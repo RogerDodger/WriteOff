@@ -1,0 +1,49 @@
+[% MACRO local(dt) GET
+	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %R') %]
+<h2>Event Listing</h2>
+<div class="event-listing">
+[% FOREACH event IN events %]
+	<h3><a href="#">[% event.prompt %] – [% local(event.start) %]</a></h3>
+	<div>
+		<table>
+			<tr>
+				<th> </th>
+				<th class="heading">Begins</th>
+				<th class="heading">Ends</th>
+			</tr>
+			[%- IF event.has_art %]
+			<tr>
+				<th>Drawing</th>
+				<td>[% local(event.art) %]</td>
+				<td>[% local(event.art_end) %]</td>
+			</tr>
+			[%- END %]
+			<tr>
+				<th>Writing</th>
+				<td>[% local(event.fic) %]</td>
+				<td>[% local(event.fic_end) %]</td>
+			</tr>
+			[%- IF event.has_prelim %]
+			<tr>
+				<th>Prelims</th>
+				<td>[% local(event.prelims) %]</td>
+				<td>[% local(event.finals) %]</td>
+			</tr>
+			[%- END %]
+			<tr>
+				<th>Finals</th>
+				<td>[% local(event.finals) %]</td>
+				<td>[% local(event.end) %]</td>
+			</tr>
+		</table>
+		<ul>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]">Fic submission</a></li>
+			[%- IF event.has_art %]
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/art/submit') %]">Art submission</a></li>
+			[%- END %]
+		</ul>
+	</div>
+[% END %]
+</div>
+<sub>Note: Event times are localised to your set timezone.</sub>
+<p><a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a></p>

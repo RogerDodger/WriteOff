@@ -1,0 +1,7 @@
+domain example.com
+AdminName SomeAdmin
+AdminEmail someadmin@somedomain.com
+<recaptcha>
+	pub_key 01010101010101
+	priv_key AAAAAAAAAAAAAA
+</recaptcha>

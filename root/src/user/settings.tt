@@ -1,0 +1,53 @@
+<form class="form-standard" method="post" action="[% c.uri_for('/settings') %]">
+	<fieldset>
+	<input type="hidden" name="type" value="password" />
+		<legend>Change Password</legend>
+		<table>
+			<tr>
+				<td class="label">New Password<span class="required">*</span></td>
+				<td>
+					<input type="password" name="password" maxlength="[% c.config.len.max.pass %]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Confirm Password<span class="required">*</span></td>
+				<td>
+					<input type="password" name="password2" maxlength="[% c.config.len.max.pass %]"/>
+					<p>Must be [% c.config.len.min.pass %] or more characters.</p>
+				</td>
+			<tr>
+				<td class="label">Old Password<span class="required">*</span></td>
+				<td>
+					<input type="password" name="old_password" maxlength="[% c.config.len.max.pass %]"/>
+				</td>
+			</tr>			
+			</tr>
+			<tr>
+				<td class="label"> </td>
+				<td><input type="submit" value="Change password" /></td>
+			</tr>
+		</table>
+	</fieldset>
+</form>
+<form class="form-standard" method="post" action="[% c.uri_for('/settings') %]">
+	<fieldset>
+	<input type="hidden" name="type" value="timezone" />
+		<legend>Change Timezone</legend>
+		<table>
+			<tr>
+				<td class="label">Timezone</td>
+				<td>
+					<select name="timezone">
+					[%- FOREACH timezone IN timezones %]
+		<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
+					[%- END %]
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="label"> </td>
+				<td><input type="submit" value="Change timezone" /></td>
+			</tr>
+		</table>
+	</fieldset>
+</form>

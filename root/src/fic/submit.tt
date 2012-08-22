@@ -1,0 +1,84 @@
+[% MACRO local(dt) GET
+	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+<h1>[% event.prompt %]</h1>
+
+<h2>Fic Submissions</h2>
+
+<p>
+	Submissions open: <strong>[% local(event.fic) %]</strong>.
+	<br />
+	Submissions close: <strong>[% local(event.fic_end) %]</strong>.
+	<br />
+[%- IF subs_allowed %]
+	Submissions are <strong class="good">open</strong>.
+[%- ELSE %]
+	Submissions are <strong class="bad">closed</strong>.
+[%- END %]
+</p>
+
+<h2>Guidelines</h2>
+
+<ul>
+	<li>Submitted works must be your own.</li>
+	<li>
+		Stories must be between [% c.config.len.min.fic %] 
+		and [% c.config.len.max.fic %] words long.
+	</li>
+</ul>
+
+<form class="form-standard" action="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]" method="post" enctype="multipart/form-data">
+	<fieldset>
+[%- IF c.form.has_error %]
+	[%- FOREACH error IN c.form.messages('submit') %]
+		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+				<strong>Error:</strong> [% error %]</p>
+			</div>
+		</div>
+	[%- END %]
+[%- END %]
+		<legend>Submit Story</legend>
+		<p>Fields with <span class="required">*</span> are required.</p>
+		<table>
+			<tr>
+				<td class="label">Title<span class="required">*</span></td>
+				<td>
+					<input name="title" type="text" maxlength="[% c.config.len.max.title %]"/>
+				</td>
+			</tr>
+[% IF event.has_art %]
+			<tr>
+				<td class="label">Art title<span class="required">*</span></td>
+				<td>
+					<select name="image_id">
+						<optgroup label="Submitted Artworks">
+							<option value=""></option>
+[%- WHILE (image = images.next) %]
+							<option value="[% image.id %]">[% image.title | html %]</option>
+[%- END %]
+						</optgroup>
+					</select>
+				</td>
+			</tr>
+[% END %]
+			<tr>
+				<td class="label">Author<span class="unrequired">*</span></td>
+				<td>
+					<input name="author" type="text" maxlength="[% c.config.len.max.user %]"
+					[%- IF c.user %]value="[% c.user.username %]"[% END %]/>
+				</td>
+				<td>(Anonymous if blank)</td>
+			</tr>
+			<tr>
+				<td class="label">Website<span class="unrequired">*</span></td>
+				<td><input name="website" type="text" maxlength="[% c.config.len.max.url %]"/></td>
+			</tr>
+			<tr>
+				<td class="label">Story<span class="required">*</span></td>
+			</tr>
+		</table>
+		<textarea name="story">[% INCLUDE fic/instructions %]</textarea>
+		<input type="submit" value="Submit"/>
+	</fieldset>
+</form>

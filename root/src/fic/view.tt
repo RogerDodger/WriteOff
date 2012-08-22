@@ -1,0 +1,4 @@
+<h1>[% title.0 %]</h1>
+<div class="story">
+[% story %]
+</div>

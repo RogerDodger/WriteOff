@@ -1,0 +1,199 @@
+body {
+	background: #ccc;
+	padding-top: 40px;
+}
+p, li, td {
+	font-size: 1em;
+}
+.topbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: black;
+	box-shadow: 0 0 8px black;
+	padding: 5px;
+	width: 100%;
+	color: white;
+	font-weight: bold;
+	z-index: 9001;
+}
+.topbar .userbar {
+	float: right;
+	margin-right: 10px;
+}
+.topbar .userbar form {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+.topbar .navbar {
+	float: left;
+}
+.topbar p, input {
+	display: inline-block;
+	margin: 0;
+	font-size: 14px;
+	font-family: Georgia;
+	padding: 2px 6px;
+}
+a.link, a.link:visited {
+	color: blue;
+	text-decoration: none;
+	transition: .05s all linear;
+	-moz-transition: .05s all linear;
+	-webkit-transition: .05s all linear;
+}
+a.link:hover {
+	color: dodgerblue;
+}
+.main, .footer {
+	margin: 20px auto 0 auto;
+	padding: 40px;
+	width: 685px;
+	background: #fff;
+	box-shadow: 0 0 8px black;
+}
+.has-placeholder {
+	color: #aaa;
+}
+.form-standard td {
+	padding: 5px;
+}
+.form-standard input[type=password], 
+.form-standard input[type=text], 
+.form-standard td p {
+	width: 310px;
+	font: serif;
+}
+.form-standard .label {
+	padding-top: 8px;
+	white-space: nowrap;
+	text-align: right;
+	vertical-align: top;
+}
+.form-standard td p {
+	margin: 2px;
+	padding: 0;
+	font-size: 80%;
+}
+.form-standard textarea[name=story] {
+	width: 645px;
+	max-width: 645px;
+	height: 450px;
+	margin-bottom: 10px;
+	display: block;
+	padding: 5px;
+	border: 2px groove silver;
+	font-family: sans-serif;
+}
+.event-listing h3 {
+	font-size: 14pt;
+}
+.event-listing td, .event-listing th {
+	padding: 4px;
+	font-size: 11pt;
+	text-align: right;
+}
+.event-listing .heading {
+	text-align: center;
+}
+.good {
+	color: green;
+}
+.bad, .required {
+	color: red;
+}
+.unrequired {
+	opacity: 0;
+	filter:Alpha(opacity=0);
+}
+.footer {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+.footer p {
+	margin: 0;
+	font-size: .9em;
+	text-align: center;
+}
+
+/*   TABLE STYLES 
+  _________________ */
+  
+table { 
+	border-collapse: collapse; 
+}
+.t-outdent-deep {
+	margin-left: -2em;
+	margin-right: -2em;
+}
+.t-outdent {
+	margin-left: -1em;
+	margin-right: -1em;
+}
+.t-indent {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+.t-indent-deep {
+	margin-left: 2em;
+	margin-right: 2em;
+}
+.t-center { 
+	margin-left: auto; 
+	margin-right: auto;
+}
+.left,    
+.left th,    
+.left td { 
+	text-align: left; 
+}
+.justify, 
+.justify th, 
+.justify td { 
+	text-align: justify; 
+}
+.right,   
+.right th,   
+.right td { 
+	text-align: right; 
+}
+.center,  
+.center th,  
+.center td { 
+	text-align: center; 
+}
+.slim {
+	background: #f8f8f8;
+}
+.slim td, .slim th {
+	padding: 3px 7px;
+	border-top: 2px dotted silver;
+	border-bottom: 2px dotted silver;
+}
+.dotted-right { 
+	border-right: 2px dotted silver; 
+}
+.dotted-left { 
+	border-left: 2px dotted silver; 
+}
+.dotted-bottom { 
+	border-bottom: 2px dotted silver; 
+}
+.dotted-top { 
+	border-top: 2px dotted silver; 
+}
+
+/* MISC STYLES
+  ____________ */
+
+.story p {
+	font-family: Georgia, serif;
+	line-height: 1.8em;
+	min-height: 1.8em;
+	text-align: justify;
+	margin: 0;
+}
+.story hr {
+	margin: 3.6em 0;
+}

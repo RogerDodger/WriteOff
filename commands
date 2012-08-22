@@ -1,0 +1,1 @@
+./script/writeoff_create.pl model DB DBIC::Schema WriteOff::Schema create=static components=TimeStamp,PassphraseColumn dbi:SQLite:WriteOff.db on_connect_do="PRAGMA foreign_keys = ON"

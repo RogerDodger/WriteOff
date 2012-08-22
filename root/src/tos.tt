@@ -1,0 +1,20 @@
+<h1>Terms of Service</h1>
+<ol style="list-style-type: upper-roman">
+	<li>
+		You will not impersonate or submit the work of another person.
+		<ul>
+			<li>
+				If you believe someone has submitted work that isn't theirs, 
+				please contact <a class="link new-window" href="mailto:[% c.config.AdminEmail %]">
+				[% c.config.AdminEmail %]</a>
+			</li>
+		</ul>
+	</li>
+	<li>
+		All rights to submitted works remain to their respective holders.
+	</li>
+	<li>
+		<tt>[% c.config.domain %]</tt> may gather data about your person, but 
+		only for the express purpose of improving user experience.
+	</li>
+</ol>

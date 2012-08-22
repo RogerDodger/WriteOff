@@ -1,0 +1,63 @@
+I figure I'll put my progress on the webapp in here to give anybody who's interested an idea of how it's coming along.
+
+✓ Implemented
+✗ Not implemented yet
+— Half-and half
+
+[b]Users[/b]
+✓ Register
+✓ Verify
+✓ Settings
+✓ View and manipulate own submissions (of implemented types)
+✓ Access controls (e.g., restricting admin tasks to the admin)
+✓ [s]Super-secret mining of all your data[/s]
+
+[b]Events[/b]
+✓ Create
+✓ Event flow
+✓ List
+— Submission time logic
+✗ Results
+
+[b]Stories[/b]
+✓ Submit
+✓ View (parsed BBCode and plaintext)
+✓ Edit
+✓ Delete
+
+[b]Images[/b]
+✓ Submit
+✓ Thumbnailing
+✓ View
+✓ Delete
+
+[b]Prompts[/b]
+✗ Submit
+✗ View
+✗ Delete
+✗ Comparison logic (ELO Ranking)
+
+[b]Heats[/b]
+✗ Request
+✗ Vote
+
+[b]Vote Records[/b]
+✗ Distribution for participants
+✗ Distribution for volunteers
+✗ Relative voting (for prelims)
+✗ Scaled voting (for finals)
+✗ Prelim → Finals flow
+✗ Results
+
+[b]Documentation[/b]
+✗ Everything
+✗ FAQ
+✗ Flow-chart of event operation
+
+
+Fic submissions require a login. Art submissions don't, but you won't be able to manipulate your submissions without one. Art rounds and prelim rounds are both optional on a per-event basis.
+
+I suspect that dealing with the vote distribution will take longer than other components, since a nice interface to the voting will take a bit of javascript magic. That said, the main algorithm for participant distributions is already written from earlier; it just needs a little wrapping to be more modular. 
+
+The only thing that isn't trivial is the volunteer distribution. I'm still thinking about how I should handle that. Suggestions are welcome.
+

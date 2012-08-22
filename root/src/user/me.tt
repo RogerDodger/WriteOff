@@ -1,0 +1,67 @@
+<h1>My Submissions</h1>
+
+[%- IF storys.count %]
+<h2>Fic</h2>
+<table class="slim">
+	<tr>
+		<th> </th>
+		<th>Title</th>
+		<th>Artist</th>
+		<th>Words</th>
+		<th>Last Updated</th>
+		<th> </th>
+	[%- WHILE (story = storys.next) %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for('/fic/edit/' _ story.id) %]">
+				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
+			</a>
+		</td>
+		<td><a class="link" href="[% c.uri_for('/fic/view/' _ story.id ) %]">[% story.title | html %]</a></td>
+		<td>
+			[% IF story.website %]<a class="link" href="[% story.website %]">[% story.author | html %]</a>
+			[% ELSE; story.author | html; END %]
+		</td>
+		<td class="center">[% story.wordcount %]</td>
+		<td>[% story.updated.set_time_zone(c.user.timezone).strftime('%d-%b-%Y %H:%M') %]</td>
+		<td>
+			<a href="[% c.uri_for('/fic/delete/' _ story.id) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
+			</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+[%- END %]
+
+[%- IF images.count %]
+<h2>Art</h2>
+<table class="slim">
+	<tr>
+		<th>Title</th>
+		<th>Artist</th>
+		<th>Filesize</th>
+		<th>Submitted</th>
+		<th> </th>
+	[%- WHILE (image = images.next) %]
+	<tr>
+		<td><a class="link" href="[% c.uri_for('/art/view/' _ image.id) %]">[% image.title | html %]</a></td>
+		<td>
+			[% IF image.website %]<a class="link" href="[% image.website %]">[% image.artist | html %]</a>
+			[% ELSE; image.artist | html; END %]
+		</td>
+		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
+		<td>[% image.created.set_time_zone(c.user.timezone).strftime('%d-%b-%Y %H:%M') %]</td>
+		<td>
+			<a href="[% c.uri_for('/art/delete/' _ image.id) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item">&nbsp;</span>
+			</a>
+		</td>	
+	</tr>
+	[%- END %]
+</table>
+[%- END %]
+
+[%- IF !images.count && !storys.count %]
+<p>You have no submissions.</p>
+[% END %]

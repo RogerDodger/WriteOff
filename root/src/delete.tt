@@ -1,0 +1,6 @@
+<h1>Confirm Deletion</h1>
+<p>Deletion is irreversible.</p>
+<form method="post" action="[% self %]">
+	<input type="submit" value="Delete" />
+	<a class="ui-button" href="[% c.uri_for('/user/me') %]">Abort</a>
+</form>

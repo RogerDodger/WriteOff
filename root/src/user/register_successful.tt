@@ -1,0 +1,14 @@
+<h1>Registration Successful!</h1>
+<p>
+	You must validate your email address before your account may be used on the 
+	site.
+</p>
+<p>
+	A validation email has been sent to [% c.req.params.email %]. Please check
+	your inbox and follow the enclosed instructions to validate your account.
+</p>
+<p>
+	If you can't find said email, check your spam box and stuff. It should be in
+	there somewhere. If you still can't find it, send an email to
+	<a class="link" href="mailto:[% c.config.AdminEmail %]">[% c.config.AdminEmail %]</a>.
+</p>

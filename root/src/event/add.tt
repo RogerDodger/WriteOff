@@ -1,0 +1,64 @@
+<form class="form-standard" method="post" action="[% c.uri_for('/event/add') %]">
+	<fieldset>
+		<legend>Event Details</legend>
+		<table>
+			<tr>
+				<td class="label">Starting Date</td>
+				<td>
+					<input type="text" name="start"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Has Art Round</td>
+				<td>
+					<input type="checkbox" name="has_art" checked="1" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Art Duration</td>
+				<td>
+					<input type="text" name="art_dur" value="72" />
+				</td>
+				<td>Hours</td>
+			</tr>
+			<tr>
+				<td class="label">Fic Duration</td>
+				<td>
+					<input type="text" name="fic_dur" value="72" />
+				</td>
+				<td>Hours</td>
+			</tr>
+			<tr>
+				<td class="label">Has Prelim</td>
+				<td>
+					<input type="checkbox" name="has_prelim" checked="1" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Prelims Duration</td>
+				<td>
+					<input type="text" name="prelims_dur" value="7" />
+				</td>
+				<td>Days</td>
+			</tr>
+			<tr>
+				<td class="label">Finals Duration</td>
+				<td>
+					<input type="text" name="finals_dur" value="7" />
+				</td>
+				<td>Days</td>
+			</tr>
+			<tr>
+				<td class="label">Interim Duration</td>
+				<td>
+					<input type="text" name="interim" value="1" />
+				</td>
+				<td>Hours</td>
+			</tr>
+			<tr>
+				<td class="label"> </td>
+				<td><input type="submit" value="Add Event" /></td>
+			</tr>
+		</table>
+	</fieldset>
+</form>

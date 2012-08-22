@@ -1,0 +1,17 @@
+[% uri = c.uri_for('verify') _ '/' _ user.id _ '/' _ token %]
+<p>Hello,</p>
+<p>
+	You have been signed up to <a href="[% c.uri_for('/') %]">[% name %]</a>
+	with the following credentials:
+</p>
+<ul>
+	<li><strong>Username: </strong>[% c.req.params.username %]</strong></li>
+	<li><strong>Password: </strong>[% c.req.params.password %]</strong></li>
+</ul>
+<p><a href="[% uri %]">Click here</a> to verify this account.</p>
+<hr />
+<p>
+	This email was sent to &lt;[% c.req.params.email %]&gt;. 
+	<a href="[% uri _ '?delete=1' %]">Click here</a> if you believe it
+	to have been sent in error.
+</p>
