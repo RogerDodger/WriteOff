@@ -1,47 +1,47 @@
-I figure I'll put my progress on the webapp in here to give anybody who's interested an idea of how it's coming along.
+v0.02
+=====
+- Changed paths on item manipulation to (fic|art)/*/(view|edit|delete)
 
-✓ Implemented
-✗ Not implemented yet
-— Half-and half
+v0.01
+=====
 
-[b]Users[/b]
+##Users
 ✓ Register
 ✓ Verify
 ✓ Settings
 ✓ View and manipulate own submissions (of implemented types)
 ✓ Access controls (e.g., restricting admin tasks to the admin)
-✓ [s]Super-secret mining of all your data[/s]
 
-[b]Events[/b]
+##Events
 ✓ Create
 ✓ Event flow
 ✓ List
 — Submission time logic
 ✗ Results
 
-[b]Stories[/b]
+##Stories
 ✓ Submit
 ✓ View (parsed BBCode and plaintext)
 ✓ Edit
 ✓ Delete
 
-[b]Images[/b]
+##Images
 ✓ Submit
 ✓ Thumbnailing
 ✓ View
 ✓ Delete
 
-[b]Prompts[/b]
+##Prompts
 ✗ Submit
 ✗ View
 ✗ Delete
 ✗ Comparison logic (ELO Ranking)
 
-[b]Heats[/b]
+##Heats
 ✗ Request
 ✗ Vote
 
-[b]Vote Records[/b]
+##Vote Records
 ✗ Distribution for participants
 ✗ Distribution for volunteers
 ✗ Relative voting (for prelims)
@@ -49,7 +49,7 @@ I figure I'll put my progress on the webapp in here to give anybody who's intere
 ✗ Prelim → Finals flow
 ✗ Results
 
-[b]Documentation[/b]
+##Documentation
 ✗ Everything
 ✗ FAQ
 ✗ Flow-chart of event operation

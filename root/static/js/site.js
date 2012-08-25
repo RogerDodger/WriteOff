@@ -1,27 +1,32 @@
+$('a.ui-button, input[type=submit], button').ready(function($) {
+	$('a.ui-button, input[type=submit], button').button();
+});
+$('.event-listing').ready(function($) {
+	$('.event-listing').accordion();
+});
+$('.has-placeholder').ready(function($) {
+	$('.has-placeholder').focus(function() {
+		var input = $(this);
+		if(input.val() == input.attr('name')) { 
+			input.val('');
+			input.css('color', 'black');
+		}
+	})
+	.blur(function() {
+		var input = $(this);
+		if(input.val() == '') {
+			input.css('color', '#aaa');
+			input.val(input.attr('name'));
+		}
+	})
+	.blur();
+});
 jQuery(document).ready(function($) {
 	var uploadOk = 0;
-	$('.has-placeholder')
-		.focus(function() {
-			var input = $(this);
-			if(input.val() == input.attr('name')) { 
-				input.val('');
-				input.css('color', 'black');
-			}
-		})
-		.blur(function() {
-			var input = $(this);
-			if(input.val() == '') {
-				input.css('color', '#aaa');
-				input.val(input.attr('name'));
-			}
-		})
-		.blur();
 	$('.link.new-window').attr({
 		target : '_blank',
 		title  : 'Open link in new tab',
 	});
-	$('a.ui-button, input[type=submit], button').button();
-	$('.event-listing').accordion();
 	var filesize = 0;
 	var max = 4; //MB
 	$('input[name=image]').bind('change', function() {

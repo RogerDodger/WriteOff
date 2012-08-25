@@ -3,7 +3,7 @@
 -- Author: Cameron Thornton <cthor@cpan.org>
 ------
 
-PRAGMA foreign_Keys = ON;
+PRAGMA foreign_keys = ON;
 
 DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS vote_records;

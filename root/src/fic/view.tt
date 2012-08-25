@@ -1,4 +1,4 @@
-<h1>[% title.0 %]</h1>
+<h1>[% title %]</h1>
 <div class="story">
-[% story %]
+[% contents %]
 </div>

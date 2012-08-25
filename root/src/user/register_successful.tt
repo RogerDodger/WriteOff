@@ -9,6 +9,7 @@
 </p>
 <p>
 	If you can't find said email, check your spam box and stuff. It should be in
-	there somewhere. If you still can't find it, send an email to
-	<a class="link" href="mailto:[% c.config.AdminEmail %]">[% c.config.AdminEmail %]</a>.
+	there somewhere. If you still can't find it, send an email to <a class="link" 
+	href="mailto:[% c.config.AdminEmail %]">[% c.config.AdminEmail %]</a> with
+	appropriate information to receive support.
 </p>

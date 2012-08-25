@@ -7,7 +7,7 @@
 [% IF redirect %]
 <meta http-equiv="REFRESH" content="2; url=[% redirect %]"/>
 [% END %]
-<title>[% name; IF title; title.unshift(''); title.join(' - '); END %]</title>
+<title>[% name; IF title; ' - ' _ title; END %]</title>
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" type="text/css" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery.alerts.css') %]" type="text/css" />

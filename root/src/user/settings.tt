@@ -1,4 +1,4 @@
-<form class="form-standard" method="post" action="[% c.uri_for('/settings') %]">
+<form class="form-standard" method="post" action="[% c.uri_for('/user/settings') %]">
 	<fieldset>
 	<input type="hidden" name="type" value="password" />
 		<legend>Change Password</legend>
@@ -29,7 +29,7 @@
 		</table>
 	</fieldset>
 </form>
-<form class="form-standard" method="post" action="[% c.uri_for('/settings') %]">
+<form class="form-standard" method="post" action="[% c.uri_for('/user/settings') %]">
 	<fieldset>
 	<input type="hidden" name="type" value="timezone" />
 		<legend>Change Timezone</legend>

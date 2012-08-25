@@ -37,12 +37,9 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 
 sub fic :PathPart('fic') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
-		
-	my $fic_real_end = $c->stash->{event}->fic_end->clone
-		->add( minutes => $c->config->{leeway} );
+
 	$c->stash->{subs_allowed} = 
-		( $c->stash->{event}->fic cmp $c->stash->{now} ) < 0 &&
-		( $fic_real_end           cmp $c->stash->{now} ) > 0;
+		$c->model('DB::Event')->fic_subs_allowed( $c->stash->{event} );
 }
 
 sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
@@ -50,12 +47,9 @@ sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
 
 	$c->detach('/error', ['There is no art component to this event.']) unless
 		$c->stash->{event}->has_art;
-			
-	my $art_real_end = $c->stash->{event}->art_end->clone
-		->add( minutes => $c->config->{leeway} );
+	
 	$c->stash->{subs_allowed} = 
-		( $c->stash->{event}->art cmp $c->stash->{now} ) < 0 &&
-		( $art_real_end           cmp $c->stash->{now} ) > 0;
+		$c->model('DB::Event')->art_subs_allowed( $c->stash->{event} );
 }
 
 =head1 AUTHOR

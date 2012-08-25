@@ -1,4 +1,4 @@
-<form class="form-standard" method="post" action="[% c.uri_for('/register') %]">
+<form class="form-standard" method="post" action="[% c.uri_for('/user/register') %]">
 	<fieldset>
 		<legend>Register</legend>
 [% IF c.form.has_error %]

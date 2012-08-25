@@ -25,7 +25,7 @@ use Parse::BBCode;
 
 extends 'Catalyst';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -94,7 +94,6 @@ __PACKAGE__->config(
 			url   => 256,
 		},
 	},
-	leeway => 5, #in minutes
 	
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,

@@ -21,14 +21,8 @@ WriteOff::Controller::Root - Root Controller for WriteOff
 
 sub auto :Private {
 	my ( $self, $c ) = @_;
-
-	my $fmt = DateTime::Format::Strptime->new( 
-		time_zone => 'floating',
-		locale    => 'en_AU',
-		pattern   => '%F %T',
-	);
 	
-	$c->stash->{now} = $fmt->parse_datetime('2013-01-02 03:06:00');
+	$c->stash->{now} = $c->model('DB::Event')->now_dt;
 }
 
 =head2 index

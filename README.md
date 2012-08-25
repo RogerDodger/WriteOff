@@ -1,5 +1,5 @@
 Installation
-========
+============
 
 - cp writeoff.conf.template writeoff.conf
   - Fill in the details as appropriate

@@ -10,8 +10,7 @@ WriteOff::Controller::User - Catalyst Controller
 
 =head1 DESCRIPTION
 
-Controller for user management - login/logout, registration, recovery, settings,
-etc.
+Controller for user management - login/logout, registration, settings, etc.
 
 =cut
 
@@ -35,17 +34,21 @@ sub me :Local :Args(0) {
 sub login :Local :Args(0) {
     my ( $self, $c ) = @_;
 	
-	(my $user = $c->req->params->{username}) =~ s/%//g;
-
-	$c->authenticate({ 
+	$c->req->params->{username} =~ s/%//g;
+	my $success = $c->authenticate({ 
 		password => $c->req->params->{password},
-		dbix_class => {
-			searchargs => [ 
-				{ username => {like => $user} }  #Case-insensitive login
-			],
-		},
-	}) || 
-	$c->flash({error_msg => 'Bad username or password'});
+		dbix_class => { searchargs => [{
+			#Case-insensitive login
+			username => { like => $c->req->params->{username} } 
+		}]},
+	});
+	if($success) {
+		$c->user->verified ||
+		$c->flash({error_msg => 'Your account is not verified'}) && $c->logout;
+	}
+	else {
+		$c->flash({error_msg => 'Bad username or password'});
+	}
 	
 	$c->res->redirect( $c->req->referer || $c->uri_for('/') );
 }
@@ -57,7 +60,9 @@ sub logout :Local :Args(0) {
 }
 
 sub register :Local :Args(0) {
-	my ( $self, $c) = @_;
+	my ( $self, $c ) = @_;
+	
+	$c->res->redirect( $c->uri_for('/') ) if $c->user;
 	
 	$c->stash->{timezones} = [qw/UTC/, grep {/\//} DateTime::TimeZone->all_names];
 	$c->stash->{template} = 'user/register.tt';
@@ -78,7 +83,7 @@ sub do_register :Private {
 	$c->detach('/') unless DateTime::TimeZone->is_valid_name($params->{timezone});
 	
 	$c->form(
-		username => ['NOT_BLANK', ['LENGTH', 1, $c->config->{len}->{max}->{name}], ['REGEX', qr/^[a-zA-Z0-9_]+$/ ] ],
+		username => ['NOT_BLANK', ['LENGTH', 1, $c->config->{len}->{max}->{user}], ['REGEX', qr/^[a-zA-Z0-9_]+$/ ] ],
 		unique_user => [ [qw/EQUAL_TO 0/] ],
 		password => ['NOT_BLANK', ['LENGTH', $c->config->{len}->{min}->{pass}, $c->config->{len}->{max}->{pass}] ],
 		{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
@@ -88,7 +93,7 @@ sub do_register :Private {
 	);
 	
 	if(!$c->form->has_error) {
-		my $user = $rs->create({
+		$c->stash->{user} = $rs->create({
 			username => $params->{username},
 			password => $params->{password},
 			email    => $params->{email},
@@ -96,16 +101,15 @@ sub do_register :Private {
 			ip       => $c->req->address,
 		});
 		
-		$c->stash->{token} = $rs->new_token_for($user->email);
+		$c->stash->{token} = $rs->new_token_for( $c->stash->{user}->email );
 		
 		$c->model("DB::UserRole")->create({
-			user_id => $user->id,
-			role_id => 2, #user
+			user_id => $c->stash->{user}->id,
+			role_id => 2,
 		});
 		
-		$c->stash->{user}  = $user;
 		$c->stash->{email} = {
-			to           => $user->email,
+			to           => $c->stash->{user}->email,
 			from         => 'noreply@' . $c->config->{domain},
 			subject      => $c->config->{name} . ' - Confirmation Email',
 			template     => 'email/registration.tt',

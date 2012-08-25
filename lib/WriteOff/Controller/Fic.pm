@@ -18,7 +18,7 @@ Catalyst Controller.
 
 =head2 index :PathPart('fic') :Chained('/') CaptureArgs(1)
 
-Grabs a fic
+Grabs a story
 
 =cut
 
@@ -28,15 +28,10 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 	$c->stash->{story} = $c->model('DB::Story')->find($id) or $c->detach('/default');
 }
 
-
-=head2 submit
-
-=cut
-
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template} = 'fic/submit.tt';
+	$c->stash->{template}     = 'fic/submit.tt';
 	
 	$c->forward('do_submit') if $c->req->method eq 'POST' && $c->user;
 }
@@ -85,49 +80,46 @@ sub do_submit :Private {
 	}
 }
 
-sub view :Local :Args(1) {
-	my ( $self, $c, $id ) = @_;
-	
-	my $row = $c->model('DB::Story')->find($id) or $c->detach('/default');
+sub view :PathPart('view') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
 	
 	unless( $c->req->params->{plain} ) {		
 		my $bb = Parse::BBCode->new;
-		my $story = Encode::decode('utf8', $bb->render( $row->contents ) );
-		   $story =~ s#\[hr\] *<br>#<hr>#g;
-		   $story =~ s#(.*)<br>#<p>$1</p>#g;
-		$c->stash->{story} = $story;
-		$c->stash->{title} = [$row->title];
+		my $contents = Encode::decode
+		   ( 'utf8', $bb->render( $c->stash->{story}->contents ) );
+		   $contents =~ s#\[hr\] *<br>#<hr>#g;
+		   $contents =~ s#(.*)<br>#<p>$1</p>#g;
+		$c->stash->{contents} = $contents;
+		$c->stash->{title} = $c->stash->{story}->title;
 		$c->stash->{template} = 'fic/view.tt';
 	} 
 	else {
 		$c->res->content_type('text/plain; charset=utf-8');
-		$c->res->body( Encode::decode('utf8', $row->contents) );
+		$c->res->body( Encode::decode('utf8', $c->stash->{story}->contents) );
 	}
 	
 }
 
-sub edit :Local :Args(1) {
-	my ( $self, $c, $id ) = @_;
+sub edit :PathPart('edit') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
 	
-	my $row = $c->model('DB::Story')->find($id) or $c->detach('/default');
+	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && (
+		$c->user->id == $c->stash->{story}->user_id || 
+		$c->check_user_roles($c->user, qw/admin/) 
+	);
 	
-	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && 
-		( $c->user->id == $row->user_id || $c->check_user_roles($c->user, qw/admin/) );
-	
-	$c->stash->{self}     = $c->uri_for("/fic/edit/$id");
-	$c->stash->{title}    = $row->title;
-	$c->stash->{contents} = Encode::decode('utf8', $row->contents);
+	$c->stash->{self}     = $c->uri_for("/fic/" . $c->stash->{story}->id . "/edit");
+	$c->stash->{title}    = $c->stash->{story}->title;
+	$c->stash->{contents} = Encode::decode('utf8', $c->stash->{story}->contents);
 	
 	if($c->req->method eq 'POST') {
 		$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
 		
-		$c->form( 
-			wordcount => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
-				$c->config->{len}->{max}->{fic}] ] 
-		);
+		$c->form( wordcount => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
+		          $c->config->{len}->{max}->{fic}] ] );
 		
 		if(!$c->form->has_error) {
-			$row->update({
+			$c->stash->{story}->update({
 				wordcount => $c->req->params->{wordcount},
 				contents  => $c->req->params->{story},
 			});
@@ -137,19 +129,19 @@ sub edit :Local :Args(1) {
 	}
 }
 
-sub delete :Local :Args(1) {
-	my ( $self, $c, $id ) = @_;
+sub delete :PathPart('delete') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
 	
-	my $row = $c->model('DB::Story')->find($id) or $c->detach('/default');
+	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && (
+		$c->user->id == $c->stash->{story}->user_id || 
+		$c->check_user_roles($c->user, qw/admin/) 
+	);
 	
-	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && 
-		( $c->user->id == $row->user_id || $c->check_user_roles($c->user, qw/admin/) );
-	
-	$c->stash->{self} = $c->uri_for("/fic/delete/$id");
+	$c->stash->{self} = $c->uri_for("/fic/" . $c->stash->{story}->id . "/delete");
 	$c->stash->{template} = 'delete.tt';
 	
 	if($c->req->method eq 'POST') {
-		$row->delete;
+		$c->stash->{story}->delete;
 		
 		$c->flash->{status_msg} = 'Deletion successful';
 		$c->res->redirect( $c->uri_for('/user/me') );	

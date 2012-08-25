@@ -16,12 +16,17 @@ Catalyst Controller.
 
 =cut
 
+=head2 index :PathPart('art') :Chained('/') CaptureArgs(1)
 
-=head2 submit
-
-Display the submission form
+Grabs an image
 
 =cut
+
+sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
+    my ( $self, $c, $id ) = @_;
+	
+	$c->stash->{image} = $c->model('DB::Image')->find($id) or $c->detach('/default');
+}
 
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
@@ -83,28 +88,30 @@ sub do_submit :Private {
 	}
 }
 
-sub view :Local :Args(1) {
-	my ( $self, $c, $id ) = @_;
+sub view :PathPart('view') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
 	
-	my $row = $c->model('DB::Image')->find($id) or $c->detach('/default');
-	
-	$c->res->content_type($row->mime);
-	$c->res->body( $c->req->params->{thumb} ? $row->thumb : $row->image );
+	$c->res->content_type( $c->stash->{image}->mime );
+	$c->res->body( 
+		$c->req->params->{thumb} ? 
+		$c->stash->{image}->thumb : 
+		$c->stash->{image}->image 
+	);
 }
 
-sub delete :Local :Args(1) {
-	my ( $self, $c, $id ) = @_;
+sub delete :PathPart('delete') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
 	
-	my $row = $c->model('DB::Image')->find($id) or $c->detach('/default');
+	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && (
+		$c->user->id == $c->stash->{image}->user_id || 
+		$c->check_user_roles($c->user, qw/admin/) 
+	);
 	
-	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && 
-		( $c->user->id == $row->user_id || $c->check_user_roles($c->user, qw/admin/) );
-	
-	$c->stash->{self} = $c->uri_for("/art/delete/$id");
+	$c->stash->{self} = $c->uri_for("/art/" . $c->stash->{image}->id . "/delete");
 	$c->stash->{template} = 'delete.tt';
 	
 	if($c->req->method eq 'POST') {
-		$row->delete;
+		$c->stash->{image}->delete;
 		
 		$c->flash->{status_msg} = 'Deletion successful';
 		$c->res->redirect( $c->uri_for('/user/me') );	
