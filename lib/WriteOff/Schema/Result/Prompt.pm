@@ -67,7 +67,12 @@ __PACKAGE__->table("prompts");
 
 =head2 rating
 
-  data_type: 'integer'
+  data_type: 'real'
+  is_nullable: 1
+
+=head2 created
+
+  data_type: 'timestamp'
   is_nullable: 1
 
 =cut
@@ -82,7 +87,9 @@ __PACKAGE__->add_columns(
   "contents",
   { data_type => "text", is_nullable => 1 },
   "rating",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "real", is_nullable => 1 },
+  "created",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -170,9 +177,11 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-10 19:18:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FX8YSq0jsuGkOvkyp3uF6w
-
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-28 14:45:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WQTcIIFpYd2sTSs9Zr6SXQ
+__PACKAGE__->add_columns(
+	created => {data_type => 'timestamp', set_on_create => 1},
+);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

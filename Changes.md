@@ -1,3 +1,12 @@
+v0.03
+=====
+- Added CSRF counter-measures
+- Business rules on submissions
+- Prompts
+  - Submission
+  - Deletion
+  - Voting (uses Elo comparison)
+
 v0.02
 =====
 - Changed paths on item manipulation to (fic|art)/*/(view|edit|delete)
@@ -5,54 +14,60 @@ v0.02
 v0.01
 =====
 
-##Users
-✓ Register
-✓ Verify
-✓ Settings
-✓ View and manipulate own submissions (of implemented types)
-✓ Access controls (e.g., restricting admin tasks to the admin)
+##Implemented
 
-##Events
-✓ Create
-✓ Event flow
-✓ List
-— Submission time logic
-✗ Results
+###Users
+- Register
+- Verify
+- Settings
+- View and manipulate own submissions (of implemented types)
+- Access controls (e.g., restricting admin tasks to the admin)
 
-##Stories
-✓ Submit
-✓ View (parsed BBCode and plaintext)
-✓ Edit
-✓ Delete
+###Events
+- Create
+- Event flow
+- List
+- Submission time logic
 
-##Images
-✓ Submit
-✓ Thumbnailing
-✓ View
-✓ Delete
+###Stories
+- Submit
+- View (parsed BBCode and plaintext)
+- Edit
+- Delete
 
-##Prompts
-✗ Submit
-✗ View
-✗ Delete
-✗ Comparison logic (ELO Ranking)
+###Images
+- Submit
+- Thumbnailing
+- View
+- Delete
 
-##Heats
-✗ Request
-✗ Vote
+##To Be Implemented
 
-##Vote Records
-✗ Distribution for participants
-✗ Distribution for volunteers
-✗ Relative voting (for prelims)
-✗ Scaled voting (for finals)
-✗ Prelim → Finals flow
-✗ Results
+###Events
+- Results
 
-##Documentation
-✗ Everything
-✗ FAQ
-✗ Flow-chart of event operation
+###Prompts
+- Submit
+- View
+- Delete
+- Comparison logic (ELO Ranking)
+
+###Heats
+- Request
+- Vote
+
+###Vote Records
+- Distribution for participants
+- Distribution for volunteers
+- Relative voting (for prelims)
+- Scaled voting (for finals)
+- Prelim → Finals flow
+- Results
+
+###Documentation
+- Everything
+- FAQ
+- Flow-chart of event operation
 
 
 Fic submissions require a login. Art submissions don't, but you won't be able to manipulate your submissions without one. Art rounds and prelim rounds are both optional on a per-event basis.

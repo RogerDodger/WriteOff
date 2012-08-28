@@ -1,0 +1,24 @@
+<form class="form-standard" method="post" action="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]">
+	<fieldset>
+[%- IF c.form.has_error %]
+	[%- FOREACH error IN c.form.messages('submit') %]
+		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+				<strong>Error:</strong> [% error %]</p>
+			</div>
+		</div>
+	[%- END %]
+[%- END %]
+		<legend>Submit Prompt</legend>
+		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+		<label>Prompt</label>
+		<input type="text" name="prompt" maxlength="[% c.config.len.max.prompt %]" />
+		<input type="submit" value="Submit" />
+	</fieldset>
+</form>
+<p>
+	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">
+		Back to voting
+	</a>
+</p>

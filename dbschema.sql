@@ -77,7 +77,8 @@ CREATE TABLE prompts (
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	contents  TEXT,
-	rating    INTEGER
+	rating    REAL,
+	created   TIMESTAMP
 );
 
 CREATE TABLE storys (
@@ -96,13 +97,13 @@ CREATE TABLE storys (
 CREATE TABLE images (
 	id        INTEGER PRIMARY KEY,
 	filesize  INTEGER,
-	mime      TEXT,
+	mimetype  TEXT,
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	title     TEXT UNIQUE,
 	artist    TEXT,
 	website   TEXT,
-	image     BLOB,
+	contents  BLOB,
 	thumb     BLOB,
 	created   TIMESTAMP
 );

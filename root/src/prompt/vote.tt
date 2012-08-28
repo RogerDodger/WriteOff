@@ -1,0 +1,35 @@
+[%- IF heat %]
+<h2 class="center">Which Prompt Is Better?</h2>
+<form method="post" action="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">
+	<table class="prompt-container">
+		<input name="heat" type="hidden" value="[% heat.id %]" />
+		<tr>
+			<td class="promptbox">
+				<input type="submit" name="left" value="[% heat.left.contents | html %]" />
+			</td>
+			<td class="or">OR</td>
+			<td class="promptbox">
+				<input type="submit" name="right" value="[% heat.right.contents | html %]" />
+			</td>
+		</tr>
+		<tr>
+			<td class="promptbox tie" colspan="3">
+				<input type="submit" name="tie" value="Tie?" />
+			</td>
+		</tr>
+	</table>
+</form>
+<h2>Prompts</h2>
+	[%- WHILE (prompt = prompts.next) %]
+<p class="prompt-listing" style="width: [% prompt.rating / 4 %]px;">
+	[% prompt.contents | html %]
+</p>
+	[%- END %]
+[%- ELSE %]
+<h2>Not Enough Prompts</h2>
+[%- END %]
+<p>
+	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]" />
+		Submit a prompt
+	</a>
+</p>

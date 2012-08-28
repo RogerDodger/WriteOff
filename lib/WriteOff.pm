@@ -22,6 +22,7 @@ use Catalyst qw/
 /;
 use Image::Magick;
 use Parse::BBCode;
+use Math::Random::MT;
 
 extends 'Catalyst';
 
@@ -66,7 +67,7 @@ __PACKAGE__->config(
 				unique_email => { EQUAL_TO => 'A user with that email already exists' },
 			},
 			submit => {
-				title    => { 
+				title     => { 
 					NOT_BLANK   => 'Title is required',
 					DBIC_UNIQUE => 'An item with that title already exists',
 				},
@@ -74,8 +75,15 @@ __PACKAGE__->config(
 				wordcount => { BETWEEN       => 'Story too long or too short' },
 				related   => { NOT_EQUAL_TO  => 'Art title is required' },
 				image     => { NOT_BLANK     => 'Image is required' },
-				type      => { IN_ARRAY      => 'Image not a valid type' },
+				mimetype  => { IN_ARRAY      => 'Image not a valid type' },
 				captcha   => { EQUAL_TO      => 'Invalid CAPTCHA' },
+				sessionid => { IN_ARRAY      => 'Invalid session' },
+				subs_allowed => { EQUAL_TO   => 'Submissions are closed' },
+				prompt    => {
+					NOT_BLANK   => 'Prompt is required',
+					DBIC_UNIQUE => 'An identical prompt already exists',
+				},
+				limit     => { LESS_THAN     => 'Limit exceeded' },
 			},
 		},
 	},
@@ -86,15 +94,27 @@ __PACKAGE__->config(
 			fic  => 2500,
 		},
 		max => {
-			user  => 32,
-			pass  => 64,
-			email => 256,
-			title => 64,
-			fic   => 20000,
-			url   => 256,
+			user   => 32,
+			pass   => 64,
+			email  => 256,
+			title  => 64,
+			fic    => 20000,
+			url    => 256,
+			img    => 4*1024*1024,
+			prompt => 64,
 		},
 	},
-	
+	elo => {
+		base => 1500,
+		beta => 200,
+		k    => 32,
+	},
+	prompts_per_user => 5,
+	rng => {
+		prompt => Math::Random::MT->new,
+		vote   => Math::Random::MT->new,
+	},
+
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );

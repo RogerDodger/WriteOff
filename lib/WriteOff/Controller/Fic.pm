@@ -26,12 +26,20 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 	
 	$c->stash->{story} = $c->model('DB::Story')->find($id) or $c->detach('/default');
+	
+	$c->stash->{user_has_permissions} = $c->user && (
+		$c->user->id == $c->stash->{story}->user_id ||
+		$c->check_user_roles($c->user, qw/admin/) 
+	);
+	
+	$c->req->params->{subs_allowed} = 
+		$c->model('DB::Event')->fic_subs_allowed( $c->stash->{story}->event_id );
 }
 
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template}     = 'fic/submit.tt';
+	$c->stash->{template} = 'event/fic_submit.tt';
 	
 	$c->forward('do_submit') if $c->req->method eq 'POST' && $c->user;
 }
@@ -41,19 +49,20 @@ sub do_submit :Private {
 	
 	my $rs = $c->model('DB::Story');
 	
-	$c->req->params->{related} = $c->stash->{images}
-		->search({ id => $c->req->params->{image_id} })->count if
+	$c->req->params->{related} = 
+		$c->stash->{images}->search({ id => $c->req->params->{image_id} })->count if
 		$c->stash->{event}->has_art;
 	$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
 	
 	$c->form(
-		title     => [ ['LENGTH', 1, $c->config->{len}->{max}->{title}], 
+		title        => [ ['LENGTH', 1, $c->config->{len}->{max}->{title}], 
 			'NOT_BLANK', ['DBIC_UNIQUE', $rs, 'title'] ],
-		author    => [ ['LENGTH', 1, $c->config->{len}->{max}->{user}] ],
-		website   => [  'HTTP_URL'  ],
-		related   => [ ['NOT_EQUAL_TO', 0] ],
-		wordcount => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
+		author       => [ ['LENGTH', 1, $c->config->{len}->{max}->{user}] ],
+		website      => [  'HTTP_URL'  ],
+		related      => [ ['NOT_EQUAL_TO', 0] ],
+		wordcount    => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
 			$c->config->{len}->{max}->{fic}] ],
+		subs_allowed => [ ['EQUAL_TO', 1] ],
 	);
 	
 	if(!$c->form->has_error) {
@@ -103,20 +112,27 @@ sub view :PathPart('view') :Chained('index') :Args(0) {
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && (
-		$c->user->id == $c->stash->{story}->user_id || 
-		$c->check_user_roles($c->user, qw/admin/) 
-	);
+	$c->detach('/forbidden', ['You do not own this item.']) unless 
+		$c->stash->{user_has_permissions};
+		
+	if ( !$c->req->params->{subs_allowed} ) {
+		$c->flash->{error_msg} = "Item cannot be edited: Submissions disabled";
+		$c->res->redirect( $c->uri_for('/user/me') );
+	}
 	
 	$c->stash->{self}     = $c->uri_for("/fic/" . $c->stash->{story}->id . "/edit");
 	$c->stash->{title}    = $c->stash->{story}->title;
 	$c->stash->{contents} = Encode::decode('utf8', $c->stash->{story}->contents);
 	
-	if($c->req->method eq 'POST') {
+	if($c->req->method eq 'POST' ) {
 		$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
 		
-		$c->form( wordcount => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
-		          $c->config->{len}->{max}->{fic}] ] );
+		$c->form( 
+			wordcount => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
+				$c->config->{len}->{max}->{fic}] ],
+			sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
+			subs_allowed => [ ['EQUAL_TO', 1] ],
+		);
 		
 		if(!$c->form->has_error) {
 			$c->stash->{story}->update({
@@ -132,18 +148,20 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You do not own this item.']) unless $c->user && (
-		$c->user->id == $c->stash->{story}->user_id || 
-		$c->check_user_roles($c->user, qw/admin/) 
-	);
+	$c->detach('/forbidden', ['You do not own this item.']) unless 
+		$c->stash->{user_has_permissions};
 	
 	$c->stash->{self} = $c->uri_for("/fic/" . $c->stash->{story}->id . "/delete");
 	$c->stash->{template} = 'delete.tt';
 	
-	if($c->req->method eq 'POST') {
-		$c->stash->{story}->delete;
-		
-		$c->flash->{status_msg} = 'Deletion successful';
+	if( $c->req->method eq 'POST' ) {
+		if( $c->req->params->{sessionid} eq $c->sessionid ) {
+			$c->stash->{story}->delete;
+			$c->flash->{status_msg} = 'Deletion successful';
+		}
+		else {
+			$c->flash->{error_msg} = 'Invalid session';
+		}
 		$c->res->redirect( $c->uri_for('/user/me') );	
 	}
 }

@@ -53,7 +53,7 @@ __PACKAGE__->table("images");
   data_type: 'integer'
   is_nullable: 1
 
-=head2 mime
+=head2 mimetype
 
   data_type: 'text'
   is_nullable: 1
@@ -85,7 +85,7 @@ __PACKAGE__->table("images");
   data_type: 'text'
   is_nullable: 1
 
-=head2 image
+=head2 contents
 
   data_type: 'blob'
   is_nullable: 1
@@ -107,7 +107,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "filesize",
   { data_type => "integer", is_nullable => 1 },
-  "mime",
+  "mimetype",
   { data_type => "text", is_nullable => 1 },
   "event_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -119,7 +119,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "website",
   { data_type => "text", is_nullable => 1 },
-  "image",
+  "contents",
   { data_type => "blob", is_nullable => 1 },
   "thumb",
   { data_type => "blob", is_nullable => 1 },
@@ -221,8 +221,8 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-21 18:09:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y5/iHbcd9CHbfyqoBo+YHA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-28 10:41:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xfNh1evUjTCCQkNqzV4VFg
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

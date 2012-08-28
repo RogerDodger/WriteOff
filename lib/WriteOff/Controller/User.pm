@@ -20,12 +20,14 @@ sub me :Local :Args(0) {
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
 	
 	if( $c->check_user_roles($c->user, qw/admin/) ) {
-		$c->stash->{images} = $c->model('DB::Image');
-		$c->stash->{storys} = $c->model('DB::Story');
+		$c->stash->{images}  = $c->model('DB::Image');
+		$c->stash->{storys}  = $c->model('DB::Story');
+		$c->stash->{prompts} = $c->model('DB::Prompt');
 	}
 	else {
-		$c->stash->{images} = $c->model('DB::Image')->search({ user_id => $c->user->id });
-		$c->stash->{storys} = $c->model('DB::Story')->search({ user_id => $c->user->id });
+		$c->stash->{images}  = $c->model('DB::Image')->search ({ user_id => $c->user->id });
+		$c->stash->{storys}  = $c->model('DB::Story')->search ({ user_id => $c->user->id });
+		$c->stash->{prompts} = $c->model('DB::Prompt')->search({ user_id => $c->user->id });
 	}
 	
 	$c->stash->{template} = 'user/me.tt';

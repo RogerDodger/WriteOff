@@ -3,7 +3,7 @@
 <h2>Event Listing</h2>
 <div class="event-listing">
 [% FOREACH event IN events %]
-	<h3><a href="#">[% event.prompt %] – [% local(event.start) %]</a></h3>
+	<h3><a href="#">[% event.prompt | html %] – [% local(event.start) %]</a></h3>
 	<div>
 		<table>
 			<tr>
@@ -37,10 +37,13 @@
 			</tr>
 		</table>
 		<ul>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]">Fic submission</a></li>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">Prompts</a></li>
+		</ul>
+		<ul>
 			[%- IF event.has_art %]
 			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/art/submit') %]">Art submission</a></li>
 			[%- END %]
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]">Fic submission</a></li>
 		</ul>
 	</div>
 [% END %]

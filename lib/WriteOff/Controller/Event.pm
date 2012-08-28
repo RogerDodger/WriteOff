@@ -38,7 +38,7 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 sub fic :PathPart('fic') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{subs_allowed} = 
+	$c->req->params->{subs_allowed} = 
 		$c->model('DB::Event')->fic_subs_allowed( $c->stash->{event} );
 }
 
@@ -48,8 +48,17 @@ sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
 	$c->detach('/error', ['There is no art component to this event.']) unless
 		$c->stash->{event}->has_art;
 	
-	$c->stash->{subs_allowed} = 
+	$c->req->params->{subs_allowed} = 
 		$c->model('DB::Event')->art_subs_allowed( $c->stash->{event} );
+}
+
+sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->req->params->{subs_allowed} = 
+		$c->model('DB::Event')->prompt_subs_allowed ( $c->stash->{event} );
+	$c->req->params->{votes_allowed} = 
+		$c->model('DB::Event')->prompt_votes_allowed( $c->stash->{event} );
 }
 
 =head1 AUTHOR

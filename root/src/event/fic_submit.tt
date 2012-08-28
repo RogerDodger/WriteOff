@@ -9,7 +9,7 @@
 	<br />
 	Submissions close: <strong>[% local(event.fic_end) %]</strong>.
 	<br />
-[%- IF subs_allowed %]
+[%- IF c.req.params.subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
 [%- ELSE %]
 	Submissions are <strong class="bad">closed</strong>.
@@ -78,7 +78,7 @@
 				<td class="label">Story<span class="required">*</span></td>
 			</tr>
 		</table>
-		<textarea name="story">[% INCLUDE fic/instructions %]</textarea>
+		<textarea name="story"></textarea>
 		<input type="submit" value="Submit"/>
 	</fieldset>
 </form>

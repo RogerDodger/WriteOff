@@ -30,6 +30,22 @@ sub art_subs_allowed {
 	( $row->art, $self->now_dt, $row->art_end->clone->add({ minutes => LEEWAY }) );
 }
 
+sub prompt_subs_allowed {
+	my ($self, $row) = @_;
+	$row = $self->find($row) if !ref $row;
+	
+	return $self->check_datetimes_ascend 
+	( $row->start, $self->now_dt, $row->prompt_voting);
+}
+
+sub prompt_votes_allowed {
+	my ($self, $row) = @_;
+	$row = $self->find($row) if !ref $row;
+	
+	return $self->check_datetimes_ascend 
+	( $row->prompt_voting, $self->now_dt, $row->has_art ? $row->art : $row->fic );
+}
+
 sub now {	
 	my $self = shift;
 	return $self->result_source->schema->storage->datetime_parser
@@ -43,13 +59,14 @@ sub now_dt {
 		pattern   => '%F %T',
 	);
 	
-	return $fmt->parse_datetime('2013-01-02 03:06:00');
+	return $fmt->parse_datetime('2012-12-25 00:06:00');
 }
 
 sub check_datetimes_ascend {
 	my $self = shift;
 	
-	return join('', @_) eq join('', sort @_);
+	return 1 if join('', @_) eq join('', sort @_);
+	0;
 }
 
 1;

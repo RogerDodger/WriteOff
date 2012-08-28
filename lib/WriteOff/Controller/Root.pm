@@ -19,10 +19,20 @@ WriteOff::Controller::Root - Root Controller for WriteOff
 
 =cut
 
+sub begin :Private {
+	my ( $self, $c ) = @_;
+
+	if( $c->req->method eq 'POST' ) {
+		my $root = $c->uri_for('/');
+		$c->detach('index') if $c->req->referer !~ /^$root/;
+	}
+}
+
 sub auto :Private {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{now} = $c->model('DB::Event')->now_dt;
+	
 }
 
 =head2 index
@@ -60,7 +70,7 @@ Standard 403 page
 sub forbidden :Private {
 	my ( $self, $c, $msg ) = @_;
 	
-	$c->stash->{forbidden_msg} = $msg;
+	$c->stash->{forbidden_msg} = $msg || 'Access denied';
 	$c->stash->{template} = '403.tt';
 	$c->res->status(403);
 }
@@ -68,7 +78,7 @@ sub forbidden :Private {
 sub error :Private {
 	my ( $self, $c, $msg ) = @_;
 	
-	$c->stash->{error} = $msg;
+	$c->stash->{error} = $msg || 'Something went wrong';
 	$c->stash->{template} = 'error.tt';
 	$c->res->status(404);
 }

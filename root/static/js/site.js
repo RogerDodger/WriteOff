@@ -1,10 +1,6 @@
-$('a.ui-button, input[type=submit], button').ready(function($) {
+jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
-});
-$('.event-listing').ready(function($) {
 	$('.event-listing').accordion();
-});
-$('.has-placeholder').ready(function($) {
 	$('.has-placeholder').focus(function() {
 		var input = $(this);
 		if(input.val() == input.attr('name')) { 
@@ -18,10 +14,8 @@ $('.has-placeholder').ready(function($) {
 			input.css('color', '#aaa');
 			input.val(input.attr('name'));
 		}
-	})
-	.blur();
-});
-jQuery(document).ready(function($) {
+	}).blur();
+	$('.userbar .ui-state-highlight, .userbar .ui-state-error').fadeOut(5000, "easeInQuint");
 	var uploadOk = 0;
 	$('.link.new-window').attr({
 		target : '_blank',

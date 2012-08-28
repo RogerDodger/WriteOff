@@ -9,7 +9,7 @@
 	<br />
 	Submissions close: <strong>[% local(event.art_end) %]</strong>.
 	<br />
-[%- IF subs_allowed %]
+[%- IF c.req.params.subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
 [%- ELSE %]
 	Submissions are <strong class="bad">closed</strong>.
@@ -86,7 +86,7 @@
 	<tr>
 		<td>[% image.title | html %]</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td>[% image.mime %]</td>
+		<td>[% image.mimetype %]</td>
 		<td class="right">[% image.created.set_time_zone(c.user.timezone || 'UTC').strftime('%d %b %T') %]</td>
 	</tr>
 	[%- END %]

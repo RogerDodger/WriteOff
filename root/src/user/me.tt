@@ -5,18 +5,23 @@
 <table class="slim">
 	<tr>
 		<th> </th>
+		<th>Event</th>
 		<th>Title</th>
 		<th>Artist</th>
 		<th>Words</th>
 		<th>Last Updated</th>
 		<th> </th>
 	[%- WHILE (story = storys.next) %]
+	[%- event = c.model('DB::Event').find(story.event_id) %]
 	<tr>
 		<td>
+			[% IF c.model('DB::Event').fic_subs_allowed( event ) %]
 			<a href="[% c.uri_for( '/fic/' _ story.id _ '/edit' ) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
 			</a>
+			[% END %]
 		</td>
+		<td>[% event.prompt | html %]</td>
 		<td><a class="link" href="[% c.uri_for( '/fic/' _ story.id _ '/view' ) %]">[% story.title | html %]</a></td>
 		<td>
 			[% IF story.website %]<a class="link" href="[% story.website %]">[% story.author | html %]</a>
@@ -38,13 +43,16 @@
 <h2>Art</h2>
 <table class="slim">
 	<tr>
+		<th>Event</th>
 		<th>Title</th>
 		<th>Artist</th>
 		<th>Filesize</th>
 		<th>Submitted</th>
 		<th> </th>
 	[%- WHILE (image = images.next) %]
+	[%- event = c.model('DB::Event').find( image.event_id ) %]
 	<tr>
+		<td>[% event.prompt | html %]</td>
 		<td><a class="link" href="[% c.uri_for( '/art/' _ image.id _ '/view' ) %]">[% image.title | html %]</a></td>
 		<td>
 			[% IF image.website %]<a class="link" href="[% image.website %]">[% image.artist | html %]</a>
@@ -62,6 +70,31 @@
 </table>
 [%- END %]
 
-[%- IF !images.count && !storys.count %]
+[% IF prompts.count %]
+<h2>Prompt</h2>
+<table class="slim">
+	<tr>
+		<th>Event</th>
+		<th>Prompt</th>
+		<th>Rating</th>
+		<th> </th>
+	</tr>
+	[%- WHILE (prompt = prompts.next) %]
+	[%- event = c.model('DB::Event').find( prompt.event_id ) %]
+	<tr>
+		<td>[% event.prompt | html %]</td>
+		<td>[% prompt.contents | html %]</td>
+		<td class="center">[% prompt.rating | format('%d') %]</td>
+		<td>
+			<a href="[% c.uri_for( '/prompt/' _ prompt.id _ '/delete' ) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item">&nbsp;</span>
+			</a>
+		</td>	
+	</tr>
+	[%- END %]
+</table>
+[%- END %]
+
+[%- IF !images.count && !storys.count && !prompts.count %]
 <p>You have no submissions.</p>
 [% END %]

@@ -33,11 +33,11 @@
 [%- IF status_msg %]
 		<p class="ui-state-highlight ui-corner-all">[% status_msg %]</p>
 [% END %]
-[% IF c.user %]
+[%- IF c.user %]
 		<a class="ui-button" href="[% c.uri_for('/user/me') %]">~[% c.user.username %]</a>
 		<a class="ui-button" href="[% c.uri_for('/user/settings') %]">Settings</a>
 		<a class="ui-button" href="[% c.uri_for('/user/logout') %]">Logout</a>
-[% ELSE %]
+[%- ELSE %]
 		<form action="[% c.uri_for('/user/login') %]" method="post">
 			<input class="has-placeholder" type="text" name="username" />
 			<input class="has-placeholder" type="password" name="password" />
@@ -49,7 +49,6 @@
 </div>
 
 <div class="main">
-<p>[% msg %]</p>
 
 [% content %]
 
