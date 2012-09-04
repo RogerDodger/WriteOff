@@ -28,11 +28,18 @@ extends 'DBIx::Class::Core';
 
 =item * L<DBIx::Class::PassphraseColumn>
 
+=item * L<DBIx::Class::InflateColumn::Serializer>
+
 =back
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components(
+  "InflateColumn::DateTime",
+  "TimeStamp",
+  "PassphraseColumn",
+  "InflateColumn::Serializer",
+);
 
 =head1 TABLE: C<vote_records>
 
@@ -185,8 +192,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-10 19:18:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3weV5ld2zR0V7oHC/Om9gg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wKWmqCQ/MWUDaSef+Rw+Bw
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

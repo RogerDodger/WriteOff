@@ -9,7 +9,9 @@
 	<br />
 	Submissions close: <strong>[% local(event.art_end) %]</strong>.
 	<br />
-[%- IF c.req.params.subs_allowed %]
+	Submissions received: <strong>[% event.images_rs.count %]</strong>.
+	<br />
+[%- IF event.art_subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
 [%- ELSE %]
 	Submissions are <strong class="bad">closed</strong>.
@@ -48,7 +50,7 @@
 				<td class="label">Artist<span class="unrequired">*</span></td>
 				<td>
 					<input name="artist" type="text" maxlength="[% c.config.len.max.user %]" 
-					[%- IF c.user %]value="[% c.user.username %]"[% END %]/>
+					[%- IF c.user_exists %]value="[% c.user.username %]"[% END %]/>
 				</td>
 				<td>Anonymous if blank</td>
 			</tr>
@@ -73,22 +75,3 @@
 		</table>
 	</fieldset>
 </form>
-
-[%- IF images.count %]
-<h2>Received Submissions</h2>
-<table class="slim">
-	<tr>
-		<th>Title</th>
-		<th>Filesize</th>
-		<th>MIME Type</th>
-		<th>Submitted</th>
-	[%- WHILE (image = images.next) %]
-	<tr>
-		<td>[% image.title | html %]</td>
-		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td>[% image.mimetype %]</td>
-		<td class="right">[% image.created.set_time_zone(c.user.timezone || 'UTC').strftime('%d %b %T') %]</td>
-	</tr>
-	[%- END %]
-</table>
-[%- END %]

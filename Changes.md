@@ -1,3 +1,12 @@
+v0.04
+- FAQ added
+- Word limits now on per-event basis
+- Interim set to global 1 hour
+- Scheduler table and cron tasks added
+- Row logic in row classes
+- Generalised some resultset logic
+- Added TODO
+
 v0.03
 =====
 - Added CSRF counter-measures

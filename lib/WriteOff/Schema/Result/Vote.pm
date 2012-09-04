@@ -28,11 +28,18 @@ extends 'DBIx::Class::Core';
 
 =item * L<DBIx::Class::PassphraseColumn>
 
+=item * L<DBIx::Class::InflateColumn::Serializer>
+
 =back
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components(
+  "InflateColumn::DateTime",
+  "TimeStamp",
+  "PassphraseColumn",
+  "InflateColumn::Serializer",
+);
 
 =head1 TABLE: C<votes>
 
@@ -149,8 +156,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-10 19:18:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H3u2glB6Yu/C37+b53yDrA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XLdCD8nYXl82ZQDTyMaA6Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -4,31 +4,30 @@
 <h2>Fic</h2>
 <table class="slim">
 	<tr>
-		<th> </th>
 		<th>Event</th>
 		<th>Title</th>
 		<th>Artist</th>
 		<th>Words</th>
 		<th>Last Updated</th>
 		<th> </th>
+		<th> </th>
 	[%- WHILE (story = storys.next) %]
-	[%- event = c.model('DB::Event').find(story.event_id) %]
 	<tr>
-		<td>
-			[% IF c.model('DB::Event').fic_subs_allowed( event ) %]
-			<a href="[% c.uri_for( '/fic/' _ story.id _ '/edit' ) %]">
-				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
-			</a>
-			[% END %]
-		</td>
-		<td>[% event.prompt | html %]</td>
+		<td>[% story.event.prompt | html %]</td>
 		<td><a class="link" href="[% c.uri_for( '/fic/' _ story.id _ '/view' ) %]">[% story.title | html %]</a></td>
 		<td>
 			[% IF story.website %]<a class="link" href="[% story.website %]">[% story.author | html %]</a>
-			[% ELSE; story.author | html; END %]
+			[% ELSE %][% story.author | html %][% END %]
 		</td>
 		<td class="center">[% story.wordcount %]</td>
 		<td>[% story.updated.set_time_zone(c.user.timezone).strftime('%d-%b-%Y %H:%M') %]</td>
+		<td>
+			[%- IF story.event.fic_subs_allowed %]
+			<a href="[% c.uri_for( '/fic/' _ story.id _ '/edit' ) %]">
+				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
+			</a>
+			[%- END %]
+		</td>
 		<td>
 			<a href="[% c.uri_for( '/fic/' _ story.id _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
@@ -50,13 +49,12 @@
 		<th>Submitted</th>
 		<th> </th>
 	[%- WHILE (image = images.next) %]
-	[%- event = c.model('DB::Event').find( image.event_id ) %]
 	<tr>
-		<td>[% event.prompt | html %]</td>
+		<td>[% image.event.prompt | html %]</td>
 		<td><a class="link" href="[% c.uri_for( '/art/' _ image.id _ '/view' ) %]">[% image.title | html %]</a></td>
 		<td>
 			[% IF image.website %]<a class="link" href="[% image.website %]">[% image.artist | html %]</a>
-			[% ELSE; image.artist | html; END %]
+			[% ELSE %][% image.artist | html %][% END %]
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
 		<td>[% image.created.set_time_zone(c.user.timezone).strftime('%d-%b-%Y %H:%M') %]</td>
@@ -75,14 +73,13 @@
 <table class="slim">
 	<tr>
 		<th>Event</th>
-		<th>Prompt</th>
+		<th>Title</th>
 		<th>Rating</th>
 		<th> </th>
 	</tr>
 	[%- WHILE (prompt = prompts.next) %]
-	[%- event = c.model('DB::Event').find( prompt.event_id ) %]
 	<tr>
-		<td>[% event.prompt | html %]</td>
+		<td>[% prompt.event.prompt | html %]</td>
 		<td>[% prompt.contents | html %]</td>
 		<td class="center">[% prompt.rating | format('%d') %]</td>
 		<td>

@@ -28,11 +28,18 @@ extends 'DBIx::Class::Core';
 
 =item * L<DBIx::Class::PassphraseColumn>
 
+=item * L<DBIx::Class::InflateColumn::Serializer>
+
 =back
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components(
+  "InflateColumn::DateTime",
+  "TimeStamp",
+  "PassphraseColumn",
+  "InflateColumn::Serializer",
+);
 
 =head1 TABLE: C<events>
 
@@ -52,6 +59,16 @@ __PACKAGE__->table("events");
 
   data_type: 'text'
   default_value: 'TBD'
+  is_nullable: 1
+
+=head2 wc_min
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 wc_max
+
+  data_type: 'integer'
   is_nullable: 1
 
 =head2 has_art
@@ -121,6 +138,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "prompt",
   { data_type => "text", default_value => "TBD", is_nullable => 1 },
+  "wc_min",
+  { data_type => "integer", is_nullable => 1 },
+  "wc_max",
+  { data_type => "integer", is_nullable => 1 },
   "has_art",
   { data_type => "integer", is_nullable => 1 },
   "has_prelim",
@@ -222,11 +243,53 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-14 21:06:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cd9wq+23swrN+98A4RmKDA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uG7sbAGx4SBP/i/6V9bbHg
+
+use constant LEEWAY => 5;
+
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
+
+sub now_dt {
+	return shift->result_source->resultset->now_dt;
+}
+
+sub fic_subs_allowed {
+	my $row = shift;
+		
+	return $row->check_datetimes_ascend
+	( $row->fic, $row->now_dt, $row->fic_end->clone->add({ minutes => LEEWAY }) );
+}
+
+sub art_subs_allowed {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend 
+	( $row->art, $row->now_dt, $row->art_end->clone->add({ minutes => LEEWAY }) );
+}
+
+sub prompt_subs_allowed {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend 
+	( $row->start, $row->now_dt, $row->prompt_voting);
+}
+
+sub prompt_votes_allowed {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend 
+	( $row->prompt_voting, $row->now_dt, $row->has_art ? $row->art : $row->fic );
+}
+
+sub check_datetimes_ascend {
+	my $row = shift;
+	
+	return 1 if join('', @_) eq join('', sort @_);
+	0;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

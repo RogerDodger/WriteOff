@@ -9,6 +9,8 @@ use Catalyst qw/
 	Static::Simple
 	Unicode::Encoding
 	
+	Scheduler
+	
 	Authentication
 	Authorization::Roles
 	
@@ -26,7 +28,7 @@ use Math::Random::MT;
 
 extends 'Catalyst';
 
-our $VERSION = '0.03_01';
+our $VERSION = '0.04';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -40,6 +42,7 @@ __PACKAGE__->config(
 			password_type => 'self_check',
 		},
 	},
+	scheduler => { time_zone => 'floating' },
 	'Plugin::Session' => {
 		flash_to_stash => 1,
 	},
@@ -91,35 +94,72 @@ __PACKAGE__->config(
 	len => {
 		min => {
 			pass => 5,
-			fic  => 2500,
 		},
 		max => {
 			user   => 32,
 			pass   => 64,
 			email  => 256,
 			title  => 64,
-			fic    => 20000,
 			url    => 256,
 			img    => 4*1024*1024,
 			prompt => 64,
 		},
 	},
-	elo => {
-		base => 1500,
-		beta => 200,
-		k    => 32,
+	biz => {
+		user => {
+			regex => qr/\A[a-zA-Z0-9_]+\z/,
+		},
 	},
+	elo_base => 1500,
 	prompts_per_user => 5,
-	rng => {
-		prompt => Math::Random::MT->new,
-		vote   => Math::Random::MT->new,
-	},
-
+	interim => 60, #minutes
+	bb => Parse::BBCode->new({
+		tags => {
+			b => '<strong>%{parse}s</strong>',
+			i => '<em>%{parse}s</em>',
+			u => '<span style="text-decoration: underline">%{parse}s</span>',
+			url => '<a href="%{link}a">%{parse}s</a>',
+			size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
+			color => '<span style="color: %{color}a;">%{parse}s</span>',
+			center => '<span style="text-align: center">%{parse}s</span>',
+			smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
+			quote => {
+				class => 'block',
+				output => "<br>\n<blockquote>%{parse}s</blockquote>\n",
+			},
+			hr => {
+				class => 'block',
+				output => "<br>\n<hr />\n",
+				single => 1,
+			},
+		},
+		escapes => {
+			Parse::BBCode::HTML->default_escapes,
+			size => sub {
+				int $_[2] eq $_[2] && 
+				8 <= $_[2] && $_[2] <= 72 ? 
+				$_[2] : 16;
+			},
+			color => sub {
+				$_[2] =~ /^#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
+			},
+		},
+	}),
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );
 
 __PACKAGE__->setup();
+
+__PACKAGE__->schedule(
+	at    => '0 * * * *',
+	event => '/cron/clean_old_heats',
+);
+
+__PACKAGE__->schedule(
+	at    => '* * * * *',
+	event => '/cron/check_schedule',
+);
 
 
 =head1 NAME

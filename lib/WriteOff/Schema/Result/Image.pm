@@ -28,11 +28,18 @@ extends 'DBIx::Class::Core';
 
 =item * L<DBIx::Class::PassphraseColumn>
 
+=item * L<DBIx::Class::InflateColumn::Serializer>
+
 =back
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components(
+  "InflateColumn::DateTime",
+  "TimeStamp",
+  "PassphraseColumn",
+  "InflateColumn::Serializer",
+);
 
 =head1 TABLE: C<images>
 
@@ -221,8 +228,8 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-28 10:41:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xfNh1evUjTCCQkNqzV4VFg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AKFqLUGQV9MuYOY6TiOn0A
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

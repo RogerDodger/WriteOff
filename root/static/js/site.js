@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-	$('a.ui-button, input[type=submit], button').button();
+	$('a.ui-button, input[type=submit], input[type=reset], button').button();
 	$('.event-listing').accordion();
 	$('.has-placeholder').focus(function() {
 		var input = $(this);

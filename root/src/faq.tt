@@ -1,0 +1,39 @@
+<h1>FAQ</h1>
+<h2>What the Hay Is This?</h2>
+<p>
+	The [% name %] is a timed challenge where writers and artists create stories
+	and images to a given prompt. The works are then released anonymously for
+	all to see, followed by judging rounds to allow the readers to determine
+	the winners.
+</p>
+<p>
+	If an art round is included in the event, artists draw to the prompt, and 
+	writers then write to the art. The art rankings are determined by how many
+	stories were written to each artwork. In essence, their goal is to create
+	something that will inspire a story.
+</p>
+
+<h2>Event Flow</h2>
+<p>
+	Each event has a series of rounds. All rounds have a [% c.config.interim %] 
+	minute intermission between them, excepting the prompt rounds which instead 
+	last for [% c.config.interim %] minutes each and have no intermission.
+</p>
+<p>
+	The following flow chart demonstrates the possible structures of a 
+	[% name %] event.
+</p>
+<img style="width: 100%; height: 100%;"
+	src="[% c.uri_for('/static/images/event-flow.png') %]" alt="Event flow" />
+<p>
+	Each event begins with a <strong>Prompt Suggestion</strong> round. Users may
+	submit up to <strong>[% c.config.prompts_per_user %]</strong> prompts to the
+	prompt pool for each event.
+</p>
+<p>
+	Following right after is the <strong>Prompt Voting</strong> round. Users
+	vote on the prompts to determine which they like the most. At the end of the
+	round, the event is named after the highest-rated prompt. This prompt sets 
+	the general theme for the event, and it is expected (though rarely enforced) 
+	that entries will bear some resemblance to it.
+</p>

@@ -27,7 +27,7 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 	
 	$c->stash->{image} = $c->model('DB::Image')->find($id) or $c->detach('/default');
 	
-	$c->stash->{user_has_permissions} = $c->user && (
+	$c->stash->{user_has_permissions} = $c->user_exists && (
 		$c->user->id == $c->stash->{image}->user_id ||
 		$c->check_user_roles($c->user, qw/admin/) 
 	);
@@ -36,7 +36,7 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template} = 'event/art_submit.tt';
+	$c->stash->{template} = 'art/submit.tt';
 	
 	$c->forward('/captcha_get');
 	$c->forward('do_submit') if $c->req->method eq 'POST';

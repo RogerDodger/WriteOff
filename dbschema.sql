@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS image_story;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS storys;
 DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
@@ -26,6 +27,7 @@ CREATE TABLE users (
 	timezone    TEXT DEFAULT 'UTC',
 	ip          TEXT,
 	verified    INTEGER DEFAULT 0,
+	mailme      INTEGER DEFAULT 0,
 	token       TEXT,
 	created     TIMESTAMP,
 	active      INTEGER
@@ -50,9 +52,11 @@ CREATE TABLE user_role (
 CREATE TABLE events (
 	id             INTEGER PRIMARY KEY,
 	prompt         TEXT DEFAULT 'TBD',
+	wc_min         INTEGER,
+	wc_max         INTEGER,
 	has_art        INTEGER,
 	has_prelim     INTEGER,
-	'start'        TIMESTAMP,
+	"start"        TIMESTAMP,
 	prompt_voting  TIMESTAMP,
 	art            TIMESTAMP,
 	art_end        TIMESTAMP,
@@ -60,8 +64,15 @@ CREATE TABLE events (
 	fic_end        TIMESTAMP,
 	prelims        TIMESTAMP,
 	finals         TIMESTAMP,
-	'end'          TIMESTAMP,
+	"end"          TIMESTAMP,
 	created        TIMESTAMP
+);
+
+CREATE TABLE schedules (
+	id      INTEGER PRIMARY KEY,
+	"at"    TIMESTAMP,
+	action  TEXT,
+	args    TEXT
 );
 
 CREATE TABLE heats (

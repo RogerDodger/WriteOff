@@ -28,11 +28,18 @@ extends 'DBIx::Class::Core';
 
 =item * L<DBIx::Class::PassphraseColumn>
 
+=item * L<DBIx::Class::InflateColumn::Serializer>
+
 =back
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components(
+  "InflateColumn::DateTime",
+  "TimeStamp",
+  "PassphraseColumn",
+  "InflateColumn::Serializer",
+);
 
 =head1 TABLE: C<users>
 
@@ -80,6 +87,12 @@ __PACKAGE__->table("users");
   default_value: 0
   is_nullable: 1
 
+=head2 mailme
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 1
+
 =head2 token
 
   data_type: 'text'
@@ -111,6 +124,8 @@ __PACKAGE__->add_columns(
   "ip",
   { data_type => "text", is_nullable => 1 },
   "verified",
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
+  "mailme",
   { data_type => "integer", default_value => 0, is_nullable => 1 },
   "token",
   { data_type => "text", is_nullable => 1 },
@@ -246,8 +261,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-12 20:16:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zia0+RDRabnnM4kEnGxR3w
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cOyY6MtwH5o7j/4fXfb/4Q
 
 __PACKAGE__->add_columns(
 	password => {
@@ -261,6 +276,19 @@ __PACKAGE__->add_columns(
 	},
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
+
+
+sub new_token {
+	my $row = shift;
+	
+	my $token = Digest->new('MD5')
+		->add( join("", time, $row->password, rand(10000), $$) )
+		->hexdigest;
+		
+	$row->update({ token => $token });
+	
+	return $token;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

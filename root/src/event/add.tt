@@ -1,12 +1,23 @@
 <form class="form-standard" method="post" action="[% c.uri_for('/event/add') %]">
 	<fieldset>
+	[%- IF c.form.has_error %]
+	[%- FOREACH error IN c.form.messages('event') %]
+		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+				<strong>Error:</strong> [% error %]</p>
+			</div>
+		</div>
+	[%- END %]
+[%- END %]
 		<legend>Event Details</legend>
 		<table>
 			<tr>
 				<td class="label">Starting Date</td>
 				<td>
-					<input type="text" name="start"/>
+					<input type="text" name="start" placeholder="yyyy-mm-dd hh:mm:ss"/>
 				</td>
+				<td>UTC</td>
 			</tr>
 			<tr>
 				<td class="label">Has Art Round</td>
@@ -29,6 +40,20 @@
 				<td>Hours</td>
 			</tr>
 			<tr>
+				<td class="label">Word Counts</td>
+				<td>
+					<input class="wc" type="text" name="wc_min" value="2000" />
+				</td>
+				<td>Min</td>
+			</tr>			
+			<tr>
+				<td> </td>
+				<td>
+					<input class="wc" type="text" name="wc_max" value="25000" />
+				</td>
+				<td>Max</td>
+			</tr>
+			<tr>
 				<td class="label">Has Prelim</td>
 				<td>
 					<input type="checkbox" name="has_prelim" checked="1" />
@@ -49,15 +74,13 @@
 				<td>Days</td>
 			</tr>
 			<tr>
-				<td class="label">Interim Duration</td>
-				<td>
-					<input type="text" name="interim" value="1" />
-				</td>
-				<td>Hours</td>
-			</tr>
-			<tr>
 				<td class="label"> </td>
-				<td><input type="submit" value="Add Event" /></td>
+				<td>
+					<input type="submit" value="Add Event" />
+					<a class="ui-button" href="[% c.uri_for( c.controller('admin').action_for('event_add') ) %]">
+						Reset
+					</a>
+				</td>
 			</tr>
 		</table>
 	</fieldset>

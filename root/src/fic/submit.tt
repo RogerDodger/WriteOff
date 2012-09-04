@@ -9,7 +9,9 @@
 	<br />
 	Submissions close: <strong>[% local(event.fic_end) %]</strong>.
 	<br />
-[%- IF c.req.params.subs_allowed %]
+	Submissions received: <strong>[% event.storys_rs.count %]</strong>.
+	<br />
+[%- IF event.fic_subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
 [%- ELSE %]
 	Submissions are <strong class="bad">closed</strong>.
@@ -21,8 +23,7 @@
 <ul>
 	<li>Submitted works must be your own.</li>
 	<li>
-		Stories must be between [% c.config.len.min.fic %] 
-		and [% c.config.len.max.fic %] words long.
+		Stories must be between [% event.wc_min %] and [% event.wc_max %] words long.
 	</li>
 </ul>
 
@@ -47,7 +48,8 @@
 					<input name="title" type="text" maxlength="[% c.config.len.max.title %]"/>
 				</td>
 			</tr>
-[% IF event.has_art %]
+[%- IF event.has_art %]
+[%- images = event.images_rs %]
 			<tr>
 				<td class="label">Art title<span class="required">*</span></td>
 				<td>
@@ -61,7 +63,7 @@
 					</select>
 				</td>
 			</tr>
-[% END %]
+[%- END %]
 			<tr>
 				<td class="label">Author<span class="unrequired">*</span></td>
 				<td>

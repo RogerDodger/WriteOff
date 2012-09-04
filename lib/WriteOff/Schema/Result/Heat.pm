@@ -28,11 +28,18 @@ extends 'DBIx::Class::Core';
 
 =item * L<DBIx::Class::PassphraseColumn>
 
+=item * L<DBIx::Class::InflateColumn::Serializer>
+
 =back
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components(
+  "InflateColumn::DateTime",
+  "TimeStamp",
+  "PassphraseColumn",
+  "InflateColumn::Serializer",
+);
 
 =head1 TABLE: C<heats>
 
@@ -133,11 +140,38 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-08-10 19:18:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0z1OG6N3F11N+tj6stQxxA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qOmVi+2ioz1dVU91QJg7pg
+use constant {
+	ELO_K       => 32,
+	ELO_BETA    => 400,
+};
+
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
+
+sub do_heat {
+	my ($row, $result) = @_;
+	#$result = { left => 1, tie => 0.5, right => 0 };
+	
+	return 0 unless defined $result;
+	
+	my ($a, $b) = ($row->left, $row->right);
+	
+	my $R_a = $a->rating;
+	my $R_b = $b->rating;
+	
+	my $E_a = 1 / ( 1 + 10**( ($R_b - $R_a) / ELO_BETA ) );
+	my $E_b = 1 / ( 1 + 10**( ($R_a - $R_b) / ELO_BETA ) );
+	
+	$a->update({ rating => $R_a + ELO_K * ( $result - $E_a ) });
+	$b->update({ rating => $R_b + ELO_K * ( abs($result - 1) - $E_b ) });
+	
+	$row->delete;
+	
+	0;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

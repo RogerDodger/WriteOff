@@ -25,6 +25,7 @@
 <div class="topbar">
 	<div class="navbar ui-widget">
 		<a class="ui-button" href="[% c.uri_for('/') %]">Home</a>
+		<a class="ui-button" href="[% c.uri_for('/faq') %]">FAQ</a>
 	</div>
 	<div class="userbar ui-widget">
 [%- IF error_msg %]
@@ -59,7 +60,12 @@
 		It is currently 
 		[% now.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %z (%Z)') %]
 	</p>
-	<p>Written by RogerDodger</p>
+	<p>
+		<a class="link new-window" href="https://github.com/RogerDodger/WriteOff">
+			WriteOff.pm
+		</a>
+		&ndash; Written by RogerDodger
+	</p>
 </div>
 
 </body>

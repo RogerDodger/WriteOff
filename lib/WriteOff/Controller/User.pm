@@ -17,7 +17,7 @@ Controller for user management - login/logout, registration, settings, etc.
 sub me :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
+	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user_exists;
 	
 	if( $c->check_user_roles($c->user, qw/admin/) ) {
 		$c->stash->{images}  = $c->model('DB::Image');
@@ -36,14 +36,16 @@ sub me :Local :Args(0) {
 sub login :Local :Args(0) {
     my ( $self, $c ) = @_;
 	
-	$c->req->params->{username} =~ s/%//g;
-	my $success = $c->authenticate({ 
-		password => $c->req->params->{password},
-		dbix_class => { searchargs => [{
-			#Case-insensitive login
-			username => { like => $c->req->params->{username} } 
-		}]},
-	});
+	my $success = 
+		$c->req->params->{username} =~ $c->config->{biz}->{user}->{regex} &&
+		$c->authenticate({ 
+			password => $c->req->params->{password},
+			dbix_class => { searchargs => [{
+				#Case-insensitive login
+				username => { like => $c->req->params->{username} } 
+			}]},
+		});
+
 	if($success) {
 		$c->user->verified ||
 		$c->flash({error_msg => 'Your account is not verified'}) && $c->logout;
@@ -58,7 +60,7 @@ sub login :Local :Args(0) {
 sub logout :Local :Args(0) {
     my ( $self, $c ) = @_;
 	$c->logout;
-	$c->res->redirect('/');
+	$c->res->redirect( $c->uri_for('/') );
 }
 
 sub register :Local :Args(0) {
@@ -78,16 +80,18 @@ sub do_register :Private {
 	
 	my $params = $c->req->params;
 	my $rs = $c->model('DB::User');
-	$params->{captcha} = $c->forward('/captcha_check');
-	$params->{unique_user}  = $rs->user_exists($params->{username});
-	$params->{unique_email} = $rs->email_exists($params->{email});
+	$params->{captcha}      = $c->forward('/captcha_check');
+	$params->{unique_user}  = $rs->user_exists ( $params->{username} );
+	$params->{unique_email} = $rs->email_exists( $params->{email} );
 	
 	$c->detach('/') unless DateTime::TimeZone->is_valid_name($params->{timezone});
 	
 	$c->form(
-		username => ['NOT_BLANK', ['LENGTH', 1, $c->config->{len}->{max}->{user}], ['REGEX', qr/^[a-zA-Z0-9_]+$/ ] ],
+		username => ['NOT_BLANK', ['LENGTH', 1, $c->config->{len}->{max}->{user}], 
+			['REGEX', $c->config->{biz}->{user}->{regex} ] ],
 		unique_user => [ [qw/EQUAL_TO 0/] ],
-		password => ['NOT_BLANK', ['LENGTH', $c->config->{len}->{min}->{pass}, $c->config->{len}->{max}->{pass}] ],
+		password => ['NOT_BLANK', ['LENGTH', $c->config->{len}->{min}->{pass}, 
+			$c->config->{len}->{max}->{pass}] ],
 		{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
 		email => [qw/NOT_BLANK EMAIL_MX/],
 		unique_email => [ [qw/EQUAL_TO 0/] ],
@@ -99,11 +103,12 @@ sub do_register :Private {
 			username => $params->{username},
 			password => $params->{password},
 			email    => $params->{email},
+			mailme   => !!$params->{mailme},
 			timezone => $params->{timezone},
 			ip       => $c->req->address,
 		});
 		
-		$c->stash->{token} = $rs->new_token_for( $c->stash->{user}->email );
+		$c->stash->{token} = $c->stash->{user}->new_token;
 		
 		$c->model("DB::UserRole")->create({
 			user_id => $c->stash->{user}->id,
@@ -183,7 +188,7 @@ sub verify :Local :Args(2) {
 			$user->update({ verified => 1 });
 			$user = $c->find_user({ id => $id });
 			$c->set_authenticated($user);
-			$rs->new_token_for($user->email);
+			$user->new_token;
 			$c->stash->{template} = 'user/verify.tt';
 		}
 	} else {

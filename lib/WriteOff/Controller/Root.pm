@@ -44,9 +44,15 @@ The root page (/)
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{events} = [$c->model('DB::Event')->active_events];
+	$c->stash->{events} = $c->model('DB::Event')->active_events;
 	
     $c->stash->{template} = 'index.tt';
+}
+
+sub faq :Local :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{template} = 'faq.tt';
 }
 
 =head2 default

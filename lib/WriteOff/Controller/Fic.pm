@@ -32,14 +32,13 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 		$c->check_user_roles($c->user, qw/admin/) 
 	);
 	
-	$c->req->params->{subs_allowed} = 
-		$c->model('DB::Event')->fic_subs_allowed( $c->stash->{story}->event_id );
+	$c->req->params->{subs_allowed} = $c->stash->{story}->event->fic_subs_allowed;
 }
 
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template} = 'event/fic_submit.tt';
+	$c->stash->{template} = 'fic/submit.tt';
 	
 	$c->forward('do_submit') if $c->req->method eq 'POST' && $c->user;
 }
@@ -60,8 +59,8 @@ sub do_submit :Private {
 		author       => [ ['LENGTH', 1, $c->config->{len}->{max}->{user}] ],
 		website      => [  'HTTP_URL'  ],
 		related      => [ ['NOT_EQUAL_TO', 0] ],
-		wordcount    => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
-			$c->config->{len}->{max}->{fic}] ],
+		wordcount    => [ ['BETWEEN', 
+			$c->stash->{event}->wc_min, $c->stash->{event}->wc_max] ],
 		subs_allowed => [ ['EQUAL_TO', 1] ],
 	);
 	
@@ -92,12 +91,10 @@ sub do_submit :Private {
 sub view :PathPart('view') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	unless( $c->req->params->{plain} ) {		
-		my $bb = Parse::BBCode->new;
+	unless( $c->req->params->{plain} ) {
 		my $contents = Encode::decode
-		   ( 'utf8', $bb->render( $c->stash->{story}->contents ) );
-		   $contents =~ s#\[hr\] *<br>#<hr>#g;
-		   $contents =~ s#(.*)<br>#<p>$1</p>#g;
+		( 'utf8', $c->config->{bb}->render( $c->stash->{story}->contents ) );
+		$contents =~ s#(.*)<br>#<p>$1</p>#g;
 		$c->stash->{contents} = $contents;
 		$c->stash->{title} = $c->stash->{story}->title;
 		$c->stash->{template} = 'fic/view.tt';
@@ -128,8 +125,8 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 		$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
 		
 		$c->form( 
-			wordcount => [ ['BETWEEN', $c->config->{len}->{min}->{fic}, 
-				$c->config->{len}->{max}->{fic}] ],
+			wordcount => [ ['BETWEEN', $c->stash->{story}->event->wc_min, 
+				$c->stash->{story}->event->wc_max] ],
 			sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
 			subs_allowed => [ ['EQUAL_TO', 1] ],
 		);
@@ -168,7 +165,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 
 sub wordcount {
 	my ( $self, $str ) = @_;
-	$str =~ s#\[/?(.+)\]#$1#g;
+	$str =~ s#\[/?(.+?)\]#$1#g;
 	return scalar split /[^\w\-']+/, $str;
 }
 

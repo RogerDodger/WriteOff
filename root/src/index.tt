@@ -1,8 +1,9 @@
 [% MACRO local(dt) GET
 	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %R') %]
 <h2>Event Listing</h2>
+[%- IF events.count %]
 <div class="event-listing">
-[% FOREACH event IN events %]
+	[% WHILE (event = events.next) %]
 	<h3><a href="#">[% event.prompt | html %] – [% local(event.start) %]</a></h3>
 	<div>
 		<table>
@@ -37,7 +38,8 @@
 			</tr>
 		</table>
 		<ul>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">Prompts</a></li>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]">Prompt submission</a></li>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">Prompt voting</a></li>
 		</ul>
 		<ul>
 			[%- IF event.has_art %]
@@ -46,7 +48,12 @@
 			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]">Fic submission</a></li>
 		</ul>
 	</div>
-[% END %]
+	[% END %]
 </div>
+[%- ELSE %]
+<p>No events found.</p>
+[%- END %]
 <sub>Note: Event times are localised to your set timezone.</sub>
+[%- IF c.check_user_roles(c.user, 'admin') %]
 <p><a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a></p>
+[%- END %]

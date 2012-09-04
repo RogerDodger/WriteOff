@@ -1,8 +1,11 @@
 package WriteOff::Controller::Admin;
 use Moose;
 use namespace::autoclean;
+use DateTime::Format::MySQL;
 
 BEGIN { extends 'Catalyst::Controller'; }
+
+use constant INTERIM => WriteOff->config->{interim};
 
 =head1 NAME
 
@@ -27,17 +30,6 @@ sub auto :Private {
 		$c->check_user_roles($c->user, qw/admin/); 
 }
 
-
-=head2 index
-
-=cut
-
-sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash->{template} = 'admin/index.tt';
-}
-
 =head2 event_add
 
 Create events
@@ -49,47 +41,52 @@ sub event_add :Path('/event/add') :Args(0) {
 	
 	$c->stash->{template} = 'event/add.tt';
 	
-	$c->stash->{error_msg} = $c->forward('do_event_add') if $c->req->method eq 'POST';
+	if($c->req->method eq 'POST') {
+	
+		$c->form(
+			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT MySQL/] ],
+			{ ints => 
+			[qw/art_dur fic_dur prelims_dur finals_dur interim wc_min wc_max/] 
+			} => [qw/NOT_BLANK INT/],
+		);
+		
+		$c->forward('do_event_add') if !$c->form->has_error;
+	}
 }
 
 sub do_event_add :Private {
 	my ( $self, $c ) = @_;
 	
-	my $fmt = DateTime::Format::Strptime->new( 
-		time_zone => 'floating',
-		locale    => 'en_AU',
-		pattern   => '%F %T',
-	);
 	my $p  = $c->req->params; 
-	my $dt = $fmt->parse_datetime($p->{start}) || 
-		return 'Invalid starting date (Format: yyyy-mm-dd hh:mm:ss)';
-	return "You can't create an event in the past!" if (DateTime->now cmp $dt) > 0;
+	my $dt = DateTime::Format::MySQL->parse_datetime( $p->{start} );
 		
 	my %row;
 	$row{start}         = $dt->clone;
-	$row{prompt_voting} = $dt->add( hours => $p->{interim} )->clone;
+	$row{prompt_voting} = $dt->add( minutes => INTERIM )->clone;
 	
 	if( $p->{has_art} ) {
 		$row{has_art} = 1;
-		$row{art}     = $dt->add( hours => $p->{interim} )->clone;
+		$row{art}     = $dt->add( minutes => INTERIM )->clone;
 		$row{art_end} = $dt->add( hours => $p->{art_dur} )->clone;
 	} 
 	else {
 		$row{has_art} = 0;
 	}
-	$row{fic}     = $dt->add( hours => $p->{interim} )->clone;
+	$row{fic}     = $dt->add( minutes => INTERIM )->clone;
 	$row{fic_end} = $dt->add( hours => $p->{fic_dur} )->clone;
 
 	if( $p->{has_prelim} ) {
 		$row{has_prelim} = 1;
-		$row{prelims}    = $dt->add( hours => $p->{interim} )->clone;
+		$row{prelims}    = $dt->add( minutes => INTERIM )->clone;
 		$row{finals}     = $dt->add( days => $p->{prelims_dur} )->clone;
 	}
 	else {
 		$row{has_prelim} = 0;
-		$row{finals}     = $dt->add( hours => $p->{interim} )->clone;
+		$row{finals}     = $dt->add( minutes => INTERIM )->clone;
 	}
 	$row{end} = $dt->add( days => $p->{finals_dur} )->clone;
+	$row{wc_min} = $p->{wc_min};
+	$row{wc_max} = $p->{wc_max};
 	
 	$c->model('DB::Event')->create(\%row);
 	$c->stash->{status_msg} = 'Event created';

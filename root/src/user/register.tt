@@ -32,7 +32,13 @@
 			</tr>
 			<tr>
 				<td class="label">Email<span class="required">*</span></td>
-				<td><input type="text" name="email" maxlength="[% c.config.len.max.email %]"/></td>
+				<td>
+					<input type="text" name="email" maxlength="[% c.config.len.max.email %]"/>
+					<p>
+						<input type="checkbox" name="mailme" />
+						Email me event notifications
+					</p>
+				</td>
 			</tr>
 			<tr>
 				<td class="label">Timezone<span class="unrequired">*</span></td>

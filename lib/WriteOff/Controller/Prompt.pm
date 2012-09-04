@@ -33,27 +33,28 @@ sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
 sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template} = 'prompt/vote.tt';
-	$c->stash->{prompts} = $c->model('DB::Prompt')->search(
-		{ event_id => $c->stash->{event}->id },
+	$c->stash->{prompts} = $c->stash->{event}->prompts->search(undef,
 		{ order_by => { -desc => 'rating' } },
 	);
 	
-	$c->stash->{heat} = $c->model('DB::Heat')->new_heat
-	( $c->stash->{prompts}, $c->config->{rng}->{prompt} );
+	$c->stash->{heat} = $c->model('DB::Heat')->new_heat( $c->stash->{prompts} );
 	
-	if($c->req->method eq 'POST') {
-		my $heat = $c->model('DB::Heat')->search({ id => $c->req->params->{heat} });
-		
-		my $result;
-		$result //= 1   if $c->req->params->{left};
-		$result //= 0.5 if $c->req->params->{tie};
-		$result //= 0   if $c->req->params->{right};
-		
-		$c->stash->{error_msg} = $heat->do_heat( $result );
-		$heat->delete_all;
-		$c->model('DB::Heat')->clean_old_entries;
-	};
+	$c->stash->{template} = 'prompt/vote.tt';
+	$c->forward('do_vote') if $c->req->method eq 'POST';
+}
+
+sub do_vote :Private {
+	my ( $self, $c ) = @_;
+	
+	my $heat = $c->model('DB::Heat')->find( $c->req->params->{heat} ) or
+		return 0;
+	
+	my $result;
+	$result //= 1   if $c->req->params->{left};
+	$result //= 0.5 if $c->req->params->{tie};
+	$result //= 0   if $c->req->params->{right};
+	
+	$heat->do_heat( $result );
 }
 
 sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
@@ -71,6 +72,9 @@ sub do_submit :Private {
 	my $rs = $c->model('DB::Prompt')->search({ event_id => $c->stash->{event}->id });
 	$c->req->params->{limit} = $rs->search({ user_id => $c->user->id })->count;
 	
+	$c->req->params->{prompt} =~ s/^\s+|\s+$//g;
+	$c->req->params->{prompt} =~ s/\s+/ /g;
+	
 	$c->form(
 		prompt       => [  'NOT_BLANK', [ 'DBIC_UNIQUE', $rs, 'contents' ],
 			[ 'LENGTH', 1, $c->config->{len}->{max}->{prompt} ] ],
@@ -85,7 +89,7 @@ sub do_submit :Private {
 			event_id => $c->stash->{event}->id,
 			user_id  => $c->user->id,
 			contents => $c->req->params->{prompt},
-			rating   => $c->config->{elo}->{base},
+			rating   => $c->config->{elo_base},
 		});
 		
 		$c->res->redirect( $c->uri_for('/user/me') );
