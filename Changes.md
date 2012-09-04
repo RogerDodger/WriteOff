@@ -1,4 +1,5 @@
 v0.04
+=====
 - FAQ added
 - Word limits now on per-event basis
 - Interim set to global 1 hour

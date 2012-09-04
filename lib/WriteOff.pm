@@ -28,7 +28,7 @@ use Math::Random::MT;
 
 extends 'Catalyst';
 
-our $VERSION = '0.04_01';
+our $VERSION = '0.04_02';
 
 __PACKAGE__->config(
 	name => 'Write-off',
