@@ -49,6 +49,14 @@ sub index :Path :Args(0) {
     $c->stash->{template} = 'index.tt';
 }
 
+sub archive :Local :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{events} = $c->model('DB::Event')->old_events;
+	
+    $c->stash->{template} = 'index.tt';
+}
+
 sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	

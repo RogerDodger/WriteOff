@@ -1,59 +1,14 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %R') %]
 <h2>Event Listing</h2>
-[%- IF events.count %]
-<div class="event-listing">
-	[% WHILE (event = events.next) %]
-	<h3><a href="#">[% event.prompt | html %] – [% local(event.start) %]</a></h3>
-	<div>
-		<table>
-			<tr>
-				<th> </th>
-				<th class="heading">Begins</th>
-				<th class="heading">Ends</th>
-			</tr>
-			[%- IF event.has_art %]
-			<tr>
-				<th>Drawing</th>
-				<td>[% local(event.art) %]</td>
-				<td>[% local(event.art_end) %]</td>
-			</tr>
-			[%- END %]
-			<tr>
-				<th>Writing</th>
-				<td>[% local(event.fic) %]</td>
-				<td>[% local(event.fic_end) %]</td>
-			</tr>
-			[%- IF event.has_prelim %]
-			<tr>
-				<th>Prelims</th>
-				<td>[% local(event.prelims) %]</td>
-				<td>[% local(event.finals) %]</td>
-			</tr>
-			[%- END %]
-			<tr>
-				<th>Finals</th>
-				<td>[% local(event.finals) %]</td>
-				<td>[% local(event.end) %]</td>
-			</tr>
-		</table>
-		<ul>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]">Prompt submission</a></li>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">Prompt voting</a></li>
-		</ul>
-		<ul>
-			[%- IF event.has_art %]
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/art/submit') %]">Art submission</a></li>
-			[%- END %]
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]">Fic submission</a></li>
-		</ul>
-	</div>
-	[% END %]
-</div>
-[%- ELSE %]
-<p>No events found.</p>
-[%- END %]
-<sub>Note: Event times are localised to your set timezone.</sub>
+[% INCLUDE event/list_partial.tt %]
+<p>
+[% IF c.action == 'index' %]
+	<span class="fake-ui-button">Active events</span>
+	<a class="ui-button" href="[% c.uri_for('/archive') %]">Event archive</a>
+[% ELSE %]
+	<a class="ui-button" href="[% c.uri_for('/') %]">Active events</a>
+	<span class="fake-ui-button">Event archive</span>
+[% END %]
 [%- IF c.check_user_roles(c.user, 'admin') %]
-<p><a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a></p>
+	<a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a>
 [%- END %]
+</p>

@@ -39,15 +39,21 @@ p {
 	font-family: Georgia;
 	padding: 2px 6px;
 }
-a.link, a.link:visited {
+a.link, a.link:visited, .event-listing a, .event-listing a:visited {
 	color: blue;
 	text-decoration: none;
 	transition: .05s all linear;
 	-moz-transition: .05s all linear;
 	-webkit-transition: .05s all linear;
 }
-a.link:hover {
+a.link:hover, .event-listing a:hover {
 	color: dodgerblue;
+}
+.fake-ui-button, .fake-ui-button:hover {
+	color: #aaa;
+	background: #f6f6f6;
+	border: 1px solid #ccc;
+	cursor: default;
 }
 .main, .footer {
 	margin: 20px auto 0 auto;
@@ -79,15 +85,19 @@ a.link:hover {
 	padding: 0;
 	font-size: 80%;
 }
-.form-standard textarea[name=story] {
-	width: 745px;
-	max-width: 745px;
-	height: 450px;
+.form-standard textarea {
 	margin-bottom: 10px;
+	width: 30em;
+	height: 6em;
 	display: block;
 	padding: 5px;
 	border: 2px groove silver;
 	font-family: sans-serif;
+}
+.form-standard textarea[name=story] {
+	width: 745px;
+	max-width: 745px;
+	height: 450px;
 }
 .event-listing h3 {
 	font-size: 14pt;
@@ -99,6 +109,9 @@ a.link:hover {
 }
 .event-listing .heading {
 	text-align: center;
+}
+.event-listing .blurb {
+	font-size: 11pt;
 }
 .good {
 	color: green;

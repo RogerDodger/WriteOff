@@ -1,0 +1,24 @@
+[% MACRO local(dt) GET
+	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %R') %]
+<h2>
+	Editing <em>[% event.prompt | html %]</em> &ndash;
+	Event starting [% local(event.start) %]
+</h2>
+<form class="form-standard" action="[% c.req.uri %]" 
+	method="post" enctype="multipart/form-data">
+[%- IF c.form.has_error %]
+	[%- FOREACH error IN c.form.messages('submit') %]
+	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+			<p>
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+				<strong>Error:</strong> [% error %]
+			</p>
+		</div>
+	</div>
+	[%- END %]
+[%- END %]
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<textarea name="blurb">[% event.blurb | html %]</textarea>
+	<input type="submit" value="Edit" />
+</form>

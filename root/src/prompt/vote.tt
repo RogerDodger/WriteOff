@@ -1,4 +1,23 @@
-[%- IF heat %]
+[% MACRO local(dt) GET
+	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+<h1>[% event.prompt %]</h1>
+
+<h2>Prompt Voting</h2>
+
+<p>
+	Votes open: <strong>[% local(event.prompt_voting) %]</strong>.
+	<br />
+[%- starts = [event.fic, event.art] %]
+	Votes close: <strong>[% local(starts.sort.0) %]</strong>.
+	<br />
+[%- IF event.prompt_votes_allowed %]
+	Votes are <strong class="good">open</strong>.
+[%- ELSE %]
+	Votes are <strong class="bad">closed</strong>.
+[%- END %]
+</p>
+[% IF event.prompt_votes_allowed %]
+	[%- IF heat %]
 <h2 class="center">Which Prompt Is Better?</h2>
 <form method="post" action="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">
 	<table class="prompt-container">
@@ -19,17 +38,24 @@
 		</tr>
 	</table>
 </form>
-<h2>Prompts</h2>
-	[%- WHILE (prompt = prompts.next) %]
-<p class="prompt-listing" style="width: [% prompt.rating / 4 %]px;">
-	[% prompt.contents | html %]
-</p>
+	[%- ELSE %]
+<h3>Not enough prompts</h3>
+<img src="[% c.uri_for('/static/images/pinkie-tau-shrug.png') %]" 
+	alt="I just don't know what went wrong"/>
 	[%- END %]
-[%- ELSE %]
-<h2>Not Enough Prompts</h2>
 [%- END %]
+[%- IF prompts.count %]
+<h3>Current Standings</h3>
+	[%- WHILE (prompt = prompts.next) %]
+	<p class="prompt-listing" style="width: [% (prompt.rating / 4) | format('%dpx;') %]">
+		[% prompt.contents | html %]
+	</p>
+	[%- END %]
+[%- END %]
+[%- IF c.user_exists %]
 <p>
 	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]" />
-		Submit a prompt
+		Prompt submission
 	</a>
 </p>
+[% END %]

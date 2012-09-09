@@ -24,11 +24,11 @@ use Catalyst qw/
 /;
 use Image::Magick;
 use Parse::BBCode;
-use Math::Random::MT;
+use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.04_02';
+our $VERSION = '0.05';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -86,6 +86,7 @@ __PACKAGE__->config(
 					NOT_BLANK   => 'Prompt is required',
 					DBIC_UNIQUE => 'An identical prompt already exists',
 				},
+				blurb     => { LENGTH        => 'Blurb too long' },
 				limit     => { LESS_THAN     => 'Limit exceeded' },
 			},
 		},
@@ -109,6 +110,9 @@ __PACKAGE__->config(
 		user => {
 			regex => qr/\A[a-zA-Z0-9_]+\z/,
 		},
+		blurb => {
+			max => 1024,
+		}
 	},
 	elo_base => 1500,
 	prompts_per_user => 5,
@@ -118,7 +122,7 @@ __PACKAGE__->config(
 			b => '<strong>%{parse}s</strong>',
 			i => '<em>%{parse}s</em>',
 			u => '<span style="text-decoration: underline">%{parse}s</span>',
-			url => '<a href="%{link}a">%{parse}s</a>',
+			url => '<a class="link" href="%{link}a">%{parse}s</a>',
 			size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
 			color => '<span style="color: %{color}a;">%{parse}s</span>',
 			center => '<span style="text-align: center">%{parse}s</span>',
@@ -145,6 +149,8 @@ __PACKAGE__->config(
 			},
 		},
 	}),
+	md => Text::Markdown->new,
+	
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );

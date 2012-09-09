@@ -33,11 +33,12 @@ sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
 sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{prompts} = $c->stash->{event}->prompts->search(undef,
-		{ order_by => { -desc => 'rating' } },
-	);
+	$c->stash->{heat} = $c->stash->{event}->prompt_votes_allowed &&
+		$c->model('DB::Heat')->new_heat( $c->stash->{event}->prompts_rs );
 	
-	$c->stash->{heat} = $c->model('DB::Heat')->new_heat( $c->stash->{prompts} );
+	$c->stash->{prompts} = $c->stash->{event}->prompts->search(undef,
+		{ order_by => { -desc => 'rating' } } 
+	);
 	
 	$c->stash->{template} = 'prompt/vote.tt';
 	$c->forward('do_vote') if $c->req->method eq 'POST';
@@ -69,7 +70,7 @@ sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
 
-	my $rs = $c->model('DB::Prompt')->search({ event_id => $c->stash->{event}->id });
+	my $rs = $c->stash->{event}->prompts;
 	$c->req->params->{limit} = $rs->search({ user_id => $c->user->id })->count;
 	
 	$c->req->params->{prompt} =~ s/^\s+|\s+$//g;
@@ -77,7 +78,7 @@ sub do_submit :Private {
 	
 	$c->form(
 		prompt       => [  'NOT_BLANK', [ 'DBIC_UNIQUE', $rs, 'contents' ],
-			[ 'LENGTH', 1, $c->config->{len}->{max}->{prompt} ] ],
+			[ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
 		sessionid    => [  'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 		subs_allowed => [ ['EQUAL_TO', 1] ],
 		limit        => [ ['LESS_THAN', $c->config->{prompts_per_user}] ],
@@ -91,8 +92,8 @@ sub do_submit :Private {
 			contents => $c->req->params->{prompt},
 			rating   => $c->config->{elo_base},
 		});
-		
-		$c->res->redirect( $c->uri_for('/user/me') );
+
+		$c->stash->{status_msg} = 'Submission successful';
 	}
 }
 

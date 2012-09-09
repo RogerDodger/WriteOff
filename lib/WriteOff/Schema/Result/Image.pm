@@ -217,6 +217,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 votes
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::Vote>
+
+=cut
+
+__PACKAGE__->has_many(
+  "votes",
+  "WriteOff::Schema::Result::Vote",
+  { "foreign.image_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 stories
 
 Type: many_to_many
@@ -228,8 +243,8 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AKFqLUGQV9MuYOY6TiOn0A
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Olx6vgjO6seYLUZ1Fy7CnA
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

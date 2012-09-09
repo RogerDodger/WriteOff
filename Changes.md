@@ -1,3 +1,22 @@
+v0.05
+=====
+- Per-event blurb added
+  - Editable with markdown (should only use links in lists, mostly)
+- Prompt submission/voting logic ironed out
+  - Submit/vote pages made to look similar to others for consistency
+  - Prompt submit page lets users know how many prompt submissions they have left
+- Submission count added to submission pages (in lieu of providing every bit of submission data)
+- Event archive added with proper nav. in place
+- General refractoring (good stuff that nobody else care about...)
+
+Added table for event-user association. Possibly going to use this for adding organisers to events, such that they can delete/modify/view entries in given events (i.e., so they can *organise* it).
+
+Considering doing accolades as purely numerical, following the formula `m - 2p + 1`, where `m` is the count of entries and `p` is the position of the scored item. This way, player scores can be tallied together in one scoresheet without winners in a contest of 5 entries being scored equally to a winner in a contest of 50 entries.
+
+It'd also be easier to implement. 
+
+Made vote records more generalised, such that the addition of a private judging round can happen. Also considering the possibility of using votes on artworks, though how that ties in to event flow... I'm not sure. Something to ponder, but not a top priority in any case.
+
 v0.04
 =====
 - FAQ added

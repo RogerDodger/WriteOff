@@ -72,7 +72,17 @@ __PACKAGE__->table("vote_records");
   data_type: 'text'
   is_nullable: 1
 
+=head2 round
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 created
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
+=head2 updated
 
   data_type: 'timestamp'
   is_nullable: 1
@@ -88,7 +98,11 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "ip",
   { data_type => "text", is_nullable => 1 },
+  "round",
+  { data_type => "text", is_nullable => 1 },
   "created",
+  { data_type => "timestamp", is_nullable => 1 },
+  "updated",
   { data_type => "timestamp", is_nullable => 1 },
 );
 
@@ -103,36 +117,6 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("id");
-
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<event_id_ip_unique>
-
-=over 4
-
-=item * L</event_id>
-
-=item * L</ip>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("event_id_ip_unique", ["event_id", "ip"]);
-
-=head2 C<event_id_user_id_unique>
-
-=over 4
-
-=item * L</event_id>
-
-=item * L</user_id>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("event_id_user_id_unique", ["event_id", "user_id"]);
 
 =head1 RELATIONS
 
@@ -192,8 +176,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wKWmqCQ/MWUDaSef+Rw+Bw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 02:06:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EzzlAIcjKxJw/EM3jUSEYQ
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

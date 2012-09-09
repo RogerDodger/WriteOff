@@ -11,6 +11,6 @@
 	[%- END %]
 [%- END %]
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<textarea name="story">[% contents %]</textarea>
+	<textarea name="story">[% contents | html %]</textarea>
 	<input type="submit" value="Edit" />
 </form>

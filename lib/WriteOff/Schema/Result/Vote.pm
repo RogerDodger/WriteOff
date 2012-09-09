@@ -67,9 +67,20 @@ __PACKAGE__->table("votes");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 image_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 rating
 
   data_type: 'integer'
+  is_nullable: 1
+
+=head2 created
+
+  data_type: 'timestamp'
   is_nullable: 1
 
 =cut
@@ -81,8 +92,12 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "story_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "image_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "rating",
   { data_type => "integer", is_nullable => 1 },
+  "created",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -97,23 +112,27 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 UNIQUE CONSTRAINTS
+=head1 RELATIONS
 
-=head2 C<record_id_story_id_unique>
+=head2 image
 
-=over 4
+Type: belongs_to
 
-=item * L</record_id>
-
-=item * L</story_id>
-
-=back
+Related object: L<WriteOff::Schema::Result::Image>
 
 =cut
 
-__PACKAGE__->add_unique_constraint("record_id_story_id_unique", ["record_id", "story_id"]);
-
-=head1 RELATIONS
+__PACKAGE__->belongs_to(
+  "image",
+  "WriteOff::Schema::Result::Image",
+  { id => "image_id" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 
 =head2 record
 
@@ -156,8 +175,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XLdCD8nYXl82ZQDTyMaA6Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XU/UlghTDfTiD0P4LChPyw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

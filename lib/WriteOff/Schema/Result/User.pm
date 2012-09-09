@@ -220,6 +220,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_events
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::UserEvent>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_events",
+  "WriteOff::Schema::Result::UserEvent",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -250,6 +265,16 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 events
+
+Type: many_to_many
+
+Composing rels: L</user_events> -> event
+
+=cut
+
+__PACKAGE__->many_to_many("events", "user_events", "event");
+
 =head2 roles
 
 Type: many_to_many
@@ -261,8 +286,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cOyY6MtwH5o7j/4fXfb/4Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0L3vwi0WOIhQaWyYq3rwvA
 
 __PACKAGE__->add_columns(
 	password => {

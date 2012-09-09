@@ -50,7 +50,6 @@ sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->req->params->{subs_allowed}  = $c->stash->{event}->prompt_subs_allowed;
-	$c->req->params->{votes_allowed} = $c->stash->{event}->prompt_votes_allowed;
 }
 
 sub set_prompt :Private {
@@ -60,6 +59,33 @@ sub set_prompt :Private {
 	my $p = $e->prompts->search(undef, { order_by => { -desc => 'rating' } });
 	
 	$e->update({ prompt => $p->first->contents });
+}
+
+sub edit :PathPart('edit') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->detach('/forbidden', ['You cannot edit this item.']) unless 
+		$c->check_user_roles( $c->user, qw/admin/ );
+	
+	$c->stash->{blurb} = Encode::decode('utf8', $c->stash->{event}->blurb);
+	
+	if($c->req->method eq 'POST' ) {
+		
+		$c->form( 
+			blurb => [ ['LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
+			sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
+		);
+		
+		if(!$c->form->has_error) {
+			$c->stash->{event}->update({
+				blurb => $c->req->params->{blurb},
+			});
+			$c->flash->{status_msg} = 'Edit successful';
+			$c->res->redirect( $c->uri_for('/') );
+		}
+	}
+	
+	$c->stash->{template} = 'event/edit.tt';
 }
 
 =head1 AUTHOR

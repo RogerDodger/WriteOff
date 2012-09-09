@@ -38,8 +38,9 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template} = 'fic/submit.tt';
+	$c->detach('/forbidden', ['Guests cannot submit fics.']) unless $c->user;
 	
+	$c->stash->{template} = 'fic/submit.tt';
 	$c->forward('do_submit') if $c->req->method eq 'POST' && $c->user;
 }
 
@@ -48,8 +49,8 @@ sub do_submit :Private {
 	
 	my $rs = $c->model('DB::Story');
 	
-	$c->req->params->{related} = 
-		$c->stash->{images}->search({ id => $c->req->params->{image_id} })->count if
+	$c->req->params->{related} = $c->stash->{event}->images->search
+		({ id => $c->req->params->{image_id} })->count if
 		$c->stash->{event}->has_art;
 	$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
 	

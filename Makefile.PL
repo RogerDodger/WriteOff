@@ -32,6 +32,7 @@ requires 'namespace::autoclean';
 requires 'Config::General';
 requires 'Image::Magick';
 requires 'Parse::BBCode';
+requires 'Text::Markdown';
 test_requires 'Test::More' => '0.88';
 catalyst;
 

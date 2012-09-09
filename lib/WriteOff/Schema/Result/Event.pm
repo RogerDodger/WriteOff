@@ -61,6 +61,11 @@ __PACKAGE__->table("events");
   default_value: 'TBD'
   is_nullable: 1
 
+=head2 blurb
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 wc_min
 
   data_type: 'integer'
@@ -138,6 +143,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "prompt",
   { data_type => "text", default_value => "TBD", is_nullable => 1 },
+  "blurb",
+  { data_type => "text", is_nullable => 1 },
   "wc_min",
   { data_type => "integer", is_nullable => 1 },
   "wc_max",
@@ -227,6 +234,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_events
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::UserEvent>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_events",
+  "WriteOff::Schema::Result::UserEvent",
+  { "foreign.event_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 vote_records
 
 Type: has_many
@@ -242,9 +264,19 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 users
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uG7sbAGx4SBP/i/6V9bbHg
+Type: many_to_many
+
+Composing rels: L</user_events> -> user
+
+=cut
+
+__PACKAGE__->many_to_many("users", "user_events", "user");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I+tCJyh/Jm5d2MEg+V5xCg
 
 use constant LEEWAY => 5;
 

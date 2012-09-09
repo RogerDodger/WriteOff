@@ -1,5 +1,5 @@
 ------
--- Schema for the application's database
+-- Schema for WriteOff.pm's database
 -- Author: Cameron Thornton <cthor@cpan.org>
 ------
 
@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS prompts;
 DROP TABLE IF EXISTS image_story;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS storys;
+DROP TABLE IF EXISTS user_event;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS user_role;
@@ -52,6 +53,7 @@ CREATE TABLE user_role (
 CREATE TABLE events (
 	id             INTEGER PRIMARY KEY,
 	prompt         TEXT DEFAULT 'TBD',
+	blurb          TEXT,
 	wc_min         INTEGER,
 	wc_max         INTEGER,
 	has_art        INTEGER,
@@ -66,6 +68,12 @@ CREATE TABLE events (
 	finals         TIMESTAMP,
 	"end"          TIMESTAMP,
 	created        TIMESTAMP
+);
+
+CREATE TABLE user_event (
+	user_id  INTEGER REFERENCES users(id)  ON DELETE CASCADE,
+	event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
+	PRIMARY KEY (user_id, event_id)
 );
 
 CREATE TABLE schedules (
@@ -130,15 +138,16 @@ CREATE TABLE vote_records (
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE,
 	user_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
 	ip        TEXT,
+	"round"   TEXT,
 	created   TIMESTAMP,
-	UNIQUE (event_id, ip),
-	UNIQUE (event_id, user_id)
+	updated   TIMESTAMP
 );
 
 CREATE TABLE votes (
 	id         INTEGER PRIMARY KEY,
 	record_id  INTEGER REFERENCES vote_records(id) ON DELETE CASCADE,
 	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
+	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
 	rating     INTEGER,
-	UNIQUE (record_id, story_id)
+	created    TIMESTAMP
 );
