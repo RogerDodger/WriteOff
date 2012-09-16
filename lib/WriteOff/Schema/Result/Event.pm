@@ -61,6 +61,11 @@ __PACKAGE__->table("events");
   default_value: 'TBD'
   is_nullable: 1
 
+=head2 title
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 blurb
 
   data_type: 'text'
@@ -76,12 +81,7 @@ __PACKAGE__->table("events");
   data_type: 'integer'
   is_nullable: 1
 
-=head2 has_art
-
-  data_type: 'integer'
-  is_nullable: 1
-
-=head2 has_prelim
+=head2 rule_set
 
   data_type: 'integer'
   is_nullable: 1
@@ -116,12 +116,17 @@ __PACKAGE__->table("events");
   data_type: 'timestamp'
   is_nullable: 1
 
-=head2 prelims
+=head2 prelim
 
   data_type: 'timestamp'
   is_nullable: 1
 
-=head2 finals
+=head2 public
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
+=head2 private
 
   data_type: 'timestamp'
   is_nullable: 1
@@ -143,15 +148,15 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "prompt",
   { data_type => "text", default_value => "TBD", is_nullable => 1 },
+  "title",
+  { data_type => "text", is_nullable => 1 },
   "blurb",
   { data_type => "text", is_nullable => 1 },
   "wc_min",
   { data_type => "integer", is_nullable => 1 },
   "wc_max",
   { data_type => "integer", is_nullable => 1 },
-  "has_art",
-  { data_type => "integer", is_nullable => 1 },
-  "has_prelim",
+  "rule_set",
   { data_type => "integer", is_nullable => 1 },
   "start",
   { data_type => "timestamp", is_nullable => 1 },
@@ -165,9 +170,11 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp", is_nullable => 1 },
   "fic_end",
   { data_type => "timestamp", is_nullable => 1 },
-  "prelims",
+  "prelim",
   { data_type => "timestamp", is_nullable => 1 },
-  "finals",
+  "public",
+  { data_type => "timestamp", is_nullable => 1 },
+  "private",
   { data_type => "timestamp", is_nullable => 1 },
   "end",
   { data_type => "timestamp", is_nullable => 1 },
@@ -264,19 +271,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 users
 
-Type: many_to_many
-
-Composing rels: L</user_events> -> user
-
-=cut
-
-__PACKAGE__->many_to_many("users", "user_events", "user");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I+tCJyh/Jm5d2MEg+V5xCg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W99Ba9B6y/v3fo5RbbTSqg
 
 use constant LEEWAY => 5;
 
@@ -284,22 +281,26 @@ __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
 
+sub id_uri {
+	my $self = shift;
+	
+	my $desc = $self->prompt;
+	
+	for ( $desc ) {
+		s/[^a-zA-Z\s\-]//g;
+		s/[\s\-]+/-/g;
+	}
+	
+	return $self->id . '-' . $desc;
+}
+
+sub first_round {
+	my $row = shift;
+	return $row->art || $row->fic;
+}
+
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
-}
-
-sub fic_subs_allowed {
-	my $row = shift;
-		
-	return $row->check_datetimes_ascend
-	( $row->fic, $row->now_dt, $row->fic_end->clone->add({ minutes => LEEWAY }) );
-}
-
-sub art_subs_allowed {
-	my $row = shift;
-	
-	return $row->check_datetimes_ascend 
-	( $row->art, $row->now_dt, $row->art_end->clone->add({ minutes => LEEWAY }) );
 }
 
 sub prompt_subs_allowed {
@@ -313,7 +314,34 @@ sub prompt_votes_allowed {
 	my $row = shift;
 	
 	return $row->check_datetimes_ascend 
-	( $row->prompt_voting, $row->now_dt, $row->has_art ? $row->art : $row->fic );
+	( $row->prompt_voting, $row->now_dt, $row->art || $row->fic );
+}
+
+sub art_subs_allowed {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend 
+	( $row->art, $row->now_dt, $row->art_end->clone->add({ minutes => LEEWAY }) );
+}
+
+sub fic_subs_allowed {
+	my $row = shift;
+		
+	return $row->check_datetimes_ascend
+	( $row->fic, $row->now_dt, $row->fic_end->clone->add({ minutes => LEEWAY }) );
+}
+
+sub fic_gallery_opened {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend( $row->public, $row->now_dt );
+}
+
+sub public_votes_allowed {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend
+	( $row->public, $row->now_dt, $row->private || $row->end );
 }
 
 sub check_datetimes_ascend {

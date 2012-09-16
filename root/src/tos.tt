@@ -5,8 +5,9 @@
 		<ul>
 			<li>
 				If you believe someone has submitted work that isn't theirs, 
-				please contact <a class="link new-window" href="mailto:[% c.config.AdminEmail %]">
-				[% c.config.AdminEmail %]</a>
+				please contact <a href="mailto:[% c.config.AdminEmail %]"
+				class="link new-window" >[% c.config.AdminEmail %]</a> with
+				proof of theft.
 			</li>
 		</ul>
 	</li>
@@ -14,7 +15,11 @@
 		All rights to submitted works remain to their respective holders.
 	</li>
 	<li>
-		<tt>[% c.config.domain %]</tt> may gather data about your person, but 
-		only for the express purpose of improving user experience.
+		<tt>[% c.config.domain %]</tt> may use cookies and browser data to
+		improve user experience.
+	</li>
+	<li>
+		In the event of any deals with the devil, [% c.config.AdminName %] may 
+		use your soul as barter.
 	</li>
 </ol>

@@ -1,14 +1,13 @@
 [% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
-<h1>[% event.prompt %]</h1>
+	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+<h1>[% event.prompt | html %]</h1>
 
 <h2>Prompt Voting</h2>
 
 <p>
 	Votes open: <strong>[% local(event.prompt_voting) %]</strong>.
 	<br />
-[%- starts = [event.fic, event.art] %]
-	Votes close: <strong>[% local(starts.sort.0) %]</strong>.
+	Votes close: <strong>[% local(event.first_round) %]</strong>.
 	<br />
 [%- IF event.prompt_votes_allowed %]
 	Votes are <strong class="good">open</strong>.
@@ -16,10 +15,10 @@
 	Votes are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
-[% IF event.prompt_votes_allowed %]
+[%- IF event.prompt_votes_allowed %]
 	[%- IF heat %]
 <h2 class="center">Which Prompt Is Better?</h2>
-<form method="post" action="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">
+<form method="post" action="[% c.req.uri %]">
 	<table class="prompt-container">
 		<input name="heat" type="hidden" value="[% heat.id %]" />
 		<tr>
@@ -52,10 +51,8 @@
 	</p>
 	[%- END %]
 [%- END %]
-[%- IF c.user_exists %]
 <p>
-	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]" />
+	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/submit') %]" />
 		Prompt submission
 	</a>
 </p>
-[% END %]

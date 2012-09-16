@@ -1,10 +1,11 @@
-<h1>FAQ</h1>
+[%- title = 'FAQ' %]
+<h1>[% title %]</h1>
 <h2>What the Hay Is This?</h2>
 <p>
 	The [% name %] is a timed challenge where writers and artists create stories
 	and images to a given prompt. The works are then released anonymously for
-	all to see, followed by judging rounds to allow the readers to determine
-	the winners.
+	all to see, followed by judging rounds to allow readers to determine the
+	winners.
 </p>
 <p>
 	If an art round is included in the event, artists draw to the prompt, and 
@@ -12,28 +13,154 @@
 	stories were written to each artwork. In essence, their goal is to create
 	something that will inspire a story.
 </p>
-
-<h2>Event Flow</h2>
+<h2>How Does It Work?</h2>
 <p>
-	Each event has a series of rounds. All rounds have a [% c.config.interim %] 
-	minute intermission between them, excepting the prompt rounds which instead 
-	last for [% c.config.interim %] minutes each and have no intermission.
-</p>
-<p>
-	The following flow chart demonstrates the possible structures of a 
+	The following flow chart demonstrates the possible structures of a
 	[% name %] event.
 </p>
-<img style="width: 100%; height: 100%;"
-	src="[% c.uri_for('/static/images/event-flow.png') %]" alt="Event flow" />
+<img style="width: 100%;" src="[% c.uri_for('/static/images/event-flow.png') %]"
+	alt="Event flow" />
 <p>
-	Each event begins with a <strong>Prompt Suggestion</strong> round. Users may
-	submit up to <strong>[% c.config.prompts_per_user %]</strong> prompts to the
-	prompt pool for each event.
+	Each event is a linear series of rounds.
+</p>
+<h3>Prompt Suggestions</h3>
+<p>
+	Users may submit up to [% c.config.prompts_per_user %] prompts to the prompt
+	pool for each event.
+</p>
+<h3>Prompt Voting</h3>
+<p>
+	Users vote on the prompts to determine which they like the most. At the end
+	of the round, the event is named after the highest-rated prompt. This prompt
+	sets the general theme for the event, and it is expected (though rarely 
+	enforced) that entries will bear some resemblance to it.
 </p>
 <p>
-	Following right after is the <strong>Prompt Voting</strong> round. Users
-	vote on the prompts to determine which they like the most. At the end of the
-	round, the event is named after the highest-rated prompt. This prompt sets 
-	the general theme for the event, and it is expected (though rarely enforced) 
-	that entries will bear some resemblance to it.
+	The prompting rounds last for [% c.config.interim %] minutes each, with
+	the suggestions starting when the event begins.
+</p>
+<h3>Art Round</h3>
+<p>
+	Artists submit artworks that mean to act as prompts for stories. Art
+	submissions don't require a login, but you won't be able to manipulate your 
+	submission (i.e., delete it) if you submit it as a guest. (Also, guests have
+	to fill in a captcha.)
+</p>
+<h3>Fic Round</h3>
+<p>
+	Stories are written to either the submitted artworks (in the case of an art
+	round) or the event's prompt. Fic submissions require a login.
+</p>
+<h3>Preliminary Voting Round</h3>
+<p>
+	Authors are given the imperative to read and rate the other entries. Each 
+	author is given a set of stories and must order them from best to worst.
+</p>
+<p>
+	Stories whose authors do not participate in the prelims will not pass
+	through to the next round.
+</p>
+<p>
+	The score associated with these rankings is equal to <tt>n - 2p + 1</tt>,
+	where <tt>n</tt> is the number of stories in the judge's set, and 
+	<tt>p</tt> is the ranking of the item (e.g., 3rd place in a set of 6 gets
+	<tt>6 - 2 * 3 + 1 = 1</tt> point). 
+</p>
+<p>
+	The system is zero-sum, meaning the sum of each judge's rankings is zero 
+	<a href="[% c.uri_for( '/static/ZeroSumRankings.pdf' ) %]"
+	class="link new-window" >(proof)</a>. Stories with a score greater than 
+	zero (approximately half) pass through to the next round.
+</p>
+<h3>Public Voting Round</h3>
+<p>
+	A public poll is released where anyone may give the stories a ranking from
+	0–10. Stories are scored by their average ranking.
+</p>
+<p>
+	Voters must vote on at least half of the candidates, and participants may
+	not vote on their own works.
+</p>
+<h3>Private Voting Round</h3>
+<p>
+	A number of finalists are given to a panel of judges. They rank the stories
+	in a manner similar to the prelminary round.
+</p>
+<h3>Results &amp; Accolades</h3>
+<p>
+	Each event will award a gold, silver, and bronze medal to the top three
+	entries for both art and fic components. Additionally, a global tally
+	gives each entry a numerical score using the same formula as the prelim
+	rankings (where the set is the entire set of entries for the event), with
+	that caveat that a competitor's score cannot go below zero.
+</p>
+<p>
+	The accolades and global tally are tied to author/artist names, <em>not</em>
+	login names. Login names are used to identify users with the site. The 
+	author/artist fields are for what shows up next to each submission. Most 
+	people will probably use the same name for both, but the option is nice to 
+	have for those who like to use pseudonyms.
+</p>
+<p>
+	This also means that if you one day call yourself “Joe Blow”, then the next
+	day call yourself “Joe_Blow”, those two names will get a different entry
+	on the global tally. (The admin might decide to merge them for you, but no 
+	guarantees.)
+</p>
+
+<h2>How Do I Get Style?</h2>
+<p>The following markups are available:</p>
+
+[%- tags = [
+	'[b]Bold text[/b]',
+	'[i]Italic text[/i]',
+	'[u]Underlined text[/u]',
+	'[smcaps]Small caps[/smcaps]',
+	'[center]Centred text[/center]',
+	'[quote]A block quote[/quote]',
+	'[size=24]Re-sized text[/size]',
+	'[url=http://www.example.com]A link to example.com[/url]',
+	'[color=red]Coloured text[/color]',
+] %]
+
+<ul style="list-style-type: none; font-family: monospace">
+[%- FOREACH tag IN tags %]
+	<li>[% tag %]</li>
+[%- END %]
+</ul>
+
+<p>The above rendered with the BBCode parser gives:</p>
+
+<div class="story" style="margin-left: 2.4em">
+[% c.config.bb.render( tags.join("\n") ).replace( '(.*)<br>', '<p>$1</p>' ) %]
+</div>
+
+<p>
+	The parameter for [size] can be any integer from 8 to 72, where 16 is the
+	default size. The paramater for [color] can be any a valid HTML colour (See 
+	<a href="http://www.w3schools.com/html/html_colornames.asp"
+	class="link new-window" >[1]</a> and <a class="link new-window" 
+	href="http://www.w3schools.com/html/html_colors.asp">[2]</a>).
+</p>
+
+<h2>How Do I Delete/Edit a Submission?</h2>
+<p>
+	You may delete/edit a submission by logging in and going to <a class="link"
+	href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only do this
+	while submissions are open. (Also, I'm sure it goes without saying that this
+	only works if you submitted while logged in.)
+</p>
+<p>
+	If you want a submission deleted or edited after submissions are closed, 
+	you'll have to take it up with the event's organiser.
+</p>
+<h2>What Time Is It?</h2>
+<p>
+	The footer tells you the server's current time and the timezone it's
+	converting your times to. 
+</p>
+<p>
+	By default, all times are in <a class="link new-window" 
+	href="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>. If
+	you're logged in, times are converted to your local timezone.
 </p>

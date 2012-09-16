@@ -27,7 +27,7 @@ sub auto :Private {
 	my ( $self, $c ) = @_;
 	
 	$c->detach('/forbidden', ['You are not the admin.']) unless 
-		$c->check_user_roles($c->user, qw/admin/); 
+		$c->check_user_roles('admin'); 
 }
 
 =head2 event_add
@@ -43,11 +43,16 @@ sub event_add :Path('/event/add') :Args(0) {
 	
 	if($c->req->method eq 'POST') {
 	
+		my $p = $c->req->params; 
 		$c->form(
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT MySQL/] ],
-			{ ints => 
-			[qw/art_dur fic_dur prelims_dur finals_dur interim wc_min wc_max/] 
-			} => [qw/NOT_BLANK INT/],
+			wc_min      => [ 'NOT_BLANK', 'INT' ],
+			wc_max      => [ 'NOT_BLANK', 'INT' ],
+			fic_dur     => [ 'NOT_BLANK', 'INT' ],
+			public_dur  => [ 'NOT_BLANK', 'INT' ],
+			art_dur     => [ ($p->{has_art}     ? 'NOT_BLANK' : () ), 'INT'],
+			prelim_dur  => [ ($p->{has_prelim}  ? 'NOT_BLANK' : () ), 'INT'],
+			private_dur => [ ($p->{has_private} ? 'NOT_BLANK' : () ), 'INT'],
 		);
 		
 		$c->forward('do_event_add') if !$c->form->has_error;
@@ -65,37 +70,66 @@ sub do_event_add :Private {
 	$row{prompt_voting} = $dt->add( minutes => INTERIM )->clone;
 	
 	if( $p->{has_art} ) {
-		$row{has_art} = 1;
 		$row{art}     = $dt->add( minutes => INTERIM )->clone;
 		$row{art_end} = $dt->add( hours => $p->{art_dur} )->clone;
 	} 
-	else {
-		$row{has_art} = 0;
-	}
+	
 	$row{fic}     = $dt->add( minutes => INTERIM )->clone;
 	$row{fic_end} = $dt->add( hours => $p->{fic_dur} )->clone;
-
+	
 	if( $p->{has_prelim} ) {
-		$row{has_prelim} = 1;
-		$row{prelims}    = $dt->add( minutes => INTERIM )->clone;
-		$row{finals}     = $dt->add( days => $p->{prelims_dur} )->clone;
+		$row{prelim} = $dt->add( minutes => INTERIM )->clone;
+		$row{public} = $dt->add( days => $p->{prelim_dur} )->clone;
 	}
 	else {
-		$row{has_prelim} = 0;
-		$row{finals}     = $dt->add( minutes => INTERIM )->clone;
+		$row{public} = $dt->add( minutes => INTERIM )->clone;
 	}
-	$row{end} = $dt->add( days => $p->{finals_dur} )->clone;
-	$row{wc_min} = $p->{wc_min};
-	$row{wc_max} = $p->{wc_max};
 	
-	$c->model('DB::Event')->create(\%row);
-	$c->stash->{status_msg} = 'Event created';
-	return 0;
+	if( $p->{has_private} ) {
+		$row{private} = $dt->add( days => $p->{public_dur}  )->clone;
+		$row{end}     = $dt->add( days => $p->{private_dur} )->clone;
+	}
+	else {
+		$row{end} = $dt->add( days => $p->{public_dur} )->clone;
+	}
+	
+	$row{wc_min}   = $p->{wc_min};
+	$row{wc_max}   = $p->{wc_max};
+	$row{rule_set} = 1;
+	
+	my $e = $c->model('DB::Event')->create(\%row);
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/set_prompt',
+		at     => $e->art || $e->fic,
+		args   => [$e->id],
+	});
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/prelim_distr',
+		at     => $e->prelim,
+		args   => [$e->id],
+	}) if $p->{has_prelim};
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/judge_distr',
+		at     => $e->private,
+		args   => [$e->id],
+	}) if $p->{has_private};
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/tally_results',
+		at     => $e->end,
+		args   => [$e->id],
+	});
+	
+	$c->flash->{status_msg} = 'Event created';
+	$c->res->redirect( $c->uri_for('/') );
 }
 
 =head1 AUTHOR
 
-Cameron Thornton
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 LICENSE
 

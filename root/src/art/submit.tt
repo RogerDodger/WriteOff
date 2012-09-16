@@ -18,27 +18,34 @@
 [%- END %]
 </p>
 
+[%- IF event.art_subs_allowed %]
 <h2>Guidelines</h2>
 
 <ul>
 	<li>Submitted works must be your own.</li>
-	<li>Images must be in either <tt>.png</tt>, <tt>.jpg</tt>, or <tt>.gif</tt> format.</li>
+	<li>
+		Images must be in either <tt>.png</tt>, <tt>.jpg</tt>, or <tt>.gif</tt> 
+		format.
+	</li>
 	<li>Images must be smaller than 4MB.</li>
 </ul>
 
-<form class="form-standard" action="[% c.uri_for('/event/' _ event.id _ '/art/submit') %]" method="post" enctype="multipart/form-data">
+<form class="form-standard" action="[% c.req.uri %]" method="post" 
+	enctype="multipart/form-data">
 	<input type="hidden" name="submit" value="true"/>
 	<fieldset>
-[%- IF c.form.has_error %]
-	[%- FOREACH error IN c.form.messages('submit') %]
+	[%- IF c.form.has_error %]
+		[%- FOREACH error IN c.form.messages('submit') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]</p>
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Error:</strong> [% error %]
+				</p>
 			</div>
 		</div>
+		[%- END %]
 	[%- END %]
-[%- END %]
 		<legend>Submit Art</legend>
 		<p>Fields with <span class="required">*</span> are required.</p>
 		<table>
@@ -62,12 +69,12 @@
 				<td class="label">Image<span class="required">*</span></td>
 				<td><input name="image" type="file"/></td>
 			</tr>
-[%- IF !c.user %]
+	[%- IF !c.user %]
 			<tr>
 				<td> </td>
 				<td>[% recaptcha %]</td>
 			</tr>
-[%- END %]
+	[%- END %]
 			<tr>
 				<td> </td>
 				<td><input type="submit" value="Submit"/></td>
@@ -75,3 +82,4 @@
 		</table>
 	</fieldset>
 </form>
+[%- END %]

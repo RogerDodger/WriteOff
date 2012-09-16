@@ -1,6 +1,6 @@
 [% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
-<h1>[% event.prompt %]</h1>
+	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+<h1>[% event.prompt | html %]</h1>
 
 <h2>Prompt Submissions</h2>
 
@@ -22,9 +22,9 @@
 [%- END %]
 </p>
 [%- IF event.prompt_subs_allowed %]
-<form class="form-standard" method="post" action="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]">
-[%- IF c.form.has_error %]
-	[%- FOREACH error IN c.form.messages('submit') %]
+<form class="form-standard" method="post" action="[% c.req.uri %]">
+	[%- IF c.form.has_error %]
+		[%- FOREACH error IN c.form.messages('submit') %]
 	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
 			<p>
@@ -33,8 +33,8 @@
 			</p>
 		</div>
 	</div>
+		[%- END %]
 	[%- END %]
-[%- END %]
 	<div>
 		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 		<label>Prompt</label>
@@ -44,7 +44,7 @@
 </form>
 [%- END %]
 <p>
-	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">
+	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/vote') %]">
 		Prompt voting
 	</a>
 </p>

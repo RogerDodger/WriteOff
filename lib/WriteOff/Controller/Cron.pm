@@ -16,13 +16,12 @@ Application cron actions.
 
 =head2 check_schedule
 
-Checks the C<schedule> table and executes any actions that are set to be 
-executed, deleting them afterwards (such that a scheduled task only executes 
-once).
+Checks the schedule table and executes any actions that are set to be executed, 
+deleting them afterwards (such that a scheduled task only executes once).
 
 =head2 clean_old_heats
 
-Cleans old heat rows.
+Cleans old data from the database.
 
 =cut
 
@@ -37,7 +36,7 @@ sub check_schedule :Private {
 	}
 }
 
-sub clean_old_heats :Private {
+sub cleanup :Private {
 	my ( $self, $c ) = @_;
 	
 	$c->model('DB::Heat')->clean_old_entries;

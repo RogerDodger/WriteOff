@@ -1,5 +1,5 @@
 [% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %R') %]
+	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %R %Z') %]
 [%- IF events.count %]
 <div class="event-listing">
 	[%- WHILE (event = events.next) %]
@@ -7,17 +7,13 @@
 		<a href="#">[% event.prompt | html %] – [% local(event.start) %]</a>
 	</h3>
 	<div>
-		<p style="font-size: 10pt">
-			<strong>Word limit:</strong>
-			[% event.wc_min %]&ndash;[% event.wc_max %]
-		</p>
 		<table>
 			<tr>
 				<th> </th>
 				<th class="heading">Begins</th>
 				<th class="heading">Ends</th>
 			</tr>
-			[%- IF event.has_art %]
+			[%- IF event.art %]
 			<tr>
 				<th>Drawing</th>
 				<td>[% local(event.art) %]</td>
@@ -29,39 +25,63 @@
 				<td>[% local(event.fic) %]</td>
 				<td>[% local(event.fic_end) %]</td>
 			</tr>
-			[%- IF event.has_prelim %]
+			[%- IF event.prelim %]
 			<tr>
 				<th>Prelims</th>
-				<td>[% local(event.prelims) %]</td>
-				<td>[% local(event.finals) %]</td>
+				<td>[% local(event.prelim) %]</td>
+				<td>[% local(event.public) %]</td>
 			</tr>
 			[%- END %]
 			<tr>
+				<th>[% event.private ? 'Main' : 'Finals' %]</th>
+				<td>[% local(event.public) %]</td>
+				<td>[% local(event.private || event.end) %]</td>
+			</tr>
+			[%- IF event.private %]
+			<tr>
 				<th>Finals</th>
-				<td>[% local(event.finals) %]</td>
+				<td>[% local(event.private) %]</td>
 				<td>[% local(event.end) %]</td>
 			</tr>
-		</table>
-		<ul>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/submit') %]">Prompt submission</a></li>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/prompt/vote') %]">Prompt voting</a></li>
-		</ul>
-		<ul>
-			[%- IF event.has_art %]
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/art/submit') %]">Art submission</a></li>
 			[%- END %]
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]">Fic submission</a></li>
+		</table>
+		<p style="font-size: 10pt">
+			<strong>Word limit:</strong>
+			[% event.wc_min %]&ndash;[% event.wc_max %]
+		</p>
+		<ul>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/rules') %]">Rules</a>
 		</ul>
-		[% c.config.md.markdown( event.blurb ) %]
+		<ul>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/submit') %]">Prompt submission</a></li>
+			[%- IF event.art %]
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/art/submit') %]">Art submission</a></li>
+			[%- END %]
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/fic/submit') %]">Fic submission</a></li>
+		</ul>
+		<ul>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/fic/gallery') %]">Fic gallery</a></li>
+			[%- IF event.art %]
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/art/gallery') %]">Art gallery</a></li>
+			[%- END %]
+		</ul>
+		<ul>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/vote') %]">Prompt voting</a></li>
+			<li>
+				<a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/vote/public') %]">
+				Fic voting ([% event.private ? 'main' : 'finals' %])
+				</a>
+			</li>
+		</ul>
+	[%- c.config.md.markdown( event.blurb ) %]
 	[%- IF c.check_user_roles(c.user, 'admin') %]
-		<a href="[% c.uri_for( '/event/' _ event.id _ '/edit' ) %]">
+		<a href="[% c.uri_for( '/event/' _ event.id_uri _ '/edit' ) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
 		</a>
 	[%- END %]
 	</div>
 	[%- END %]
 </div>
-<sub>Note: Event times are localised to your set timezone.</sub>
 [%- ELSE %]
 <p>No events found.</p>
 [%- END %]

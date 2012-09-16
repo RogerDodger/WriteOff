@@ -40,8 +40,8 @@
 		<a class="ui-button" href="[% c.uri_for('/user/logout') %]">Logout</a>
 [%- ELSE %]
 		<form action="[% c.uri_for('/user/login') %]" method="post">
-			<input class="has-placeholder" type="text" name="username" />
-			<input class="has-placeholder" type="password" name="password" />
+			<input class="has-placeholder" type="text" name="Username" />
+			<input class="has-placeholder" type="password" name="Password" />
 			<input type="submit" value="Login" />
 			<a class="ui-button" href="[% c.uri_for('/user/register') %]">Register</a>
 		</form>

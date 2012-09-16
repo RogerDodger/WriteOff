@@ -1,0 +1,15 @@
+[% MACRO local(dt) GET
+	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+<h1>[% event.prompt | html %]</h1>
+
+<h2>Fic Gallery</h2>
+
+<p>
+	Gallery opens: <strong>[% local(event.public) %]</strong>.
+	<br />
+[%- IF event.fic_gallery_opened %]
+	Gallery is <strong class="good">open</strong>.
+[%- ELSE %]
+	Gallery is <strong class="bad">closed</strong>.
+[%- END %]
+</p>

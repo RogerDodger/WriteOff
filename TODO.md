@@ -1,6 +1,7 @@
-4 Sep 16:40 (CST)
+9 Sep 19:45 (CST)
 =================
 
+- Email notifications
 - Votes
   - Tallying
   - Prelim distribution

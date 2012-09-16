@@ -1,6 +1,6 @@
-<form class="form-standard" method="post" action="[% c.uri_for('/event/add') %]">
+<form class="form-standard" method="post" action="[% c.req.uri %]">
 	<fieldset>
-	[%- IF c.form.has_error %]
+[%- IF c.form.has_error %]
 	[%- FOREACH error IN c.form.messages('event') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
@@ -22,7 +22,7 @@
 			<tr>
 				<td class="label">Has Art Round</td>
 				<td>
-					<input type="checkbox" name="has_art" checked="1" />
+					<input type="checkbox" name="has_art" />
 				</td>
 			</tr>
 			<tr>
@@ -52,24 +52,37 @@
 					<input class="wc" type="text" name="wc_max" value="25000" />
 				</td>
 				<td>Max</td>
-			</tr>
 			<tr>
 				<td class="label">Has Prelim</td>
 				<td>
-					<input type="checkbox" name="has_prelim" checked="1" />
+					<input type="checkbox" name="has_prelim" />
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Prelims Duration</td>
+				<td class="label">Prelim Duration</td>
 				<td>
-					<input type="text" name="prelims_dur" value="7" />
+					<input type="text" name="prelim_dur" value="7" />
 				</td>
 				<td>Days</td>
 			</tr>
 			<tr>
-				<td class="label">Finals Duration</td>
+				<td class="label">Public Duration</td>
 				<td>
-					<input type="text" name="finals_dur" value="7" />
+					<input type="text" name="public_dur" value="7" />
+				</td>
+				<td>Days</td>
+			</tr>
+			</tr>
+			<tr>
+				<td class="label">Has Judges</td>
+				<td>
+					<input type="checkbox" name="has_judges" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Private Duration</td>
+				<td>
+					<input type="text" name="private_dur" value="7" />
 				</td>
 				<td>Days</td>
 			</tr>

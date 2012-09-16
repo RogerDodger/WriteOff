@@ -55,16 +55,6 @@ __PACKAGE__->table("images");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 filesize
-
-  data_type: 'integer'
-  is_nullable: 1
-
-=head2 mimetype
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 event_id
 
   data_type: 'integer'
@@ -75,6 +65,11 @@ __PACKAGE__->table("images");
 
   data_type: 'integer'
   is_foreign_key: 1
+  is_nullable: 1
+
+=head2 ip
+
+  data_type: 'text'
   is_nullable: 1
 
 =head2 title
@@ -102,6 +97,21 @@ __PACKAGE__->table("images");
   data_type: 'blob'
   is_nullable: 1
 
+=head2 filesize
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 mimetype
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 seed
+
+  data_type: 'real'
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -112,14 +122,12 @@ __PACKAGE__->table("images");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "filesize",
-  { data_type => "integer", is_nullable => 1 },
-  "mimetype",
-  { data_type => "text", is_nullable => 1 },
   "event_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "ip",
+  { data_type => "text", is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 1 },
   "artist",
@@ -130,6 +138,12 @@ __PACKAGE__->add_columns(
   { data_type => "blob", is_nullable => 1 },
   "thumb",
   { data_type => "blob", is_nullable => 1 },
+  "filesize",
+  { data_type => "integer", is_nullable => 1 },
+  "mimetype",
+  { data_type => "text", is_nullable => 1 },
+  "seed",
+  { data_type => "real", is_nullable => 1 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -243,11 +257,35 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Olx6vgjO6seYLUZ1Fy7CnA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2K5vOdH17YNARnZX1ynHiw
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
+
+sub is_manipulable_by {
+	my $self = shift;
+	my $user = $self->result_source->schema->resultset('User')
+		->resolve(shift) or return 0;
+	
+	return 1 if $self->user_id == $user->id && $self->event->art_subs_allowed;
+	return 1 if $user->is_admin;
+	
+	0;
+}
+
+sub id_uri {
+	my $self = shift;
+	
+	my $desc = $self->title;
+	
+	for ( $desc ) {
+		s/[^a-zA-Z\s\-]//g;
+		s/[\s\-]+/-/g;
+	}
+	
+	return $self->id . '-' . $desc;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

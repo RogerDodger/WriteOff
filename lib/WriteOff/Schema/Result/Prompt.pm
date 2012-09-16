@@ -67,6 +67,11 @@ __PACKAGE__->table("prompts");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 ip
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 contents
 
   data_type: 'text'
@@ -91,6 +96,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "ip",
+  { data_type => "text", is_nullable => 1 },
   "contents",
   { data_type => "text", is_nullable => 1 },
   "rating",
@@ -184,11 +191,35 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PFSIT14soIw5IPLnSIU3qA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mmxRR98M8HMDs4fk71oV/g
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
+
+sub is_manipulable_by {
+	my $self = shift;
+	my $user = $self->result_source->schema->resultset('User')
+		->resolve(shift) or return 0;
+	
+	return 1 if $self->user_id == $user->id && $self->event->prompt_subs_allowed;
+	return 1 if $user->is_admin;
+	
+	0;
+}
+
+sub id_uri {
+	my $self = shift;
+	
+	my $desc = $self->contents;
+	
+	for ( $desc ) {
+		s/[^a-zA-Z\s\-]//g;
+		s/[\s\-]+/-/g;
+	}
+	
+	return $self->id . '-' . $desc;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

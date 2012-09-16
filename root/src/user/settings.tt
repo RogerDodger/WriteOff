@@ -1,7 +1,20 @@
+<h2>User Settings</h2>
 <form class="form-standard" method="post" action="[% c.uri_for('/user/settings') %]">
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 	<fieldset>
-	<input type="hidden" name="type" value="password" />
 		<legend>Change Password</legend>
+[% IF c.form.has_error %]
+	[% FOREACH error IN c.form.messages('register') %]
+		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Error:</strong> [% error %]
+				</p>
+			</div>
+		</div>
+	[% END %]
+[% END %]
 		<table>
 			<tr>
 				<td class="label">New Password<span class="required">*</span></td>
@@ -18,20 +31,17 @@
 			<tr>
 				<td class="label">Old Password<span class="required">*</span></td>
 				<td>
-					<input type="password" name="old_password" maxlength="[% c.config.len.max.pass %]"/>
+					<input type="password" name="old" maxlength="[% c.config.len.max.pass %]"/>
 				</td>
 			</tr>			
 			</tr>
 			<tr>
 				<td class="label"> </td>
-				<td><input type="submit" value="Change password" /></td>
+				<td><input name="submit" type="submit" value="Change password" /></td>
 			</tr>
 		</table>
 	</fieldset>
-</form>
-<form class="form-standard" method="post" action="[% c.uri_for('/user/settings') %]">
 	<fieldset>
-	<input type="hidden" name="type" value="timezone" />
 		<legend>Change Timezone</legend>
 		<table>
 			<tr>
@@ -39,14 +49,38 @@
 				<td>
 					<select name="timezone">
 					[%- FOREACH timezone IN timezones %]
-		<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
+						[%- IF timezone == c.user.timezone %]
+<option value="[% timezone %]" selected="selected" >[% timezone.replace('_', ' ') %]</option>
+						[%- ELSE %]
+<option value="[% timezone %]">[% timezone.replace('_', ' ') %]</option>
+						[%- END %]
 					[%- END %]
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<td class="label"> </td>
-				<td><input type="submit" value="Change timezone" /></td>
+				<td><input name="submit" type="submit" value="Change timezone" /></td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>Change Notifications</legend>
+		<table>
+			<tr>
+				<td class="label"><span class="unrequired">Timezone</span></td>
+				<td>
+					[%- IF c.user.mailme %]
+					<input name="mailme" type="checkbox" checked="checked" />
+					[%- ELSE %]
+					<input name="mailme" type="checkbox" />
+					[%- END %]
+					Send me email notifications when new events are announced.
+				</td>
+			</tr>
+			<tr>
+				<td class="label"> </td>
+				<td><input name="submit" type="submit" value="Change notifications" /></td>
 			</tr>
 		</table>
 	</fieldset>

@@ -1,12 +1,12 @@
 use utf8;
-package WriteOff::Schema::Result::Schedule;
+package WriteOff::Schema::Result::LoginAttempt;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-WriteOff::Schema::Result::Schedule
+WriteOff::Schema::Result::LoginAttempt
 
 =cut
 
@@ -41,11 +41,11 @@ __PACKAGE__->load_components(
   "InflateColumn::Serializer",
 );
 
-=head1 TABLE: C<schedules>
+=head1 TABLE: C<login_attempts>
 
 =cut
 
-__PACKAGE__->table("schedules");
+__PACKAGE__->table("login_attempts");
 
 =head1 ACCESSORS
 
@@ -55,19 +55,14 @@ __PACKAGE__->table("schedules");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 action
+=head2 ip
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 at
+=head2 created
 
   data_type: 'timestamp'
-  is_nullable: 1
-
-=head2 args
-
-  data_type: 'text'
   is_nullable: 1
 
 =cut
@@ -75,12 +70,10 @@ __PACKAGE__->table("schedules");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "action",
+  "ip",
   { data_type => "text", is_nullable => 1 },
-  "at",
+  "created",
   { data_type => "timestamp", is_nullable => 1 },
-  "args",
-  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -97,13 +90,8 @@ __PACKAGE__->set_primary_key("id");
 
 
 # Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OMlD8K2oj2N5c5LskCxQHA
-__PACKAGE__->add_columns(
-	args => {
-		data_type => "VARCHAR",
-		serializer_class => "JSON",
-	},
-);
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ljJCquM+crsIZ+jfasdaig
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

@@ -19,15 +19,16 @@ Catalyst Controller.
 =cut
 
 sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
-    my ( $self, $c, $id ) = @_;
+    my ( $self, $c, $arg ) = @_;
 	
-	$c->stash->{prompt} = $c->model('DB::Prompt')->find($id) or $c->detach('/default');
-	
-	$c->stash->{user_has_permissions} = $c->user && (
-		$c->user->id == $c->stash->{prompt}->user_id ||
-		$c->check_user_roles($c->user, qw/admin/) 
-	);
-
+	my $id = eval { no warnings; int $arg };
+	$c->stash->{prompt} = $c->model('DB::Prompt')->find($id) or 
+		$c->detach('/default');
+		
+	if( $arg ne $c->stash->{prompt}->id_uri ) {
+		$c->res->redirect
+		( $c->uri_for( $c->action, [ $c->stash->{prompt}->id_uri ] ) );
+	}
 }
 
 sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
@@ -64,24 +65,22 @@ sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
 	$c->detach('/forbidden', ['Guests cannot submit prompts.']) unless $c->user;
 	
 	$c->stash->{template} = 'prompt/submit.tt';
-	$c->forward('do_submit') if $c->req->method eq 'POST';
+	$c->forward('do_submit') if 
+		$c->req->method eq 'POST' && $c->stash->{event}->prompt_subs_allowed;
 }
 
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
 
 	my $rs = $c->stash->{event}->prompts;
-	$c->req->params->{limit} = $rs->search({ user_id => $c->user->id })->count;
 	
-	$c->req->params->{prompt} =~ s/^\s+|\s+$//g;
-	$c->req->params->{prompt} =~ s/\s+/ /g;
+	$c->req->params->{count} = $rs->search({ user_id => $c->user->id })->count;
 	
 	$c->form(
-		prompt       => [  'NOT_BLANK', [ 'DBIC_UNIQUE', $rs, 'contents' ],
-			[ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
-		sessionid    => [  'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
-		subs_allowed => [ ['EQUAL_TO', 1] ],
-		limit        => [ ['LESS_THAN', $c->config->{prompts_per_user}] ],
+		prompt       => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ], 
+			'TRIM_COLLAPSE', [ 'DBIC_UNIQUE', $rs, 'contents' ], 'NOT_BLANK', 
+			'SCALAR' ],
+		sessionid    => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 	);
 	
 	if( !$c->form->has_error ) {
@@ -89,7 +88,7 @@ sub do_submit :Private {
 		$rs->create({
 			event_id => $c->stash->{event}->id,
 			user_id  => $c->user->id,
-			contents => $c->req->params->{prompt},
+			contents => $c->form->valid('prompt'),
 			rating   => $c->config->{elo_base},
 		});
 
@@ -100,22 +99,31 @@ sub do_submit :Private {
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You do not own this item.']) unless 
-		$c->stash->{user_has_permissions};
-	
-	$c->stash->{self} = $c->uri_for("/prompt/" . $c->stash->{prompt}->id . "/delete");
+	$c->detach('/forbidden', ['You cannot delete this item.']) unless 
+		$c->stash->{prompt}->is_manipulable_by( $c->user );
+		
 	$c->stash->{template} = 'delete.tt';
 	
-	if( $c->req->method eq 'POST' ) {
-		if( $c->req->params->{sessionid} eq $c->sessionid ) {
-			$c->stash->{prompt}->delete;
-			$c->flash->{status_msg} = 'Deletion successful';
-		}
-		else {
-			$c->flash->{error_msg} = 'Invalid session';
-		}
+	$c->forward('do_delete') if $c->req->method eq 'POST';
+}
+
+sub do_delete :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->form(
+		title => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->stash->{prompt}->contents ] ],
+		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+	);
+	
+	if( !$c->form->has_error ) {
+		$c->stash->{prompt}->delete;
+		$c->flash->{status_msg} = 'Deletion successful';
 		$c->res->redirect( $c->uri_for('/user/me') );	
 	}
+	else {
+		$c->stash->{error_msg} = 'Title is incorrect';
+	}
+	
 }
 
 =head1 AUTHOR

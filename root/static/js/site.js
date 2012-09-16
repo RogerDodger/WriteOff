@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 	$('form.form-standard').on('submit', function(e) {
 		if( filesize > max*1024*1024 ) {
 			e.preventDefault();
-			jAlert('Max filesize: ' + max + 'MB', 'File too big');
+			alert('Max filesize: ' + max + 'MB');
 		}
 	});
 });

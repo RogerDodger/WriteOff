@@ -176,8 +176,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 02:06:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EzzlAIcjKxJw/EM3jUSEYQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:M33njHcZwpNqdBQN6phB7w
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

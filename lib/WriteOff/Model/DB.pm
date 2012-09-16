@@ -10,6 +10,7 @@ __PACKAGE__->config(
         dsn => 'dbi:SQLite:WriteOff.db',
         user => '',
         password => '',
+		sqlite_unicode => 1,
         on_connect_do => q{PRAGMA foreign_keys = ON},
     },
 );
@@ -32,7 +33,7 @@ Catalyst::Helper::Model::DBIC::Schema - 0.59
 
 =head1 AUTHOR
 
-Cameron Thornton
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 LICENSE
 

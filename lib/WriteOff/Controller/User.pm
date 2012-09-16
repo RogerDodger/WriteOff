@@ -19,15 +19,15 @@ sub me :Local :Args(0) {
 	
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user_exists;
 	
-	if( $c->check_user_roles($c->user, qw/admin/) ) {
+	if( $c->check_user_roles('admin') ) {
 		$c->stash->{images}  = $c->model('DB::Image');
 		$c->stash->{storys}  = $c->model('DB::Story');
 		$c->stash->{prompts} = $c->model('DB::Prompt');
 	}
 	else {
-		$c->stash->{images}  = $c->model('DB::Image')->search ({ user_id => $c->user->id });
-		$c->stash->{storys}  = $c->model('DB::Story')->search ({ user_id => $c->user->id });
-		$c->stash->{prompts} = $c->model('DB::Prompt')->search({ user_id => $c->user->id });
+		$c->stash->{images}  = $c->user->obj->images;
+		$c->stash->{storys}  = $c->user->obj->storys;
+		$c->stash->{prompts} = $c->user->obj->prompts;
 	}
 	
 	$c->stash->{template} = 'user/me.tt';
@@ -37,12 +37,12 @@ sub login :Local :Args(0) {
     my ( $self, $c ) = @_;
 	
 	my $success = 
-		$c->req->params->{username} =~ $c->config->{biz}->{user}->{regex} &&
+		$c->req->params->{Username} =~ $c->config->{biz}{user}{regex} &&
 		$c->authenticate({ 
-			password => $c->req->params->{password},
+			password => $c->req->params->{Password},
 			dbix_class => { searchargs => [{
 				#Case-insensitive login
-				username => { like => $c->req->params->{username} } 
+				username => { like => $c->req->params->{Username} } 
 			}]},
 		});
 
@@ -68,7 +68,7 @@ sub register :Local :Args(0) {
 	
 	$c->res->redirect( $c->uri_for('/') ) if $c->user;
 	
-	$c->stash->{timezones} = [qw/UTC/, grep {/\//} DateTime::TimeZone->all_names];
+	$c->stash->{timezones} = [ $self->timezones ];
 	$c->stash->{template} = 'user/register.tt';
 	
 	$c->forward('/captcha_get');
@@ -84,31 +84,29 @@ sub do_register :Private {
 	$params->{unique_user}  = $rs->user_exists ( $params->{username} );
 	$params->{unique_email} = $rs->email_exists( $params->{email} );
 	
-	$c->detach('/') unless DateTime::TimeZone->is_valid_name($params->{timezone});
-	
 	$c->form(
-		username => ['NOT_BLANK', ['LENGTH', 1, $c->config->{len}->{max}->{user}], 
-			['REGEX', $c->config->{biz}->{user}->{regex} ] ],
-		unique_user => [ [qw/EQUAL_TO 0/] ],
-		password => ['NOT_BLANK', ['LENGTH', $c->config->{len}->{min}->{pass}, 
-			$c->config->{len}->{max}->{pass}] ],
+		username => [ 'NOT_BLANK', [ 'LENGTH', 1, $c->config->{len}{max}{user} ], 
+			[ 'REGEX', $c->config->{biz}{user}{regex} ] ],
+		unique_user => [ ['EQUAL_TO', 0] ],
+		password => ['NOT_BLANK', [ 'LENGTH', $c->config->{len}{min}{pass}, 
+			$c->config->{len}{max}{pass} ] ],
 		{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
-		email => [qw/NOT_BLANK EMAIL_MX/],
-		unique_email => [ [qw/EQUAL_TO 0/] ],
-		captcha => [ [qw/EQUAL_TO 1/] ],
+		email        => [ 'NOT_BLANK', 'EMAIL_MX' ],
+		unique_email => [ [ 'EQUAL_TO', 0 ] ],
+		timezone     => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
+		captcha      => [ [ 'EQUAL_TO', 1 ] ],
 	);
 	
 	if(!$c->form->has_error) {
 		$c->stash->{user} = $rs->create({
-			username => $params->{username},
-			password => $params->{password},
-			email    => $params->{email},
-			mailme   => !!$params->{mailme},
-			timezone => $params->{timezone},
+			username => $c->form->valid('username'),
+			password => $c->form->valid('password'),
+			email    => $c->form->valid('email'),
+			mailme   => $c->form->valid('mailme') ? 1 : 0,
+			timezone => $c->form->valid('timezone'),
 			ip       => $c->req->address,
 		});
-		
-		$c->stash->{token} = $c->stash->{user}->new_token;
+		$c->stash->{user}->new_token;
 		
 		$c->model("DB::UserRole")->create({
 			user_id => $c->stash->{user}->id,
@@ -117,13 +115,14 @@ sub do_register :Private {
 		
 		$c->stash->{email} = {
 			to           => $c->stash->{user}->email,
-			from         => 'noreply@' . $c->config->{domain},
+			from         => $c->config->{AdminName} . ' ' . '<' . 'noreply@' . 
+				$c->config->{domain} . '>',
 			subject      => $c->config->{name} . ' - Confirmation Email',
 			template     => 'email/registration.tt',
 			content_type => 'text/html',
 		};
 		
-		$c->forward($c->view('Email::Template'));
+		$c->forward( $c->view('Email::Template') );
 		$c->stash->{template} = 'user/register_successful.tt';
 	}
 }
@@ -132,13 +131,10 @@ sub settings :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user; 
-	$c->detach('/forbidden', ['Your account is not verified.']) unless $c->user->verified; 
 	
-	$c->stash->{timezones} = [qw/UTC/, grep {/\//} DateTime::TimeZone->all_names];
-	if($c->req->method eq 'POST') {
-		$c->stash->{error_msg}  = $c->forward('do_settings') or
-		$c->stash->{status_msg} = 'Settings changed successfully';
-	}
+	$c->stash->{timezones} = [ $self->timezones ];
+	
+	$c->forward('do_settings') if $c->req->params->{sessionid} eq $c->sessionid;
 	
 	$c->stash->{template} = 'user/settings.tt';
 }
@@ -146,59 +142,75 @@ sub settings :Local :Args(0) {
 sub do_settings :Private {
 	my ( $self, $c ) = @_;
 	
-	if($c->req->params->{type} eq 'password') {
-		my($old, $new, $new2) = @{$c->req->params}{qw/old_password password password2/};
+	if( $c->req->params->{submit} eq 'Change password' ) {
 		
-		return "One or more fields empty" if grep {$_ eq ''} ($old, $new, $new2);
+		$c->req->params->{old_password} = $c->req->params->{old} && 0 + $c->user
+			->obj->discard_changes->check_password( $c->req->params->{old} );
 		
-		$c->authenticate({ 
-			username => $c->user->username,
-			password => $old,
-		}) || return 'Incorrect password given';
+		$c->form(
+			password => [ 'NOT_BLANK', [ 'LENGTH', $c->config->{len}{min}{pass}, 
+				$c->config->{len}{max}{pass} ] ],
+			{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
+			old_password => [ 'NOT_BLANK', [ 'EQUAL_TO', 1 ] ],
+		);
 		
-		return 'Passwords do not match' unless $new eq $new2;
-		return 'Password too short' if length($new) < $c->config->{len}->{min}->{pass};
+		return 0 if $c->form->has_error;
 		
-		$c->user->update({password => $new});
+		$c->user->update({ password => $c->form->valid('password')});
+		$c->stash->{status_msg} = 'Password changed successfully';
 	}
-	elsif($c->req->params->{type} eq 'timezone') {
-		return 'Error: Invalid timezone' unless 
-			DateTime::TimeZone->is_valid_name($c->req->params->{timezone});
-			
-		$c->user->update({ timezone => $c->req->params->{timezone} });
+	
+	elsif( $c->req->params->{submit} eq 'Change timezone' ) {
+		$c->form(
+			timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
+		);
+		return 0 if $c->form->has_error;
+		
+		$c->user->update({ timezone => $c->form->valid('timezone') });
 		$c->set_authenticated($c->user);
-	} else {
-		return 'Error: Unknown';
+		$c->stash->{status_msg} = 'Timezone changed successfully';
+	} 
+	
+	elsif( $c->req->params->{submit} eq 'Change notifications' ) {
+		$c->user->update({ mailme => $c->req->params->{mailme} ? 1 : 0 });
+		$c->set_authenticated($c->user);
+		$c->stash->{status_msg} = 'Notifications changed successfully';
 	}
+	
 	0;
 }
 
 sub verify :Local :Args(2) {
 	my ( $self, $c, $id, $token ) = @_;
 	
-	my $rs = $c->model('DB::User');
-	my $user = $rs->find($id);
+	my $user = $c->model('DB::User')->find($id);
 	
-	if($user && $user->token eq $token) {
-		if($c->req->params->{delete}) { 
+	if( $user && $user->token eq $token ) {
+		if( $c->req->params->{delete} ) { 
 			$user->delete;
 			$c->stash->{template} = 'user/verify_delete.tt';
 		}
 		else { 
 			$user->update({ verified => 1 });
-			$user = $c->find_user({ id => $id });
-			$c->set_authenticated($user);
 			$user->new_token;
+			$c->set_authenticated( $c->find_user({ id => $id }) );
 			$c->stash->{template} = 'user/verify.tt';
 		}
-	} else {
+	} 
+	else {
 		$c->res->redirect( $c->uri_for('/') );
 	}
 }
 
+sub timezones {
+	my ( $self, $c ) = @_;
+	
+	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
+}
+
 =head1 AUTHOR
 
-Cameron Thornton <cthor@cpan.org>
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 LICENSE
 

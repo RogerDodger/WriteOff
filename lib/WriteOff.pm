@@ -18,7 +18,7 @@ use Catalyst qw/
 	Session::Store::File
 	Session::State::Cookie
 	
-	FormValidator::Simple 
+	FormValidator::Simple::OwnCheck 
 	FillInForm
 	Upload::MIME
 /;
@@ -28,10 +28,16 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 __PACKAGE__->config(
 	name => 'Write-off',
+	
+	#These should be configured on a per-deployment basis
+	domain     => 'example.com',
+	AdminName  => 'admin',
+	AdminEmail => 'admin@example.com',
+	
 	default_view => 'HTML',
 	'View::HTML'         => { INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ] },
 	'View::HTML::NoWrap' => { INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ] },
@@ -47,7 +53,8 @@ __PACKAGE__->config(
 		flash_to_stash => 1,
 	},
 	validator => {
-		plugins => [ qw/DBIC::Unique/ ],
+		plugins => [ 'DBIC::Unique', 'Trim' ],
+		plugins_owncheck => [ __PACKAGE__ . '::Checker' ],
 		messages => {
 			register => {
 				username => {
@@ -58,13 +65,15 @@ __PACKAGE__->config(
 					NOT_BLANK => 'Password is required',
 					LENGTH => 'Password is too short',
 				},
-				pass_confirm => {
-					DUPLICATION => 'Passwords do not match',
-				},
 				email => {
 					NOT_BLANK => 'Email is required',
 					EMAIL_MX => 'Invalid email address',
 				},
+				old_password => { 
+					NOT_BLANK => 'Old Password is required',
+					EQUAL_TO  => 'Old Password is invalid',
+				},
+				pass_confirm => { DUPLICATION => 'Passwords do not match' },
 				captcha      => { EQUAL_TO => 'Invalid CAPTCHA' },
 				unique_user  => { EQUAL_TO => 'Username already exists' },
 				unique_email => { EQUAL_TO => 'A user with that email already exists' },
@@ -74,20 +83,19 @@ __PACKAGE__->config(
 					NOT_BLANK   => 'Title is required',
 					DBIC_UNIQUE => 'An item with that title already exists',
 				},
+				image_id  => { NOT_BLANK     => 'Art Title is required' },
 				website   => { HTTP_URL      => 'Website is not a valid HTTP URL' },
-				wordcount => { BETWEEN       => 'Story too long or too short' },
-				related   => { NOT_EQUAL_TO  => 'Art title is required' },
+				wordcount => { BETWEEN       => 'Wordcount too high or too low' },
 				image     => { NOT_BLANK     => 'Image is required' },
 				mimetype  => { IN_ARRAY      => 'Image not a valid type' },
 				captcha   => { EQUAL_TO      => 'Invalid CAPTCHA' },
 				sessionid => { IN_ARRAY      => 'Invalid session' },
-				subs_allowed => { EQUAL_TO   => 'Submissions are closed' },
 				prompt    => {
 					NOT_BLANK   => 'Prompt is required',
 					DBIC_UNIQUE => 'An identical prompt already exists',
 				},
 				blurb     => { LENGTH        => 'Blurb too long' },
-				limit     => { LESS_THAN     => 'Limit exceeded' },
+				count     => { LESS_THAN     => 'Submission limit exceeded' },
 			},
 		},
 	},
@@ -102,7 +110,6 @@ __PACKAGE__->config(
 			email  => 256,
 			title  => 64,
 			url    => 256,
-			img    => 4*1024*1024,
 			prompt => 64,
 		},
 	},
@@ -112,7 +119,10 @@ __PACKAGE__->config(
 		},
 		blurb => {
 			max => 1024,
-		}
+		},
+		img => {
+			size => 4 * 1024 * 1024,
+		},
 	},
 	elo_base => 1500,
 	prompts_per_user => 5,
@@ -122,7 +132,7 @@ __PACKAGE__->config(
 			b => '<strong>%{parse}s</strong>',
 			i => '<em>%{parse}s</em>',
 			u => '<span style="text-decoration: underline">%{parse}s</span>',
-			url => '<a class="link" href="%{link}a">%{parse}s</a>',
+			url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
 			size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
 			color => '<span style="color: %{color}a;">%{parse}s</span>',
 			center => '<span style="text-align: center">%{parse}s</span>',
@@ -150,6 +160,12 @@ __PACKAGE__->config(
 		},
 	}),
 	md => Text::Markdown->new,
+	awards => {
+		gold          => '/static/images/awards/medal_gold.png',
+		silver        => '/static/images/awards/medal_silver.png',
+		bronze        => '/static/images/awards/medal_bronze.png',
+		participation => '/static/images/awards/ribbon.gif',
+	},
 	
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
@@ -159,7 +175,7 @@ __PACKAGE__->setup();
 
 __PACKAGE__->schedule(
 	at    => '0 * * * *',
-	event => '/cron/clean_old_heats',
+	event => '/cron/cleanup',
 );
 
 __PACKAGE__->schedule(

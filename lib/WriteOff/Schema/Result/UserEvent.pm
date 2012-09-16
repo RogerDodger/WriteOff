@@ -61,6 +61,11 @@ __PACKAGE__->table("user_event");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 role
+
+  data_type: 'text'
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -68,6 +73,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "event_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "role",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -78,11 +85,13 @@ __PACKAGE__->add_columns(
 
 =item * L</event_id>
 
+=item * L</role>
+
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("user_id", "event_id");
+__PACKAGE__->set_primary_key("user_id", "event_id", "role");
 
 =head1 RELATIONS
 
@@ -117,8 +126,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QKVo+YUZP2Rk6EA47ag50Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:M389IOBmQ8/sA90PkM4Uzg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

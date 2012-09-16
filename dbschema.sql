@@ -5,6 +5,8 @@
 
 PRAGMA foreign_keys = ON;
 
+DROP TABLE IF EXISTS login_attempts;
+DROP TABLE IF EXISTS bans;
 DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS vote_records;
 DROP TABLE IF EXISTS heats;
@@ -30,8 +32,7 @@ CREATE TABLE users (
 	verified    INTEGER DEFAULT 0,
 	mailme      INTEGER DEFAULT 0,
 	token       TEXT,
-	created     TIMESTAMP,
-	active      INTEGER
+	created     TIMESTAMP
 );
 
 CREATE TABLE roles (
@@ -48,38 +49,53 @@ CREATE TABLE user_role (
 	PRIMARY KEY (user_id, role_id)
 );
 
+CREATE TABLE bans (
+	id       INTEGER PRIMARY KEY,
+	ip       TEXT,
+	reason   TEXT,
+	expires  TIMESTAMP,
+	created  TIMESTAMP
+);
+
+CREATE TABLE login_attempts (
+	id       INTEGER PRIMARY KEY,
+	ip       TEXT,
+	created  TIMESTAMP
+);
 
 -- Event tables
 CREATE TABLE events (
-	id             INTEGER PRIMARY KEY,
-	prompt         TEXT DEFAULT 'TBD',
-	blurb          TEXT,
-	wc_min         INTEGER,
-	wc_max         INTEGER,
-	has_art        INTEGER,
-	has_prelim     INTEGER,
-	"start"        TIMESTAMP,
-	prompt_voting  TIMESTAMP,
-	art            TIMESTAMP,
-	art_end        TIMESTAMP,
-	fic            TIMESTAMP,
-	fic_end        TIMESTAMP,
-	prelims        TIMESTAMP,
-	finals         TIMESTAMP,
-	"end"          TIMESTAMP,
-	created        TIMESTAMP
+	id              INTEGER PRIMARY KEY,
+	prompt          TEXT DEFAULT 'TBD',
+	title           TEXT,
+	blurb           TEXT,
+	wc_min          INTEGER,
+	wc_max          INTEGER,
+	rule_set        INTEGER,
+	"start"         TIMESTAMP,
+	prompt_voting   TIMESTAMP,
+	art             TIMESTAMP,
+	art_end         TIMESTAMP,
+	fic             TIMESTAMP,
+	fic_end         TIMESTAMP,
+	prelim          TIMESTAMP,
+	"public"        TIMESTAMP,
+	"private"       TIMESTAMP,
+	"end"           TIMESTAMP,
+	created         TIMESTAMP
 );
 
 CREATE TABLE user_event (
-	user_id  INTEGER REFERENCES users(id)  ON DELETE CASCADE,
-	event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
-	PRIMARY KEY (user_id, event_id)
+	user_id   INTEGER REFERENCES users(id)  ON DELETE CASCADE,
+	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE,
+	role      TEXT,
+	PRIMARY KEY (user_id, event_id, role)
 );
 
 CREATE TABLE schedules (
 	id      INTEGER PRIMARY KEY,
-	"at"    TIMESTAMP,
 	action  TEXT,
+	"at"    TIMESTAMP,
 	args    TEXT
 );
 
@@ -95,6 +111,7 @@ CREATE TABLE prompts (
 	id        INTEGER PRIMARY KEY,
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	ip        TEXT,
 	contents  TEXT,
 	rating    REAL,
 	created   TIMESTAMP
@@ -104,26 +121,30 @@ CREATE TABLE storys (
 	id         INTEGER PRIMARY KEY,
 	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE,
 	user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	ip         TEXT,
 	title      TEXT UNIQUE,
 	author     TEXT,
 	website    TEXT,
 	contents   TEXT,
 	wordcount  INTEGER,
+	seed       REAL,
 	created    TIMESTAMP,
 	updated    TIMESTAMP
 );
 
 CREATE TABLE images (
 	id        INTEGER PRIMARY KEY,
-	filesize  INTEGER,
-	mimetype  TEXT,
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	ip        TEXT,
 	title     TEXT UNIQUE,
 	artist    TEXT,
 	website   TEXT,
 	contents  BLOB,
 	thumb     BLOB,
+	filesize  INTEGER,
+	mimetype  TEXT,
+	seed      REAL,
 	created   TIMESTAMP
 );
 
@@ -148,6 +169,13 @@ CREATE TABLE votes (
 	record_id  INTEGER REFERENCES vote_records(id) ON DELETE CASCADE,
 	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
 	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
-	rating     INTEGER,
-	created    TIMESTAMP
+	"value"    INTEGER
+);
+
+CREATE TABLE scoreboard (
+	competitor  TEXT PRIMARY KEY,
+	"score"     INTEGER,
+	"awards"    TEXT,
+	created     TIMESTAMP,
+	updated     TIMESTAMP
 );

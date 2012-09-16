@@ -1,12 +1,12 @@
 use utf8;
-package WriteOff::Schema::Result::Schedule;
+package WriteOff::Schema::Result::Scoreboard;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-WriteOff::Schema::Result::Schedule
+WriteOff::Schema::Result::Scoreboard
 
 =cut
 
@@ -41,69 +41,70 @@ __PACKAGE__->load_components(
   "InflateColumn::Serializer",
 );
 
-=head1 TABLE: C<schedules>
+=head1 TABLE: C<scoreboard>
 
 =cut
 
-__PACKAGE__->table("schedules");
+__PACKAGE__->table("scoreboard");
 
 =head1 ACCESSORS
 
-=head2 id
+=head2 competitor
 
-  data_type: 'integer'
-  is_auto_increment: 1
+  data_type: 'text'
   is_nullable: 0
 
-=head2 action
+=head2 score
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 awards
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 at
+=head2 created
 
   data_type: 'timestamp'
   is_nullable: 1
 
-=head2 args
+=head2 updated
 
-  data_type: 'text'
+  data_type: 'timestamp'
   is_nullable: 1
 
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "action",
+  "competitor",
+  { data_type => "text", is_nullable => 0 },
+  "score",
+  { data_type => "integer", is_nullable => 1 },
+  "awards",
   { data_type => "text", is_nullable => 1 },
-  "at",
+  "created",
   { data_type => "timestamp", is_nullable => 1 },
-  "args",
-  { data_type => "text", is_nullable => 1 },
+  "updated",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
 
 =over 4
 
-=item * L</id>
+=item * L</competitor>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("id");
+__PACKAGE__->set_primary_key("competitor");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OMlD8K2oj2N5c5LskCxQHA
-__PACKAGE__->add_columns(
-	args => {
-		data_type => "VARCHAR",
-		serializer_class => "JSON",
-	},
-);
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OSdMxLmgnZ0c2rkQ6gkGAQ
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

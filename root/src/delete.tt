@@ -1,7 +1,8 @@
 <h1>Confirm Deletion</h1>
-<p>Deletion is irreversible.</p>
-<form method="post" action="[% self %]">
+<p>Please enter the title of the selected item to confirm deletion.</p>
+<form method="post" action="[% c.req.uri %]">
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="text" name="title" style="width: 250px"  />
 	<input type="submit" value="Delete" />
 	<a class="ui-button" href="[% c.uri_for('/user/me') %]">Abort</a>
 </form>

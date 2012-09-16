@@ -16,24 +16,26 @@
 	<tr>
 		<td>[% story.event.prompt | html %]</td>
 		<td class="center">[% story.event_id %]</td>
-		<td><a class="link" href="[% c.uri_for( '/fic/' _ story.id _ '/view' ) %]">[% story.title | html %]</a></td>
+		<td><a class="link" href="[% c.uri_for( '/fic/' _ story.id_uri ) %]">[% story.title | html %]</a></td>
 		<td>
 			[% IF story.website %]<a class="link" href="[% story.website %]">[% story.author | html %]</a>
-			[% ELSE %][% story.author | html %][% END %]
+			[%- ELSE %][% story.author | html %][% END %]
 		</td>
 		<td class="center">[% story.wordcount %]</td>
-		<td>[% story.updated.set_time_zone(c.user.timezone).strftime('%d-%b-%Y %H:%M') %]</td>
+		<td>[% story.updated.set_time_zone( c.user.get('timezone') ).strftime('%d-%b-%Y %H:%M') %]</td>
 		<td>
-			[%- IF story.event.fic_subs_allowed %]
-			<a href="[% c.uri_for( '/fic/' _ story.id _ '/edit' ) %]">
+		[%- IF story.is_manipulable_by(c.user) %]
+			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/edit' ) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
 			</a>
-			[%- END %]
+		[%- END %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/fic/' _ story.id _ '/delete' ) %]">
+		[%- IF story.is_manipulable_by(c.user) %]
+			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
 			</a>
+		[%- END %]
 		</td>
 	</tr>
 	[%- END %]
@@ -55,17 +57,23 @@
 	<tr>
 		<td>[% image.event.prompt | html %]</td>
 		<td class="center">[% image.event_id %]</td>
-		<td><a class="link" href="[% c.uri_for( '/art/' _ image.id _ '/view' ) %]">[% image.title | html %]</a></td>
+		<td>
+			<a class="link" href="[% c.uri_for( '/art/' _ image.id_uri ) %]">
+				[% image.title | html %]
+			</a>
+		</td>
 		<td>
 			[% IF image.website %]<a class="link" href="[% image.website %]">[% image.artist | html %]</a>
-			[% ELSE %][% image.artist | html %][% END %]
+			[%- ELSE %][% image.artist | html %][% END %]
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td>[% image.created.set_time_zone(c.user.timezone).strftime('%d-%b-%Y %H:%M') %]</td>
+		<td>[% image.created.set_time_zone( c.user.get('timezone') ).strftime('%d-%b-%Y %H:%M') %]</td>
 		<td>
-			<a href="[% c.uri_for( '/art/' _ image.id _ '/delete' ) %]">
+		[%- IF image.is_manipulable_by( c.user ) %]
+			<a href="[% c.uri_for( '/art/' _ image.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item">&nbsp;</span>
 			</a>
+		[%- END %]
 		</td>	
 	</tr>
 	[%- END %]
@@ -89,15 +97,17 @@
 		<td>[% prompt.contents | html %]</td>
 		<td class="center">[% prompt.rating | format('%d') %]</td>
 		<td>
-			<a href="[% c.uri_for( '/prompt/' _ prompt.id _ '/delete' ) %]">
+		[%- IF prompt.is_manipulable_by( c.user ) %]
+			<a href="[% c.uri_for( '/prompt/' _ prompt.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item">&nbsp;</span>
 			</a>
-		</td>	
+		</td>
+		[%- END %]
 	</tr>
 	[%- END %]
 </table>
 [%- END %]
 
 [%- IF !images.count && !storys.count && !prompts.count %]
-<p>You have no submissions.</p>
+<p>No submissions found.</p>
 [% END %]

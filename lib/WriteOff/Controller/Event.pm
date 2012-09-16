@@ -26,30 +26,73 @@ Grabs event info
 =cut
 
 sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
-    my ( $self, $c, $id ) = @_;
+    my ( $self, $c, $arg ) = @_;
 	
-	$c->stash->{event} = $c->model('DB::Event')->find($id) or $c->detach('/default');
+	my $id = eval { no warnings; int $arg };
+	$c->stash->{event} = $c->model('DB::Event')->find($id) or 
+		$c->detach('/default');
+	
+	if( $arg ne $c->stash->{event}->id_uri ) {
+		$c->res->redirect
+		( $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] ) );
+	}
 }
 
 sub fic :PathPart('fic') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
-
-	$c->req->params->{subs_allowed} = $c->stash->{event}->fic_subs_allowed;
+	
 }
 
 sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no art component to this event.']) unless
-		$c->stash->{event}->has_art;
-	
-	$c->req->params->{subs_allowed} = $c->stash->{event}->art_subs_allowed;
+		$c->stash->{event}->art;
 }
 
 sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->req->params->{subs_allowed}  = $c->stash->{event}->prompt_subs_allowed;
+}
+
+sub vote :PathPart('vote') :Chained('index') :CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+	
+}
+
+sub rules :PathPart('rules') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{template} = 'event/rules.tt';
+}
+
+sub edit :PathPart('edit') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->detach('/forbidden', ['You cannot edit this item.']) unless 
+		$c->check_user_roles( $c->user, qw/admin/ );
+	
+	$c->forward('do_edit') if $c->req->method eq 'POST';
+	
+	$c->stash->{template} = 'event/edit.tt';
+}
+
+sub do_edit :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->form( 
+		blurb => [ ['LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
+		sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
+	);
+	
+	if(!$c->form->has_error) {
+		$c->stash->{event}->update({
+			blurb => $c->req->params->{blurb},
+		});
+		$c->flash->{status_msg} = 'Edit successful';
+		$c->res->redirect( $c->uri_for('/') );
+	}
+	
 }
 
 sub set_prompt :Private {
@@ -61,36 +104,33 @@ sub set_prompt :Private {
 	$e->update({ prompt => $p->first->contents });
 }
 
-sub edit :PathPart('edit') :Chained('index') :Args(0) {
-	my ( $self, $c ) = @_;
+sub prelim_distr :Private {
+	my ( $self, $c, $id ) = @_;
 	
-	$c->detach('/forbidden', ['You cannot edit this item.']) unless 
-		$c->check_user_roles( $c->user, qw/admin/ );
+	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
-	$c->stash->{blurb} = Encode::decode('utf8', $c->stash->{event}->blurb);
+	#blah blah blah
+}
+
+sub judge_distr :Private {
+	my ( $self, $c, $id ) = @_;
+
+	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
-	if($c->req->method eq 'POST' ) {
-		
-		$c->form( 
-			blurb => [ ['LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
-			sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
-		);
-		
-		if(!$c->form->has_error) {
-			$c->stash->{event}->update({
-				blurb => $c->req->params->{blurb},
-			});
-			$c->flash->{status_msg} = 'Edit successful';
-			$c->res->redirect( $c->uri_for('/') );
-		}
-	}
+	#blah blah blah
+}
+
+sub tally_results :Private {
+	my ( $self, $c, $id ) = @_;
+
+	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
-	$c->stash->{template} = 'event/edit.tt';
+	#blah blah blah
 }
 
 =head1 AUTHOR
 
-Cameron Thornton
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 LICENSE
 

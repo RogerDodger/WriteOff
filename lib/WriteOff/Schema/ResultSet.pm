@@ -10,9 +10,10 @@ sub now {
 }
 
 sub now_dt {
-	my $self = shift;	
-	return $self->result_source->schema->storage->datetime_parser
-		->parse_datetime('2012-12-25 01:00:00');
+	return DateTime->now;
+	
+	return shift->result_source->schema->storage->datetime_parser
+		->parse_datetime('2012-12-27 01:00:00');
 }
 
 sub created_before {

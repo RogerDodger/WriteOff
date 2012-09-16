@@ -18,27 +18,34 @@
 [%- END %]
 </p>
 
+[%- IF event.fic_subs_allowed %]
 <h2>Guidelines</h2>
 
 <ul>
 	<li>Submitted works must be your own.</li>
 	<li>
-		Stories must be between [% event.wc_min %] and [% event.wc_max %] words long.
+		Stories must be [% event.wc_min %]–[% event.wc_max %] words long.
 	</li>
 </ul>
 
-<form class="form-standard" action="[% c.uri_for('/event/' _ event.id _ '/fic/submit') %]" method="post" enctype="multipart/form-data">
+<form class="form-standard"  action="[% c.req.uri %]" method="post"
+	enctype="multipart/form-data">
 	<fieldset>
-[%- IF c.form.has_error %]
-	[%- FOREACH error IN c.form.messages('submit') %]
+	[%- IF c.form.has_error %]
+		[%- FOREACH error IN c.form.messages('submit') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]</p>
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Error:</strong> [% error %]
+					[%- IF error.match('^Wordcount') %] 
+					[%- '(' _ c.req.params.wordcount _ ' words)' %]
+					[%- END %]
+				</p>
 			</div>
 		</div>
+		[%- END %]
 	[%- END %]
-[%- END %]
 		<legend>Submit Story</legend>
 		<p>Fields with <span class="required">*</span> are required.</p>
 		<table>
@@ -48,22 +55,22 @@
 					<input name="title" type="text" maxlength="[% c.config.len.max.title %]"/>
 				</td>
 			</tr>
-[%- IF event.has_art %]
-[%- images = event.images_rs %]
-			<tr>
-				<td class="label">Art title<span class="required">*</span></td>
-				<td>
-					<select name="image_id">
-						<optgroup label="Submitted Artworks">
-							<option value=""></option>
-[%- WHILE (image = images.next) %]
-							<option value="[% image.id %]">[% image.title | html %]</option>
-[%- END %]
-						</optgroup>
-					</select>
-				</td>
-			</tr>
-[%- END %]
+	[%- IF event.art %]
+		[%- images = event.images_rs %]
+				<tr>
+					<td class="label">Art Title<span class="required">*</span></td>
+					<td>
+						<select name="image_id">
+							<optgroup label="Submitted Artworks">
+								<option value=""></option>
+		[%- WHILE (image = images.next) %]
+								<option value="[% image.id %]">[% image.title | html %]</option>
+		[%- END %]
+							</optgroup>
+						</select>
+					</td>
+				</tr>
+	[%- END %]
 			<tr>
 				<td class="label">Author<span class="unrequired">*</span></td>
 				<td>
@@ -84,3 +91,4 @@
 		<input type="submit" value="Submit"/>
 	</fieldset>
 </form>
+[%- END %]

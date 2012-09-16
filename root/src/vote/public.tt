@@ -1,0 +1,17 @@
+[% MACRO local(dt) GET
+	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+<h1>[% event.prompt | html %]</h1>
+
+<h2>Public Voting</h2>
+
+<p>
+	Votes open: <strong>[% local(event.public) %]</strong>.
+	<br />
+	Votes close: <strong>[% local(event.private || event.end) %]</strong>.
+	<br />
+[%- IF event.public_votes_allowed %]
+	Votes are <strong class="good">open</strong>.
+[%- ELSE %]
+	Votes are <strong class="bad">closed</strong>.
+[%- END %]
+</p>

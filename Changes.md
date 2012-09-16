@@ -1,3 +1,16 @@
+v0.06
+=====
+- Rules added
+- FAQ mostly completed
+- Stories and images given a seed for randomised listing order
+- Form validation solidified
+- DB Schema (mostly) finalised
+- URLs on items made descriptive
+- Soul-barter clause added to Terms of Service
+- Placeholders for votes and galleries in place
+  - Will be complete before planned minific event starts
+- Let's do this
+
 v0.05
 =====
 - Per-event blurb added

@@ -103,11 +103,6 @@ __PACKAGE__->table("users");
   data_type: 'timestamp'
   is_nullable: 1
 
-=head2 active
-
-  data_type: 'integer'
-  is_nullable: 1
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -131,8 +126,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
-  "active",
-  { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -265,16 +258,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 events
-
-Type: many_to_many
-
-Composing rels: L</user_events> -> event
-
-=cut
-
-__PACKAGE__->many_to_many("events", "user_events", "event");
-
 =head2 roles
 
 Type: many_to_many
@@ -286,8 +269,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-09 00:30:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0L3vwi0WOIhQaWyYq3rwvA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pVEJ7XjxIZv0ZG03tkGpcw
 
 __PACKAGE__->add_columns(
 	password => {
@@ -302,17 +285,23 @@ __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
 
-
 sub new_token {
-	my $row = shift;
+	my $self = shift;
 	
 	my $token = Digest->new('MD5')
-		->add( join("", time, $row->password, rand(10000), $$) )
+		->add( join("", time, $self->password, rand(10000), $$) )
 		->hexdigest;
 		
-	$row->update({ token => $token });
+	$self->update({ token => $token });
 	
 	return $token;
+}
+
+sub is_admin {
+	my $self = shift;
+	
+	return 1 if grep { $_->role eq 'admin' } $self->roles;
+	0;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
