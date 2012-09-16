@@ -10,6 +10,8 @@ name 'WriteOff';
 all_from 'lib/WriteOff.pm';
 
 requires 'Catalyst::Runtime' => '5.90013';
+requires 'Catalyst::View::TT';
+requires 'Catalyst::View::Email::Template';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Unicode::Encoding';
@@ -27,6 +29,7 @@ requires 'Catalyst::Plugin::FillInForm';
 requires 'Catalyst::Plugin::Upload::MIME';
 requires 'Catalyst::TraitFor::Controller::reCAPTCHA';
 requires 'Catalyst::Action::RenderView';
+requires 'DBIx::Class';
 requires 'DBIx::Class::TimeStamp';
 requires 'DBIx::Class::PassphraseColumn';
 requires 'DBIx::Class::InflateColumn::Serializer';
