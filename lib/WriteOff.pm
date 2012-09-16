@@ -1,6 +1,7 @@
 package WriteOff;
 use Moose;
 use namespace::autoclean;
+use 5.014;
 
 use Catalyst::Runtime 5.80;
 use Catalyst qw/
@@ -28,7 +29,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.06_03';
+our $VERSION = '0.06_04';
 
 __PACKAGE__->config(
 	name => 'Write-off',
