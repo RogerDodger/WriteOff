@@ -19,7 +19,7 @@ Application cron actions.
 Checks the schedule table and executes any actions that are set to be executed, 
 deleting them afterwards (such that a scheduled task only executes once).
 
-=head2 clean_old_heats
+=head2 cleanup
 
 Cleans old data from the database.
 

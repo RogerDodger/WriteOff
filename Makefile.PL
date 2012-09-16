@@ -7,6 +7,7 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
                                # 'make dist' to create a standalone tarball.
 
 name 'WriteOff';
+all_from 'lib/WriteOff.pm';
 
 requires 'Catalyst::Runtime' => '5.90013';
 requires 'Catalyst::Plugin::ConfigLoader';
