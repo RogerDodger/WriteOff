@@ -1,3 +1,7 @@
+v0.08
+=====
+- Logs
+
 v0.07
 =====
 - Events able to have a pre-set title for descriptiveness before the prompt overwrites it

@@ -9,6 +9,8 @@ use Catalyst qw/
 	Static::Simple
 	Unicode::Encoding
 	
+	Log::Handler
+	
 	Scheduler
 	
 	Authentication
@@ -28,7 +30,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.07_01';
+our $VERSION = '0.08';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -48,10 +50,16 @@ __PACKAGE__->config(
 			password_type => 'self_check',
 		},
 	},
-	scheduler => { time_zone => 'floating' },
 	'Plugin::Session' => {
 		flash_to_stash => 1,
 	},
+	'Log::Handler' => {
+		filename => __PACKAGE__->path_to('writeoff.log')->stringify,
+		fileopen => 1,
+		mode     => 'append',
+		newline  => 1,
+	},
+	scheduler => { time_zone => 'floating' },
 	validator => {
 		plugins => [ 'DBIC::Unique', 'Trim' ],
 		plugins_owncheck => [ 'WriteOff::Checker' ],

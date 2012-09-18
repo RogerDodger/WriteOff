@@ -39,10 +39,8 @@ sub login :Local :Args(0) {
 	$c->res->redirect( $c->uri_for('/') ) and return 0 if $c->user;
 	
 	$c->detach('login_attempts_exceeded') if $c->model('DB::LoginAttempt')
-		->search({ ip => $c->req->address })
-		->created_after( 
-			DateTime->now->subtract( minutes => $c->config->{login}{timer} ) 
-		)
+		->search({ ip => $c->req->address })->created_after
+			( DateTime->now->subtract( minutes => $c->config->{login}{timer} ) )
 		->count >= $c->config->{login}{limit};
 	
 	my $success = 
@@ -140,6 +138,10 @@ sub do_register :Private {
 		
 		$c->forward( $c->view('Email::Template') );
 		$c->stash->{template} = 'user/register_successful.tt';
+		$c->log->info( sprintf 'User created: %s (%s)',
+			$c->stash->{user}->username,
+			$c->stash->{user}->email,
+		);
 	}
 }
 

@@ -18,6 +18,13 @@ WriteOff::Controller::Root - Root Controller for WriteOff
 sub begin :Private {
 	my ( $self, $c ) = @_;
 
+	$c->log->info( sprintf "Request: %s - %s (%s) - %s", 
+		$c->req->method, 
+		$c->req->address,
+		( $c->user ? $c->user->username : 'guest' ),
+		$c->req->uri->path_query,
+	);
+	
 	if( $c->req->method eq 'POST' ) {
 		my $root = $c->uri_for('/');
 		$c->detach('index') if ($c->req->referer || '') !~ /^$root/;
@@ -107,16 +114,26 @@ The Terms of Service page
 sub tos :Local :Args(0) {
 	my ( $self, $c) = @_;
 	
-	$c->stash->{tempalte} = 'tos.tt';
+	$c->stash->{template} = 'tos.tt';
 }
 
-=head2 end
+=head2 render
 
 Attempt to render a view, if needed.
 
 =cut
 
-sub end : ActionClass('RenderView') {}
+sub render : ActionClass('RenderView') {}
+
+sub end :Private {
+	my ( $self, $c ) = @_;
+	$c->forward('render');
+	
+	# $c->log->info( sprintf "Response: %s - %s",
+		# $c->res->status,
+		# $c->stash->{template},
+	# );
+}
 
 =head1 AUTHOR
 

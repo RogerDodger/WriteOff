@@ -37,6 +37,7 @@ requires 'DBIx::Class::InflateColumn::Serializer';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::General';
+requires 'Catalyst::Plugin::Log::Handler';
 requires 'Image::Magick';
 requires 'Parse::BBCode';
 requires 'Text::Markdown';
