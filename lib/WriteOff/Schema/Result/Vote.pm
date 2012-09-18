@@ -59,7 +59,7 @@ __PACKAGE__->table("votes");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 story_id
 
@@ -84,7 +84,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "record_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "story_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "image_id",
@@ -139,12 +139,7 @@ __PACKAGE__->belongs_to(
   "record",
   "WriteOff::Schema::Result::VoteRecord",
   { id => "record_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 story
@@ -168,8 +163,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:U68Eu6sx46fbJpbgdLzwGw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:l39rb0Viyz0uRWpMUzrmvg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

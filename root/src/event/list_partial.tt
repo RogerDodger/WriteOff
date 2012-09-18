@@ -54,22 +54,24 @@
 		</ul>
 		<ul>
 			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/submit') %]">Prompt submission</a></li>
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/vote') %]">Prompt voting</a></li>
+		</ul>
+		<ul>
 			[%- IF event.art %]
 			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/art/submit') %]">Art submission</a></li>
 			[%- END %]
 			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/fic/submit') %]">Fic submission</a></li>
 		</ul>
 		<ul>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/fic/gallery') %]">Fic gallery</a></li>
 			[%- IF event.art %]
 			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/art/gallery') %]">Art gallery</a></li>
 			[%- END %]
+			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/fic/gallery') %]">Fic gallery</a></li>
 		</ul>
 		<ul>
-			<li><a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/vote') %]">Prompt voting</a></li>
 			<li>
 				<a class="link" href="[% c.uri_for('/event/' _ event.id_uri _ '/vote/public') %]">
-				Fic voting ([% event.private ? 'main' : 'finals' %])
+				Voting ([% event.private ? 'main' : 'finals' %])
 				</a>
 			</li>
 		</ul>

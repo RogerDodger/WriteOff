@@ -1,9 +1,14 @@
 body {
 	background: #ccc;
-	padding-top: 40px;
+	padding-top: 40px;	
+	font-family: "Bitstream Charter", "Book Antiqua", Baskerville, 
+		"Bookman Old Style", "Palatino Linotype", Palatino, Palladio, 
+		"URW Palladio L", "Nimbus Roman No9 L", Garamond, "Apple Garamond", 
+		"ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", 
+		"Century Schoolbook L", Georgia, serif; /* Eeyup */
 }
 p, li, td {
-	font-size: 1em;
+	font-size: 1em; 
 }
 p {
 	text-align: justify;
@@ -49,6 +54,8 @@ code, tt {
 	padding: 2px 6px;
 }
 a.link, a.link:visited, 
+.footer a,
+.footer a:visited
 .event-listing div a, 
 .event-listing div a:visited {
 	color: blue;
@@ -58,6 +65,7 @@ a.link, a.link:visited,
 	-webkit-transition: .05s all linear;
 }
 a.link:hover, 
+.footer a:hover,
 .event-listing div a:hover {
 	color: dodgerblue;
 }
@@ -72,6 +80,7 @@ a.link:hover,
 	padding: 40px;
 	width: 785px;
 	background: #fff;
+	border-radius: 2px;
 	box-shadow: 0 0 8px black;
 }
 .has-placeholder {
@@ -109,6 +118,7 @@ a.link:hover,
 	width: 745px;
 	max-width: 745px;
 	height: 450px;
+	border: 2px groove threedface;
 }
 .event-listing h3 {
 	font-size: 14pt;
@@ -256,9 +266,9 @@ table {
 	width: 25px;
 }
 .prompt-listing {
-	border: 1px solid black;
+	border: 2px groove #222;
 	border-radius: 2px;
-	background: #fff;
-	padding: 2px;
-	margin: 2px;
+	background: #f6f6f6;
+	padding: 3px;
+	margin: 0 0 -2px 0;
 }

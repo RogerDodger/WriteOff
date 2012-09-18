@@ -1,5 +1,5 @@
-9 Sep 19:45 (CST)
-=================
+18 Sep 02:01 (CST)
+===================
 
 - Email notifications
 - Votes
@@ -7,7 +7,4 @@
   - Prelim distribution
   - Volunteer distribution
 - Results
-- Complete FAQ
-- TOS/Privacy Policy
-- Rules
 - Password recovery

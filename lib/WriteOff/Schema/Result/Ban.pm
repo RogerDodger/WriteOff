@@ -58,7 +58,7 @@ __PACKAGE__->table("bans");
 =head2 ip
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 reason
 
@@ -68,7 +68,7 @@ __PACKAGE__->table("bans");
 =head2 expires
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 created
 
@@ -81,11 +81,11 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "ip",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "reason",
   { data_type => "text", is_nullable => 1 },
   "expires",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -103,9 +103,11 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w63ShYKBm/hcd9+hPIVJYA
-
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:194hVlISqRXJ2bUf6WaCHw
+__PACKAGE__->add_columns(
+	created => {data_type => "timestamp", set_on_create => 1},
+);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

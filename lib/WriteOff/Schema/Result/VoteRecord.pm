@@ -59,7 +59,7 @@ __PACKAGE__->table("vote_records");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 user_id
 
@@ -75,7 +75,7 @@ __PACKAGE__->table("vote_records");
 =head2 round
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 created
 
@@ -93,13 +93,13 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "event_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "ip",
   { data_type => "text", is_nullable => 1 },
   "round",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
   "updated",
@@ -132,12 +132,7 @@ __PACKAGE__->belongs_to(
   "event",
   "WriteOff::Schema::Result::Event",
   { id => "event_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 user
@@ -176,8 +171,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:M33njHcZwpNqdBQN6phB7w
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7HSX3/90FpLQCAhVw2DFqw
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

@@ -5,7 +5,8 @@
 	The [% name %] is a timed challenge where writers and artists create stories
 	and images to a given prompt. The works are then released anonymously for
 	all to see, followed by judging rounds to allow readers to determine the
-	winners.
+	winners. The event is concluded with the results posted and the authors and
+	artists revealed.
 </p>
 <p>
 	If an art round is included in the event, artists draw to the prompt, and 
@@ -132,7 +133,7 @@
 <p>The above rendered with the BBCode parser gives:</p>
 
 <div class="story" style="margin-left: 2.4em">
-[% c.config.bb.render( tags.join("\n") ).replace( '(.*)<br>', '<p>$1</p>' ) %]
+[% c.bb_render( tags.join("\n") ) %]
 </div>
 
 <p>
@@ -145,10 +146,10 @@
 
 <h2>How Do I Delete/Edit a Submission?</h2>
 <p>
-	You may delete/edit a submission by logging in and going to <a class="link"
-	href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only do this
-	while submissions are open. (Also, I'm sure it goes without saying that this
-	only works if you submitted while logged in.)
+	You may delete/edit a submission by logging in and going to <a class="link
+	new-window" href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only
+	do this while submissions are open. (Also, I'm sure it goes without saying 
+	that this only works if you submitted while logged in.)
 </p>
 <p>
 	If you want a submission deleted or edited after submissions are closed, 

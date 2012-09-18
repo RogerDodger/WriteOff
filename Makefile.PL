@@ -21,6 +21,7 @@ requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::File';
 requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Plugin::FormValidator::Simple';
 requires 'Catalyst::Plugin::FormValidator::Simple::OwnCheck';
 requires 'FormValidator::Simple::Plugin::DBIC::Unique';
 requires 'FormValidator::Simple::Plugin::Trim';

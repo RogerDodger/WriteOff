@@ -1,5 +1,5 @@
 [% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
+	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
 <h1>[% event.prompt %]</h1>
 
 <h2>Fic Submissions</h2>
@@ -18,16 +18,7 @@
 [%- END %]
 </p>
 
-[%- IF event.fic_subs_allowed %]
-<h2>Guidelines</h2>
-
-<ul>
-	<li>Submitted works must be your own.</li>
-	<li>
-		Stories must be [% event.wc_min %]–[% event.wc_max %] words long.
-	</li>
-</ul>
-
+[%- IF event.fic_subs_allowed && c.user %]
 <form class="form-standard"  action="[% c.req.uri %]" method="post"
 	enctype="multipart/form-data">
 	<fieldset>
@@ -75,7 +66,7 @@
 				<td class="label">Author<span class="unrequired">*</span></td>
 				<td>
 					<input name="author" type="text" maxlength="[% c.config.len.max.user %]"
-					[%- IF c.user %]value="[% c.user.username %]"[% END %]/>
+					value="[% c.user.username %]"/>
 				</td>
 				<td>(Anonymous if blank)</td>
 			</tr>
@@ -91,4 +82,14 @@
 		<input type="submit" value="Submit"/>
 	</fieldset>
 </form>
+[%- END %]
+[%- IF !c.user %]
+	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+		<div class="ui-state-highlight ui-corner-all" style="padding: 0 .7em;"> 
+			<p>
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+				Guests cannot submit fics
+			</p>
+		</div>
+	</div>
 [%- END %]

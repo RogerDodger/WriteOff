@@ -59,7 +59,7 @@ __PACKAGE__->table("images");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 user_id
 
@@ -75,12 +75,13 @@ __PACKAGE__->table("images");
 =head2 title
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 artist
 
   data_type: 'text'
-  is_nullable: 1
+  default_value: 'Anonymous'
+  is_nullable: 0
 
 =head2 website
 
@@ -90,22 +91,22 @@ __PACKAGE__->table("images");
 =head2 contents
 
   data_type: 'blob'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 thumb
 
   data_type: 'blob'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 filesize
 
   data_type: 'integer'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 mimetype
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 seed
 
@@ -123,25 +124,25 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "event_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "ip",
   { data_type => "text", is_nullable => 1 },
   "title",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "artist",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", default_value => "Anonymous", is_nullable => 0 },
   "website",
   { data_type => "text", is_nullable => 1 },
   "contents",
-  { data_type => "blob", is_nullable => 1 },
+  { data_type => "blob", is_nullable => 0 },
   "thumb",
-  { data_type => "blob", is_nullable => 1 },
+  { data_type => "blob", is_nullable => 0 },
   "filesize",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_nullable => 0 },
   "mimetype",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "seed",
   { data_type => "real", is_nullable => 1 },
   "created",
@@ -188,12 +189,7 @@ __PACKAGE__->belongs_to(
   "event",
   "WriteOff::Schema::Result::Event",
   { id => "event_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 image_stories
@@ -257,8 +253,8 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2K5vOdH17YNARnZX1ynHiw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DH6RTiidy0+ngAQ67w6pBg
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

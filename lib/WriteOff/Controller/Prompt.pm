@@ -34,15 +34,18 @@ sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
 sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{heat} = $c->stash->{event}->prompt_votes_allowed &&
-		$c->model('DB::Heat')->new_heat( $c->stash->{event}->prompts_rs );
-	
 	$c->stash->{prompts} = $c->stash->{event}->prompts->search(undef,
 		{ order_by => { -desc => 'rating' } } 
 	);
 	
 	$c->stash->{template} = 'prompt/vote.tt';
-	$c->forward('do_vote') if $c->req->method eq 'POST';
+	
+	if ( $c->stash->{event}->prompt_votes_allowed ) {
+		$c->stash->{heat} = 
+			$c->model('DB::Heat')->new_heat( $c->stash->{event}->prompts_rs );
+			
+		$c->forward('do_vote') if $c->req->method eq 'POST';
+	}
 }
 
 sub do_vote :Private {
@@ -62,11 +65,10 @@ sub do_vote :Private {
 sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['Guests cannot submit prompts.']) unless $c->user;
-	
 	$c->stash->{template} = 'prompt/submit.tt';
-	$c->forward('do_submit') if 
-		$c->req->method eq 'POST' && $c->stash->{event}->prompt_subs_allowed;
+	
+	$c->forward('do_submit') if $c->req->method eq 'POST' && 
+		$c->user && $c->stash->{event}->prompt_subs_allowed;
 }
 
 sub do_submit :Private {
@@ -78,9 +80,9 @@ sub do_submit :Private {
 	
 	$c->form(
 		prompt       => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ], 
-			'TRIM_COLLAPSE', [ 'DBIC_UNIQUE', $rs, 'contents' ], 'NOT_BLANK', 
-			'SCALAR' ],
+			'TRIM_COLLAPSE', [ 'DBIC_UNIQUE', $rs, 'contents' ], 'NOT_BLANK' ],
 		sessionid    => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+		count        => [ [ 'LESS_THAN', $c->config->{prompts_per_user} ] ],
 	);
 	
 	if( !$c->form->has_error ) {
@@ -88,6 +90,7 @@ sub do_submit :Private {
 		$rs->create({
 			event_id => $c->stash->{event}->id,
 			user_id  => $c->user->id,
+			ip       => $c->req->address,
 			contents => $c->form->valid('prompt'),
 			rating   => $c->config->{elo_base},
 		});

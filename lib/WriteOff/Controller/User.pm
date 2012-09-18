@@ -17,7 +17,7 @@ Controller for user management - login/logout, registration, settings, etc.
 sub me :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user_exists;
+	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
 	
 	if( $c->check_user_roles('admin') ) {
 		$c->stash->{images}  = $c->model('DB::Image');
@@ -36,10 +36,19 @@ sub me :Local :Args(0) {
 sub login :Local :Args(0) {
     my ( $self, $c ) = @_;
 	
+	$c->res->redirect( $c->uri_for('/') ) and return 0 if $c->user;
+	
+	$c->detach('login_attempts_exceeded') if $c->model('DB::LoginAttempt')
+		->search({ ip => $c->req->address })
+		->created_after( 
+			DateTime->now->subtract( minutes => $c->config->{login}{timer} ) 
+		)
+		->count >= $c->config->{login}{limit};
+	
 	my $success = 
-		$c->req->params->{Username} =~ $c->config->{biz}{user}{regex} &&
+		($c->req->params->{Username} || '') =~ $c->config->{biz}{user}{regex} &&
 		$c->authenticate({ 
-			password => $c->req->params->{Password},
+			password => $c->req->params->{Password} || '',
 			dbix_class => { searchargs => [{
 				#Case-insensitive login
 				username => { like => $c->req->params->{Username} } 
@@ -51,10 +60,17 @@ sub login :Local :Args(0) {
 		$c->flash({error_msg => 'Your account is not verified'}) && $c->logout;
 	}
 	else {
+		$c->model('DB::LoginAttempt')->create({ ip => $c->req->address });
 		$c->flash({error_msg => 'Bad username or password'});
 	}
 	
 	$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+}
+
+sub login_attempts_exceeded :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{template} = 'user/login_attempts_exceeded.tt';
 }
 
 sub logout :Local :Args(0) {
@@ -102,9 +118,9 @@ sub do_register :Private {
 			username => $c->form->valid('username'),
 			password => $c->form->valid('password'),
 			email    => $c->form->valid('email'),
-			mailme   => $c->form->valid('mailme') ? 1 : 0,
 			timezone => $c->form->valid('timezone'),
 			ip       => $c->req->address,
+			mailme   => $c->req->params->{mailme} ? 1 : 0,
 		});
 		$c->stash->{user}->new_token;
 		
@@ -134,13 +150,15 @@ sub settings :Local :Args(0) {
 	
 	$c->stash->{timezones} = [ $self->timezones ];
 	
-	$c->forward('do_settings') if $c->req->params->{sessionid} eq $c->sessionid;
+	$c->forward('do_settings') if $c->req->method eq 'POST';
 	
 	$c->stash->{template} = 'user/settings.tt';
 }
 
 sub do_settings :Private {
 	my ( $self, $c ) = @_;
+	
+	return 0 unless $c->req->params->{sessionid} eq $c->sessionid;
 	
 	if( $c->req->params->{submit} eq 'Change password' ) {
 		

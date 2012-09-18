@@ -4,8 +4,10 @@
 	[%- FOREACH error IN c.form.messages('event') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]</p>
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Error:</strong> [% error %]
+				</p>
 			</div>
 		</div>
 	[%- END %]
@@ -18,6 +20,12 @@
 					<input type="text" name="start" placeholder="yyyy-mm-dd hh:mm:ss"/>
 				</td>
 				<td>UTC</td>
+			</tr>
+			<tr>
+				<td class="label">Initial Prompt</td>
+				<td>
+					<input type="text" name="prompt" maxlength="[% c.config.len.max.prompt %]"/>
+				</td>
 			</tr>
 			<tr>
 				<td class="label">Has Art Round</td>

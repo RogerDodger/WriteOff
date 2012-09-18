@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
 	}).blur();
 	$('.userbar .ui-state-highlight, .userbar .ui-state-error').fadeOut(5000, "easeInQuint");
 	var uploadOk = 0;
-	$('.link.new-window').attr({
+	$('.link.new-window, .footer a').attr({
 		target : '_blank',
 		title  : 'Open link in new tab',
 	});

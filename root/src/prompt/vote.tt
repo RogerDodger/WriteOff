@@ -7,7 +7,7 @@
 <p>
 	Votes open: <strong>[% local(event.prompt_voting) %]</strong>.
 	<br />
-	Votes close: <strong>[% local(event.first_round) %]</strong>.
+	Votes close: <strong>[% local(event.art || event.fic) %]</strong>.
 	<br />
 [%- IF event.prompt_votes_allowed %]
 	Votes are <strong class="good">open</strong>.

@@ -5,3 +5,4 @@ AdminEmail someadmin@somedomain.com
 	pub_key 01010101010101
 	priv_key AAAAAAAAAAAAAA
 </recaptcha>
+footer_addendum 

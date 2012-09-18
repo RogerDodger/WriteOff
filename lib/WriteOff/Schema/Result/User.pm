@@ -58,12 +58,12 @@ __PACKAGE__->table("users");
 =head2 username
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 password
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 email
 
@@ -85,12 +85,17 @@ __PACKAGE__->table("users");
 
   data_type: 'integer'
   default_value: 0
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 mailme
 
   data_type: 'integer'
   default_value: 0
+  is_nullable: 0
+
+=head2 last_mailed_at
+
+  data_type: 'timestamp'
   is_nullable: 1
 
 =head2 token
@@ -103,15 +108,20 @@ __PACKAGE__->table("users");
   data_type: 'timestamp'
   is_nullable: 1
 
+=head2 updated
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "username",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "password",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "email",
   { data_type => "text", is_nullable => 1 },
   "timezone",
@@ -119,12 +129,16 @@ __PACKAGE__->add_columns(
   "ip",
   { data_type => "text", is_nullable => 1 },
   "verified",
-  { data_type => "integer", default_value => 0, is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
   "mailme",
-  { data_type => "integer", default_value => 0, is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
+  "last_mailed_at",
+  { data_type => "timestamp", is_nullable => 1 },
   "token",
   { data_type => "text", is_nullable => 1 },
   "created",
+  { data_type => "timestamp", is_nullable => 1 },
+  "updated",
   { data_type => "timestamp", is_nullable => 1 },
 );
 
@@ -269,8 +283,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pVEJ7XjxIZv0ZG03tkGpcw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 11:36:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oaVghNcy9wBaQw7UBMmVfw
 
 __PACKAGE__->add_columns(
 	password => {
@@ -282,7 +296,10 @@ __PACKAGE__->add_columns(
 		},
 		passphrase_check_method => 'check_password',
 	},
+	last_mailed_at => {data_type => 'timestamp', set_on_create => 1},
+	
 	created => {data_type => 'timestamp', set_on_create => 1},
+	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
 sub new_token {

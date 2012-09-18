@@ -58,7 +58,7 @@ __PACKAGE__->table("roles");
 =head2 role
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =cut
 
@@ -66,7 +66,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "role",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -109,8 +109,8 @@ Composing rels: L</user_roles> -> user
 __PACKAGE__->many_to_many("users", "user_roles", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-04 01:31:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+k4vxMoTi25CcFimB+qqjw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3sNFh9W9sA29kiPO/14h5w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

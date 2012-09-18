@@ -59,7 +59,7 @@ __PACKAGE__->table("storys");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 user_id
 
@@ -75,12 +75,13 @@ __PACKAGE__->table("storys");
 =head2 title
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 author
 
   data_type: 'text'
-  is_nullable: 1
+  default_value: 'Anonymous'
+  is_nullable: 0
 
 =head2 website
 
@@ -90,16 +91,22 @@ __PACKAGE__->table("storys");
 =head2 contents
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 wordcount
 
   data_type: 'integer'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 seed
 
   data_type: 'real'
+  is_nullable: 1
+
+=head2 views
+
+  data_type: 'integer'
+  default_value: 0
   is_nullable: 1
 
 =head2 created
@@ -118,23 +125,25 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "event_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "ip",
   { data_type => "text", is_nullable => 1 },
   "title",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "author",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", default_value => "Anonymous", is_nullable => 0 },
   "website",
   { data_type => "text", is_nullable => 1 },
   "contents",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "wordcount",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_nullable => 0 },
   "seed",
   { data_type => "real", is_nullable => 1 },
+  "views",
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
   "updated",
@@ -181,12 +190,7 @@ __PACKAGE__->belongs_to(
   "event",
   "WriteOff::Schema::Result::Event",
   { id => "event_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 image_stories
@@ -250,8 +254,8 @@ Composing rels: L</image_stories> -> image
 __PACKAGE__->many_to_many("images", "image_stories", "image");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ym8k0YJJeUxRnx+drv+eWw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 11:33:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a1TFfpSpKNWXjdugxahEmg
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},

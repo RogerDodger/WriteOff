@@ -38,11 +38,9 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['Guests cannot submit fics.']) unless $c->user;
-	
 	$c->stash->{template} = 'fic/submit.tt';
-	$c->forward('do_submit') if 
-		$c->req->method eq 'POST' && $c->stash->{event}->fic_subs_allowed;
+	$c->forward('do_submit') if $c->req->method eq 'POST' && 
+		$c->user && $c->stash->{event}->fic_subs_allowed;
 }
 
 sub do_submit :Private {

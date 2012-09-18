@@ -40,6 +40,7 @@ sub cleanup :Private {
 	my ( $self, $c ) = @_;
 	
 	$c->model('DB::Heat')->clean_old_entries;
+	$c->model('DB::LoginAttempt')->clean_old_entries;
 }
 
 

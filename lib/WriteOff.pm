@@ -5,7 +5,6 @@ use 5.014;
 
 use Catalyst::Runtime 5.80;
 use Catalyst qw/
-	-Debug
 	ConfigLoader
 	Static::Simple
 	Unicode::Encoding
@@ -29,7 +28,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.06_06';
+our $VERSION = '0.07';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -55,7 +54,7 @@ __PACKAGE__->config(
 	},
 	validator => {
 		plugins => [ 'DBIC::Unique', 'Trim' ],
-		plugins_owncheck => [ __PACKAGE__ . '::Checker' ],
+		plugins_owncheck => [ 'WriteOff::Checker' ],
 		messages => {
 			register => {
 				username => {
@@ -116,7 +115,7 @@ __PACKAGE__->config(
 	},
 	biz => {
 		user => {
-			regex => qr/\A[a-zA-Z0-9_]+\z/,
+			regex => qr{\A[a-zA-Z0-9_]+\z},
 		},
 		blurb => {
 			max => 1024,
@@ -125,41 +124,13 @@ __PACKAGE__->config(
 			size => 4 * 1024 * 1024,
 		},
 	},
+	login => {
+		limit => 5,
+		timer => 5, #minutes
+	},
 	elo_base => 1500,
 	prompts_per_user => 5,
 	interim => 60, #minutes
-	bb => Parse::BBCode->new({
-		tags => {
-			b => '<strong>%{parse}s</strong>',
-			i => '<em>%{parse}s</em>',
-			u => '<span style="text-decoration: underline">%{parse}s</span>',
-			url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
-			size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
-			color => '<span style="color: %{color}a;">%{parse}s</span>',
-			center => '<span style="text-align: center">%{parse}s</span>',
-			smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
-			quote => {
-				class => 'block',
-				output => "<br>\n<blockquote>%{parse}s</blockquote>\n",
-			},
-			hr => {
-				class => 'block',
-				output => "<br>\n<hr />\n",
-				single => 1,
-			},
-		},
-		escapes => {
-			Parse::BBCode::HTML->default_escapes,
-			size => sub {
-				int $_[2] eq $_[2] && 
-				8 <= $_[2] && $_[2] <= 72 ? 
-				$_[2] : 16;
-			},
-			color => sub {
-				$_[2] =~ /^#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
-			},
-		},
-	}),
 	md => Text::Markdown->new,
 	awards => {
 		gold          => '/static/images/awards/medal_gold.png',
@@ -184,6 +155,50 @@ __PACKAGE__->schedule(
 	event => '/cron/check_schedule',
 );
 
+my $bb = Parse::BBCode->new({
+	tags => {
+		b => '<strong>%{parse}s</strong>',
+		i => '<em>%{parse}s</em>',
+		u => '<span style="text-decoration: underline">%{parse}s</span>',
+		url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
+		size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
+		color => '<span style="color: %{color}a;">%{parse}s</span>',
+		center => '<span style="text-align: center">%{parse}s</span>',
+		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
+		quote => {
+			class => 'block',
+			output => "<br>\n<blockquote>%{parse}s</blockquote>\n",
+		},
+		hr => {
+			class => 'block',
+			output => "<br>\n<hr />\n",
+			single => 1,
+		},
+	},
+	escapes => {
+		Parse::BBCode::HTML->default_escapes,
+		size => sub {
+			int $_[2] eq $_[2] && 
+			8 <= $_[2] && $_[2] <= 72 ? 
+			$_[2] : 16;
+		},
+		color => sub {
+			$_[2] =~ /\A#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
+		},
+	},
+});
+
+sub bb_render {
+	my( $self, $text ) = @_;
+	
+	return '' unless $text;
+	
+	$text = $bb->render( $text );
+	$text =~ s{(.*)<br>}{<p>$1</p>}g;
+	
+	return $text;
+}
+
 
 =head1 NAME
 
@@ -195,7 +210,7 @@ WriteOff - Catalyst based application
 
 =head1 DESCRIPTION
 
-Web application for handling the logic required to run the write-off.
+Web application for handling the logic required to run a write-off event.
 
 =head1 SEE ALSO
 
@@ -203,7 +218,7 @@ L<WriteOff::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 
-Cameron Thornton <cthor@cpan.org>
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 LICENSE
 

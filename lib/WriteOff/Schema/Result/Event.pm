@@ -59,12 +59,7 @@ __PACKAGE__->table("events");
 
   data_type: 'text'
   default_value: 'TBD'
-  is_nullable: 1
-
-=head2 title
-
-  data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 blurb
 
@@ -74,27 +69,28 @@ __PACKAGE__->table("events");
 =head2 wc_min
 
   data_type: 'integer'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 wc_max
 
   data_type: 'integer'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 rule_set
 
   data_type: 'integer'
-  is_nullable: 1
+  default_value: 1
+  is_nullable: 0
 
 =head2 start
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 prompt_voting
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 art
 
@@ -109,12 +105,12 @@ __PACKAGE__->table("events");
 =head2 fic
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 fic_end
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 prelim
 
@@ -124,7 +120,7 @@ __PACKAGE__->table("events");
 =head2 public
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 private
 
@@ -134,7 +130,7 @@ __PACKAGE__->table("events");
 =head2 end
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 created
 
@@ -147,37 +143,35 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "prompt",
-  { data_type => "text", default_value => "TBD", is_nullable => 1 },
-  "title",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", default_value => "TBD", is_nullable => 0 },
   "blurb",
   { data_type => "text", is_nullable => 1 },
   "wc_min",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_nullable => 0 },
   "wc_max",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_nullable => 0 },
   "rule_set",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", default_value => 1, is_nullable => 0 },
   "start",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "prompt_voting",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "art",
   { data_type => "timestamp", is_nullable => 1 },
   "art_end",
   { data_type => "timestamp", is_nullable => 1 },
   "fic",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "fic_end",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "prelim",
   { data_type => "timestamp", is_nullable => 1 },
   "public",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "private",
   { data_type => "timestamp", is_nullable => 1 },
   "end",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -272,8 +266,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 20:34:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W99Ba9B6y/v3fo5RbbTSqg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O4Y5UVvf5IOuKNxDpSDYSg
 
 use constant LEEWAY => 5;
 

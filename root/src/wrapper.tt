@@ -7,7 +7,7 @@
 [% IF redirect %]
 <meta http-equiv="REFRESH" content="2; url=[% redirect %]"/>
 [% END %]
-<title>[% name; IF title; ' - ' _ title; END %]</title>
+<title>[% name.list.merge( title.list ).join(' - ') %]</title>
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" type="text/css" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery.alerts.css') %]" type="text/css" />
@@ -58,14 +58,16 @@
 <div class="footer">
 	<p>
 		It is currently 
-		[% now.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %z (%Z)') %]
+		[% now.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %z (%Z)') %]
 	</p>
 	<p>
-		<a class="link new-window" href="https://github.com/RogerDodger/WriteOff">
-			WriteOff.pm
-		</a>
+		<a href="https://github.com/RogerDodger/WriteOff">WriteOff.pm</a>
 		&ndash; Written by RogerDodger
 	</p>
+[%- IF c.config.footer_addendum %]
+	<hr />
+	[% c.config.md.markdown( c.config.footer_addendum ) %]
+[%- END %]
 </div>
 
 </body>

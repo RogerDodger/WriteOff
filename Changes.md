@@ -1,3 +1,15 @@
+v0.07
+=====
+- Events able to have a pre-set title for descriptiveness before the prompt overwrites it
+- Submission pages requiring logins made more guest-friendly
+- BBCode parser put where it belongs
+- Configurable footer addendum added
+- FAQ made clearer
+- Prompt submission-limit bug fixed
+- Register form mailme bug fixed
+- Added counter measures to login-attempt spam
+- Site's font chain made super long so I look like I know what I'm doing
+
 v0.06
 =====
 - Rules added

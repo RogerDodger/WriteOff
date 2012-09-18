@@ -8,7 +8,7 @@
 	<a class="ui-button" href="[% c.uri_for('/') %]">Active events</a>
 	<span class="fake-ui-button">Event archive</span>
 [% END %]
-[%- IF c.check_user_roles(c.user, 'admin') %]
+[%- IF c.check_user_roles('admin') %]
 	<a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a>
 [%- END %]
 </p>

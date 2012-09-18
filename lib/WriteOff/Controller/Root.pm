@@ -20,7 +20,7 @@ sub begin :Private {
 
 	if( $c->req->method eq 'POST' ) {
 		my $root = $c->uri_for('/');
-		$c->detach('index') if $c->req->referer !~ /^$root/;
+		$c->detach('index') if ($c->req->referer || '') !~ /^$root/;
 	}
 }
 

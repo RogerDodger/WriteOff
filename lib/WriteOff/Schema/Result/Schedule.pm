@@ -58,12 +58,12 @@ __PACKAGE__->table("schedules");
 =head2 action
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 at
 
   data_type: 'timestamp'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 args
 
@@ -76,9 +76,9 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "action",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "at",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 0 },
   "args",
   { data_type => "text", is_nullable => 1 },
 );
@@ -96,8 +96,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OMlD8K2oj2N5c5LskCxQHA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FOvHJkZ8OEQ9CHUjgI0J/Q
 __PACKAGE__->add_columns(
 	args => {
 		data_type => "VARCHAR",

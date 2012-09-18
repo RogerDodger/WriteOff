@@ -57,7 +57,8 @@ __PACKAGE__->table("scoreboard");
 =head2 score
 
   data_type: 'integer'
-  is_nullable: 1
+  default_value: 0
+  is_nullable: 0
 
 =head2 awards
 
@@ -80,7 +81,7 @@ __PACKAGE__->add_columns(
   "competitor",
   { data_type => "text", is_nullable => 0 },
   "score",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
   "awards",
   { data_type => "text", is_nullable => 1 },
   "created",
@@ -102,8 +103,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("competitor");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-16 17:42:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OSdMxLmgnZ0c2rkQ6gkGAQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:54:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Jj6WWt5xFEFCMUL4hSy7sA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

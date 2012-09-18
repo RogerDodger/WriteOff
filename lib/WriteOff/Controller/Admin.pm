@@ -46,6 +46,7 @@ sub event_add :Path('/event/add') :Args(0) {
 		my $p = $c->req->params; 
 		$c->form(
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT MySQL/] ],
+			prompt => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
 			wc_min      => [ 'NOT_BLANK', 'INT' ],
 			wc_max      => [ 'NOT_BLANK', 'INT' ],
 			fic_dur     => [ 'NOT_BLANK', 'INT' ],
@@ -93,6 +94,7 @@ sub do_event_add :Private {
 		$row{end} = $dt->add( days => $p->{public_dur} )->clone;
 	}
 	
+	$row{prompt}   = $c->form->valid('prompt') || 'TBD';
 	$row{wc_min}   = $p->{wc_min};
 	$row{wc_max}   = $p->{wc_max};
 	$row{rule_set} = 1;
