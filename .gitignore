@@ -1,3 +1,4 @@
 WriteOff.db*
 writeoff.conf
 scheduler.state
+nohup.out
