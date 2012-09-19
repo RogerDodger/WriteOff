@@ -6,10 +6,13 @@ use constant {
 	CLEAN_TIMER => 60, #minutes
 };
 
-sub new_heat {
-	my ($self, $prompts) = @_;
+sub get_or_new_heat {
+	my ($self, $event, $ip) = @_;
 	
-	my $n = $prompts->count;
+	my $heats = $event->heats->search({ ip => $ip });
+	return $heats->first if $heats->count;
+	
+	my $n = $event->prompts->count;
 	return 0 if $n < 2;
 	
 	my $rand = sub { int rand $n };
@@ -17,18 +20,24 @@ sub new_heat {
 	my ($left, $right) = map { $rand->() } 0..1;
 	$left = $rand->() while $right == $left;
 	
-	$prompts = [$prompts->all];
+	my @prompts = $event->prompts;
+	
+	my $id;
+	do { $id = int rand(4_294_967_295) } while ( $self->find($id) );
 	
 	return $self->create({
-		left  => $prompts->[$left]->id,
-		right => $prompts->[$right]->id,
+		id       => $id,
+		left     => $prompts[$left]->id,
+		right    => $prompts[$right]->id,
+		event_id => $event->id,
+		ip       => $ip,
 	});
 }
 
 sub clean_old_entries {
 	my($self) = @_;
 	
-	$self->created_before( DateTime->now->subtract(minutes => CLEAN_TIMER) )
+	$self->created_before( DateTime->now->subtract( minutes => CLEAN_TIMER ) )
 		->delete_all;
 }
 

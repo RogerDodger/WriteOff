@@ -51,8 +51,3 @@
 	</p>
 	[%- END %]
 [%- END %]
-<p>
-	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/submit') %]" />
-		Prompt submission
-	</a>
-</p>

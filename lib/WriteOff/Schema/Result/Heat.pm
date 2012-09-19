@@ -67,6 +67,17 @@ __PACKAGE__->table("heats");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 event_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
+=head2 ip
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -81,6 +92,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "right",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "event_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "ip",
+  { data_type => "text", is_nullable => 1 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -98,6 +113,21 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
+
+=head2 event
+
+Type: belongs_to
+
+Related object: L<WriteOff::Schema::Result::Event>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "event",
+  "WriteOff::Schema::Result::Event",
+  { id => "event_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 =head2 left
 
@@ -130,8 +160,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kg/amYVlbPNY7428slWcKA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-19 15:08:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ThgJutZATFssHQd9IxauAQ
 use constant {
 	ELO_K       => 32,
 	ELO_BETA    => 400,
@@ -142,10 +172,13 @@ __PACKAGE__->add_columns(
 );
 
 sub do_heat {
-	my ($row, $result) = @_;
+	my ($row, $event, $ip, $result) = @_;
 	#$result = { left => 1, tie => 0.5, right => 0 };
 	
-	return 0 unless defined $result;
+	return 0 unless 
+		defined $result && 
+		$row->ip eq $ip && 
+		$row->event->id == $event->id;
 	
 	my ($a, $b) = ($row->left, $row->right);
 	

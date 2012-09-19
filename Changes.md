@@ -1,3 +1,13 @@
+v0.09
+=====
+- Fixed some forms & cleaned up the code
+- Parsers put where they belong & links done up right w/o any messy view code
+- Case-sensitive collation put on columns that should have it
+- Tests should actually work now
+- Database backup script added
+- Time to *actually implement the voting* now? Haha, maybe...
+- Nobody reads these anyway
+
 v0.08
 =====
 - Logs

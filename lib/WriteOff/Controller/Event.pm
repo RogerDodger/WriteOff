@@ -81,14 +81,12 @@ sub do_edit :Private {
 	my ( $self, $c ) = @_;
 	
 	$c->form( 
-		blurb => [ ['LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
+		blurb => [ [ 'LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
 		sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
 	);
 	
 	if(!$c->form->has_error) {
-		$c->stash->{event}->update({
-			blurb => $c->req->params->{blurb},
-		});
+		$c->stash->{event}->update({ blurb => $c->form->valid('blurb') });
 		$c->flash->{status_msg} = 'Edit successful';
 		$c->res->redirect( $c->uri_for('/') );
 	}

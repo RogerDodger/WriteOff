@@ -18,18 +18,13 @@
 [%- END %]
 </p>
 
+<p>
+	Allowed types: <tt>[% c.config.biz.img.types.join('</tt>, <tt>') %]</tt>.
+	<br />
+	Max filesize: <strong>[% c.config.biz.img.size / 1024 / 1024 | format('%d') %]MB</strong>.
+</p>
+
 [%- IF event.art_subs_allowed %]
-<h2>Guidelines</h2>
-
-<ul>
-	<li>Submitted works must be your own.</li>
-	<li>
-		Images must be in either <tt>.png</tt>, <tt>.jpg</tt>, or <tt>.gif</tt> 
-		format.
-	</li>
-	<li>Images must be smaller than 4MB.</li>
-</ul>
-
 <form class="form-standard" action="[% c.req.uri %]" method="post" 
 	enctype="multipart/form-data">
 	<input type="hidden" name="submit" value="true"/>

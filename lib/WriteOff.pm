@@ -20,7 +20,7 @@ use Catalyst qw/
 	Session::Store::File
 	Session::State::Cookie
 	
-	FormValidator::Simple::OwnCheck 
+	FormValidator::Simple 
 	FillInForm
 	Upload::MIME
 /;
@@ -30,7 +30,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -62,20 +62,21 @@ __PACKAGE__->config(
 	scheduler => { time_zone => 'floating' },
 	validator => {
 		plugins => [ 'DBIC::Unique', 'Trim' ],
-		plugins_owncheck => [ 'WriteOff::Checker' ],
 		messages => {
 			register => {
 				username => {
-					NOT_BLANK => 'Username is required',
-					REGEX => 'Username contains invalid characters',
+					NOT_BLANK   => 'Username is required',
+					REGEX       => 'Username contains invalid characters',
+					DBIC_UNIQUE => 'Username exists',
 				},
 				password => {
 					NOT_BLANK => 'Password is required',
-					LENGTH => 'Password is too short',
+					LENGTH    => 'Password is too short',
 				},
 				email => {
-					NOT_BLANK => 'Email is required',
-					EMAIL_MX => 'Invalid email address',
+					NOT_BLANK   => 'Email is required',
+					EMAIL_MX    => 'Invalid email address',
+					DBIC_UNIQUE => 'A user with that email already exists',
 				},
 				old_password => { 
 					NOT_BLANK => 'Old Password is required',
@@ -83,8 +84,6 @@ __PACKAGE__->config(
 				},
 				pass_confirm => { DUPLICATION => 'Passwords do not match' },
 				captcha      => { EQUAL_TO => 'Invalid CAPTCHA' },
-				unique_user  => { EQUAL_TO => 'Username already exists' },
-				unique_email => { EQUAL_TO => 'A user with that email already exists' },
 			},
 			submit => {
 				title     => { 
@@ -94,6 +93,7 @@ __PACKAGE__->config(
 				image_id  => { NOT_BLANK     => 'Art Title is required' },
 				website   => { HTTP_URL      => 'Website is not a valid HTTP URL' },
 				wordcount => { BETWEEN       => 'Wordcount too high or too low' },
+				story     => { NOT_BLANK     => 'Story is required' },
 				image     => { NOT_BLANK     => 'Image is required' },
 				mimetype  => { IN_ARRAY      => 'Image not a valid type' },
 				captcha   => { EQUAL_TO      => 'Invalid CAPTCHA' },
@@ -107,7 +107,6 @@ __PACKAGE__->config(
 			},
 		},
 	},
-	allowed_types => [qw:image/jpeg image/png image/gif:],
 	len => {
 		min => {
 			pass => 5,
@@ -129,7 +128,8 @@ __PACKAGE__->config(
 			max => 1024,
 		},
 		img => {
-			size => 4 * 1024 * 1024,
+			size  => 4 * 1024 * 1024,
+			types => [ qw:image/jpeg image/png image/gif: ],
 		},
 	},
 	login => {
@@ -139,7 +139,6 @@ __PACKAGE__->config(
 	elo_base => 1500,
 	prompts_per_user => 5,
 	interim => 60, #minutes
-	md => Text::Markdown->new,
 	awards => {
 		gold          => '/static/images/awards/medal_gold.png',
 		silver        => '/static/images/awards/medal_silver.png',
@@ -162,6 +161,12 @@ __PACKAGE__->schedule(
 	at    => '* * * * *',
 	event => '/cron/check_schedule',
 );
+
+sub wordcount {
+	my ( $self, $str ) = @_;
+	$str =~ s{ \[ /? (.+?) \] }{ $1 }gx;
+	return scalar split /[^\w\-']+/, $str;
+}
 
 my $bb = Parse::BBCode->new({
 	tags => {
@@ -186,7 +191,7 @@ my $bb = Parse::BBCode->new({
 	escapes => {
 		Parse::BBCode::HTML->default_escapes,
 		size => sub {
-			int $_[2] eq $_[2] && 
+			$_[2] !~ /\D/ && 
 			8 <= $_[2] && $_[2] <= 72 ? 
 			$_[2] : 16;
 		},
@@ -197,7 +202,7 @@ my $bb = Parse::BBCode->new({
 });
 
 sub bb_render {
-	my( $self, $text ) = @_;
+	my ( $self, $text ) = @_;
 	
 	return '' unless $text;
 	
@@ -207,6 +212,23 @@ sub bb_render {
 	return $text;
 }
 
+sub md_render {
+	my ( $self, $text ) = @_;
+	
+	return '' unless $text;
+	
+	$text = Text::Markdown->new->markdown( $text );
+	$text =~ s{<a (.+?)>}{<a class="link new-window" $1>}g;
+	
+	return $text;
+}
+
+sub noreply {
+	my $self = shift;
+	
+	sprintf "%s <noreply@%s>", 
+		$self->config->{AdminName}, $self->config->{domain};
+}
 
 =head1 NAME
 

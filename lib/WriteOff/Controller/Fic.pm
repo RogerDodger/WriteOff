@@ -46,20 +46,27 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
 
-	$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
+	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
 	
 	$c->form(
-		title        => [ [ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
-			'TRIM_COLLAPSE', 'SCALAR', 'NOT_BLANK', 
-			[ 'DBIC_UNIQUE', $c->model('DB::Story'), 'title' ] ],
-		author       => [ [ 'LENGTH', 1, $c->config->{len}{max}{user} ],
-			'TRIM_COLLAPSE', 'SCALAR' ],
-		website      => [ 'HTTP_URL', 'SCALAR' ],
-		image_id     => [ ( $c->stash->{event}->art ? 'NOT_BLANK' : () ), 'SCALAR',
-			[ 'IN_ARRAY', $c->stash->{event}->images->get_column('id')->all ] ],
-		wordcount    => [ [ 'BETWEEN', 
-			$c->stash->{event}->wc_min, $c->stash->{event}->wc_max ] ],
-		story        => [ 'SCALAR' ],
+		title        => [ 
+			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
+			'TRIM_COLLAPSE', 
+			'NOT_BLANK', 
+			[ 'DBIC_UNIQUE', $c->model('DB::Story'), 'title' ],
+		],
+		author       => [ 
+			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
+			'TRIM_COLLAPSE', 
+		],
+		website      => [ 'HTTP_URL' ],
+		image_id     => [ 
+			( $c->stash->{event}->art ? 'NOT_BLANK' : () ),
+			[ 'IN_ARRAY', $c->stash->{event}->images->get_column('id')->all ],
+		],
+		story        => [ 'NOT_BLANK' ],
+		wordcount    => [ [ 'BETWEEN', $c->stash->{event}->wc_min, 
+			$c->stash->{event}->wc_max ] ],
 	);
 	
 	if(!$c->form->has_error) {
@@ -78,7 +85,7 @@ sub do_submit :Private {
 		
 		$c->model('DB::ImageStory')->create({
 			story_id => $new->id,
-			image_id => $c->req->params->{image_id},
+			image_id => $c->form->valid->{image_id},
 		}) if $c->stash->{event}->art;
 		
 		$c->flash->{status_msg} = 'Submission successful';
@@ -117,10 +124,10 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->req->params->{wordcount} = $self->wordcount( $c->req->params->{story} );
+	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
 	
 	$c->form( 
-		story     => [ 'SCALAR' ],
+		story     => [ 'NOT_BLANK' ],
 		wordcount => [ ['BETWEEN', $c->stash->{story}->event->wc_min, 
 			$c->stash->{story}->event->wc_max] ],
 		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
@@ -165,12 +172,6 @@ sub do_delete :Private {
 	else {
 		$c->stash->{error_msg} = 'Title is incorrect';
 	}
-}
-
-sub wordcount {
-	my ( $self, $str ) = @_;
-	$str =~ s{ \[ /? (.+?) \] }{ $1 }gx;
-	return scalar split /[^\w\-']+/, $str;
 }
 
 =head1 AUTHOR

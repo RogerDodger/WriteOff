@@ -55,8 +55,3 @@
 		</div>
 	</div>
 [%- END %]
-<p>
-	<a class="ui-button" href="[% c.uri_for('/event/' _ event.id_uri _ '/prompt/vote') %]">
-		Prompt voting
-	</a>
-</p>

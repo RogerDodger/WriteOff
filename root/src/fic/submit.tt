@@ -17,6 +17,9 @@
 	Submissions are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
+<p>
+	Word limit: [% event.wc_min %]–[% event.wc_max %].
+</p>
 
 [%- IF event.fic_subs_allowed && c.user %]
 <form class="form-standard"  action="[% c.req.uri %]" method="post"

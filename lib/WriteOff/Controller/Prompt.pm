@@ -41,10 +41,10 @@ sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
 	$c->stash->{template} = 'prompt/vote.tt';
 	
 	if ( $c->stash->{event}->prompt_votes_allowed ) {
-		$c->stash->{heat} = 
-			$c->model('DB::Heat')->new_heat( $c->stash->{event}->prompts_rs );
-			
 		$c->forward('do_vote') if $c->req->method eq 'POST';
+		
+		$c->stash->{heat} = $c->model('DB::Heat')->get_or_new_heat
+		( $c->stash->{event}, $c->req->address );
 	}
 }
 
@@ -59,7 +59,7 @@ sub do_vote :Private {
 	$result //= 0.5 if $c->req->params->{tie};
 	$result //= 0   if $c->req->params->{right};
 	
-	$heat->do_heat( $result );
+	$heat->do_heat( $c->stash->{event}, $c->req->address, $result );
 }
 
 sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
@@ -79,8 +79,12 @@ sub do_submit :Private {
 	$c->req->params->{count} = $rs->search({ user_id => $c->user->id })->count;
 	
 	$c->form(
-		prompt       => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ], 
-			'TRIM_COLLAPSE', [ 'DBIC_UNIQUE', $rs, 'contents' ], 'NOT_BLANK' ],
+		prompt       => [ 
+			'NOT_BLANK',
+			[ 'LENGTH', 1, $c->config->{len}{max}{prompt} ], 
+			'TRIM_COLLAPSE', 
+			[ 'DBIC_UNIQUE', $rs, 'contents' ],
+		],
 		sessionid    => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 		count        => [ [ 'LESS_THAN', $c->config->{prompts_per_user} ] ],
 	);

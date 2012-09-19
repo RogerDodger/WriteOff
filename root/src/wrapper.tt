@@ -61,12 +61,14 @@
 		[% now.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %z (%Z)') %]
 	</p>
 	<p>
-		<a href="https://github.com/RogerDodger/WriteOff">WriteOff.pm</a>
+		<a class="link new-window" href="https://github.com/RogerDodger/WriteOff">
+			WriteOff.pm
+		</a>
 		&ndash; Written by RogerDodger
 	</p>
 [%- IF c.config.footer_addendum %]
 	<hr />
-	[% c.config.md.markdown( c.config.footer_addendum ) %]
+	[% c.md_render( c.config.footer_addendum ) %]
 [%- END %]
 </div>
 

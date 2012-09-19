@@ -190,6 +190,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 heats
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::Heat>
+
+=cut
+
+__PACKAGE__->has_many(
+  "heats",
+  "WriteOff::Schema::Result::Heat",
+  { "foreign.event_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 images
 
 Type: has_many
@@ -266,8 +281,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O4Y5UVvf5IOuKNxDpSDYSg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-19 14:33:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FfY9FxzJmXNr1CV1mwGIMA
 
 use constant LEEWAY => 5;
 

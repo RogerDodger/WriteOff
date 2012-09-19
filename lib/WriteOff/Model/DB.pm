@@ -4,15 +4,15 @@ use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
-    schema_class => 'WriteOff::Schema',
-    
-    connect_info => {
-        dsn => 'dbi:SQLite:WriteOff.db',
-        user => '',
-        password => '',
+	schema_class => 'WriteOff::Schema',
+	
+	connect_info => {
+		dsn => 'dbi:SQLite:WriteOff.db',
+		user => '',
+		password => '',
 		sqlite_unicode => 1,
-        on_connect_do => q{PRAGMA foreign_keys = ON},
-    },
+		on_connect_do => q{PRAGMA foreign_keys = ON},
+	},
 );
 
 =head1 NAME

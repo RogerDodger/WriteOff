@@ -75,8 +75,8 @@
 				</a>
 			</li>
 		</ul>
-	[%- c.config.md.markdown( event.blurb ) %]
-	[%- IF c.check_user_roles(c.user, 'admin') %]
+	[%- c.md_render( event.blurb ) %]
+	[%- IF c.check_user_roles('admin') %]
 		<a href="[% c.uri_for( '/event/' _ event.id_uri _ '/edit' ) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
 		</a>

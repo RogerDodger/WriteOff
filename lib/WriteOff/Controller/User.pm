@@ -39,19 +39,15 @@ sub login :Local :Args(0) {
 	$c->res->redirect( $c->uri_for('/') ) and return 0 if $c->user;
 	
 	$c->detach('login_attempts_exceeded') if $c->model('DB::LoginAttempt')
-		->search({ ip => $c->req->address })->created_after
+		->search({ ip => $c->req->address })
+		->created_after
 			( DateTime->now->subtract( minutes => $c->config->{login}{timer} ) )
 		->count >= $c->config->{login}{limit};
 	
-	my $success = 
-		($c->req->params->{Username} || '') =~ $c->config->{biz}{user}{regex} &&
-		$c->authenticate({ 
-			password => $c->req->params->{Password} || '',
-			dbix_class => { searchargs => [{
-				#Case-insensitive login
-				username => { like => $c->req->params->{Username} } 
-			}]},
-		});
+	my $success = $c->authenticate({ 
+		password => $c->req->params->{Password} || '',
+		username => $c->req->params->{Username} || '',
+	});
 
 	if($success) {
 		$c->user->verified ||
@@ -94,21 +90,27 @@ sub do_register :Private {
 	
 	my $params = $c->req->params;
 	my $rs = $c->model('DB::User');
-	$params->{captcha}      = $c->forward('/captcha_check');
-	$params->{unique_user}  = $rs->user_exists ( $params->{username} );
-	$params->{unique_email} = $rs->email_exists( $params->{email} );
+	$params->{captcha} = $c->forward('/captcha_check');
 	
 	$c->form(
-		username => [ 'NOT_BLANK', [ 'LENGTH', 1, $c->config->{len}{max}{user} ], 
-			[ 'REGEX', $c->config->{biz}{user}{regex} ] ],
-		unique_user => [ ['EQUAL_TO', 0] ],
-		password => ['NOT_BLANK', [ 'LENGTH', $c->config->{len}{min}{pass}, 
-			$c->config->{len}{max}{pass} ] ],
+		username => [ 
+			'NOT_BLANK', 
+			[ 'DBIC_UNIQUE', $rs, 'username' ],
+			[ 'LENGTH', 1, $c->config->{len}{max}{user} ], 
+			[ 'REGEX', $c->config->{biz}{user}{regex} ] 
+		],
+		password => [ 
+			'NOT_BLANK', 
+			[ 'LENGTH', $c->config->{len}{min}{pass}, $c->config->{len}{max}{pass} ] 
+		],
 		{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
-		email        => [ 'NOT_BLANK', 'EMAIL_MX' ],
-		unique_email => [ [ 'EQUAL_TO', 0 ] ],
-		timezone     => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
-		captcha      => [ [ 'EQUAL_TO', 1 ] ],
+		email => [ 
+			'NOT_BLANK', 
+			'EMAIL_MX', 
+			[ 'DBIC_UNIQUE', $rs, 'email' ] 
+		],
+		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
+		captcha  => [ [ 'EQUAL_TO', 1 ] ],
 	);
 	
 	if(!$c->form->has_error) {
@@ -129,8 +131,7 @@ sub do_register :Private {
 		
 		$c->stash->{email} = {
 			to           => $c->stash->{user}->email,
-			from         => $c->config->{AdminName} . ' ' . '<' . 'noreply@' . 
-				$c->config->{domain} . '>',
+			from         => $c->noreply,
 			subject      => $c->config->{name} . ' - Confirmation Email',
 			template     => 'email/registration.tt',
 			content_type => 'text/html',

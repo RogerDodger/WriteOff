@@ -61,14 +61,19 @@ sub do_submit :Private {
 	}
 	
 	$c->form(
-		title        => [ [ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
-			'TRIM_COLLAPSE', [ 'DBIC_UNIQUE', $c->model('DB::Image'), 'title' ],
-			'NOT_BLANK', 'SCALAR' ],
-		artist       => [ [ 'LENGTH', 1, $c->config->{len}{max}{user} ],
-			'TRIM_COLLAPSE', 'SCALAR' ],
-		website      => [ 'HTTP_URL', 'SCALAR' ],
+		title => [ 
+			'NOT_BLANK',
+			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
+			'TRIM_COLLAPSE', 
+			[ 'DBIC_UNIQUE', $c->model('DB::Image'), 'title' ],
+		],
+		artist => [ 
+			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
+			'TRIM_COLLAPSE',
+		],
+		website      => [ 'HTTP_URL' ],
 		image        => [ 'NOT_BLANK' ],
-		mimetype     => [ [ 'IN_ARRAY', @{ $c->config->{allowed_types} } ] ],
+		mimetype     => [ [ 'IN_ARRAY', @{ $c->config->{biz}{img}{types} } ] ],
 		captcha      => [ $c->user ? () : [ 'EQUAL_TO', 1 ] ],
 		filesize     => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
 	);

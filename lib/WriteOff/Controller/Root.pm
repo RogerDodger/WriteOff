@@ -22,7 +22,7 @@ sub begin :Private {
 		$c->req->method, 
 		$c->req->address,
 		( $c->user ? $c->user->username : 'guest' ),
-		$c->req->uri->path_query,
+		$c->req->uri->path,
 	);
 	
 	if( $c->req->method eq 'POST' ) {
@@ -128,11 +128,6 @@ sub render : ActionClass('RenderView') {}
 sub end :Private {
 	my ( $self, $c ) = @_;
 	$c->forward('render');
-	
-	# $c->log->info( sprintf "Response: %s - %s",
-		# $c->res->status,
-		# $c->stash->{template},
-	# );
 }
 
 =head1 AUTHOR

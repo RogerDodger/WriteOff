@@ -25,9 +25,9 @@ DROP TABLE IF EXISTS roles;
 -- User tables
 CREATE TABLE users (
 	id              INTEGER PRIMARY KEY,
-	username        TEXT UNIQUE NOT NULL,
+	username        TEXT COLLATE NOCASE UNIQUE NOT NULL,
 	password        TEXT NOT NULL,
-	email           TEXT UNIQUE,
+	email           TEXT COLLATE NOCASE UNIQUE,
 	timezone        TEXT DEFAULT 'UTC',
 	ip              TEXT,
 	verified        INTEGER DEFAULT 0 NOT NULL,
@@ -102,10 +102,12 @@ CREATE TABLE schedules (
 );
 
 CREATE TABLE heats (
-	id       INTEGER PRIMARY KEY,
-	"left"   INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
-	"right"  INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
-	created  TIMESTAMP
+	id        INTEGER PRIMARY KEY,
+	"left"    INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
+	"right"   INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
+	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	ip        TEXT,
+	created   TIMESTAMP
 );
 
 -- Resource tables
@@ -114,7 +116,7 @@ CREATE TABLE prompts (
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	ip        TEXT,
-	contents  TEXT NOT NULL,
+	contents  TEXT COLLATE NOCASE NOT NULL,
 	rating    REAL DEFAULT 1500 NOT NULL,
 	created   TIMESTAMP
 );
@@ -124,8 +126,8 @@ CREATE TABLE storys (
 	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	ip         TEXT,
-	title      TEXT UNIQUE NOT NULL,
-	author     TEXT DEFAULT 'Anonymous' NOT NULL,
+	title      TEXT UNIQUE COLLATE NOCASE NOT NULL,
+	author     TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website    TEXT,
 	contents   TEXT NOT NULL,
 	wordcount  INTEGER NOT NULL,
@@ -140,8 +142,8 @@ CREATE TABLE images (
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	ip        TEXT,
-	title     TEXT UNIQUE NOT NULL,
-	artist    TEXT DEFAULT 'Anonymous' NOT NULL,
+	title     TEXT UNIQUE COLLATE NOCASE NOT NULL,
+	artist    TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website   TEXT,
 	contents  BLOB NOT NULL,
 	thumb     BLOB NOT NULL,
@@ -176,7 +178,7 @@ CREATE TABLE votes (
 );
 
 CREATE TABLE scoreboard (
-	competitor  TEXT PRIMARY KEY,
+	competitor  TEXT COLLATE NOCASE PRIMARY KEY,
 	"score"     INTEGER DEFAULT 0 NOT NULL,
 	"awards"    TEXT,
 	created     TIMESTAMP,
