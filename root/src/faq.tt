@@ -122,19 +122,14 @@
 	'[size=24]Re-sized text[/size]',
 	'[url=http://www.example.com]A link to example.com[/url]',
 	'[color=red]Coloured text[/color]',
+	'[hr]',
 ] %]
 
-<ul style="list-style-type: none; font-family: monospace">
+<ul>
 [%- FOREACH tag IN tags %]
-	<li>[% tag %]</li>
+	<li><tt>[% tag %]</tt>[% IF loop.last %] – Produces a horizontal line[% END %]</li>
 [%- END %]
 </ul>
-
-<p>The above rendered with the BBCode parser gives:</p>
-
-<div class="story" style="margin-left: 2.4em">
-[% c.bb_render( tags.join("\n") ) %]
-</div>
 
 <p>
 	The parameter for [size] can be any integer from 8 to 72, where 16 is the
