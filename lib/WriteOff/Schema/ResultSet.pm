@@ -22,7 +22,7 @@ sub created_before {
     my $date_str = $self->result_source->schema->storage
 		->datetime_parser->format_datetime($datetime);
 
-    return $self->search({ created => { '<' => $date_str } });
+    return $self->search_rs({ created => { '<' => $date_str } });
 }
 
 sub created_after {
@@ -31,7 +31,11 @@ sub created_after {
     my $date_str = $self->result_source->schema->storage
 		->datetime_parser->format_datetime($datetime);
 
-    return $self->search({ created => { '>' => $date_str } });
+    return $self->search_rs({ created => { '>' => $date_str } });
+}
+
+sub seed_order {
+	return shift->search_rs(undef, { order_by => { -desc => 'seed' } } );
 }
 
 1;

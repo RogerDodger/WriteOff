@@ -65,6 +65,10 @@ a.link, a.link:visited {
 a.link:hover {
 	color: dodgerblue;
 }
+a.author, a.author:visited {
+	color: inherit;
+	border-bottom: 1px dotted silver;
+}
 .fake-ui-button, .fake-ui-button:hover {
 	color: #aaa;
 	background: #f6f6f6;
@@ -129,6 +133,10 @@ a.link:hover {
 }
 .event-listing .blurb {
 	font-size: 11pt;
+}
+.result-listing {
+	line-height: 1.4em;
+	font-size: 16px;
 }
 .good {
 	color: green;
@@ -220,12 +228,10 @@ table {
 /* MISC STYLES
   ____________ */
 
-.story p {
+.story {
 	font-family: Georgia, serif;
 	line-height: 1.8em;
-	min-height: 1.8em;
 	text-align: justify;
-	margin: 0;
 }
 .story blockquote {
 	padding: 1.8em;

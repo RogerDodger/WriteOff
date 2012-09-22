@@ -1,15 +1,31 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
 <h1>[% event.prompt | html %]</h1>
 
 <h2>Fic Gallery</h2>
 
-<p>
-	Gallery opens: <strong>[% local(event.public) %]</strong>.
-	<br />
 [%- IF event.fic_gallery_opened %]
-	Gallery is <strong class="good">open</strong>.
+<table class="slim">
+	<tr>
+		<th>#</th>
+		<th>Story</th>
+		<th>Wordcount</th>
+	</tr>
+	[%- FOREACH story IN event.storys_rs.seed_order.all %]
+	<tr>
+		<td class="center">[% loop.count %]</td>
+		<td>
+			<a class="link" href="[% c.uri_for( c.controller('Fic')
+				.action_for('view'), [ story.id_uri ]) %]">
+				[% story.title | html %]
+			</a>
+		</td>
+		<td class="center">[% story.wordcount %]</td>
+	</tr>
+	[%- END %]
+</table>
 [%- ELSE %]
+<p>
+	Gallery opens: <strong>[% format_dt( event.public ) %]</strong>.
+	<br />
 	Gallery is <strong class="bad">closed</strong>.
-[%- END %]
 </p>
+[%- END %]

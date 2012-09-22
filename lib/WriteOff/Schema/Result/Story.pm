@@ -256,6 +256,7 @@ __PACKAGE__->many_to_many("images", "image_stories", "image");
 
 # Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 11:33:41
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a1TFfpSpKNWXjdugxahEmg
+
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
@@ -283,6 +284,28 @@ sub id_uri {
 	}
 	
 	return $self->id . '-' . $desc;
+}
+
+# Persist these results to make sorting a lot quicker
+sub prelim_score {
+	my $self = shift;
+	
+	return $self->{__prelim_score} //=
+		$self->votes->prelim->search({ value => { '!=' => undef } })->average;
+}
+
+sub public_score {
+	my $self = shift;
+	
+	return $self->{__public_score} //= 
+		$self->votes->public->search({ value => { '!=' => undef } })->average;
+}
+
+sub private_score {
+	my $self = shift;
+	
+	return $self->{__private_score} //=
+		$self->votes->private->search({ value => { '!=' => undef } })->average;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

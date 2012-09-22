@@ -175,6 +175,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7HSX3/90FpLQCAhVw2DFqw
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
+	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -1,21 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-[% IF redirect %]
+[%- IF redirect %]
 <meta http-equiv="REFRESH" content="2; url=[% redirect %]"/>
-[% END %]
+[%- END %]
+
 <title>[% name.list.merge( title.list ).join(' - ') %]</title>
+
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" type="text/css" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery.alerts.css') %]" type="text/css" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/main.css') %]" type="text/css" />
 
 <script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" type="text/javascript"></script>
 <script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" type="text/javascript"></script>
-<script src="[% c.uri_for('/static/js/jquery.alerts.js') %]" type="text/javascript"></script>
 <script src="[% c.uri_for('/static/js/site.js') %]" type="text/javascript"></script>
 
 </head>
@@ -26,14 +26,15 @@
 	<div class="navbar ui-widget">
 		<a class="ui-button" href="[% c.uri_for('/') %]">Home</a>
 		<a class="ui-button" href="[% c.uri_for('/faq') %]">FAQ</a>
+		<a class="ui-button" href="[% c.uri_for('/scoreboard') %]">Scoreboard</a>
 	</div>
 	<div class="userbar ui-widget">
 [%- IF error_msg %]
 		<p class="ui-state-error ui-corner-all">[% error_msg %]</p>
-[% END %]
+[%- END %]
 [%- IF status_msg %]
 		<p class="ui-state-highlight ui-corner-all">[% status_msg %]</p>
-[% END %]
+[%- END %]
 [%- IF c.user %]
 		<a class="ui-button" href="[% c.uri_for('/user/me') %]">~[% c.user.username %]</a>
 		<a class="ui-button" href="[% c.uri_for('/user/settings') %]">Settings</a>
@@ -45,7 +46,7 @@
 			<input type="submit" value="Login" />
 			<a class="ui-button" href="[% c.uri_for('/user/register') %]">Register</a>
 		</form>
-[% END %]
+[%- END %]
 	</div>
 </div>
 
@@ -58,7 +59,7 @@
 <div class="footer">
 	<p>
 		It is currently 
-		[% now.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %z (%Z)') %]
+		[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
 	</p>
 	<p>
 		<a class="link new-window" href="https://github.com/RogerDodger/WriteOff">

@@ -127,7 +127,7 @@
 
 <ul>
 [%- FOREACH tag IN tags %]
-	<li><tt>[% tag %]</tt>[% IF loop.last %] – Produces a horizontal line[% END %]</li>
+	<li><tt>[% tag %]</tt>[% '– Produces a horizontal line' IF loop.last %]</li>
 [%- END %]
 </ul>
 
@@ -141,10 +141,10 @@
 
 <h2>How Do I Delete/Edit a Submission?</h2>
 <p>
-	You may delete/edit a submission by logging in and going to <a class="link
-	new-window" href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only
-	do this while submissions are open. (Also, I'm sure it goes without saying 
-	that this only works if you submitted while logged in.)
+	You may delete/edit a submission by logging in and going to <a class="link"
+	href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only do this 
+	while submissions are open. (Also, I'm sure it goes without saying that this
+	only works if you submitted while logged in.)
 </p>
 <p>
 	If you want a submission deleted or edited after submissions are closed, 

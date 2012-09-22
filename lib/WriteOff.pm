@@ -1,4 +1,5 @@
 package WriteOff;
+use utf8;
 use Moose;
 use namespace::autoclean;
 use 5.014;
@@ -30,7 +31,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.09_01';
+our $VERSION = '0.10';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -52,6 +53,7 @@ __PACKAGE__->config(
 	},
 	'Plugin::Session' => {
 		flash_to_stash => 1,
+		expires => 30 * (60 * 60 * 24),
 	},
 	'Log::Handler' => {
 		filename => __PACKAGE__->path_to('writeoff.log')->stringify,
@@ -104,7 +106,14 @@ __PACKAGE__->config(
 				},
 				blurb     => { LENGTH        => 'Blurb too long' },
 				count     => { LESS_THAN     => 'Submission limit exceeded' },
+				
 			},
+			vote => {
+				count => { GREATER_THAN => 'You must vote on at least half of the entries' },
+				ip    => { DBIC_UNIQUE  => 'You have already cast a vote' },
+				user  => { DBIC_UNIQUE  => 'You have already cast a vote' },
+				captcha => { EQUAL_TO   => 'Invalid CAPTCHA' },
+			}
 		},
 	},
 	len => {
@@ -140,10 +149,10 @@ __PACKAGE__->config(
 	prompts_per_user => 5,
 	interim => 60, #minutes
 	awards => {
-		gold          => '/static/images/awards/medal_gold.png',
-		silver        => '/static/images/awards/medal_silver.png',
-		bronze        => '/static/images/awards/medal_bronze.png',
-		participation => '/static/images/awards/ribbon.gif',
+		gold    => '/static/images/awards/medal_gold.png',
+		silver  => '/static/images/awards/medal_silver.png',
+		bronze  => '/static/images/awards/medal_bronze.png',
+		ribbon  => '/static/images/awards/ribbon.gif',
 	},
 	
 	disable_component_resolution_regex_fallback => 1,
@@ -164,8 +173,7 @@ __PACKAGE__->schedule(
 
 sub wordcount {
 	my ( $self, $str ) = @_;
-	$str =~ s{ \[ /? (.+?) \] }{ $1 }gx;
-	return scalar split /[^\w\-']+/, $str;
+	return scalar split /\s+/, $str;
 }
 
 my $bb = Parse::BBCode->new({
@@ -207,7 +215,6 @@ sub bb_render {
 	return '' unless $text;
 	
 	$text = $bb->render( $text );
-	$text =~ s{(.*)<br>}{<p>$1</p>}g;
 	
 	return $text;
 }
@@ -221,13 +228,6 @@ sub md_render {
 	$text =~ s{<a (.+?)>}{<a class="link new-window" $1>}g;
 	
 	return $text;
-}
-
-sub noreply {
-	my $self = shift;
-	
-	sprintf "%s <noreply@%s>", 
-		$self->config->{AdminName}, $self->config->{domain};
 }
 
 =head1 NAME

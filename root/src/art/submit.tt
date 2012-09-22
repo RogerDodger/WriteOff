@@ -1,13 +1,11 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
-<h1>[% event.prompt %]</h1>
+<h1>[% event.prompt | html %]</h1>
 
 <h2>Art Submissions</h2>
 
 <p>
-	Submissions open: <strong>[% local(event.art) %]</strong>.
+	Submissions open: <strong>[% format_dt(event.art) %]</strong>.
 	<br />
-	Submissions close: <strong>[% local(event.art_end) %]</strong>.
+	Submissions close: <strong>[% format_dt(event.art_end) %]</strong>.
 	<br />
 	Submissions received: <strong>[% event.images_rs.count %]</strong>.
 	<br />
@@ -21,7 +19,7 @@
 <p>
 	Allowed types: <tt>[% c.config.biz.img.types.join('</tt>, <tt>') %]</tt>.
 	<br />
-	Max filesize: <strong>[% c.config.biz.img.size / 1024 / 1024 | format('%d') %]MB</strong>.
+	Max filesize: <strong>[% c.config.biz.img.size / 1024 | format('%dKB') %]</strong>.
 </p>
 
 [%- IF event.art_subs_allowed %]

@@ -190,21 +190,6 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 heats
-
-Type: has_many
-
-Related object: L<WriteOff::Schema::Result::Heat>
-
-=cut
-
-__PACKAGE__->has_many(
-  "heats",
-  "WriteOff::Schema::Result::Heat",
-  { "foreign.event_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 images
 
 Type: has_many
@@ -281,8 +266,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-19 14:33:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FfY9FxzJmXNr1CV1mwGIMA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-22 00:43:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tsZRUm9CNpnvH79cxV8ccw
 
 use constant LEEWAY => 5;
 
@@ -303,13 +288,21 @@ sub id_uri {
 	return $self->id . '-' . $desc;
 }
 
-sub first_round {
-	my $row = shift;
-	return $row->art || $row->fic;
-}
-
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
+}
+
+sub public_story_candidates {
+	my( $self, $user ) = @_;
+	
+	my $rs = $self->storys->seed_order;
+	
+	if( $user ) {
+		$user = $self->result_source->schema->resultset('User')->resolve($user);
+		$rs = $rs->search({ user_id => { '!=' => $user ? $user->id : undef } });
+	}
+	
+	return $rs;
 }
 
 sub prompt_subs_allowed {
@@ -351,6 +344,12 @@ sub public_votes_allowed {
 	
 	return $row->check_datetimes_ascend
 	( $row->public, $row->now_dt, $row->private || $row->end );
+}
+
+sub is_ended {
+	my $row = shift;
+	
+	return $row->check_datetimes_ascend( $row->end, $row->now_dt );
 }
 
 sub check_datetimes_ascend {

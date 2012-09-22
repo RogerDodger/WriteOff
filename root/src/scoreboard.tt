@@ -1,0 +1,9 @@
+<h1>Scoreboard</h1>
+
+[%- IF (scoreboard = c.model('DB::Scoreboard').ordered) %]
+	[%- FOREACH competitor IN scoreboard %]
+	<p>[% item.competitor %] – [% item.score %]</p>
+	[%- END %]
+[%- ELSE %]
+<p>Nothing here yet.</p>
+[%- END %]

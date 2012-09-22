@@ -70,7 +70,7 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->detach('/forbidden', ['You cannot edit this item.']) unless 
-		$c->check_user_roles( $c->user, qw/admin/ );
+		$c->check_user_roles('admin');
 	
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 	
@@ -82,7 +82,7 @@ sub do_edit :Private {
 	
 	$c->form( 
 		blurb => [ [ 'LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
-		sessionid => [ 'NOT_BLANK', ['IN_ARRAY', $c->sessionid] ],
+		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 	);
 	
 	if(!$c->form->has_error) {
@@ -91,6 +91,12 @@ sub do_edit :Private {
 		$c->res->redirect( $c->uri_for('/') );
 	}
 	
+}
+
+sub results :PathPart('results') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+
+	$c->stash->{template} = 'event/results.tt';
 }
 
 sub set_prompt :Private {
@@ -123,7 +129,8 @@ sub tally_results :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
-	#blah blah blah
+	$c->model('DB::Scoreboard')->tally_storys( $e->storys_rs );
+	$c->model('DB::Scoreboard')->tally_images( $e->images_rs ) if $e->art;
 }
 
 =head1 AUTHOR

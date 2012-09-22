@@ -1,13 +1,13 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
 <h1>[% event.prompt | html %]</h1>
 
 <h2>Public Voting</h2>
 
 <p>
-	Votes open: <strong>[% local(event.public) %]</strong>.
+	Votes open: <strong>[% format_dt(event.public) %]</strong>.
 	<br />
-	Votes close: <strong>[% local(event.private || event.end) %]</strong>.
+	Votes close: <strong>[% format_dt(event.private || event.end) %]</strong>.
+	<br />
+	Votes received: <strong>[% event.vote_records_rs.public.count %]</strong>.
 	<br />
 [%- IF event.public_votes_allowed %]
 	Votes are <strong class="good">open</strong>.
@@ -15,3 +15,61 @@
 	Votes are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
+
+[%- IF event.public_votes_allowed %]
+
+<h3>Guidelines</h3>
+<ul>
+	<li>You must vote on at least half of the entries.</li>
+	<li>Only vote on stories that you have read.</li>
+	<li>Do not vote on a story if you are its author.</li>
+</ul>
+
+[%- IF c.form.has_error %]
+	[%- FOREACH error IN c.form.messages('vote') %]
+<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+			<strong>Error:</strong> [% error %]
+		</p>
+	</div>
+</div>
+	[%- END %]
+[%- ELSE %]
+<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+	<div class="ui-state-highlight ui-corner-all" style="padding: 0 .7em;"> 
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+			Scores are in ascending order, i.e., 10 is the best score
+		</p>
+	</div>
+</div>
+[%- END %]
+
+[%- vote_range = [0 .. 10] %]
+<form method="post" action="[% c.req.uri %]">
+	<table class="slim">
+		<tr>
+			<th>#</th>
+			<th>Title</th>
+			[%- FOREACH n IN vote_range %]
+			<th>[% n %]</th>
+			[%- END %]
+			<th>N/A</th>
+		</tr>
+		[%- FOREACH story IN event.public_story_candidates.all %]
+		<tr>
+			<td class="center">[% loop.count %]</td>
+			<td>[% story.title | html %]</td>
+			[%- FOREACH n IN vote_range %]
+			<td class="center"><input type="radio" name="[% story.id %]" value="[% n %]"/></td>
+			[%- END %]
+			<td class="center"><input type="radio" name="[% story.id %]" value="N/A"/></td>
+		</tr>
+		[%- END %]
+	</table>
+	<p>[% recaptcha %]</p>
+	<p><input type="submit" value="Cast vote" /></p>
+</form>
+[%- END %]

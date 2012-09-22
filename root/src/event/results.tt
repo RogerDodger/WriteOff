@@ -1,0 +1,42 @@
+<h1>[% event.prompt | html %]</h1>
+
+<h2>Results</h2>
+
+[%- IF event.is_ended %]
+	[%- awards = [ 'gold', 'silver', 'bronze' ] %]
+<table class="result-listing">
+
+	[%- storys = event.storys_rs.tally_order %]
+	[% FOREACH story IN storys %]
+<tr>
+		[%- pos = loop.index %]
+		[%- WHILE pos > 0 && 
+			storys.${pos.minus(1)}.public_score == story.public_score &&
+			storys.${pos.minus(1)}.private_score == story.private_score
+		-%]
+		[%- pos = pos - 1 %]
+		[%- END -%]
+
+		[%- award = awards.$pos || 'ribbon' %]
+	<td>
+		<img src="[% c.uri_for( c.config.awards.$award ) %]" />
+		<a class="link" href="[% c.uri_for( c.controller('Fic').action_for('view'), [story.id_uri] ) %]">
+			<em>[% story.title | html %]</em>
+		</a>
+		[%- IF story.website %]
+		by <a class="author new-window" href="[% story.website %]">[% story.author | html %]</a>
+		[%- ELSE %]
+		by [% story.author | html %]
+		[%- END %]
+		[% story.public_score | format('(%.2f)') IF story.public_score %]
+	</td>
+</tr>
+	[% END %]
+</table>
+[%- ELSE %]
+<p>
+	Results open: <strong>[% format_dt( event.end ) %]</strong>.
+	<br />
+	Results are <strong class="bad">closed</strong>.
+</p>
+[%- END %]

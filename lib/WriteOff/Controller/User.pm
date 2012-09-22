@@ -88,14 +88,12 @@ sub register :Local :Args(0) {
 sub do_register :Private {
 	my ( $self, $c ) = @_;
 	
-	my $params = $c->req->params;
-	my $rs = $c->model('DB::User');
-	$params->{captcha} = $c->forward('/captcha_check');
+	$c->req->params->{captcha} = $c->forward('/captcha_check');
 	
 	$c->form(
 		username => [ 
 			'NOT_BLANK', 
-			[ 'DBIC_UNIQUE', $rs, 'username' ],
+			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'username' ],
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ], 
 			[ 'REGEX', $c->config->{biz}{user}{regex} ] 
 		],
@@ -103,18 +101,18 @@ sub do_register :Private {
 			'NOT_BLANK', 
 			[ 'LENGTH', $c->config->{len}{min}{pass}, $c->config->{len}{max}{pass} ] 
 		],
-		{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
+		{ pass_confirm => [qw/password password2/] } => [ 'DUPLICATION' ],
 		email => [ 
 			'NOT_BLANK', 
 			'EMAIL_MX', 
-			[ 'DBIC_UNIQUE', $rs, 'email' ] 
+			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'email' ] 
 		],
 		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
 		captcha  => [ [ 'EQUAL_TO', 1 ] ],
 	);
 	
 	if(!$c->form->has_error) {
-		$c->stash->{user} = $rs->create({
+		$c->stash->{user} = $c->model('DB::User')->create({
 			username => $c->form->valid('username'),
 			password => $c->form->valid('password'),
 			email    => $c->form->valid('email'),
@@ -131,13 +129,14 @@ sub do_register :Private {
 		
 		$c->stash->{email} = {
 			to           => $c->stash->{user}->email,
-			from         => $c->noreply,
+			from         => sprintf "%s <noreply@%s>", 
+				$self->config->{AdminName}, $self->config->{domain},
 			subject      => $c->config->{name} . ' - Confirmation Email',
 			template     => 'email/registration.tt',
 			content_type => 'text/html',
 		};
-		
 		$c->forward( $c->view('Email::Template') );
+		
 		$c->stash->{template} = 'user/register_successful.tt';
 		$c->log->info( sprintf 'User created: %s (%s)',
 			$c->stash->{user}->username,
@@ -177,7 +176,7 @@ sub do_settings :Private {
 		
 		return 0 if $c->form->has_error;
 		
-		$c->user->update({ password => $c->form->valid('password')});
+		$c->user->update({ password => $c->form->valid('password') });
 		$c->stash->{status_msg} = 'Password changed successfully';
 	}
 	

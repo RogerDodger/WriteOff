@@ -9,7 +9,10 @@ use constant {
 sub get_or_new_heat {
 	my ($self, $event, $ip) = @_;
 	
-	my $heats = $event->heats->search({ ip => $ip });
+	my $heats = $self->search(
+		{ 'me.ip' => $ip, 'prompt.event_id' => $event->id },
+		{ join => 'prompt' },
+	);
 	return $heats->first if $heats->count;
 	
 	my $n = $event->prompts->count;
@@ -23,13 +26,12 @@ sub get_or_new_heat {
 	my @prompts = $event->prompts;
 	
 	my $id;
-	do { $id = int rand(4_294_967_295) } while ( $self->find($id) );
+	do { $id = int rand(1 << 32) } while ( $self->find($id) );
 	
 	return $self->create({
 		id       => $id,
 		left     => $prompts[$left]->id,
 		right    => $prompts[$right]->id,
-		event_id => $event->id,
 		ip       => $ip,
 	});
 }

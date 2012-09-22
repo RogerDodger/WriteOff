@@ -1,3 +1,12 @@
+v0.10
+=====
+- Public voting implemented
+- BBCode parsing done up proper
+- Scoreboard half done
+- Heats done up proper
+- Discovered the magic of pre-defined TT subs
+  - i.e., Date math done up proper
+
 v0.09
 =====
 - Fixed some forms & cleaned up the code

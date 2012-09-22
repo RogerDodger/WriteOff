@@ -21,7 +21,7 @@ sub begin :Private {
 	$c->log->info( sprintf "Request: %s - %s (%s) - %s", 
 		$c->req->method, 
 		$c->req->address,
-		( $c->user ? $c->user->username : 'guest' ),
+		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
 	);
 	
@@ -63,6 +63,12 @@ sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{template} = 'faq.tt';
+}
+
+sub scoreboard :Local :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{template} = 'scoreboard.tt';
 }
 
 =head2 default
