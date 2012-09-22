@@ -106,6 +106,11 @@ __PACKAGE__->set_primary_key("competitor");
 # Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:54:27
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Jj6WWt5xFEFCMUL4hSy7sA
 __PACKAGE__->add_columns(
+	awards => {
+		data_type => "VARCHAR",
+		serializer_class => "JSON",
+	},
+	
 	created => { data_type => "timestamp", set_on_create => 1 },
 	updated => { data_type => "timestamp", set_on_create => 1, set_on_update => 1 },
 );
