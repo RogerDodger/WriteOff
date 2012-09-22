@@ -129,8 +129,8 @@ sub do_register :Private {
 		
 		$c->stash->{email} = {
 			to           => $c->stash->{user}->email,
-			from         => sprintf "%s <noreply@%s>", 
-				$self->config->{AdminName}, $self->config->{domain},
+			from         => sprintf( "%s <noreply@%s>", 
+				$c->config->{AdminName}, $c->config->{domain} ),
 			subject      => $c->config->{name} . ' - Confirmation Email',
 			template     => 'email/registration.tt',
 			content_type => 'text/html',
