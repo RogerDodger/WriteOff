@@ -227,6 +227,7 @@ sub bb_render {
 	return '' unless $text;
 	
 	$text = $bb->render( $text );
+	$text =~ s{</div>\s*<br>}{</div>}g;
 	$text =~ s{<br>}{<br />}g;
 	
 	return $text;
