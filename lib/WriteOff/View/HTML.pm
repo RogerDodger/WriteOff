@@ -17,7 +17,6 @@ __PACKAGE__->config(
 
 $Template::Stash::SCALAR_OPS->{ minus } = sub { return $_[0] - $_[1] };
 
-
 sub format_dt {
 	my( $self, $c, $dt, $fmt ) = @_;
 	

@@ -12,7 +12,9 @@
 		[ storys.${loop.index.minus(1)}.id_uri ]) %]">
 		« Prev
 	</a>
-	<strong style="padding: 0 5px">[% loop.count %]</strong>
+	&thinsp;
+	<strong>[% loop.count %]</strong>
+	&thinsp;
 	[%- i = loop.count % loop.size %]
 	<a class="link" href="[% c.uri_for( c.controller('Fic').action_for('view'),
 		[ storys.$i.id_uri ]) %]">
