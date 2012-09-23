@@ -30,7 +30,28 @@ sub auto :Private {
 		$c->check_user_roles('admin'); 
 }
 
-=head2 event_add
+=head2 scoreboard_reset :Path('/scoreboard/reset')
+
+Reset the scoreboard.
+
+=cut
+
+sub scoreboard_reset :Path('/scoreboard/reset') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->model('DB::Scoreboard')->delete_all unless $c->req->params->{stack};
+	
+	if( !$c->req->params->{clear} ) {
+		$c->forward('/event/tally_results', [ $_ ]) for	$c->model('DB::Event')
+			->order_by({ -asc => 'created' })->get_column('id')->all;
+	}
+	
+	$c->stash->{status_msg} = 'Scoreboard reset';
+	
+	$c->forward( $c->controller('Root')->action_for('scoreboard') );
+}
+
+=head2 event_add :Path('/event/add')
 
 Create events
 

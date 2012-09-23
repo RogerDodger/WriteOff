@@ -1,9 +1,42 @@
-<h1>Scoreboard</h1>
+[% title = 'Scoreboard' %]
+<h1 class="center">[% name %] Hall of Fame</h1>
 
+<table class="slim t-center">
+	<tr>
+		<th>#</th>
+		<th>Competitor</th>
+		<th>Score</th>
+		<th>Awards</th>
+	</tr>
 [%- IF (scoreboard = c.model('DB::Scoreboard').ordered) %]
-	[%- FOREACH competitor IN scoreboard %]
-	<p>[% item.competitor %] – [% item.score %]</p>
+	[%- FOREACH item IN scoreboard %]
+		[%- pos = loop.index %]
+		[%- WHILE pos > 0 && scoreboard.${pos.minus(1)}.score == item.score %]
+		[%- pos = pos - 1 %]
+		[%- END %]
+	<tr>
+		<td class="center">[% pos + 1 %]</td>
+		<td>[% item.competitor | html %]</td>
+		<td class="center">[% item.score %]</td>
+		<td class="center">
+		[%- FOREACH award IN item.awards %]
+			<img src="[% c.config.awards.$award.path %]" 
+				alt="[% c.config.awards.$award.alt %]"/>
+		[%- END %]
+		</td>
+	</tr>
 	[%- END %]
 [%- ELSE %]
-<p>Nothing here yet.</p>
+	<tr>
+		<td class="center">NaN</td>
+		<td>Anonymous</td>
+		<td class="center">&infin;</td>
+		<td class="center">
+		[%- FOREACH award IN [ 'gold', 'gold', 'gold', 'gold', 'gold' ] %]
+			<img src="[% c.config.awards.$award.path %]" 
+				alt="[% c.config.awards.$award.alt %]"/>
+		[%- END %]
+		</td>
+	</tr>
 [%- END %]
+</table>

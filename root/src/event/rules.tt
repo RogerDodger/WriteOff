@@ -1,5 +1,6 @@
 <h1>[% event.prompt | html %]</h1>
 
+[%- title = [ 'Rules', event.prompt ] %]
 <h2>Rules</h2>
 <p>
 	Failure to adhere to any of the following may be grounds for punitive
@@ -53,9 +54,9 @@
 </ol>
 
 <h4>Example</h4>
-<p style="width: 350px; margin: 0 auto"; >
+<p style="width: 350px; margin: 0 auto;" >
 	<textarea style="width: 350px; height: 200px; max-height: 250px; 
-		max-width: 350px; " disabled="disabled">[% -%]
+		max-width: 350px; " rows="24" cols="16" disabled="disabled">[% -%]
 This is a sentence. Sentences have exactly one space between them.
 
 This is a new paragraph. 

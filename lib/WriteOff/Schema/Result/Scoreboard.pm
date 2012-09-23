@@ -115,6 +115,29 @@ __PACKAGE__->add_columns(
 	updated => { data_type => "timestamp", set_on_create => 1, set_on_update => 1 },
 );
 
+my %award_rank = (
+	gold => 1,
+	silver => 2,
+	bronze => 3,
+	ribbon => 10,
+);
+
+sub add_awards {
+	my $self = shift;
+	
+	@_ = @{$_[0]} if ref $_[0] eq 'ARRAY';
+	
+	$self->update({ 
+		awards => [ 
+			sort { $award_rank{$a} <=> $award_rank{$b} }
+			grep { defined $award_rank{$_} } 
+			@_, @{ $self->awards // [] }
+		]
+	});
+	
+	return $self;
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

@@ -19,7 +19,8 @@
 
 		[%- award = awards.$pos || 'ribbon' %]
 	<td>
-		<img src="[% c.uri_for( c.config.awards.$award ) %]" />
+		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
+			alt="[% c.config.awards.$award.alt %]"/>
 		<a class="link" href="[% c.uri_for( c.controller('Fic').action_for('view'), [story.id_uri] ) %]">
 			<em>[% story.title | html %]</em>
 		</a>

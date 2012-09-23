@@ -1,13 +1,11 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
-<h1>[% event.prompt %]</h1>
+<h1>[% event.prompt | html %]</h1>
 
 <h2>Fic Submissions</h2>
 
 <p>
-	Submissions open: <strong>[% local(event.fic) %]</strong>.
+	Submissions open: <strong>[% format_dt(event.fic) %]</strong>.
 	<br />
-	Submissions close: <strong>[% local(event.fic_end) %]</strong>.
+	Submissions close: <strong>[% format_dt(event.fic_end) %]</strong>.
 	<br />
 	Submissions received: <strong>[% event.storys_rs.count %]</strong>.
 	<br />
@@ -33,7 +31,7 @@
 					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
 					<strong>Error:</strong> [% error %]
 					[%- IF error.match('^Wordcount') %] 
-					[%- '(' _ c.req.params.wordcount _ ' words)' %]
+					[%- c.req.params.wordcount | format('(%d words)') %]
 					[%- END %]
 				</p>
 			</div>

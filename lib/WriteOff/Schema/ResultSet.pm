@@ -38,4 +38,10 @@ sub seed_order {
 	return shift->search_rs(undef, { order_by => { -desc => 'seed' } } );
 }
 
+sub order_by {
+	my $self = shift;
+	
+	return $self->search(undef, { order_by => shift });
+}
+
 1;

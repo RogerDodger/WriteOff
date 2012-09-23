@@ -1,5 +1,6 @@
 [%- title = 'FAQ' %]
 <h1>[% title %]</h1>
+
 <h2>What the Hay Is This?</h2>
 <p>
 	The [% name %] is a timed challenge where writers and artists create stories
@@ -14,6 +15,7 @@
 	stories were written to each artwork. In essence, their goal is to create
 	something that will inspire a story.
 </p>
+
 <h2>How Does It Work?</h2>
 <p>
 	The following flow chart demonstrates the possible structures of a
@@ -109,6 +111,7 @@
 	guarantees.)
 </p>
 
+<a class="anchor" name="Tags"> </a>
 <h2>How Do I Get Style?</h2>
 <p>The following markups are available:</p>
 
@@ -133,7 +136,7 @@
 
 <p>
 	The parameter for [size] can be any integer from 8 to 72, where 16 is the
-	default size. The paramater for [color] can be any a valid HTML colour (See 
+	default size. The parameter for [color] can be any a valid HTML colour (See 
 	<a href="http://www.w3schools.com/html/html_colornames.asp"
 	class="link new-window" >[1]</a> and <a class="link new-window" 
 	href="http://www.w3schools.com/html/html_colors.asp">[2]</a>).

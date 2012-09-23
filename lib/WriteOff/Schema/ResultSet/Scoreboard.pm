@@ -13,8 +13,8 @@ sub tally_storys {
 	my %tally; 
 	
 	for( my $i = 0; $i < $n; $i++ ) {
-		my $storage = $self->find_or_create($storys[$i]->author);
-		my $author = $storage->competitor;
+		my $store = $self->find_or_create({ competitor => $storys[$i]->author });
+		my $author = $store->competitor;
 		
 		# Deal with tiebreakers
 		my($upper, $lower) = ($i, $i);
@@ -25,7 +25,7 @@ sub tally_storys {
 			$storys[$i]->public_score  == $storys[$lower-1]->public_score &&
 			$storys[$i]->private_score == $storys[$lower-1]->private_score;
 		
-		$tally{$author} //= { score => $storage->score };
+		$tally{$author} //= { score => $store->score };
 		$tally{$author}{score} += $n - ($upper + $lower) - 1;
 		
 		if( $lower <= $#medals ) {
@@ -34,20 +34,18 @@ sub tally_storys {
 		}
 	}
 	
-	while( my($author, $data) = each %tally ) {
-		my $row = $self->find($author);
-		$row->update({
-			score  => $data->{score} > 0 ? $data->{score} : 0,
-			awards => [ $row->awards, @{ $data->{awards} // ['ribbon'] } ],
-		});
+	while( my($author, $new) = each %tally ) {
+		my $store = $self->find($author);
+		$store->update({ score  => $new->{score} > 0 ? $new->{score} : 0 });
+		$store->add_awards( $new->{awards} // ['ribbon'] );
 	}
 }
 
 sub ordered {
-	return shift->search(undef, { order_by => [
+	return shift->order_by([
 		{ -desc => 'score' },
 		{ -asc  => 'competitor' },
-	]});
+	]);
 }
 
 1;
@@ -88,10 +86,10 @@ appears more than once in a given set, they are only given one ribbon.
 
 =head2 tally_storys
 
-Tallies scores from a L<WriteOff::Schema::ResultSet::Story> object.
+Tallies scores from a L<WriteOff::Schema::ResultSet::Story> resultset.
 
 =head2 tally_images
 
-Tallies scores from a L<WriteOff::Schema::ResultSet::Image> object.
+Tallies scores from a L<WriteOff::Schema::ResultSet::Image> resultset.
 
 =cut

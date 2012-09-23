@@ -1,3 +1,7 @@
+v0.11
+- Scoreboard done
+- FAQ cleaned up
+
 v0.10
 =====
 - Public voting implemented

@@ -31,7 +31,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.10_02';
+our $VERSION = '0.11';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -149,10 +149,22 @@ __PACKAGE__->config(
 	prompts_per_user => 5,
 	interim => 60, #minutes
 	awards => {
-		gold    => '/static/images/awards/medal_gold.png',
-		silver  => '/static/images/awards/medal_silver.png',
-		bronze  => '/static/images/awards/medal_bronze.png',
-		ribbon  => '/static/images/awards/ribbon.gif',
+		gold => {
+			path => '/static/images/awards/medal_gold.png',
+			alt  => 'Gold medal',
+		},
+		silver => {
+			path => '/static/images/awards/medal_silver.png',
+			alt  => 'Silver medal',
+		},
+		bronze => {
+			path => '/static/images/awards/medal_bronze.png',
+			alt  => 'Bronze medal',
+		},
+		ribbon => {
+			path => '/static/images/awards/ribbon.gif',
+			alt  => 'Participation ribbon',
+		},
 	},
 	
 	disable_component_resolution_regex_fallback => 1,
@@ -215,6 +227,7 @@ sub bb_render {
 	return '' unless $text;
 	
 	$text = $bb->render( $text );
+	$text =~ s{<br>}{<br />}g;
 	
 	return $text;
 }
