@@ -31,7 +31,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.11_01';
+our $VERSION = '0.11_03';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -196,7 +196,7 @@ my $bb = Parse::BBCode->new({
 		url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
 		size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
 		color => '<span style="color: %{color}a;">%{parse}s</span>',
-		center => '<span style="text-align: center">%{parse}s</span>',
+		center => '<div style="text-align: center">%{parse}s</div>',
 		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
 		quote => {
 			class => 'block',
