@@ -31,7 +31,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.11_03';
+our $VERSION = '0.11_05';
 
 __PACKAGE__->config(
 	name => 'Write-off',
