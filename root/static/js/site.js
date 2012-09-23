@@ -17,9 +17,9 @@ jQuery(document).ready(function($) {
 	}).blur();
 	$('.userbar .ui-state-highlight, .userbar .ui-state-error').fadeOut(5000, "easeInQuint");
 	var uploadOk = 0;
-	$('a.new-window').attr({
-		target : '_blank',
-		title  : 'Open link in new tab',
+	$('a.new-window').attr('target', '_blank');
+	$('a.new-window').attr('title', function(i, title) {
+		return title || 'Open link in new tab';
 	});
 	var filesize = 0;
 	var max = 4; //MB

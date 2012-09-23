@@ -14,15 +14,23 @@
 		<th> </th>
 	[%- WHILE (story = storys.next) %]
 	<tr>
-		<td>[% story.event.prompt | html %]</td>
+		<td>[% story.event.prompt | truncate(12) | html %]</td>
 		<td class="center">[% story.event_id %]</td>
-		<td><a class="link" href="[% c.uri_for( '/fic/' _ story.id_uri ) %]">[% story.title | html %]</a></td>
+		<td>
+			<a class="link" title="[% story.title | html %]" href="[% c.uri_for(
+				c.controller('Fic').action_for('view'), [ story.id_uri ]) %]">
+				[% story.title | truncate(24) | html %]
+			</a>
+		</td>
 		<td>
 			[%- IF story.website %]
-			<a class="link" href="[% story.website %]">[% story.author | html %]</a>
+			<a title="[% story.author| html %]" class="link new-window" href="[%
+				story.website | url %]">
 			[%- ELSE %]
-			[% story.author | html %]
+			<a title="[% story.author| html %]">
 			[%- END %]
+				[% story.author | truncate(24) | html %]
+			</a>
 		</td>
 		<td class="center">[% story.wordcount %]</td>
 		<td>[% format_dt( story.updated, '%d-%b-%Y %H:%M') %]</td>
@@ -58,19 +66,22 @@
 		<th> </th>
 	[%- WHILE (image = images.next) %]
 	<tr>
-		<td>[% image.event.prompt | html %]</td>
+		<td>[% image.event.prompt | truncate(12) | html %]</td>
 		<td class="center">[% image.event_id %]</td>
 		<td>
 			<a class="link" href="[% c.uri_for( '/art/' _ image.id_uri ) %]">
-				[% image.title | html %]
+				[% image.title | truncate(24) | html %]
 			</a>
 		</td>
 		<td>
 			[%- IF image.website %]
-			<a class="link" href="[% image.website %]">[% image.artist | html %]</a>
+			<a title="[% image.artist | html %]" class="link new-window" href="[%
+				image.website | url %]">
 			[%- ELSE %]
-			[% image.artist | html %]
+			<a title="[% image.artist | html %]">
 			[%- END %]
+				[% image.artist | truncate(24) | html %]
+			</a>
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
 		<td>[% format_dt( image.created, '%d-%b-%Y %H:%M') %]</td>
@@ -98,7 +109,7 @@
 	</tr>
 	[%- WHILE (prompt = prompts.next) %]
 	<tr>
-		<td>[% prompt.event.prompt | html %]</td>
+		<td>[% prompt.event.prompt | truncate(12) | html %]</td>
 		<td class="center">[% prompt.event_id %]</td>
 		<td>[% prompt.contents | html %]</td>
 		<td class="center">[% prompt.rating | format('%d') %]</td>

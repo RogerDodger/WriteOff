@@ -13,7 +13,7 @@ sub now_dt {
 	return DateTime->now;
 	
 	return shift->result_source->schema->storage->datetime_parser
-		->parse_datetime('2012-12-27 01:00:00');
+		->parse_datetime('2012-09-20 15:00:00');
 }
 
 sub created_before {
