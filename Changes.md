@@ -5,7 +5,7 @@ v0.12
 - VoteRecord view/delete added
 - Scoreboard controller added
 - Admin controller removed - actions put in other controllers
-- DateTimes now format into <time> tags, with title attribute as a full RFC2822 date time in UTC
+- DateTimes now format into time tags, with title attribute as a full RFC2822 date time in UTC
 - Added a number of title attributes to truncated table data
 - Fixed Cron controller
 - Set $ENV{TZ} to UTC and configurable at deployment level
