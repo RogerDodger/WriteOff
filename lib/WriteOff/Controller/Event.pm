@@ -4,6 +4,8 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+use constant INTERIM => WriteOff->config->{interim};
+
 =head1 NAME
 
 WriteOff::Controller::Event - Catalyst Controller
@@ -16,12 +18,9 @@ part allows submissions at the current time.
 
 =head1 METHODS
 
-=cut
-
-
 =head2 index :PathPart('event') :Chained('/') :CaptureArgs(1)
 
-Grabs event info
+Grabs an event.
 
 =cut
 
@@ -36,11 +35,115 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 		$c->res->redirect
 		( $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] ) );
 	}
+	
+	$c->stash->{title} = [ $c->stash->{event}->prompt ];
+}
+
+=head2 add :Local :Args(0)
+
+Adds an event.
+
+=cut
+
+sub add :Local :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->forward( $c->controller('Root')->action_for('admin_check') );
+	
+	$c->stash->{template} = 'event/add.tt';
+	
+	if($c->req->method eq 'POST') {
+	
+		my $p = $c->req->params; 
+		$c->form(
+			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT MySQL/] ],
+			prompt => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
+			wc_min      => [ 'NOT_BLANK', 'UINT' ],
+			wc_max      => [ 'NOT_BLANK', 'UINT' ],
+			fic_dur     => [ 'NOT_BLANK', 'UINT' ],
+			public_dur  => [ 'NOT_BLANK', 'UINT' ],
+			art_dur     => [ $p->{has_art}     ? ( 'NOT_BLANK', 'UINT' ) : () ],
+			prelim_dur  => [ $p->{has_prelim}  ? ( 'NOT_BLANK', 'UINT' ) : () ],
+			private_dur => [ $p->{has_private} ? ( 'NOT_BLANK', 'UINT' ) : () ],
+		);
+		
+		$c->forward('do_add') if !$c->form->has_error;
+	}
+}
+
+sub do_add :Private {
+	my ( $self, $c ) = @_;
+	
+	my $p  = $c->req->params; 
+	my $dt = $c->form->valid('start');
+		
+	my %row;
+	$row{start}         = $dt->clone;
+	$row{prompt_voting} = $dt->add( minutes => INTERIM )->clone;
+	
+	if( $p->{has_art} ) {
+		$row{art}     = $dt->add( minutes => INTERIM )->clone;
+		$row{art_end} = $dt->add( hours => $p->{art_dur} )->clone;
+	} 
+	
+	$row{fic}     = $dt->add( minutes => INTERIM )->clone;
+	$row{fic_end} = $dt->add( hours => $p->{fic_dur} )->clone;
+	
+	if( $p->{has_prelim} ) {
+		$row{prelim} = $dt->add( minutes => INTERIM )->clone;
+		$row{public} = $dt->add( days => $p->{prelim_dur} )->clone;
+	}
+	else {
+		$row{public} = $dt->add( minutes => INTERIM )->clone;
+	}
+	
+	if( $p->{has_private} ) {
+		$row{private} = $dt->add( days => $p->{public_dur}  )->clone;
+		$row{end}     = $dt->add( days => $p->{private_dur} )->clone;
+	}
+	else {
+		$row{end} = $dt->add( days => $p->{public_dur} )->clone;
+	}
+	
+	$row{prompt}   = $c->form->valid('prompt') || 'TBD';
+	$row{wc_min}   = $p->{wc_min};
+	$row{wc_max}   = $p->{wc_max};
+	$row{rule_set} = 1;
+	
+	my $e = $c->model('DB::Event')->create(\%row);
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/set_prompt',
+		at     => $e->art || $e->fic,
+		args   => [$e->id],
+	});
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/prelim_distr',
+		at     => $e->prelim,
+		args   => [$e->id],
+	}) if $p->{has_prelim};
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/judge_distr',
+		at     => $e->private,
+		args   => [$e->id],
+	}) if $p->{has_private};
+	
+	$c->model('DB::Schedule')->create({
+		action => '/event/tally_results',
+		at     => $e->end,
+		args   => [$e->id],
+	});
+	
+	$c->flash->{status_msg} = 'Event created';
+	$c->res->redirect( $c->uri_for('/') );
 }
 
 sub fic :PathPart('fic') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
+	push $c->stash->{title}, 'Fic';
 }
 
 sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
@@ -48,32 +151,54 @@ sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
 
 	$c->detach('/error', ['There is no art component to this event.']) unless
 		$c->stash->{event}->art;
+		
+	push $c->stash->{title}, 'Art';
 }
 
 sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
+	push $c->stash->{title}, 'Prompt';
 }
 
 sub vote :PathPart('vote') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
+	push $c->stash->{title}, 'Vote';
 }
 
 sub rules :PathPart('rules') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{template} = 'event/rules.tt';
+	
+	push $c->stash->{title}, 'Rules';
+}
+
+sub view :PathPart('submissions') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->detach('/forbidden', ['You are not an organiser for this event.']) unless 
+		$c->stash->{event}->is_organised_by( $c->user );
+	
+	$c->stash->{storys}  = $c->stash->{event}->storys;
+	$c->stash->{images}  = $c->stash->{event}->images;
+	$c->stash->{prompts} = $c->stash->{event}->prompts;
+	$c->stash->{records} = $c->stash->{event}->vote_records->filled;
+	
+	push $c->stash->{title}, 'Submissions';
+	$c->stash->{template} = 'user/me.tt';
 }
 
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You cannot edit this item.']) unless 
-		$c->check_user_roles('admin');
-	
+	$c->detach('/forbidden', ['You are not an organiser for this event.']) unless 
+		$c->stash->{event}->is_organised_by( $c->user );
+		
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 	
+	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'event/edit.tt';
 }
 
@@ -96,6 +221,7 @@ sub do_edit :Private {
 sub results :PathPart('results') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 
+	push $c->stash->{title}, 'Results';
 	$c->stash->{template} = 'event/results.tt';
 }
 
@@ -129,10 +255,14 @@ sub tally_results :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
+	$c->log->info( sprintf "Tallying results for: Event %02d - %s", 
+		$e->id, $e->prompt
+	);
+	
 	$c->model('DB::Scoreboard')->tally_storys( $e->storys_rs );
 	$c->model('DB::Scoreboard')->tally_images( $e->images_rs ) if $e->art;
-}
 
+}
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

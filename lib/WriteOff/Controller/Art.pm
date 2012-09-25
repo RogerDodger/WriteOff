@@ -110,8 +110,11 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->res->content_type( $c->stash->{image}->mimetype );
-	$c->res->body( $c->req->params->{thumb} ? $c->stash->{image}->thumb : 
-		$c->stash->{image}->contents );
+	$c->res->body( 
+		$c->req->query_keywords eq 'thumb' ? 
+		$c->stash->{image}->thumb : 
+		$c->stash->{image}->contents 
+	);
 }
 
 sub delete :PathPart('delete') :Chained('index') :Args(0) {

@@ -166,6 +166,12 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:l39rb0Viyz0uRWpMUzrmvg
 
+sub item {
+	my $self = shift;
+	
+	return $self->story if $self->story_id;
+	return $self->image if $self->image_id;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

@@ -1,5 +1,5 @@
 <h2>Event Listing</h2>
-[% INCLUDE event/list_partial.tt %]
+[% INCLUDE event/list.tt %]
 <p>
 [% IF c.action == 'index' %]
 	<span class="fake-ui-button">Active events</span>

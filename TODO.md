@@ -1,10 +1,10 @@
-22 Sep 23:45 (CST)
+26 Sep 06:37 (CST)
 ===================
 
+- Saving public votes into session
 - Email notifications
 - Votes
-  - Tallying
   - Prelim distribution
   - Volunteer distribution
-- Scoreboard
+  - Judge distribution
 - Password recovery

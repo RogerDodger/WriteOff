@@ -7,6 +7,7 @@ use DBI;
 use DateTime;
 
 my $dbname = 'WriteOff.db';
+die "$dbname does not exist" unless -e $dbname;
 my $dbh = DBI->connect("dbi:SQLite:dbname=$dbname","","");
 
 my $dt = DateTime->now->ymd;

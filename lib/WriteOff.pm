@@ -31,7 +31,7 @@ use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.11_05';
+our $VERSION = '0.12';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -53,7 +53,7 @@ __PACKAGE__->config(
 	},
 	'Plugin::Session' => {
 		flash_to_stash => 1,
-		expires => 30 * (60 * 60 * 24),
+		expires => 365 * (60 * 60 * 24),
 	},
 	'Log::Handler' => {
 		filename => __PACKAGE__->path_to('writeoff.log')->stringify,
@@ -61,6 +61,7 @@ __PACKAGE__->config(
 		mode     => 'append',
 		newline  => 1,
 	},
+	timezone => 'UTC',
 	scheduler => { time_zone => 'floating' },
 	validator => {
 		plugins => [ 'DBIC::Unique', 'Trim' ],
@@ -172,6 +173,8 @@ __PACKAGE__->config(
 );
 
 __PACKAGE__->setup();
+
+$ENV{TZ} = __PACKAGE__->config->{timezone};
 
 __PACKAGE__->schedule(
 	at    => '0 * * * *',

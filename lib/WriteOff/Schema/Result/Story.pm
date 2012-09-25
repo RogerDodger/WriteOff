@@ -286,6 +286,10 @@ sub id_uri {
 	return $self->id . '-' . $desc;
 }
 
+sub artist {
+	return shift->author;
+}
+
 # Persist these results to make sorting a lot quicker
 sub prelim_score {
 	my $self = shift;

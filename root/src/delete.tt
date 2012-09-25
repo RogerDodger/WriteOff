@@ -1,8 +1,11 @@
+[% referer = c.req.params.referer || c.req.referer -%]
+[% DEFAULT identifier = 'title' -%]
 <h1>Confirm Deletion</h1>
-<p>Please enter the title of the selected item to confirm deletion.</p>
+<p>Please enter the [% identifier %] of the selected item to confirm deletion.</p>
 <form method="post" action="[% c.req.uri %]">
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<input type="text" name="title" style="width: 250px"  />
+	<input type="hidden" name="referer" value="[% referer %]" />
+	<input type="text" name="[% identifier.lower %]" style="width: 250px"  />
 	<input type="submit" value="Delete" />
-	<a class="ui-button" href="[% c.uri_for('/user/me') %]">Abort</a>
+	<a class="ui-button" href="[% referer %]">Abort</a>
 </form>

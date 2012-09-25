@@ -3,6 +3,18 @@ package WriteOff::Schema::ResultSet::VoteRecord;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
+sub filled {
+	my $self = shift;
+
+	return $self->search(
+		{ 'votes.value' => { '!=' => undef } },
+		{ 
+			join => 'votes',
+			group_by => 'me.id',
+		}
+	);
+}
+
 sub round {
 	my( $self, $round ) = @_;
 	

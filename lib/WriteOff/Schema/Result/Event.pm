@@ -292,6 +292,23 @@ sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
 
+sub organisers {
+	my $self = shift;
+	
+	return ();
+}
+
+sub is_organised_by {
+	my $self = shift;
+	my $user = $self->result_source->schema->resultset('User')
+		->resolve(shift) or return 0;
+	
+	return 1 if grep { $_->id == $user->id } $self->organisers;
+	return 1 if $user->is_admin;
+	
+	0;
+}
+
 sub public_story_candidates {
 	my( $self, $user ) = @_;
 	

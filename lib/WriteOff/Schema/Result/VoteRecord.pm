@@ -178,6 +178,33 @@ __PACKAGE__->add_columns(
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
+sub type {
+	my $self = shift;
+	
+	return 'fic' if $self->votes->search({ story_id => { '!=' => undef } })->count;
+	return 'art' if $self->votes->search({ image_id => { '!=' => undef } })->count;
+	
+	return undef;
+}
+
+sub stdev {
+	my $self = shift;
+	
+	return $self->{__stdev} //= $self->votes->stdev;
+}
+
+sub average {
+	my $self = shift;
+	
+	return $self->{__average} //= $self->votes->average;
+}
+
+sub values {
+	my $self = shift;
+	
+	return $self->votes->get_column('value');
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

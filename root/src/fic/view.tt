@@ -1,24 +1,28 @@
-[%- title = story.title | html %]
-<h1>[% title %]</h1>
+[%- title = [ story.event.prompt, story.title ] %]
+<h1>[% story.title | html %]</h1>
+
 <div class="story">
 [% c.bb_render( story.contents ) %]
 </div>
+
 <hr style="margin-top: 1.6em"/>
-<p style="text-align: center"> 
-[% storys = story.event.storys_rs.seed_order.all %]
-[% FOREACH s IN storys %]
+
+<p class="center">
+[%- storys = story.event.storys_rs.seed_order.all %]
+[%- FOREACH s IN storys %]
 	[%- NEXT IF story.id != s.id %]
-	<a class="link" href="[% c.uri_for( c.controller('Fic').action_for('view'),
-		[ storys.${loop.index.minus(1)}.id_uri ]) %]">
-		« Prev
-	</a>
-	&thinsp;
+	
+	[%- prev = loop.prev || storys.-1 %]
+	<a class="link" href="[% c.uri_for( c.action, [ prev.id_uri ]) %]">« Prev</a>
+	&nbsp;
 	<strong>[% loop.count %]</strong>
-	&thinsp;
-	[%- i = loop.count % loop.size %]
-	<a class="link" href="[% c.uri_for( c.controller('Fic').action_for('view'),
-		[ storys.$i.id_uri ]) %]">
-		Next »
-	</a>
-[% END %]
+	&nbsp;
+	[%- next = loop.next || storys.0 %]
+	<a class="link" href="[% c.uri_for( c.action, [ next.id_uri ]) %]">Next »</a>
+	
+[%- END %]
+</p>
+<p class="center">
+	<a class="ui-button" href="[% c.uri_for( c.controller('Fic')
+		.action_for('gallery'), [ story.event_id ]) %]">Back to gallery</a>
 </p>

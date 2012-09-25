@@ -19,22 +19,20 @@ sub me :Local :Args(0) {
 	
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
 	
-	if( $c->check_user_roles('admin') ) {
-		$c->stash->{images}  = $c->model('DB::Image');
-		$c->stash->{storys}  = $c->model('DB::Story');
-		$c->stash->{prompts} = $c->model('DB::Prompt');
-	}
-	else {
-		$c->stash->{images}  = $c->user->obj->images;
-		$c->stash->{storys}  = $c->user->obj->storys;
-		$c->stash->{prompts} = $c->user->obj->prompts;
-	}
+	$c->stash->{images}  = $c->user->obj->images;
+	$c->stash->{storys}  = $c->user->obj->storys;
+	$c->stash->{prompts} = $c->user->obj->prompts;
 	
+	$c->stash->{title} = 'My Submissions';
 	$c->stash->{template} = 'user/me.tt';
 }
 
 sub login :Local :Args(0) {
     my ( $self, $c ) = @_;
+	
+	$c->set_authenticated( $c->find_user({ 
+		username => $c->req->params->{as} || $c->user->username
+	}) ) if $c->check_user_roles('admin');
 	
 	$c->res->redirect( $c->uri_for('/') ) and return 0 if $c->user;
 	

@@ -17,16 +17,19 @@ __PACKAGE__->config(
 
 $Template::Stash::SCALAR_OPS->{ minus } = sub { return $_[0] - $_[1] };
 
+my $RFC2822 = '%a, %d %b %Y %T %Z';
+
 sub format_dt {
 	my( $self, $c, $dt, $fmt ) = @_;
 	
-	return '' unless eval { $dt->isa('DateTime') };
+	return '' unless eval { $dt->set_time_zone('UTC')->isa('DateTime') };
 	
-	$dt->set_time_zone( $c->user ? $c->user->get('timezone') : 'UTC' );
+	my $tz = $c->user ? $c->user->get('timezone') : 'UTC';
 	
-	$fmt //= '%a, %d %b %Y %T %Z';
-	
-	return $dt->strftime($fmt);
+	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
+	$dt->strftime($RFC2822), 
+	$dt->iso8601, 
+	$dt->set_time_zone($tz)->strftime($fmt // $RFC2822);
 }
 
 1;

@@ -1,6 +1,8 @@
 [%- title = 'FAQ' %]
+
 <h1>[% title %]</h1>
 
+<a id="What-the-Hay-Is-This"> </a>
 <h2>What the Hay Is This?</h2>
 <p>
 	The [% name %] is a timed challenge where writers and artists create stories
@@ -16,6 +18,7 @@
 	something that will inspire a story.
 </p>
 
+<a id="How-Does-It-Work"> </a>
 <h2>How Does It Work?</h2>
 <p>
 	The following flow chart demonstrates the possible structures of a
@@ -26,11 +29,13 @@
 <p>
 	Each event is a linear series of rounds.
 </p>
+<a id="Prompt-Suggestions"> </a>
 <h3>Prompt Suggestions</h3>
 <p>
 	Users may submit up to [% c.config.prompts_per_user %] prompts to the prompt
 	pool for each event.
 </p>
+<a id="Prompt-Voting"> </a>
 <h3>Prompt Voting</h3>
 <p>
 	Users vote on the prompts to determine which they like the most. At the end
@@ -42,6 +47,7 @@
 	The prompting rounds last for [% c.config.interim %] minutes each, with
 	the suggestions starting when the event begins.
 </p>
+<a id="Art-Round"> </a>
 <h3>Art Round</h3>
 <p>
 	Artists submit artworks that mean to act as prompts for stories. Art
@@ -49,11 +55,13 @@
 	submission (i.e., delete it) if you submit it as a guest. (Also, guests have
 	to fill in a captcha.)
 </p>
+<a id="Fic-Round"> </a>
 <h3>Fic Round</h3>
 <p>
 	Stories are written to either the submitted artworks (in the case of an art
 	round) or the event's prompt. Fic submissions require a login.
 </p>
+<a id="Preliminary-Voting-Round"> </a>
 <h3>Preliminary Voting Round</h3>
 <p>
 	Authors are given the imperative to read and rate the other entries. Each 
@@ -64,10 +72,10 @@
 	through to the next round.
 </p>
 <p>
-	The score associated with these rankings is equal to <tt>n - 2p + 1</tt>,
-	where <tt>n</tt> is the number of stories in the judge's set, and 
-	<tt>p</tt> is the ranking of the item (e.g., 3rd place in a set of 6 gets
-	<tt>6 - 2 * 3 + 1 = 1</tt> point). 
+	The score associated with these rankings is equal to <var>n - 2p + 1</var>,
+	where <var>n</var> is the number of stories in the judge's set, and 
+	<var>p</var> is the ranking of the item (e.g., 3rd place in a set of 6 gets
+	<var>6 - 2 * 3 + 1 = 1</var> point). 
 </p>
 <p>
 	The system is zero-sum, meaning the sum of each judge's rankings is zero 
@@ -75,6 +83,7 @@
 	class="link new-window" >(proof)</a>. Stories with a score greater than 
 	zero (approximately half) pass through to the next round.
 </p>
+<a id="Public-Voting-Round"> </a>
 <h3>Public Voting Round</h3>
 <p>
 	A public poll is released where anyone may give the stories a ranking from
@@ -84,18 +93,20 @@
 	Voters must vote on at least half of the candidates, and participants may
 	not vote on their own works.
 </p>
+<a id="Private-Voing-Round"> </a>
 <h3>Private Voting Round</h3>
 <p>
 	A number of finalists are given to a panel of judges. They rank the stories
 	in a manner similar to the prelminary round.
 </p>
-<h3>Results &amp; Accolades</h3>
+<a id="Results-and-Accolades"> </a>
+<h3>Results and Accolades</h3>
 <p>
 	Each event will award a gold, silver, and bronze medal to the top three
 	entries for both art and fic components. Additionally, a global tally
 	gives each entry a numerical score using the same formula as the prelim
 	rankings (where the set is the entire set of entries for the event), with
-	that caveat that a competitor's score cannot go below zero.
+	the caveat that a competitor's score cannot go below zero.
 </p>
 <p>
 	The accolades and global tally are tied to author/artist names, <em>not</em>
@@ -111,7 +122,8 @@
 	guarantees.)
 </p>
 
-<a class="anchor" name="Tags"> </a>
+<a id="Tags"> </a>
+<a id="How-Do-I-Get-Style"> </a>
 <h2>How Do I Get Style?</h2>
 <p>The following markups are available:</p>
 
@@ -130,7 +142,7 @@
 
 <ul>
 [%- FOREACH tag IN tags %]
-	<li><tt>[% tag %]</tt>[% '– Produces a horizontal line' IF loop.last %]</li>
+	<li><code>[% tag %]</code>[% ' – Produces a horizontal line' IF loop.last %]</li>
 [%- END %]
 </ul>
 
@@ -142,6 +154,7 @@
 	href="http://www.w3schools.com/html/html_colors.asp">[2]</a>).
 </p>
 
+<a id="How-Do-I-DeleteEdit-a-Submission"> </a>
 <h2>How Do I Delete/Edit a Submission?</h2>
 <p>
 	You may delete/edit a submission by logging in and going to <a class="link"
@@ -153,6 +166,8 @@
 	If you want a submission deleted or edited after submissions are closed, 
 	you'll have to take it up with the event's organiser.
 </p>
+
+<a id="What-Time-Is-It"> </a>
 <h2>What Time Is It?</h2>
 <p>
 	The footer tells you the server's current time and the timezone it's

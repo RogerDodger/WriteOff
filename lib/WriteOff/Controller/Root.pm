@@ -65,12 +65,6 @@ sub faq :Local :Args(0) {
 	$c->stash->{template} = 'faq.tt';
 }
 
-sub scoreboard :Local :Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{template} = 'scoreboard.tt';
-}
-
 =head2 default
 
 Standard 404 error page
@@ -92,7 +86,7 @@ Standard 403 page
 sub forbidden :Private {
 	my ( $self, $c, $msg ) = @_;
 	
-	$c->stash->{forbidden_msg} = $msg || 'Access denied';
+	$c->stash->{forbidden_msg} = $msg // 'Access denied';
 	$c->stash->{template} = '403.tt';
 	$c->res->status(403);
 }
@@ -106,7 +100,7 @@ Error page
 sub error :Private {
 	my ( $self, $c, $msg ) = @_;
 	
-	$c->stash->{error} = $msg || 'Something went wrong';
+	$c->stash->{error} = $msg // 'Something went wrong';
 	$c->stash->{template} = 'error.tt';
 	$c->res->status(404);
 }
@@ -121,6 +115,19 @@ sub tos :Local :Args(0) {
 	my ( $self, $c) = @_;
 	
 	$c->stash->{template} = 'tos.tt';
+}
+
+=head2 admin_check
+
+Check that the user is the admin, detaching to a 403 if they aren't.
+
+=cut
+
+sub admin_check :Private {
+	my ( $self, $c, $msg ) = @_;
+	
+	$msg //= 'You are not the admin.';
+	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin'); 
 }
 
 =head2 render

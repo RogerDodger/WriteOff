@@ -1,8 +1,9 @@
 domain example.com
 AdminName SomeAdmin
-AdminEmail someadmin@somedomain.com
+AdminEmail someadmin@example.com
 <recaptcha>
 	pub_key 01010101010101
 	priv_key AAAAAAAAAAAAAA
 </recaptcha>
+timezone UTC
 footer_addendum 

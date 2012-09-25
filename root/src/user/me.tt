@@ -1,44 +1,46 @@
-<h1>My Submissions</h1>
+<h1>[% title.list.join(' - ') | html %]</h1>
 
 [%- IF storys.count %]
 <h2>Fic</h2>
 <table class="slim">
 	<tr>
 		<th>Event</th>
-		<th>ID</th>
 		<th>Title</th>
-		<th>Artist</th>
+		<th>Author</th>
 		<th>Words</th>
 		<th>Last Updated</th>
 		<th> </th>
 		<th> </th>
+	</tr>
 	[%- WHILE (story = storys.next) %]
 	<tr>
-		<td>[% story.event.prompt | truncate(12) | html %]</td>
-		<td class="center">[% story.event_id %]</td>
-		<td>
-			<a class="link" title="[% story.title | html %]" href="[% c.uri_for(
-				c.controller('Fic').action_for('view'), [ story.id_uri ]) %]">
+		<td title="[% story.event.prompt | html %]">
+			[% story.event.prompt | truncate(12) | html %]
+		</td>
+		<td title="[% story.title | html %]">
+			<a class="link" href="[% c.uri_for(	c.controller('Fic')
+				.action_for('view'), [ story.id_uri ]) %]">
 				[% story.title | truncate(24) | html %]
 			</a>
 		</td>
-		<td>
+		<td title="[% story.author | html %]">
 			[%- IF story.website %]
-			<a title="[% story.author| html %]" class="link new-window" href="[%
-				story.website | url %]">
-			[%- ELSE %]
-			<a title="[% story.author| html %]">
-			[%- END %]
+			<a class="link new-window" href="[% story.website | url %]">
 				[% story.author | truncate(24) | html %]
 			</a>
+			[%- ELSE %]
+			[% story.author | truncate(24) | html %]
+			[%- END %]
 		</td>
 		<td class="center">[% story.wordcount %]</td>
-		<td>[% format_dt( story.updated, '%d-%b-%Y %H:%M') %]</td>
+		<td>[% format_dt( story.updated, '%d %b %H:%M') %]</td>
 		<td>
 		[%- IF story.is_manipulable_by(c.user) %]
 			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/edit' ) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
 			</a>
+		[%- ELSE %]
+			<span class="ui-icon ui-icon-locked" title="Edit disabled"></span>
 		[%- END %]
 		</td>
 		<td>
@@ -46,6 +48,8 @@
 			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
 			</a>
+		[%- ELSE %]
+		<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
 		[%- END %]
 		</td>
 	</tr>
@@ -58,38 +62,40 @@
 <table class="slim">
 	<tr>
 		<th>Event</th>
-		<th>ID</th>
 		<th>Title</th>
 		<th>Artist</th>
 		<th>Filesize</th>
 		<th>Submitted</th>
 		<th> </th>
+	</tr>
 	[%- WHILE (image = images.next) %]
 	<tr>
-		<td>[% image.event.prompt | truncate(12) | html %]</td>
-		<td class="center">[% image.event_id %]</td>
-		<td>
+		<td title="[ image.event.prompt | html %]">
+			[% image.event.prompt | truncate(12) | html %]
+		</td>
+		<td title="[% image.title | html %]">
 			<a class="link" href="[% c.uri_for( '/art/' _ image.id_uri ) %]">
 				[% image.title | truncate(24) | html %]
 			</a>
 		</td>
-		<td>
+		<td title="[% image.artist | html %]">
 			[%- IF image.website %]
-			<a title="[% image.artist | html %]" class="link new-window" href="[%
-				image.website | url %]">
-			[%- ELSE %]
-			<a title="[% image.artist | html %]">
-			[%- END %]
+			<a class="link new-window" href="[% image.website | url %]">
 				[% image.artist | truncate(24) | html %]
 			</a>
+			[%- ELSE %]
+			[% image.artist | truncate(24) | html %]
+			[%- END %]
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td>[% format_dt( image.created, '%d-%b-%Y %H:%M') %]</td>
+		<td>[% format_dt( image.created, '%d %b %H:%M') %]</td>
 		<td>
 		[%- IF image.is_manipulable_by( c.user ) %]
 			<a href="[% c.uri_for( '/art/' _ image.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
 			</a>
+		[%- ELSE %]
+			<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
 		[%- END %]
 		</td>	
 	</tr>
@@ -102,29 +108,38 @@
 <table class="slim">
 	<tr>
 		<th>Event</th>
-		<th>ID</th>
 		<th>Title</th>
 		<th>Rating</th>
 		<th> </th>
 	</tr>
 	[%- WHILE (prompt = prompts.next) %]
 	<tr>
-		<td>[% prompt.event.prompt | truncate(12) | html %]</td>
-		<td class="center">[% prompt.event_id %]</td>
+		<td title="[% prompt.event.prompt | html %]">
+			[% prompt.event.prompt | truncate(12) | html %]
+		</td>
 		<td>[% prompt.contents | html %]</td>
-		<td class="center">[% prompt.rating | format('%d') %]</td>
+		<td class="center" title="[% prompt.rating |format('%.2f') %]">
+			[% prompt.rating | format('%d') %]
+		</td>
 		<td>
 		[%- IF prompt.is_manipulable_by( c.user ) %]
 			<a href="[% c.uri_for( '/prompt/' _ prompt.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
 			</a>
-		</td>
+		[%- ELSE %]
+			<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
 		[%- END %]
+		</td>
 	</tr>
 	[%- END %]
 </table>
 [%- END %]
 
-[%- IF !images.count && !storys.count && !prompts.count %]
+[%- IF records.count %]
+<h2>Vote Records</h2>
+[% INCLUDE voterecord/list.tt %]
+[%- END %]
+
+[%- IF !images.count && !storys.count && !prompts.count && !records.count %]
 <p>No submissions found.</p>
-[% END %]
+[%- END %]

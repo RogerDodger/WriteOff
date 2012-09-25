@@ -14,11 +14,13 @@ p {
 	text-align: justify;
 	line-height: 1.2em;
 }
-code, tt {
+code, tt, var {
 	margin: 0 2px;
 	padding: 0px 5px;
 	white-space: nowrap;
 	border: 1px solid #EAEAEA;
+	font-style: normal;
+	font-family: monospace;
 	background-color: #F8F8F8;
 	border-radius: 3px;
 }
@@ -203,6 +205,10 @@ table {
 .center th,  
 .center td { 
 	text-align: center; 
+}
+.votes th,
+.votes td {
+	min-width: 18px;
 }
 .slim {
 	background: #f8f8f8;

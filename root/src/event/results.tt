@@ -2,7 +2,7 @@
 
 <h2>Results</h2>
 
-[%- IF event.is_ended %]
+[%- IF event.is_ended || c.check_user_roles('admin') %]
 	[%- awards = [ 'gold', 'silver', 'bronze' ] %]
 <table class="result-listing">
 

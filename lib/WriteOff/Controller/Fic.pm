@@ -38,7 +38,9 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
+	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'fic/submit.tt';
+	
 	$c->forward('do_submit') if $c->req->method eq 'POST' && 
 		$c->user && $c->stash->{event}->fic_subs_allowed;
 }
@@ -96,7 +98,7 @@ sub do_submit :Private {
 sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	if( $c->req->params->{plain} ) {
+	if( $c->req->query_keywords eq 'plain' ) {
 		$c->res->content_type('text/plain; charset=utf-8');
 		$c->res->body( $c->stash->{story}->contents );
 	}
@@ -107,6 +109,7 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
+	push $c->stash->{title}, 'Gallery';
 	$c->stash->{template} = 'fic/gallery.tt';
 }
 

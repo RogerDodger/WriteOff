@@ -1,4 +1,20 @@
+v0.12
+=====
+- Moved event management view to event/$id/...
+  - Cleans up the logic and makes implementing organisers much easier
+- VoteRecord view/delete added
+- Scoreboard controller added
+- Admin controller removed - actions put in other controllers
+- DateTimes now format into <time> tags, with title attribute as a full RFC2822 date time in UTC
+- Added a number of title attributes to truncated table data
+- Fixed Cron controller
+- Set $ENV{TZ} to UTC and configurable at deployment level
+- Log archiver script added
+- Cleaned up FAQ and Rules page to validate as HTML5
+- Added login hook for testing purposes
+
 v0.11
+=====
 - Scoreboard done
 - FAQ cleaned up
 

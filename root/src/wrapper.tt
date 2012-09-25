@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -8,7 +7,7 @@
 <meta http-equiv="REFRESH" content="2; url=[% redirect %]"/>
 [%- END %]
 
-<title>[% name.list.merge( title.list ).join(' - ') %]</title>
+<title>[% name.list.merge( title.list ).join(' - ') | html %]</title>
 
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" type="text/css" />

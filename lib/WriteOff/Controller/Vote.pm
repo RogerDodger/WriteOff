@@ -16,11 +16,6 @@ Catalyst Controller.
 
 =cut
 
-
-=head2 index
-
-=cut
-
 sub public :PathPart('public') :Chained('/event/vote') :Args(0) {
     my ( $self, $c ) = @_;
 
