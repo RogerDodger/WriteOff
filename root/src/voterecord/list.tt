@@ -1,0 +1,44 @@
+<table class="slim center">
+	<tr>
+		<th>Event</th>
+		<th>IP Address</th>
+		<th>Round</th>
+		<th>Type</th>
+		<th>Count</th>
+		<th title="Standard deviation">&sigma;</th>
+		<th title="Mean (average)">&mu;</th>
+		<th>Created</th>
+		<th> </th>
+		<th> </th>
+	</tr>
+	[%- WHILE (record = records.next) %]
+	<tr>
+		<td class="left" title="[% record.event.prompt | html %]">
+			[% record.event.prompt | truncate(12) | html %]
+		</td>
+		<td>[% record.ip %]</td>
+		<td>[% record.round.ucfirst %]</td>
+		<td>[% record.type.ucfirst %]</td>
+		<td>[% record.votes_rs.count %]</td>
+		<td title="[% record.stdev | format('%.5f') %]">
+			[% record.stdev | format('%.2f') %]
+		</td>
+		<td title="[% record.average | format('%.5f') %]">
+			[% record.average | format('%.2f') %]
+		</td>
+		<td>[% format_dt( record.updated, '%d %b %H:%M' ) %]</td>
+		<td>
+			<a href="[% c.uri_for( c.controller('VoteRecord')
+				.action_for('view'), [ record.id ]) %]">
+				<span class="ui-icon ui-icon-clipboard" title="More details"></span>
+			</a>	
+		</td>
+		<td>
+			<a href="[% c.uri_for( c.controller('VoteRecord')
+				.action_for('delete'), [ record.id ]) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
+			</a>	
+		</td>
+	</tr>
+	[%- END %]
+</table>

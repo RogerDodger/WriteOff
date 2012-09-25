@@ -1,0 +1,58 @@
+[% DEFAULT title = 'Vote Record' -%]
+<h2>[% title %]</h2>
+
+[% INCLUDE voterecord/list.tt 
+	records = record.result_source.resultset.search_rs({ id => record.id }) %]
+
+<h3>Votes</h3>
+	
+<table class="slim votes">
+[%-
+	IF record.round == 'public'; 
+		range = [0 .. 10];
+	ELSE;
+		range = [record.values.min .. record.values.max];
+	END;
+%]
+	<tr>
+		<th>Title</th>
+		[%- FOREACH n IN range %]
+		<th>[% n %]</th>
+		[%- END %]
+	</tr>
+	[%- FOREACH vote IN record.votes %]
+	<tr>
+		<td>[% vote.item.title %]</td>
+		[%- FOREACH n IN range %]
+		<th>
+			[%- IF n == vote.value %]
+			&#x2717;
+			[%- END %]
+		</th>
+		[%- END %]
+	</tr>
+	[%- END %]
+</table>
+
+<hr style="margin-top: 1.6em"/>
+
+<p class="center">
+[%- records = record.event.vote_records_rs.filled %]
+[%- FOREACH r IN records %] 
+	[%- NEXT IF record.id != r.id %]
+	
+	[%- prev = loop.prev || records.-1 %]
+	<a class="link" href="[% c.uri_for( c.action, [ prev.id ]) %]">« Prev</a>
+	&nbsp;
+	<strong>[% loop.count %]</strong>
+	&nbsp;
+	[%- next = loop.next || records.0 %]
+	<a class="link" href="[% c.uri_for( c.action, [ next.id ]) %]">Next »</a>
+
+[%- END %]
+</p>
+<p class="center">
+	<a class="ui-button" href="[% c.uri_for( c.controller('Event')
+		.action_for('view'), [ record.event_id ]) %]">Back to submissions</a>
+</p>
+	
