@@ -22,11 +22,28 @@ sub public :PathPart('public') :Chained('/event/vote') :Args(0) {
     $c->stash->{template} = 'vote/public.tt';
 	
 	$c->forward('/captcha_get');
-	$c->forward('do_public') if $c->req->method eq 'POST';
+	
+	my $formid = "form" . "event" . $c->stash->{event}->id . "public" . "fic";
+	
+	if( $c->req->method eq 'POST' ) {
+		if( $c->req->params->{submit} eq 'Save vote' ) {
+			$c->session->{$formid} = $c->req->params;
+			$c->stash->{status_msg} = 'Vote saved';
+		}
+		if( $c->req->params->{submit} eq 'Clear vote' ) {
+			delete $c->session->{$formid};
+			$c->stash->{status_msg} = 'Vote cleared';
+		}
+		if( $c->req->params->{submit} eq 'Cast vote' ) {
+			$c->forward('do_public', [ $formid ]);
+		}
+	}
+	
+	$c->stash->{fillform} = $c->session->{$formid} // undef;
 }
 
 sub do_public :Private {
-	my ( $self, $c ) = @_;
+	my ( $self, $c, $formid ) = @_;
 	
 	my @candidates = $c->stash->{event}->public_story_candidates( $c->user )->all;
 	
@@ -67,6 +84,7 @@ sub do_public :Private {
 			});
 		}
 		
+		delete $c->session->{$formid};
 		$c->stash->{status_msg} = 'Vote successful';
 	}
 }

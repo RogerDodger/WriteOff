@@ -1,3 +1,7 @@
+v0.13
+=====
+- Made public votes saveable to session data
+
 v0.12
 =====
 - Moved event management view to event/$id/...

@@ -67,7 +67,8 @@ a.link, a.link:visited {
 a.link:hover {
 	color: dodgerblue;
 }
-a.author, a.author:visited {
+a.author, a.author:visited,
+a.artist, a.artist:visited {
 	color: inherit;
 	border-bottom: 1px dotted silver;
 }

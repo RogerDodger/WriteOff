@@ -141,6 +141,7 @@ sub render : ActionClass('RenderView') {}
 sub end :Private {
 	my ( $self, $c ) = @_;
 	$c->forward('render');
+	$c->fillform( $c->stash->{fillform} ) if defined $c->stash->{fillform};
 }
 
 =head1 AUTHOR
