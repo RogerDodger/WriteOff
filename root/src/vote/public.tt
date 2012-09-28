@@ -59,6 +59,7 @@
 			<th>N/A</th>
 		</tr>
 		[%- FOREACH story IN event.public_story_candidates.all %]
+		[%- NEXT IF story.user_id == c.user.get('id') %]
 		<tr>
 			<td class="center">[% loop.count %]</td>
 			<td>[% story.title | html %]</td>
