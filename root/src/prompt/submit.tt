@@ -1,20 +1,18 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
 <h1>[% event.prompt | html %]</h1>
 
 <h2>Prompt Submissions</h2>
 
 <p>
-	Submissions open: <strong>[% local(event.start) %]</strong>.
+	Submissions open: <strong>[% format_dt(event.start) %]</strong>.
 	<br />
-	Submissions close: <strong>[% local(event.prompt_voting) %]</strong>.
+	Submissions close: <strong>[% format_dt(event.prompt_voting) %]</strong>.
 	<br />
 	Submissions received: <strong>[% event.prompts_rs.count %]</strong>.
 	<br />
 [%- IF event.prompt_subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
-	<br />
 	[%- IF c.user %]
+	<br />
 		[%- subs_left = c.config.prompts_per_user - event.prompts_rs
 			.search_rs({ user_id => c.user.get('id') }).count %]
 	You may submit <strong>[% subs_left %]</strong> more prompt(s).

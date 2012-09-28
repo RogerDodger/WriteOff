@@ -1,8 +1,6 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.timezone || 'UTC').strftime('%a, %d %b %Y %R') %]
 <h2>
 	Editing <em>[% event.prompt | html %]</em> &ndash;
-	Event starting [% local(event.start) %]
+	Event starting [% format_dt(event.start) %]
 </h2>
 <form class="form-standard" action="[% c.req.uri %]" 
 	method="post" enctype="multipart/form-data">

@@ -1,11 +1,9 @@
 body {
 	background: #ccc;
 	padding-top: 40px;	
-	font-family: "Bitstream Charter", "Book Antiqua", Baskerville, 
-		"Bookman Old Style", "Palatino Linotype", Palatino, Palladio, 
-		"URW Palladio L", "Nimbus Roman No9 L", Garamond, "Apple Garamond", 
-		"ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", 
-		"Century Schoolbook L", Georgia, serif; /* Eeyup */
+	font-family: "Bitstream Charter", "Charter BT", "Book Antiqua",
+		"Bookman Old Style", Palladio, "URW Palladio L", Garamond, 
+		"Apple Garamond", Georgia, serif; /* Eeyup */
 }
 p, li, td {
 	font-size: 1em; 
@@ -23,6 +21,9 @@ code, tt, var {
 	font-family: monospace;
 	background-color: #F8F8F8;
 	border-radius: 3px;
+}
+li ol li {
+	list-style-type: lower-alpha;
 }
 .topbar {
 	position: fixed;
@@ -280,4 +281,19 @@ table {
 	background: #f6f6f6;
 	padding: 3px;
 	margin: 0 0 -2px 0;
+}
+textarea.example {
+	width: 350px; 
+	height: 200px; 
+	max-height: 200px; 
+	max-width: 350px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+.nobefore {
+	margin-top: 0px;
+}
+.noafter {
+	margin-bottom: 0px;
 }

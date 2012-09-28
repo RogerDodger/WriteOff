@@ -1,13 +1,11 @@
-[% MACRO local(dt) GET
-	dt.set_time_zone(c.user.get('timezone') || 'UTC').strftime('%a, %d %b %Y %T %Z') %]
 <h1>[% event.prompt | html %]</h1>
 
 <h2>Prompt Voting</h2>
 
 <p>
-	Votes open: <strong>[% local(event.prompt_voting) %]</strong>.
+	Votes open: <strong>[% format_dt(event.prompt_voting) %]</strong>.
 	<br />
-	Votes close: <strong>[% local(event.art || event.fic) %]</strong>.
+	Votes close: <strong>[% format_dt(event.art || event.fic) %]</strong>.
 	<br />
 [%- IF event.prompt_votes_allowed %]
 	Votes are <strong class="good">open</strong>.

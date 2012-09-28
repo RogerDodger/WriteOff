@@ -275,6 +275,18 @@ __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
 
+sub now_dt {
+	return shift->result_source->resultset->now_dt;
+}
+
+sub content_level {
+	my $self = shift;
+	
+	return 'M' if $self->rule_set & 2;
+	return 'T' if $self->rule_set & 1;
+	return 'E';
+}
+
 sub id_uri {
 	my $self = shift;
 	
@@ -288,9 +300,6 @@ sub id_uri {
 	return $self->id . '-' . $desc;
 }
 
-sub now_dt {
-	return shift->result_source->resultset->now_dt;
-}
 
 sub organisers {
 	my $self = shift;

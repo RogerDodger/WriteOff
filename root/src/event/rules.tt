@@ -1,38 +1,92 @@
 <h1>[% event.prompt | html %]</h1>
 
-[%- title = [ 'Rules', event.prompt ] %]
 <h2>Rules</h2>
 <p>
-	Failure to adhere to any of the following may be grounds for punitive
-	actions.
+	Failure to adhere to any of the following may be grounds for submissions
+	being removed. Repeat or serious offences may result in culprits being 
+	barred from entering future events.
 </p>
 
 <h3>Generic</h3>
 <ol>
-	<li>Submitted works must be your own.</li>
-	<li>You may start writing only after the prompt is released.</li>
-	<li>
-		Your story must be based on the prompt to a reasonable and discernible 
-		degree.
+	<li>Submitted works may not be submitted elsewhere until the event's conclusion.</li>
+	<li>Submitted written works&mdash;
+		<ol>
+			<li>must be written primarily in English; and</li>
+			<li>
+				must be based on 
+				[% event.art ? 'one of the submitted artworks' : 'the prompt' %]
+				to a reasonable and discernible degree.
+			</li>
+		</ol>
 	</li>
+[%- IF event.art %]
 	<li>
-		Your story may not be submitted elsewhere until the event's conclusion.
+		Submitted artworks must be based on the prompt to a reasonable and 
+		discernible degree.
 	</li>
-	<li>
-		You must remain anonymous within all reasonable means until the event's
-		conclusion.
+[%- END %]
+	<li>Participants&mdash;
+		<ol>
+			[%- IF event.art %]
+			<li>may start drawing only after the prompt is released;</li>
+			<li>may start writing only after the artworks are released; and</li>
+			[%- ELSE %]
+			<li>may start writing only after the prompt is released; and</li>
+			[%- END %]
+			<li>
+				must remain pubically disassociated from their works 
+				(i.e., anonymous) within all reasonable means until the event's
+				conclusion.
+			</li>
+		</ol>
+	</li>
+</ol>
+
+<h3>Legal</h3>
+<ol>
+	<li>Submitted works&mdash;
+		<ol>
+			<li>must be the work of the submitter;</li>
+			<li>
+				may not include the likeness of any living persons without 
+				express prior written consent, with exception to cases of parody 
+				and/or satire, i.e., if the persons presented in the work are 
+				distinctly characitures;
+			</li>
+			<li>may not be spiteful and/or hateful in nature; and</li>
+			<li>
+				may not depict any sexual abuse of minors (See <a class="link 
+				new-window" href="http://www.law.cornell.edu/uscode/text/18/1466A">
+				18 USC § 1466A</a> for specifics).
+			</li>
+		</ol>
 	</li>
 </ol>
 
 <h3>Content</h3>
+[%- SWITCH event.content_level -%]
+
+[%- CASE 'E' %]
 <p>
-	Your story must follow the posting guidelines of <a class="link new-window"
-	href="http://www.ponychan.net/chan/?p=rules">Ponychan</a>, <a
-	href="http://www.equestriadaily.com/2012/01/story-submission-guidelines.html"
-	class="link new-window">EquestriaDaily</a>, and <a class="link new-window" 
-	href="http://www.fimfiction.net">Fimfiction</a>, with exception to any
-	rules regarding word counts.
+	This event's content level is <strong>E</strong> for Everybody. This is
+	loosely defined as material suitable for all ages.
 </p>
+
+[%- CASE 'T' %]
+<p>
+	This event's content level is <strong>T</strong> for Teen. This is loosely
+	defined as material suitable for teenagers.
+</p>
+
+[%- CASE 'M' %]
+<p>
+	This event's content level is <strong>M</strong> for Mature. Mostly anything
+	content-wise is allowed here, but have some tact when dealing with more
+	risque subjects.
+</p>
+
+[%- END -%]
 
 <h3>Story Formatting</h3>
 <p>
@@ -41,34 +95,20 @@
 </p>
 <ol>
 	<li>Paragraphs should be separated by a single blank line.</li>
+	<li>Scene breaks should be indicated by an [hr] in its own paragraph.</li>
 	<li>
-		Scene breaks should be indicated by an [hr] in its own paragraph.
-		<ul>
-			<li>
-				Weak scene breaks should be indicated by a blank paragraph,
-				i.e, three blank lines.
-			</li>
-		</ul>
+		Weak scene breaks should be indicated by a blank paragraph,	i.e, three 
+		blank lines.
 	</li>
 	<li>Sentences should be separated by a single space.</li>
 </ol>
 
 <h4>Example</h4>
-<p style="width: 350px; margin: 0 auto;" >
-	<textarea style="width: 350px; height: 200px; max-height: 250px; 
-		max-width: 350px; " rows="24" cols="16" disabled="disabled">[% -%]
-This is a sentence. Sentences have exactly one space between them.
 
-This is a new paragraph. 
+<textarea class="example" rows="24" cols="16" disabled="disabled">
+	[%- INCLUDE fic/formatting.tt -%]
+</textarea>
 
-[hr]
-
-There was a scene break just there.
-
- 
-
-There was a weak scene break just there.</textarea>
-</p>
 <p>
 	<strong>Do not put your name or other metadata inside of the story field.
 	</strong> The <em>story</em> field should only have the <em>story</em> in 
