@@ -117,13 +117,13 @@ sub tos :Local :Args(0) {
 	$c->stash->{template} = 'tos.tt';
 }
 
-=head2 admin_check
+=head2 assert_admin
 
 Check that the user is the admin, detaching to a 403 if they aren't.
 
 =cut
 
-sub admin_check :Private {
+sub assert_admin :Private {
 	my ( $self, $c, $msg ) = @_;
 	
 	$msg //= 'You are not the admin.';

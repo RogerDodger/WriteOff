@@ -82,6 +82,11 @@ __PACKAGE__->table("events");
   default_value: 1
   is_nullable: 0
 
+=head2 custom_rules
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 start
 
   data_type: 'timestamp'
@@ -152,6 +157,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "rule_set",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
+  "custom_rules",
+  { data_type => "text", is_nullable => 1 },
   "start",
   { data_type => "timestamp", is_nullable => 0 },
   "prompt_voting",
@@ -266,25 +273,44 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-22 00:43:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tsZRUm9CNpnvH79cxV8ccw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-29 10:12:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Nq0gy5gD1P33y9DqjwSpWA
 
-use constant LEEWAY => 5;
+__PACKAGE__->many_to_many( users => 'user_events', 'user' );
 
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
 
+use constant LEEWAY => 5;
+
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
 
+my %levels = (
+	E => 0,
+	T => 1,
+	M => 2,
+);
+
 sub content_level {
 	my $self = shift;
+	
+	return $self->set_content_level(@_) if @_;
 	
 	return 'M' if $self->rule_set & 2;
 	return 'T' if $self->rule_set & 1;
 	return 'E';
+}
+
+sub set_content_level {
+	my ( $self, $rating ) = @_;
+	
+	$self->update({ rule_set =>
+		($self->rule_set & ~3) + 
+		$levels{$rating} // 0 
+	});
 }
 
 sub id_uri {
@@ -304,7 +330,13 @@ sub id_uri {
 sub organisers {
 	my $self = shift;
 	
-	return ();
+	return $self->users->search({ role => 'organiser' });
+}
+
+sub judges {
+	my $self = shift;
+	
+	return $self->users->search({ role => 'judge' });
 }
 
 sub is_organised_by {

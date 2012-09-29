@@ -18,8 +18,4 @@
 		<tt>[% c.config.domain %]</tt> may use cookies and browser data to
 		improve user experience.
 	</li>
-	<li>
-		In the event of any deals with the devil, [% c.config.AdminName %] may 
-		use your soul as barter.
-	</li>
 </ol>

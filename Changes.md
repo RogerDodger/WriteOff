@@ -1,3 +1,16 @@
+v0.14
+=====
+- Put parsers where they belong (for reals this time)
+- Organiser/Judge CRUD added
+- Organiser functionality fully implemented
+- Rule sets and custom rule funtionality added
+- Cleaned up the templates and stylesheet a little
+- Event listing more detailed
+- Removed second HTML view for emails
+  - The wrapper is now smart enough to not need it
+- Added JSON view
+- Added a FillForm check to Root/end, instead of doing it the silly way
+
 v0.13
 =====
 - Made public votes saveable to session data

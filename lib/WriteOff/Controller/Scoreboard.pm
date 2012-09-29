@@ -46,7 +46,7 @@ Clears and resets the scoreboard.
 sub reset :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( $c->controller('Root')->action_for('admin_check') );
+	$c->forward( $c->controller('Root')->action_for('assert_admin') );
 	
 	$c->forward('clear') unless $c->req->query_keywords eq 'noclear';
 	
@@ -68,7 +68,7 @@ Clears the scoreboard.
 sub clear :Local :Args(0) {
 	my ( $self , $c ) = @_;
 	
-	$c->forward( $c->controller('Root')->action_for('admin_check') );
+	$c->forward( $c->controller('Root')->action_for('assert_admin') );
 	
 	$c->model('DB::Scoreboard')->delete;
 	

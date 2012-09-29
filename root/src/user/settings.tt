@@ -48,12 +48,8 @@
 				<td class="label">Timezone</td>
 				<td>
 					<select name="timezone">
-					[%- FOREACH timezone IN timezones %]
-						[%- IF timezone == c.user.timezone %]
-<option value="[% timezone %]" selected="selected" >[% timezone.replace('_', ' ') %]</option>
-						[%- ELSE %]
+					[%- FOREACH timezone IN c.timezones %]
 <option value="[% timezone %]">[% timezone.replace('_', ' ') %]</option>
-						[%- END %]
 					[%- END %]
 					</select>
 				</td>
@@ -70,11 +66,7 @@
 			<tr>
 				<td class="label"><span class="unrequired">Timezone</span></td>
 				<td>
-					[%- IF c.user.mailme %]
-					<input name="mailme" type="checkbox" checked="checked" />
-					[%- ELSE %]
 					<input name="mailme" type="checkbox" />
-					[%- END %]
 					Send me email notifications when new events are announced.
 				</td>
 			</tr>

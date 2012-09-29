@@ -11,7 +11,7 @@ use Catalyst qw/
 	Unicode::Encoding
 	
 	Log::Handler
-	
+
 	Scheduler
 	
 	Authentication
@@ -26,12 +26,10 @@ use Catalyst qw/
 	Upload::MIME
 /;
 use Image::Magick;
-use Parse::BBCode;
-use Text::Markdown;
 
 extends 'Catalyst';
 
-our $VERSION = '0.13_03';
+our $VERSION = '0.14';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -42,8 +40,12 @@ __PACKAGE__->config(
 	AdminEmail => 'admin@example.com',
 	
 	default_view => 'HTML',
-	'View::HTML'         => { INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ] },
-	'View::HTML::NoWrap' => { INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ] },
+	'View::HTML' => { 
+		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
+	},
+	'View::JSON' => {
+		expose_stash => 'json',
+	},
 	'Plugin::Authentication' => {
 		default => {
 			class         => 'SimpleDB',
@@ -106,6 +108,7 @@ __PACKAGE__->config(
 					DBIC_UNIQUE => 'An identical prompt already exists',
 				},
 				blurb     => { LENGTH        => 'Blurb too long' },
+				rules     => { LENGTH        => 'RUles too long' },
 				count     => { LESS_THAN     => 'Submission limit exceeded' },
 				
 			},
@@ -128,14 +131,13 @@ __PACKAGE__->config(
 			title  => 64,
 			url    => 256,
 			prompt => 64,
+			blurb  => 1024,
+			rules  => 2048,
 		},
 	},
 	biz => {
 		user => {
 			regex => qr{\A[a-zA-Z0-9_]+\z},
-		},
-		blurb => {
-			max => 1024,
 		},
 		img => {
 			size  => 4 * 1024 * 1024,
@@ -188,63 +190,14 @@ __PACKAGE__->schedule(
 
 sub wordcount {
 	my ( $self, $str ) = @_;
+	
 	return scalar split /\s+/, $str;
 }
 
-my $bb = Parse::BBCode->new({
-	tags => {
-		b => '<strong>%{parse}s</strong>',
-		i => '<em>%{parse}s</em>',
-		u => '<span style="text-decoration: underline">%{parse}s</span>',
-		url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
-		size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
-		color => '<span style="color: %{color}a;">%{parse}s</span>',
-		center => '<div style="text-align: center">%{parse}s</div>',
-		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
-		quote => {
-			class => 'block',
-			output => "<br>\n<blockquote>%{parse}s</blockquote>\n",
-		},
-		hr => {
-			class => 'block',
-			output => "<br>\n<hr />\n",
-			single => 1,
-		},
-	},
-	escapes => {
-		Parse::BBCode::HTML->default_escapes,
-		size => sub {
-			$_[2] !~ /\D/ && 
-			8 <= $_[2] && $_[2] <= 72 ? 
-			$_[2] : 16;
-		},
-		color => sub {
-			$_[2] =~ /\A#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
-		},
-	},
-});
-
-sub bb_render {
-	my ( $self, $text ) = @_;
+sub timezones {
+	my $self = @_;
 	
-	return '' unless $text;
-	
-	$text = $bb->render( $text );
-	$text =~ s{</div>\s*<br>}{</div>}g;
-	$text =~ s{<br>}{<br />}g;
-	
-	return $text;
-}
-
-sub md_render {
-	my ( $self, $text ) = @_;
-	
-	return '' unless $text;
-	
-	$text = Text::Markdown->new->markdown( $text );
-	$text =~ s{<a (.+?)>}{<a class="link new-window" $1>}g;
-	
-	return $text;
+	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
 }
 
 =head1 NAME

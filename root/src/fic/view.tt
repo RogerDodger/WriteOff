@@ -2,7 +2,7 @@
 <h1>[% story.title | html %]</h1>
 
 <div class="story">
-	[% c.bb_render( story.contents ).replace( '\n' , "\n\t" ) %]
+	[% bb_render( story.contents ).replace( '\n' , "\n\t" ) %]
 	<!-- [% story.wordcount %] words -->
 </div>
 

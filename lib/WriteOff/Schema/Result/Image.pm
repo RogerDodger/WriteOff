@@ -265,6 +265,7 @@ sub is_manipulable_by {
 		->resolve(shift) or return 0;
 	
 	return 1 if $self->user_id == $user->id && $self->event->art_subs_allowed;
+	return 1 if $self->event->is_organised_by( $user );
 	return 1 if $user->is_admin;
 	
 	0;

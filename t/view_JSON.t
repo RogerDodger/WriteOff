@@ -3,6 +3,6 @@ use warnings;
 use Test::More;
 
 
-BEGIN { use_ok 'WriteOff::View::HTML::NoWrap' }
+BEGIN { use_ok 'WriteOff::View::JSON' }
 
 done_testing();

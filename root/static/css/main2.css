@@ -7,10 +7,10 @@ body {
 }
 p, li, td {
 	font-size: 1em; 
+	line-height: 1.2em;
 }
 p {
 	text-align: justify;
-	line-height: 1.2em;
 }
 code, tt, var {
 	margin: 0 2px;
@@ -112,28 +112,43 @@ a.artist, a.artist:visited {
 }
 .form-standard textarea {
 	margin-bottom: 10px;
-	width: 30em;
-	height: 6em;
 	display: block;
 	padding: 5px;
 	font-family: sans-serif;
+	border: 2px groove threedface;
+	width: 725px;
+	max-width: 725px;
 }
 .form-standard textarea[name=story] {
-	width: 745px;
-	max-width: 745px;
 	height: 450px;
-	border: 2px groove threedface;
+}
+.form-standard textarea[name=blurb],
+.form-standard textarea[name=rules] {
+	height: 10em;
 }
 .event-listing h3 {
 	font-size: 14pt;
+}
+.event-listing h4 {
+	font-size: 13pt;
 }
 .event-listing td, .event-listing th {
 	padding: 4px;
 	font-size: 11pt;
 	text-align: right;
 }
-.event-listing .heading {
-	text-align: center;
+.event-listing .minutae {
+	margin-top: 1em;
+}
+.event-listing .minutae td {
+	padding: 0px 4px;
+	font-size: 10pt;
+	text-align: left;
+}
+.event-listing .minutae th {
+	padding: 0px 4px;
+	font-size: 10pt;
+	text-align: right;
 }
 .event-listing .blurb {
 	font-size: 11pt;
@@ -166,7 +181,7 @@ a.artist, a.artist:visited {
   _________________ */
   
 table { 
-	border-collapse: collapse; 
+	border-collapse: collapse;
 }
 .t-outdent-deep {
 	margin-left: -2em;
@@ -188,22 +203,30 @@ table {
 	margin-left: auto; 
 	margin-right: auto;
 }
-.left,    
+.left, 
+td.left,
+th.left, 
 .left th,    
 .left td { 
 	text-align: left; 
 }
-.justify, 
+.justify
+td.justify,
+th.justify, 
 .justify th, 
 .justify td { 
 	text-align: justify; 
 }
-.right,   
+.right,
+th.right, 
+td.right,
 .right th,   
 .right td { 
 	text-align: right; 
 }
-.center,  
+.center,
+th.center, 
+td.center, 
 .center th,  
 .center td { 
 	text-align: center; 
@@ -290,6 +313,9 @@ textarea.example {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+.inline-block {
+	display: inline-block;
 }
 .nobefore {
 	margin-top: 0px;

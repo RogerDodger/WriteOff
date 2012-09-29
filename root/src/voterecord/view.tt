@@ -34,8 +34,6 @@
 	[%- END %]
 </table>
 
-<hr style="margin-top: 1.6em"/>
-
 <p class="center">
 [%- records = record.event.vote_records_rs.filled %]
 [%- FOREACH r IN records %] 
@@ -55,4 +53,3 @@
 	<a class="ui-button" href="[% c.uri_for( c.controller('Event')
 		.action_for('view'), [ record.event_id ]) %]">Back to submissions</a>
 </p>
-	

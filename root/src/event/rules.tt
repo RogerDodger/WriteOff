@@ -35,13 +35,20 @@
 			<li>may start writing only after the prompt is released; and</li>
 			[%- END %]
 			<li>
-				must remain pubically disassociated from their works 
+				must remain pubically disassociated from their submitted works 
 				(i.e., anonymous) within all reasonable means until the event's
 				conclusion.
 			</li>
 		</ol>
 	</li>
 </ol>
+
+[%- IF event.custom_rules %]
+<h3>Custom</h3>
+
+[% md_render( event.custom_rules ) %]
+
+[%- END %]
 
 <h3>Legal</h3>
 <ol>
@@ -72,18 +79,37 @@
 	This event's content level is <strong>E</strong> for Everybody. This is
 	loosely defined as material suitable for all ages.
 </p>
+<ul>
+	<li>Submitted works may not contain&mdash;
+		<ul>
+			<li>coarse language;</li>
+			<li>drug references;</li>
+			<li>sexual references;</li>
+			<li>adult themes;</li>
+			<li>excessive violence;</li>
+			<li>depictions of sexual acts; or</li>
+			<li>grotesque content.</li>
+		</ul>
+	</li>
+</ul>
 
 [%- CASE 'T' %]
 <p>
 	This event's content level is <strong>T</strong> for Teen. This is loosely
 	defined as material suitable for teenagers.
 </p>
-
+<ul>
+	<li>Submitted works may not contain&mdash;
+		<ul>
+			<li>depictions of sexual acts; or</li>
+			<li>grotesque content.</li>
+		</ul>
+	</li>
+</ul>
 [%- CASE 'M' %]
 <p>
-	This event's content level is <strong>M</strong> for Mature. Mostly anything
-	content-wise is allowed here, but have some tact when dealing with more
-	risque subjects.
+	This event's content level is <strong>M</strong> for Mature. Anything not
+	prohibited by other rules is allowed.
 </p>
 
 [%- END -%]
@@ -110,7 +136,7 @@
 </textarea>
 
 <p>
-	<strong>Do not put your name or other metadata inside of the story field.
-	</strong> The <em>story</em> field should only have the <em>story</em> in 
-	it.
+	<strong>Participants should not put their name or other metadata inside of 
+	the story field.</strong> The <em>story</em> field should only have the 
+	<em>story</em> in it.
 </p>	

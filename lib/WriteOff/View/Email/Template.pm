@@ -8,7 +8,7 @@ __PACKAGE__->config(
 	default => {
 		content_type => 'text/html',
 		charset => 'utf-8',
-		view => 'HTML::NoWrap',
+		view => 'HTML',
 	},
 );
 
@@ -22,7 +22,7 @@ View for sending template-generated email from WriteOff.
 
 =head1 AUTHOR
 
-Cameron,,,
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 SEE ALSO
 

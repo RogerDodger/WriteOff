@@ -48,7 +48,7 @@ Adds an event.
 sub add :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( $c->controller('Root')->action_for('admin_check') );
+	$c->forward( $c->controller('Root')->action_for('assert_admin') );
 	
 	$c->stash->{template} = 'event/add.tt';
 	
@@ -62,9 +62,9 @@ sub add :Local :Args(0) {
 			wc_max      => [ 'NOT_BLANK', 'UINT' ],
 			fic_dur     => [ 'NOT_BLANK', 'UINT' ],
 			public_dur  => [ 'NOT_BLANK', 'UINT' ],
-			art_dur     => [ $p->{has_art}     ? ( 'NOT_BLANK', 'UINT' ) : () ],
-			prelim_dur  => [ $p->{has_prelim}  ? ( 'NOT_BLANK', 'UINT' ) : () ],
-			private_dur => [ $p->{has_private} ? ( 'NOT_BLANK', 'UINT' ) : () ],
+			art_dur     => [ $p->{has_art}    ? ( 'NOT_BLANK', 'UINT' ) : () ],
+			prelim_dur  => [ $p->{has_prelim} ? ( 'NOT_BLANK', 'UINT' ) : () ],
+			private_dur => [ $p->{has_judges} ? ( 'NOT_BLANK', 'UINT' ) : () ],
 		);
 		
 		$c->forward('do_add') if !$c->form->has_error;
@@ -97,7 +97,7 @@ sub do_add :Private {
 		$row{public} = $dt->add( minutes => INTERIM )->clone;
 	}
 	
-	if( $p->{has_private} ) {
+	if( $p->{has_judges} ) {
 		$row{private} = $dt->add( days => $p->{public_dur}  )->clone;
 		$row{end}     = $dt->add( days => $p->{private_dur} )->clone;
 	}
@@ -122,13 +122,13 @@ sub do_add :Private {
 		action => '/event/prelim_distr',
 		at     => $e->prelim,
 		args   => [$e->id],
-	}) if $p->{has_prelim};
+	}) if $e->prelim;
 	
 	$c->model('DB::Schedule')->create({
 		action => '/event/judge_distr',
 		at     => $e->private,
 		args   => [$e->id],
-	}) if $p->{has_private};
+	}) if $e->private;
 	
 	$c->model('DB::Schedule')->create({
 		action => '/event/tally_results',
@@ -175,11 +175,17 @@ sub rules :PathPart('rules') :Chained('index') :Args(0) {
 	push $c->stash->{title}, 'Rules';
 }
 
+sub results :PathPart('results') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+
+	push $c->stash->{title}, 'Results';
+	$c->stash->{template} = 'event/results.tt';
+}
+
 sub view :PathPart('submissions') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You are not an organiser for this event.']) unless 
-		$c->stash->{event}->is_organised_by( $c->user );
+	$c->forward('assert_organiser');
 	
 	$c->stash->{storys}  = $c->stash->{event}->storys;
 	$c->stash->{images}  = $c->stash->{event}->images;
@@ -193,10 +199,15 @@ sub view :PathPart('submissions') :Chained('index') :Args(0) {
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You are not an organiser for this event.']) unless 
-		$c->stash->{event}->is_organised_by( $c->user );
+	$c->forward('assert_organiser');
 		
 	$c->forward('do_edit') if $c->req->method eq 'POST';
+	
+	$c->stash->{fillform} = { 
+		content_level => $c->stash->{event}->content_level,
+		blurb => $c->stash->{event}->blurb,
+		rules => $c->stash->{event}->custom_rules,
+	};
 	
 	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'event/edit.tt';
@@ -205,24 +216,104 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->form( 
-		blurb => [ [ 'LENGTH', 1, $c->config->{biz}{blurb}{max} ] ],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
-	);
+	return 0 unless $c->req->param('sessionid') eq $c->sessionid;
 	
-	if(!$c->form->has_error) {
-		$c->stash->{event}->update({ blurb => $c->form->valid('blurb') });
-		$c->flash->{status_msg} = 'Edit successful';
-		$c->res->redirect( $c->uri_for('/') );
+	if( $c->req->param('submit') eq 'Edit blurb' ) {
+	
+		$c->form( blurb => [ [ 'LENGTH', 1, $c->config->{len}{max}{blurb} ] ] );
+		
+		if(!$c->form->has_error) {
+			$c->stash->{event}->update({ blurb => $c->form->valid('blurb') });
+			
+			return $c->stash->{status_msg} = 'Blurb edited';
+		}
 	}
 	
+	if( $c->req->param('submit') eq 'Edit rules' ) {
+		
+		$c->form( rules => [ [ 'LENGTH', 1, $c->config->{len}{max}{rules} ] ] );
+		
+		if(!$c->form->has_error) {
+			$c->stash->{event}->update({ custom_rules => $c->form->valid('rules') });
+			
+			return $c->stash->{status_msg} = 'Rules edited';
+		}
+	}
+	
+	if( $c->req->param('submit') eq 'Edit content level' ) {
+		
+		$c->form( content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ] );
+		
+		if(!$c->form->has_error) {
+			$c->stash->{event}->content_level( $c->form->valid('content_level') );
+			
+			return $c->stash->{status_msg} = 'Content level updated';
+		}
+	}
+	
+	my $user = $c->model('DB::User')->search({ 
+		username => $c->req->param('user'),
+		verified => 1,
+	})->single;
+	
+	if( $c->req->param('submit') eq 'Add organiser' && $user ) {
+		$c->forward( $c->controller('Root')->action_for('assert_admin') );
+		
+		eval { $c->stash->{event}->add_to_users($user, { role => 'organiser' }) };
+		
+		return $c->stash->{status_msg} = $@ ? '' : 'Organiser added';
+	}
+	
+	if( $c->req->param('submit') eq 'Add judge' && $user ) {
+		return 0 unless $c->stash->{event}->private;
+		
+		eval { $c->stash->{event}->add_to_users($user, { role => 'judge' }) };
+		
+		return $c->stash->{status_msg} = $@ ? '' : 'Judge added';
+	}
 }
 
-sub results :PathPart('results') :Chained('index') :Args(0) {
-	my ( $self, $c ) = @_;
+sub remove_judge :PathPart('remove-judge') :Chained('index') :Args(1) {
+	my ( $self, $c, $user_id ) = @_;
+	
+	$c->forward( $self->action_for('assert_organiser') );
+	
+	$c->forward( $self->action_for('remove_user'), [ $user_id, 'judge' ] );
+}
 
-	push $c->stash->{title}, 'Results';
-	$c->stash->{template} = 'event/results.tt';
+sub remove_organiser :PartPart('remove-organiser') :Chained('index') :Args(1) {
+	my ( $self, $c, $user_id ) = @_;
+	
+	$c->forward( $c->controller('Root')->action_for('assert_admin') );
+	
+	$c->forward( $self->action_for('remove_user'), [ $user_id, 'organiser' ] );
+}
+
+sub remove_user :Private {
+	my ( $self, $c, $user_id, $role ) = @_;
+	
+	my $junction = $c->model('DB::UserEvent')->find({ 
+		user_id  => $user_id, 
+		event_id => $c->stash->{event}->id, 
+		role     => $role,
+	});
+	
+	if( defined $junction ) {
+		$junction->delete;
+		$c->flash->{status_msg} = sprintf "%s removed", ucfirst $role;
+	}
+	
+	$c->res->redirect( $c->uri_for( 
+		$self->action_for('edit'), [ $c->stash->{event}->id_uri ] 
+	));
+}
+
+sub assert_organiser :Private {
+	my ( $self, $c, $msg ) = @_;
+	
+	$msg //= 'You are not an organiser for this event.';
+	$c->detach('/forbidden', [ $msg ]) unless 
+		$c->stash->{event}->is_organised_by( $c->user );
 }
 
 sub set_prompt :Private {

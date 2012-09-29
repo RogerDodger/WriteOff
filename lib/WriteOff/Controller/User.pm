@@ -1,6 +1,7 @@
 package WriteOff::Controller::User;
 use Moose;
 use namespace::autoclean;
+use JSON::XS;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -76,7 +77,6 @@ sub register :Local :Args(0) {
 	
 	$c->res->redirect( $c->uri_for('/') ) if $c->user;
 	
-	$c->stash->{timezones} = [ $self->timezones ];
 	$c->stash->{template} = 'user/register.tt';
 	
 	$c->forward('/captcha_get');
@@ -105,7 +105,7 @@ sub do_register :Private {
 			'EMAIL_MX', 
 			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'email' ] 
 		],
-		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
+		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->timezones ] ],
 		captcha  => [ [ 'EQUAL_TO', 1 ] ],
 	);
 	
@@ -148,9 +148,12 @@ sub settings :Local :Args(0) {
 	
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user; 
 	
-	$c->stash->{timezones} = [ $self->timezones ];
-	
 	$c->forward('do_settings') if $c->req->method eq 'POST';
+	
+	$c->stash->{fillform} = {
+		timezone => $c->user->get('timezone'),
+		mailme   => $c->user->get('mailme') ? 'on' : '',
+	};
 	
 	$c->stash->{template} = 'user/settings.tt';
 }
@@ -180,7 +183,7 @@ sub do_settings :Private {
 	
 	elsif( $c->req->params->{submit} eq 'Change timezone' ) {
 		$c->form(
-			timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $self->timezones ] ],
+			timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->timezones ] ],
 		);
 		return 0 if $c->form->has_error;
 		
@@ -220,10 +223,16 @@ sub verify :Local :Args(2) {
 	}
 }
 
-sub timezones {
+sub json_list :Path('json-list') :Args(0) {
 	my ( $self, $c ) = @_;
-	
-	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
+
+	$c->stash->{json} = [ 
+		$c->model('DB::User')->search({ 
+			username => { like => "%" . $c->req->param('term') . "%" },
+			verified => 1,
+		})->get_column('username')->all
+	];
+	$c->forward('View::JSON');
 }
 
 =head1 AUTHOR

@@ -74,6 +74,7 @@ CREATE TABLE events (
 	wc_min          INTEGER NOT NULL,
 	wc_max          INTEGER NOT NULL,
 	rule_set        INTEGER DEFAULT 1 NOT NULL,
+	custom_rules    TEXT,
 	"start"         TIMESTAMP NOT NULL,
 	prompt_voting   TIMESTAMP NOT NULL,
 	art             TIMESTAMP,

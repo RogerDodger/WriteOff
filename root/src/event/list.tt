@@ -9,8 +9,8 @@
 		<table>
 			<tr>
 				<th> </th>
-				<th class="heading">Begins</th>
-				<th class="heading">Ends</th>
+				<th class="center">Begins</th>
+				<th class="center">Ends</th>
 			</tr>
 			[%- IF event.art %]
 			<tr>
@@ -44,10 +44,26 @@
 			</tr>
 			[%- END %]
 		</table>
-		<p style="font-size: 10pt">
-			<strong>Word limit:</strong>
-			[% event.wc_min %]&ndash;[% event.wc_max %]
-		</p>
+		<table class="minutae">
+			<tr>
+				<th>Organiser[% 's' IF event.organisers.max != 0 %]:</th>
+				<td>[% event.organisers.map_username.join_serial %]</td>
+			</tr>
+			[%- IF event.private %]
+			<tr>
+				<th>Judge[% 's' IF event.judges.max != 0 %]:</th>
+				<td>[% event.judges.map_username.join_serial %]</td>
+			</tr>
+			[%- END %]
+			<tr>
+				<th>Word limit:</th>
+				<td>[% event.wc_min %]&ndash;[% event.wc_max %]</td>
+			</tr>
+			<tr>
+				<th>Content level:</th>
+				<td>[% event.content_level %]</td>
+			</tr>
+		</table>
 		<ul>
 			<li><a class="link" href="[% c.uri_for( c.controller('Event')
 				.action_for('rules'), [ event.id_uri ]) %]">Rules</a></li>
@@ -83,14 +99,14 @@
 			<li><a class="link" href="[% c.uri_for( c.controller('Event')
 				.action_for('results'), [ event.id_uri ]) %]">Results</a></li>
 		</ul>
-		[% c.md_render( event.blurb ) %]
+		[% md_render( event.blurb ) %]
 		[%- IF event.is_organised_by( c.user ) %]
 		<h3>Organiser Tasks</h3>
 		<ul>
 			<li><a class="link" href="[% c.uri_for( c.controller('Event')
 				.action_for('view'), [ event.id_uri ]) %]">View submissions</a></li>
 			<li><a class="link" href="[% c.uri_for( c.controller('Event')
-				.action_for('edit'), [ event.id_uri ]) %]">Edit blurb</a></li>
+				.action_for('edit'), [ event.id_uri ]) %]">Edit event</a></li>
 		</ul>
 		[%- END %]
 	</div>

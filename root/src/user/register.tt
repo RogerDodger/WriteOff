@@ -46,8 +46,8 @@
 				<td class="label">Timezone<span class="unrequired">*</span></td>
 				<td>
 					<select name="timezone">
-					[%- FOREACH timezone IN timezones %]
-		<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
+					[%- FOREACH timezone IN c.timezones %]
+<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
 					[%- END %]
 					</select>
 				</td>

@@ -32,4 +32,8 @@ jQuery(document).ready(function($) {
 			alert('Max filesize: ' + max + 'MB');
 		}
 	});
+	$('input.user-autocomplete').autocomplete({
+		source: '/user/json-list',
+		minLength: 1,
+	});
 });

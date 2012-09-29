@@ -11,6 +11,7 @@ all_from 'lib/WriteOff.pm';
 
 requires 'Catalyst::Runtime' => '5.90013';
 requires 'Catalyst::View::TT';
+requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::Email::Template';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
