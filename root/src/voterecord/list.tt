@@ -7,7 +7,7 @@
 		<th>Count</th>
 		<th title="Standard deviation">&sigma;</th>
 		<th title="Mean (average)">&mu;</th>
-		<th>Created</th>
+		<th>Filled</th>
 		<th> </th>
 		<th> </th>
 	</tr>
@@ -16,7 +16,7 @@
 		<td class="left" title="[% record.event.prompt | html %]">
 			[% record.event.prompt | truncate(12) | html %]
 		</td>
-		<td>[% record.ip %]</td>
+		<td title="[% record.ip %]">[% record.ip | truncate(15) %]</td>
 		<td>[% record.round.ucfirst %]</td>
 		<td>[% record.type.ucfirst %]</td>
 		<td>[% record.votes_rs.count %]</td>

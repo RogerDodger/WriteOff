@@ -267,9 +267,9 @@ sub is_manipulable_by {
 	my $user = $self->result_source->schema->resultset('User')
 		->resolve(shift) or return 0;
 	
-	return 1 if $self->user_id == $user->id && $self->event->fic_subs_allowed;
-	return 1 if $self->event->is_organised_by( $user );
 	return 1 if $user->is_admin;
+	return 1 if $self->event->is_organised_by( $user );
+	return 1 if $self->user_id == $user->id && $self->event->fic_subs_allowed;
 	
 	0;
 }
@@ -311,6 +311,34 @@ sub private_score {
 	
 	return $self->{__private_score} //=
 		$self->votes->private->search({ value => { '!=' => undef } })->average;
+}
+
+sub stdev {
+	my $self = shift;
+	
+	return $self->{__stdev} //=
+		$self->votes->public->search({ value => { '!=' => undef } })->stdev;
+}
+
+sub pos_in {
+	my($self, $storys, $switch) = @_;
+	
+	my($i, $n) = (0, $#$storys);
+	
+	$i++ until $self->id == $storys->[$i]->id;
+	
+	if( !$switch ) {
+		$i-- while $i > 0 && 
+			$self->public_score  == $storys->[$i-1]->public_score &&
+			$self->private_score == $storys->[$i-1]->private_score
+	}
+	else {
+		$i++ while $i < $n && 
+			$self->public_score  == $storys->[$i+1]->public_score &&
+			$self->private_score == $storys->[$i+1]->private_score;
+	}
+	
+	return $i;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

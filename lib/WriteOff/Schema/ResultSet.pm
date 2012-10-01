@@ -3,17 +3,27 @@ package WriteOff::Schema::ResultSet;
 use strict;
 use base 'DBIx::Class::ResultSet';
 
+sub datetime_parser {
+	return shift->result_source->schema->storage->datetime_parser;
+}
+
+sub format_datetime {
+	return shift->datetime_parser->format_datetime(shift);
+}
+
+sub parse_datetime {
+	return shift->datetime_parser->parse_datetime(shift);
+}
+
 sub now {	
 	my $self = shift;
-	return $self->result_source->schema->storage->datetime_parser
-		->format_datetime( $self->now_dt );
+	return $self->format_datetime( $self->now_dt );
 }
 
 sub now_dt {
 	return DateTime->now;
 	
-	return shift->result_source->schema->storage->datetime_parser
-		->parse_datetime('2012-09-20 15:00:00');
+	return shift->parse_datetime('2012-09-20 15:00:00');
 }
 
 sub created_before {

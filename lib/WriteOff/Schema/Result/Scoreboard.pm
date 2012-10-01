@@ -116,10 +116,12 @@ __PACKAGE__->add_columns(
 );
 
 my %award_rank = (
-	gold => 1,
-	silver => 2,
-	bronze => 3,
-	ribbon => 10,
+	gold     => 1,
+	silver   => 2,
+	bronze   => 3,
+	confetti => 8,
+	spoon    => 9,
+	ribbon   => 10,
 );
 
 sub add_awards {
@@ -136,6 +138,13 @@ sub add_awards {
 	});
 	
 	return $self;
+}
+
+sub pos {
+	my $self = shift;
+	my $rs = $self->result_source->resultset;
+	
+	return 1 + $rs->search({ score => { '>' => $self->score } })->count;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

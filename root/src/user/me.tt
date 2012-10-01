@@ -34,24 +34,25 @@
 		</td>
 		<td class="center">[% story.wordcount %]</td>
 		<td>[% format_dt( story.updated, '%d %b %H:%M') %]</td>
-		<td>
 		[%- IF story.is_manipulable_by(c.user) %]
+		<td>
 			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/edit' ) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
 			</a>
-		[%- ELSE %]
-			<span class="ui-icon ui-icon-locked" title="Edit disabled"></span>
-		[%- END %]
 		</td>
 		<td>
-		[%- IF story.is_manipulable_by(c.user) %]
 			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/delete' ) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
 			</a>
-		[%- ELSE %]
-		<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
-		[%- END %]
 		</td>
+		[%- ELSE %]
+		<td>
+			<span class="ui-icon ui-icon-locked" title="Edit disabled"></span>
+		</td>
+		<td>
+			<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
+		</td>
+		[%- END %]
 	</tr>
 	[%- END %]
 </table>

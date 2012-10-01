@@ -3,7 +3,7 @@ package WriteOff::Schema::ResultSet::Story;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
-sub tally_order {
+sub order_by_score {
 	my $self = shift;
 
 	return sort { 
@@ -11,6 +11,12 @@ sub tally_order {
 		$b->public_score  <=> $a->public_score  ||
 		$a->title cmp $b->title 
 	} $self->all
+}
+
+sub order_by_stdev {
+	my $self = shift;
+	
+	return sort { $b->stdev <=> $a->stdev } $self->all;
 }
 
 1;

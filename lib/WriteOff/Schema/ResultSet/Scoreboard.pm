@@ -5,37 +5,43 @@ use base 'WriteOff::Schema::ResultSet';
 
 my @medals = qw/gold silver bronze/;
 
-sub tally_storys {
-	my( $self, $storys_rs ) = @_;
+sub tally {
+	my( $self, $rs ) = @_;
 	
-	my @storys = $storys_rs->tally_order;
-	my $n = $storys_rs->count;
+	my @items = $rs->order_by_score;
+	my $n = $#items;
 	my %tally; 
 	
-	for( my $i = 0; $i < $n; $i++ ) {
-		my $store = $self->find_or_create({ competitor => $storys[$i]->author });
-		my $author = $store->competitor;
+	my $most_controversial = ($rs->order_by_stdev)[0];
+	
+	for my $item ( @items ) {
+		my $store = $self->find_or_create({ competitor => $item->artist });
+		my $artist = $store->competitor;
 		
-		# Deal with tiebreakers
-		my($upper, $lower) = ($i, $i);
-		$upper++ while $upper < $#storys &&
-			$storys[$i]->public_score  == $storys[$upper+1]->public_score &&
-			$storys[$i]->private_score == $storys[$upper+1]->private_score;
-		$lower-- while $lower > 0 &&
-			$storys[$i]->public_score  == $storys[$lower-1]->public_score &&
-			$storys[$i]->private_score == $storys[$lower-1]->private_score;
+		my $lower = $item->pos_in( \@items );
+		my $upper = $item->pos_in( \@items, 1);
 		
-		$tally{$author} //= { score => $store->score };
-		$tally{$author}{score} += $n - ($upper + $lower) - 1;
+		$tally{$artist} //= { score => $store->score };
+		$tally{$artist}{score} += $n - ($upper + $lower);
 		
 		if( $lower <= $#medals ) {
-			$tally{$author}{awards} //= [];
-			push @{ $tally{$author}{awards} }, $medals[$lower];
+			$tally{$artist}{awards} //= [];
+			push $tally{$artist}{awards}, $medals[$lower];
+		}
+		
+		if( $lower == $n ) {
+			$tally{$artist}{awards} //= [];			
+			push $tally{$artist}{awards}, 'spoon';
+		}
+		
+		if( $most_controversial->id == $item->id ) {
+			$tally{$artist}{awards} //= [];			
+			push $tally{$artist}{awards}, 'confetti';
 		}
 	}
 	
-	while( my($author, $new) = each %tally ) {
-		my $store = $self->find($author);
+	while( my($artist, $new) = each %tally ) {
+		my $store = $self->find($artist);
 		$store->update({ score  => $new->{score} > 0 ? $new->{score} : 0 });
 		$store->add_awards( $new->{awards} // ['ribbon'] );
 	}
@@ -84,12 +90,9 @@ appears more than once in a given set, they are only given one ribbon.
 
 =head1 METHODS
 
-=head2 tally_storys
+=head2 tally
 
-Tallies scores from a L<WriteOff::Schema::ResultSet::Story> resultset.
-
-=head2 tally_images
-
-Tallies scores from a L<WriteOff::Schema::ResultSet::Image> resultset.
+Tallies scores from either a L<WriteOff::Schema::ResultSet::Story> resultset or
+a L<WriteOff::Schema::ResultSet::Image> resultset.
 
 =cut

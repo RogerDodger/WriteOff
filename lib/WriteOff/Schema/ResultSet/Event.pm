@@ -6,7 +6,9 @@ use base 'WriteOff::Schema::ResultSet';
 sub active_events {	
 	my $self = shift;
 	return $self->search(
-		{ end => { '>' => $self->now } },
+		{ end => { '>' => 
+			$self->format_datetime( $self->now_dt->subtract( days => 1 ) ) 
+		} },
 		{ order_by => { -asc => 'start' } },
 	);
 }
@@ -14,7 +16,9 @@ sub active_events {
 sub old_events {
 	my $self = shift;
 	return $self->search(
-		{ end => { '<' => $self->now } },
+		{ end => { '<' => 
+			$self->format_datetime( $self->now_dt->subtract( days => 1 ) ) 
+		} },
 		{ order_by => { -asc => 'start' } },
 	);
 }

@@ -15,10 +15,8 @@ sub filled {
 	);
 }
 
-sub round {
-	my( $self, $round ) = @_;
-	
-	return scalar $self->search({ round => $round });
+sub round {	
+	return shift->search_rs({ round => shift });
 }
 
 sub prelim {

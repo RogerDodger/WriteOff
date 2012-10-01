@@ -10,18 +10,15 @@
 	</tr>
 [%- IF (scoreboard = c.model('DB::Scoreboard').ordered) %]
 	[%- FOREACH item IN scoreboard %]
-		[%- pos = loop.index %]
-		[%- WHILE pos > 0 && scoreboard.${pos.minus(1)}.score == item.score %]
-		[%- pos = pos - 1 %]
-		[%- END %]
 	<tr>
-		<td class="center">[% pos + 1 %]</td>
+		<td class="center">[% item.pos %]</td>
 		<td>[% item.competitor | html %]</td>
 		<td class="center">[% item.score %]</td>
 		<td class="center">
 		[%- FOREACH award IN item.awards %]
 			<img src="[% c.config.awards.$award.path %]" 
-				alt="[% c.config.awards.$award.alt %]"/>
+				alt="[% c.config.awards.$award.alt %]"
+				title="[% c.config.awards.$award.alt %]" />
 		[%- END %]
 		</td>
 	</tr>

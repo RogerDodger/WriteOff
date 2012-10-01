@@ -6,22 +6,17 @@
 	[%- awards = [ 'gold', 'silver', 'bronze' ] %]
 <table class="result-listing">
 
-	[%- storys = event.storys_rs.tally_order %]
+	[%- storys = event.storys_rs.order_by_score %]
 	[% FOREACH story IN storys %]
 <tr>
-		[%- pos = loop.index %]
-		[%- WHILE pos > 0 && 
-			storys.${pos.minus(1)}.public_score == story.public_score &&
-			storys.${pos.minus(1)}.private_score == story.private_score
-		-%]
-		[%- pos = pos - 1 %]
-		[%- END -%]
-
-		[%- award = awards.$pos || 'ribbon' %]
+		[%- pos = story.pos_in(storys) %]	
+		[%- award = awards.$pos || pos == storys.max && 'spoon' || 'ribbon' %]
 	<td>
 		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
-			alt="[% c.config.awards.$award.alt %]"/>
-		<a class="link" href="[% c.uri_for( c.controller('Fic').action_for('view'), [story.id_uri] ) %]">
+			alt="[% c.config.awards.$award.alt %]" 
+			title="[% c.config.awards.$award.alt %]"/>
+		<a class="link" href="[% c.uri_for( c.controller('Fic')
+			.action_for('view'), [ story.id_uri ]) %]">
 			<em>[% story.title | html %]</em>
 		</a>
 		[%- IF story.website %]
@@ -34,6 +29,33 @@
 </tr>
 	[% END %]
 </table>
+
+<h3>Controversial Stories</h3>
+
+<table class="result-listing">
+	[%- FOREACH story IN event.storys_rs.order_by_stdev %]
+		[%- LAST IF loop.count == 6 -%]
+		[%- award = loop.first ? 'confetti' : 'ribbon' %] 
+<tr>
+	<td>
+		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
+			alt="[% c.config.awards.$award.alt %]" 
+			title="[% c.config.awards.$award.alt %]"/>
+		<a class="link" href="[% c.uri_for( c.controller('Fic')
+			.action_for('view'), [ story.id_uri ]) %]">
+			<em>[% story.title | html %]</em>
+		</a>
+		[%- IF story.website %]
+		by <a class="author new-window" href="[% story.website %]">[% story.author | html %]</a>
+		[%- ELSE %]
+		by [% story.author | html %]
+		[%- END %]
+		[% story.stdev | format('(%.2f)') IF story.stdev %]
+	</td>
+</tr>
+	[%- END %]
+</table>
+
 [%- ELSE %]
 <p>
 	Results open: <strong>[% format_dt( event.end ) %]</strong>.

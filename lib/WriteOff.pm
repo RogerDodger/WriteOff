@@ -29,7 +29,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -163,6 +163,14 @@ __PACKAGE__->config(
 		bronze => {
 			path => '/static/images/awards/medal_bronze.png',
 			alt  => 'Bronze medal',
+		},
+		confetti => {
+			path => '/static/images/awards/confetti.png',
+			alt  => 'Most controversial',
+		},
+		spoon => {
+			path => '/static/images/awards/wooden_spoon.png',
+			alt  => 'Wooden spoon',
 		},
 		ribbon => {
 			path => '/static/images/awards/ribbon.gif',

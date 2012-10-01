@@ -198,9 +198,9 @@ sub is_manipulable_by {
 	my $user = $self->result_source->schema->resultset('User')
 		->resolve(shift) or return 0;
 	
-	return 1 if $self->user_id == $user->id && $self->event->prompt_subs_allowed;
-	return 1 if $self->event->is_organised_by( $user );
 	return 1 if $user->is_admin;
+	return 1 if $self->event->is_organised_by( $user );
+	return 1 if $self->user_id == $user->id && $self->event->prompt_subs_allowed;
 	
 	0;
 }

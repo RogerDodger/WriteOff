@@ -350,8 +350,8 @@ sub tally_results :Private {
 		$e->id, $e->prompt
 	);
 	
-	$c->model('DB::Scoreboard')->tally_storys( $e->storys_rs );
-	$c->model('DB::Scoreboard')->tally_images( $e->images_rs ) if $e->art;
+	$c->model('DB::Scoreboard')->tally( $e->storys_rs );
+	$c->model('DB::Scoreboard')->tally( $e->images_rs ) if $e->art;
 
 }
 =head1 AUTHOR

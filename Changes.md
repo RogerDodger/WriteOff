@@ -1,3 +1,12 @@
+v0.15
+=====
+- Wooden spoon award
+- Conetti award
+- Cleaned up voterecord/list
+- Cleaned up position-determining routines by taking them out of templates
+- Optimised `is_manipulable_by` methods
+- Pushed event archive clock back 1 day, so that recently finished events don't go straight in the archive
+
 v0.14
 =====
 - Put parsers where they belong (for reals this time)
