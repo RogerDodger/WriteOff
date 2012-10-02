@@ -56,15 +56,21 @@ sub add :Local :Args(0) {
 	
 		my $p = $c->req->params; 
 		$c->form(
-			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT MySQL/] ],
+			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
 			prompt => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
-			wc_min      => [ 'NOT_BLANK', 'UINT' ],
-			wc_max      => [ 'NOT_BLANK', 'UINT' ],
-			fic_dur     => [ 'NOT_BLANK', 'UINT' ],
-			public_dur  => [ 'NOT_BLANK', 'UINT' ],
-			art_dur     => [ $p->{has_art}    ? ( 'NOT_BLANK', 'UINT' ) : () ],
-			prelim_dur  => [ $p->{has_prelim} ? ( 'NOT_BLANK', 'UINT' ) : () ],
-			private_dur => [ $p->{has_judges} ? ( 'NOT_BLANK', 'UINT' ) : () ],
+			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
+			organiser => [ 
+				'NOT_BLANK',
+				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
+			],
+			wc_min => [ qw/NOT_BLANK UINT/, [ 'LESS_THAN', $c->req->param('wc_max') ] ],
+			wc_max => [ qw/NOT_BLANK UINT/ ],
+			fic_dur     => [ qw/NOT_BLANK UINT/ ],
+			public_dur  => [ qw/NOT_BLANK UINT/ ],
+			art_dur     => [ $p->{has_art}    ? qw/NOT_BLANK UINT/ : () ],
+			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
+			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ],
+			sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 		);
 		
 		$c->forward('do_add') if !$c->form->has_error;
@@ -108,33 +114,42 @@ sub do_add :Private {
 	$row{prompt}   = $c->form->valid('prompt') || 'TBD';
 	$row{wc_min}   = $p->{wc_min};
 	$row{wc_max}   = $p->{wc_max};
-	$row{rule_set} = 1;
 	
-	my $e = $c->model('DB::Event')->create(\%row);
+	$c->stash->{event} = $c->model('DB::Event')->create(\%row);
+	$c->stash->{event}->set_content_level( $c->form->valid('content_level') );
+	
+	$c->stash->{event}->add_to_users( $c->model('DB::User')->find
+		({ username => $c->form->valid('organiser') }), 
+		({ role     => 'organiser' })
+	);
 	
 	$c->model('DB::Schedule')->create({
 		action => '/event/set_prompt',
-		at     => $e->art || $e->fic,
-		args   => [$e->id],
+		at     => $c->stash->{event}->art || $c->stash->{event}->fic,
+		args   => [ $c->stash->{event}->id ],
 	});
 	
 	$c->model('DB::Schedule')->create({
 		action => '/event/prelim_distr',
-		at     => $e->prelim,
-		args   => [$e->id],
-	}) if $e->prelim;
+		at     => $c->stash->{event}->prelim,
+		args   => [ $c->stash->{event}->id ],
+	}) if $c->stash->{event}->prelim;
 	
 	$c->model('DB::Schedule')->create({
 		action => '/event/judge_distr',
-		at     => $e->private,
-		args   => [$e->id],
-	}) if $e->private;
+		at     => $c->stash->{event}->private,
+		args   => [ $c->stash->{event}->id ],
+	}) if $c->stash->{event}->private;
 	
 	$c->model('DB::Schedule')->create({
 		action => '/event/tally_results',
-		at     => $e->end,
-		args   => [$e->id],
+		at     => $c->stash->{event}->end,
+		args   => [ $c->stash->{event}->id ],
 	});
+	
+	$c->run_after_request( sub {
+		$c->forward( $self->action_for('notify_mailing_list') );
+	}) if $c->req->param('notify_mailing_list');
 	
 	$c->flash->{status_msg} = 'Event created';
 	$c->res->redirect( $c->uri_for('/') );
@@ -185,7 +200,7 @@ sub results :PathPart('results') :Chained('index') :Args(0) {
 sub view :PathPart('submissions') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('assert_organiser');
+	$c->forward( $self->action_for('assert_organiser') );
 	
 	$c->stash->{storys}  = $c->stash->{event}->storys;
 	$c->stash->{images}  = $c->stash->{event}->images;
@@ -199,7 +214,7 @@ sub view :PathPart('submissions') :Chained('index') :Args(0) {
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('assert_organiser');
+	$c->forward( $self->action_for('assert_organiser') );
 		
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 	
@@ -314,6 +329,31 @@ sub assert_organiser :Private {
 	$msg //= 'You are not an organiser for this event.';
 	$c->detach('/forbidden', [ $msg ]) unless 
 		$c->stash->{event}->is_organised_by( $c->user );
+}
+
+sub notify_mailing_list :Private {
+	my ( $self, $c ) = @_;
+	
+	return 0 unless eval { 
+		$c->stash->{event}->isa('WriteOff::Schema::Result::Event');
+	};
+	
+	my $rs = $c->model('DB::User')->mailing_list;
+	
+	$c->log->info( join " ", $rs->all );
+	
+	while ( my $user = $rs->next ) {
+		$c->stash->{email} = {
+			to           => $user->email,
+			from         => $c->mailfrom,
+			subject      => $c->config->{name} . " - New Event",
+			template     => 'email/event.tt',
+			content_type => 'text/html',
+			timezone     => $user->timezone,
+		};
+	
+		$c->forward( $c->view('Email::Template') );
+	}
 }
 
 sub set_prompt :Private {

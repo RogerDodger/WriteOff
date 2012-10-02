@@ -21,6 +21,8 @@ use Catalyst qw/
 	Session::Store::File
 	Session::State::Cookie
 	
+	RunAfterRequest
+	
 	FormValidator::Simple 
 	FillInForm
 	Upload::MIME
@@ -29,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -117,7 +119,12 @@ __PACKAGE__->config(
 				ip    => { DBIC_UNIQUE  => 'You have already cast a vote' },
 				user  => { DBIC_UNIQUE  => 'You have already cast a vote' },
 				captcha => { EQUAL_TO   => 'Invalid CAPTCHA' },
-			}
+			},
+			event => {
+				start     => { DATETIME_FORMAT => 'Starting Date not a valid RFC3339 datetime' },
+				wc_min    => { LESS_THAN => 'Wordcount Min > Max' },
+				organiser => { NOT_DBIC_UNIQUE => 'Organiser not a real user' },
+			},
 		},
 	},
 	len => {
@@ -206,6 +213,15 @@ sub timezones {
 	my $self = @_;
 	
 	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
+}
+
+sub mailfrom {
+	my( $self, $name, $user ) = @_;
+	
+	$name //= $self->config->{AdminName};
+	$user //= 'noreply';
+	
+	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
 }
 
 =head1 NAME

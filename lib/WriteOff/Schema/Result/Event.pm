@@ -297,7 +297,7 @@ my %levels = (
 sub content_level {
 	my $self = shift;
 	
-	return $self->set_content_level(@_) if @_;
+	$self->set_content_level(@_) if @_;
 	
 	return 'M' if $self->rule_set & 2;
 	return 'T' if $self->rule_set & 1;
@@ -308,7 +308,7 @@ sub set_content_level {
 	my ( $self, $rating ) = @_;
 	
 	$self->update({ rule_set =>
-		($self->rule_set & ~3) + 
+		( ($self->rule_set // 0) & ~3) + 
 		$levels{$rating} // 0 
 	});
 }

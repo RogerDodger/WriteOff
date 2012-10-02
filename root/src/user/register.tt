@@ -1,69 +1,66 @@
-<form class="form-standard" method="post" action="[% c.uri_for('/user/register') %]">
-	<fieldset>
-		<legend>Register</legend>
+<h1>Register</h1>
+<form class="light" method="post" action="[% c.uri_for('/user/register') %]">
 [% IF c.form.has_error %]
 	[% FOREACH error IN c.form.messages('register') %]
-	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-			<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]
-			</p>
+		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Error:</strong> [% error %]
+				</p>
+			</div>
 		</div>
-	</div>
 	[% END %]
 [% END %]
-		<table>
-			<tr>
-				<td class="label">Username<span class="required">*</span></td>
-				<td>
-					<input type="text" name="username" maxlength="[% c.config.len.max.user %]"/>
-					<p>Letters, numbers, and underscores only.</p>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Password<span class="required">*</span></td>
-				<td>
-					<input type="password" name="password" maxlength="[% c.config.len.max.pass %]"/>
-					<p>Must be [% c.config.len.min.pass %] or more characters.</p>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Confirm Password<span class="required">*</span></td>
-				<td><input type="password" name="password2" maxlength="[% c.config.len.max.pass %]"/></td>
-			</tr>
-			<tr>
-				<td class="label">Email<span class="required">*</span></td>
-				<td>
-					<input type="text" name="email" maxlength="[% c.config.len.max.email %]"/>
-					<p>
-						<input type="checkbox" name="mailme" />
-						Email me event notifications
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Timezone<span class="unrequired">*</span></td>
-				<td>
-					<select name="timezone">
-					[%- FOREACH timezone IN c.timezones %]
-<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
-					[%- END %]
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"></td>
-				<td>
-					[% recaptcha %]
-					<p>
-						By registering you acknowledge that you have read
-						and agreed to the site's
-						<a class="link new-window" href="[% c.uri_for('/tos') %]">Terms of Service</a>.
-					</p>
-					<input class="big" type="submit" value="Submit" />
-				</td>
-			</tr>
-		</table>
-	</fieldset>
+	<p>
+		<label>Username<span class="required">*</span></label>
+		<input type="text" name="username"  size="30"
+			title="Letters, numbers, and underscores only."
+			maxlength="[% c.config.len.max.user %]"
+			pattern="^[a-zA-Z0-9_]+$" required />
+	</p>
+	
+	<p class="inline">
+		<label>Password<span class="required">*</span></label>
+		<input type="password" name="password" size="30"
+			title="Must be [% c.config.len.min.pass %] or more characters." 
+			maxlength="[% c.config.len.max.pass %]"
+			onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
+			pattern=".{[% c.config.len.min.pass %],}" required />
+	</p>
+	
+	<p class="inline">
+		<label>Confirm Password<span class="required">*</span></label>
+		<input type="password" name="password2" id="p2" size="30"
+			title="Passwords must match"
+			maxlength="[% c.config.len.max.pass %]" required />
+	</p>
+	
+	<p>
+		<label>Email<span class="required">*</span></label>
+		<input type="email" name="email" size="30"
+			maxlength="[% c.config.len.max.email %]" required />
+		<br />
+		<input type="checkbox" name="mailme" />
+		Email me event notifications
+	</p>
+	
+	<p>
+		<label>Timezone</label>
+		<select name="timezone">
+		[%- FOREACH timezone IN c.timezones %]
+			<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
+		[%- END %]
+		</select>
+	</p>
+	
+	<label>Prove You Are Human<span class="required">*</span></label>
+	[% recaptcha.remove(' frameborder="0"') %]
+	<p class="confirm">
+		By registering you acknowledge that you have read and agreed to 
+		the site's <a class="link new-window" 
+		href="[% c.uri_for('/tos') %]">Terms of Service</a>.
+	</p>
+	
+	<input type="submit" value="Register" />
 </form>

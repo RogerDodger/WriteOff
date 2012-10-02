@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 [%- IF template.name.match('^email/') %]
 
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta charset="utf-8" />
 	<title>[% email.subject || name %]</title>
 </head>
 
@@ -17,29 +17,33 @@
 [%- ELSE %]
 
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 
 <title>[% name.list.merge( title.list ).join(' - ') | html %]</title>
 
-<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" type="text/css" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/main2.css') %]" type="text/css" />
+<!--[if lt IE 9]>
+	<script src="[% c.uri_for('/static/js/html5shiv.js') %]"></script>
+<![endif]-->
 
-<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" type="text/javascript"></script>
-<script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" type="text/javascript"></script>
-<script src="[% c.uri_for('/static/js/site2.js') %]" type="text/javascript"></script>
+<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
+<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
+<link rel="stylesheet" href="[% c.uri_for('/static/css/main3.css') %]" />
+
+<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
+<script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
+<script src="[% c.uri_for('/static/js/site2.js') %]" ></script>
 
 </head>
 
 <body>
 
-<div class="topbar">
-	<div class="navbar ui-widget">
+<nav>
+	<div class="navbar">
 		<a class="ui-button" href="[% c.uri_for('/') %]">Home</a>
 		<a class="ui-button" href="[% c.uri_for('/faq') %]">FAQ</a>
 		<a class="ui-button" href="[% c.uri_for('/scoreboard') %]">Scoreboard</a>
 	</div>
-	<div class="userbar ui-widget">
+	<div class="userbar">
 [%- IF error_msg %]
 		<p class="ui-state-error ui-corner-all">[% error_msg %]</p>
 [%- END %]
@@ -52,22 +56,22 @@
 		<a class="ui-button" href="[% c.uri_for('/user/logout') %]">Logout</a>
 [%- ELSE %]
 		<form action="[% c.uri_for('/user/login') %]" method="post">
-			<input class="has-placeholder" type="text" name="Username" />
-			<input class="has-placeholder" type="password" name="Password" />
+			<input type="text" name="Username" placeholder="Username" size="16" required />
+			<input type="password" name="Password" placeholder="Password" size="16" required />
 			<input type="submit" value="Login" />
 			<a class="ui-button" href="[% c.uri_for('/user/register') %]">Register</a>
 		</form>
 [%- END %]
 	</div>
-</div>
+</nav>
 
-<div class="main">
+<article>
 
 [% content %]
 
-</div>
+</article>
 
-<div class="footer">
+<footer>
 	<p>
 		It is currently 
 		[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
@@ -82,7 +86,7 @@
 	<hr />
 	[% md_render( c.config.footer_addendum ) %]
 [%- END %]
-</div>
+</footer>
 
 </body>
 

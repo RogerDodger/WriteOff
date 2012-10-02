@@ -32,8 +32,13 @@ jQuery(document).ready(function($) {
 			alert('Max filesize: ' + max + 'MB');
 		}
 	});
-	$('input.user-autocomplete').autocomplete({
-		source: '/user/json-list',
+	$('input.user-autocomplete, input.autocomplete-user').autocomplete({
+		source: '/user/list?view=json',
 		minLength: 1,
 	});
 });
+
+function toggleField(id) {
+	var field = document.getElementById(id);
+	field.disabled = !field.disabled;
+}

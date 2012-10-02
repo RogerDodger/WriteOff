@@ -1,3 +1,9 @@
+v0.16
+=====
+- Email notifications
+- Nicer forms (in some places)
+  - HTML5 validation woo
+
 v0.15
 =====
 - Wooden spoon award

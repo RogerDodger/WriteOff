@@ -127,8 +127,7 @@ sub do_register :Private {
 		
 		$c->stash->{email} = {
 			to           => $c->stash->{user}->email,
-			from         => sprintf( "%s <noreply@%s>", 
-				$c->config->{AdminName}, $c->config->{domain} ),
+			from         => $c->mailfrom,
 			subject      => $c->config->{name} . ' - Confirmation Email',
 			template     => 'email/registration.tt',
 			content_type => 'text/html',
@@ -223,16 +222,21 @@ sub verify :Local :Args(2) {
 	}
 }
 
-sub json_list :Path('json-list') :Args(0) {
+sub list :Path('list') :Args(0) {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{users} = $c->model('DB::User')->search({
+		username => { like => "%" . $c->req->param('term') . "%" },
+		verified => 1,
+	});
 
-	$c->stash->{json} = [ 
-		$c->model('DB::User')->search({ 
-			username => { like => "%" . $c->req->param('term') . "%" },
-			verified => 1,
-		})->get_column('username')->all
-	];
-	$c->forward('View::JSON');
+	if( $c->req->param('view') eq 'json' ) {
+		$c->stash->{json} = [ $c->stash->{users}->get_column('username')->all ];
+		
+		$c->detach( $c->view('JSON') );
+	}
+	
+	$c->stash->{template} = '/user/list.tt';
 }
 
 =head1 AUTHOR

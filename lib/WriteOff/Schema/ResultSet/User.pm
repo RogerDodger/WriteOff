@@ -11,7 +11,18 @@ sub resolve {
 		{ $user->isa('Catalyst::Authentication::Store::DBIx::Class::User') };
 		
 	return $user if eval { $user->isa('WriteOff::Model::DB::User') };
-	return $self->find($user) or 0;
+	return $self->find($user) || 0;
+}
+
+sub verified {
+	return shift->search_rs({ verified => 1 });
+}
+
+sub mailing_list {	
+	return shift->search_rs({ 
+		mailme   => 1, 
+		verified => 1,
+	});
 }
 
 1;
