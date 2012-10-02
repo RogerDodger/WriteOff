@@ -1,0 +1,368 @@
+body {
+	background: #ccc;
+	padding-top: 40px;	
+	font-family: "Bitstream Charter", "Charter BT", "Book Antiqua",
+		"Bookman Old Style", Palladio, "URW Palladio L", Garamond, 
+		"Apple Garamond", Georgia, serif; /* Eeyup */
+}
+h1 {
+	font-size: 32px;
+}
+h2 {
+	font-size: 24px;
+}
+h3 {
+	font-size: 20px;
+}
+h4 {
+	font-size: 18px;
+}
+h5 {
+	font-size: 16px;
+}
+h6 {
+	font-size: 14px;
+}
+p, li, td {
+	font-size: 1em; 
+	line-height: 1.2em;
+}
+p {
+	text-align: justify;
+}
+code, tt, var {
+	margin: 0 2px;
+	padding: 0px 5px;
+	white-space: nowrap;
+	border: 1px solid #EAEAEA;
+	font-style: normal;
+	font-family: monospace;
+	background-color: #F8F8F8;
+	border-radius: 3px;
+}
+li ol li {
+	list-style-type: lower-alpha;
+}
+a {
+	text-decoration: none;
+}
+a.link, a.link:visited {
+	color: blue;
+	transition: .05s all linear;
+	-moz-transition: .05s all linear;
+	-webkit-transition: .05s all linear;
+}
+a.link:hover {
+	color: dodgerblue;
+}
+a.author, a.author:visited,
+a.artist, a.artist:visited {
+	color: inherit;
+	border-bottom: 1px dotted silver;
+}
+.fake-ui-button, .fake-ui-button:hover {
+	color: #aaa;
+	background: #f6f6f6;
+	border: 1px solid #ccc;
+	cursor: default;
+}
+article, footer {
+	margin: 20px auto 0 auto;
+	padding: 40px;
+	width: 785px;
+	background: #fff;
+	border-radius: 2px;
+	box-shadow: 0 0 8px black;
+}
+.form-standard td {
+	padding: 5px;
+}
+.form-standard input[type=password], 
+.form-standard input[type=text], 
+.form-standard td p {
+	width: 310px;
+	font: serif;
+}
+.form-standard .label {
+	padding-top: 8px;
+	white-space: nowrap;
+	text-align: right;
+	vertical-align: top;
+}
+.form-standard td p {
+	margin: 2px;
+	padding: 0;
+	font-size: 80%;
+}
+.form-standard textarea {
+	margin-bottom: 10px;
+	display: block;
+	padding: 5px;
+	font-family: sans-serif;
+	border: 2px groove threedface;
+	width: 725px;
+	max-width: 725px;
+}
+.form-standard textarea[name=story] {
+	height: 450px;
+}
+.form-standard textarea[name=blurb],
+.form-standard textarea[name=rules] {
+	height: 10em;
+}
+form.light label {
+	font-weight: bold;
+	display: block;
+}
+form.light p.field, form.light p.inline {
+	margin-right: 1em;
+	min-width: 225px;
+	display: inline-block;
+	vertical-align: top;
+}
+form.light p.confirm {
+	margin-top: 0px;
+	font-size: 14px;
+	text-align: left;
+	width: 316px;
+}
+.event-listing h3 {
+	font-size: 14pt;
+}
+.event-listing h4 {
+	font-size: 13pt;
+}
+.event-listing td, .event-listing th {
+	padding: 4px;
+	font-size: 11pt;
+	text-align: right;
+}
+.event-listing .minutae {
+	margin-top: 1em;
+}
+.event-listing .minutae td {
+	padding: 0px 4px;
+	font-size: 10pt;
+	text-align: left;
+}
+.event-listing .minutae th {
+	padding: 0px 4px;
+	font-size: 10pt;
+	text-align: right;
+}
+.event-listing .blurb {
+	font-size: 11pt;
+}
+.result-listing {
+	line-height: 1.4em;
+	font-size: 16px;
+}
+.good {
+	color: green;
+}
+.bad, .required {
+	color: red;
+}
+.unrequired {
+	opacity: 0;
+	filter:Alpha(opacity=0);
+}
+footer {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+footer p {
+	margin: 0;
+	font-size: .9em;
+	text-align: center;
+}
+
+/*
+ *  NAV STYLES
+ */
+
+nav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: black;
+	box-shadow: 0 0 8px black;
+	padding: 5px;
+	width: 100%;
+	color: white;
+	font-weight: bold;
+	z-index: 9001;
+}
+nav .userbar {
+	float: right;
+	margin-right: 10px;
+}
+nav .navbar {
+	float: left;
+}
+nav form, nav input, nav p, nav a {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+}
+nav input[type=password], nav input[type=text], nav p {
+	padding: 2px 6px;
+}
+nav input[type=submit] {
+	line-height: 1.4em;
+}
+nav input {
+	font-size: 11px;
+}
+nav p {
+	padding: 3px 12px;
+	font-size: 14px;
+}
+
+/*
+ *   TABLE STYLES 
+ */
+  
+table { 
+	border-collapse: collapse;
+}
+.t-outdent-deep {
+	margin-left: -2em;
+	margin-right: -2em;
+}
+.t-outdent {
+	margin-left: -1em;
+	margin-right: -1em;
+}
+.t-indent {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+.t-indent-deep {
+	margin-left: 2em;
+	margin-right: 2em;
+}
+.t-center { 
+	margin-left: auto; 
+	margin-right: auto;
+}
+.left, 
+td.left,
+th.left, 
+.left th,    
+.left td { 
+	text-align: left; 
+}
+.justify
+td.justify,
+th.justify, 
+.justify th, 
+.justify td { 
+	text-align: justify; 
+}
+.right,
+th.right, 
+td.right,
+.right th,   
+.right td { 
+	text-align: right; 
+}
+.center,
+th.center, 
+td.center, 
+.center th,  
+.center td { 
+	text-align: center; 
+}
+.votes th,
+.votes td {
+	min-width: 18px;
+}
+.slim {
+	background: #f8f8f8;
+}
+.slim td, .slim th {
+	padding: 3px 7px;
+	border-top: 2px dotted silver;
+	border-bottom: 2px dotted silver;
+}
+.dotted-right { 
+	border-right: 2px dotted silver; 
+}
+.dotted-left { 
+	border-left: 2px dotted silver; 
+}
+.dotted-bottom { 
+	border-bottom: 2px dotted silver; 
+}
+.dotted-top { 
+	border-top: 2px dotted silver; 
+}
+
+/* MISC STYLES
+  ____________ */
+
+.story {
+	font-family: Georgia, serif;
+	line-height: 1.8em;
+	text-align: justify;
+}
+.story blockquote {
+	padding: 1.8em;
+	margin: 0;
+	border: 1px solid gainsboro;
+	background: #f6f6f6;
+	box-shadow: 5px 5px 1px grey;
+}
+
+/* PROMPT STYLES
+  ______________ */
+
+.prompt-container {
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.promptbox, .or {
+	text-align: center;
+	padding: 5px;
+}
+.promptbox input {
+	font-size: 1.4em;
+	border-radius: 5px;
+	background: #fff;
+	width: 250px;
+	white-space: pre-wrap;
+}
+.promptbox.tie input {
+	font-size: .8em;
+	width: 50px;
+}
+.or {
+	width: 25px;
+}
+.prompt-listing {
+	border: 2px groove #222;
+	border-radius: 2px;
+	background: #f6f6f6;
+	padding: 3px;
+	margin: 0 0 -2px 0;
+}
+textarea.example {
+	width: 350px; 
+	height: 200px; 
+	max-height: 200px; 
+	max-width: 350px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+.inline-block {
+	display: inline-block;
+}
+.nobefore {
+	margin-top: 0px;
+}
+.noafter {
+	margin-bottom: 0px;
+}

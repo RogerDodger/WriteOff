@@ -1,0 +1,36 @@
+<p>New event and shizz. Here's the gist:</p>
+<ul>
+	<li>
+		<strong>Name:</strong>
+		[% event.prompt | html %]
+	</li>
+	<li>
+		<strong>Organiser:</strong>
+		[% event.organisers.map_username.join_serial %]
+	</li>
+	<li>
+		<strong>Starting time:</strong>
+		[% event.start.set_time_zone( email.timezone ).strftime('%a, %d %b %Y %H:%M %Z') %]
+	</li>
+	<li>
+		<strong>Wordcount:</strong>
+		[% event.wc_min %]&ndash;[% event.wc_max %]
+	</li>
+	<li>
+		<strong>Has art:</strong>
+		[% event.art ? 'Yes' : 'No' %]
+	</li>
+	<li>
+		<strong>Has prelim:</strong>
+		[% event.prelim ? 'Yes' : 'No' %]
+	</li>
+	<li>
+		<strong>Has judges:</strong>
+		[% event.private ? 'Yes' : 'No' %]
+	</li>
+	<li>
+		<strong>Content level:</strong>
+		[% event.content_level %]
+	</li>
+</ul>
+<p>Check out <a href="[% c.uri_for('/') %]">the site</a> for more details.</p>
