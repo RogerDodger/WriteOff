@@ -1,0 +1,17 @@
+<h1>[% event.prompt | html %]</h1>
+
+<h2>Art Voting</h2>
+
+<p>
+	Votes open: <strong>[% format_dt(event.public) %]</strong>.
+	<br />
+	Votes close: <strong>[% format_dt(event.private || event.end) %]</strong>.
+	<br />
+	Votes received: <strong>[% event.vote_records_rs.public.count %]</strong>.
+	<br />
+[%- IF event.public_votes_allowed %]
+	Votes are <strong class="good">open</strong>.
+[%- ELSE %]
+	Votes are <strong class="bad">closed</strong>.
+[%- END %]
+</p>

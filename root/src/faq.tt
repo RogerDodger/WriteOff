@@ -50,16 +50,13 @@
 <a id="Art-Round"> </a>
 <h3>Art Round</h3>
 <p>
-	Artists submit artworks that mean to act as prompts for stories. Art
-	submissions don't require a login, but you won't be able to manipulate your 
-	submission (i.e., delete it) if you submit it as a guest. (Also, guests have
-	to fill in a captcha.)
+	Artists submit artworks that mean to act as prompts for stories.
 </p>
 <a id="Fic-Round"> </a>
 <h3>Fic Round</h3>
 <p>
 	Stories are written to either the submitted artworks (in the case of an art
-	round) or the event's prompt. Fic submissions require a login.
+	round) or the event's prompt.
 </p>
 <a id="Preliminary-Voting-Round"> </a>
 <h3>Preliminary Voting Round</h3>
@@ -159,8 +156,7 @@
 <p>
 	You may delete/edit a submission by logging in and going to <a class="link"
 	href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only do this 
-	while submissions are open. (Also, I'm sure it goes without saying that this
-	only works if you submitted while logged in.)
+	while submissions are open.
 </p>
 <p>
 	If you want a submission deleted or edited after submissions are closed, 

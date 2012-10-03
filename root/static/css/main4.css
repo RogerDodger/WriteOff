@@ -74,6 +74,74 @@ article, footer {
 	border-radius: 2px;
 	box-shadow: 0 0 8px black;
 }
+footer {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+footer p {
+	margin: 0;
+	font-size: .9em;
+	text-align: center;
+}
+.event-listing h3 {
+	font-size: 14pt;
+}
+.event-listing h4 {
+	font-size: 13pt;
+}
+.event-listing td, .event-listing th {
+	padding: 4px;
+	font-size: 11pt;
+	text-align: right;
+}
+.event-listing .minutae {
+	margin-top: 1em;
+}
+.event-listing .minutae td {
+	padding: 0px 4px;
+	font-size: 10pt;
+	text-align: left;
+}
+.event-listing .minutae th {
+	padding: 0px 4px;
+	font-size: 10pt;
+	text-align: right;
+}
+.event-listing .blurb {
+	font-size: 11pt;
+}
+.result-listing {
+	line-height: 1.4em;
+	font-size: 16px;
+}
+
+/*
+ * FORM STYLES
+ */
+
+form.light label {
+	font-weight: bold;
+	display: block;
+}
+form.light p.field, form.light p.inline {
+	margin-right: 1em;
+	min-width: 225px;
+	display: inline-block;
+	vertical-align: top;
+}
+form.light p.confirm {
+	margin-top: 0px;
+	font-size: 14px;
+	text-align: left;
+	width: 316px;
+}
+form.light textarea {
+	width: 100%;
+	max-width: 777px;
+	height: 10em;
+	border: 2px groove threedface;
+	font-family: sans-serif;
+}
 .form-standard td {
 	padding: 5px;
 }
@@ -110,75 +178,9 @@ article, footer {
 .form-standard textarea[name=rules] {
 	height: 10em;
 }
-form.light label {
-	font-weight: bold;
-	display: block;
-}
-form.light p.field, form.light p.inline {
-	margin-right: 1em;
-	min-width: 225px;
-	display: inline-block;
-	vertical-align: top;
-}
-form.light p.confirm {
-	margin-top: 0px;
-	font-size: 14px;
-	text-align: left;
-	width: 316px;
-}
-.event-listing h3 {
-	font-size: 14pt;
-}
-.event-listing h4 {
-	font-size: 13pt;
-}
-.event-listing td, .event-listing th {
-	padding: 4px;
-	font-size: 11pt;
-	text-align: right;
-}
-.event-listing .minutae {
-	margin-top: 1em;
-}
-.event-listing .minutae td {
-	padding: 0px 4px;
-	font-size: 10pt;
-	text-align: left;
-}
-.event-listing .minutae th {
-	padding: 0px 4px;
-	font-size: 10pt;
-	text-align: right;
-}
-.event-listing .blurb {
-	font-size: 11pt;
-}
-.result-listing {
-	line-height: 1.4em;
-	font-size: 16px;
-}
-.good {
-	color: green;
-}
-.bad, .required {
-	color: red;
-}
-.unrequired {
-	opacity: 0;
-	filter:Alpha(opacity=0);
-}
-footer {
-	padding-top: 1em;
-	padding-bottom: 1em;
-}
-footer p {
-	margin: 0;
-	font-size: .9em;
-	text-align: center;
-}
 
 /*
- *  NAV STYLES
+ * NAV STYLES
  */
 
 nav {
@@ -220,7 +222,7 @@ nav p {
 }
 
 /*
- *   TABLE STYLES 
+ * TABLE STYLES 
  */
   
 table { 
@@ -299,24 +301,9 @@ td.center,
 	border-top: 2px dotted silver; 
 }
 
-/* MISC STYLES
-  ____________ */
-
-.story {
-	font-family: Georgia, serif;
-	line-height: 1.8em;
-	text-align: justify;
-}
-.story blockquote {
-	padding: 1.8em;
-	margin: 0;
-	border: 1px solid gainsboro;
-	background: #f6f6f6;
-	box-shadow: 5px 5px 1px grey;
-}
-
-/* PROMPT STYLES
-  ______________ */
+/* 
+ * PROMPT STYLES
+ */
 
 .prompt-container {
 	width: 500px;
@@ -347,6 +334,33 @@ td.center,
 	background: #f6f6f6;
 	padding: 3px;
 	margin: 0 0 -2px 0;
+}
+
+/*
+ * MISC STYLES
+ */
+
+.good {
+	color: green;
+}
+.bad, .required {
+	color: red;
+}
+.unrequired {
+	opacity: 0;
+	filter:Alpha(opacity=0);
+}
+.story {
+	font-family: Georgia, serif;
+	line-height: 1.8em;
+	text-align: justify;
+}
+.story blockquote {
+	padding: 1.8em;
+	margin: 0;
+	border: 1px solid gainsboro;
+	background: #f6f6f6;
+	box-shadow: 5px 5px 1px grey;
 }
 textarea.example {
 	width: 350px; 

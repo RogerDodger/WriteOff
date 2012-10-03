@@ -6,19 +6,26 @@
 <table class="slim">
 	<tr>
 		<th>#</th>
+		<th> </th>
 		<th>Story</th>
 		<th>Wordcount</th>
 	</tr>
 	[%- FOREACH story IN event.storys_rs.seed_order.all %]
 	<tr>
 		<td class="center">[% loop.count %]</td>
+		<td class="center">
+			<a href="[% c.uri_for( c.controller('Fic').action_for('view'), 
+				[ story.id_uri ] ) _ '?plain' %]" class="new-window">
+				<span class="ui-icon ui-icon-script" title="View as plain text"></span>
+			</a>
+		</td>
 		<td>
 			<a class="link" href="[% c.uri_for( c.controller('Fic')
 				.action_for('view'), [ story.id_uri ]) %]">
 				[% story.title | html %]
 			</a>
 		</td>
-		<td class="center">[% story.wordcount %]</td>
+		<td class="center">[% story.wordcount.chunk(-3).join(',') %]</td>
 	</tr>
 	[%- END %]
 </table>

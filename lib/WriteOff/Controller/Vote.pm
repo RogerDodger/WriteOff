@@ -16,77 +16,24 @@ Catalyst Controller.
 
 =cut
 
-sub public :PathPart('public') :Chained('/event/vote') :Args(0) {
+sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
     my ( $self, $c ) = @_;
-
-    $c->stash->{template} = 'vote/public.tt';
 	
-	$c->forward('/captcha_get');
+	$c->detach('/error', [ "There is no prelim for this event." ]) 
+		unless $c->stash->{event}->prelim;
 	
-	my $formid = "form" . "event" . $c->stash->{event}->id . "public" . "fic";
-	
-	if( $c->req->method eq 'POST' ) {
-		if( $c->req->params->{submit} eq 'Save vote' ) {
-			$c->session->{$formid} = $c->req->params;
-			$c->stash->{status_msg} = 'Vote saved';
-		}
-		if( $c->req->params->{submit} eq 'Clear vote' ) {
-			delete $c->session->{$formid};
-			$c->stash->{status_msg} = 'Vote cleared';
-		}
-		if( $c->req->params->{submit} eq 'Cast vote' ) {
-			$c->forward('do_public', [ $formid ]);
-		}
-	}
-	
-	$c->stash->{fillform} = $c->session->{$formid} // undef;
+	push $c->stash->{title}, 'Vote', 'Prelim';
+	$c->stash->{template} = 'vote/prelim.tt';
 }
 
-sub do_public :Private {
-	my ( $self, $c, $formid ) = @_;
+sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
+    my ( $self, $c ) = @_;
 	
-	my @candidates = $c->stash->{event}->public_story_candidates( $c->user )->all;
+	$c->detach('/error', [ "There is no private judging for this event." ]) 
+		unless $c->stash->{event}->private;
 	
-	#The votes are keyed with the id of the story that the votes are cast on
-	my @votes = 
-		grep { defined $c->req->params->{$_} && $c->req->params->{$_} ne 'N/A' }
-		map  { $_->id }
-		grep { $_->ip ne $c->req->address }
-		@candidates;
-	
-	$c->req->params->{count}   = @votes;
-	$c->req->params->{ip}      = $c->req->address;
-	$c->req->params->{captcha} = $c->forward('/captcha_check');
-	
-	my $rs = $c->stash->{event}->vote_records->public->story;
-	
-	$c->form(
-		ip       => [ [ 'DBIC_UNIQUE', $rs, 'ip' ] ],
-		
-		#For whatever reason, FormValidator::Simple doesn't have a >= operator
-		count    => [ [ 'GREATER_THAN', @candidates / 2 - 0.001 ] ],
-		
-		captcha  => [ [ 'EQUAL_TO', 1 ] ],
-		map { $_ => [ 'NOT_BLANK', 'UINT', [ 'BETWEEN', 0, 10 ] ] } @votes,
-	);
-	
-	if( !$c->form->has_error ) {
-		my $record = $c->stash->{event}->create_related('vote_records', {
-			user_id => $c->user ? $c->user->get('id') : undef,
-			ip      => $c->req->address,
-			round   => 'public',
-		});
-		
-		for my $id ( @votes ) {
-			$record->create_related('votes', {
-				story_id => $id,
-				value    => $c->form->valid($id),
-			});
-		}
-		
-		delete $c->session->{$formid};
-		$c->stash->{status_msg} = 'Vote successful';
-	}
+	push $c->stash->{title}, 'Vote', 'Private';
+	$c->stash->{template} = 'vote/private.tt';
 }
 
 

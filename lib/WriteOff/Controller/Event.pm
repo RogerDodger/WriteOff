@@ -216,7 +216,21 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	
 	$c->forward( $self->action_for('assert_organiser') );
 		
-	$c->forward('do_edit') if $c->req->method eq 'POST';
+	if( $c->req->method eq 'POST' ) {
+		
+		$c->form(
+			user => [ 
+				( $c->req->param('submit') =~ /Add/ ? 'NOT_BLANK' : () ),
+				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
+			],
+			blurb => [ [ 'LENGTH', 1, $c->config->{len}{max}{blurb} ] ],
+			rules => [ [ 'LENGTH', 1, $c->config->{len}{max}{rules} ] ],
+			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
+			sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+		);
+		
+		$c->forward('do_edit') if !$c->form->has_error;
+	}
 	
 	$c->stash->{fillform} = { 
 		content_level => $c->stash->{event}->content_level,
@@ -231,45 +245,19 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 	
-	return 0 unless $c->req->param('sessionid') eq $c->sessionid;
+	if( $c->req->param('submit') eq 'Edit details' ) {
 	
-	if( $c->req->param('submit') eq 'Edit blurb' ) {
-	
-		$c->form( blurb => [ [ 'LENGTH', 1, $c->config->{len}{max}{blurb} ] ] );
-		
-		if(!$c->form->has_error) {
-			$c->stash->{event}->update({ blurb => $c->form->valid('blurb') });
+		$c->stash->{event}->content_level( $c->form->valid('content_level') );
+		$c->stash->{event}->update({ 
+			blurb        => $c->form->valid('blurb'),
+			custom_rules => $c->form->valid('rules'),
+		});
 			
-			return $c->stash->{status_msg} = 'Blurb edited';
-		}
+		return $c->stash->{status_msg} = 'Details edited';
 	}
 	
-	if( $c->req->param('submit') eq 'Edit rules' ) {
-		
-		$c->form( rules => [ [ 'LENGTH', 1, $c->config->{len}{max}{rules} ] ] );
-		
-		if(!$c->form->has_error) {
-			$c->stash->{event}->update({ custom_rules => $c->form->valid('rules') });
-			
-			return $c->stash->{status_msg} = 'Rules edited';
-		}
-	}
-	
-	if( $c->req->param('submit') eq 'Edit content level' ) {
-		
-		$c->form( content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ] );
-		
-		if(!$c->form->has_error) {
-			$c->stash->{event}->content_level( $c->form->valid('content_level') );
-			
-			return $c->stash->{status_msg} = 'Content level updated';
-		}
-	}
-	
-	my $user = $c->model('DB::User')->search({ 
-		username => $c->req->param('user'),
-		verified => 1,
-	})->single;
+	my $user = $c->model('DB::User')->verified
+		->find({ username => $c->req->param('user') });
 	
 	if( $c->req->param('submit') eq 'Add organiser' && $user ) {
 		$c->forward( $c->controller('Root')->action_for('assert_admin') );

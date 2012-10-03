@@ -56,6 +56,7 @@ sub archive :Local :Args(0) {
 	
 	$c->stash->{events} = $c->model('DB::Event')->old_events;
 	
+	$c->stash->{title} = 'Event Archive';
     $c->stash->{template} = 'index.tt';
 }
 

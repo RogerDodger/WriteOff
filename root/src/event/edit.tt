@@ -1,4 +1,6 @@
 <h1>[% event.prompt | html %]</h1>
+<form class="light" action="[% c.req.uri %]" method="post" >
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 [%- IF c.form.has_error %]
 	[%- FOREACH error IN c.form.messages('submit') %]
 	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
@@ -11,87 +13,67 @@
 	</div>
 	[%- END %]
 [%- END %]
-<form class="form-standard" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<fieldset>
-		<legend>Blurb</legend>
+	<h2>Details</h2>
+	<p>
+		<label>Blurb</label>
 		<textarea name="blurb"></textarea>
-		<input type="submit" name="submit" value="Edit blurb" />
-	</fieldset>
-</form>
-<form class="form-standard" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<fieldset>
-		<legend>Custom rules</legend>
+	</p>
+	<p>
+		<label>Custom rules</label>
 		<textarea name="rules"></textarea>
-		<input type="submit" name="submit" value="Edit rules" />
-	</fieldset>
-</form>
-<form class="form-standard" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<fieldset>
-		<legend>Content level</legend>
-		<table>
-			<tr>
-				<td class="label">Content level</td>
-				<td>
-					<select name="content_level">
-						<option value="E">Everyone</option>
-						<option value="T">Teen</option>
-						<option value="M">Mature</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th> </th>
-				<td><input type="submit" name="submit" value="Edit content level" /></td>
-			</tr>
-		</table>
-	</fieldset>
-</form>
-[%- IF c.check_user_roles('admin') %]
-<form class="form-standard" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<fieldset>
-		<legend>Organisers</legend>
-		<table>
-		[%- FOREACH user IN event.organisers %]
-			<tr>
-				<td>[% user.username %]</td>
-				<td>
-					<a href="[% c.uri_for( c.controller('Event')
-						.action_for('remove_organiser'), [ event.id_uri, user.id ]) %]">
-						<span class="ui-icon ui-icon-closethick" title="Remove organiser"></span>
-					</a>
-				</td>
-			</tr>
-		[%- END %]
-		</table>
+	</p>
+	<p>
+		<label>Content level</label>
+		<select name="content_level">
+			<option value="E">Everyone</option>
+			<option value="T">Teen</option>
+			<option value="M">Mature</option>
+		</select>
+	</p>
+	<p>
+		<input type="submit" name="submit" value="Edit details" />
+	</p>
+	<h2>Staff</h2>
+	<table class="slim">
+		<tr>
+			<th>Username</th>
+			<th>Role</th>
+			<th> </th>
+		</tr>
+	[%- FOREACH user IN event.organisers %]
+		<tr>
+			<td>[% user.username %]</td>
+			<td>Organiser</td>
+			<td>
+				[%- IF c.check_user_roles('admin') %]
+				<a href="[% c.uri_for( c.controller('Event')
+					.action_for('remove_organiser'), [ event.id_uri, user.id ]) %]">
+					<span class="ui-icon ui-icon-closethick" title="Remove organiser"></span>
+				</a>
+				[%- ELSE %]
+				<span class="ui-icon ui-icon-locked" title="You cannot remove organisers"></span>
+				[%- END %]
+			</td>
+		</tr>
+	[%- END %]
+	[%- FOREACH user IN event.judges %]
+		<tr>
+			<td>[% user.username %]</td>
+			<td>Judge</td>
+			<td>
+				<a href="[% c.uri_for( c.controller('Event')
+					.action_for('remove_judge'), [ event.id_uri, user.id ]) %]">
+					<span class="ui-icon ui-icon-closethick" title="Remove judge"></span>
+				</a>
+			</td>
+		</tr>
+	[%- END %]
+	</table>
+	<p>
 		<input class="user-autocomplete" type="text" name="user" />
+		[%- IF c.check_user_roles('admin') %]
 		<input type="submit" name="submit" value="Add organiser" />
-	</fieldset>
-</form>
-[%- END %]
-[%- IF event.private %]
-<form class="form-standard" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<fieldset>
-		<legend>Judges</legend>
-		<table>
-		[%- FOREACH user IN event.judges %]
-			<tr>
-				<td>[% user.username %]</td>
-				<td>
-					<a href="[% c.uri_for( c.controller('Event')
-						.action_for('remove_judge'), [ event.id_uri, user.id ]) %]">
-						<span class="ui-icon ui-icon-closethick" title="Remove judge"></span>
-					</a>
-				</td>
-			</tr>
 		[%- END %]
-		</table>
-		<input class="user-autocomplete" type="text" name="user" />
 		<input type="submit" name="submit" value="Add judge" />
-	</fieldset>
+	</p>
 </form>
-[%- END %]

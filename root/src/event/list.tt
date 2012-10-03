@@ -91,9 +91,21 @@
 				.action_for('gallery'), [ event.id_uri ]) %]">Fic gallery</a></li>
 		</ul>
 		<ul>
+			[%- IF event.art %]
+			<li><a class="link" href="[% c.uri_for( c.controller('Vote::Public')
+				.action_for('art'), [ event.id_uri ]) %]">Art voting</a></li>
+			[%- END %]
+			[%- IF event.prelim %]
 			<li><a class="link" href="[% c.uri_for( c.controller('Vote')
-				.action_for('public'), [ event.id_uri ]) %]">Voting ([% 
+				.action_for('prelim'), [ event.id_uri ]) %]">Fic voting (prelim)</a></li>
+			[%- END %]
+			<li><a class="link" href="[% c.uri_for( c.controller('Vote::Public')
+				.action_for('fic'), [ event.id_uri ]) %]">Fic voting ([% 
 				event.private ? 'main' : 'finals' %])</a></li>
+			[%- IF event.private %]
+			<li><a class="link" href="[% c.uri_for( c.controller('Vote')
+				.action_for('private'), [ event.id_uri ]) %]">Fic voting (finals)</a></li>
+			[%- END %]
 		</ul>
 		<ul>
 			<li><a class="link" href="[% c.uri_for( c.controller('Event')

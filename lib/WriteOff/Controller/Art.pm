@@ -117,6 +117,13 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 	);
 }
 
+sub gallery :PathPart('gallery') :Chained('/event/art') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	push $c->stash->{title}, 'Gallery';
+	$c->stash->{template} = 'art/gallery.tt';
+}
+
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	

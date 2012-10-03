@@ -1,3 +1,9 @@
+v0.17
+=====
+- Added placeholder templates/actions for art gallery and voting, and prelim and private voting
+- Prettied up the event/edit form
+- Tidied up the CSS
+
 v0.16
 =====
 - Email notifications
@@ -7,7 +13,7 @@ v0.16
 v0.15
 =====
 - Wooden spoon award
-- Conetti award
+- Confetti award
 - Cleaned up voterecord/list
 - Cleaned up position-determining routines by taking them out of templates
 - Optimised `is_manipulable_by` methods

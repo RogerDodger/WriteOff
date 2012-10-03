@@ -391,10 +391,27 @@ sub fic_subs_allowed {
 	( $row->fic, $row->now_dt, $row->fic_end->clone->add({ minutes => LEEWAY }) );
 }
 
+sub art_gallery_opened {
+	my $row = shift;
+	
+	return 0 unless $row->art;
+	
+	return $row->check_datetimes_ascend( $row->fic, $row->now_dt );
+}
+
 sub fic_gallery_opened {
 	my $row = shift;
 	
 	return $row->check_datetimes_ascend( $row->public, $row->now_dt );
+}
+
+sub prelim_votes_allowed {
+	my $row = shift;
+	
+	return 0 unless $row->prelim;
+	
+	return $row->check_datetimes_ascend
+	( $row->prelim, $row->now_dt, $row->public );
 }
 
 sub public_votes_allowed {
@@ -402,6 +419,15 @@ sub public_votes_allowed {
 	
 	return $row->check_datetimes_ascend
 	( $row->public, $row->now_dt, $row->private || $row->end );
+}
+
+sub private_votes_allowed {
+	my $row = shift;
+	
+	return 0 unless $row->private;
+	
+	return $row->check_datetimes_ascend
+	( $row->private, $row->now_dt, $row->end );
 }
 
 sub is_ended {

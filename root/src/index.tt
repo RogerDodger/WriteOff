@@ -1,14 +1,22 @@
-<h2>Event Listing</h2>
+<h2>[% title || 'Active Events' %]</h2>
 [% INCLUDE event/list.tt %]
 <p>
-[% IF c.action == 'index' %]
-	<span class="fake-ui-button">Active events</span>
-	<a class="ui-button" href="[% c.uri_for('/archive') %]">Event archive</a>
-[% ELSE %]
-	<a class="ui-button" href="[% c.uri_for('/') %]">Active events</a>
-	<span class="fake-ui-button">Event archive</span>
-[% END %]
+[%- 
+	buttons = [ 
+		{ text => 'Active events',  action => 'index' },
+		{ text => 'Event archive',  action => 'archive' },
+	],
+%]
+[%- FOREACH button IN buttons %]
+	[%- IF c.controller('Root').action_for(button.action) == c.action %]
+	<span class="fake-ui-button">[% button.text %]</span>
+	[%- ELSE %]
+	<a class="ui-button" href="[% c.uri_for( c.controller('Root')
+		.action_for(button.action) ) %]">[% button.text %]</a>
+	[%- END %]
+[%- END %]
 [%- IF c.check_user_roles('admin') %]
-	<a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a>
+	<a class="ui-button" href="[% c.uri_for( c.controller('Event')
+		.action_for('add') ) %]">Add new event</a>
 [%- END %]
 </p>

@@ -1,0 +1,15 @@
+<h1>[% event.prompt | html %]</h1>
+
+<h2>Art Gallery</h2>
+
+[%- IF event.art_gallery_opened %]
+
+[%- #blah blah blah %]
+
+[%- ELSE %]
+<p>
+	Gallery opens: <strong>[% format_dt( event.fic ) %]</strong>.
+	<br />
+	Gallery is <strong class="bad">closed</strong>.
+</p>
+[%- END %]
