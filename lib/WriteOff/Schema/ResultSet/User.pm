@@ -3,6 +3,23 @@ package WriteOff::Schema::ResultSet::User;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
+sub with_prompt_skill {
+	my $self = shift;
+	
+	my $inner = $self->result_source->schema->resultset('Prompt')->search(
+		{ 'prompts.user_id' => { '=' => { -ident => 'me.id' } } },
+		{
+			select => [{ avg => 'prompts.rating' }],
+			alias => 'prompts',
+		}
+	);
+	
+	return $self->search_rs(undef, {
+		'+select' => [{ '' => $inner->as_query, -as => 'prompt_skill' }],
+		'+as' => [ 'prompt_skill' ],
+	});
+}
+
 sub resolve {
 	my ($self, $user) = @_;
 	return 0 unless $user;

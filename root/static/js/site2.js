@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
 		return title || 'Open link in new tab';
 	});
 	$('input.autocomplete-user').autocomplete({
-		source: '/user/list?view=json',
+		source: '/user/list?view=json&order_by=username',
 		minLength: 1,
 	});
 });

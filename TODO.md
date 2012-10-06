@@ -1,10 +1,8 @@
-26 Sep 06:37 (CST)
-===================
+###07 Oct 09:15 (CST)
 
-- Saving public votes into session
-- Email notifications
 - Votes
   - Prelim distribution
   - Volunteer distribution
   - Judge distribution
-- Password recovery
+
+Use subqueries instead of calculating various data in Perl. This will probably increase efficiency enormously, since the data will be stored in the columns outright. No need for hacky instance cacheing.
