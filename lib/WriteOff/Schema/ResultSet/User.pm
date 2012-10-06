@@ -25,4 +25,12 @@ sub mailing_list {
 	});
 }
 
+sub clean_unverified {
+	my $self = shift;
+	
+	$self->search({ verified => 0 })
+		->created_before( DateTime->now->subtract( days => 1 ) )
+		->delete_all;
+}
+
 1;

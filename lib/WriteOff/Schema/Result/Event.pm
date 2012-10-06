@@ -319,7 +319,7 @@ sub id_uri {
 	my $desc = $self->prompt;
 	
 	for ( $desc ) {
-		s/[^a-zA-Z\s\-]//g;
+		s/[^\w\d\s\-]//g;
 		s/[\s\-]+/-/g;
 	}
 	
@@ -341,8 +341,8 @@ sub judges {
 
 sub is_organised_by {
 	my $self = shift;
-	my $user = $self->result_source->schema->resultset('User')
-		->resolve(shift) or return 0;
+	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
+		or return 0;
 	
 	return 1 if grep { $_->id == $user->id } $self->organisers;
 	return 1 if $user->is_admin;

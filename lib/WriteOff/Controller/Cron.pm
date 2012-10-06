@@ -42,12 +42,13 @@ sub cleanup :Private {
 	
 	$c->model('DB::Heat')->clean_old_entries;
 	$c->model('DB::LoginAttempt')->clean_old_entries;
+	$c->model('DB::User')->clean_unverified;
 }
 
 
 =head1 AUTHOR
 
-Cameron Thornton
+Cameron Thornton E<lt>cthor@cpan.orgE<gt>
 
 =head1 LICENSE
 

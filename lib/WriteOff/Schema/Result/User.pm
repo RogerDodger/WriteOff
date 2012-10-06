@@ -302,6 +302,13 @@ __PACKAGE__->add_columns(
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
+sub is_admin {
+	my $self = shift;
+	
+	return 1 if grep { $_->role eq 'admin' } $self->roles;
+	0;
+}
+
 sub new_token {
 	my $self = shift;
 	
@@ -314,10 +321,27 @@ sub new_token {
 	return $token;
 }
 
-sub is_admin {
+sub new_password {
 	my $self = shift;
 	
-	return 1 if grep { $_->role eq 'admin' } $self->roles;
+	my $pass = substr Digest->new('MD5')->add( rand, $$ )->hexdigest, 0, 5;
+	
+	$self->update({ password => $pass });
+	
+	return $pass;
+}
+
+sub has_been_mailed_recently {
+	my $self = shift;
+	
+	return $self->check_datetimes_ascend 
+	( DateTime->now->subtract( hours => 1 ), $self->last_mailed_at );
+}
+
+sub check_datetimes_ascend {
+	my $row = shift;
+	
+	return 1 if join('', @_) eq join('', sort @_);
 	0;
 }
 

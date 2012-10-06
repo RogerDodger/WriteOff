@@ -195,8 +195,8 @@ __PACKAGE__->add_columns(
 
 sub is_manipulable_by {
 	my $self = shift;
-	my $user = $self->result_source->schema->resultset('User')
-		->resolve(shift) or return 0;
+	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
+		or return 0;
 	
 	return 1 if $user->is_admin;
 	return 1 if $self->event->is_organised_by( $user );
@@ -211,7 +211,7 @@ sub id_uri {
 	my $desc = $self->contents;
 	
 	for ( $desc ) {
-		s/[^a-zA-Z\s\-]//g;
+		s/[^\w\d\s\-]//g;
 		s/[\s\-]+/-/g;
 	}
 	

@@ -1,9 +1,6 @@
-<h2>User Settings</h2>
-<form class="form-standard" method="post" action="[% c.uri_for('/user/settings') %]">
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<fieldset>
-		<legend>Change Password</legend>
+<h1>User Settings</h1>
 [% IF c.form.has_error %]
+	<div>
 	[% FOREACH error IN c.form.messages('register') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
@@ -14,66 +11,56 @@
 			</div>
 		</div>
 	[% END %]
+	</div>
 [% END %]
-		<table>
-			<tr>
-				<td class="label">New Password<span class="required">*</span></td>
-				<td>
-					<input type="password" name="password" maxlength="[% c.config.len.max.pass %]"/>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Confirm Password<span class="required">*</span></td>
-				<td>
-					<input type="password" name="password2" maxlength="[% c.config.len.max.pass %]"/>
-					<p>Must be [% c.config.len.min.pass %] or more characters.</p>
-				</td>
-			<tr>
-				<td class="label">Old Password<span class="required">*</span></td>
-				<td>
-					<input type="password" name="old" maxlength="[% c.config.len.max.pass %]"/>
-				</td>
-			</tr>			
-			</tr>
-			<tr>
-				<td class="label"> </td>
-				<td><input name="submit" type="submit" value="Change password" /></td>
-			</tr>
-		</table>
-	</fieldset>
-	<fieldset>
-		<legend>Change Timezone</legend>
-		<table>
-			<tr>
-				<td class="label">Timezone</td>
-				<td>
-					<select name="timezone">
-					[%- FOREACH timezone IN c.timezones %]
-<option value="[% timezone %]">[% timezone.replace('_', ' ') %]</option>
-					[%- END %]
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"> </td>
-				<td><input name="submit" type="submit" value="Change timezone" /></td>
-			</tr>
-		</table>
-	</fieldset>
-	<fieldset>
-		<legend>Change Notifications</legend>
-		<table>
-			<tr>
-				<td class="label"><span class="unrequired">Timezone</span></td>
-				<td>
-					<input name="mailme" type="checkbox" />
-					Send me email notifications when new events are announced.
-				</td>
-			</tr>
-			<tr>
-				<td class="label"> </td>
-				<td><input name="submit" type="submit" value="Change notifications" /></td>
-			</tr>
-		</table>
-	</fieldset>
+
+<form class="light" method="post" action="[% c.req.uri %]">
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<h2>Change Password</h2>
+	
+	<p class="inline">
+		<label>New Password<span class="required">*</span></label>
+		<input type="password" name="password" size="30"
+			title="Must be [% c.config.len.min.pass %] or more characters." 
+			maxlength="[% c.config.len.max.pass %]"
+			onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
+			pattern=".{[% c.config.len.min.pass %],}" required />
+		<br />
+		<input type="password" name="password2" id="p2" size="30"
+			title="Passwords must match"
+			maxlength="[% c.config.len.max.pass %]" required />
+	</p>
+	
+	<p class="inline">
+		<label>Old Password<span class="required">*</span></label>
+		<input type="password" name="old" size="30"
+			title="Must be [% c.config.len.min.pass %] or more characters." 
+			maxlength="[% c.config.len.max.pass %]"
+			pattern=".{[% c.config.len.min.pass %],}" required />
+	</p>
+	
+	<p>
+		<input type="submit" name="submit" value="Change password" />
+	</p>
+</form>
+
+<form class="light" method="post" action="[% c.req.uri %]">
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<h2>Other Settings</h2>
+	<p>
+		<label>Timezone</label>
+		<select name="timezone">
+		[%- FOREACH timezone IN c.timezones %]
+			<option value="[% timezone %]">[% timezone.replace('_', ' ') %]</option>
+		[%- END %]
+		</select>
+	</p>
+	<p>
+		<label>Notifications</label>
+		<input name="mailme" type="checkbox" />
+		Send me email notifications when new events are announced.
+	</p>
+	<p>
+		<input type="submit" name="submit" value="Change settings" />
+	</p>
 </form>

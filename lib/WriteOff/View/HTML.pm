@@ -12,7 +12,7 @@ __PACKAGE__->config(
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
-	expose_methods     => [ qw/format_dt md_render bb_render/ ],
+	expose_methods     => [ qw/format_dt md_render bb_render prompt_subs_left/ ],
 	render_die         => 1,
 );
 
@@ -104,6 +104,17 @@ sub md_render {
 	$text =~ s{<a (.+?)>}{<a class="link new-window" $1>}g;
 	
 	return $text;
+}
+
+sub prompt_subs_left {
+	my ( $self, $c ) = @_;
+	
+	return 0 unless $c->stash->{event} && $c->user;
+	
+	my $rs = $c->stash->{event}->prompts->search({ user_id => $c->user->id });
+	
+	return $c->config->{prompts_per_user} -	$rs->count;
+		
 }
 
 1;

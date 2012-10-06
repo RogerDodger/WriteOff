@@ -27,7 +27,7 @@
 
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/main4.css') %]" />
+<link rel="stylesheet" href="[% c.uri_for('/static/css/main5.css') %]" />
 
 <script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
 <script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
@@ -59,8 +59,9 @@
 			<input type="text" name="Username" placeholder="Username" size="16" required />
 			<input type="password" name="Password" placeholder="Password" size="16" required />
 			<input type="submit" value="Login" />
-			<a class="ui-button" href="[% c.uri_for('/user/register') %]">Register</a>
 		</form>
+		<a class="ui-button" href="[% c.uri_for('/user/recover') %]">Recover</a>
+		<a class="ui-button" href="[% c.uri_for('/user/register') %]">Register</a>
 [%- END %]
 	</div>
 </nav>

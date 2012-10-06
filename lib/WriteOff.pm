@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.17_01';
+our $VERSION = '0.18';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -85,12 +85,9 @@ __PACKAGE__->config(
 					EMAIL_MX    => 'Invalid email address',
 					DBIC_UNIQUE => 'A user with that email already exists',
 				},
-				old_password => { 
-					NOT_BLANK => 'Old Password is required',
-					EQUAL_TO  => 'Old Password is invalid',
-				},
+				old          => { EQUAL_TO    => 'Old Password is invalid' },
 				pass_confirm => { DUPLICATION => 'Passwords do not match' },
-				captcha      => { EQUAL_TO => 'Invalid CAPTCHA' },
+				captcha      => { NOT_BLANK   => 'Invalid CAPTCHA' },
 			},
 			submit => {
 				title     => { 
@@ -190,6 +187,9 @@ __PACKAGE__->config(
 );
 
 __PACKAGE__->setup();
+
+__PACKAGE__->log( Catalyst::Log->new( qw/info warn error fatal/ ) )
+	if __PACKAGE__->debug;
 
 $ENV{TZ} = __PACKAGE__->config->{timezone};
 

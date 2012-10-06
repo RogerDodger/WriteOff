@@ -328,7 +328,10 @@ sub notify_mailing_list :Private {
 	
 	my $rs = $c->model('DB::User')->mailing_list;
 	
-	$c->log->info( join " ", $rs->all );
+	$c->log->info( sprintf "Notifying mailing list of Event: %s - %s",
+		$c->stash->{event}->id,
+		$c->stash->{event}->prompt,
+	);
 	
 	while ( my $user = $rs->next ) {
 		$c->stash->{email} = {

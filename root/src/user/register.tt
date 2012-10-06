@@ -1,7 +1,9 @@
-<h1>Register</h1>
-<form class="light" method="post" action="[% c.uri_for('/user/register') %]">
-[% IF c.form.has_error %]
-	[% FOREACH error IN c.form.messages('register') %]
+[% IF c.req.method != 'POST' || c.form.has_error %]
+<h1>[% title.join(' - ') %]</h1>
+
+<form class="light" method="post" action="[% c.uri_for( c.action ) %]">
+	[% IF c.form.has_error %]
+		[% FOREACH error IN c.form.messages('register') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
 				<p>
@@ -10,8 +12,8 @@
 				</p>
 			</div>
 		</div>
+		[% END %]
 	[% END %]
-[% END %]
 	<p>
 		<label>Username<span class="required">*</span></label>
 		<input type="text" name="username"  size="30"
@@ -38,7 +40,7 @@
 	
 	<p>
 		<label>Email<span class="required">*</span></label>
-		<input type="email" name="email" size="30"
+		<input type="email" name="email" size="72"
 			maxlength="[% c.config.len.max.email %]" required />
 		<br />
 		<input type="checkbox" name="mailme" />
@@ -64,3 +66,23 @@
 	
 	<input type="submit" value="Register" />
 </form>
+
+[%- ELSE -%]
+
+<h1>Registration Successful!</h1>
+<p>
+	You must validate your email address before your account may be used on the 
+	site.
+</p>
+<p>
+	A validation email has been sent to [% user.email %]. Please check
+	your inbox and follow the enclosed instructions to validate your account.
+</p>
+<p>
+	If you can't find said email, check your spam box and stuff. It should be in
+	there somewhere. If you still can't find it, send an email to <a class="link" 
+	href="mailto:[% c.config.AdminEmail %]">the admin</a> with appropriate 
+	information to receive assistance.
+</p>
+
+[%- END %]

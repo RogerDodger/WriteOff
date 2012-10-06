@@ -5,23 +5,39 @@ body {
 		"Bookman Old Style", Palladio, "URW Palladio L", Garamond, 
 		"Apple Garamond", Georgia, serif; /* Eeyup */
 }
+h1, h2, h3, h4, h5, h6,
+p, table, ol, ul,
+.event-listing {
+	margin: 0 0 1em 0;
+}
+li ol, li ul {
+	margin: 0;
+}
 h1 {
 	font-size: 32px;
 }
 h2 {
 	font-size: 24px;
+	padding-top: 0.2em;
+	margin-bottom: 0.8em;
 }
 h3 {
 	font-size: 20px;
+	padding-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 h4 {
 	font-size: 18px;
+	padding-top: 0.7em;
+	margin-bottom: 0.3em;
 }
 h5 {
 	font-size: 16px;
+	margin-bottom: 0.1em;
 }
 h6 {
 	font-size: 14px;
+	margin-bottom: 0;
 }
 p, li, td {
 	font-size: 1em; 
@@ -125,7 +141,7 @@ form.light label {
 }
 form.light p.field, form.light p.inline {
 	margin-right: 1em;
-	min-width: 225px;
+	min-width: 240px;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -138,45 +154,8 @@ form.light p.confirm {
 form.light textarea {
 	width: 100%;
 	max-width: 777px;
-	height: 10em;
 	border: 2px groove threedface;
-	font-family: sans-serif;
-}
-.form-standard td {
-	padding: 5px;
-}
-.form-standard input[type=password], 
-.form-standard input[type=text], 
-.form-standard td p {
-	width: 310px;
-	font: serif;
-}
-.form-standard .label {
-	padding-top: 8px;
-	white-space: nowrap;
-	text-align: right;
-	vertical-align: top;
-}
-.form-standard td p {
-	margin: 2px;
-	padding: 0;
-	font-size: 80%;
-}
-.form-standard textarea {
-	margin-bottom: 10px;
-	display: block;
-	padding: 5px;
-	font-family: sans-serif;
-	border: 2px groove threedface;
-	width: 725px;
-	max-width: 725px;
-}
-.form-standard textarea[name=story] {
-	height: 450px;
-}
-.form-standard textarea[name=blurb],
-.form-standard textarea[name=rules] {
-	height: 10em;
+	font: 12px sans-serif;
 }
 
 /*
@@ -346,9 +325,8 @@ td.center,
 .bad, .required {
 	color: red;
 }
-.unrequired {
-	opacity: 0;
-	filter:Alpha(opacity=0);
+.unimportant {
+	color: #666;
 }
 .story {
 	font-family: Georgia, serif;
@@ -362,14 +340,15 @@ td.center,
 	background: #f6f6f6;
 	box-shadow: 5px 5px 1px grey;
 }
-textarea.example {
+p.example {
 	width: 350px; 
-	height: 200px; 
-	max-height: 200px; 
-	max-width: 350px;
-	display: block;
+	height: 200px;
 	margin-left: auto;
 	margin-right: auto;
+}
+p.example textarea {
+	max-height: 200px;
+	max-width: 350px;
 }
 .inline-block {
 	display: inline-block;

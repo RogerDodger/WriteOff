@@ -16,18 +16,10 @@
 [%- END %]
 </p>
 
-<p>
-	Allowed types: <tt>[% c.config.biz.img.types.join('</tt>, <tt>') %]</tt>.
-	<br />
-	Max filesize: <strong>[% c.config.biz.img.size / 1024 | format('%dKB') %]</strong>.
-</p>
-
-[%- IF event.art_subs_allowed %]
-<form class="form-standard" action="[% c.req.uri %]" method="post" 
-	enctype="multipart/form-data">
-	<input type="hidden" name="submit" value="true"/>
-	<fieldset>
+[%- IF event.art_subs_allowed && c.user %]
+<form class="light" action="[% c.req.uri %]" method="post" enctype="multipart/form-data">
 	[%- IF c.form.has_error %]
+	<div>
 		[%- FOREACH error IN c.form.messages('submit') %]
 		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
@@ -38,41 +30,49 @@
 			</div>
 		</div>
 		[%- END %]
+	</div>
 	[%- END %]
-		<legend>Submit Art</legend>
-		<p>Fields with <span class="required">*</span> are required.</p>
-		<table>
-			<tr>
-				<td class="label">Title<span class="required">*</span></td>
-				<td><input name="title" type="text" maxlength="[% c.config.len.max.title %]" /></td>
-			</tr>
-			<tr>
-				<td class="label">Artist<span class="unrequired">*</span></td>
-				<td>
-					<input name="artist" type="text" maxlength="[% c.config.len.max.user %]" 
-					[%- IF c.user_exists %]value="[% c.user.username %]"[% END %]/>
-				</td>
-				<td>Anonymous if blank</td>
-			</tr>
-			<tr>
-				<td class="label">Website<span class="unrequired">*</span></td>
-				<td><input name="website" type="text" maxlength="[% c.config.len.max.url %]"/></td>
-			</tr>
-			<tr>
-				<td class="label">Image<span class="required">*</span></td>
-				<td><input name="image" type="file"/></td>
-			</tr>
-	[%- IF !c.user %]
-			<tr>
-				<td> </td>
-				<td>[% recaptcha %]</td>
-			</tr>
-	[%- END %]
-			<tr>
-				<td> </td>
-				<td><input type="submit" value="Submit"/></td>
-			</tr>
-		</table>
-	</fieldset>
+	<p class="inline">
+		<label>Title<span class="required">*</span></label>
+		<input name="title" type="text" size="38"
+			maxlength="[% c.config.len.max.title %]" required />
+	</p>
+	<p class="inline">
+		<label>Artist</label>
+		<input name="artist" type="text" size="24"
+			maxlength="[% c.config.len.max.user %]"
+			value="[% c.user.username %]"
+			placeholder="Anonymous" />
+	</p>
+	<p>
+		<label>Website</label>
+		<input name="website" type="url" size="72"
+			maxlength="[% c.config.len.max.url %]"
+			title="Optional link to your online galleries"
+			placeholder="http://" />
+	</p>
+	<p id="imageContainer">
+		<label>Image<span class="required">*</span></label>
+		<input name="image" type="file" id="image"
+			title="Allowed types: [% c.config.biz.img.types.join_serial %]"
+			accept="[% c.config.biz.img.types.join(',') %]"
+			onchange="this.setCustomValidity( 
+				this.files[0].size > [% c.config.biz.img.size %] ? 
+				'Max filesize: [% c.config.biz.img.size / 1024 | format('%dKB') %]' : ''
+			)" required />
+	</p>
+	<p>
+		<input type="submit" value="Submit" id="submit"/>
+	</p>
 </form>
+[%- END %]
+[%- IF !c.user %]
+	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+		<div class="ui-state-highlight ui-corner-all" style="padding: 0 .7em;"> 
+			<p>
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+				Guests cannot submit art
+			</p>
+		</div>
+	</div>
 [%- END %]

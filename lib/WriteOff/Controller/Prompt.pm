@@ -109,28 +109,31 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless 
 		$c->stash->{prompt}->is_manipulable_by( $c->user );
 		
+	$c->stash->{key} = { 
+		name  => 'prompt',
+		value => $c->stash->{prompt}->contents,
+	};
+		
 	$c->stash->{template} = 'delete.tt';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST';
+	$c->forward('do_delete') if $c->req->method eq 'POST' && 
+		$c->req->param('sessionid') eq $c->sessionid;
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->form(
-		title => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->stash->{prompt}->contents ] ],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+	$c->log->info( sprintf "Prompt deleted by %s: %s (%s - %s)",
+		$c->user->get('username'),
+		$c->stash->{prompt}->contents,
+		$c->stash->{prompt}->ip,
+		$c->stash->{prompt}->user->username,
 	);
-	
-	if( !$c->form->has_error ) {
-		$c->stash->{prompt}->delete;
-		$c->flash->{status_msg} = 'Deletion successful';
-		$c->res->redirect( $c->uri_for('/user/me') );	
-	}
-	else {
-		$c->stash->{error_msg} = 'Title is incorrect';
-	}
-	
+		
+	$c->stash->{prompt}->delete;
+		
+	$c->flash->{status_msg} = 'Deletion successful';
+	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
 =head1 AUTHOR

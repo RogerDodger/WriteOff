@@ -15,6 +15,20 @@ Controller for user management - login/logout, registration, settings, etc.
 
 =cut
 
+sub begin :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{title} = [ 'User' ];
+}
+
+sub index :PathPart('user') :Chained('/') :CaptureArgs(1) {
+    my ( $self, $c, $id ) = @_;
+	
+	$c->stash->{user} = $c->model('DB::User')->find($id) 
+		or $c->detach('/default');
+
+}
+
 sub me :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
@@ -77,6 +91,7 @@ sub register :Local :Args(0) {
 	
 	$c->res->redirect( $c->uri_for('/') ) if $c->user;
 	
+	push $c->stash->{title}, 'Register';
 	$c->stash->{template} = 'user/register.tt';
 	
 	$c->forward('/captcha_get');
@@ -118,23 +133,12 @@ sub do_register :Private {
 			ip       => $c->req->address,
 			mailme   => $c->req->params->{mailme} ? 1 : 0,
 		});
-		$c->stash->{user}->new_token;
 		
-		$c->model("DB::UserRole")->create({
-			user_id => $c->stash->{user}->id,
-			role_id => 2,
-		});
+		my $role = $c->model('DB::Role')->find({ role => 'user' });
+		$c->stash->{user}->add_to_roles( $role );
 		
-		$c->stash->{email} = {
-			to           => $c->stash->{user}->email,
-			from         => $c->mailfrom,
-			subject      => $c->config->{name} . ' - Confirmation Email',
-			template     => 'email/registration.tt',
-			content_type => 'text/html',
-		};
-		$c->forward( $c->view('Email::Template') );
+		$c->forward( $self->action_for('send_verification_email') );
 		
-		$c->stash->{template} = 'user/register_successful.tt';
 		$c->log->info( sprintf 'User created: %s (%s)',
 			$c->stash->{user}->username,
 			$c->stash->{user}->email,
@@ -145,7 +149,7 @@ sub do_register :Private {
 sub settings :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user; 
+	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user; 
 	
 	$c->forward('do_settings') if $c->req->method eq 'POST';
 	
@@ -154,6 +158,7 @@ sub settings :Local :Args(0) {
 		mailme   => $c->user->get('mailme') ? 'on' : '',
 	};
 	
+	push $c->stash->{title}, 'Settings';
 	$c->stash->{template} = 'user/settings.tt';
 }
 
@@ -164,71 +169,138 @@ sub do_settings :Private {
 	
 	if( $c->req->params->{submit} eq 'Change password' ) {
 		
-		$c->req->params->{old_password} = $c->req->params->{old} && 0 + $c->user
-			->obj->discard_changes->check_password( $c->req->params->{old} );
+		$c->req->params->{old} = $c->user->obj->discard_changes
+			->check_password( $c->req->params->{old} );
 		
 		$c->form(
-			password => [ 'NOT_BLANK', [ 'LENGTH', $c->config->{len}{min}{pass}, 
-				$c->config->{len}{max}{pass} ] ],
+			password => [ 
+				'NOT_BLANK', 
+				[ 'LENGTH', $c->config->{len}{min}{pass}, $c->config->{len}{max}{pass} ] 
+			],
 			{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
-			old_password => [ 'NOT_BLANK', [ 'EQUAL_TO', 1 ] ],
+			old => [ 'NOT_BLANK' ],
 		);
 		
 		return 0 if $c->form->has_error;
 		
 		$c->user->update({ password => $c->form->valid('password') });
-		$c->stash->{status_msg} = 'Password changed successfully';
+		
+		return $c->stash->{status_msg} = 'Password changed successfully';
 	}
 	
-	elsif( $c->req->params->{submit} eq 'Change timezone' ) {
+	if( $c->req->params->{submit} eq 'Change settings' ) {
 		$c->form(
 			timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->timezones ] ],
 		);
+		
 		return 0 if $c->form->has_error;
 		
-		$c->user->update({ timezone => $c->form->valid('timezone') });
+		$c->user->update({ 
+			timezone => $c->form->valid('timezone'),
+			mailme   => $c->req->param('mailme') ? 1 : 0,
+		});
+		
 		$c->set_authenticated($c->user);
-		$c->stash->{status_msg} = 'Timezone changed successfully';
+		
+		return $c->stash->{status_msg} = 'Settings changed successfully';
 	} 
-	
-	elsif( $c->req->params->{submit} eq 'Change notifications' ) {
-		$c->user->update({ mailme => $c->req->params->{mailme} ? 1 : 0 });
-		$c->set_authenticated($c->user);
-		$c->stash->{status_msg} = 'Notifications changed successfully';
-	}
 	
 	0;
 }
 
-sub verify :Local :Args(2) {
-	my ( $self, $c, $id, $token ) = @_;
+sub send_verification_email :Private {
+	my ( $self, $c ) = @_;
 	
-	my $user = $c->model('DB::User')->find($id);
+	return unless $c->stash->{user};
 	
-	if( $user && $user->token eq $token ) {
-		if( $c->req->params->{delete} ) { 
-			$user->delete;
-			$c->stash->{template} = 'user/verify_delete.tt';
-		}
-		else { 
-			$user->update({ verified => 1 });
-			$user->new_token;
-			$c->set_authenticated( $c->find_user({ id => $id }) );
-			$c->stash->{template} = 'user/verify.tt';
-		}
+	$c->stash->{user}->new_token;
+	
+	$c->log->info( "Sending verification email to " . $c->stash->{user}->email );
+	
+	$c->stash->{email} = {
+		to           => $c->stash->{user}->email,
+		from         => $c->mailfrom,
+		subject      => $c->config->{name} . ' - Verification Email',
+		template     => 'email/verify.tt',
+		content_type => 'text/html',
+	};
+	
+	$c->forward( $c->view('Email::Template') );
+}
+
+sub verify :PathPart('verify') :Chained('index') :Args(1) {
+	my ( $self, $c, $token ) = @_;
+	
+	if( $c->stash->{user}->token eq $token ) {
+		$c->stash->{user}->update({ verified => 1 })->new_token;
+		$c->set_authenticated( $c->find_user({ id => $c->stash->{user}->id }) );
+		$c->stash->{template} = 'user/verified.tt';
 	} 
 	else {
 		$c->res->redirect( $c->uri_for('/') );
 	}
 }
 
-sub list :Path('list') :Args(0) {
+sub recover :Local :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	if( $c->req->method eq 'POST' ) {
+		$c->stash->{user} = $c->model('DB::User')->verified
+			->find({ email => $c->req->param('email') }) or return 0;
+		
+		$c->forward( $self->action_for('send_recovery_email') );
+	}
+	
+	push $c->stash->{title}, 'Recover';
+	$c->stash->{template} = 'user/recover.tt';
+}
+
+sub send_recovery_email :Private {
+	my ( $self, $c ) = @_;
+	
+	return 0 if $c->stash->{user}->has_been_mailed_recently;
+	
+	$c->log->info( "Sending recovery email to " . $c->stash->{user}->email );
+	
+	$c->stash->{user}->new_token;
+	
+	$c->stash->{email} = {
+		to           => $c->stash->{user}->email,
+		from         => $c->mailfrom,
+		subject      => $c->config->{name} . ' - Password Recovery',
+		template     => 'email/recover.tt',
+		content_type => 'text/html',
+	};
+	
+	$c->forward( $c->view('Email::Template') );
+	
+	$c->stash->{user}->update({ last_mailed_at => DateTime->now });
+}
+
+sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
+	my ( $self, $c, $token ) = @_;
+	
+	if( $c->stash->{user}->token eq $token ) 
+	{
+		$c->stash->{pass} = $c->stash->{user}->new_password;
+		
+		$c->stash->{user}->new_token;
+		
+		$c->stash->{template} = 'user/recovered.tt';
+	}
+	else 
+	{
+		$c->res->redirect( $c->uri_for('/') );
+	}
+}
+
+sub list :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{users} = $c->model('DB::User')->search({
 		username => { like => "%" . $c->req->param('term') . "%" },
 		verified => 1,
-	});
+	})->order_by({ -asc => 'username' });
 
 	if( $c->req->param('view') eq 'json' ) {
 		$c->stash->{json} = [ $c->stash->{users}->get_column('username')->all ];
@@ -236,7 +308,7 @@ sub list :Path('list') :Args(0) {
 		$c->detach( $c->view('JSON') );
 	}
 	
-	$c->stash->{template} = '/user/list.tt';
+	$c->stash->{template} = 'user/list.tt';
 }
 
 =head1 AUTHOR

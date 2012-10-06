@@ -1,11 +1,14 @@
-[% referer = c.req.params.referer || c.req.referer -%]
-[% DEFAULT identifier = 'title' -%]
+[%- title = 'Delete' %]
+
 <h1>Confirm Deletion</h1>
-<p>Please enter the [% identifier %] of the selected item to confirm deletion.</p>
-<form method="post" action="[% c.req.uri %]">
+<p>Please enter the [% key.name %] of the selected item to confirm deletion.</p>
+<form method="post" action="[% c.uri_for( c.action, c.args ) %]">
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<input type="hidden" name="referer" value="[% referer %]" />
-	<input type="text" name="[% identifier.lower %]" style="width: 250px"  />
-	<input type="submit" value="Delete" />
-	<a class="ui-button" href="[% referer %]">Abort</a>
+	<input type="hidden" name="referer" value="[% c.req.referer | url %]" />
+	
+	<input type="text" size="30" oninput="if( this.value == '[% key.value %]' ) 
+			$('#delete').button('enable')" />
+	
+	<input type="submit" value="Delete" disabled="disabled" id="delete" />
+	<a class="ui-button" href="[% c.req.referer | url %]">Abort</a>
 </form>

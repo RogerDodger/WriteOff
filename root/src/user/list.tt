@@ -1,0 +1,27 @@
+<h2>User List</h2>
+
+<form method="get" action="[% c.uri_for( c.action ) %]">
+	<p>
+		<input type="text" name="term" />
+		<input type="submit" value="Search" />
+	</p>
+</form>
+
+[%- IF users.count %]
+<table class="slim">
+	<tr>
+		<th>Username</th>
+		<th>Email</th>
+		<th>Registered</th>
+	</tr>
+	[%- WHILE (user = users.next) %]
+	<tr>
+		<td>[% user.username %]</td>
+		<td class="center"><em>hidden</em></td>
+		<td class="right">[% format_dt( user.created, '%d %b %Y' ) %]</td>
+	</tr>
+	[%- END %]
+</table>
+[%- ELSE %]
+<p>No users found.</p>
+[%- END %]

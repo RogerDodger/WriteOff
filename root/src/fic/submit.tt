@@ -15,74 +15,9 @@
 	Submissions are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
-<p>
-	Word limit: [% event.wc_min %]–[% event.wc_max %].
-</p>
 
 [%- IF event.fic_subs_allowed && c.user %]
-<form class="form-standard"  action="[% c.req.uri %]" method="post"
-	enctype="multipart/form-data">
-	<fieldset>
-	[%- IF c.form.has_error %]
-		[%- FOREACH error IN c.form.messages('submit') %]
-		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p>
-					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-					<strong>Error:</strong> [% error %]
-					[%- IF error.match('^Wordcount') %] 
-					[%- c.req.params.wordcount | format('(%d words)') %]
-					[%- END %]
-				</p>
-			</div>
-		</div>
-		[%- END %]
-	[%- END %]
-		<legend>Submit Story</legend>
-		<p>Fields with <span class="required">*</span> are required.</p>
-		<table>
-			<tr>
-				<td class="label">Title<span class="required">*</span></td>
-				<td>
-					<input name="title" type="text" maxlength="[% c.config.len.max.title %]"/>
-				</td>
-			</tr>
-	[%- IF event.art %]
-		[%- images = event.images_rs %]
-				<tr>
-					<td class="label">Art Title<span class="required">*</span></td>
-					<td>
-						<select name="image_id">
-							<optgroup label="Submitted Artworks">
-								<option value=""></option>
-		[%- WHILE (image = images.next) %]
-								<option value="[% image.id %]">[% image.title | html %]</option>
-		[%- END %]
-							</optgroup>
-						</select>
-					</td>
-				</tr>
-	[%- END %]
-			<tr>
-				<td class="label">Author<span class="unrequired">*</span></td>
-				<td>
-					<input name="author" type="text" maxlength="[% c.config.len.max.user %]"
-					value="[% c.user.username %]"/>
-				</td>
-				<td>(Anonymous if blank)</td>
-			</tr>
-			<tr>
-				<td class="label">Website<span class="unrequired">*</span></td>
-				<td><input name="website" type="text" maxlength="[% c.config.len.max.url %]"/></td>
-			</tr>
-			<tr>
-				<td class="label">Story<span class="required">*</span></td>
-			</tr>
-		</table>
-		<textarea name="story"></textarea>
-		<input type="submit" value="Submit"/>
-	</fieldset>
-</form>
+[% INCLUDE fic/form.tt %]
 [%- END %]
 [%- IF !c.user %]
 	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">

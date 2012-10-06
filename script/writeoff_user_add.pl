@@ -17,20 +17,13 @@ my $schema = WriteOff::Schema->connect('dbi:SQLite:WriteOff.db');
 
 my($user, $pass, $role) = @ARGV;
 
-my %id = (
-	admin => 1,
-	user  => 2,
-);
+$role = $schema->resultset('Role')->find({ role => $role }) 
+	|| die "Role '$role' does not exist";
 
-die "Not a defined role" unless defined $id{$role};
-
-my $entry = $schema->resultset('User')->create({
+$schema->resultset('User')->create({
 	username => $user,
 	password => $pass,
 	verified => 1,
-});
+})->add_to_roles($role);
 
-$schema->resultset('UserRole')->create({
-	user_id => $entry->id,
-	role_id => $id{$role},
-});
+1;

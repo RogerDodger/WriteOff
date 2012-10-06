@@ -1,3 +1,25 @@
+v0.18
+=====
+- Delete form prettied up
+- Every submit/edit form prettied up
+- CSS made more generalised (also prettied up, because that word isn't trite by now!)
+- Fic submit/edit can choose one or more related art items now
+- Fic editing uses the same form as submitting, so you can edit anything basically
+- Password recover page added
+- Email sending stuff put in isolated subs
+  - Verification email doesn't send the password out now for security reasons
+- Fics don't point to other fics until gallery is open
+- Added link to plain text view on fic gallery
+- Item deletion logs now
+- Settings form tidied up
+- User list HTML view added 
+  - No public link yet though, because it's kind of useless + ugly
+- Added a clean_unverified_users method to the cleanup schedule, dousing the system of the unpure
+- Started using proper many_to_many create functions
+- Replaced up all the messy js with inline HTML5 validation
+  - Miracle shit that is
+- Probably broke something
+
 v0.17
 =====
 - Added placeholder templates/actions for art gallery and voting, and prelim and private voting

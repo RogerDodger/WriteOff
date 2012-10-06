@@ -1,23 +1,4 @@
-[%- title = story.title | html %]
-<h2>Editing <em>[% title %]</em></h2>
-<form class="form-standard" method="post" enctype="multipart/form-data" 
-	action="[% c.req.uri %]">
-[%- IF c.form.has_error %]
-	[%- FOREACH error IN c.form.messages('submit') %]
-	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-			<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]
-				[%- IF error.match('^Wordcount') %] 
-				[%- '(' _ c.req.params.wordcount _ ' words)' %]
-				[%- END %]
-			</p>
-		</div>
-	</div>
-	[%- END %]
-[%- END %]
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<textarea name="story">[% story.contents | html %]</textarea>
-	<input type="submit" value="Edit" />
-</form>
+<h1>[% story.event.prompt | html %]</h1>
+
+<h2>Fic Editing</h2>
+[% INCLUDE fic/form.tt %]

@@ -16,11 +16,11 @@
 	<h2>Details</h2>
 	<p>
 		<label>Blurb</label>
-		<textarea name="blurb"></textarea>
+		<textarea name="blurb" rows="8" cols="32"></textarea>
 	</p>
 	<p>
 		<label>Custom rules</label>
-		<textarea name="rules"></textarea>
+		<textarea name="rules" rows="8" cols="32"></textarea>
 	</p>
 	<p>
 		<label>Content level</label>
@@ -70,7 +70,7 @@
 	[%- END %]
 	</table>
 	<p>
-		<input class="user-autocomplete" type="text" name="user" />
+		<input class="autocomplete-user" type="text" name="user" />
 		[%- IF c.check_user_roles('admin') %]
 		<input type="submit" name="submit" value="Add organiser" />
 		[%- END %]

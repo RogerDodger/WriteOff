@@ -23,14 +23,13 @@ sub now {
 sub now_dt {
 	return DateTime->now;
 	
-	return shift->parse_datetime('2012-09-20 15:00:00');
+	return shift->parse_datetime('2012-10-04 01:00:00');
 }
 
 sub created_before {
     my ($self, $datetime) = @_;
 
-    my $date_str = $self->result_source->schema->storage
-		->datetime_parser->format_datetime($datetime);
+    my $date_str = $self->format_datetime($datetime);
 
     return $self->search_rs({ created => { '<' => $date_str } });
 }
@@ -38,8 +37,7 @@ sub created_before {
 sub created_after {
     my ($self, $datetime) = @_;
 
-    my $date_str = $self->result_source->schema->storage
-		->datetime_parser->format_datetime($datetime);
+    my $date_str = $self->format_datetime($datetime);
 
     return $self->search_rs({ created => { '>' => $date_str } });
 }

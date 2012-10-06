@@ -38,17 +38,15 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 	
+	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'art/submit.tt';
 	
-	$c->forward('/captcha_get');
-	$c->forward('do_submit') if 
-		$c->req->method eq 'POST' && $c->stash->{event}->art_subs_allowed;
+	$c->forward('do_submit') if $c->req->method eq 'POST' && 
+		$c->user && $c->stash->{event}->art_subs_allowed;
 }
 
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
-
-	$c->req->params->{captcha} = $c->forward('/captcha_check');
 	
 	my $img = $c->req->upload('image');
 	if( $img ) {
@@ -74,7 +72,6 @@ sub do_submit :Private {
 		website      => [ 'HTTP_URL' ],
 		image        => [ 'NOT_BLANK' ],
 		mimetype     => [ [ 'IN_ARRAY', @{ $c->config->{biz}{img}{types} } ] ],
-		captcha      => [ $c->user ? () : [ 'EQUAL_TO', 1 ] ],
 		filesize     => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
 	);
 	
@@ -82,7 +79,7 @@ sub do_submit :Private {
 		
 		my %row = (
 			event_id => $c->stash->{event}->id,
-			user_id  => $c->user ? $c->user->get('id') : undef,
+			user_id  => $c->user->get('id'),
 			ip       => $c->req->address,
 			title    => $c->form->valid('title'),
 			artist   => $c->form->valid('artist') || 'Anonymous',
@@ -130,27 +127,31 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless
 		$c->stash->{image}->is_manipulable_by( $c->user );
 		
+	$c->stash->{key} = { 
+		name  => 'title',
+		value => $c->stash->{image}->title,
+	};
+		
 	$c->stash->{template} = 'delete.tt';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST';
+	$c->forward('do_delete') if $c->req->method eq 'POST' && 
+		$c->req->param('sessionid') eq $c->sessionid;
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->form(
-		title     => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->stash->{image}->title ] ],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+	$c->log->info( sprintf "Art deleted by %s: %s (%s - %s)",
+		$c->user->get('username'),
+		$c->stash->{image}->title,
+		$c->stash->{image}->ip,
+		$c->stash->{image}->user->username,
 	);
+		
+	$c->stash->{image}->delete;
 	
-	if( !$c->form->has_error ) {
-		$c->stash->{image}->delete;
-		$c->flash->{status_msg} = 'Deletion successful';
-		$c->res->redirect( $c->uri_for('/user/me') );	
-	}
-	else {
-		$c->stash->{error_msg} = 'Title is incorrect';
-	}
+	$c->flash->{status_msg} = 'Deletion successful';
+	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 	
 }
 

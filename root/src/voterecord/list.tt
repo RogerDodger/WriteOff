@@ -1,7 +1,10 @@
 <table class="slim center">
 	<tr>
 		<th>Event</th>
+		<th>User</th>
+		[%- IF c.check_user_roles('admin') %]
 		<th>IP Address</th>
+		[%- END %]
 		<th>Round</th>
 		<th>Type</th>
 		<th>Count</th>
@@ -16,7 +19,16 @@
 		<td class="left" title="[% record.event.prompt | html %]">
 			[% record.event.prompt | truncate(12) | html %]
 		</td>
+		[%- IF record.user_id %]
+		<td title="[% record.user.username %]">
+			[% record.user.username | truncate(12) %]
+		</td>
+		[%- ELSE %]
+		<td>Guest</td>
+		[%- END %]
+		[%- IF c.check_user_roles('admin') %]
 		<td title="[% record.ip %]">[% record.ip | truncate(15) %]</td>
+		[%- END %]
 		<td>[% record.round.ucfirst %]</td>
 		<td>[% record.type.ucfirst %]</td>
 		<td>[% record.votes_rs.count %]</td>

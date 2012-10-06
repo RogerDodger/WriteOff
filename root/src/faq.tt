@@ -163,6 +163,18 @@
 	you'll have to take it up with the event's organiser.
 </p>
 
+<a id="How-Do-I-Host-an-Event"> </a>
+<h2>How Do I Host an Event?</h2>
+<p>
+	If you have an event idea in mind, contact <a class="link"
+	href="[% c.config.AdminEmail %]">the admin</a> with a request explaining
+	what your event is and why it should be hosted here.
+</p>
+<p>
+	As an organiser, you will be tasked with making sure submissions are within
+	the event's rules.
+</p>
+
 <a id="What-Time-Is-It"> </a>
 <h2>What Time Is It?</h2>
 <p>

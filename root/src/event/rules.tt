@@ -131,9 +131,11 @@
 
 <h4>Example</h4>
 
-<textarea class="example" rows="24" cols="16" disabled="disabled">
-	[%- INCLUDE fic/formatting.tt -%]
-</textarea>
+<p class="example">
+	<textarea rows="24" cols="48" disabled="disabled">
+		[%- INCLUDE fic/formatting.tt -%]
+	</textarea>
+</p>
 
 <p>
 	<strong>Participants should not put their name or other metadata inside of 

@@ -40,31 +40,29 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{identifier} = 'standard deviation';
+	$c->stash->{key} = { 
+		name  => 'standard deviation (to 2 decimal places)',
+		value => sprintf "%.2f", $c->stash->{record}->stdev,
+	};
+	
 	$c->stash->{template} = 'delete.tt';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST';
+	$c->forward('do_delete') if $c->req->param('sessionid') eq $c->sessionid;
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
-	
-	$c->form(
-		'standard deviation' => [ 
-			'NOT_BLANK', 
-			[ 'IN_ARRAY', sprintf '%.2f', $c->stash->{record}->votes->stdev ] 
-		],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+
+	$c->log->info( sprintf "VoteRecord deleted by %s: %s (%s)",
+		$c->user->get('username'),
+		$c->stash->{record}->ip,
+		eval { $c->stash->{record}->user->username } || 'Guest',
 	);
 	
-	if( !$c->form->has_error ) {
-		$c->stash->{record}->votes->delete;
-		$c->flash->{status_msg} = 'Deletion successful';
-		$c->res->redirect( $c->req->params->{referer} || $c->uri_for('/') );	
-	}
-	else {
-		$c->stash->{error_msg} = 'Standard deviation is incorrect';
-	}
+	$c->stash->{record}->votes->delete_all;
+	
+	$c->flash->{status_msg} = 'Deletion successful';
+	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
 

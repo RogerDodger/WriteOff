@@ -6,24 +6,28 @@
 	<!-- [% story.wordcount %] words -->
 </div>
 
+[%- IF story.event.fic_gallery_opened %]
+
 <hr style="margin-top: 1.6em"/>
 
 <p class="center">
-[%- storys = story.event.storys_rs.seed_order.all %]
-[%- FOREACH s IN storys %]
-	[%- NEXT IF story.id != s.id %]
+	[%- storys = story.event.storys_rs.seed_order.all %]
+	[%- FOREACH s IN storys %]
+		[%- NEXT IF story.id != s.id %]
 	
-	[%- prev = loop.prev || storys.-1 %]
+		[%- prev = loop.prev || storys.-1 %]
 	<a class="link" href="[% c.uri_for( c.action, [ prev.id_uri ]) %]">« Prev</a>
 	&nbsp;
 	<strong>[% loop.count %]</strong>
 	&nbsp;
-	[%- next = loop.next || storys.0 %]
+		[%- next = loop.next || storys.0 %]
 	<a class="link" href="[% c.uri_for( c.action, [ next.id_uri ]) %]">Next »</a>
 	
-[%- END %]
+	[%- END %]
 </p>
 <p class="center">
 	<a class="ui-button" href="[% c.uri_for( c.controller('Fic')
 		.action_for('gallery'), [ story.event_id ]) %]">Back to gallery</a>
 </p>
+
+[%- END %]

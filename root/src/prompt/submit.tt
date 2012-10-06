@@ -11,36 +11,35 @@
 	<br />
 [%- IF event.prompt_subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
-	[%- IF c.user %]
 	<br />
-		[%- subs_left = c.config.prompts_per_user - event.prompts_rs
-			.search_rs({ user_id => c.user.get('id') }).count %]
-	You may submit <strong>[% subs_left %]</strong> more prompt(s).
-	[%- END %]
+	You may submit <strong>[% prompt_subs_left %]</strong> more prompt(s).
 [%- ELSE %]
 	Submissions are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
-[%- IF event.prompt_subs_allowed && c.user && subs_left > 0 %]
-<form class="form-standard" method="post" action="[% c.req.uri %]">
+[%- IF event.prompt_subs_allowed && prompt_subs_left > 0 %]
+<form class="light" method="post" action="[% c.uri_for( c.action, c.req.args ) %]">
 	[%- IF c.form.has_error %]
-		[%- FOREACH error IN c.form.messages('submit') %]
-	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-			<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]
-			</p>
-		</div>
-	</div>
-		[%- END %]
-	[%- END %]
 	<div>
-		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-		<label>Prompt</label>
-		<input type="text" name="prompt" maxlength="[% c.config.len.max.prompt %]" />
-		<input type="submit" value="Submit" />
+		[%- FOREACH error IN c.form.messages('submit') %]
+		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Error:</strong> [% error %]
+				</p>
+			</div>
+		</div>
+		[%- END %]
 	</div>
+	[%- END %]
+	<p>
+		<label>Prompt</label>
+		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+		<input type="text" name="prompt" size="24"
+			maxlength="[% c.config.len.max.prompt %]" required />
+		<input type="submit" value="Submit" />
+	</p>
 </form>
 [%- END %]
 [%- IF !c.user %]

@@ -35,66 +35,6 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 	}
 }
 
-sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
-	my ( $self, $c ) = @_;
-	
-	push $c->stash->{title}, 'Submit';
-	$c->stash->{template} = 'fic/submit.tt';
-	
-	$c->forward('do_submit') if $c->req->method eq 'POST' && 
-		$c->user && $c->stash->{event}->fic_subs_allowed;
-}
-
-sub do_submit :Private {
-	my ( $self, $c ) = @_;
-
-	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
-	
-	$c->form(
-		title        => [ 
-			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
-			'TRIM_COLLAPSE', 
-			'NOT_BLANK', 
-			[ 'DBIC_UNIQUE', $c->model('DB::Story'), 'title' ],
-		],
-		author       => [ 
-			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
-			'TRIM_COLLAPSE', 
-		],
-		website      => [ 'HTTP_URL' ],
-		image_id     => [ 
-			( $c->stash->{event}->art ? 'NOT_BLANK' : () ),
-			[ 'IN_ARRAY', $c->stash->{event}->images->get_column('id')->all ],
-		],
-		story        => [ 'NOT_BLANK' ],
-		wordcount    => [ [ 'BETWEEN', $c->stash->{event}->wc_min, 
-			$c->stash->{event}->wc_max ] ],
-	);
-	
-	if(!$c->form->has_error) {
-		
-		my $new = $c->model('DB::Story')->create({
-			event_id  => $c->stash->{event}->id,
-			user_id   => $c->user->id,
-			ip        => $c->req->address,
-			title     => $c->form->valid('title'),
-			author    => $c->form->valid('author') || 'Anonymous',
-			website   => $c->form->valid('website') || undef,
-			contents  => $c->form->valid('story'),
-			wordcount => $c->form->valid('wordcount'),
-			seed      => rand,
-		});
-		
-		$c->model('DB::ImageStory')->create({
-			story_id => $new->id,
-			image_id => $c->form->valid->{image_id},
-		}) if $c->stash->{event}->art;
-		
-		$c->flash->{status_msg} = 'Submission successful';
-		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
-	}
-}
-
 sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
@@ -113,35 +53,132 @@ sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
 	$c->stash->{template} = 'fic/gallery.tt';
 }
 
+sub form :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
+	
+	# When editing, must allow for the title to be itself
+	my $rs = $c->model('DB::Story')->search({ title => { '!=' => 
+		$c->stash->{story} ? $c->stash->{story}->title : undef
+	} });
+	
+	if( $c->stash->{event}->art ) {
+		my @ids = $c->stash->{event}->images->get_column('id')->all;
+		
+		# Make sure each image_id is unique and in the set of valid image_ids
+		my @params = sort $c->req->param('image_id') or return 0;
+		for ( my $i = 0; $i <= $#params; $i++ ) {
+			return 0 unless grep { $params[$i] eq $_ } @ids;
+			return 0 unless $params[$i] cmp $params[$i-1];
+		}
+	}
+	
+	$c->form(
+		title => [ 
+			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
+			'TRIM_COLLAPSE', 
+			'NOT_BLANK', 
+			[ 'DBIC_UNIQUE', $rs, 'title' ],
+		],
+		author => [ 
+			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
+			'TRIM_COLLAPSE', 
+		],
+		website => [ 'HTTP_URL' ],
+		story => [ 'NOT_BLANK' ],
+		wordcount => [ 
+			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ] 
+		],
+	);
+	
+	1;
+}
+
+sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	push $c->stash->{title}, 'Submit';
+	$c->stash->{template} = 'fic/submit.tt';
+	
+	$c->forward('do_submit') if $c->req->method eq 'POST' && 
+		$c->user && $c->stash->{event}->fic_subs_allowed;
+}
+
+sub do_submit :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->forward( $self->action_for('form') ) or return 0;
+	
+	if(!$c->form->has_error) {
+		
+		my $story = $c->model('DB::Story')->create({
+			event_id  => $c->stash->{event}->id,
+			user_id   => $c->user->id,
+			ip        => $c->req->address,
+			title     => $c->form->valid('title'),
+			author    => $c->form->valid('author') || 'Anonymous',
+			website   => $c->form->valid('website') || undef,
+			contents  => $c->form->valid('story'),
+			wordcount => $c->form->valid('wordcount'),
+			seed      => rand,
+		});
+		
+		if( $c->stash->{event}->art ) {
+			for my $image_id ( $c->req->param('image_id') ) {
+				my $image = $c->model('DB::Image')->find( $image_id );
+				$story->add_to_images( $image );
+			}
+		}
+		
+		$c->flash->{status_msg} = 'Submission successful';
+		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+	}
+}
+
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You cannot edit this item.']) unless 
+	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) unless 
 		$c->stash->{story}->is_manipulable_by( $c->user );
-	
-	$c->stash->{template} = 'fic/edit.tt';
+		
+	$c->stash->{event} = $c->stash->{story}->event;
 	
 	$c->forward('do_edit') if $c->req->method eq 'POST';
+	
+	$c->stash->{fillform} = {
+		author   => $c->stash->{story}->author,
+		title    => $c->stash->{story}->title,
+		image_id => [ $c->stash->{story}->images->get_column('id')->all ],
+		website  => $c->stash->{story}->website,
+		story    => $c->stash->{story}->contents,
+	};
+	
+	$c->stash->{template} = 'fic/edit.tt';
 }
 
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
-	
-	$c->form( 
-		story     => [ 'NOT_BLANK' ],
-		wordcount => [ ['BETWEEN', $c->stash->{story}->event->wc_min, 
-			$c->stash->{story}->event->wc_max] ],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
-	);
+	$c->forward( $self->action_for('form') ) or return 0;
 	
 	if( !$c->form->has_error ) {
 	
 		$c->stash->{story}->update({
-			wordcount => $c->form->valid('wordcount'),
+			title     => $c->form->valid('title'),
+			author    => $c->form->valid('author') || 'Anonymous',
+			website   => $c->form->valid('website') || undef,
 			contents  => $c->form->valid('story'),
+			wordcount => $c->form->valid('wordcount'),
 		});
+		
+		if( $c->stash->{event}->art ) {
+			$c->stash->{story}->image_stories->delete;
+			for my $image_id ( $c->req->param('image_id') ) {
+				my $image = $c->model('DB::Image')->find( $image_id );
+				$c->stash->{story}->add_to_images( $image );
+			}
+		}
 		
 		$c->stash->{status_msg} = 'Edit successful';
 	}
@@ -154,27 +191,31 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless 
 		$c->stash->{story}->is_manipulable_by( $c->user );
 		
+	$c->stash->{key} = { 
+		name  => 'title',
+		value => $c->stash->{story}->title,
+	};
+		
 	$c->stash->{template} = 'delete.tt';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST';
+	$c->forward('do_delete') if $c->req->method eq 'POST' && 
+		$c->req->param('sessionid') eq $c->sessionid;
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
-	
-	$c->form(
-		title     => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->stash->{story}->title ] ],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+		
+	$c->log->info( sprintf "Fic deleted by %s: %s (%s - %s)",
+		$c->user->get('username'),
+		$c->stash->{story}->title,
+		$c->stash->{story}->ip,
+		$c->stash->{story}->user->username,
 	);
-	
-	if( !$c->form->has_error ) {
-		$c->stash->{story}->delete;
-		$c->flash->{status_msg} = 'Deletion successful';
-		$c->res->redirect( $c->uri_for('/user/me') );	
-	}
-	else {
-		$c->stash->{error_msg} = 'Title is incorrect';
-	}
+		
+	$c->stash->{story}->delete;
+		
+	$c->flash->{status_msg} = 'Deletion successful';
+	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
 =head1 AUTHOR
