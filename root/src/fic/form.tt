@@ -51,7 +51,7 @@
 			title="Word limit: [% event.wc_min _ '–' _ event.wc_max %]"
 			onchange="var wc = this.value.split(/\s+/).length;
 				this.setCustomValidity(
-					[% event.wc_min %] < wc && wc < [% event.wc_max %] ?
+					[% event.wc_min %] <= wc && wc <= [% event.wc_max %] ?
 					'' : 'Wordcount: ' + wc
 				)" ></textarea>
 	</p>
