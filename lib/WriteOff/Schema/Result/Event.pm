@@ -282,7 +282,9 @@ __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
 
-use constant LEEWAY => 5;
+sub leeway {
+	return 5; #minutes
+}
 
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
@@ -344,7 +346,7 @@ sub is_organised_by {
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
 		or return 0;
 	
-	return 1 if grep { $_->id == $user->id } $self->organisers;
+	return 1 if $self->organisers->search({ id => $user->id })->count;
 	return 1 if $user->is_admin;
 	
 	0;
@@ -381,14 +383,14 @@ sub art_subs_allowed {
 	my $row = shift;
 	
 	return $row->check_datetimes_ascend 
-	( $row->art, $row->now_dt, $row->art_end->clone->add({ minutes => LEEWAY }) );
+	( $row->art, $row->now_dt, $row->art_end->add({ minutes => $row->leeway }) );
 }
 
 sub fic_subs_allowed {
 	my $row = shift;
 		
 	return $row->check_datetimes_ascend
-	( $row->fic, $row->now_dt, $row->fic_end->clone->add({ minutes => LEEWAY }) );
+	( $row->fic, $row->now_dt, $row->fic_end->add({ minutes => $row->leeway }) );
 }
 
 sub art_gallery_opened {
@@ -403,6 +405,15 @@ sub fic_gallery_opened {
 	my $row = shift;
 	
 	return $row->check_datetimes_ascend( $row->public, $row->now_dt );
+}
+
+sub art_votes_allowed {
+	my $row = shift;
+	
+	return 0 unless $row->art;
+	
+	return $row->check_datetimes_ascend
+	( $row->art_end, $row->now_dt, $row->end );
 }
 
 sub prelim_votes_allowed {

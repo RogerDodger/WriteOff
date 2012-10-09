@@ -15,7 +15,7 @@
 	END;
 %]
 	<tr>
-		<th>Title</th>
+		<th style="width: 100%">Title</th>
 		[%- FOREACH n IN range %]
 		<th>[% n %]</th>
 		[%- END %]
@@ -24,11 +24,7 @@
 	<tr>
 		<td>[% vote.item.title %]</td>
 		[%- FOREACH n IN range %]
-		<th>
-			[%- IF n == vote.value %]
-			&#x2717;
-			[%- END %]
-		</th>
+		<th>[% '&#x2717;' IF n == vote.value %]</th>
 		[%- END %]
 	</tr>
 	[%- END %]

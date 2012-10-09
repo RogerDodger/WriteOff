@@ -4,8 +4,6 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-use constant INTERIM => WriteOff->config->{interim};
-
 =head1 NAME
 
 WriteOff::Controller::Event - Catalyst Controller
@@ -82,25 +80,30 @@ sub do_add :Private {
 	
 	my $p  = $c->req->params; 
 	my $dt = $c->form->valid('start');
-		
+	
+	my $leeway = $c->model('DB::Event')->result_class->leeway;
+	my $interim = $c->config->{interim};
+	
 	my %row;
 	$row{start}         = $dt->clone;
-	$row{prompt_voting} = $dt->add( minutes => INTERIM )->clone;
+	$row{prompt_voting} = $dt->add( minutes => $interim )->clone;
+	
+	$dt->add( minutes => $interim );
 	
 	if( $p->{has_art} ) {
-		$row{art}     = $dt->add( minutes => INTERIM )->clone;
+		$row{art}     = $dt->clone;
 		$row{art_end} = $dt->add( hours => $p->{art_dur} )->clone;
 	} 
 	
-	$row{fic}     = $dt->add( minutes => INTERIM )->clone;
+	$row{fic}     = $dt->clone;
 	$row{fic_end} = $dt->add( hours => $p->{fic_dur} )->clone;
 	
 	if( $p->{has_prelim} ) {
-		$row{prelim} = $dt->add( minutes => INTERIM )->clone;
+		$row{prelim} = $dt->clone->add( minutes => $leeway );
 		$row{public} = $dt->add( days => $p->{prelim_dur} )->clone;
 	}
 	else {
-		$row{public} = $dt->add( minutes => INTERIM )->clone;
+		$row{public} = $dt->clone->add( minutes => $leeway );
 	}
 	
 	if( $p->{has_judges} ) {

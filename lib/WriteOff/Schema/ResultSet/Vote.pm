@@ -22,7 +22,7 @@ sub average {
 
 	return -(1 << 31) if $self->count == 0;
 	
-	return $self->get_column('value')->sum / $self->count;
+	return $self->get_column('value')->func('avg');
 }
 
 =head2 stdev
@@ -47,21 +47,21 @@ sub stdev {
 }
 
 sub prelim {
-	return shift->search(
+	return shift->search_rs(
 		{ 'record.round' => 'prelim' }, 
 		{ join => 'record' }
 	);	
 }
 
 sub public {	
-	return shift->search(
+	return shift->search_rs(
 		{ 'record.round' => 'public' }, 
 		{ join => 'record' }
 	);
 }
 
 sub private {
-	return shift->search(
+	return shift->search_rs(
 		{ 'record.round' => 'private' }, 
 		{ join => 'record' }
 	);	

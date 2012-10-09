@@ -3,15 +3,15 @@
 <h2>Results</h2>
 
 [%- IF event.is_ended || c.check_user_roles('admin') %]
-	[%- awards = [ 'gold', 'silver', 'bronze' ] %]
 <table class="result-listing">
 
-	[%- storys = event.storys_rs.order_by_score %]
+	[%- s = c.model('DB::Scoreboard') %]
+	[%- storys = event.storys_rs.with_scores.with_stats %]
 	[% FOREACH story IN storys %]
 <tr>
-		[%- pos = story.pos_in(storys) %]	
-		[%- award = awards.$pos || pos == storys.max && 'spoon' || 'ribbon' %]
 	<td>
+		[%- pos = story.pos %]
+		[%- award = s.medal_for(pos) || (pos == storys.max ? 'spoon' : 'ribbon') %]
 		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
 			alt="[% c.config.awards.$award.alt %]" 
 			title="[% c.config.awards.$award.alt %]"/>
@@ -33,8 +33,8 @@
 <h3>Controversial Stories</h3>
 
 <table class="result-listing">
-	[%- FOREACH story IN event.storys_rs.order_by_stdev %]
-		[%- LAST IF loop.count == 6 -%]
+	[%- FOREACH story IN storys.sort_stdev %]
+		[%- LAST IF loop.index == 5 %]
 		[%- award = loop.first ? 'confetti' : 'ribbon' %] 
 <tr>
 	<td>

@@ -1,3 +1,12 @@
+v0.19
+=====
+- Removed delay between events
+  - Prelim rounds start with +leeway time so that stories submitted dring the leeway time don't miss out on the prelim distriution
+- Massiely optimised the result listing page
+  - Unfortunately, could not get a super-awesome all-encompassing query for all the data in one big sweep, but this is still good enough
+- Misc template fidgeting
+- Request logging logs the referer of requests without the same origin
+
 v0.18
 =====
 - Delete form prettied up

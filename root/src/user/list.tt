@@ -19,7 +19,8 @@
 		<th>Email</th>
 		<th>
 			[%- c.req.params.import({ order_by => 'prompt_skill' }) %]
-			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]">
+			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]"
+				title="The average score of this user's prompts">
 			Prompt Skill
 			</a>
 		</th>

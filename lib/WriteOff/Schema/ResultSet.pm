@@ -49,7 +49,7 @@ sub seed_order {
 sub order_by {
 	my $self = shift;
 	
-	return $self->search(undef, { order_by => shift });
+	return $self->search_rs(undef, { order_by => shift });
 }
 
 1;

@@ -13,22 +13,28 @@ WriteOff::Controller::Root - Root Controller for WriteOff
 
 =head1 METHODS
 
+=head2 begin
+
+Logs the request.
+
+Detaches to index if the request is POST with a differing origin.
+
 =cut
 
 sub begin :Private {
 	my ( $self, $c ) = @_;
-
-	$c->log->info( sprintf "Request: %s - %s (%s) - %s", 
+	
+	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
+	
+	$c->log->info( sprintf "Request: %s - %s (%s) - %s" . ( $so ? "" : " - %s" ), 
 		$c->req->method, 
 		$c->req->address,
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
+		$c->req->referer || 'no referer',
 	);
 	
-	if( $c->req->method eq 'POST' ) {
-		my $root = $c->uri_for('/');
-		$c->detach('index') if ($c->req->referer || '') !~ /^$root/;
-	}
+	$c->detach('index') if !$so && $c->req->method eq 'POST';
 }
 
 sub auto :Private {
@@ -39,26 +45,38 @@ sub auto :Private {
 
 =head2 index
 
-The root page (/)
+Lists all active events.
 
 =cut
 
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{events} = $c->model('DB::Event')->active_events;
+	$c->stash->{events} = $c->model('DB::Event')->active;
 	
-    $c->stash->{template} = 'index.tt';
+	$c->stash->{template} = 'index.tt';
 }
+
+=head2 archive
+
+Lists all old events.
+
+=cut
 
 sub archive :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{events} = $c->model('DB::Event')->old_events;
+	$c->stash->{events} = $c->model('DB::Event')->old;
 	
 	$c->stash->{title} = 'Event Archive';
-    $c->stash->{template} = 'index.tt';
+	$c->stash->{template} = 'index.tt';
 }
+
+=head2 faq
+
+Frequently Asked Questions page
+
+=cut
 
 sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
@@ -73,9 +91,9 @@ Standard 404 error page
 =cut
 
 sub default :Path {
-    my ( $self, $c ) = @_;
-    $c->stash->{template} = '404.tt';
-    $c->res->status(404);
+	my ( $self, $c ) = @_;
+	$c->stash->{template} = '404.tt';
+	$c->res->status(404);
 }
 
 =head2 forbidden
@@ -108,7 +126,7 @@ sub error :Private {
 
 =head2 tos
 
-The Terms of Service page
+Terms of Service page
 
 =cut
 

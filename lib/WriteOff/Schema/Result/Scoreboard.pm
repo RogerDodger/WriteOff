@@ -115,6 +115,8 @@ __PACKAGE__->add_columns(
 	updated => { data_type => "timestamp", set_on_create => 1, set_on_update => 1 },
 );
 
+__PACKAGE__->mk_group_accessors( column => 'pos' );
+
 my %award_rank = (
 	gold     => 1,
 	silver   => 2,
@@ -127,24 +129,17 @@ my %award_rank = (
 sub add_awards {
 	my $self = shift;
 	
-	@_ = @{$_[0]} if ref $_[0] eq 'ARRAY';
+	my @awards = map { ref $_ eq 'ARRAY' ? @$_ : $_ } @_, $self->awards;
 	
 	$self->update({ 
 		awards => [ 
 			sort { $award_rank{$a} <=> $award_rank{$b} }
 			grep { defined $award_rank{$_} } 
-			@_, @{ $self->awards // [] }
+			@awards
 		]
 	});
 	
 	return $self;
-}
-
-sub pos {
-	my $self = shift;
-	my $rs = $self->result_source->resultset;
-	
-	return 1 + $rs->search({ score => { '>' => $self->score } })->count;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

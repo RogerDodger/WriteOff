@@ -359,3 +359,6 @@ p.example textarea {
 .noafter {
 	margin-bottom: 0px;
 }
+.ui-widget p {
+	margin: 1em 0;
+}

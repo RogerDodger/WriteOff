@@ -8,7 +8,7 @@
 
 [%- IF story.event.fic_gallery_opened %]
 
-<hr style="margin-top: 1.6em"/>
+<hr style="margin: 1.6em 0"/>
 
 <p class="center">
 	[%- storys = story.event.storys_rs.seed_order.all %]

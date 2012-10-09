@@ -31,8 +31,12 @@ $Template::Stash::LIST_OPS->{join_serial} = sub {
 	return join ", ", @list;
 };
 
+$Template::Stash::LIST_OPS->{sort_stdev} = sub {
+	return [ sort { $b->stdev <=> $a->stdev } @{ $_[0] } ]
+};
+
 $Template::Stash::LIST_OPS->{map_username} = sub {
-	return [ map { $_->username } @{$_[0]} ];
+	return [ map { $_->username } @{ $_[0] } ];
 };
 
 my $RFC2822 = '%a, %d %b %Y %T %Z';

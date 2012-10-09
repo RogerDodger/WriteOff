@@ -307,8 +307,7 @@ __PACKAGE__->mk_group_accessors('column' => 'prompt_skill');
 sub is_admin {
 	my $self = shift;
 	
-	return 1 if grep { $_->role eq 'admin' } $self->roles;
-	0;
+	return $self->roles->search({ role => 'admin' })->count;
 }
 
 sub new_token {

@@ -1,20 +1,20 @@
 [% title = 'Scoreboard' %]
 <h1 class="center">[% name %] Hall of Fame</h1>
 
-<table class="slim t-center">
+<table class="slim t-center center">
 	<tr>
 		<th>#</th>
 		<th>Competitor</th>
 		<th>Score</th>
 		<th>Awards</th>
 	</tr>
-[%- IF (scoreboard = c.model('DB::Scoreboard').ordered) %]
-	[%- FOREACH item IN scoreboard %]
+[%- IF scoreboard.count %]
+	[%- FOREACH item IN scoreboard.all %]
 	<tr>
-		<td class="center">[% item.pos %]</td>
+		<td>[% item.pos %]</td>
 		<td>[% item.competitor | html %]</td>
-		<td class="center">[% item.score %]</td>
-		<td class="center">
+		<td>[% item.score %]</td>
+		<td>
 		[%- FOREACH award IN item.awards %]
 			<img src="[% c.config.awards.$award.path %]" 
 				alt="[% c.config.awards.$award.alt %]"
@@ -28,8 +28,8 @@
 		<td class="center">NaN</td>
 		<td>Anonymous</td>
 		<td class="center">&infin;</td>
-		<td class="center">
-		[%- FOREACH award IN [ 'gold', 'gold', 'gold', 'gold', 'gold' ] %]
+		<td class="center"> 
+		[%- g = 'gold'; FOREACH award IN g.repeat(5).chunk(4) %]
 			<img src="[% c.config.awards.$award.path %]" 
 				alt="[% c.config.awards.$award.alt %]"/>
 		[%- END %]

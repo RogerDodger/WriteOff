@@ -5,45 +5,65 @@ use base 'WriteOff::Schema::ResultSet';
 
 my @medals = qw/gold silver bronze/;
 
+sub medal_for {
+	my($self, $pos) = @_;
+	
+	return $medals[$pos] if $pos <= $#medals;
+	
+	return wantarray ? () : undef;
+}
+
+sub with_pos {
+	my $self = shift;
+	
+	my $pos = $self->search(
+		{ 'other.score' => { '>' => { -ident => 'me.score' } } },
+		{
+			select => [{ '1 + count' => 'other.score' }],
+			alias => 'other',
+		}
+	);
+	
+	return $self->search_rs(undef, {
+		'+select' => [ { '' => $pos->as_query, -as => 'pos' } ],
+		'+as'     => [ 'pos' ],
+	});
+}
+
 sub tally {
 	my( $self, $rs ) = @_;
 	
-	my @items = $rs->order_by_score;
+	my @items = $rs->with_scores->with_stats;
 	my $n = $#items;
-	my %tally; 
+	my %tally;
 	
-	my $most_controversial = ($rs->order_by_stdev)[0];
+	my $max_stdev = $items[0];
 	
-	for my $item ( @items ) {
-		my $store = $self->find_or_create({ competitor => $item->artist });
+	for my $this ( @items ) {
+		my $store = $self->find_or_create({ competitor => $this->artist });
 		my $artist = $store->competitor;
 		
-		my $lower = $item->pos_in( \@items );
-		my $upper = $item->pos_in( \@items, 1);
+		$tally{$artist} //= { 
+			score => $store->score, 
+			awards => [],
+		};
 		
-		$tally{$artist} //= { score => $store->score };
-		$tally{$artist}{score} += $n - ($upper + $lower);
+		$tally{$artist}{score} += $n - ($this->pos + $this->pos_low);
 		
-		if( $lower <= $#medals ) {
-			$tally{$artist}{awards} //= [];
-			push $tally{$artist}{awards}, $medals[$lower];
-		}
+		push $tally{$artist}{awards}, $self->medal_for( $this->pos );	
+		push $tally{$artist}{awards}, 'spoon' if $this->pos == $n;
 		
-		if( $lower == $n ) {
-			$tally{$artist}{awards} //= [];			
-			push $tally{$artist}{awards}, 'spoon';
-		}
-		
-		if( $most_controversial->id == $item->id ) {
-			$tally{$artist}{awards} //= [];			
-			push $tally{$artist}{awards}, 'confetti';
-		}
+		$max_stdev = $this if $this->stdev > $max_stdev->stdev;
 	}
 	
 	while( my($artist, $new) = each %tally ) {
 		my $store = $self->find($artist);
-		$store->update({ score  => $new->{score} > 0 ? $new->{score} : 0 });
-		$store->add_awards( $new->{awards} // ['ribbon'] );
+		
+		push $new->{awards}, 'confetti' if lc $artist eq lc $max_stdev->artist;
+		push $new->{awards}, 'ribbon'   if $new->{awards} ~~ [];
+		
+		$store->update({ score => $new->{score} > 0 ? $new->{score} : 0 });
+		$store->add_awards( $new->{awards} );
 	}
 }
 

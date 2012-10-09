@@ -137,12 +137,12 @@ sub do_register :Private {
 		my $role = $c->model('DB::Role')->find({ role => 'user' });
 		$c->stash->{user}->add_to_roles( $role );
 		
-		$c->forward( $self->action_for('send_verification_email') );
-		
 		$c->log->info( sprintf 'User created: %s (%s)',
 			$c->stash->{user}->username,
 			$c->stash->{user}->email,
 		);
+		
+		$c->forward( $self->action_for('send_verification_email') );
 	}
 }
 

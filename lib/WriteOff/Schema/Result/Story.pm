@@ -262,6 +262,44 @@ __PACKAGE__->add_columns(
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
+__PACKAGE__->mk_group_accessors( 
+	column => 'prelim_score',
+	column => 'public_score', 
+	column => 'private_score',
+);
+
+sub pos {
+	return shift->{__pos} // 0;
+}
+
+sub pos_low {
+	return shift->{__pos_low} // 0;
+}
+
+sub artist {
+	return shift->author;
+}
+
+sub stdev {
+	my $self = shift;
+	
+	return $self->{__stdev};
+}
+
+use overload "==" => '_compare_scores',
+	fallback => 1;
+
+sub _compare_scores {
+	my( $left, $right ) = @_;
+	
+	#Scores could be uninit, so perl will complain
+	no warnings;
+	
+	return 0 unless $left->private_score == $right->private_score;
+	return 0 unless $left->public_score == $right->public_score;
+	1;
+}
+
 sub is_manipulable_by {
 	my $self = shift;
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
@@ -285,60 +323,6 @@ sub id_uri {
 	}
 	
 	return $self->id . '-' . $desc;
-}
-
-sub artist {
-	return shift->author;
-}
-
-# Persist these results to make sorting a lot quicker
-sub prelim_score {
-	my $self = shift;
-	
-	return $self->{__prelim_score} //=
-		$self->votes->prelim->search({ value => { '!=' => undef } })->average;
-}
-
-sub public_score {
-	my $self = shift;
-	
-	return $self->{__public_score} //= 
-		$self->votes->public->search({ value => { '!=' => undef } })->average;
-}
-
-sub private_score {
-	my $self = shift;
-	
-	return $self->{__private_score} //=
-		$self->votes->private->search({ value => { '!=' => undef } })->average;
-}
-
-sub stdev {
-	my $self = shift;
-	
-	return $self->{__stdev} //=
-		$self->votes->public->search({ value => { '!=' => undef } })->stdev;
-}
-
-sub pos_in {
-	my($self, $storys, $switch) = @_;
-	
-	my($i, $n) = (0, $#$storys);
-	
-	$i++ until $self->id == $storys->[$i]->id;
-	
-	if( !$switch ) {
-		$i-- while $i > 0 && 
-			$self->public_score  == $storys->[$i-1]->public_score &&
-			$self->private_score == $storys->[$i-1]->private_score
-	}
-	else {
-		$i++ while $i < $n && 
-			$self->public_score  == $storys->[$i+1]->public_score &&
-			$self->private_score == $storys->[$i+1]->private_score;
-	}
-	
-	return $i;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

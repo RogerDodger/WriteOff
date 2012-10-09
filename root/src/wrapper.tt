@@ -19,7 +19,7 @@
 <head>
 <meta charset="utf-8" />
 
-<title>[% name.list.merge( title.list ).join(' - ') | html %]</title>
+<title>[% title.list.join(' - ') || name | html %]</title>
 
 <!--[if lt IE 9]>
 	<script src="[% c.uri_for('/static/js/html5shiv.js') %]"></script>
