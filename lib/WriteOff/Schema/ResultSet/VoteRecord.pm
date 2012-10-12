@@ -31,6 +31,12 @@ sub private {
 	return shift->round('private');
 }
 
+sub fic {
+	return shift->search_rs({ type => 'fic' });
+}
 
+sub art {
+	return shift->search_rs({ type => 'art' });
+}
 
 1;

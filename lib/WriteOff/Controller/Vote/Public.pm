@@ -85,6 +85,7 @@ sub do_public :Private {
 			user_id => $c->user ? $c->user->get('id') : undef,
 			ip      => $c->req->address,
 			round   => 'public',
+			type    => 'fic',
 		});
 		
 		for my $id ( @votes ) {
