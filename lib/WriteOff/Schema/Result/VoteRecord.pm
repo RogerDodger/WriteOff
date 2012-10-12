@@ -77,6 +77,11 @@ __PACKAGE__->table("vote_records");
   data_type: 'text'
   is_nullable: 0
 
+=head2 type
+
+  data_type: 'text'
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -99,6 +104,8 @@ __PACKAGE__->add_columns(
   "ip",
   { data_type => "text", is_nullable => 1 },
   "round",
+  { data_type => "text", is_nullable => 0 },
+  "type",
   { data_type => "text", is_nullable => 0 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
@@ -171,20 +178,33 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7HSX3/90FpLQCAhVw2DFqw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-13 08:49:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KqJkiITugLAVTb17hhC7sg
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
-sub type {
+sub is_filled {
 	my $self = shift;
 	
-	return 'fic' if $self->votes->search({ story_id => { '!=' => undef } })->count;
-	return 'art' if $self->votes->search({ image_id => { '!=' => undef } })->count;
+	return 1 if $self->votes->get_column('value')->next;
+	0;
+}
+
+sub is_empty {
+	my $self = shift;
 	
-	return undef;
+	return 1 if $self->votes->count == 0;
+	0;
+}
+
+sub is_unfilled {
+	my $self;
+	
+	return 0 if $self->is_filled;
+	return 0 if $self->is_empty;
+	1;
 }
 
 sub stdev {

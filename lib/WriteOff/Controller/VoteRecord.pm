@@ -1,6 +1,7 @@
 package WriteOff::Controller::VoteRecord;
 use Moose;
 use namespace::autoclean;
+no warnings "uninitialized";
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -23,22 +24,29 @@ Grabs a vote record.
 sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $id ) = @_;
 	
+	$c->detach('/forbidden', [ "Guests cannot manipulate voterecords." ])
+		unless $c->user;
+	
 	$c->stash->{record} = $c->model('DB::VoteRecord')->find($id) or 
 		$c->detach('/default');
 	
-	$c->stash->{record}->event->is_organised_by( $c->user ) or
-		$c->detach('/forbidden', ["You are not an organiser for this event."]);
-
+	$c->stash->{event} = $c->stash->{record}->event;
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 
+	$c->forward('/default') unless $c->stash->{record}->is_filled;
+	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
+	
 	$c->stash->{template} = 'voterecord/view.tt';
 }
 
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
+	
+	$c->forward('/default') unless $c->stash->{record}->is_filled;
+	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
 	
 	$c->stash->{key} = { 
 		name  => 'standard deviation (to 2 decimal places)',

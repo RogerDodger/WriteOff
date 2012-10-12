@@ -1,6 +1,7 @@
 package WriteOff::Controller::Root;
 use Moose;
 use namespace::autoclean;
+no warnings "uninitialized";
 
 BEGIN { extends 'Catalyst::Controller' }
 with 'Catalyst::TraitFor::Controller::reCAPTCHA';

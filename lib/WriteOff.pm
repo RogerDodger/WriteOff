@@ -31,7 +31,8 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.19_01';
+
+our $VERSION = '0.19_02';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -242,7 +243,7 @@ L<WriteOff::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 
-Cameron Thornton E<lt>cthor@cpan.orgE<gt>
+Cameron Thornton E<lt>cthor@cpan.orgE<gt> (c) 2012
 
 =head1 LICENSE
 

@@ -31,10 +31,6 @@ sub private {
 	return shift->round('private');
 }
 
-sub story {
-	my $self = shift;
-	
-	return $self;
-}
+
 
 1;

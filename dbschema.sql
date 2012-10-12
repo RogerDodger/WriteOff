@@ -126,7 +126,7 @@ CREATE TABLE storys (
 	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	ip         TEXT,
-	title      TEXT UNIQUE COLLATE NOCASE NOT NULL,
+	title      TEXT COLLATE NOCASE NOT NULL,
 	author     TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website    TEXT,
 	contents   TEXT NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE images (
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	ip        TEXT,
-	title     TEXT UNIQUE COLLATE NOCASE NOT NULL,
+	title     TEXT COLLATE NOCASE NOT NULL,
 	artist    TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website   TEXT,
 	contents  BLOB NOT NULL,
@@ -165,6 +165,7 @@ CREATE TABLE vote_records (
 	user_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
 	ip        TEXT,
 	"round"   TEXT NOT NULL,
+	"type"    TEXT NOT NULL,
 	created   TIMESTAMP,
 	updated   TIMESTAMP
 );

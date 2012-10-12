@@ -162,20 +162,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<title_unique>
-
-=over 4
-
-=item * L</title>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("title_unique", ["title"]);
-
 =head1 RELATIONS
 
 =head2 event
@@ -254,8 +240,8 @@ Composing rels: L</image_stories> -> image
 __PACKAGE__->many_to_many("images", "image_stories", "image");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 11:33:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a1TFfpSpKNWXjdugxahEmg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-13 08:49:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Dpw6ZxtcZJKKnKNJ9AtrHw
 
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
