@@ -68,7 +68,7 @@ sub do_public :Private {
 	$c->req->params->{ip}      = $c->req->address;
 	$c->req->params->{captcha} = $c->forward('/captcha_check');
 	
-	my $rs = $c->stash->{event}->vote_records->public->story;
+	my $rs = $c->stash->{event}->vote_records->public->fic;
 	
 	$c->form(
 		ip       => [ [ 'DBIC_UNIQUE', $rs, 'ip' ] ],
