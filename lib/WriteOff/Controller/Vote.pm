@@ -30,8 +30,8 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	push $c->stash->{title}, 'Vote', 'Prelim';
 	$c->stash->{template} = 'vote/prelim.tt';
 	
-	$c->stash->{error_msg} = $c->forward('prelim_request') 
-		if $c->user && $c->req->method eq 'POST';
+	$c->stash->{error_msg} = $c->forward('prelim_request') if $c->user && 
+		$c->req->method eq 'POST' && $c->stash->{event}->prelim_votes_allowed;
 }
 
 sub prelim_request :Private {
