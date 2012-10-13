@@ -19,11 +19,29 @@ Catalyst Controller.
 sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
     my ( $self, $c ) = @_;
 	
-	$c->detach('/error', [ "There is no prelim for this event." ]) 
+	$c->detach('/error', [ "There is no preliminary voting round for this event." ]) 
 		unless $c->stash->{event}->prelim;
+	
+	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
+		round   => 'prelim',
+		user_id => $c->user->get('id'),
+	}) if $c->user;
 	
 	push $c->stash->{title}, 'Vote', 'Prelim';
 	$c->stash->{template} = 'vote/prelim.tt';
+	
+	$c->stash->{error_msg} = $c->forward('prelim_request') 
+		if $c->user && $c->req->method eq 'POST';
+}
+
+sub prelim_request :Private {
+	my ( $self, $c ) = @_;
+	
+	return "You have empty records to fill in" if $c->stash->{records}->count;
+	
+	return $c->stash->{event}->new_prelim_record_for( $c->user, $c->config->{prelim_distr_size} );
+	
+	0;
 }
 
 sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
