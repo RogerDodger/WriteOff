@@ -93,7 +93,7 @@ sub do_submit :Private {
 		$magick->Read     ( $img->tempname );
 		$row{contents} =  ( $magick->ImageToBlob )[0];
 		
-		$magick->Resize( geometry => '250x250' );
+		$magick->Resize( geometry => '225x225' );
 		$row{thumb} =  ( $magick->ImageToBlob  )[0];
 		
 		$c->model('DB::Image')->create(\%row);
