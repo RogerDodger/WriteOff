@@ -353,16 +353,27 @@ sub is_organised_by {
 }
 
 sub public_story_candidates {
-	my( $self, $user ) = @_;
+	my $self = shift;
 	
-	my $rs = $self->storys->seed_order;
+	return $self->storys->seed_order->all if !$self->prelim;
+
+	# Doing the prelim_score search in the resultset doesn't work. 
+	# ...I don't know why, but I guess this'll do.
+	return grep { 
+		!defined $_->prelim_score || $_->prelim_score >= 0 and
+		$_->author_story_count <= $_->author_vote_count
+	} $self->storys->with_prelim_stats->seed_order->all;
+}
+
+sub public_story_noncandidates {
+	my $self = shift;
 	
-	if( $user ) {
-		$user = $self->result_source->schema->resultset('User')->resolve($user);
-		$rs = $rs->search({ user_id => { '!=' => $user ? $user->id : undef } });
-	}
+	return () if !$self->prelim;
 	
-	return $rs;
+	return grep { 
+		$_->prelim_score < 0 ||  
+		$_->author_story_count > $_->author_vote_count
+	} $self->storys->with_prelim_stats->seed_order->all;
 }
 
 sub prompt_subs_allowed {
@@ -452,6 +463,210 @@ sub check_datetimes_ascend {
 	
 	return 1 if join('', @_) eq join('', sort @_);
 	0;
+}
+
+sub new_prelim_record_for {
+	my $self   = shift;
+	my $schema = $self->result_source->schema;
+	my $user   = $schema->resultset('User')->resolve(shift) or return 0;
+	my $size   = shift // 6;
+	
+	my $voted_storys = $schema->resultset('Vote')->search({
+		"record.user_id"  => $user->id,
+		"record.event_id" => $self->id,
+		"record.round"    => 'prelim',
+		"record.type"     => 'fic',
+	}, { join => 'record' })->get_column('me.story_id');	
+	
+	my $candidates = $self->storys->search({
+		id      => { -not_in => $voted_storys->as_query },
+		user_id => { '!=' => $user->id },
+	});
+	
+	return "You've already voted on all the stories" if !$candidates->count;
+	
+	my $record = $self->create_related('vote_records', {
+		user_id => $user->id,
+		round   => 'prelim',
+		type    => 'fic',
+	});
+	
+	for( List::Util::shuffle $candidates->get_column('id')->all ) {
+		$record->create_related('votes', { story_id => $_ });
+		last if --$size == 0;
+	}
+	
+	0;
+}
+
+sub judge_distr {
+	my $self = shift;
+	my $SIZE = shift // 5;
+	
+	#This is already sorted by score
+	my @storys = $self->storys->with_scores->all;
+	
+	for my $judge ( $self->judges->all ) {
+		my $record = $self->create_related('vote_records', {
+			user_id => $judge->id,
+			round   => 'private',
+			type    => 'fic',
+		});
+		
+		my $size = $SIZE;
+		
+		for( my $i = 0; $i <= $#storys; $i++ ) {
+			$record->create_related('votes', { story_id => $storys[$i]->id });
+			last unless --$size > 0
+				|| $storys[$i]->public_score == $storys[$i-1]->public_score;
+		}
+	}
+}
+
+=head2 prelim_distr
+
+Distributes stories for preliminary voting.
+
+Criteria: users do not get their own stories, and the standard deviation of the
+judges' wordcounts is minimalised.
+
+=cut
+
+sub prelim_distr {
+	my $self = shift;
+	my $x_len = shift // 6;
+	my $y_len = $self->storys->count;
+	
+	# Order by user_id so that initial seeding is faster
+	my @storys = $self->storys->search(undef, { 
+		select => [ 'id', 'wordcount', 'user_id' ],
+		order_by => 'user_id',
+		result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+	})->all;
+	
+	my %author_count; $author_count{$_}++ for map { $_->{user_id} } @storys;
+	my $mode_count = List::Util::max values %author_count;
+	
+	# Reduce x_len if there aren't enough stories in the pool for such a size
+	$x_len = List::Util::min $x_len, $y_len - $mode_count;
+	
+	# No point doing prelim distr with size of 1 or fewer
+	return 0 if $x_len <= 1;
+	
+	# System state array. First item is the judge.
+	my @system = map { [ $_ ] } @storys;
+	
+	# Seed initial system.
+	for( my $col = 0; $col < $x_len; $col++ ) {		
+		for( my $i = 0; $i < $y_len; $i++ ) {
+			# Shift up by $mode_count so that judges are not given their 
+			# own stories, and by $col so that there are no dupes in any set
+			push $system[$i], $storys[ ($i + $mode_count + $col) % $y_len ];
+		}
+	}
+	
+	my $check_system_constraints = sub {
+		for my $row ( @system ) {
+			# Judges cannot have their own stories
+			return 0 if $row->[0]->{user_id} ~~ [ map { $_->{user_id} } @$row[1 .. $x_len] ];
+			
+			# No dupes
+			my %story_count; $story_count{$_}++ for map { $_->{id} } @$row;
+			return 0 unless List::Util::max( values %story_count ) == 1; 
+		}
+		1;
+	};
+	
+	my $system_work = sub {
+		my $work;
+		
+		for my $row ( @system ) {
+			my $wc_total = List::Util::sum map { $_->{wordcount} } @$row[1 .. $x_len];
+			$work += $wc_total * ( 1 + $wc_total ) / 2;
+		}
+		
+		return $work;
+	};
+	
+	#Only used for testing
+	my $system_stdev = sub {
+		my @wcs = map {
+			List::Util::sum map { $_->{wordcount} } @$_[1 .. $x_len]
+		} @system;
+		
+		my $mean = List::Util::sum( @wcs ) / $y_len;
+		
+		my $variance;
+		$variance += ($_ - $mean) ** 2 for @wcs;
+		
+		return sqrt $variance / $y_len;
+	};
+	
+	my $cell_swap = sub {
+		my( $c1, $c2 ) = @_;
+		
+		my $temp = $system[ $c1->{y} ][ $c1->{x} ];
+		
+		$system[ $c1->{y} ][ $c1->{x} ] = $system[ $c2->{y} ][ $c2->{x} ];
+
+		$system[ $c2->{y} ][ $c2->{x} ] = $temp;
+	};
+	
+	# Main algorithm. Take random cells and see if swapping them would decrease
+	# the total work in the system.
+	my $current_work = $system_work->();
+	for( my $i = 0; $i <= 1000; $i++ ) {
+		
+		# Define two random cells to be swapped, with x in range (1..$x_len) so
+		# that judges are never moved
+		my $c1 = {
+			x => int rand($x_len) + 1,
+			y => int rand($y_len),
+		};
+		my $c2 = {
+			x => int rand($x_len) + 1,
+			y => int rand($y_len),
+		};
+		
+		# No point swapping cells between the same judge
+		redo if $c1->{y} == $c2->{y};
+		
+		my $item1 = $system[ $c1->{y} ][ $c1->{x} ];
+		my $item2 = $system[ $c2->{y} ][ $c2->{x} ];
+		
+		# Don't give a judge their own story
+		redo if $system[ $c1->{y} ][0]->{user_id} == $item2->{user_id};
+		redo if $system[ $c2->{y} ][0]->{user_id} == $item1->{user_id};
+		
+		# Don't put an item in a set if it's already there
+		redo if $item1->{id} ~~ [ map { $_->{id} } @{ $system[ $c2->{y} ] } ];
+		redo if $item2->{id} ~~ [ map { $_->{id} } @{ $system[ $c1->{y} ] } ];
+	
+		$cell_swap->( $c1, $c2 );
+		my $new_work = $system_work->();
+		
+		if( $new_work < $current_work ) {
+			$i = 0;
+			$current_work = $new_work;
+		}
+		else {
+			$cell_swap->( $c1, $c2 );
+		}
+	}
+	
+	$self->result_source->schema->resultset('VoteRecord')->populate([ map {
+		{
+			event_id => $self->id,
+			user_id  => $_->[0]->{user_id},
+			round    => 'prelim',
+			type     => 'fic',
+			votes    => [ map {
+				{ story_id => $_->{id} }
+			} @$_[ 1..$x_len ] ],
+		}
+	} @system ]);
+	
+	1;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

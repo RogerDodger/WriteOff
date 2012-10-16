@@ -11,7 +11,7 @@ sub active {
 				$self->format_datetime( $self->now_dt->subtract( days => 1 ) ) 
 			} 
 		},
-		{ order_by => { -asc => 'start' } },
+		{ order_by => { -asc => 'end' } },
 	);
 }
 
@@ -23,7 +23,7 @@ sub old {
 				$self->format_datetime( $self->now_dt->subtract( days => 1 ) ) 
 			} 
 		},
-		{ order_by => { -desc => 'start' } },
+		{ order_by => { -desc => 'end' } },
 	);
 }
 

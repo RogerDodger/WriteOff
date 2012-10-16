@@ -1,7 +1,7 @@
 package WriteOff::Controller::User;
 use Moose;
 use namespace::autoclean;
-use JSON::XS;
+no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -296,6 +296,7 @@ sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
 
 my %order_by = (
 	prompt_skill => { -desc => 'prompt_skill' },
+	hugbox_score => { -desc => 'hugbox_score' },
 	username     => { -asc => 'username' },
 	registered   => { -asc => 'created' },
 );
@@ -306,16 +307,14 @@ sub list :Local :Args(0) {
 	return $c->res->redirect( $c->uri_for( $c->action ) ) 
 		if defined $c->req->param('term') && $c->req->param('term') eq '';
 
-	my $term = $c->req->param('term') || '';
 	$c->stash->{users} = $c->model('DB::User')->search({
-		'me.username' => { like => "%" . $term . "%" },
+		'me.username' => { like => "%" . $c->req->param('term') . "%" },
 		'me.verified' => 1,
 	})
-	->with_prompt_skill
-	->order_by( $order_by{ $c->req->param('order_by') || '' } );
+	->with_stats
+	->order_by( $order_by{ $c->req->param('order_by') } );
 
-	my $view = $c->req->param('view') || '';
-	if( $view eq 'json' ) {
+	if( $c->req->param('view') eq 'json' ) {
 		$c->stash->{json} = [ 
 			$c->stash->{users}->get_column('username')->all
 		];
@@ -323,6 +322,7 @@ sub list :Local :Args(0) {
 		$c->detach( $c->view('JSON') );
 	}
 	
+	push $c->stash->{title}, 'List';
 	$c->stash->{template} = 'user/list.tt';
 }
 

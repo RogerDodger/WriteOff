@@ -31,7 +31,7 @@
 </table>
 
 <p class="center">
-[%- records = record.event.vote_records_rs.filled %]
+[%- records = record.event.vote_records_rs.filled.all %]
 [%- FOREACH r IN records %] 
 	[%- NEXT IF record.id != r.id %]
 	

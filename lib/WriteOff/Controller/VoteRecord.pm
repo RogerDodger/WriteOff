@@ -36,7 +36,7 @@ sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->forward('/default') unless $c->stash->{record}->is_filled;
+	$c->detach('/default') unless $c->stash->{record}->is_filled;
 	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
 	
 	$c->stash->{template} = 'voterecord/view.tt';
@@ -45,7 +45,7 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/default') unless $c->stash->{record}->is_filled;
+	$c->detach('/default') unless $c->stash->{record}->is_filled;
 	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
 	
 	$c->stash->{key} = { 
@@ -73,6 +73,46 @@ sub do_delete :Private {
 	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
+sub fill :PathPart('fill') :Chained('index') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->detach('/forbidden', [ "You do not own this record." ])
+		unless $c->stash->{record}->user_id == $c->user->id;
+	$c->detach('/error', [ "This record is already filled." ]) 
+		unless $c->stash->{record}->is_unfilled;
+		
+	$c->detach('/error', [ "It is too late to fill this record." ])
+		if $c->stash->{record}->round eq 'prelim' 
+			&& !$c->stash->{event}->prelim_votes_allowed
+		|| $c->stash->{record}->round eq 'private' 
+			&& !$c->stash->{event}->private_votes_allowed;
+	
+	$c->stash->{template} = 'voterecord/fill.tt';
+	
+	$c->forward('do_fill') if $c->req->method eq 'POST' 
+		&& $c->req->param('sessionid') eq $c->sessionid;
+}
+
+sub do_fill :Private {
+	my ( $self, $c ) = @_;
+	
+	my @params = split ";", $c->req->param('data');
+	my $vote_ids = $c->stash->{record}->votes->get_column('id');
+	
+	return 0 unless [ $vote_ids->all ] ~~ [ sort { $a <=> $b } @params ];
+	
+	for( my $p = 0; $p <= $#params; $p++ ) {
+		$c->model('DB::Vote')->find( $params[$p] )->update({
+			value => $#params - 2 * $p,
+		});
+	}
+	
+	$c->stash->{record}->update({ ip => $c->req->address });
+	
+	$c->flash->{status_msg} = 'Vote successful';
+	$c->res->redirect( $c->uri_for( $c->controller('Vote')->action_for
+			( $c->stash->{record}->round ), [ $c->stash->{event}->id ]) );
+}
 
 =head1 AUTHOR
 

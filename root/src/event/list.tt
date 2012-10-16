@@ -3,7 +3,9 @@
 <div class="event-listing">
 	[%- WHILE (event = events.next) %]
 	<h3>
-		<a href="#">[% event.prompt | html %] – [% format_dt(event.start, fmt) %]</a>
+		<a href="#[% event.prompt.remove('[^\w\d\-\s]').replace('[\s\-]+','-') %]">
+			[% event.prompt | html %] – [% format_dt(event.start, fmt) %]
+		</a>
 	</h3>
 	<div>
 		<table>

@@ -2,16 +2,15 @@
 
 <h2>Results</h2>
 
-[%- IF event.is_ended || c.check_user_roles('admin') %]
+[%- IF event.is_ended %]
 <table class="result-listing">
 
-	[%- s = c.model('DB::Scoreboard') %]
 	[%- storys = event.storys_rs.with_scores.with_stats %]
 	[% FOREACH story IN storys %]
 <tr>
 	<td>
 		[%- pos = story.pos %]
-		[%- award = s.medal_for(pos) || (pos == storys.max ? 'spoon' : 'ribbon') %]
+		[%- award = medal_for(pos) || (pos == storys.max ? 'spoon' : 'ribbon') %]
 		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
 			alt="[% c.config.awards.$award.alt %]" 
 			title="[% c.config.awards.$award.alt %]"/>
@@ -24,7 +23,7 @@
 		[%- ELSE %]
 		by [% story.author | html %]
 		[%- END %]
-		[% story.public_score | format('(%.2f)') IF story.public_score %]
+		[% story.public_score | format('(%.2f)') IF story.public_score != undef %]
 	</td>
 </tr>
 	[% END %]

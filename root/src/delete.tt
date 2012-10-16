@@ -6,7 +6,8 @@
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 	<input type="hidden" name="referer" value="[% c.req.referer | url %]" />
 	
-	<input type="text" size="30" oninput="if( this.value == '[% key.value %]' ) 
+	<input type="text" size="30" data-key="[% key.value | html %]"
+		oninput="if( this.value == $(this).attr('data-key') ) 
 			$('#delete').button('enable')" />
 	
 	<input type="submit" value="Delete" disabled="disabled" id="delete" />

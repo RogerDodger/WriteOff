@@ -7,7 +7,7 @@
 	<br />
 	Votes close: <strong>[% format_dt(event.public) %]</strong>.
 	<br />
-	Votes received: <strong>[% event.vote_records_rs.prelim.count %]</strong>.
+	Votes received: <strong>[% event.vote_records_rs.prelim.filled.count %]</strong>.
 	<br />
 [%- IF event.prelim_votes_allowed %]
 	Votes are <strong class="good">open</strong>.
@@ -15,3 +15,37 @@
 	Votes are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
+
+[%- IF event.prelim_votes_allowed && c.user %]
+<h3>Unfilled Vote Records</h3>
+	[%- IF records.count %]
+<ul>
+		[%- FOREACH record IN records.all %]
+	<li>
+		<a class="link" href="[% c.uri_for( c.controller('VoteRecord')	
+			.action_for('fill'), [ record.id ]) %]">Record #[% record.id %]</a>
+	</li>
+		[%- END %]
+</ul>
+	[%- ELSE %]
+<p>
+	There are no records for you to fill in.
+</p>
+<form method="post" action="[% c.uri_for( c.action, c.req.args) %]">
+	<p>
+		<input type="submit" value="Request a record" />
+	</p>
+</form>
+	[%- END %]
+[%- END %]
+
+[%- IF !c.user %]
+<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
+	<div class="ui-state-highlight ui-corner-all" style="padding: 0 .7em;"> 
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+			Guests cannot participate in prelim voting
+		</p>
+	</div>
+</div>
+[%- END %]

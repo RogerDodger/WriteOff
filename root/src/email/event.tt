@@ -2,7 +2,7 @@
 <ul>
 	<li>
 		<strong>Name:</strong>
-		[% event.prompt | html %]
+		[% event.prompt | html_entity %]
 	</li>
 	<li>
 		<strong>Organiser:</strong>

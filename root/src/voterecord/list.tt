@@ -32,12 +32,17 @@
 		<td>[% record.round.ucfirst %]</td>
 		<td>[% record.type.ucfirst %]</td>
 		<td>[% record.votes_rs.count %]</td>
+		[%- IF record.round == 'public' %]
 		<td title="[% record.stdev | format('%.5f') %]">
 			[% record.stdev | format('%.2f') %]
 		</td>
 		<td title="[% record.average | format('%.5f') %]">
 			[% record.average | format('%.2f') %]
 		</td>
+		[%- ELSE %]
+		<td></td>
+		<td></td>
+		[%- END %]
 		<td>[% format_dt( record.updated, '%d %b %H:%M' ) %]</td>
 		<td>
 			<a href="[% c.uri_for( c.controller('VoteRecord')

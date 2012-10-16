@@ -3,10 +3,10 @@ package WriteOff::Schema::ResultSet::User;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
-sub with_prompt_skill {
+sub with_stats {
 	my $self = shift;
 	
-	my $inner = $self->result_source->schema->resultset('Prompt')->search(
+	my $prompts = $self->result_source->schema->resultset('Prompt')->search(
 		{ 'prompts.user_id' => { '=' => { -ident => 'me.id' } } },
 		{
 			select => [{ avg => 'prompts.rating' }],
@@ -14,9 +14,24 @@ sub with_prompt_skill {
 		}
 	);
 	
+	my $public = $self->result_source->schema->resultset('Vote')->search(
+		{ 
+			'record.user_id' => { '=' => { -ident => 'me.id' } },
+			'record.round' => 'public',
+		},
+		{
+			join => 'record',
+			select => [{ avg => 'votes.value' }],
+			alias => 'votes',
+		}
+	);
+	
 	return $self->search_rs(undef, {
-		'+select' => [{ '' => $inner->as_query, -as => 'prompt_skill' }],
-		'+as' => [ 'prompt_skill' ],
+		'+select' => [
+			{ '' => $prompts->as_query, -as => 'prompt_skill' },
+			{ '' => $public->as_query, -as => 'hugbox_score' },
+		],
+		'+as' => [ 'prompt_skill', 'hugbox_score' ],
 	});
 }
 

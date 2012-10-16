@@ -12,13 +12,11 @@ __PACKAGE__->config(
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
-	expose_methods     => [ qw/format_dt md_render bb_render prompt_subs_left/ ],
+	expose_methods     => [ qw/
+		format_dt md_render bb_render prompt_subs_left medal_for
+	/ ],
 	render_die         => 1,
 );
-
-$Template::Stash::SCALAR_OPS->{minus} = sub { 
-	return $_[0] - $_[1];
-};
 
 $Template::Stash::LIST_OPS->{join_serial} = sub {
 	my @list = @{+shift};
@@ -119,6 +117,13 @@ sub prompt_subs_left {
 	
 	return $c->config->{prompts_per_user} -	$rs->count;
 		
+}
+
+
+sub medal_for {
+	my( $self, $c, $pos ) = @_;
+	
+	return $c->model('DB::Scoreboard')->medal_for( $pos );
 }
 
 1;

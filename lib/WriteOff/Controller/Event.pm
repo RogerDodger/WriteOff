@@ -364,7 +364,7 @@ sub prelim_distr :Private {
 	
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
-	#blah blah blah
+	$e->prelim_distr( $c->config->{prelim_distr_size} );
 }
 
 sub judge_distr :Private {
@@ -372,7 +372,7 @@ sub judge_distr :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 	
-	#blah blah blah
+	$e->judge_distr( $c->config->{judge_distr_size} );
 }
 
 sub tally_results :Private {

@@ -188,7 +188,7 @@ __PACKAGE__->add_columns(
 sub is_filled {
 	my $self = shift;
 	
-	return 1 if $self->votes->get_column('value')->next;
+	return 1 if defined $self->votes->get_column('value')->next;
 	0;
 }
 
@@ -200,7 +200,7 @@ sub is_empty {
 }
 
 sub is_unfilled {
-	my $self;
+	my $self = shift;
 	
 	return 0 if $self->is_filled;
 	return 0 if $self->is_empty;

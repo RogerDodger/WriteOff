@@ -24,6 +24,7 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	
 	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
 		round   => 'prelim',
+		type    => 'fic',
 		user_id => $c->user->get('id'),
 	}) if $c->user;
 	
@@ -49,6 +50,15 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	
 	$c->detach('/error', [ "There is no private judging for this event." ]) 
 		unless $c->stash->{event}->private;
+		
+	$c->stash->{judge} = 
+		$c->stash->{event}->judges->find( $c->user ? $c->user->id : undef );
+		
+	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
+		round    => 'private',
+		type     => 'fic',
+		user_id  => $c->stash->{judge}->id,
+	})->unfilled if $c->stash->{judge};
 	
 	push $c->stash->{title}, 'Vote', 'Private';
 	$c->stash->{template} = 'vote/private.tt';

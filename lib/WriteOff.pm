@@ -31,8 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-
-our $VERSION = '0.19_03';
+our $VERSION = '0.20_00';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -155,6 +154,8 @@ __PACKAGE__->config(
 	},
 	elo_base => 1500,
 	prompts_per_user => 5,
+	prelim_distr_size => 6,
+	judge_distr_size => 5,
 	interim => 60, #minutes
 	awards => {
 		gold => {
@@ -223,6 +224,10 @@ sub mailfrom {
 	$user //= 'noreply';
 	
 	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
+}
+
+sub app_version {	
+	return version->parse( $VERSION )->stringify;
 }
 
 =head1 NAME

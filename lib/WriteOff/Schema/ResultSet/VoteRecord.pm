@@ -4,11 +4,22 @@ use strict;
 use base 'WriteOff::Schema::ResultSet';
 
 sub filled {
-	my $self = shift;
-
-	return $self->search(
+	return shift->search_rs(
 		{ 'votes.value' => { '!=' => undef } },
 		{ 
+			join => 'votes',
+			group_by => 'me.id',
+		}
+	);
+}
+
+sub unfilled {
+	return shift->search_rs(
+		{ 
+			'votes.value' => undef, 
+			'votes.id' => { '!=' => undef } 
+		},
+		{
 			join => 'votes',
 			group_by => 'me.id',
 		}
@@ -31,12 +42,16 @@ sub private {
 	return shift->round('private');
 }
 
+sub type {
+	return shift->search_rs({ type => shift })
+}
+
 sub fic {
-	return shift->search_rs({ type => 'fic' });
+	return shift->type('fic');
 }
 
 sub art {
-	return shift->search_rs({ type => 'art' });
+	return shift->type('art');
 }
 
 1;

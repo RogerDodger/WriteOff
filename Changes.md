@@ -1,3 +1,22 @@
+v0.20
+=====
+
+### 16 Oct 2012
+
+- VoteRecord filling and other various logic
+- Prelim distribution
+  - Algorithm surprisingly simpler when using an array rather than a hash
+- Added public story candidate logic
+- Judge distribution 
+- Volunteer distribution
+- Generalised Vote::Public so that Vote::Public::art will be easily implementable
+- Added URL seek to event listing's accordion
+- Added version numbers to css/js files so that new versions will update despite user caches
+- Added app version to footer
+- Ensured scheduler does not execute schedules twice
+- +Hugbox score
+- Decided that timestamps on changelogs *might* be a good idea
+
 v0.19
 =====
 - Removed delay between events

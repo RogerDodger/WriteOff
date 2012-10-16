@@ -1,0 +1,34 @@
+<h2>Vote Record</h2>
+
+<noscript><p>
+	<strong class="bad">This page requires javascript be enabled.</strong>
+</p></noscript>
+
+<p>Click and drag the items to sort them into your preferred order.</p>
+
+<form method="post" action="[% c.uri_for( c.action, c.args ) %]">
+
+	<ul id="sortable">
+		[%- FOREACH vote IN record.votes %]
+		<li class="ui-state-default" 
+			data-name="[% vote.item.title | html %]" data-id="[% vote.id %]" >
+			<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+			<a href="[% c.uri_for( c.controller( vote.record.type.ucfirst )
+				.action_for('view'), [ vote.item.id_uri ]) %]" class="new-window">
+				[% vote.item.title %]
+			</a>
+		</li>
+		[%- END %]
+	</ul>
+	
+	<p>
+		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+		<input type="hidden" name="data" id="sortable-data" value=""/>
+		<input type="text" size="32" class="ui-state-default" id="sortable-confirm"
+			style="padding: 0.2em 0.7em"
+			placeholder="Name of highest rated item"/>
+		<input type="submit" id="sortable-submit" value="Cast Vote" 
+			disabled="disabled"/>
+	</p>
+	
+</form>

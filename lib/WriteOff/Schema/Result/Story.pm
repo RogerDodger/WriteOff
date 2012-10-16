@@ -250,6 +250,8 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->mk_group_accessors( 
 	column => 'prelim_score',
+	column => 'author_vote_count',
+	column => 'author_story_count',
 	column => 'public_score', 
 	column => 'private_score',
 );
@@ -278,8 +280,7 @@ use overload "==" => '_compare_scores',
 sub _compare_scores {
 	my( $left, $right ) = @_;
 	
-	#Scores could be uninit, so perl will complain
-	no warnings;
+	no warnings 'uninitialized';
 	
 	return 0 unless $left->private_score == $right->private_score;
 	return 0 unless $left->public_score == $right->public_score;

@@ -302,7 +302,10 @@ __PACKAGE__->add_columns(
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
-__PACKAGE__->mk_group_accessors('column' => 'prompt_skill');
+__PACKAGE__->mk_group_accessors(
+	column => 'prompt_skill',
+	column => 'hugbox_score',
+);
 
 sub is_admin {
 	my $self = shift;

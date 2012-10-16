@@ -30,11 +30,11 @@ sub check_schedule :Private {
 	
 	my $rs = $c->model('DB::Schedule')->active_schedules;
 	
-	while (my $row = $rs->next) {		
-		$c->forward($row->action, $row->args);
-		$row->delete;
-	}
-	
+	# Extract and delete schedules *before* executing them, lest long-running
+	# tasks execute twice.
+	my @schedules = $rs->all; $rs->delete;
+
+	$c->forward($_->action, $_->args) for @schedules;
 }
 
 sub cleanup :Private {
