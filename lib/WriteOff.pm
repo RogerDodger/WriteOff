@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.20_00';
+our $VERSION = '0.20_01';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -144,7 +144,7 @@ __PACKAGE__->config(
 			regex => qr{\A[a-zA-Z0-9_]+\z},
 		},
 		img => {
-			size  => 4 * 1024 * 1024,
+			size  => 2 * 1024 * 1024,
 			types => [ qw:image/jpeg image/png image/gif: ],
 		},
 	},
