@@ -59,18 +59,22 @@ sub form :Private {
 	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
 	
 	# When editing, must allow for the title to be itself
-	my $rs = $c->model('DB::Story')->search({ title => { '!=' => 
-		$c->stash->{story} ? $c->stash->{story}->title : undef
-	} });
+	my $story_rs = $c->stash->{event}->storys->search({
+		title => { 
+			'!=' => $c->stash->{story} ? $c->stash->{story}->title : undef
+		}	
+	});
 	
 	if( $c->stash->{event}->art ) {
 		my @ids = $c->stash->{event}->images->get_column('id')->all;
+		my @params = $c->req->param('image_id') or return 0;
 		
 		# Make sure each image_id is unique and in the set of valid image_ids
-		my @params = sort $c->req->param('image_id') or return 0;
-		for ( my $i = 0; $i <= $#params; $i++ ) {
-			return 0 unless grep { $params[$i] eq $_ } @ids;
-			return 0 unless $params[$i] cmp $params[$i-1];
+		my %uniq;
+		for( @params ) {
+			return 0 unless $_ ~~ \@ids;
+			return 0 if exists $uniq{$_};
+			$uniq{$_} = 1;
 		}
 	}
 	
@@ -79,12 +83,13 @@ sub form :Private {
 			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
 			'TRIM_COLLAPSE', 
 			'NOT_BLANK', 
-			[ 'DBIC_UNIQUE', $rs, 'title' ],
+			[ 'DBIC_UNIQUE', $story_rs, 'title' ],
 		],
 		author => [ 
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE', 
 		],
+		image_id => [ 'NOT_BLANK' ],
 		website => [ 'HTTP_URL' ],
 		story => [ 'NOT_BLANK' ],
 		wordcount => [ 

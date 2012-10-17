@@ -36,8 +36,8 @@
 		<td title="[% record.stdev | format('%.5f') %]">
 			[% record.stdev | format('%.2f') %]
 		</td>
-		<td title="[% record.average | format('%.5f') %]">
-			[% record.average | format('%.2f') %]
+		<td title="[% record.mean | format('%.5f') %]">
+			[% record.mean | format('%.2f') %]
 		</td>
 		[%- ELSE %]
 		<td></td>

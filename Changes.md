@@ -1,3 +1,10 @@
+v0.21
+=====
+
+- Art gallery
+- Related images/artworks listed in galleries
+- Fixed Controller::Fic::form image_id logic bug
+
 v0.20
 =====
 

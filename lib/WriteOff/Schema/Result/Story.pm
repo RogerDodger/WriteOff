@@ -312,6 +312,13 @@ sub id_uri {
 	return $self->id . '-' . $desc;
 }
 
+sub is_public_candidate {
+	my $me = shift;
+	no warnings 'uninitialized';
+	
+	$me->prelim_score >= 0 && $me->author_vote_count >= $me->author_story_count;
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

@@ -185,6 +185,11 @@ __PACKAGE__->add_columns(
 	updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
+__PACKAGE__->mk_group_accessors(
+	column => 'variance',
+	column => 'mean',
+);
+
 sub is_filled {
 	my $self = shift;
 	
@@ -210,13 +215,7 @@ sub is_unfilled {
 sub stdev {
 	my $self = shift;
 	
-	return $self->{__stdev} //= $self->votes->stdev;
-}
-
-sub average {
-	my $self = shift;
-	
-	return $self->{__average} //= $self->votes->average;
+	return eval { sqrt $self->variance } // $self->votes->stdev;
 }
 
 sub values {

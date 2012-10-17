@@ -117,6 +117,9 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 sub gallery :PathPart('gallery') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 	
+	$c->stash->{show_artists} = $c->stash->{event}->is_ended;
+	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
+	
 	push $c->stash->{title}, 'Gallery';
 	$c->stash->{template} = 'art/gallery.tt';
 }

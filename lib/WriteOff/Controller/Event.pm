@@ -208,7 +208,7 @@ sub view :PathPart('submissions') :Chained('index') :Args(0) {
 	$c->stash->{storys}  = $c->stash->{event}->storys;
 	$c->stash->{images}  = $c->stash->{event}->images;
 	$c->stash->{prompts} = $c->stash->{event}->prompts;
-	$c->stash->{records} = $c->stash->{event}->vote_records->filled;
+	$c->stash->{records} = $c->stash->{event}->vote_records->filled->with_stats;
 	
 	push $c->stash->{title}, 'Submissions';
 	$c->stash->{template} = 'user/me.tt';

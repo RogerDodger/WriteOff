@@ -2,7 +2,7 @@
 <h2>[% title %]</h2>
 
 [% INCLUDE voterecord/list.tt 
-	records = record.result_source.resultset.search_rs({ id => record.id }) %]
+	records = record.result_source.resultset.search_rs({ id => record.id }).with_stats %]
 
 <h3>Votes</h3>
 	

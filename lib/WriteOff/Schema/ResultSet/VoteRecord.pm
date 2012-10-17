@@ -26,6 +26,51 @@ sub unfilled {
 	);
 }
 
+sub with_stats {
+	my $self = shift;
+	
+	my $votes_rs = $self->result_source->schema->resultset('Vote');
+	
+	my $mean = $votes_rs->search(
+		{
+			"votes.record_id" => { '=' => { -ident => 'me.id' } }
+		},
+		{
+			select => [{ avg => 'votes.value' }],
+			alias => 'votes',
+		}
+	);
+	
+	my $with_mean = $self->search_rs(undef, {
+		'+select' => [{ '' => $mean->as_query, -as => 'mean' }],
+	});
+	
+	# my $variance = $votes_rs->search(
+		# {
+			# "votes.record_id" => { '=' => { -ident => 'me.id' } },
+		# },
+		# {
+			# select => [ \'(AVG( (value - mean)*(value - mean) ))' ],
+			# alias => 'votes',
+		# }
+	# );
+	
+	# my $variance = 
+		# '(SELECT AVG( (value - mean)*(value - mean) ) ' .
+		# 'FROM votes votes ' .
+		# 'WHERE votes.record_id = me.id)';
+	
+	# my $with_stats = $with_mean->as_subselect_rs->search(undef, {
+		# '+select' => [
+			# 'mean',
+			# $variance,
+		# ],
+		# '+as' => [ 'mean', 'variance' ],
+	# });
+	
+	# return $with_stats;
+}
+
 sub round {	
 	return shift->search_rs({ round => shift });
 }

@@ -2,11 +2,11 @@
 
 <h2>Fic Gallery</h2>
 
-[%- IF event.fic_gallery_opened -%]
+[%- IF event.fic_gallery_opened; i = 0 -%]
 
 	[%- PROCESS story_table  storys = event.public_story_candidates -%]
 
-	[%- IF event.prelim %]
+	[%- IF event.prelim && !event.prelim_votes_allowed %]
 		[%- PROCESS story_table  storys = event.public_story_noncandidates -%] 
 	[%- END -%]
 	
@@ -16,7 +16,7 @@
 
 [%- ELSE %]
 <p>
-	Gallery opens: <strong>[% format_dt( event.public ) %]</strong>.
+	Gallery opens: <strong>[% format_dt( event.prelim || event.public ) %]</strong>.
 	<br />
 	Gallery is <strong class="bad">closed</strong>.
 </p>
@@ -27,6 +27,7 @@
 	<tr>
 		<th style="min-width: 28px">#</th>
 		<th> </th>
+		[% '<th> </th>' IF event.art %]
 		<th style="width: 100%">Story</th>
 		<th>Wordcount</th>
 	</tr>
@@ -39,6 +40,22 @@
 				<span class="ui-icon ui-icon-script" title="View as plain text"></span>
 			</a>
 		</td>
+		[%- IF story.images_rs.count %]
+		<td>
+			<a class="dialog-activator" data-target="rel[% loop.count %]">
+				<span class="ui-icon ui-icon-image" title="Show related artwork(s)"></span>
+			</a>
+			<div class="dialog" id="rel[% loop.count %]"
+				title="[% story.title | html %] - Related Artwork(s)">
+				<ul>
+				[%- FOREACH image IN story.images_rs.seed_order.all %]
+					<li><a class="link new-tab" href="[% c.uri_for( c.controller('Art')
+						.action_for('view'), [ image.id_uri ]) %]">[% image.title | html %]</a></li>
+				[%- END %]
+				</ul>
+			</div>
+		</td>
+		[%- END %]
 		<td>
 			<a class="link" href="[% c.uri_for( c.controller('Fic')
 				.action_for('view'), [ story.id_uri ]) %]">

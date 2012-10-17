@@ -355,13 +355,13 @@ sub is_organised_by {
 sub public_story_candidates {
 	my $self = shift;
 	
-	return $self->storys->seed_order->all if !$self->prelim;
+	return $self->storys->seed_order->all 
+		if !$self->prelim || $self->prelim_votes_allowed;
 
 	# Doing the prelim_score search in the resultset doesn't work. 
 	# ...I don't know why, but I guess this'll do.
 	return grep { 
-		!defined $_->prelim_score || $_->prelim_score >= 0 and
-		$_->author_story_count <= $_->author_vote_count
+		$_->is_public_candidate 
 	} $self->storys->with_prelim_stats->seed_order->all;
 }
 
@@ -371,8 +371,7 @@ sub public_story_noncandidates {
 	return () if !$self->prelim;
 	
 	return grep { 
-		$_->prelim_score < 0 ||  
-		$_->author_story_count > $_->author_vote_count
+		!$_->is_public_candidate
 	} $self->storys->with_prelim_stats->seed_order->all;
 }
 
@@ -415,7 +414,7 @@ sub art_gallery_opened {
 sub fic_gallery_opened {
 	my $row = shift;
 	
-	return $row->check_datetimes_ascend( $row->public, $row->now_dt );
+	return $row->check_datetimes_ascend( $row->prelim || $row->public , $row->now_dt );
 }
 
 sub art_votes_allowed {
