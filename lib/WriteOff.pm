@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.20_06';
+our $VERSION = '0.21_00';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -226,6 +226,12 @@ sub mailfrom {
 	$user //= 'noreply';
 	
 	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
+}
+
+sub user_id {
+	my $self = shift;
+	
+	return $self->user ? $self->user->get('id') : -1;
 }
 
 sub app_version {	

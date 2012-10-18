@@ -61,13 +61,14 @@ sub form :Private {
 	# When editing, must allow for the title to be itself
 	my $title_rs = $c->stash->{event}->storys->search({
 		title => { 
-			'!=' => $c->stash->{story} ? $c->stash->{story}->title : undef
+			'!=' => eval { $c->stash->{story}->title } || undef
 		}	
 	});
 	
 	my $competitor_rs = $c->model('DB::Virtual::Competitor')->search({
 		competitor => { '!=' => 'Anonymous' },
-		user_id => { '!=' => $c->user->id },
+		# Must allow organisers to edit properly
+		user_id => { '!=' => eval { $c->stash->{story}->user_id } || $c->user_id }
 	});
 	
 	if( $c->stash->{event}->art ) {
@@ -111,6 +112,8 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	
 	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'fic/submit.tt';
+	
+	$c->stash->{fillform}{author} = eval { $c->user->username };
 	
 	$c->forward('do_submit') if $c->req->method eq 'POST' && 
 		$c->user && $c->stash->{event}->fic_subs_allowed;
@@ -175,6 +178,16 @@ sub do_edit :Private {
 	
 	if( !$c->form->has_error ) {
 	
+		$c->log->info( sprintf "Fic edited by %s: %s by %s (%d words) to %s by %s (%d words)",
+			$c->user->get('username'),
+			$c->stash->{story}->title,
+			$c->stash->{story}->author,
+			$c->stash->{story}->wordcount,
+			$c->form->valid('title'),
+			$c->form->valid('author'),
+			$c->form->valid('wordcount'),
+		);
+		
 		$c->stash->{story}->update({
 			title     => $c->form->valid('title'),
 			author    => $c->form->valid('author') || 'Anonymous',
@@ -190,6 +203,7 @@ sub do_edit :Private {
 				$c->stash->{story}->add_to_images( $image );
 			}
 		}
+		
 		
 		$c->stash->{status_msg} = 'Edit successful';
 	}

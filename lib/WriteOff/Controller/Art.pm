@@ -41,6 +41,8 @@ sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'art/submit.tt';
 	
+	$c->stash->{fillform}{artist} = eval { $c->user->username }; 
+	
 	$c->forward('do_submit') if $c->req->method eq 'POST' && 
 		$c->user && $c->stash->{event}->art_subs_allowed;
 }
@@ -60,7 +62,7 @@ sub do_submit :Private {
 	
 	my $competitor_rs = $c->model('DB::Virtual::Competitor')->search({
 		competitor => { '!=' => 'Anonymous' },
-		user_id => { '!=' => $c->user->id },
+		user_id => { '!=' => $c->user_id },
 	});
 	
 	$c->form(

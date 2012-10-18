@@ -22,7 +22,6 @@
 		<label>Author</label>
 		<input name="author" type="text" size="24"
 			maxlength="[% c.config.len.max.user %]"
-			value="[% c.user.username %]"
 			placeholder="Anonymous" />
 	</p>
 	[%- IF (images = event.images) %]

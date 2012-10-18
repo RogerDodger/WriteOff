@@ -1,12 +1,16 @@
 v0.21
 =====
 
+### 18 Oct 2012
+
 - Art gallery
 - Related images/artworks listed in galleries
 - Fixed Controller::Fic::form image_id logic bug
 - Art public voting
 - Art results
 - Results page made columnar to use space more effectively
+- Reserved artist/author names for first person to use them (using funky virtual tables, woo)
+- Added logs for Controller::Fic::edit
 
 v0.20
 =====

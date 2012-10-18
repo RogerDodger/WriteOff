@@ -41,7 +41,6 @@
 		<label>Artist</label>
 		<input name="artist" type="text" size="24"
 			maxlength="[% c.config.len.max.user %]"
-			value="[% c.user.username %]"
 			placeholder="Anonymous" />
 	</p>
 	<p>

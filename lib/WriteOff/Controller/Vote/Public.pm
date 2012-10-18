@@ -88,19 +88,16 @@ sub do_public :Private {
 	my @votes = 
 		grep { defined $c->req->params->{$_} && $c->req->params->{$_} ne 'N/A' }
 		map  { $_->id }
-		grep { $_->user_id != ( $c->user ? $c->user->id : 0 ) }
-		grep { $_->ip ne $c->req->address }
+		grep { $_->user_id != $c->user_id }
 		@$candidates;
 	
 	$c->req->params->{count}   = @votes;
-	$c->req->params->{ip}      = $c->req->address;
-	$c->req->params->{user_id} = $c->user ? $c->user->id : 0;
+	$c->req->params->{user_id} = $c->user_id;
 	$c->req->params->{captcha} = $c->forward('/captcha_check');
 	
 	my $rs = $c->stash->{event}->vote_records->public->type( $c->action->name );
 	
 	$c->form(
-		ip       => [ [ 'DBIC_UNIQUE', $rs, 'ip' ] ],
 		user_id  => [ [ 'DBIC_UNIQUE', $rs, 'user_id' ] ],
 		
 		#For whatever reason, FormValidator::Simple doesn't have a >= operator
