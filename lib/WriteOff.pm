@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.21_00';
+our $VERSION = '0.21_01';
 
 __PACKAGE__->config(
 	name => 'Write-off',
