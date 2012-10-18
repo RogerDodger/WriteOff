@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.20_04';
+our $VERSION = '0.20_06';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -94,6 +94,8 @@ __PACKAGE__->config(
 					NOT_BLANK   => 'Title is required',
 					DBIC_UNIQUE => 'An item with that title already exists',
 				},
+				author    => { DBIC_UNIQUE   => 'Author name is reserved by another user' },
+				artist    => { DBIC_UNIQUE   => 'Artist name is reserved by another user' },
 				image_id  => { NOT_BLANK     => 'Art Title is required' },
 				website   => { HTTP_URL      => 'Website is not a valid HTTP URL' },
 				wordcount => { BETWEEN       => 'Wordcount too high or too low' },

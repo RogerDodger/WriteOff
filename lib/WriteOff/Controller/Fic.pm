@@ -59,10 +59,15 @@ sub form :Private {
 	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
 	
 	# When editing, must allow for the title to be itself
-	my $story_rs = $c->stash->{event}->storys->search({
+	my $title_rs = $c->stash->{event}->storys->search({
 		title => { 
 			'!=' => $c->stash->{story} ? $c->stash->{story}->title : undef
 		}	
+	});
+	
+	my $competitor_rs = $c->model('DB::Virtual::Competitor')->search({
+		competitor => { '!=' => 'Anonymous' },
+		user_id => { '!=' => $c->user->id },
 	});
 	
 	if( $c->stash->{event}->art ) {
@@ -83,11 +88,12 @@ sub form :Private {
 			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
 			'TRIM_COLLAPSE', 
 			'NOT_BLANK', 
-			[ 'DBIC_UNIQUE', $story_rs, 'title' ],
+			[ 'DBIC_UNIQUE', $title_rs, 'title' ],
 		],
 		author => [ 
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE', 
+			[ 'DBIC_UNIQUE', $competitor_rs, 'competitor' ],
 		],
 		image_id => [ 'NOT_BLANK' ],
 		website => [ 'HTTP_URL' ],

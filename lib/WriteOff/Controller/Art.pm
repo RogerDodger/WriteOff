@@ -58,16 +58,22 @@ sub do_submit :Private {
 		delete $c->req->params->{image};
 	}
 	
+	my $competitor_rs = $c->model('DB::Virtual::Competitor')->search({
+		competitor => { '!=' => 'Anonymous' },
+		user_id => { '!=' => $c->user->id },
+	});
+	
 	$c->form(
 		title => [ 
 			'NOT_BLANK',
 			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
 			'TRIM_COLLAPSE', 
-			[ 'DBIC_UNIQUE', $c->model('DB::Image'), 'title' ],
+			[ 'DBIC_UNIQUE', $c->stash->{event}->storys_rs, 'title' ],
 		],
 		artist => [ 
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE',
+			[ 'DBIC_UNIQUE', $competitor_rs, 'competitor' ]
 		],
 		website      => [ 'HTTP_URL' ],
 		image        => [ 'NOT_BLANK' ],
