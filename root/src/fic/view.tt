@@ -11,7 +11,7 @@
 <hr style="margin: 1.6em 0"/>
 
 <p class="center">
-	[%- storys = story.event.storys_rs.seed_order.all %]
+	[%- storys = story.event.storys_gallery_order %]
 	[%- FOREACH s IN storys %]
 		[%- NEXT IF story.id != s.id %]
 	
@@ -27,7 +27,7 @@
 </p>
 <p class="center">
 	<a class="ui-button" href="[% c.uri_for( c.controller('Fic')
-		.action_for('gallery'), [ story.event_id ]) %]">Back to gallery</a>
+		.action_for('gallery'), [ story.event.id_uri ]) %]">Back to gallery</a>
 </p>
 
 [%- END %]

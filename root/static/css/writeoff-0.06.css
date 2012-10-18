@@ -130,8 +130,13 @@ footer p {
 	font-size: 11pt;
 }
 .result-listing {
-	line-height: 1.4em;
+	display: table-cell;
+	vertical-align: top;
+}
+.result-listing p {
 	font-size: 16px;
+	line-height: 1em;
+	margin-bottom: 0.4em;
 }
 
 /*

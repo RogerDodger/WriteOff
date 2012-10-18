@@ -271,7 +271,7 @@ sub artist {
 sub stdev {
 	my $self = shift;
 	
-	return $self->{__stdev};
+	return $self->{__stdev} //= $self->votes->stdev;
 }
 
 use overload "==" => '_compare_scores',
@@ -285,6 +285,10 @@ sub _compare_scores {
 	return 0 unless $left->private_score == $right->private_score;
 	return 0 unless $left->public_score == $right->public_score;
 	1;
+}
+
+sub final_score {
+	return shift->public_score;
 }
 
 sub is_manipulable_by {

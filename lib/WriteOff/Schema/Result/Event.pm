@@ -375,6 +375,12 @@ sub public_story_noncandidates {
 	} $self->storys->with_prelim_stats->seed_order->all;
 }
 
+sub storys_gallery_order {
+	my $self = shift;
+	
+	return ( $self->public_story_candidates, $self->public_story_noncandidates );
+}
+
 sub prompt_subs_allowed {
 	my $row = shift;
 	

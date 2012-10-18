@@ -4,7 +4,7 @@
 
 [%- IF event.art_gallery_opened %]
 
-	[%- FOREACH image IN event.images_rs.seed_order.all %]
+	[%- FOREACH image IN event.images_rs.seed_order.no_contents.all %]
 	<figure>
 		<img src="[% c.uri_for( c.controller('Art').action_for('view'), [ image.id_uri ]) %]?thumb"
 			alt="[% image.title | html %]" />

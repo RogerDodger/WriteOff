@@ -3,6 +3,17 @@ package WriteOff::Schema::ResultSet::Story;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
+sub metadata {
+	return shift->search_rs(undef, {
+		columns => [ 
+			'id', 'user_id', 'event_id', 'ip',
+			'title', 'author', 'website',
+			'wordcount',
+			'seed', 'created', 'updated'
+		]
+	});
+}
+
 sub with_scores {
 	my $self = shift;
 	
@@ -36,36 +47,6 @@ sub with_scores {
 			{ -asc  => 'title' },
 		],
 	});
-}
-
-sub with_stats {
-	my $self = shift;
-	
-	my @storys = $self->all;
-	my $n = $#storys;
-	
-	for( my $i = 0; $i <= $n; $i++ ) {
-		my $this = $storys[$i];
-		my ($pos, $pos_low) = ($i, $i);
-		
-		$pos-- while $pos > 0 && $this == $storys[$pos-1];
-		$this->{__pos} = $pos;
-		
-		$pos_low++ while $pos_low < $n && $this == $storys[$pos_low+1];
-		$this->{__pos_low} = $pos_low;
-		
-		my (@votes, $sum) = $this->votes->public->get_column('value')->all;
-		
-		if( @votes ) {
-			$sum += ($_ - $this->public_score) ** 2 for @votes;
-			$this->{__stdev} = sqrt $sum / @votes;
-		}
-		else {
-			$this->{__stdev} = 0;
-		}
-	}
-	
-	return @storys;
 }
 
 sub with_prelim_stats {

@@ -53,7 +53,8 @@ jQuery(document).ready(function($) {
 	$('.dialog').dialog({
 		autoOpen: false,
 		modal: true,
-		closeOnEscape: true
+		closeOnEscape: true,
+		resizable: false
 	});
 });
 

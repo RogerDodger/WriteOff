@@ -4,6 +4,9 @@ v0.21
 - Art gallery
 - Related images/artworks listed in galleries
 - Fixed Controller::Fic::form image_id logic bug
+- Art public voting
+- Art results
+- Results page made columnar to use space more effectively
 
 v0.20
 =====

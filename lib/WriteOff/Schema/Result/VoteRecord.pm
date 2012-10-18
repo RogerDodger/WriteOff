@@ -215,7 +215,8 @@ sub is_unfilled {
 sub stdev {
 	my $self = shift;
 	
-	return eval { sqrt $self->variance } // $self->votes->stdev;
+	return $self->{__stdev} = #eval { sqrt $self->variance } // 
+		$self->votes->stdev;
 }
 
 sub values {

@@ -1,64 +1,81 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Results</h2>
+<h1>[% event.prompt | html %] - Results</h1>
 
 [%- IF event.is_ended %]
-<table class="result-listing">
 
-	[%- storys = event.storys_rs.with_scores.with_stats %]
-	[% FOREACH story IN storys %]
-<tr>
-	<td>
-		[%- pos = story.pos %]
-		[%- award = medal_for(pos) || (pos == storys.max ? 'spoon' : 'ribbon') %]
-		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
-			alt="[% c.config.awards.$award.alt %]" 
-			title="[% c.config.awards.$award.alt %]"/>
-		<a class="link" href="[% c.uri_for( c.controller('Fic')
-			.action_for('view'), [ story.id_uri ]) %]">
-			<em>[% story.title | html %]</em>
-		</a>
-		[%- IF story.website %]
-		by <a class="author new-window" href="[% story.website %]">[% story.author | html %]</a>
-		[%- ELSE %]
-		by [% story.author | html %]
-		[%- END %]
-		[% story.public_score | format('(%.2f)') IF story.public_score != undef %]
-	</td>
-</tr>
-	[% END %]
-</table>
+<div class="result-listing">
+	[%- PROCESS item_listing
+		items = event.storys_rs.with_scores.with_stats,
+		view = c.controller('Fic').action_for('view')
+		heading = 'Stories'
+	-%]
+</div>
+	
+	[%- IF event.art -%]
+	
+<div class="result-listing" style="padding-left: 25px">
+	[%- PROCESS item_listing
+		items = event.images_rs.with_scores.with_stats,
+		view = c.controller('Art').action_for('view')
+		heading = 'Artworks'
+	-%]	
+</div>
 
-<h3>Controversial Stories</h3>
-
-<table class="result-listing">
-	[%- FOREACH story IN storys.sort_stdev %]
-		[%- LAST IF loop.index == 5 %]
-		[%- award = loop.first ? 'confetti' : 'ribbon' %] 
-<tr>
-	<td>
-		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
-			alt="[% c.config.awards.$award.alt %]" 
-			title="[% c.config.awards.$award.alt %]"/>
-		<a class="link" href="[% c.uri_for( c.controller('Fic')
-			.action_for('view'), [ story.id_uri ]) %]">
-			<em>[% story.title | html %]</em>
-		</a>
-		[%- IF story.website %]
-		by <a class="author new-window" href="[% story.website %]">[% story.author | html %]</a>
-		[%- ELSE %]
-		by [% story.author | html %]
-		[%- END %]
-		[% story.stdev | format('(%.2f)') IF story.stdev %]
-	</td>
-</tr>
-	[%- END %]
-</table>
-
+	[%- END -%]
+	
 [%- ELSE %]
 <p>
 	Results open: <strong>[% format_dt( event.end ) %]</strong>.
 	<br />
 	Results are <strong class="bad">closed</strong>.
 </p>
+[%- END %]
+
+[%- BLOCK item_listing %]
+
+	<h2>[% heading %]</h2>
+
+	[%- FOREACH item IN items %]
+
+	<p>
+		[%- pos = item.pos %]
+		[%- award = medal_for(pos) || (pos == items.max ? 'spoon' : 'ribbon') %]
+		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
+			alt="[% c.config.awards.$award.alt %]" 
+			title="[% c.config.awards.$award.alt %]"/>
+		<a class="link em" href="[% c.uri_for( view, [ item.id_uri ]) %]">
+			[% item.title | html %]
+		</a>
+		[%- IF item.website %]
+		by <a class="author new-window" href="[% item.website %]">[% item.artist | html %]</a>
+		[%- ELSE %]
+		by [% item.artist | html %]
+		[%- END %]
+		[% item.final_score | format('(%.2f)') IF item.final_score != undef %]
+	</p>
+	
+	[%- END %]
+
+	<h3>Controversial [% heading %]</h3>
+
+	[%- FOREACH item IN items.sort_stdev %]
+		[%- LAST IF loop.index == 5 %]
+		[%- award = loop.first ? 'confetti' : 'ribbon' %] 
+
+	<p>
+		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
+			alt="[% c.config.awards.$award.alt %]" 
+			title="[% c.config.awards.$award.alt %]"/>
+		<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
+			<em>[% item.title | html %]</em>
+		</a>
+		[%- IF item.website %]
+		by <a class="author new-window" href="[% item.website %]">[% item.artist | html %]</a>
+		[%- ELSE %]
+		by [% item.artist | html %]
+		[%- END %]
+		[% item.stdev | format('(%.2f)') IF item.stdev %]
+	</p>
+
+	[%- END %]
+
 [%- END %]

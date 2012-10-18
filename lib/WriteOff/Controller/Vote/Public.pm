@@ -44,9 +44,17 @@ sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 
 sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
     my ( $self, $c ) = @_;
+
+	$c->forward('init');
 	
-	push $c->stash->{title}, 'Vote', 'Public';
-	$c->stash->{template} = 'vote/public/art.tt';
+	if( $c->stash->{event}->art_votes_allowed ) 
+	{
+		$c->stash->{candidates} = [ $c->stash->{event}->images->metadata->all ];
+		
+		$c->forward('first_pass') if $c->req->method eq 'POST';
+	}
+	
+    $c->stash->{template} = 'vote/public/art.tt';
 }
 
 sub first_pass :Private {

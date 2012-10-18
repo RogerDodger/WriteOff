@@ -42,7 +42,10 @@ sub with_stats {
 	);
 	
 	my $with_mean = $self->search_rs(undef, {
-		'+select' => [{ '' => $mean->as_query, -as => 'mean' }],
+		'+select' => [
+			{ '' => $mean->as_query, -as => 'mean' },
+		],
+		'+as' => [ 'mean' ],
 	});
 	
 	# my $variance = $votes_rs->search(

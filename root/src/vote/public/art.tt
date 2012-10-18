@@ -7,7 +7,7 @@
 	<br />
 	Votes close: <strong>[% format_dt(event.end) %]</strong>.
 	<br />
-	Votes received: <strong>[% event.vote_records_rs.public.count %]</strong>.
+	Votes received: <strong>[% event.vote_records_rs.public.art.filled.count %]</strong>.
 	<br />
 [%- IF event.art_votes_allowed %]
 	Votes are <strong class="good">open</strong>.
@@ -15,3 +15,15 @@
 	Votes are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
+
+[%- IF event.art_votes_allowed %]
+
+<h3>Guidelines</h3>
+<ul>
+	<li>You must vote on at least half of the entries.</li>
+	<li>Do not vote on an artwork if you are its artist.</li>
+</ul>
+
+[% INCLUDE vote/public/form.tt %]
+
+[%- END %]

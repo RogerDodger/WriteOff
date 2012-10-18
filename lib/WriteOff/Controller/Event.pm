@@ -205,8 +205,8 @@ sub view :PathPart('submissions') :Chained('index') :Args(0) {
 	
 	$c->forward( $self->action_for('assert_organiser') );
 	
-	$c->stash->{storys}  = $c->stash->{event}->storys;
-	$c->stash->{images}  = $c->stash->{event}->images;
+	$c->stash->{storys}  = $c->stash->{event}->storys->metadata;
+	$c->stash->{images}  = $c->stash->{event}->images->metadata;
 	$c->stash->{prompts} = $c->stash->{event}->prompts;
 	$c->stash->{records} = $c->stash->{event}->vote_records->filled->with_stats;
 	

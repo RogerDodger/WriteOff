@@ -23,7 +23,7 @@ sub now {
 sub now_dt {
 	#return DateTime->now;
 	
-	return shift->parse_datetime('2012-11-22 01:00:00');
+	return shift->parse_datetime('2012-11-30 01:00:00');
 }
 
 sub created_before {
@@ -50,6 +50,44 @@ sub order_by {
 	my $self = shift;
 	
 	return $self->search_rs(undef, { order_by => shift });
+}
+
+=head2 with_stats
+
+Returns a list with position and stdev columns set for row objects made by 
+L<WriteOff::Schema::ResultSet::Image> or L<WriteOff::Schema::ResultSet::Story>
+resultsets. Must be called after with_scores().
+
+=cut
+
+sub with_stats {
+	my $self = shift;
+	
+	my @items = $self->all;
+	my $n = $#items;
+	
+	for( my $i = 0; $i <= $n; $i++ ) {
+		my $this = $items[$i];
+		my ($pos, $pos_low) = ($i, $i);
+		
+		$pos-- while $pos > 0 && $this == $items[$pos-1];
+		$this->{__pos} = $pos;
+		
+		$pos_low++ while $pos_low < $n && $this == $items[$pos_low+1];
+		$this->{__pos_low} = $pos_low;
+		
+		my (@votes, $sum) = $this->votes->public->get_column('value')->all;
+		
+		if( @votes ) {
+			$sum += ($_ - $this->public_score) ** 2 for @votes;
+			$this->{__stdev} = sqrt $sum / @votes;
+		}
+		else {
+			$this->{__stdev} = 0;
+		}
+	}
+	
+	return @items;
 }
 
 1;

@@ -245,6 +245,41 @@ __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );
 
+__PACKAGE__->mk_group_accessors(
+	column => 'public_score',
+	column => 'story_count',
+);
+
+sub pos {
+	return shift->{__pos} // 0;
+}
+
+sub pos_low {
+	return shift->{__pos_low} // 0;
+}
+
+sub final_score {
+	my $self = shift;
+	
+	return ($self->story_count || 0) + ($self->public_score || 0 );
+}
+
+sub stdev {
+	my $self = shift;
+	
+	return $self->{__stdev} //= $self->votes->stdev;
+}
+
+use overload "==" => '_compare_scores',
+	fallback => 1;
+
+sub _compare_scores {
+	my( $left, $right ) = @_;
+	
+	return 0 unless $left->final_score == $right->final_score;
+	1;
+}
+
 sub is_manipulable_by {
 	my $self = shift;
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
