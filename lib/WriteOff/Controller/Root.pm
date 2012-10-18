@@ -14,7 +14,7 @@ WriteOff::Controller::Root - Root Controller for WriteOff
 
 =head1 METHODS
 
-=head2 begin
+=head2 auto
 
 Logs the request.
 
@@ -22,7 +22,7 @@ Detaches to index if the request is POST with a differing origin.
 
 =cut
 
-sub begin :Private {
+sub auto :Private {
 	my ( $self, $c ) = @_;
 	
 	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
@@ -33,13 +33,9 @@ sub begin :Private {
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
-	);
+	) unless $so && $c->action eq 'art/view';
 	
 	$c->detach('index') if !$so && $c->req->method eq 'POST';
-}
-
-sub auto :Private {
-	my ( $self, $c ) = @_;
 	
 	$c->stash->{now} = $c->model('DB::Event')->now_dt;
 }
