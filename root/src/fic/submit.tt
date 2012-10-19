@@ -17,8 +17,9 @@
 </p>
 
 [%- IF event.fic_subs_allowed && c.user %]
-[% INCLUDE fic/form.tt %]
+	[%- INCLUDE fic/form.tt %]
 [%- END %]
+
 [%- IF !c.user %]
 <div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
 	<div class="ui-state-highlight ui-corner-all" style="padding: 0 .7em;"> 

@@ -154,9 +154,8 @@
 <a id="How-Do-I-DeleteEdit-a-Submission"> </a>
 <h2>How Do I Delete/Edit a Submission?</h2>
 <p>
-	You may delete/edit a submission by logging in and going to <a class="link"
-	href="[% c.uri_for( '/user/me' ) %]">/user/me</a>. You can only do this 
-	while submissions are open.
+	You may delete/edit a submission by logging in and going to the “My 
+	Submissions” page. You can only do this while submissions are open.
 </p>
 <p>
 	If you want a submission deleted or edited after submissions are closed, 
@@ -166,9 +165,9 @@
 <a id="How-Do-I-Host-an-Event"> </a>
 <h2>How Do I Host an Event?</h2>
 <p>
-	If you have an event idea in mind, contact <a class="link"
-	href="[% c.config.AdminEmail %]">the admin</a> with a request explaining
-	what your event is and why it should be hosted here.
+	If you have an event idea in mind, contact <a class="link new-tab"
+	href="malito:[% c.config.AdminEmail %]">the admin</a> with a request 
+	explaining what your event is and why it should be hosted here.
 </p>
 <p>
 	As an organiser, you will be tasked with making sure submissions are within

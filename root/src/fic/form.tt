@@ -24,11 +24,12 @@
 			maxlength="[% c.config.len.max.user %]"
 			placeholder="Anonymous" />
 	</p>
-	[%- IF (images = event.images) %]
+	[%- IF (images = event.images_rs.metadata.seed_order.all) %]
 	<p>
 		<label>Art Title(s)<span class="required">*</span></label>
-		<select name="image_id" multiple required
-			title="Artwork(s) related to the story.">
+		<select name="image_id" size="[% event.images_rs.count + 1 %]" 
+			title="Artwork(s) related to the story."
+			multiple required >
 			<optgroup label="Submitted Artworks">
 			[%- FOREACH image IN images %]
 				<option value="[% image.id %]">[% image.title | html %]</option>
