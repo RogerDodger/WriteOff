@@ -397,16 +397,13 @@ figure img {
 	font-size: 1em;
 }
 .popup-msg div {
-	padding: 0 .7em;
+	padding: .3em .7em;
 }
 .popup-msg span {
 	float: left; 
 	margin-right: .3em;
 	position: relative;
 	top: 2px;
-}
-.popup-msg p {
-	margin: .3em;
 }
 
 /*

@@ -6,10 +6,10 @@
 
 	[%- FOREACH image IN event.images_rs.seed_order.no_contents.all %]
 	<figure>
-	
+
 		<!--[if lt IE 9]>
-			<img src="[% c.uri_for( c.controller('Art').action_for('view'), 
-				[ image.id_uri ]) %]?thumb" alt="[% image.title | html %]"/>
+		<img src="[% c.uri_for( c.controller('Art').action_for('view'), [ image.id_uri ]) %]?thumb" 
+			alt="[% image.title | html %]" />
 		<![endif]-->
 	
 		<img src="data:[% image.mimetype %];base64,[% image.thumb_base64 %]"

@@ -27,7 +27,7 @@
 
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.08.css') %]" />
+<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.09.css') %]" />
 
 <script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
 <script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
@@ -101,20 +101,16 @@
 [%- IF status_msg %]
 	<div class="popup-msg ui-widget">
 		<div class="ui-state-highlight ui-corner-all">
-			<p>
-				<span class="ui-icon ui-icon-check"></span> 
-				[% status_msg %]
-			</p>
+			<span class="ui-icon ui-icon-check"></span> 
+			[% status_msg %]
 		</div>
 	</div>
 [%- END -%]
 [%- IF error_msg %]
 	<div class="popup-msg ui-widget">
 		<div class="ui-state-error ui-corner-all">
-			<p>
-				<span class="ui-icon ui-icon-alert"></span> 
-				<strong>Error:</strong> [% error_msg %]
-			</p>
+			<span class="ui-icon ui-icon-alert"></span> 
+			<strong>Error:</strong> [% error_msg %]
 		</div>
 	</div>
 [%- END %]
