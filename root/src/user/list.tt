@@ -8,7 +8,7 @@
 </form>
 
 [%- IF users.count %]
-<table class="slim">
+<table class="slim" style="width: 100%">
 	<tr>
 		<th>
 			[%- c.req.params.import({ order_by => 'username' }) %]

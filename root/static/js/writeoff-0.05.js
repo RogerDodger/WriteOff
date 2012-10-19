@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-	$('.userbar .ui-state-highlight, .userbar .ui-state-error').fadeOut(5000, "easeInQuint");
+	$('.popup-msg').fadeOut(5000, "easeInQuint");
 	$('a.new-window, a.new-tab').attr('target', '_blank');
 	$('a.new-window, a.new-tab').attr('title', function(i, title) {
 		return title || 'Open link in new tab';

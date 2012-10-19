@@ -1,6 +1,5 @@
 body {
-	background: #ccc;
-	padding-top: 40px;	
+	background: #ccc;	
 	font-family: "Bitstream Charter", "Charter BT", "Book Antiqua",
 		"Bookman Old Style", Palladio, "URW Palladio L", Garamond, 
 		"Apple Garamond", Georgia, serif; /* Eeyup */
@@ -85,23 +84,119 @@ a.artist, a.artist:visited {
 	border: 1px solid #ccc;
 	cursor: default;
 }
-article, footer {
-	margin: 20px auto 0 auto;
-	padding: 40px;
+article, footer, nav {
+	margin: 0 auto;
+	padding: 0 40px;
 	width: 785px;
+}
+article, footer {
 	background: #fff;
-	border-radius: 2px;
+	border-radius: 3px;
 	box-shadow: 0 0 8px black;
 }
+article {
+	padding: 40px;
+	padding-bottom: 24px;
+}
 footer {
-	padding-top: 1em;
-	padding-bottom: 1em;
+	margin-top: 20px;
+	padding: 1em 40px;
 }
 footer p {
 	margin: 0;
 	font-size: .9em;
 	text-align: center;
 }
+
+/*
+ * FORM STYLES
+ */
+
+form.light label {
+	font-weight: bold;
+	display: block;
+}
+form.light p.field, form.light p.inline {
+	margin-right: 1em;
+	min-width: 240px;
+	display: inline-block;
+	vertical-align: top;
+}
+form.light p.confirm {
+	margin-top: 0px;
+	font-size: 14px;
+	text-align: left;
+	width: 316px;
+}
+form.light textarea {
+	width: 100%;
+	max-width: 777px;
+	border: 2px groove threedface;
+	font: 12px sans-serif;
+}
+
+/*
+ * NAV STYLES
+ */
+
+nav ul {
+	padding: 0;
+	margin: 0;
+}
+nav li {
+	display: block;
+	list-style: none;
+	float: left;
+	position: relative;
+	background: #fff;
+	border-radius: 5px 5px 0 0;
+	margin-right: 3px;
+	max-width: 350px;
+}
+nav li:hover, nav li.selected {
+	background: #000;
+}
+nav li a {
+	color: #000;
+	padding: 10px 24px;
+	font-size: 1.1em;
+	font-weight: bold;
+	font-variant: small-caps;
+	display: block;
+	
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+nav li ul {
+	z-index: 10;
+	width: 100px;
+	position: absolute;
+	left: -9999px;
+}
+nav li ul li {
+	border-radius: 0 0 5px 0;
+	background: #000;
+}
+nav li:hover ul {
+	left: 0;
+}
+nav li:hover a {
+	color: #aaa;
+}
+nav li:hover a[href="#"],
+nav li a:hover,
+nav li.selected a {
+	color: #fff;
+}
+nav li:hover ul li:hover a {
+	color: #fff;
+}
+
+/*
+ * LISTING STYLES
+ */
+
 .event-listing h3 {
 	font-size: 14pt;
 }
@@ -137,75 +232,6 @@ footer p {
 	font-size: 16px;
 	line-height: 1em;
 	margin-bottom: 0.4em;
-}
-
-/*
- * FORM STYLES
- */
-
-form.light label {
-	font-weight: bold;
-	display: block;
-}
-form.light p.field, form.light p.inline {
-	margin-right: 1em;
-	min-width: 240px;
-	display: inline-block;
-	vertical-align: top;
-}
-form.light p.confirm {
-	margin-top: 0px;
-	font-size: 14px;
-	text-align: left;
-	width: 316px;
-}
-form.light textarea {
-	width: 100%;
-	max-width: 777px;
-	border: 2px groove threedface;
-	font: 12px sans-serif;
-}
-
-/*
- * NAV STYLES
- */
-
-nav {
-	position: fixed;
-	top: 0;
-	left: 0;
-	background: black;
-	box-shadow: 0 0 8px black;
-	padding: 5px;
-	width: 100%;
-	color: white;
-	font-weight: bold;
-	z-index: 9001;
-}
-nav .userbar {
-	float: right;
-	margin-right: 10px;
-}
-nav .navbar {
-	float: left;
-}
-nav form, nav input, nav p, nav a {
-	display: inline-block;
-	vertical-align: middle;
-	margin: 0;
-}
-nav input[type=password], nav input[type=text], nav p {
-	padding: 2px 6px;
-}
-nav input[type=submit] {
-	line-height: 1.4em;
-}
-nav input {
-	font-size: 11px;
-}
-nav p {
-	padding: 3px 12px;
-	font-size: 14px;
 }
 
 /*
@@ -412,4 +438,13 @@ p.example textarea {
 #sortable li span { 
 	position: absolute; 
 	margin-left: -1.3em; 
+}
+.col {
+	display: table-cell;
+	vertical-align: top;
+}
+.popup-msg {
+	font-weight: bold;
+	float: right; 
+	padding: 0 .7em;
 }

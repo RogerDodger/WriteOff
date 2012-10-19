@@ -305,6 +305,10 @@ sub id_uri {
 	return $self->id . '-' . $desc;
 }
 
+sub thumb_base64 {
+	return MIME::Base64::encode( shift->thumb );
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

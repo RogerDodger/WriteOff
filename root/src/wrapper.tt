@@ -27,46 +27,90 @@
 
 <link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 <link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.07.css') %]" />
+<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.08.css') %]" />
 
 <script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
 <script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
-<script src="[% c.uri_for('/static/js/writeoff-0.04.js') %]" ></script>
+<script src="[% c.uri_for('/static/js/writeoff-0.05.js') %]" ></script>
 
 </head>
 
 <body>
 
 <nav>
-	<div class="navbar">
-		<a class="ui-button" href="[% c.uri_for('/') %]">Home</a>
-		<a class="ui-button" href="[% c.uri_for('/faq') %]">FAQ</a>
-		<a class="ui-button" href="[% c.uri_for('/scoreboard') %]">Scoreboard</a>
-	</div>
-	<div class="userbar">
-[%- IF error_msg %]
-		<p class="ui-state-error ui-corner-all">[% error_msg %]</p>
-[%- END %]
-[%- IF status_msg %]
-		<p class="ui-state-highlight ui-corner-all">[% status_msg %]</p>
-[%- END %]
-[%- IF c.user %]
-		<a class="ui-button" href="[% c.uri_for('/user/me') %]">~[% c.user.username %]</a>
-		<a class="ui-button" href="[% c.uri_for('/user/settings') %]">Settings</a>
-		<a class="ui-button" href="[% c.uri_for('/user/logout') %]">Logout</a>
-[%- ELSE %]
-		<form action="[% c.uri_for('/user/login') %]" method="post">
-			<input type="text" name="Username" placeholder="Username" size="16" required />
-			<input type="password" name="Password" placeholder="Password" size="16" required />
-			<input type="submit" value="Login" />
-		</form>
-		<a class="ui-button" href="[% c.uri_for('/user/recover') %]">Recover</a>
-		<a class="ui-button" href="[% c.uri_for('/user/register') %]">Register</a>
-[%- END %]
-	</div>
+[% 
+	navs = [ 
+		{ action => c.controller('Root').action_for('index'),       name => 'Events' },
+		{ action => c.controller('Root').action_for('faq'),         name => 'FAQ' },
+		{ action => c.controller('Scoreboard').action_for('index'), name => 'Scoreboard' },
+		{ action => c.controller('User').action_for('list'),        name => 'Users' },
+	];
+%]
+	<ul>
+	[%- FOREACH nav IN navs %]
+		<li>
+			<a href="[% c.uri_for( nav.action ) %]">[% nav.name %]</a>
+		</li>
+	[%- END %]
+	
+	[%- IF c.user %]
+		<li>
+			<a href="#">~[% c.user.username %] &#9660;</a>
+			<ul>
+				<li><a href="[% c.uri_for('/user/me') %]">My Submissions</a></li>
+				<li><a href="[% c.uri_for('/user/settings') %]">Settings</a></li>
+				<li><a href="[% c.uri_for('/user/logout') %]">Logout</a></li>
+			</ul>
+		</li>
+	[%- ELSE %]
+		<li>
+			<a class="dialog-activator" data-target="Login" href="#Login">Login / Register</a>
+		</li>
+	[%- END %]
+	</ul>
+	
+	<div style="clear: both"></div>
 </nav>
 
+[%- IF !c.user %]
+<form class="dialog light" id="Login" title="User Login" method="post"
+	action="[% c.uri_for( c.controller('User').action_for('login') ) %]">
+	<p>
+		<label>Username</label>
+		<input type="text" name="Username" size="32" style="width: 100%"
+			placeholder="JoeBlow" required />
+	</p>
+	<p>
+		<label>Password</label>
+		<input type="password" name="Password" size="32" style="width: 100%"
+			placeholder="hunter2" required />
+	</p>
+	<p>
+		<input class="ui-helper-reset" type="submit" value="Login" />
+		<a class="ui-button" href="[% c.uri_for( c.controller('User')
+			.action_for('recover') ) %]">Forgot Password?</a>
+			
+		<a class="ui-button" href="[% c.uri_for( c.controller('User')
+			.action_for('register') ) %]" style="float: right">Register</a>
+	</p>
+</form>
+[%- END %]
+
 <article>
+	
+[%- IF status_msg %]
+	<p class="ui-state-highlight ui-corner-all popup-msg">
+		[% status_msg %]
+	</p>
+[%- END -%]
+[%- IF error_msg %]
+	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+			<strong>Error:</strong> [% error_msg %]
+		</p>
+	</div>
+[%- END %]
 
 [% content %]
 

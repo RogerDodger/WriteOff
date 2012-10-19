@@ -1,3 +1,11 @@
+v0.22
+
+### 19 Oct 2012
+
+- New navbar and other layout changes
+- Art gallery done with data URI base64 images to reduce the number of server requests
+  - IE8 and prior have a directive to still work with the gallery
+
 v0.21
 =====
 
