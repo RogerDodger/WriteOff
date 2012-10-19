@@ -384,6 +384,32 @@ figure img {
 }
 
 /*
+ * POPUP STYLES
+ */
+
+.ui-widget p {
+	margin: 1em 0;
+}
+.popup-msg {
+	display: inline-block;
+	padding: .2em;
+	float: right;
+	font-size: 1em;
+}
+.popup-msg div {
+	padding: 0 .7em;
+}
+.popup-msg span {
+	float: left; 
+	margin-right: .3em;
+	position: relative;
+	top: 2px;
+}
+.popup-msg p {
+	margin: .3em;
+}
+
+/*
  * MISC STYLES
  */
 
@@ -421,9 +447,6 @@ p.example textarea {
 .noafter {
 	margin-bottom: 0px;
 }
-.ui-widget p {
-	margin: 1em 0;
-}
 #sortable { 
 	list-style-type: none;
 	padding: 0; 
@@ -442,9 +465,4 @@ p.example textarea {
 .col {
 	display: table-cell;
 	vertical-align: top;
-}
-.popup-msg {
-	font-weight: bold;
-	float: right; 
-	padding: 0 .7em;
 }

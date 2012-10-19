@@ -99,16 +99,23 @@
 <article>
 	
 [%- IF status_msg %]
-	<p class="ui-state-highlight ui-corner-all popup-msg">
-		[% status_msg %]
-	</p>
+	<div class="popup-msg ui-widget">
+		<div class="ui-state-highlight ui-corner-all">
+			<p>
+				<span class="ui-icon ui-icon-check"></span> 
+				[% status_msg %]
+			</p>
+		</div>
+	</div>
 [%- END -%]
 [%- IF error_msg %]
-	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-		<p>
-			<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-			<strong>Error:</strong> [% error_msg %]
-		</p>
+	<div class="popup-msg ui-widget">
+		<div class="ui-state-error ui-corner-all">
+			<p>
+				<span class="ui-icon ui-icon-alert"></span> 
+				<strong>Error:</strong> [% error_msg %]
+			</p>
+		</div>
 	</div>
 [%- END %]
 
