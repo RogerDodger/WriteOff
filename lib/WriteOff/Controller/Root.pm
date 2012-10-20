@@ -33,7 +33,7 @@ sub auto :Private {
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
-	); #unless $so && $c->action eq 'art/view';
+	) unless $so && $c->stash->{no_log};
 	
 	$c->detach('index') if !$so && $c->req->method eq 'POST';
 	

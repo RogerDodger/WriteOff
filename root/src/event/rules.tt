@@ -14,9 +14,15 @@
 		<ol>
 			<li>must be written primarily in English; and</li>
 			<li>
-				must be based on 
-				[% event.art ? 'one of the submitted artworks' : 'the prompt' %]
-				to a reasonable and discernible degree.
+			[%- IF event.art %]
+				must be based on at least one of the submitted artworks	to a 
+				reasonable and discernible degree, with each related 
+				artwork&mdash;and only the related artwork(s)&mdash;indicated 
+				on submission.
+			[%- ELSE %]
+				must be based on the prompt to a reasonable and discernible 
+				degree.
+			[%- END %]
 			</li>
 		</ol>
 	</li>

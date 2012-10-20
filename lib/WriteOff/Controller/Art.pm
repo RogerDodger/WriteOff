@@ -22,6 +22,13 @@ Grabs an image
 
 =cut
 
+sub begin :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{no_log} = 1 
+		if $c->action eq 'art/view' && $c->req->query_keywords eq 'thumb';
+}
+
 sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
@@ -120,6 +127,8 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 		$c->stash->{image}->thumb : 
 		$c->stash->{image}->contents 
 	);
+	
+	$c->res->header( 'Cache-Control' => 'max-age=' . 30 * 24 * 60 * 60 );
 }
 
 sub gallery :PathPart('gallery') :Chained('/event/art') :Args(0) {
