@@ -50,12 +50,14 @@ jQuery(document).ready(function($) {
 		$( '#' + $(this).attr('data-target') ).dialog('open');
 		return false;
 	});
-	$('.dialog').dialog({
-		autoOpen: false,
-		modal: true,
-		closeOnEscape: true,
-		resizable: false
-	});
+	$('.dialog')
+		.css({ position: 'static' })
+		.dialog({
+			autoOpen: false,
+			modal: true,
+			closeOnEscape: true,
+			resizable: false
+		});
 });
 
 function toggleField(id) {

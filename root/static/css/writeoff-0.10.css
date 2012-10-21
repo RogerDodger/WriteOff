@@ -241,6 +241,9 @@ nav li:hover ul li:hover a {
 table { 
 	border-collapse: collapse;
 }
+table.maxwidth {
+	width: 100%;
+}
 .t-outdent-deep {
 	margin-left: -2em;
 	margin-right: -2em;
@@ -387,9 +390,6 @@ figure img {
  * POPUP STYLES
  */
 
-.ui-widget p {
-	margin: 1em 0;
-}
 .popup-msg {
 	display: inline-block;
 	padding: .2em;
@@ -443,6 +443,13 @@ p.example textarea {
 }
 .noafter {
 	margin-bottom: 0px;
+}
+.ui-widget p {
+	margin: 1em 0;
+}
+.dialog {
+	position: absolute;
+	left: -9999px;
 }
 #sortable { 
 	list-style-type: none;
