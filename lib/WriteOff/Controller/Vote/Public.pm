@@ -49,7 +49,7 @@ sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 	
 	if( $c->stash->{event}->art_votes_allowed ) 
 	{
-		$c->stash->{candidates} = [ $c->stash->{event}->images->metadata->all ];
+		$c->stash->{candidates} = [ $c->stash->{event}->images->metadata->seed_order->all ];
 		
 		$c->forward('first_pass') if $c->req->method eq 'POST';
 	}
