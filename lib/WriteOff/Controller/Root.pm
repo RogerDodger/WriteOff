@@ -146,6 +146,31 @@ sub assert_admin :Private {
 	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin'); 
 }
 
+=head2 strum
+
+Mogrify certain words in the response body.
+
+=cut
+
+my %strum_list = (
+	Sturm => 'Strum',
+	PavFeira => 'PavFiera',
+	PresentPerfect => 'PresentPrefect',
+);
+
+sub strum :Private {
+	my ( $self, $c ) = @_;
+	
+	while( my($key, $strum) = each %strum_list ) 
+	{
+		while( (my $index = CORE::index $c->res->{body}, $key ) > 0 ) 
+		{
+			substr( $c->res->{body}, $index, length $key ) = $strum;
+		}
+	}
+	
+}
+
 =head2 render
 
 Attempt to render a view, if needed.
@@ -157,6 +182,7 @@ sub render : ActionClass('RenderView') {}
 sub end :Private {
 	my ( $self, $c ) = @_;
 	$c->forward('render');
+	$c->forward('strum') if $c->config->{strum_ok} && rand > 0.5;
 	$c->fillform( $c->stash->{fillform} ) if defined $c->stash->{fillform};
 }
 
