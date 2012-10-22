@@ -368,7 +368,7 @@ sub public_story_candidates {
 sub public_story_noncandidates {
 	my $self = shift;
 	
-	return () if !$self->prelim;
+	return () if !$self->prelim || $self->prelim_votes_allowed;
 	
 	return grep { 
 		!$_->is_public_candidate
