@@ -328,6 +328,13 @@ sub id_uri {
 	return $self->id . '-' . $desc;
 }
 
+sub id_html {
+	my $prompt = shift->id_uri;
+	
+	$prompt =~ s/^(\d+)-//;
+	
+	return $prompt;
+}
 
 sub organisers {
 	my $self = shift;

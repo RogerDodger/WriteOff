@@ -31,7 +31,7 @@
 
 <script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
 <script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
-<script src="[% c.uri_for('/static/js/writeoff-0.06.js') %]" ></script>
+<script src="[% c.uri_for('/static/js/writeoff-0.07.js') %]" ></script>
 
 </head>
 

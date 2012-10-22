@@ -52,7 +52,7 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 		unless $c->stash->{event}->private;
 		
 	$c->stash->{judge} = 
-		$c->stash->{event}->judges->find( $c->user ? $c->user->id : undef );
+		$c->stash->{event}->judges->find( $c->user_id );
 		
 	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
 		round    => 'private',

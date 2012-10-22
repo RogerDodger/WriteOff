@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.22_09';
+our $VERSION = '0.22_10';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -222,7 +222,7 @@ sub timezones {
 sub mailfrom {
 	my( $self, $name, $user ) = @_;
 	
-	$name //= $self->config->{AdminName};
+	$name //= $self->config->{name};
 	$user //= 'noreply';
 	
 	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};

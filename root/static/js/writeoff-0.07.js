@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], input[type=reset], button, .fake-ui-button').button();
 	
 	{
-		var index = $('.event-listing h3').index(
+		var index = $('.event-listing h3.event-name').index(
 			$( '.event-listing h3 a[href="' + window.location.hash + '"]' ).parent()
 		);
 		$('.event-listing').accordion({ 

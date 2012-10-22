@@ -2,8 +2,8 @@
 	[%- fmt = '%a, %d %b %Y %H:%M %Z' %]
 <div class="event-listing">
 	[%- WHILE (event = events.next) %]
-	<h3>
-		<a href="#[% event.prompt.remove('[^\w\d\-\s]').replace('[\s\-]+','-') %]">
+	<h3 class="event-name">
+		<a href="#[% event.id_html %]" id="[% event.id_html %]">
 			[% event.prompt | html %] – [% format_dt(event.start, fmt) %]
 		</a>
 	</h3>
