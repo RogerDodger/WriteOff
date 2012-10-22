@@ -96,7 +96,7 @@ sub form :Private {
 			'TRIM_COLLAPSE', 
 			[ 'DBIC_UNIQUE', $competitor_rs, 'competitor' ],
 		],
-		image_id => [ 'NOT_BLANK' ],
+		image_id => [ $c->stash->{event}->art ? 'NOT_BLANK' : () ],
 		website => [ 'HTTP_URL' ],
 		story => [ 'NOT_BLANK' ],
 		wordcount => [ 

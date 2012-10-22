@@ -57,6 +57,7 @@ my $bb = Parse::BBCode->new({
 		b => '<strong>%{parse}s</strong>',
 		i => '<em>%{parse}s</em>',
 		u => '<span style="text-decoration: underline">%{parse}s</span>',
+		s => '<del>%{parse}s</del>',
 		url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
 		size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
 		color => '<span style="color: %{color}a;">%{parse}s</span>',
