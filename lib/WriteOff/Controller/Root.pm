@@ -192,7 +192,7 @@ sub send_contact_email :Private {
 		$c->stash->{email} = {
 			to           => $recipient,
 			from         => $c->mailfrom,
-			subject      => $c->config->{name} . " - " . $c->form->valid('subject'),
+			subject      => $c->config->{name} . " - Contact Us - " . $c->form->valid('subject'),
 			template     => 'email/contact.tt',
 			content_type => 'text/html',
 		};
