@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 
 [%- IF template.name.match('^email/') %]
 
@@ -14,7 +14,7 @@
 
 </body>
 
-[%- ELSE %]
+[%- ELSE -%]
 
 <head>
 	<meta charset="utf-8" />
@@ -35,7 +35,7 @@
 		var _gaq = [
 			[ '_setAccount', 'UA-35896457-1' ],
 			[ '_trackPageview' ]
-		);
+		];
 
 		(function(d) {
 			var ga = d.createElement('script');
