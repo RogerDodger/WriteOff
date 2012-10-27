@@ -1,6 +1,4 @@
-[%- title = 'FAQ' %]
-
-<h1>[% title %]</h1>
+<h1>Frequently Asked Questions</h1>
 
 <a id="What-the-Hay-Is-This"> </a>
 <h2>What the Hay Is This?</h2>
@@ -166,13 +164,8 @@
 <a id="How-Do-I-Host-an-Event"> </a>
 <h2>How Do I Host an Event?</h2>
 <p>
-	If you have an event idea in mind, contact <a class="link new-tab"
-	href="malito:[% c.config.AdminEmail %]">the admin</a> with a request 
-	explaining what your event is and why it should be hosted here.
-</p>
-<p>
-	As an organiser, you will be tasked with making sure submissions are within
-	the event's rules.
+	Check out the <a href="[% c.uri_for( c.controller.action_for('contact') ) %]"
+	class="link" >Contact Us</a> page.
 </p>
 
 <a id="What-Time-Is-It"> </a>

@@ -143,6 +143,8 @@ sub do_register :Private {
 		);
 		
 		$c->forward( $self->action_for('send_verification_email') );
+		
+		$c->stash->{status_msg} = 'Registration successful!';
 	}
 }
 
@@ -246,7 +248,7 @@ sub recover :Local :Args(0) {
 	
 	if( $c->req->method eq 'POST' ) {
 		$c->stash->{user} = $c->model('DB::User')->verified
-			->find({ email => $c->req->param('email') }) or return 0;
+			->find({ email => $c->req->param('email') }) and
 		
 		$c->forward( $self->action_for('send_recovery_email') );
 	}
@@ -280,16 +282,13 @@ sub send_recovery_email :Private {
 sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
 	my ( $self, $c, $token ) = @_;
 	
-	if( $c->stash->{user}->token eq $token ) 
-	{
+	if( $c->stash->{user}->token eq $token ) {
+	
 		$c->stash->{pass} = $c->stash->{user}->new_password;
-		
 		$c->stash->{user}->new_token;
-		
 		$c->stash->{template} = 'user/recovered.tt';
 	}
-	else 
-	{
+	else {
 		$c->res->redirect( $c->uri_for('/') );
 	}
 }

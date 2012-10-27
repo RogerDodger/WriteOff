@@ -1,0 +1,69 @@
+<h1>Contact Us</h1>
+
+[%- IF c.req.method != 'POST' %]
+
+<p>
+	Have an event you'd like to organise? Got a feature request or bug report? Need to report rule breakers? Fill out the form below and we'll try to get back to you as soon as possible.
+</p>
+<p>
+	If you want to organise an event, please give as much information about it as possible. Stuff like running and starting times, word limits, prizes (if any), whether there's an art round, etc. is vital information. The more detailed your request is, the better chance you have of it being met.
+</p>
+
+	[%- IF c.user %]
+
+<form class="light" action="[% c.uri_for( c.action ) %]" method="post" >
+
+	<p>
+		<label>To</label>
+		<select name="to">
+			[%- FOREACH person IN staff %]
+				<option value="[% person | html %]">[% person | html %]</option>
+			[%- END %]
+		</select>
+	</p>
+	
+	<p>
+		<label>From</label>
+		<input type="text" class="max-width" name="from" disabled="disabled" />
+	</p>
+
+	<p>
+		<label>Subject</label>
+		<select name="subject">
+		[%- FOREACH subject IN subjects %]
+			<option value="[% subject %]">[% subject %]</option>
+		[%- END %]
+		</select>
+	</p>
+	
+	<p>
+		<label>
+			Message
+			<span style="font-size: 95%">
+				(Will be parsed with <a href="http://en.wikipedia.org/wiki/Markdown#Syntax_examples" class="link new-tab" >Markdown</a>)
+			</span>
+		</label>
+		<textarea name="message" cols="64" rows="16" maxlength="30000" required></textarea>
+	</p>
+	
+	<p>
+		<input type="submit" value="Send" />
+	</p>
+	
+</form>
+
+	[%- ELSE %]
+
+<p class="status-msg">
+	To pevent abuse, you must be logged in to use this form
+</p>
+
+	[%- END %]
+	
+[%- ELSE %]
+
+<p>
+	Thank you for your feedback. We'll try to get back to you as soon as possible. 
+</p>
+
+[%- END %]

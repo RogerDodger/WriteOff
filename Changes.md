@@ -1,3 +1,16 @@
+v0.23
+=====
+
+### 27 Oct 2012
+
+- Started using Google Analytics on the site
+- Cleaned up popup messages to be more lightweight in the templates
+- Added a Contact page
+- Update Terms of Service to be more professional looking
+- Swapped html5shiv for modernizr
+- Added humans.txt
+- Added a html filter before rendering markdown, as markdown doesn't do that by default
+
 v0.22
 =====
 

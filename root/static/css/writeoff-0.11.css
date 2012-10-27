@@ -42,9 +42,6 @@ p, li, td {
 	font-size: 1em; 
 	line-height: 1.2em;
 }
-p {
-	text-align: justify;
-}
 code, tt, var {
 	margin: 0 2px;
 	padding: 0px 5px;
@@ -133,6 +130,21 @@ form.light textarea {
 	max-width: 777px;
 	border: 2px groove threedface;
 	font: 12px sans-serif;
+}
+#sortable { 
+	list-style-type: none;
+	padding: 0; 
+	width: 60%; 
+}
+#sortable li { 
+	margin: 0 3px 3px 3px; 
+	padding: 0.4em;
+	padding-left: 1.5em;
+	height: 18px; 
+}
+#sortable li span { 
+	position: absolute; 
+	margin-left: -1.3em; 
 }
 
 /*
@@ -390,20 +402,24 @@ figure img {
  * POPUP STYLES
  */
 
+.status-msg, 
+.error-msg, 
 .popup-msg {
 	display: inline-block;
-	padding: .2em;
-	float: right;
-	font-size: 1em;
+	font-size: 0.9em;
+	padding: 0.5em 0.9em;
 }
-.popup-msg div {
-	padding: .3em .7em;
-}
-.popup-msg span {
-	float: left; 
+.status-msg span.ui-icon, 
+.error-msg span.ui-icon,
+.popup-msg span.ui-icon {
+	float: left;
 	margin-right: .3em;
 	position: relative;
 	top: 2px;
+}
+.popup-msg {
+	float: right;
+	font-size: 1em;
 }
 
 /*
@@ -451,22 +467,10 @@ p.example textarea {
 	position: absolute;
 	left: -9999px;
 }
-#sortable { 
-	list-style-type: none;
-	padding: 0; 
-	width: 60%; 
-}
-#sortable li { 
-	margin: 0 3px 3px 3px; 
-	padding: 0.4em;
-	padding-left: 1.5em;
-	height: 18px; 
-}
-#sortable li span { 
-	position: absolute; 
-	margin-left: -1.3em; 
-}
 .col {
 	display: table-cell;
 	vertical-align: top;
+}
+.max-width {
+	width: 100%;
 }

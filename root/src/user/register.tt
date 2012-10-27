@@ -1,18 +1,15 @@
-[% IF c.req.method != 'POST' || c.form.has_error %]
 <h1>[% title.join(' - ') %]</h1>
 
+[% IF c.req.method != 'POST' || c.form.has_error %]
 <form class="light" method="post" action="[% c.uri_for( c.action ) %]">
 	[% IF c.form.has_error %]
-		[% FOREACH error IN c.form.messages('register') %]
-		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p>
-					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-					<strong>Error:</strong> [% error %]
-				</p>
-			</div>
-		</div>
-		[% END %]
+	<div>
+		[%- FOREACH error IN c.form.messages('register') %]
+		<p class="error-msg ui-state-error ui-corner-all"> 
+			<strong>Error:</strong> [% error %]
+		</p>
+		[%- END %]
+	</div>
 	[% END %]
 	<p>
 		<label>Username<span class="required">*</span></label>
@@ -67,9 +64,8 @@
 	<input type="submit" value="Register" />
 </form>
 
-[%- ELSE -%]
+[%- ELSIF user -%]
 
-<h1>Registration Successful!</h1>
 <p>
 	You must validate your email address before your account may be used on the 
 	site.

@@ -17,21 +17,34 @@
 [%- ELSE %]
 
 <head>
-<meta charset="utf-8" />
+	<meta charset="utf-8" />
 
-<title>[% title.list.join(' - ') || name | html %]</title>
+	<title>[% title.list.title_format %]</title>
 
-<!--[if lt IE 9]>
-	<script src="[% c.uri_for('/static/js/html5shiv.js') %]"></script>
-<![endif]-->
+	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.11.css') %]" />
+	
+	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
+	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
+	<script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.08.js') %]" ></script>
+	
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+		var _gaq = [
+			[ '_setAccount', 'UA-35896457-1' ],
+			[ '_trackPageview' ]
+		);
 
-<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
-<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.10.css') %]" />
-
-<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
-<script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
-<script src="[% c.uri_for('/static/js/writeoff-0.07.js') %]" ></script>
+		(function(d) {
+			var ga = d.createElement('script');
+			ga.async = true;
+			ga.src = ('https:' == d.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = d.getElementsByTagName('script')[0]; 
+			s.parentNode.insertBefore(ga, s);
+		})(document);
+	</script>
 
 </head>
 
@@ -99,20 +112,16 @@
 <article>
 	
 [%- IF status_msg %]
-	<div class="popup-msg ui-widget">
-		<div class="ui-state-highlight ui-corner-all">
-			<span class="ui-icon ui-icon-check"></span> 
-			[% status_msg %]
-		</div>
-	</div>
+	<p class="popup-msg ui-state-highlight ui-corner-all">
+		<span class="ui-icon ui-icon-check"></span> 
+		[% status_msg %]
+	</p>
 [%- END -%]
 [%- IF error_msg %]
-	<div class="popup-msg ui-widget">
-		<div class="ui-state-error ui-corner-all">
-			<span class="ui-icon ui-icon-alert"></span> 
-			<strong>Error:</strong> [% error_msg %]
-		</div>
-	</div>
+	<p class="popup-msg ui-state-error ui-corner-all">
+		<span class="ui-icon ui-icon-alert"></span> 
+		<strong>Error:</strong> [% error_msg %]
+	</p>
 [%- END %]
 
 [% content %]
@@ -128,8 +137,20 @@
 		<a class="link new-window" href="https://github.com/RogerDodger/WriteOff">
 			WriteOff.pm
 		</a>
-		[% 'v' _ c.app_version.replace('_', '.') %]
-		&ndash; Written by RogerDodger
+		[% c.app_version %]
+		&ndash;
+		<a class="link new-window" href="[% c.uri_for('/humans.txt') %]">
+			humans.txt
+		</a>
+	</p>
+	<p>
+		<a class="link" href="[% c.uri_for( c.controller('Root').action_for('tos') ) %]">
+			Terms of Service
+		</a>
+		|
+		<a class="link" href="[% c.uri_for( c.controller('Root').action_for('contact') ) %]">
+			Contact Us
+		</a>
 	</p>
 [%- IF c.config.footer_addendum %]
 	<hr />

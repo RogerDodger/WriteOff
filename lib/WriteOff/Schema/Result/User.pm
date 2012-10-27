@@ -307,6 +307,12 @@ __PACKAGE__->mk_group_accessors(
 	column => 'hugbox_score',
 );
 
+sub username_and_email {
+	my $self = shift;
+	
+	return sprintf "%s <%s>", $self->username, $self->email;
+}
+
 sub is_admin {
 	my $self = shift;
 	

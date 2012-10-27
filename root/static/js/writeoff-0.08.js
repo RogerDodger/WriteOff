@@ -58,6 +58,13 @@ jQuery(document).ready(function($) {
 			closeOnEscape: true,
 			resizable: false
 		});
+	$('.status-msg').addClass('ui-state-highlight');
+	$('.error-msg').addClass('ui-state-error');
+	$('.status-msg, .error-msg')
+		.addClass('ui-corner-all')
+		.html( function(i, contents) {
+			return '<span class="ui-icon ui-icon-alert"></span>' + contents;
+		});
 });
 
 function toggleField(id) {

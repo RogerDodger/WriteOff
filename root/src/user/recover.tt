@@ -7,7 +7,7 @@
 <form class="light" method="post" action="[% c.uri_for( c.action ) %]">
 	<p>
 		<label>Email</label>
-		<input type="email" name="email" size="64" required />
+		<input type="email" name="email" class="max-width" required />
 	</p>
 	<p>
 		<input type="submit" value="Recover account" />

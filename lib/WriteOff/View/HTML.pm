@@ -1,4 +1,5 @@
 package WriteOff::View::HTML;
+use utf8;
 use Moose;
 use namespace::autoclean;
 use Template::Stash;
@@ -35,6 +36,13 @@ $Template::Stash::LIST_OPS->{sort_stdev} = sub {
 
 $Template::Stash::LIST_OPS->{map_username} = sub {
 	return [ map { $_->username } @{ $_[0] } ];
+};
+
+$Template::Stash::LIST_OPS->{title_format} = sub {
+	return 
+		join " – ",
+		map { Template::Filters::html_filter $_ } 
+		@{ $_[0] };
 };
 
 my $RFC2822 = '%a, %d %b %Y %T %Z';
@@ -103,6 +111,7 @@ sub md_render {
 	
 	return '' unless $text;
 	
+	$text = Template::Filters::html_filter( $text );
 	$text = Text::Markdown->new->markdown( $text );
 	$text =~ s{<a (.+?)>}{<a class="link new-window" $1>}g;
 	

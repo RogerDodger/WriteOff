@@ -1,5 +1,6 @@
 package WriteOff::View::Email::Template;
 
+use utf8;
 use strict;
 use base 'Catalyst::View::Email::Template';
 

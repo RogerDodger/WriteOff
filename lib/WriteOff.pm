@@ -31,10 +31,12 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = '0.22_10';
+our $VERSION = 'v0.23.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
+	
+	DevEmail => 'cthor@cpan.org',
 	
 	#These should be configured on a per-deployment basis
 	domain     => 'example.com',

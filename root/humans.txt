@@ -1,0 +1,14 @@
+# humanstxt.org/
+
+/* TEAM */
+	Developer: Cameron Thornton
+	Contact: cthor@cpan.org
+	From: Adelaide, Australia
+
+/* THANKS */
+	
+/* SITE */
+	Language: English 
+	Technology: Perl5, Catalyst, Template Toolkit, Git, jQuery, jQueryUI, modernizr
+	Doctype: HTML5
+	IDE: Notepad++

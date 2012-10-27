@@ -51,6 +51,7 @@ sub index :Path :Args(0) {
 	
 	$c->stash->{events} = $c->model('DB::Event')->active;
 	
+	$c->stash->{title} = 'Active Events';
 	$c->stash->{template} = 'index.tt';
 }
 
@@ -78,6 +79,7 @@ Frequently Asked Questions page
 sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
+	$c->stash->{title} = 'FAQ';
 	$c->stash->{template} = 'faq.tt';
 }
 
@@ -89,6 +91,8 @@ Standard 404 error page
 
 sub default :Path {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{title} = [ '404', 'File Not Found' ],
 	$c->stash->{template} = '404.tt';
 	$c->res->status(404);
 }
@@ -103,6 +107,8 @@ sub forbidden :Private {
 	my ( $self, $c, $msg ) = @_;
 	
 	$c->stash->{forbidden_msg} = $msg // 'Access denied';
+	
+	$c->stash->{title} = [ '403', 'Forbidden' ],
 	$c->stash->{template} = '403.tt';
 	$c->res->status(403);
 }
@@ -117,6 +123,8 @@ sub error :Private {
 	my ( $self, $c, $msg ) = @_;
 	
 	$c->stash->{error} = $msg // 'Something went wrong';
+	
+	$c->stash->{title} = [ 'Error' ],
 	$c->stash->{template} = 'error.tt';
 	$c->res->status(404);
 }
@@ -128,9 +136,75 @@ Terms of Service page
 =cut
 
 sub tos :Local :Args(0) {
-	my ( $self, $c) = @_;
+	my ( $self, $c ) = @_;
 	
+	$c->stash->{title} = 'Terms of Service';
 	$c->stash->{template} = 'tos.tt';
+}
+
+=head2 contact
+
+Allow users to contact the admin or developer.
+
+=cut
+
+sub contact :Local :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	if( $c->user ) {
+	
+		$c->stash->{fillform}{from} = $c->user->username_and_email;
+		
+		my $staff = $c->stash->{staff} = [
+			sprintf( "%s <%s>", 'Admin', $c->config->{AdminEmail} ),
+			sprintf( "%s <%s>", 'Developer', $c->config->{DevEmail} ),
+		];
+		
+		my $subjects = $c->stash->{subjects} = [ 
+			'Event Idea', 
+			'Feature Request', 
+			'Bug Report',
+			'Rule Breakers',
+			'Other',
+		];
+		
+		if( $c->req->method eq 'POST' ) {
+		
+			$c->form(
+				to => [ 'NOT_BLANK', [ 'IN_ARRAY', @$staff ] ],
+				subject => [ 'NOT_BLANK', [ 'IN_ARRAY', @$subjects ] ],
+				message => [ 'NOT_BLANK' ],
+			);
+			
+			$c->forward('send_contact_email') if !$c->form->has_error;
+		}
+	}
+	
+	$c->stash->{title} = 'Contact Us';
+	$c->stash->{template} = 'contact.tt';
+}
+
+sub send_contact_email :Private {
+	my ( $self, $c ) = @_;
+	
+	for my $recipient ( $c->form->valid('to'), $c->user->username_and_email ) {
+		
+		$c->stash->{email} = {
+			to           => $recipient,
+			from         => $c->mailfrom,
+			subject      => $c->config->{name} . " - " . $c->form->valid('subject'),
+			template     => 'email/contact.tt',
+			content_type => 'text/html',
+		};
+		$c->stash->{recipient} = $c->stash->{email}{to};
+		
+		$c->log->info( "Contact email sent to " . $recipient );
+		
+		$c->forward( $c->view('Email::Template') );
+		
+	}
+	
+	$c->stash->{status_msg} = 'Email sent successfully';
 }
 
 =head2 assert_admin

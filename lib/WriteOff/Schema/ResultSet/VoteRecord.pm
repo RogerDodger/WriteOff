@@ -26,6 +26,13 @@ sub unfilled {
 	);
 }
 
+sub ordered {
+	return shift->order_by([
+		{ -asc => 'type' },
+		{ -asc => 'updated' },
+	]);
+}
+
 sub with_stats {
 	my $self = shift;
 	
