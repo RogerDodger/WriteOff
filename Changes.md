@@ -1,3 +1,9 @@
+v0.24
+=====
+
+- Added config for Google Analytics
+- Put full id_uri for event listing IDs (starting with a number is valid in HTML5)
+
 v0.23
 =====
 

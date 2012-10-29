@@ -5,5 +5,6 @@ AdminEmail someadmin@example.com
 	pub_key 01010101010101
 	priv_key AAAAAAAAAAAAAA
 </recaptcha>
+google_analytics_id UA-XXXXXXX-X
 timezone UTC
 footer_addendum 

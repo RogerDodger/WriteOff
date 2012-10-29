@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.23.3';
+our $VERSION = 'v0.23.4';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -187,6 +187,8 @@ __PACKAGE__->config(
 			alt  => 'Participation ribbon',
 		},
 	},
+	use_google_analytics => 1,
+	
 	
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,

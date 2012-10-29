@@ -30,11 +30,12 @@
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
 	<script src="[% c.uri_for('/static/js/writeoff-0.08.js') %]" ></script>
 	
+	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
 	<script type="text/javascript">
 
 		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-35896457-1']);
+		_gaq.push(['_setAccount', '[% c.config.google_analytics_id %]']);
 		_gaq.push(['_trackPageview']);
 
 		(function() {
@@ -44,6 +45,7 @@
 		})();
 
 	</script>
+	[%- END -%]
 
 </head>
 

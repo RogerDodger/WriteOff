@@ -3,7 +3,7 @@
 <div class="event-listing">
 	[%- WHILE (event = events.next) %]
 	<h3 class="event-name">
-		<a href="#[% event.id_html %]" id="[% event.id_html %]">
+		<a href="#[% event.id_uri %]" id="[% event.id_uri %]">
 			[% event.prompt | html %] – [% format_dt(event.start, fmt) %]
 		</a>
 	</h3>
