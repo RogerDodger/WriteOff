@@ -1,0 +1,23 @@
+<h1>[% title.list.join(' ') %]</h1>
+
+<form class="light" method="post"
+	action="[% c.uri_for( c.controller('User').action_for('login') ) %]">
+	<p>
+		<label>Username</label>
+		<input type="text" name="Username" size="32" class="maxwidth"
+			placeholder="JoeBlow" required autofocus />
+	</p>
+	<p>
+		<label>Password</label>
+		<input type="password" name="Password" size="32" class="maxwidth"
+			placeholder="hunter2" required />
+	</p>
+	<p>
+		<input class="ui-helper-reset" type="submit" value="Login" />
+		<a class="ui-button" href="[% c.uri_for( c.controller('User')
+			.action_for('recover') ) %]">Forgot Password?</a>
+			
+		<a class="ui-button" href="[% c.uri_for( c.controller('User')
+			.action_for('register') ) %]" style="float: right">Register</a>
+	</p>
+</form>

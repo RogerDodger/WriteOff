@@ -4,7 +4,7 @@
 
 [%- IF event.art_gallery_opened %]
 
-	[%- FOREACH image IN event.images_rs.seed_order.no_contents.all %]
+	[%- FOREACH image IN images.all %]
 	<figure>
 
 		<img src="[% c.uri_for( c.controller('Art').action_for('view'), [ image.id_uri ]) %]?thumb" 
@@ -25,16 +25,11 @@
 		[%- END -%]
 		
 		[%- IF show_storys && image.stories_rs.count %]
-			<button class="dialog-activator story" data-target="rel[% loop.count %]">Show related story(s)</button>
-			<div class="dialog" id="rel[% loop.count %]"
-				title="[% image.title | html %] - Related Story(s)">
-				<ul>
-			[%- FOREACH story IN image.stories_rs.seed_order.all %]
-					<li><a class="link new-tab" href="[% c.uri_for( c.controller('Fic')
-						.action_for('view'), [ story.id_uri ]) %]">[% story.title | html %]</a></li>
-			[%- END %]
-				</ul>
-			</div>
+			<a class="dialog-fetcher inline-block" title="Show related story(s)"
+				href="[% c.uri_for( c.controller('Art').action_for('rels'), [ image.id_uri ]) %]"
+				style="position: relative; top: 1px;">
+				<span class="ui-icon ui-icon-script">[Related Story(s)]</span>
+			</a>
 		[%- END -%]
 		
 		</figcaption>

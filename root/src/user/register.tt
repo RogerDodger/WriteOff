@@ -13,31 +13,33 @@
 	[% END %]
 	<p>
 		<label>Username<span class="required">*</span></label>
-		<input type="text" name="username"  size="30"
+		<input type="text" name="username"  size="30" class="halfwidth"
 			title="Letters, numbers, and underscores only."
 			maxlength="[% c.config.len.max.user %]"
 			pattern="^[a-zA-Z0-9_]+$" required />
 	</p>
 	
-	<p class="inline">
-		<label>Password<span class="required">*</span></label>
-		<input type="password" name="password" size="30"
-			title="Must be [% c.config.len.min.pass %] or more characters." 
-			maxlength="[% c.config.len.max.pass %]"
-			onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
-			pattern=".{[% c.config.len.min.pass %],}" required />
-	</p>
-	
-	<p class="inline">
-		<label>Confirm Password<span class="required">*</span></label>
-		<input type="password" name="password2" id="p2" size="30"
-			title="Passwords must match"
-			maxlength="[% c.config.len.max.pass %]" required />
-	</p>
+	<div class="para">
+		<p class="col">
+			<label>Password<span class="required">*</span></label>
+			<input type="password" name="password" size="30" class="halfwidth"
+				title="Must be [% c.config.len.min.pass %] or more characters." 
+				maxlength="[% c.config.len.max.pass %]"
+				onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
+				pattern=".{[% c.config.len.min.pass %],}" required />
+		</p>
+		
+		<p class="col final">
+			<label>Confirm Password<span class="required">*</span></label>
+			<input type="password" name="password2" id="p2" size="30" class="maxwidth"
+				title="Passwords must match"
+				maxlength="[% c.config.len.max.pass %]" required />
+		</p>
+	</div>
 	
 	<p>
 		<label>Email<span class="required">*</span></label>
-		<input type="email" name="email" size="72"
+		<input type="email" name="email" size="72" class="maxwidth"
 			maxlength="[% c.config.len.max.email %]" required />
 		<br />
 		<input type="checkbox" name="mailme" />

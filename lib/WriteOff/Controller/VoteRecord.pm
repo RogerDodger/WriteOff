@@ -21,6 +21,12 @@ Grabs a vote record.
 
 =cut
 
+sub begin :Private {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{title} = [ 'Vote Record' ];
+}
+
 sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $id ) = @_;
 	
@@ -31,6 +37,7 @@ sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 		$c->detach('/default');
 	
 	$c->stash->{event} = $c->stash->{record}->event;
+	push $c->stash->{title}, $id;
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
@@ -87,6 +94,7 @@ sub fill :PathPart('fill') :Chained('index') :Args(0) {
 		|| $c->stash->{record}->round eq 'private' 
 			&& !$c->stash->{event}->private_votes_allowed;
 	
+	push $c->stash->{title}, 'Fill';
 	$c->stash->{template} = 'voterecord/fill.tt';
 	
 	$c->forward('do_fill') if $c->req->method eq 'POST' 

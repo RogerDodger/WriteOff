@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
-	$('a.ui-button, input[type=submit], input[type=reset], button, .fake-ui-button').button();
+	$('a.ui-button, input[type=submit], button').button();
+	$('.fake-ui-button').button({ disabled: true });
 	
 	{
 		var index = $('.event-listing h3.event-name').index(
@@ -12,15 +13,17 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-	$('.popup-msg').fadeOut(5000, "easeInQuint");
 	$('a.new-window, a.new-tab').attr('target', '_blank');
 	$('a.new-window, a.new-tab').attr('title', function(i, title) {
 		return title || 'Open link in new tab';
 	});
+	
 	$('input.autocomplete-user').autocomplete({
 		source: '/user/list?view=json&order_by=username',
 		minLength: 1,
 	});
+	
+	//VoteRecord::fill form handlers
 	var sortable_update = function() {
 		if(	$(this).children(':first').attr('data-name') != $('#sortable-confirm').attr('value') ) {
 			$('#sortable-submit').button('disable');
@@ -42,29 +45,60 @@ jQuery(document).ready(function($) {
 			$('#sortable-submit').button('enable');
 		}
 	});
-	$('.dialog-activator.story').button({ 
-		icons: { primary: 'ui-icon-script' },
-		text: false
-	});
-	$('.dialog-activator').click( function(e) {
-		$( '#' + $(this).attr('data-target') ).dialog('open');
-		return false;
-	});
-	$('.dialog')
-		.css({ position: 'static' })
-		.dialog({
-			autoOpen: false,
-			modal: true,
-			closeOnEscape: true,
-			resizable: false
-		});
-	$('.status-msg').addClass('ui-state-highlight');
-	$('.error-msg').addClass('ui-state-error');
-	$('.status-msg, .error-msg')
-		.addClass('ui-corner-all')
-		.html( function(i, contents) {
-			return '<span class="ui-icon ui-icon-alert"></span>' + contents;
-		});
+	
+	//Dialogs
+	$('.dialog-fetcher')
+		.click( function(e) {
+			var dialog = $('<div class="dialog"><div class="loading"></div></div>').appendTo('body');
+			
+			var pos = [ 'center', 40 ];
+			
+			dialog.dialog({
+				title: 'Please Wait',
+				modal: true,
+				closeOnEscape: true,
+				width: 'auto',
+				resizable: false,
+				close: function(ui, e) {
+					dialog.remove();
+				},
+				position: pos
+			});
+			
+			dialog.load(
+				$(this).data('target'),
+				function(res, status, xhr) {
+					if( status != 'error' ) {
+						dialog.find('a.ui-button, input[type=submit]').button();
+						
+						// Grab and remove title before resetting position so
+						// that dialog is correctly centred
+						var header = dialog.find('h1').html();
+						dialog.find('h1').remove();
+						
+						dialog.dialog('option', {
+							position: pos,
+							title: header || 'Dialog Box'
+						})
+						dialog.find('input:first').focus();
+					}
+					else {
+						dialog.dialog('option', {
+							position: pos,
+							title: 'Error'
+						})
+						dialog.html( xhr.status + " " + xhr.statusText );
+					}
+				}
+			);
+		})
+		.each( function() { 
+			$(this).data('target', $(this).attr('href') );
+		})
+		.removeAttr('href');
+	
+	//Popups
+	$('.popup-msg').fadeOut(5000, "easeInQuint");
 });
 
 function toggleField(id) {

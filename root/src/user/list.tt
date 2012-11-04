@@ -1,12 +1,5 @@
 <h2>User List</h2>
 
-<form method="get" action="[% c.uri_for( c.action ) %]">
-	<p>
-		<input type="search" class="autocomplete-user" name="term" />
-		<input type="submit" value="Search" />
-	</p>
-</form>
-
 [%- IF users.count %]
 <table class="slim" style="width: 100%">
 	<tr>

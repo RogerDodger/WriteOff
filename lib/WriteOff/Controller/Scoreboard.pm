@@ -14,18 +14,6 @@ Catalyst Controller.
 
 =head1 METHODS
 
-=head2 begin
-
-Sets the template.
-
-=cut
-
-sub begin :Private {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{template} = 'scoreboard.tt';
-}
-
 =head2 index
 
 Displays the scoreboard.
@@ -35,7 +23,11 @@ Displays the scoreboard.
 sub index :Path('') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{scoreboard} = $c->model('DB::Scoreboard')->ordered->with_pos;
+	$c->stash->{artists} = [ $c->model('DB::Artist')->tallied ];
+	$c->stash->{gold_medal} = $c->model('DB::Award')->find({ name => 'gold' });
+	
+	$c->stash->{title} = 'Scoreboard';
+	$c->stash->{template} = 'scoreboard/index.tt';
 }
 
 =head2 reset
@@ -70,9 +62,45 @@ sub clear :Local :Args(0) {
 	
 	$c->forward( $c->controller('Root')->action_for('assert_admin') );
 	
-	$c->model('DB::Scoreboard')->delete;
+	$c->model('DB::Score')->delete;
+	$c->model('DB::ArtistAward')->delete;
+	$c->model('DB::Artist')->delete;
 	
 	$c->stash->{status_msg} = 'Scoreboard cleared';
+}
+
+=head2 artist
+
+Grabs an artist
+
+=cut
+
+sub artist :Chained('/') :PathPart('artist') :CaptureArgs(1) {
+	my ( $self, $c, $id ) = @_;
+	
+	$c->stash->{artist} = $c->model('DB::Artist')->find($id)
+		or $c->detach('/default');
+}
+
+=head2 scores
+
+Displays the scores for an artist with no template (to be fetched with AJAX).
+
+=cut
+
+sub scores :Chained('artist') :PathPart('scores') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{scores} = $c->stash->{artist}->scores->search(undef, {
+		prefetch => 'event',
+		order_by => [
+			{ -asc  => 'event.end' },
+			{ -desc => 'value' },
+		]
+	});
+	
+	$c->stash->{title} = 'Score Breakdown for ' . $c->stash->{artist}->name;
+	$c->stash->{template} = 'scoreboard/scores.tt';
 }
 
 =head1 AUTHOR

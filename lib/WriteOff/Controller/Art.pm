@@ -137,6 +137,8 @@ sub gallery :PathPart('gallery') :Chained('/event/art') :Args(0) {
 	$c->stash->{show_artists} = $c->stash->{event}->is_ended;
 	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
 	
+	$c->stash->{images} = $c->stash->{event}->images->seed_order->no_contents;
+	
 	push $c->stash->{title}, 'Gallery';
 	$c->stash->{template} = 'art/gallery.tt';
 }
@@ -173,6 +175,17 @@ sub do_delete :Private {
 	$c->flash->{status_msg} = 'Deletion successful';
 	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 	
+}
+
+sub rels :PathPart('rels') :Chained('index') {
+	my ( $self, $c ) = @_;
+	
+	$c->detach('/default') if !$c->stash->{image}->event->fic_gallery_opened;
+	
+	$c->stash->{items} = $c->stash->{image}->stories->metadata;
+	
+	$c->stash->{title} = $c->stash->{image}->title . " - Related Story(s)";
+	$c->stash->{template} = 'item/list.tt';
 }
 
 

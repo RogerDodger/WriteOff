@@ -1,39 +1,26 @@
-<h1>User Settings</h1>
-[% IF c.form.has_error %]
-	<div>
-	[% FOREACH error IN c.form.messages('register') %]
-		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p>
-					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-					<strong>Error:</strong> [% error %]
-				</p>
-			</div>
-		</div>
-	[% END %]
-	</div>
-[% END %]
+<h1>[% title.list.join(' ') %]</h1>
 
 <form class="light" method="post" action="[% c.req.uri %]">
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<h2>Change Password</h2>
 	
-	<p class="inline">
+	<p>
 		<label>New Password<span class="required">*</span></label>
-		<input type="password" name="password" size="30"
+		<input type="password" name="password" size="30" class="maxwidth"
 			title="Must be [% c.config.len.min.pass %] or more characters." 
 			maxlength="[% c.config.len.max.pass %]"
 			onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
 			pattern=".{[% c.config.len.min.pass %],}" required />
-		<br />
-		<input type="password" name="password2" id="p2" size="30"
-			title="Passwords must match"
+	</p>
+	<p>
+		<label>Confirm Password<span class="required">*</span></label>
+		<input type="password" name="password2" size="30" class="maxwidth"
+			title="Passwords must match" id="p2"
 			maxlength="[% c.config.len.max.pass %]" required />
 	</p>
 	
-	<p class="inline">
+	<p>
 		<label>Old Password<span class="required">*</span></label>
-		<input type="password" name="old" size="30"
+		<input type="password" name="old" size="30" class="maxwidth"
 			title="Must be [% c.config.len.min.pass %] or more characters." 
 			maxlength="[% c.config.len.max.pass %]"
 			pattern=".{[% c.config.len.min.pass %],}" required />
@@ -44,9 +31,11 @@
 	</p>
 </form>
 
+<hr style="margin-bottom: 1em" />
+
 <form class="light" method="post" action="[% c.req.uri %]">
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-	<h2>Other Settings</h2>
+	
 	<p>
 		<label>Timezone</label>
 		<select name="timezone">
@@ -55,7 +44,8 @@
 		[%- END %]
 		</select>
 	</p>
-	<p>
+
+	<p class="nowrap">
 		<label>Notifications</label>
 		<input name="mailme" type="checkbox" />
 		Send me email notifications when new events are announced.

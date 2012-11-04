@@ -1,6 +1,11 @@
 v0.24
 =====
 
+- Boatload of style changes
+- Scoreboard data put into multiple tables for score breakdowns
+- Awards are a table in the database now, rather than configured
+- Made the wrapper render partial for XMLHttpRequests so that dialogs can be fetched easily
+- All dialogs are now fetched instead of embedded
 - Added config for Google Analytics
 - Put full id_uri for event listing IDs (starting with a number is valid in HTML5)
 

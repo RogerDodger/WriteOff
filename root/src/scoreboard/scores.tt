@@ -1,0 +1,28 @@
+<h1>[% title.list.join(' ') %]</h1>
+
+<table class="plain t-center">
+	<tr>
+		<th>Event</th>
+		<th>Entry</th>
+		<th>Type</th>
+		<th>Score</th>
+	</tr>
+	[%- FOREACH score IN scores.all %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for( c.controller('Event').action_for('results'),
+				[ score.event.id_uri ]) %]" class="link">
+				[% score.event.prompt | html %]
+			</a>
+		</td>
+		<td>
+			<a href="[% c.uri_for( c.controller( score.item.type.ucfirst )
+				.action_for('view'), [ score.item.id_uri ]) %]" class="link em">
+				[% score.item.title | html %]
+			</a>
+		</td>
+		<td class="center">[% score.type.ucfirst %]</td>
+		<td class="center">[% score.value %]</td>
+	</tr>
+	[%- END %]
+</table>

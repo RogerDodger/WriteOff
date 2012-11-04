@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.23.4';
+our $VERSION = 'v0.24.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -87,7 +87,7 @@ __PACKAGE__->config(
 					EMAIL_MX    => 'Invalid email address',
 					DBIC_UNIQUE => 'A user with that email already exists',
 				},
-				old          => { EQUAL_TO    => 'Old Password is invalid' },
+				old          => { NOT_BLANK   => 'Old Password is invalid' },
 				pass_confirm => { DUPLICATION => 'Passwords do not match' },
 				captcha      => { NOT_BLANK   => 'Invalid CAPTCHA' },
 			},
@@ -111,14 +111,14 @@ __PACKAGE__->config(
 					DBIC_UNIQUE => 'An identical prompt already exists',
 				},
 				blurb     => { LENGTH        => 'Blurb too long' },
-				rules     => { LENGTH        => 'RUles too long' },
+				rules     => { LENGTH        => 'Rules too long' },
 				count     => { LESS_THAN     => 'Submission limit exceeded' },
 				
 			},
 			vote => {
-				count => { GREATER_THAN => 'You must vote on at least half of the entries' },
-				ip    => { DBIC_UNIQUE  => 'You have already cast a vote' },
-				user  => { DBIC_UNIQUE  => 'You have already cast a vote' },
+				count   => { GREATER_THAN => 'You must vote on at least half of the entries' },
+				ip      => { DBIC_UNIQUE  => 'You have already cast a vote' },
+				user_id => { DBIC_UNIQUE  => 'You have already cast a vote' },
 				captcha => { EQUAL_TO   => 'Invalid CAPTCHA' },
 			},
 			event => {
@@ -161,32 +161,6 @@ __PACKAGE__->config(
 	prelim_distr_size => 6,
 	judge_distr_size => 5,
 	interim => 60, #minutes
-	awards => {
-		gold => {
-			path => '/static/images/awards/medal_gold.png',
-			alt  => 'Gold medal',
-		},
-		silver => {
-			path => '/static/images/awards/medal_silver.png',
-			alt  => 'Silver medal',
-		},
-		bronze => {
-			path => '/static/images/awards/medal_bronze.png',
-			alt  => 'Bronze medal',
-		},
-		confetti => {
-			path => '/static/images/awards/confetti.png',
-			alt  => 'Most controversial',
-		},
-		spoon => {
-			path => '/static/images/awards/wooden_spoon.png',
-			alt  => 'Wooden spoon',
-		},
-		ribbon => {
-			path => '/static/images/awards/ribbon.gif',
-			alt  => 'Participation ribbon',
-		},
-	},
 	use_google_analytics => 1,
 	
 	

@@ -1,0 +1,45 @@
+<h1 class="center">[% name %] Hall of Fame</h1>
+
+<table class="slim t-center center">
+	<tr>
+		<th>#</th>
+		<th>Competitor</th>
+		<th>Score</th>
+		<th>Awards</th>
+	</tr>
+[%- IF artists.size != 0 %]
+	[%- FOREACH artist IN artists %]
+	<tr>
+		<td>[% artist.rank %]</td>
+		<td>[% artist.name | html %]</td>
+		<td>
+			<a href="[% c.uri_for( c.controller('Scoreboard')
+				.action_for('scores'), [ artist.id ]) %]"
+				class="dialog-fetcher author" title="View score breakdown" >
+				[% artist.score %]
+			</a>
+		</td>
+		<td>
+		[%- FOREACH award IN artist.awards_rs.ordered.all %]
+			<img src="[% award.src %]" 
+				alt="[% award.alt %]" 
+				title="[% award.alt %]" />
+		[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+[%- ELSE %]
+	<tr>
+		<td>NaN</td>
+		<td>Anonymous</td>
+		<td>&infin;</td>
+		<td>
+		[%- FOREACH n IN [ 0 .. 4 ] %]
+			<img src="[% gold_medal.src %]" 
+				alt="[% gold_medal.alt %]"
+				title="[% gold_medal.alt %]" />
+		[%- END %]
+		</td>
+	</tr>
+[%- END %]
+</table>

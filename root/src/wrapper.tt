@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 
-[%- IF template.name.match('^email/') %]
+[%- IF template.name.match('^email/') || 
+	c.req.header('x-requested-with') == 'XMLHttpRequest' %]
 
 <head>
 	<meta charset="utf-8" />
-	<title>[% email.subject || name %]</title>
+	<title>[% name %]</title>
 </head>
 
 <body>
@@ -19,16 +20,16 @@
 <head>
 	<meta charset="utf-8" />
 
-	<title>[% title.list.title_format %]</title>
+	<title>[% title.list.title_format || name %]</title>
 
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.8.22.custom.css') %]" />
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.11.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.12.css') %]" />
 	
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.8.22.custom.min.js') %]" ></script>
-	<script src="[% c.uri_for('/static/js/writeoff-0.08.js') %]" ></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.09.js') %]" ></script>
 	
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
@@ -72,43 +73,23 @@
 			<a href="#">~[% c.user.username %] &#9660;</a>
 			<ul>
 				<li><a href="[% c.uri_for('/user/me') %]">My Submissions</a></li>
-				<li><a href="[% c.uri_for('/user/settings') %]">Settings</a></li>
+				<li>
+					<a class="dialog-fetcher" 
+						href="[% c.uri_for('/user/settings') %]">Settings</a>
+				</li>
 				<li><a href="[% c.uri_for('/user/logout') %]">Logout</a></li>
 			</ul>
 		</li>
 	[%- ELSE %]
 		<li>
-			<a class="dialog-activator" data-target="Login" href="#Login">Login / Register</a>
+			<a class="dialog-fetcher" 
+				href="[% c.uri_for('/user/login') %]">Login / Register</a>
 		</li>
 	[%- END %]
 	</ul>
 	
 	<div style="clear: both"></div>
 </nav>
-
-[%- IF !c.user %]
-<form class="dialog light" id="Login" title="User Login" method="post"
-	action="[% c.uri_for( c.controller('User').action_for('login') ) %]">
-	<p>
-		<label>Username</label>
-		<input type="text" name="Username" size="32" style="width: 100%"
-			placeholder="JoeBlow" required />
-	</p>
-	<p>
-		<label>Password</label>
-		<input type="password" name="Password" size="32" style="width: 100%"
-			placeholder="hunter2" required />
-	</p>
-	<p>
-		<input class="ui-helper-reset" type="submit" value="Login" />
-		<a class="ui-button" href="[% c.uri_for( c.controller('User')
-			.action_for('recover') ) %]">Forgot Password?</a>
-			
-		<a class="ui-button" href="[% c.uri_for( c.controller('User')
-			.action_for('register') ) %]" style="float: right">Register</a>
-	</p>
-</form>
-[%- END %]
 
 <article>
 	
@@ -135,12 +116,12 @@
 		[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
 	</p>
 	<p>
-		<a class="link new-window" href="https://github.com/RogerDodger/WriteOff">
+		<a class="link new-tab" href="https://github.com/RogerDodger/WriteOff">
 			WriteOff.pm
 		</a>
 		[% c.app_version %]
 		&ndash;
-		<a class="link new-window" href="[% c.uri_for('/humans.txt') %]">
+		<a class="link new-tab" href="[% c.uri_for('/humans.txt') %]">
 			humans.txt
 		</a>
 	</p>

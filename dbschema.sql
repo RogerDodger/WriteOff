@@ -5,23 +5,6 @@
 
 PRAGMA foreign_keys = ON;
 
-DROP TABLE IF EXISTS scoreboard;
-DROP TABLE IF EXISTS login_attempts;
-DROP TABLE IF EXISTS bans;
-DROP TABLE IF EXISTS votes;
-DROP TABLE IF EXISTS vote_records;
-DROP TABLE IF EXISTS heats;
-DROP TABLE IF EXISTS prompts;
-DROP TABLE IF EXISTS image_story;
-DROP TABLE IF EXISTS images;
-DROP TABLE IF EXISTS storys;
-DROP TABLE IF EXISTS user_event;
-DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS schedules;
-DROP TABLE IF EXISTS user_role;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS roles;
-
 -- User tables
 CREATE TABLE users (
 	id              INTEGER PRIMARY KEY,
@@ -178,10 +161,43 @@ CREATE TABLE votes (
 	"value"    INTEGER
 );
 
-CREATE TABLE scoreboard (
-	competitor  TEXT COLLATE NOCASE PRIMARY KEY,
-	"score"     INTEGER DEFAULT 0 NOT NULL,
-	"awards"    TEXT,
-	created     TIMESTAMP,
-	updated     TIMESTAMP
+-- Scoreboard tables
+CREATE TABLE artists (
+	id        INTEGER PRIMARY KEY,
+	name      TEXT COLLATE NOCASE UNIQUE NOT NULL,
+	user_id   INTEGER REFERENCES users(id),
+	score     INTEGER
+);
+
+CREATE TABLE awards (
+	id         INTEGER PRIMARY KEY,
+	name       TEXT COLLATE NOCASE UNIQUE,
+	sort_rank  INTEGER
+);
+
+INSERT INTO awards VALUES (1, 'gold', 10);
+INSERT INTO awards VALUES (2, 'silver', 20);
+INSERT INTO awards VALUES (3, 'bronze', 30);
+INSERT INTO awards VALUES (4, 'confetti', 40);
+INSERT INTO awards VALUES (5, 'spoon', 90);
+INSERT INTO awards VALUES (6, 'ribbon', 100);
+INSERT INTO awards VALUES (7, 'ribbonx5', 99);
+INSERT INTO awards VALUES (8, 'ribbonx10', 98);
+
+CREATE TABLE artist_award (
+	id         INTEGER PRIMARY KEY,
+	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE NOT NULL,
+	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	"type"     TEXT,
+	award_id   INTEGER REFERENCES awards(id) ON DELETE CASCADE NOT NULL
+);
+
+CREATE TABLE scores (
+	id         INTEGER PRIMARY KEY,
+	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE NOT NULL,
+	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
+	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
+	"type"     TEXT,
+	"value"    INTEGER
 );

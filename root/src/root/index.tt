@@ -12,7 +12,7 @@
 	<span class="fake-ui-button">[% button.text %]</span>
 	[%- ELSE %]
 	<a class="ui-button" href="[% c.uri_for( c.controller('Root')
-		.action_for(button.action) ) %]">[% button.text %]</a>
+		.action_for(button.action) ) %]" >[% button.text %]</a>
 	[%- END %]
 [%- END %]
 [%- IF c.check_user_roles('admin') %]

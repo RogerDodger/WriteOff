@@ -43,13 +43,22 @@ sub me :Local :Args(0) {
 }
 
 sub login :Local :Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	$c->set_authenticated( $c->find_user({ 
 		username => $c->req->params->{as} || $c->user->username
 	}) ) if $c->check_user_roles('admin');
 	
 	$c->res->redirect( $c->uri_for('/') ) and return 0 if $c->user;
+	
+	push $c->stash->{title}, 'Login';
+	$c->stash->{template} = 'user/login.tt';
+	
+	$c->forward('do_login') if $c->req->method eq 'POST';
+}
+
+sub do_login :Private {
+    my ( $self, $c ) = @_;
 	
 	$c->detach('login_attempts_exceeded') if $c->model('DB::LoginAttempt')
 		->search({ ip => $c->req->address })
@@ -62,14 +71,16 @@ sub login :Local :Args(0) {
 		username => $c->req->params->{Username} || '',
 	});
 
-	if($success) {
-		$c->user->verified ||
-		$c->flash({error_msg => 'Your account is not verified'}) && $c->logout;
+	if( $success ) {
+		if( !$c->user->verified ) {
+			$c->flash->{error_msg} = 'Your account is not verified';
+			$c->logout;
+		}
 	}
 	else {
 		$c->model('DB::LoginAttempt')->create({ ip => $c->req->address });
-		$c->flash({error_msg => 'Bad username or password'});
-	}
+		$c->flash->{error_msg} = 'Bad username or password';
+	}	
 	
 	$c->res->redirect( $c->req->referer || $c->uri_for('/') );
 }
@@ -167,6 +178,8 @@ sub settings :Local :Args(0) {
 sub do_settings :Private {
 	my ( $self, $c ) = @_;
 	
+	$c->res->redirect( $c->req->referer || $c->uri_for( $c->action ) );
+	
 	return 0 unless $c->req->params->{sessionid} eq $c->sessionid;
 	
 	if( $c->req->params->{submit} eq 'Change password' ) {
@@ -183,31 +196,29 @@ sub do_settings :Private {
 			old => [ 'NOT_BLANK' ],
 		);
 		
-		return 0 if $c->form->has_error;
-		
-		$c->user->update({ password => $c->form->valid('password') });
-		
-		return $c->stash->{status_msg} = 'Password changed successfully';
+		if( !$c->form->has_error ) {
+			$c->user->update({ password => $c->form->valid('password') });
+			$c->flash->{status_msg} = 'Password changed successfully';
+		}
+		else {
+			$c->flash->{error_msg} = 'Old Password is invalid';
+		}
 	}
 	
 	if( $c->req->params->{submit} eq 'Change settings' ) {
-		$c->form(
-			timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->timezones ] ],
-		);
-		
-		return 0 if $c->form->has_error;
-		
-		$c->user->update({ 
-			timezone => $c->form->valid('timezone'),
-			mailme   => $c->req->param('mailme') ? 1 : 0,
-		});
-		
-		$c->set_authenticated($c->user);
-		
-		return $c->stash->{status_msg} = 'Settings changed successfully';
-	} 
 	
-	0;
+		my $tz = $c->req->param('timezone');
+		
+		if( $tz ~~ [ $c->timezones ] ) {
+			$c->user->update({ 
+				timezone => $tz,
+				mailme   => $c->req->param('mailme') ? 1 : 0,
+			});
+			$c->persist_user;
+			$c->flash->{status_msg} = 'Settings changed successfully';
+		}
+	} 
+
 }
 
 sub send_verification_email :Private {

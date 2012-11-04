@@ -1,0 +1,8 @@
+<h1>[% title.list.join(' ') | html %]</h1>
+
+<ul>
+[%- FOREACH item IN items.all %]
+	<li><a class="link" href="[% c.uri_for( c.controller( item.type.ucfirst )
+		.action_for('view'), [ item.id_uri ]) %]">[% item.title | html %]</a></li>
+[%- END %]
+</ul>

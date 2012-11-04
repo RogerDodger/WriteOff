@@ -133,7 +133,7 @@ sub prompt_subs_left {
 sub medal_for {
 	my( $self, $c, $pos ) = @_;
 	
-	return $c->model('DB::Scoreboard')->medal_for( $pos );
+	return $c->model('DB::Award')->medal_for( $pos );
 }
 
 1;

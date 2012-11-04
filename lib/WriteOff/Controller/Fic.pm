@@ -243,6 +243,17 @@ sub do_delete :Private {
 	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
+sub rels :PathPart('rels') :Chained('index') {
+	my ( $self, $c ) = @_;
+	
+	$c->detach('/default') if !$c->stash->{story}->event->fic_gallery_opened;
+	
+	$c->stash->{items} = $c->stash->{story}->images->metadata;
+	
+	$c->stash->{title} = $c->stash->{story}->title . " - Related Artwork(s)";
+	$c->stash->{template} = 'item/list.tt';
+}
+
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

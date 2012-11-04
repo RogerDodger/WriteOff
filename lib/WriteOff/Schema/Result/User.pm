@@ -182,6 +182,21 @@ __PACKAGE__->add_unique_constraint("username_unique", ["username"]);
 
 =head1 RELATIONS
 
+=head2 artists
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::Artist>
+
+=cut
+
+__PACKAGE__->has_many(
+  "artists",
+  "WriteOff::Schema::Result::Artist",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 images
 
 Type: has_many
@@ -283,8 +298,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 11:36:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oaVghNcy9wBaQw7UBMmVfw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-30 10:19:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LJkZ7TX8PyiVmJ5seb9LtQ
 
 __PACKAGE__->add_columns(
 	password => {

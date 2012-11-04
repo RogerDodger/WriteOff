@@ -194,6 +194,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 scores
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::Score>
+
+=cut
+
+__PACKAGE__->has_many(
+  "scores",
+  "WriteOff::Schema::Result::Score",
+  { "foreign.story_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user
 
 Type: belongs_to
@@ -240,8 +255,8 @@ Composing rels: L</image_stories> -> image
 __PACKAGE__->many_to_many("images", "image_stories", "image");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-13 08:49:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Dpw6ZxtcZJKKnKNJ9AtrHw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-31 08:53:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oO9zn7UuGBnBxYltffM+3Q
 
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
@@ -255,6 +270,10 @@ __PACKAGE__->mk_group_accessors(
 	column => 'public_score', 
 	column => 'private_score',
 );
+
+sub type {
+	return 'fic';
+}
 
 sub pos {
 	return shift->{__pos} // 0;

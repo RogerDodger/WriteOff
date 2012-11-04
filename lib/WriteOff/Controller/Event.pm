@@ -195,6 +195,8 @@ sub rules :PathPart('rules') :Chained('index') :Args(0) {
 
 sub results :PathPart('results') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{awards} = { map { $_->name => $_ } $c->model('DB::Award')->all };
 
 	push $c->stash->{title}, 'Results';
 	$c->stash->{template} = 'event/results.tt';
@@ -384,10 +386,11 @@ sub tally_results :Private {
 		$e->id, $e->prompt
 	);
 	
-	$c->model('DB::Scoreboard')->tally( $e->storys_rs );
-	$c->model('DB::Scoreboard')->tally( $e->images_rs ) if $e->art;
-
+	$c->model('DB::Artist')->deal_awards_and_scores( $e->storys_rs );
+	$c->model('DB::Artist')->deal_awards_and_scores( $e->images_rs ) if $e->art;
+	$c->model('DB::Artist')->recalculate_scores;
 }
+
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

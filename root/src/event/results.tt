@@ -38,19 +38,23 @@
 
 	<p>
 		[%- pos = item.pos %]
-		[%- award = medal_for(pos) || (pos == items.max ? 'spoon' : 'ribbon') %]
-		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
-			alt="[% c.config.awards.$award.alt %]" 
-			title="[% c.config.awards.$award.alt %]"/>
+		[%- award = medal_for(pos) || (pos == items.max ? awards.spoon : awards.ribbon) %]
+		<img src="[% c.uri_for( award.src ) %]" 
+			alt="[% award.alt %]" 
+			title="[% award.alt %]"/>
 		<a class="link em" href="[% c.uri_for( view, [ item.id_uri ]) %]">
 			[% item.title | html %]
 		</a>
 		[%- IF item.website %]
-		by <a class="author new-window" href="[% item.website %]">[% item.artist | html %]</a>
+		by <a class="author new-window" href="[% item.website | url %]">[% item.artist | html %]</a>
 		[%- ELSE %]
 		by [% item.artist | html %]
 		[%- END %]
-		[% item.final_score | format('(%.2f)') IF item.final_score != undef %]
+		[%- IF item.final_score %]
+		<span title="[% item.final_score | format('(%.5f)') %]">
+			[% item.final_score | format('(%.2f)') %]
+		</span>
+		[%- END %]
 	</p>
 	
 	[%- END %]
@@ -59,21 +63,25 @@
 
 	[%- FOREACH item IN items.sort_stdev %]
 		[%- LAST IF loop.index == 5 %]
-		[%- award = loop.first ? 'confetti' : 'ribbon' %] 
+		[%- award = loop.first ? awards.confetti : awards.ribbon %] 
 
 	<p>
-		<img src="[% c.uri_for( c.config.awards.$award.path ) %]" 
-			alt="[% c.config.awards.$award.alt %]" 
-			title="[% c.config.awards.$award.alt %]"/>
+		<img src="[% c.uri_for( award.src ) %]" 
+			alt="[% award.alt %]" 
+			title="[% award.alt %]"/>
 		<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
 			<em>[% item.title | html %]</em>
 		</a>
 		[%- IF item.website %]
-		by <a class="author new-window" href="[% item.website %]">[% item.artist | html %]</a>
+		by <a class="author new-window" href="[% item.website | url %]">[% item.artist | html %]</a>
 		[%- ELSE %]
 		by [% item.artist | html %]
 		[%- END %]
-		[% item.stdev | format('(%.2f)') IF item.stdev %]
+		[%- IF item.stdev %]
+		<span title="[% item.stdev | format('(%.5f)') %]">
+			[% item.stdev | format('(%.2f)') %]
+		</span>
+		[%- END %]
 	</p>
 
 	[%- END %]

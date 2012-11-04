@@ -40,19 +40,12 @@
 				<span class="ui-icon ui-icon-script" title="View as plain text"></span>
 			</a>
 		</td>
-		[%- IF (images = story.images_rs.seed_order.metadata.all) %]
+		[%- IF event.art %]
 		<td>
-			<a class="dialog-activator" data-target="rel[% i %]">
-				<span class="ui-icon ui-icon-image" title="Show related artwork(s)"></span>
+			<a class="dialog-fetcher" title="Show related artwork(s)"
+				href="[% c.uri_for( c.controller('Fic').action_for('rels'), [ story.id_uri ]) %]">
+				<span class="ui-icon ui-icon-image">[Related Artwork(s)]</span>
 			</a>
-			<div class="dialog" id="rel[% i %]"	title="[% story.title | html %] - Related Artwork(s)">
-				<ul>
-				[%- FOREACH image IN images %]
-					<li><a class="link new-tab" href="[% c.uri_for( c.controller('Art')
-						.action_for('view'), [ image.id_uri ]) %]">[% image.title | html %]</a></li>
-				[%- END %]
-				</ul>
-			</div>
 		</td>
 		[%- END %]
 		<td>

@@ -82,14 +82,16 @@ sub first_pass :Private {
 sub do_public :Private {
 	my ( $self, $c ) = @_;
 	
-	my $candidates = $c->stash->{candidates};
+	my @candidates = 
+		grep { $_->user_id != $c->user_id } 
+		@{ $c->stash->{candidates} };
 	
 	#The votes are keyed with the id of the story that the votes are cast on
 	my @votes = 
-		grep { defined $c->req->params->{$_} && $c->req->params->{$_} ne 'N/A' }
+		grep { $c->req->params->{$_} ne 'N/A' }
+		grep { defined $c->req->params->{$_} }
 		map  { $_->id }
-		grep { $_->user_id != $c->user_id }
-		@$candidates;
+		@candidates;
 	
 	$c->req->params->{count}   = @votes;
 	$c->req->params->{user_id} = $c->user_id;
@@ -101,7 +103,7 @@ sub do_public :Private {
 		user_id  => [ [ 'DBIC_UNIQUE', $rs, 'user_id' ] ],
 		
 		#For whatever reason, FormValidator::Simple doesn't have a >= operator
-		count    => [ [ 'GREATER_THAN', @$candidates / 2 - 0.001 ] ],
+		count    => [ [ 'GREATER_THAN', @candidates / 2 - 0.001 ] ],
 		
 		captcha  => [ [ 'EQUAL_TO', 1 ] ],
 		map { $_ => [ 'NOT_BLANK', 'UINT', [ 'BETWEEN', 0, 10 ] ] } @votes,

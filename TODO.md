@@ -1,3 +1,4 @@
-### 20 Oct 2012 (CST)
+### 30 Oct 2012 (CST)
 
-Nothing.
+- DROP TABLE scoreboard
+- INSERT replacement tables

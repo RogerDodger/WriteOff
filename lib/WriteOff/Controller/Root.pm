@@ -52,7 +52,7 @@ sub index :Path :Args(0) {
 	$c->stash->{events} = $c->model('DB::Event')->active;
 	
 	$c->stash->{title} = 'Active Events';
-	$c->stash->{template} = 'index.tt';
+	$c->stash->{template} = 'root/index.tt';
 }
 
 =head2 archive
@@ -67,7 +67,7 @@ sub archive :Local :Args(0) {
 	$c->stash->{events} = $c->model('DB::Event')->old;
 	
 	$c->stash->{title} = 'Event Archive';
-	$c->stash->{template} = 'index.tt';
+	$c->stash->{template} = 'root/index.tt';
 }
 
 =head2 faq
@@ -80,7 +80,7 @@ sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{title} = 'FAQ';
-	$c->stash->{template} = 'faq.tt';
+	$c->stash->{template} = 'root/faq.tt';
 }
 
 =head2 default
@@ -93,7 +93,7 @@ sub default :Path {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{title} = [ '404', 'File Not Found' ],
-	$c->stash->{template} = '404.tt';
+	$c->stash->{template} = 'root/404.tt';
 	$c->res->status(404);
 }
 
@@ -109,7 +109,7 @@ sub forbidden :Private {
 	$c->stash->{forbidden_msg} = $msg // 'Access denied';
 	
 	$c->stash->{title} = [ '403', 'Forbidden' ],
-	$c->stash->{template} = '403.tt';
+	$c->stash->{template} = 'root/403.tt';
 	$c->res->status(403);
 }
 
@@ -125,7 +125,7 @@ sub error :Private {
 	$c->stash->{error} = $msg // 'Something went wrong';
 	
 	$c->stash->{title} = [ 'Error' ],
-	$c->stash->{template} = 'error.tt';
+	$c->stash->{template} = 'root/error.tt';
 	$c->res->status(404);
 }
 
@@ -139,7 +139,7 @@ sub tos :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{title} = 'Terms of Service';
-	$c->stash->{template} = 'tos.tt';
+	$c->stash->{template} = 'root/tos.tt';
 }
 
 =head2 contact
@@ -181,7 +181,7 @@ sub contact :Local :Args(0) {
 	}
 	
 	$c->stash->{title} = 'Contact Us';
-	$c->stash->{template} = 'contact.tt';
+	$c->stash->{template} = 'root/contact.tt';
 }
 
 sub send_contact_email :Private {
