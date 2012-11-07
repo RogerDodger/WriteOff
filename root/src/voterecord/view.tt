@@ -1,10 +1,9 @@
-[% DEFAULT title = 'Vote Record' -%]
-<h2>[% title %]</h2>
+<h1>Vote Record</h1>
 
 [% INCLUDE voterecord/list.tt 
 	records = record.result_source.resultset.search_rs({ id => record.id }).with_stats %]
 
-<h3>Votes</h3>
+<h2>Votes</h2>
 	
 <table class="slim votes">
 [%-

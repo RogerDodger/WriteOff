@@ -1,0 +1,19 @@
+<h1>Confirm Deletion</h1>
+
+<p>Please enter the [% key.name %] of the selected item to confirm deletion.</p>
+<form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="hidden" name="referer" value="[% c.req.referer | url %]" />
+	
+	<p>
+		<input type="text" size="30" class="maxwidth" autofocus
+			data-key="[% key.value | html %]"
+			oninput="if( this.value == $(this).attr('data-key') ) 
+				$('#delete').button('enable')" />		
+	</p>
+	
+	<p>	
+		<input type="submit" value="Delete" disabled="disabled" id="delete" />
+	</p>
+	
+</form>

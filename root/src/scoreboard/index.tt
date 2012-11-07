@@ -1,6 +1,6 @@
 <h1 class="center">[% name %] Hall of Fame</h1>
 
-<table class="slim t-center center">
+<table class="solid t-center center">
 	<tr>
 		<th>#</th>
 		<th>Competitor</th>
@@ -9,11 +9,11 @@
 	</tr>
 [%- IF artists.size != 0 %]
 	[%- FOREACH artist IN artists %]
-	<tr>
+	<tr class="[% loop.parity %]">
 		<td>[% artist.rank %]</td>
 		<td>[% artist.name | html %]</td>
 		<td>
-			<a href="[% c.uri_for( c.controller('Scoreboard')
+			<a href="[% c.uri_for( c.controller('Artist')
 				.action_for('scores'), [ artist.id ]) %]"
 				class="dialog-fetcher author" title="View score breakdown" >
 				[% artist.score %]

@@ -21,7 +21,7 @@ Catalyst Controller.
 sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
-	my $id = eval { no warnings; int $arg };
+	(my $id = $arg) =~ s/^\d+\K.+//;
 	$c->stash->{prompt} = $c->model('DB::Prompt')->find($id) or 
 		$c->detach('/default');
 		
@@ -29,6 +29,8 @@ sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
 		$c->res->redirect
 		( $c->uri_for( $c->action, [ $c->stash->{prompt}->id_uri ] ) );
 	}
+	
+	$c->stash->{title} = [ $c->stash->{prompt}->contents ];
 }
 
 sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
@@ -38,14 +40,14 @@ sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
 		{ order_by => { -desc => 'rating' } } 
 	);
 	
-	$c->stash->{template} = 'prompt/vote.tt';
-	
 	if ( $c->stash->{event}->prompt_votes_allowed ) {
 		$c->forward('do_vote') if $c->req->method eq 'POST';
 		
 		$c->stash->{heat} = $c->model('DB::Heat')->get_or_new_heat
 		( $c->stash->{event}, $c->req->address );
 	}
+	
+	$c->stash->{template} = 'prompt/vote.tt';
 }
 
 sub do_vote :Private {
@@ -65,34 +67,42 @@ sub do_vote :Private {
 sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{template} = 'prompt/submit.tt';
+	my $subs_left = sub {
+		return 0 unless $c->user;
+		return $c->config->{prompts_per_user} -
+		$c->stash->{event}->prompts->search({ user_id => $c->user_id })->count;
+	};
 	
-	$c->forward('do_submit') if $c->req->method eq 'POST' && 
-		$c->user && $c->stash->{event}->prompt_subs_allowed;
+	$c->req->params->{subs_left} = $subs_left->();
+	
+	$c->forward('do_submit') 
+		if $c->req->method eq 'POST' 
+		&& $c->user_exists
+		&& $c->stash->{event}->prompt_subs_allowed;
+		
+	$c->stash->{subs_left} = $subs_left->();
+		
+	push $c->stash->{title}, 'Submit';
+	$c->stash->{template} = 'prompt/submit.tt';
 }
 
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
-
-	my $rs = $c->stash->{event}->prompts;
-	
-	$c->req->params->{count} = $rs->search({ user_id => $c->user->id })->count;
 	
 	$c->form(
-		prompt       => [ 
+		prompt => [ 
 			'NOT_BLANK',
 			[ 'LENGTH', 1, $c->config->{len}{max}{prompt} ], 
 			'TRIM_COLLAPSE', 
-			[ 'DBIC_UNIQUE', $rs, 'contents' ],
+			[ 'DBIC_UNIQUE', $c->stash->{event}->prompts_rs, 'contents' ],
 		],
-		sessionid    => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
-		count        => [ [ 'LESS_THAN', $c->config->{prompts_per_user} ] ],
+		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+		subs_left => [ [ 'GREATER_THAN', 0 ] ],
 	);
 	
 	if( !$c->form->has_error ) {
 		
-		$rs->create({
-			event_id => $c->stash->{event}->id,
+		$c->stash->{event}->create_related('prompts', {
 			user_id  => $c->user->id,
 			ip       => $c->req->address,
 			contents => $c->form->valid('prompt'),
@@ -114,14 +124,16 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 		value => $c->stash->{prompt}->contents,
 	};
 		
-	$c->stash->{template} = 'delete.tt';
+	$c->forward('do_delete') if $c->req->method eq 'POST';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST' && 
-		$c->req->param('sessionid') eq $c->sessionid;
+	push $c->stash->{title}, 'Delete';
+	$c->stash->{template} = 'item/delete.tt';
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
+	
+	$c->forward('/assert_valid_session');
 	
 	$c->log->info( sprintf "Prompt deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),

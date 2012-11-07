@@ -14,7 +14,7 @@ __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
 	expose_methods     => [ qw/
-		format_dt md_render bb_render prompt_subs_left medal_for
+		format_dt md_render bb_render medal_for
 	/ ],
 	render_die         => 1,
 );
@@ -117,18 +117,6 @@ sub md_render {
 	
 	return $text;
 }
-
-sub prompt_subs_left {
-	my ( $self, $c ) = @_;
-	
-	return 0 unless $c->stash->{event} && $c->user;
-	
-	my $rs = $c->stash->{event}->prompts->search({ user_id => $c->user->id });
-	
-	return $c->config->{prompts_per_user} -	$rs->count;
-		
-}
-
 
 sub medal_for {
 	my( $self, $c, $pos ) = @_;

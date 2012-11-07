@@ -49,45 +49,41 @@ jQuery(document).ready(function($) {
 	//Dialogs
 	$('.dialog-fetcher')
 		.click( function(e) {
-			var dialog = $('<div class="dialog"><div class="loading"></div></div>').appendTo('body');
+			var div = $('<div class="dialog"><div class="loading"></div></div>').appendTo('body');
 			
 			var pos = [ 'center', 40 ];
 			
-			dialog.dialog({
+			div.dialog({
 				title: 'Please Wait',
 				modal: true,
 				closeOnEscape: true,
 				width: 'auto',
 				resizable: false,
 				close: function(ui, e) {
-					dialog.remove();
+					div.remove();
 				},
 				position: pos
 			});
 			
-			dialog.load(
+			div.load(
 				$(this).data('target'),
 				function(res, status, xhr) {
 					if( status != 'error' ) {
-						dialog.find('a.ui-button, input[type=submit]').button();
+						div.find('a.ui-button, input[type=submit]').button();
 						
-						// Grab and remove title before resetting position so
-						// that dialog is correctly centred
-						var header = dialog.find('h1').html();
-						dialog.find('h1').remove();
+						//Order here is important
+						div.dialog('option', 'title', div.find('h1').html() );
+						div.find('h1').remove();
+						div.dialog('option', 'position', pos);
 						
-						dialog.dialog('option', {
-							position: pos,
-							title: header || 'Dialog Box'
-						})
-						dialog.find('input:first').focus();
+						div.find('input:first').focus();
 					}
 					else {
-						dialog.dialog('option', {
+						div.dialog('option', {
 							position: pos,
 							title: 'Error'
 						})
-						dialog.html( xhr.status + " " + xhr.statusText );
+						div.html( xhr.status + " " + xhr.statusText );
 					}
 				}
 			);

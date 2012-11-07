@@ -69,8 +69,12 @@
 		</tr>
 	[%- END %]
 	</table>
+	
 	<p>
-		<input class="autocomplete-user" type="text" name="user" />
+		<input class="autocomplete-user maxwidth" type="text" name="user" />
+	</p>
+	
+	<p>
 		[%- IF c.check_user_roles('admin') %]
 		<input type="submit" name="submit" value="Add organiser" />
 		[%- END %]

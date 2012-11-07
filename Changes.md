@@ -1,5 +1,20 @@
+v0.25
+=====
+
+### 7 Nov 2012
+
+- Cleaned up title logic
+- Put a regex on id_uri extractors instead of int() with no warnings
+- Made Controller::Root::assert_valid_session for checking against CSRF
+- Delete checks now fetched as dialogs
+- Fixed action attribute on some forms that refer to themselves
+- Added new table class, `solid`, currently used for the scoreboard
+  - I grow weary of the `slim` table that's used on most of the tables right now
+
 v0.24
 =====
+
+### 4 Nov 2012
 
 - Boatload of style changes
 - Scoreboard data put into multiple tables for score breakdowns

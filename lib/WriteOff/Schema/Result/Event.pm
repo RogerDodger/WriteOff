@@ -457,7 +457,8 @@ sub art_gallery_opened {
 sub fic_gallery_opened {
 	my $row = shift;
 	
-	return $row->check_datetimes_ascend( $row->prelim || $row->public , $row->now_dt );
+	return $row->check_datetimes_ascend
+	( $row->prelim || $row->public , $row->now_dt );
 }
 
 sub art_votes_allowed {

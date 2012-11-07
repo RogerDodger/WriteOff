@@ -47,13 +47,13 @@
 		<td>
 			<a href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('view'), [ record.id ]) %]">
-				<span class="ui-icon ui-icon-clipboard" title="More details"></span>
+				<span class="ui-icon ui-icon-clipboard" title="More details">[More details]</span>
 			</a>	
 		</td>
 		<td>
-			<a href="[% c.uri_for( c.controller('VoteRecord')
+			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('delete'), [ record.id ]) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
+				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
 			</a>	
 		</td>
 	</tr>

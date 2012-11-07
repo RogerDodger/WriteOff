@@ -1,4 +1,5 @@
 <form class="light" action="[% c.req.uri %]" method="post" >
+	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 	[%- IF c.form.has_error %]
 	<div>
 		[%- FOREACH message IN c.form.messages('submit') %]

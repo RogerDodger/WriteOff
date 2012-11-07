@@ -23,7 +23,7 @@ sub now {
 sub now_dt {
 	return DateTime->now;
 	
-	return shift->parse_datetime('2012-10-27 01:00:00');
+	return shift->parse_datetime('2012-10-29 02:00:00');
 }
 
 sub created_before {

@@ -21,23 +21,17 @@ Grabs a vote record.
 
 =cut
 
-sub begin :Private {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{title} = [ 'Vote Record' ];
-}
-
 sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $id ) = @_;
 	
-	$c->detach('/forbidden', [ "Guests cannot manipulate voterecords." ])
+	$c->detach('/forbidden', [ "Guests cannot manipulate VoteRecords." ])
 		unless $c->user;
 	
 	$c->stash->{record} = $c->model('DB::VoteRecord')->find($id) or 
 		$c->detach('/default');
-	
 	$c->stash->{event} = $c->stash->{record}->event;
-	push $c->stash->{title}, $id;
+	
+	$c->stash->{title} = [ 'Vote Record', $c->stash->{record}->id ];
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
@@ -56,17 +50,20 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
 	
 	$c->stash->{key} = { 
-		name  => 'standard deviation (to 2 decimal places)',
-		value => sprintf "%.2f", $c->stash->{record}->stdev,
+		name  => 'count',
+		value => $c->stash->{record}->votes->count,
 	};
 	
-	$c->stash->{template} = 'delete.tt';
+	$c->forward('do_delete') if $c->req->method eq 'POST';
 	
-	$c->forward('do_delete') if $c->req->param('sessionid') eq $c->sessionid;
+	push $c->stash->{title}, 'Delete';
+	$c->stash->{template} = 'item/delete.tt';
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
+	
+	$c->forward('/assert_valid_session');
 
 	$c->log->info( sprintf "VoteRecord deleted by %s: %s (%s)",
 		$c->user->get('username'),
@@ -77,7 +74,10 @@ sub do_delete :Private {
 	$c->stash->{record}->votes->delete_all;
 	
 	$c->flash->{status_msg} = 'Deletion successful';
-	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
+	$c->res->redirect( $c->uri_for( 
+		$c->controller('Event')->action_for('view'), 
+		[ $c->stash->{event}->id_uri ],
+	) );
 }
 
 sub fill :PathPart('fill') :Chained('index') :Args(0) {
@@ -89,25 +89,27 @@ sub fill :PathPart('fill') :Chained('index') :Args(0) {
 		unless $c->stash->{record}->is_unfilled;
 		
 	$c->detach('/error', [ "It is too late to fill this record." ])
-		if $c->stash->{record}->round eq 'prelim' 
-			&& !$c->stash->{event}->prelim_votes_allowed
-		|| $c->stash->{record}->round eq 'private' 
-			&& !$c->stash->{event}->private_votes_allowed;
+		if  $c->stash->{record}->round eq 'prelim' 
+		&& !$c->stash->{event}->prelim_votes_allowed
+		||  $c->stash->{record}->round eq 'private' 
+		&& !$c->stash->{event}->private_votes_allowed;
 	
 	push $c->stash->{title}, 'Fill';
 	$c->stash->{template} = 'voterecord/fill.tt';
 	
-	$c->forward('do_fill') if $c->req->method eq 'POST' 
-		&& $c->req->param('sessionid') eq $c->sessionid;
+	$c->forward('do_fill') if $c->req->method eq 'POST';
 }
 
 sub do_fill :Private {
 	my ( $self, $c ) = @_;
 	
+	$c->forward('/assert_valid_session');
+	
 	my @params = split ";", $c->req->param('data');
 	my $vote_ids = $c->stash->{record}->votes->get_column('id');
 	
-	return 0 unless [ $vote_ids->all ] ~~ [ sort { $a <=> $b } @params ];
+	$c->detach('/error', [ 'Bad form input' ]) 
+		unless [ $vote_ids->all ] ~~ [ sort { $a <=> $b } @params ];
 	
 	for( my $p = 0; $p <= $#params; $p++ ) {
 		$c->model('DB::Vote')->find( $params[$p] )->update({
@@ -118,8 +120,10 @@ sub do_fill :Private {
 	$c->stash->{record}->update({ ip => $c->req->address });
 	
 	$c->flash->{status_msg} = 'Vote successful';
-	$c->res->redirect( $c->uri_for( $c->controller('Vote')->action_for
-			( $c->stash->{record}->round ), [ $c->stash->{event}->id ]) );
+	$c->res->redirect( $c->uri_for( 
+		$c->controller('Vote')->action_for( $c->stash->{record}->round ), 
+		[ $c->stash->{event}->id_uri ]
+	) );
 }
 
 =head1 AUTHOR

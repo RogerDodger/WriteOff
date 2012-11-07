@@ -69,40 +69,6 @@ sub clear :Local :Args(0) {
 	$c->stash->{status_msg} = 'Scoreboard cleared';
 }
 
-=head2 artist
-
-Grabs an artist
-
-=cut
-
-sub artist :Chained('/') :PathPart('artist') :CaptureArgs(1) {
-	my ( $self, $c, $id ) = @_;
-	
-	$c->stash->{artist} = $c->model('DB::Artist')->find($id)
-		or $c->detach('/default');
-}
-
-=head2 scores
-
-Displays the scores for an artist with no template (to be fetched with AJAX).
-
-=cut
-
-sub scores :Chained('artist') :PathPart('scores') :Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{scores} = $c->stash->{artist}->scores->search(undef, {
-		prefetch => 'event',
-		order_by => [
-			{ -asc  => 'event.end' },
-			{ -desc => 'value' },
-		]
-	});
-	
-	$c->stash->{title} = 'Score Breakdown for ' . $c->stash->{artist}->name;
-	$c->stash->{template} = 'scoreboard/scores.tt';
-}
-
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

@@ -12,32 +12,28 @@
 [%- IF event.prompt_subs_allowed %]
 	Submissions are <strong class="good">open</strong>.
 	<br />
-	You may submit <strong>[% prompt_subs_left %]</strong> more prompt(s).
+	You may submit <strong>[% subs_left %]</strong> more prompt(s).
 [%- ELSE %]
 	Submissions are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
-[%- IF event.prompt_subs_allowed && prompt_subs_left > 0 %]
-<form class="light" method="post" action="[% c.uri_for( c.action, c.req.args ) %]">
+
+[%- IF event.prompt_subs_allowed && subs_left > 0 %]
+<form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
 	[%- IF c.form.has_error %]
 	<div>
-		[%- FOREACH error IN c.form.messages('submit') %]
-		<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-				<p>
-					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-					<strong>Error:</strong> [% error %]
-				</p>
-			</div>
-		</div>
+		[%- FOREACH message IN c.form.messages('submit') %]
+			[%- INCLUDE fragment/error_msg.tt %]
 		[%- END %]
 	</div>
 	[%- END %]
 	<p>
 		<label>Prompt</label>
 		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
-		<input type="text" name="prompt" size="24"
+		<input type="text" name="prompt" size="24" class="maxwidth"
 			maxlength="[% c.config.len.max.prompt %]" required />
+	</p>
+	<p>
 		<input type="submit" value="Submit" />
 	</p>
 </form>

@@ -37,20 +37,21 @@
 		[%- IF story.is_manipulable_by(c.user) %]
 		<td>
 			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/edit' ) %]">
-				<span class="ui-icon ui-icon-pencil" title="Edit item"></span>
+				<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
 			</a>
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/delete' ) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
+			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Fic')
+				.action_for('delete'), [ story.id_uri ]) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
 			</a>
 		</td>
 		[%- ELSE %]
 		<td>
-			<span class="ui-icon ui-icon-locked" title="Edit disabled"></span>
+			<span class="ui-icon ui-icon-locked" title="Edit disabled">[]</span>
 		</td>
 		<td>
-			<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
+			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
 		</td>
 		[%- END %]
 	</tr>
@@ -92,11 +93,12 @@
 		<td>[% format_dt( image.created, '%d %b %H:%M') %]</td>
 		<td>
 		[%- IF image.is_manipulable_by( c.user ) %]
-			<a href="[% c.uri_for( '/art/' _ image.id_uri _ '/delete' ) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
+			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Art')
+				.action_for('delete'), [ image.id_uri ]) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
 			</a>
 		[%- ELSE %]
-			<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
+			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
 		[%- END %]
 		</td>	
 	</tr>
@@ -124,11 +126,12 @@
 		</td>
 		<td>
 		[%- IF prompt.is_manipulable_by( c.user ) %]
-			<a href="[% c.uri_for( '/prompt/' _ prompt.id_uri _ '/delete' ) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item"></span>
+			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Prompt')
+				.action_for('delete'), [ prompt.id_uri ]) %]">
+				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
 			</a>
 		[%- ELSE %]
-			<span class="ui-icon ui-icon-locked" title="Delete disabled"></span>
+			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
 		[%- END %]
 		</td>
 	</tr>

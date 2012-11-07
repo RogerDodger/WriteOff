@@ -25,14 +25,14 @@ Grabs an image
 sub begin :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{no_log} = 1 
+	$c->stash->{no_req_log} = 1 
 		if $c->action eq 'art/view' && $c->req->query_keywords eq 'thumb';
 }
 
 sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
-	my $id = eval { no warnings; int $arg };
+	(my $id = $arg) =~ s/^\d+\K.+//;
 	$c->stash->{image} = $c->model('DB::Image')->find($id) or 
 		$c->detach('/default');
 	
@@ -40,6 +40,8 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 		$c->res->redirect
 		( $c->uri_for( $c->action, [ $c->stash->{image}->id_uri ] ) );
 	}
+	
+	$c->stash->{title} = [ $c->stash->{image}->title ];
 }
 
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
@@ -154,14 +156,16 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 		value => $c->stash->{image}->title,
 	};
 		
-	$c->stash->{template} = 'delete.tt';
+	$c->forward('do_delete') if $c->req->method eq 'POST';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST' && 
-		$c->req->param('sessionid') eq $c->sessionid;
+	push $c->stash->{title}, 'Delete';
+	$c->stash->{template} = 'item/delete.tt';
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
+	
+	$c->forward('/assert_valid_session');
 	
 	$c->log->info( sprintf "Art deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),
@@ -184,7 +188,7 @@ sub rels :PathPart('rels') :Chained('index') {
 	
 	$c->stash->{items} = $c->stash->{image}->stories->metadata;
 	
-	$c->stash->{title} = $c->stash->{image}->title . " - Related Story(s)";
+	push $c->stash->{title}, 'Related Story(s)';
 	$c->stash->{template} = 'item/list.tt';
 }
 

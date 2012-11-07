@@ -31,7 +31,7 @@ use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.24.0';
+our $VERSION = 'v0.25.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -112,7 +112,7 @@ __PACKAGE__->config(
 				},
 				blurb     => { LENGTH        => 'Blurb too long' },
 				rules     => { LENGTH        => 'Rules too long' },
-				count     => { LESS_THAN     => 'Submission limit exceeded' },
+				subs_left => { GREATER_THAN  => 'Submission limit exceeded' },
 				
 			},
 			vote => {

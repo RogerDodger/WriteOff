@@ -1,13 +1,13 @@
-<h2>Vote Record</h2>
+<h1>Vote Record [% record.id %]</h1>
 
 <noscript>
-	[% INCLUDE fragment/status_msg.tt
+	[%- INCLUDE fragment/status_msg.tt
 		message = 'This page requires javascript be enabled.' %]
 </noscript>
 
 <p>Click and drag the items to sort them into your preferred order.</p>
 
-<form class="light" method="post" action="[% c.uri_for( c.action, c.args ) %]">
+<form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
 
 	<ul id="sortable">
 		[%- FOREACH vote IN record.votes %]
@@ -25,8 +25,7 @@
 	<p>
 		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 		<input type="hidden" name="data" id="sortable-data" value=""/>
-		<input type="text" size="30" id="sortable-confirm"
-			style="width: 60%"
+		<input type="text" size="30" id="sortable-confirm" style="width: 60%"
 			placeholder="Name of highest rated item"/>
 	</p>
 	<p>

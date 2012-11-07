@@ -326,10 +326,30 @@ td.center,
 .slim {
 	background: #f8f8f8;
 }
-.slim td, .slim th {
+.slim td, 
+.slim th {
 	padding: 3px 7px;
 	border-top: 2px dotted silver;
 	border-bottom: 2px dotted silver;
+}
+.solid {
+	border-bottom: 2px solid #dd9;
+}
+.solid th {
+	border-bottom: 2px solid #dd9;
+	font-size: 110%;
+	font-variant: small-caps;
+	background: transparent;
+}
+.solid td, 
+.solid th {
+	padding: 7px 11px;
+}
+.solid tr.even td {
+	background: #f6f6d6;
+}
+.solid tr.odd td {
+	background: #f2f2d0;
 }
 .dotted-right { 
 	border-right: 2px dotted silver; 
@@ -426,6 +446,7 @@ figure img {
 .popup-msg {
 	display: inline-block;
 	padding: 0.7em 0.7em 0.5em 0.7em;
+	white-space: nowrap;
 }
 .status-msg span.ui-icon, 
 .error-msg span.ui-icon,

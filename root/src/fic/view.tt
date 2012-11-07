@@ -1,4 +1,3 @@
-[%- title = [ story.event.prompt, story.title ] %]
 <h1>[% story.title | html %]</h1>
 
 <div class="story">

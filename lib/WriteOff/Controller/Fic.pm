@@ -25,7 +25,7 @@ Grabs a story
 sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
-	my $id = eval { no warnings; int $arg };
+	(my $id = $arg) =~ s/^\d+\K.+//;
 	$c->stash->{story} = $c->model('DB::Story')->find($id) or 
 		$c->detach('/default');
 	
@@ -33,6 +33,8 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 		$c->res->redirect
 		( $c->uri_for( $c->action, [ $c->stash->{story}->id_uri ] ) );
 	}
+	
+	$c->stash->{title} = [ $c->stash->{story}->title ];
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
@@ -43,6 +45,7 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 		$c->res->body( $c->stash->{story}->contents );
 	}
 	
+	push $c->stash->{title}, $c->stash->{story}->event->prompt;
 	$c->stash->{template} = 'fic/view.tt';
 }
 
@@ -55,6 +58,8 @@ sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
 
 sub form :Private {
 	my ( $self, $c ) = @_;
+	
+	$c->forward('/assert_valid_session');
 	
 	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
 	
@@ -122,7 +127,7 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( $self->action_for('form') ) or return 0;
+	$c->forward('form') or $c->detach('/error', [ 'Bad input' ]);
 	
 	if(!$c->form->has_error) {
 		
@@ -168,6 +173,7 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 		story    => $c->stash->{story}->contents,
 	};
 	
+	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'fic/edit.tt';
 }
 
@@ -178,11 +184,9 @@ sub do_edit :Private {
 	
 	if( !$c->form->has_error ) {
 	
-		$c->log->info( sprintf "Fic edited by %s: %s by %s (%d words) to %s by %s (%d words)",
+		$c->log->info( sprintf "Fic id %d edited by %s, to %s by %s (%d words)",
+			$c->stash->{story}->id,
 			$c->user->get('username'),
-			$c->stash->{story}->title,
-			$c->stash->{story}->author,
-			$c->stash->{story}->wordcount,
 			$c->form->valid('title'),
 			$c->form->valid('author'),
 			$c->form->valid('wordcount'),
@@ -220,15 +224,17 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 		name  => 'title',
 		value => $c->stash->{story}->title,
 	};
-		
-	$c->stash->{template} = 'delete.tt';
 	
-	$c->forward('do_delete') if $c->req->method eq 'POST' && 
-		$c->req->param('sessionid') eq $c->sessionid;
+	$c->forward('do_delete') if $c->req->method eq 'POST';
+	
+	push $c->stash->{title}, 'Delete';
+	$c->stash->{template} = 'item/delete.tt';
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
+	
+	$c->forward('/assert_valid_session');
 		
 	$c->log->info( sprintf "Fic deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),
@@ -250,7 +256,7 @@ sub rels :PathPart('rels') :Chained('index') {
 	
 	$c->stash->{items} = $c->stash->{story}->images->metadata;
 	
-	$c->stash->{title} = $c->stash->{story}->title . " - Related Artwork(s)";
+	push $c->stash->{title}, 'Related Artwork(s)';
 	$c->stash->{template} = 'item/list.tt';
 }
 

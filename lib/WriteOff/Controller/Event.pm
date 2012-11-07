@@ -25,7 +25,7 @@ Grabs an event.
 sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
-	my $id = eval { no warnings; int $arg };
+	(my $id = $arg) =~ s/^\d+\K.+//;
 	$c->stash->{event} = $c->model('DB::Event')->find($id) or 
 		$c->detach('/default');
 	
@@ -46,12 +46,14 @@ Adds an event.
 sub add :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( $c->controller('Root')->action_for('assert_admin') );
+	$c->forward('/assert_admin');
 	
 	$c->stash->{template} = 'event/add.tt';
 	
 	if($c->req->method eq 'POST') {
 	
+		$c->forward('/assert_valid_session');
+		
 		my $p = $c->req->params; 
 		$c->form(
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
@@ -67,8 +69,7 @@ sub add :Local :Args(0) {
 			public_dur  => [ qw/NOT_BLANK UINT/ ],
 			art_dur     => [ $p->{has_art}    ? qw/NOT_BLANK UINT/ : () ],
 			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
-			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ],
-			sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
+			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ]
 		);
 		
 		$c->forward('do_add') if !$c->form->has_error;

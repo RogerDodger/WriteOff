@@ -33,7 +33,7 @@ sub auto :Private {
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
-	) unless $so && $c->stash->{no_log};
+	) unless $so && $c->stash->{no_req_log};
 	
 	$c->detach('index') if !$so && $c->req->method eq 'POST';
 	
@@ -124,7 +124,7 @@ sub error :Private {
 	
 	$c->stash->{error} = $msg // 'Something went wrong';
 	
-	$c->stash->{title} = [ 'Error' ],
+	$c->stash->{title} = 'Error';
 	$c->stash->{template} = 'root/error.tt';
 	$c->res->status(404);
 }
@@ -198,7 +198,7 @@ sub send_contact_email :Private {
 		};
 		$c->stash->{recipient} = $c->stash->{email}{to};
 		
-		$c->log->info( "Contact email sent to " . $recipient );
+		$c->log->info( "Contact email sent to $recipient" );
 		
 		$c->forward( $c->view('Email::Template') );
 		
@@ -220,6 +220,19 @@ sub assert_admin :Private {
 	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin'); 
 }
 
+=head2 assert_valid_session
+
+Check that the user provided their session id in the request parameters.
+
+=cut
+
+sub assert_valid_session :Private {
+	my ( $self, $c, $msg ) = @_;
+	
+	$c->detach('/error', [ $msg // 'Bad session id.' ])
+		if $c->req->param('sessionid') ne $c->sessionid;
+}
+
 =head2 strum
 
 Mogrify certain words in the response body.
@@ -237,7 +250,7 @@ sub strum :Private {
 	
 	while( my($key, $strum) = each %strum_list ) 
 	{
-		while( (my $index = CORE::index $c->res->{body}, $key ) > 0 ) 
+		while( (my $index = CORE::index $c->res->{body}, $key ) >= 0 ) 
 		{
 			substr( $c->res->{body}, $index, length $key ) = $strum;
 		}
