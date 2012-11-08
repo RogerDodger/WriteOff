@@ -1,7 +1,7 @@
 <h1 class="center">[% name %] Hall of Fame</h1>
 
 <table class="solid t-center center">
-	<tr>
+	<tr class="heading">
 		<th>#</th>
 		<th>Competitor</th>
 		<th>Score</th>
@@ -19,7 +19,7 @@
 				[% artist.score %]
 			</a>
 		</td>
-		<td>
+		<td class="flat">
 		[%- FOREACH award IN artist.awards_rs.ordered.all %]
 			<img src="[% award.src %]" 
 				alt="[% award.alt %]" 

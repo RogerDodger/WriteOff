@@ -1,3 +1,7 @@
+/*
+ * GENERIC STYLES
+ */
+
 body {
 	background: #ccc;	
 	color: #222;
@@ -248,6 +252,7 @@ nav li:hover ul li:hover a {
 	padding: 0px 4px;
 	font-size: 10pt;
 	text-align: right;
+	white-space: nowrap;
 }
 .event-listing .blurb {
 	font-size: 11pt;
@@ -332,11 +337,11 @@ td.center,
 	border-top: 2px dotted silver;
 	border-bottom: 2px dotted silver;
 }
-.solid {
-	border-bottom: 2px solid #dd9;
+.solid,
+.solid tr.heading {
+	border-bottom: 2px solid #a79645;
 }
 .solid th {
-	border-bottom: 2px solid #dd9;
 	font-size: 110%;
 	font-variant: small-caps;
 	background: transparent;
@@ -345,11 +350,11 @@ td.center,
 .solid th {
 	padding: 7px 11px;
 }
-.solid tr.even td {
-	background: #f6f6d6;
+.solid tr.even {
+	background: #fffae4;
 }
-.solid tr.odd td {
-	background: #f2f2d0;
+.solid tr.odd {
+	background: #fff9da;
 }
 .dotted-right { 
 	border-right: 2px dotted silver; 
@@ -550,4 +555,7 @@ p.example textarea {
 }
 .nowrap {
 	white-space: nowrap;
+}
+.flat {
+	line-height: 0;
 }
