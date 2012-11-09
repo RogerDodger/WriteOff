@@ -2,29 +2,9 @@
 
 <h2>Fic Gallery</h2>
 
-[%- IF event.fic_gallery_opened; i = 0 -%]
-
-	[%- PROCESS story_table  storys = event.public_story_candidates -%]
-
-	[%- IF event.prelim && !event.prelim_votes_allowed %]
-		[%- PROCESS story_table  storys = event.public_story_noncandidates -%] 
-	[%- END -%]
-	
-	<p class="ui-helper-reset center ui-state-default" style="padding: 2px">
-		Total wordcount: [% event.storys_rs.wordcount.chunk(-3).join(',') %]
-	</p>
-
-[%- ELSE %]
-<p>
-	Gallery opens: <strong>[% format_dt( event.prelim || event.public ) %]</strong>.
-	<br />
-	Gallery is <strong class="bad">closed</strong>.
-</p>
-[%- END %]
-
 [%- BLOCK story_table %]
-<table class="slim">
-	<tr>
+<table class="solid">
+	<tr class="heading">
 		<th style="min-width: 28px">#</th>
 		<th> </th>
 		[% '<th> </th>' IF event.art %]
@@ -32,7 +12,7 @@
 		<th>Wordcount</th>
 	</tr>
 	[%- FOREACH story IN storys; i = i + 1 %]
-	<tr>
+	<tr class="[% loop.parity %]">
 		<td class="center">[% i %]</td>
 		<td class="center">
 			<a href="[% c.uri_for( c.controller('Fic').action_for('view'), 
@@ -58,4 +38,24 @@
 	</tr>
 	[%- END %]
 </table>
+[%- END %]
+
+[%- IF event.fic_gallery_opened; i = 0 -%]
+
+	[%- PROCESS story_table  storys = event.public_story_candidates -%]
+
+	[%- IF event.prelim && !event.prelim_votes_allowed %]
+		[%- PROCESS story_table  storys = event.public_story_noncandidates -%] 
+	[%- END -%]
+	
+<p class="ui-state-default center" style="padding: 7px">
+	Total wordcount: [% event.storys_rs.wordcount.chunk(-3).join(',') %]
+</p>
+
+[%- ELSE %]
+<p>
+	Gallery opens: <strong>[% format_dt( event.prelim || event.public ) %]</strong>.
+	<br />
+	Gallery is <strong class="bad">closed</strong>.
+</p>
 [%- END %]

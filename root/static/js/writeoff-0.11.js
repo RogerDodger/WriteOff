@@ -2,17 +2,18 @@ jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
 	$('.fake-ui-button').button({ disabled: true });
 	
-	{
-		var index = $('.event-listing h3.event-name').index(
-			$( '.event-listing h3 a[href="' + window.location.hash + '"]' ).parent()
-		);
-		$('.event-listing').accordion({ 
-			active: index,
-			change: function(event, ui) {
-				window.location.hash = ui.newHeader.children('a').attr('href');
-			}
-		});
-	}
+	//Event-listing
+	var defaultEventIndex = $('.event-listing h3.event-name').index(
+		$( '.event-listing h3 a' + (window.location.hash || '#null') ).parent()
+	);
+	$('.event-listing').accordion({ 
+		active: defaultEventIndex >= 0 ? defaultEventIndex : false,
+		collapsible: true,
+		change: function(event, ui) {
+			window.location.hash = ui.newHeader.children('a').attr('href') || '';
+		}
+	});
+	
 	$('a.new-window, a.new-tab').attr('target', '_blank');
 	$('a.new-window, a.new-tab').attr('title', function(i, title) {
 		return title || 'Open link in new tab';
@@ -69,7 +70,7 @@ jQuery(document).ready(function($) {
 				$(this).data('target'),
 				function(res, status, xhr) {
 					if( status != 'error' ) {
-						div.find('a.ui-button, input[type=submit]').button();
+						div.find('a.ui-button, input[type=submit], button').button();
 						
 						//Order here is important
 						div.dialog('option', 'title', div.find('h1').html() );

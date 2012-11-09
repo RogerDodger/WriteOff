@@ -65,17 +65,14 @@ li ol li {
 a {
 	text-decoration: none;
 }
-a:hover {
-	cursor: pointer;
-}
 a.link, a.link:visited {
-	color: blue;
+	color: brown;
 	transition: .05s all linear;
 	-moz-transition: .05s all linear;
 	-webkit-transition: .05s all linear;
 }
 a.link:hover {
-	color: dodgerblue;
+	color: coral;
 }
 a.author, a.author:visited,
 a.artist, a.artist:visited {
@@ -324,10 +321,20 @@ td.center,
 .center td { 
 	text-align: center; 
 }
+
+/* Plain */
+table.plain td,
+table.plain th {
+	padding: 3px 7px;
+}
+
+/* Votes */
 .votes th,
 .votes td {
 	min-width: 18px;
 }
+
+/* Slim */
 .slim {
 	background: #f8f8f8;
 }
@@ -336,25 +343,6 @@ td.center,
 	padding: 3px 7px;
 	border-top: 2px dotted silver;
 	border-bottom: 2px dotted silver;
-}
-.solid,
-.solid tr.heading {
-	border-bottom: 2px solid #a79645;
-}
-.solid th {
-	font-size: 110%;
-	font-variant: small-caps;
-	background: transparent;
-}
-.solid td, 
-.solid th {
-	padding: 7px 11px;
-}
-.solid tr.even {
-	background: #fffae4;
-}
-.solid tr.odd {
-	background: #fff9da;
 }
 .dotted-right { 
 	border-right: 2px dotted silver; 
@@ -368,9 +356,25 @@ td.center,
 .dotted-top { 
 	border-top: 2px dotted silver; 
 }
-table.plain td,
-table.plain th {
-	padding: 3px 7px;
+
+/* Solid */
+.solid tr.heading {
+	font-size: 110%;
+	font-variant: small-caps;
+}
+.solid td, 
+.solid th {
+	padding: 7px 11px;
+}
+.solid,
+.solid tr.heading {
+	border-bottom: 2px solid #a79645;
+}
+.solid tr.even {
+	background: #f5f0e5;
+}
+.solid tr.odd {
+	background: #ede4d4;
 }
 
 /* 
@@ -459,7 +463,7 @@ figure img {
 	float: left;
 	margin-right: .3em;
 	position: relative;
-	top: -1px;
+	top: -2px;
 }
 .popup-msg {
 	float: right;
@@ -474,6 +478,9 @@ figure img {
  * DIALOG STYLES
  */
 
+a.dialog-fetcher:hover {
+	cursor: pointer;
+}
 .dialog {
 	min-width: 300px;
 }

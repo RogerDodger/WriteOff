@@ -1,8 +1,8 @@
 <h2>User List</h2>
 
 [%- IF users.count %]
-<table class="slim" style="width: 100%">
-	<tr>
+<table class="solid maxwidth">
+	<tr class="heading">
 		<th>
 			[%- c.req.params.import({ order_by => 'username' }) %]
 			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]">
@@ -30,8 +30,8 @@
 			</a>
 		</th>
 	</tr>
-	[%- WHILE (user = users.next) %]
-	<tr>
+	[%- FOREACH user IN users.all %]
+	<tr class="[% loop.parity %]">
 		<td>[% user.username %]</td>
 		<td class="center">&lt;hidden&gt;</td>
 		<td class="center">[% user.prompt_skill | format('%d') %]</td>
