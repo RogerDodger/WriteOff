@@ -7,9 +7,7 @@
 
 [%- IF story.event.fic_gallery_opened %]
 
-<hr style="margin: 1.6em 0"/>
-
-<p class="center">
+<p class="center" style="margin-top: 1.8em">
 	[%- storys = story.event.storys_gallery_order %]
 	[%- FOREACH s IN storys %]
 		[%- NEXT IF story.id != s.id %]

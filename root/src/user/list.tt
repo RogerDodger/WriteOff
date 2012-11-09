@@ -1,4 +1,4 @@
-<h2>User List</h2>
+<h1>User List</h1>
 
 [%- IF users.count %]
 <table class="solid maxwidth">

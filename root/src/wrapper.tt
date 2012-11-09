@@ -24,7 +24,7 @@
 
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.1.custom.css') %]" />
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.15.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.16.css') %]" />
 	
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
@@ -135,8 +135,9 @@
 		</a>
 	</p>
 [%- IF c.config.footer_addendum %]
-	<hr />
-	[% md_render( c.config.footer_addendum ) %]
+	<div style="margin-top: 0.5em">
+		[% md_render( c.config.footer_addendum ) %]
+	</div>
 [%- END %]
 </footer>
 

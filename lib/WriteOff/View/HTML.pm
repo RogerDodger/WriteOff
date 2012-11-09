@@ -66,18 +66,18 @@ my $bb = Parse::BBCode->new({
 		i => '<em>%{parse}s</em>',
 		u => '<span style="text-decoration: underline">%{parse}s</span>',
 		s => '<del>%{parse}s</del>',
-		url => '<a class="link new-window" href="%{link}a">%{parse}s</a>',
+		url => '<a class="link new-tab" href="%{link}a">%{parse}s</a>',
 		size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
 		color => '<span style="color: %{color}a;">%{parse}s</span>',
-		center => '<div style="text-align: center">%{parse}s</div>',
+		center => '<div class="center br-eater">%{parse}s</div>',
 		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
 		quote => {
 			class => 'block',
-			output => "<br>\n<blockquote>%{parse}s</blockquote>\n",
+			output => '<blockquote class="br-eater">%{parse}s</blockquote>',
 		},
 		hr => {
 			class => 'block',
-			output => "<br>\n<hr />\n",
+			output => '<hr class="br-eater"/>',
 			single => 1,
 		},
 	},
@@ -100,7 +100,6 @@ sub bb_render {
 	return '' unless $text;
 	
 	$text = $bb->render( $text );
-	$text =~ s{</div>\s*<br>}{</div>}g;
 	$text =~ s{<br>}{<br />}g;
 	
 	return $text;
@@ -113,7 +112,7 @@ sub md_render {
 	
 	$text = Template::Filters::html_filter( $text );
 	$text = Text::Markdown->new->markdown( $text );
-	$text =~ s{<a (.+?)>}{<a class="link new-window" $1>}g;
+	$text =~ s{<a (.+?)>}{<a class="link new-tab" $1>}g;
 	
 	return $text;
 }
