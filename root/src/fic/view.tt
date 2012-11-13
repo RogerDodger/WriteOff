@@ -6,7 +6,7 @@
 	<a class="bigger" title="Increase font size">A</a>
 </aside>
 
-<div class="story" onchange="setFontSizeFromCookie( $(this) )">
+<div class="story">
 	[% bb_render( story.contents ).replace( '\n' , "\n\t" ) %]
 	<!-- [% story.wordcount %] words -->
 </div>
