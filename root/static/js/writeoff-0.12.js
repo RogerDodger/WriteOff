@@ -1,6 +1,45 @@
+function resetStoryFontSize() {
+	var config = $.cookie('story-font-size') * 1 || 1;
+	
+	//min of 0.6em and max of 1.4em
+	if(config < 0.6) config = 0.6;
+	if(config > 1.4) config = 1.4;
+	
+	$('.story').css('font-size', config + 'em');
+}
+
+function toggleField(id) {
+	var field = document.getElementById(id);
+	field.disabled = !field.disabled;
+}
+
 jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
 	$('.fake-ui-button').button({ disabled: true });
+	
+	//Story font-size togglers
+	resetStoryFontSize();
+	$('aside.font-size-chooser a').on('click', function() {
+		var a = $(this);
+		if( a.hasClass('default') ) {
+			$.removeCookie('story-font-size');
+		}
+		else {
+			config = $.cookie('story-font-size') * 1 || 1;
+			
+			if( a.hasClass('bigger') )
+				config += 0.05;
+				if( config >= 1.4 ) config = 1.4;
+			if( a.hasClass('smaller') ) {
+				config -= 0.05;
+				if( config < 0.6 ) config = 0.6;
+			}
+			
+			$.cookie('story-font-size', config, { expires: 365 });
+		}
+		
+		resetStoryFontSize();
+	});
 	
 	//Event-listing
 	var defaultEventIndex = $('.event-listing h3.event-name').index(
@@ -97,8 +136,3 @@ jQuery(document).ready(function($) {
 	//Popups
 	$('.popup-msg').fadeOut(5000, "easeInQuint");
 });
-
-function toggleField(id) {
-	var field = document.getElementById(id);
-	field.disabled = !field.disabled;
-}

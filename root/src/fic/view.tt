@@ -1,6 +1,12 @@
-<h1>[% story.title | html %]</h1>
+<h1 style="float: left">[% story.title | html %]</h1>
 
-<div class="story">
+<aside class="font-size-chooser ui-state-highlight ui-corner-all" unselectable="on">
+	<a class="smaller" title="Decrease font size">A</a>
+	<a class="default" title="Reset font size">A</a>
+	<a class="bigger" title="Increase font size">A</a>
+</aside>
+
+<div class="story" onchange="setFontSizeFromCookie( $(this) )">
 	[% bb_render( story.contents ).replace( '\n' , "\n\t" ) %]
 	<!-- [% story.wordcount %] words -->
 </div>

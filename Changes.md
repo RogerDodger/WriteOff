@@ -1,3 +1,10 @@
+v0.26
+=====
+
+### 13 Nov 2012
+
+- Added font-size chooser for story views
+
 v0.25
 =====
 
