@@ -1,3 +1,9 @@
+v0.27
+
+### 15 Nov 2012
+
+- News tab added (WIP, not actually dynamic right now)
+
 v0.26
 =====
 

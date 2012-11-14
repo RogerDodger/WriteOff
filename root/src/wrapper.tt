@@ -20,11 +20,11 @@
 <head>
 	<meta charset="utf-8" />
 
-	<title>[% title.list.title_format || name %]</title>
+	<title>[% head_title %]</title>
 
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]" />
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.1.custom.css') %]" />
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.17.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.18.css') %]" />
 	
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]" ></script>
@@ -57,6 +57,7 @@
 [% 
 	navs = [ 
 		{ action => c.controller('Root').action_for('index'),       name => 'Events' },
+		{ action => c.controller('News').action_for('list'),        name => 'News' },
 		{ action => c.controller('Root').action_for('faq'),         name => 'FAQ' },
 		{ action => c.controller('Scoreboard').action_for('index'), name => 'Scoreboard' },
 		{ action => c.controller('User').action_for('list'),        name => 'Users' },

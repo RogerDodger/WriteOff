@@ -14,7 +14,7 @@ __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
 	expose_methods     => [ qw/
-		format_dt md_render bb_render medal_for
+		format_dt md_render bb_render medal_for head_title
 	/ ],
 	render_die         => 1,
 );
@@ -30,19 +30,16 @@ $Template::Stash::LIST_OPS->{join_serial} = sub {
 	return join ", ", @list;
 };
 
+$Template::Stash::LIST_OPS->{join_en} = sub {
+	join " – ", @{$_[0]};
+};
+
 $Template::Stash::LIST_OPS->{sort_stdev} = sub {
 	return [ sort { $b->stdev <=> $a->stdev } @{ $_[0] } ]
 };
 
 $Template::Stash::LIST_OPS->{map_username} = sub {
 	return [ map { $_->username } @{ $_[0] } ];
-};
-
-$Template::Stash::LIST_OPS->{title_format} = sub {
-	return 
-		join " – ",
-		map { Template::Filters::html_filter $_ } 
-		@{ $_[0] };
 };
 
 my $RFC2822 = '%a, %d %b %Y %T %Z';
@@ -58,6 +55,17 @@ sub format_dt {
 	$dt->strftime($RFC2822), 
 	$dt->iso8601, 
 	$dt->set_time_zone($tz)->strftime($fmt // $RFC2822);
+}
+
+sub head_title {
+	my( $self, $c ) = @_;
+	
+	my $title = $c->stash->{title};
+	
+	return 
+		join " – ",
+		map { Template::Filters::html_filter $_ } 
+		( ref $title eq 'ARRAY' ? @$title : $title || () ), $c->config->{name};
 }
 
 my $bb = Parse::BBCode->new({

@@ -18,17 +18,17 @@
 		<input type="datetime-local" name="start" size="32"
 			placeholder="1970-01-01T00:00:00Z" required autofocus/>
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Organiser<span class="required">*</span></label>
 		<input type="text" name="organiser" class="autocomplete-user"
 			maxlength="[% c.config.len.max.user %]" required />
 	</p>
 			
-	<p class="field">
+	<p class="inline">
 		<label>Initial Prompt</label>
 		<input type="text" name="prompt" placeholder="TBD" maxlength="[% c.config.len.max.prompt %]"/>
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Content level</label>
 		<select name="content_level">
 			<option value="E">Everyone</option>
@@ -36,13 +36,13 @@
 			<option value="M">Mature</option>
 		</select>
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Fic Duration</label>
 		<input type="number" name="fic_dur"
 			size="4" max="9999" min="1" value="72" required />
 		Hours
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Wordcount</label>
 		<input type="number" name="wc_min" 
 			size="6" max="999999" min="0" step="50" value="2000" required />
@@ -50,36 +50,36 @@
 		<input type="number" name="wc_max" 
 			size="6" max="999999" min="0" step="50" value="25000" required />
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Public Duration</label>
 		<input type="number" name="public_dur" 
 			size="4" max="9999" min="1" value="7" required />
 		Days
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Art Duration</label>
-		<input type="checkbox" name="has_art" onclick="toggleField('art')" /> 
+		<input type="checkbox" name="has_art" class="toggler" /> 
 		Has art
 		<br />
-		<input type="number" id="art" name="art_dur" disabled="disabled"
+		<input type="number" name="art_dur" disabled="disabled"
 			size="4" max="9999" min="1" value="72" required />
 		Hours
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Prelim Duration</label>
-		<input type="checkbox" name="has_prelim" onclick="toggleField('prelim')" />
+		<input type="checkbox" name="has_prelim" class="toggler" />
 		Has prelim
 		<br />
-		<input type="number" id="prelim" name="prelim_dur" disabled="disabled"
+		<input type="number" name="prelim_dur" disabled="disabled"
 			size="4" max="9999" min="1" value="7"  required />
 		Days
 	</p>
-	<p class="field">
+	<p class="inline">
 		<label>Private Duration</label>
-		<input type="checkbox" name="has_judges" onclick="toggleField('private')" />
+		<input type="checkbox" name="has_judges" class="toggler" />
 		Has judges
 		<br />
-		<input type="number" id="private" name="private_dur" disabled="disabled" 
+		<input type="number" name="private_dur" disabled="disabled" 
 			size="4" max="9999" min="1" value="7"  required />
 		Days
 	</p>
@@ -88,7 +88,7 @@
 		Notify mailing list of event
 	</p>
 	<p>
-		<input type="submit" value="Add Event" />
+		<button type="submit">Add Event</button>
 		<a class="ui-button" href="[% c.uri_for( c.controller('Event').action_for('add') ) %]">
 			Reset
 		</a>

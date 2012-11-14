@@ -49,7 +49,7 @@ sub with_scores {
 		],
 		'+as' => [ 'public_score', 'story_count' ],
 		order_by => [
-			{ -desc => 'story_count + public_score' },
+			{ -desc => 'story_count + (CASE WHEN public_score THEN public_score ELSE 0 END)' },
 			{ -asc  => 'title' },
 		],
 	});

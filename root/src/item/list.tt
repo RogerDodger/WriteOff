@@ -1,4 +1,4 @@
-<h1>[% title.list.title_format %]</h1>
+<h1>[% title.list.join_en | html %]</h1>
 
 <ul>
 [%- FOREACH item IN items.all %]

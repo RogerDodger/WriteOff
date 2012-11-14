@@ -8,11 +8,6 @@ function resetStoryFontSize() {
 	$('.story').css('font-size', config + 'em');
 }
 
-function toggleField(id) {
-	var field = document.getElementById(id);
-	field.disabled = !field.disabled;
-}
-
 jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
 	$('.fake-ui-button').button({ disabled: true });
@@ -52,6 +47,12 @@ jQuery(document).ready(function($) {
 			window.location.hash = ui.newHeader.children('a').attr('href') || '';
 		}
 	});
+	
+	$('input[type="checkbox"].toggler')
+		.on('change', function() {
+			$(this).nextAll('input').get(0).disabled = !this.checked;
+		})
+		.trigger('change');
 	
 	$('a.new-window, a.new-tab').attr('target', '_blank');
 	$('a.new-window, a.new-tab').attr('title', function(i, title) {

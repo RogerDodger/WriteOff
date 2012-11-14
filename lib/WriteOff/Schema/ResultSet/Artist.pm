@@ -51,7 +51,8 @@ sub deal_awards_and_scores {
 		
 		my @awards = (
 			$awards->medal_for($item->pos) // (),
-			$max_stdev->id == $item->id ? $awards->find({ name => 'confetti' }) : (),
+			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ? 
+					$awards->find({ name => 'confetti' }) : (),
 			$item->pos == $n ? $awards->find({ name => 'spoon' }) : (),
 		);
 		

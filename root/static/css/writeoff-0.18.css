@@ -180,7 +180,7 @@ nav li {
 	background: #fff;
 	border-radius: 5px 5px 0 0;
 	margin-right: 3px;
-	max-width: 350px;
+	max-width: 275px;
 }
 nav li:hover, nav li.selected {
 	background: #000;
@@ -420,6 +420,7 @@ table.plain th {
 	clear: both;
 	font-size: 1em;
 	line-height: 1.8em;
+	margin-bottom: 1.8em;
 	text-align: justify;
 }
 .story hr {
