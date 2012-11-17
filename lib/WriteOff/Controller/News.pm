@@ -23,6 +23,12 @@ Catalyst Controller.
 
 sub list :Path :Args(0) {
     my ( $self, $c ) = @_;
+	require DateTime::Format::SQLite;
+	
+	$c->stash->{times} = [
+		DateTime::Format::SQLite->parse_datetime('2012-11-17 17:45:00'),
+		DateTime::Format::SQLite->parse_datetime('2012-11-14 16:50:00'),
+	];
 	
 	$c->stash->{title} = 'News';
     $c->stash->{template} = 'news/list.tt';

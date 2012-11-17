@@ -4,6 +4,24 @@
 
 <h1>News</h1>
 
+<h2>[% format_dt( times.0 ) %]</h2>
+
+<p>
+	MLPchan's servers experienced a DDoS over the last couple hours, which is
+	why the site was unavailable. And the Hearth's Warming Care Package deadline
+	is right about now. Because of work or other commitments, I understand 
+	that the last few hours may have been the only time some people may have had
+	to submit today. As such, the deadline's been extended by 24 hours to make
+	sure nobody missed out because of this issue.
+</p>
+
+<p>
+	Sorry for the inconvenience,<br />
+	Roger
+</p>
+
+<h2>[% format_dt( times.1 ) %]</h2>
+
 <p>
 	Hey, just lettin' everyone know that the site was temporarily down while
 	I populated the database with the old write-offs. That's right—<a class="link"
@@ -31,6 +49,6 @@
 	them (and I'm tired).
 </p>
 <p>
-	Cheers,<br/>
+	Cheers,<br />
 	Roger
 </p>
