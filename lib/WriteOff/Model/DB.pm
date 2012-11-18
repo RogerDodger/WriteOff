@@ -2,12 +2,13 @@ package WriteOff::Model::DB;
 
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
+use FindBin '$Bin';
 
 __PACKAGE__->config(
 	schema_class => 'WriteOff::Schema',
 	
 	connect_info => {
-		dsn => 'dbi:SQLite:WriteOff.db',
+		dsn => "dbi:SQLite:$Bin/../WriteOff.db",
 		user => '',
 		password => '',
 		sqlite_unicode => 1,
