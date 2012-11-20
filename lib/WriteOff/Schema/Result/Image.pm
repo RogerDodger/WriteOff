@@ -313,19 +313,9 @@ sub is_manipulable_by {
 
 sub id_uri {
 	my $self = shift;
+	require WriteOff::Helpers;
 	
-	my $desc = $self->title;
-	
-	for ( $desc ) {
-		s/[^\w\d\s\-]//g;
-		s/[\s\-]+/-/g;
-	}
-	
-	return $self->id . '-' . $desc;
-}
-
-sub thumb_base64 {
-	return MIME::Base64::encode( shift->thumb );
+	return WriteOff::Helpers::simple_uri( $self->id, $self->title );
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

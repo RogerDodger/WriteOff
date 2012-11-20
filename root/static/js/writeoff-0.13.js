@@ -8,6 +8,24 @@ function resetStoryFontSize() {
 	$('.story').css('font-size', config + 'em');
 }
 
+String.prototype.trim = function() {
+	return this.replace(/^\s+|\s+$/g, "");
+};
+String.prototype.collapse = function() {
+	return this.replace(/\s(?=\s)/g, "");
+};
+String.prototype.collate = function() {
+	return this
+		.toLowerCase()
+		.trim()
+		.collapse()
+		.replace(/[^\x20-\x7E]/g, "");
+};
+String.prototype.regex = function() {
+	//http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+	return this.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+};
+
 jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
 	$('.fake-ui-button').button({ disabled: true });
@@ -66,7 +84,9 @@ jQuery(document).ready(function($) {
 	
 	//VoteRecord::fill form handlers
 	var sortable_update = function() {
-		if(	$(this).children(':first').attr('data-name') != $('#sortable-confirm').attr('value') ) {
+		if(	$(this).children(':first').attr('data-name').collate() 
+			!= $('#sortable-confirm').attr('value').collate() ) 
+		{
 			$('#sortable-submit').button('disable');
 			$('#sortable-confirm').attr('value', '');
 		}
@@ -82,7 +102,8 @@ jQuery(document).ready(function($) {
 		create: sortable_update
 	});
 	$('#sortable-confirm').on('input', function() {
-		if( this.value == $('#sortable').children(':first').attr('data-name') ) {
+		if( this.value.collate() 
+			== $('#sortable').children(':first').attr('data-name') ) {
 			$('#sortable-submit').button('enable');
 		}
 	});

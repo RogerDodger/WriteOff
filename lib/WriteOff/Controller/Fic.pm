@@ -1,6 +1,7 @@
 package WriteOff::Controller::Fic;
 use Moose;
 use namespace::autoclean;
+use WriteOff::Helpers 'wordcount';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -61,7 +62,7 @@ sub form :Private {
 	
 	$c->forward('/assert_valid_session');
 	
-	$c->req->params->{wordcount} = $c->wordcount( $c->req->params->{story} );
+	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 	
 	# When editing, must allow for the title to be itself
 	my $title_rs = $c->stash->{event}->storys->search({

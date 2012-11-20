@@ -322,28 +322,23 @@ sub is_manipulable_by {
 	0;
 }
 
+
 sub id_uri {
 	my $self = shift;
+	require WriteOff::Helpers;
 	
-	my $desc = $self->title;
-	
-	for ( $desc ) {
-		s/[^\w\d\s\-]//g;
-		s/[\s\-]+/-/g;
-	}
-	
-	return $self->id . '-' . $desc;
+	return WriteOff::Helpers::simple_uri( $self->id, $self->title );
 }
 
 sub is_public_candidate {
-	my $me = shift;
+	my $self = shift;
 	no warnings 'uninitialized';
 	
-	$me->prelim_score >= 0 && 
-	$me->author_vote_count >= $me->author_story_count ||
+	$self->prelim_score >= 0 
+	&& $self->author_vote_count >= $self->author_story_count
 	# Legacy check. The above doesn't work on 'Sweet Music' data because some
 	# of the participants don't have accounts on the site
-	$me->votes->public->count;
+	|| $self->votes->public->count;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

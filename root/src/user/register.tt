@@ -4,10 +4,8 @@
 <form class="light" method="post" action="[% c.uri_for( c.action ) %]">
 	[% IF c.form.has_error %]
 	<div>
-		[%- FOREACH error IN c.form.messages('register') %]
-		<p class="error-msg ui-state-error ui-corner-all"> 
-			<strong>Error:</strong> [% error %]
-		</p>
+		[%- FOREACH message IN c.form.messages('register') %]
+			[% INCLUDE fragment/error_msg.tt %]
 		[%- END %]
 	</div>
 	[% END %]
@@ -25,15 +23,16 @@
 			<input type="password" name="password" size="30" class="halfwidth"
 				title="Must be [% c.config.len.min.pass %] or more characters." 
 				maxlength="[% c.config.len.max.pass %]"
-				onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
+				onchange="$('input[name=password2]')
+					.attr('pattern', '^' + this.value.regex() + '$')"
 				pattern=".{[% c.config.len.min.pass %],}" required />
 		</p>
 		
 		<p class="col final">
 			<label>Confirm Password<span class="required">*</span></label>
-			<input type="password" name="password2" id="p2" size="30" class="maxwidth"
-				title="Passwords must match"
-				maxlength="[% c.config.len.max.pass %]" required />
+			<input type="password" name="password2" size="30" class="maxwidth"
+				title="Passwords must match" 
+				maxlength="[% c.config.len.max.pass %]" required/>
 		</p>
 	</div>
 	
@@ -59,11 +58,13 @@
 	[% recaptcha.remove(' frameborder="0"') %]
 	<p class="confirm">
 		By registering you acknowledge that you have read and agreed to 
-		the site's <a class="link new-window" 
-		href="[% c.uri_for('/tos') %]">Terms of Service</a>.
+		the site's <a class="link new-tab" href="[% c.uri_for('/tos') %]">
+		Terms of Service</a>.
 	</p>
 	
-	<input type="submit" value="Register" />
+	<p>
+		<input type="submit" value="Register" />
+	</p>
 </form>
 
 [%- ELSIF user -%]

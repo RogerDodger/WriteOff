@@ -8,13 +8,14 @@
 		<input type="password" name="password" size="30" class="maxwidth"
 			title="Must be [% c.config.len.min.pass %] or more characters." 
 			maxlength="[% c.config.len.max.pass %]"
-			onchange="document.getElementById('p2').pattern = '^' + this.value + '$'"
+			onchange="$('input[name=password2]')
+				.attr('pattern', '^' + this.value.regex() + '$')"
 			pattern=".{[% c.config.len.min.pass %],}" required />
 	</p>
 	<p>
 		<label>Confirm Password<span class="required">*</span></label>
 		<input type="password" name="password2" size="30" class="maxwidth"
-			title="Passwords must match" id="p2"
+			title="Passwords must match"
 			maxlength="[% c.config.len.max.pass %]" required />
 	</p>
 	

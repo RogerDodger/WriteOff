@@ -3,6 +3,8 @@ v0.27
 ### 15 Nov 2012
 
 - News tab added (WIP, not actually dynamic right now)
+- WriteOff::Helpers added to store miscellenous subs
+- Fixed password confirmation fields not letting special characters in passwords
 
 v0.26
 =====

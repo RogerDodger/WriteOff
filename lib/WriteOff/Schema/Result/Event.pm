@@ -347,23 +347,9 @@ sub set_content_level {
 
 sub id_uri {
 	my $self = shift;
+	require WriteOff::Helpers;
 	
-	my $desc = $self->prompt;
-	
-	for ( $desc ) {
-		s/[^\w\d\s\-]//g;
-		s/[\s\-]+/-/g;
-	}
-	
-	return $self->id . '-' . $desc;
-}
-
-sub id_html {
-	my $prompt = shift->id_uri;
-	
-	$prompt =~ s/^(\d+)-//;
-	
-	return $prompt;
+	return WriteOff::Helpers::simple_uri( $self->id, $self->prompt );
 }
 
 sub organisers {
@@ -579,11 +565,12 @@ sub prelim_distr {
 	my $self = shift;
 	my $x_len = shift // 6;
 	my $y_len = $self->storys->count;
+	require List::Util;
 	
 	# Order by user_id so that initial seeding is faster
 	my @storys = $self->storys->search(undef, { 
-		select => [ 'id', 'wordcount', 'user_id' ],
-		order_by => 'user_id',
+		select       => [ 'id', 'wordcount', 'user_id' ],
+		order_by     => 'user_id',
 		result_class => 'DBIx::Class::ResultClass::HashRefInflator'
 	})->all;
 	
@@ -631,7 +618,6 @@ sub prelim_distr {
 		return $work;
 	};
 	
-	#Only used for testing
 	my $system_stdev = sub {
 		my @wcs = map {
 			List::Util::sum map { $_->{wordcount} } @$_[1 .. $x_len]
