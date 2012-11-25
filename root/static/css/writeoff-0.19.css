@@ -598,7 +598,7 @@ figure img {
 	float: left;
 	margin-right: .3em;
 	position: relative;
-	top: -2px;
+	top: 2px;
 }
 .popup-msg {
 	float: right;
