@@ -10,6 +10,7 @@ v0.27
   - Lots of renaming to be more semantic/neat
 - Complete replacement of "slim" table style with the "solid" one (woo!)
 - Private-round finalists display for the public in Controller::Vote::private
+- Added a dynamically loaded table of contents to the FAQ (finally...)
 
 v0.26
 =====
