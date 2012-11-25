@@ -1,5 +1,5 @@
-<table class="slim center maxwidth">
-	<tr>
+<table class="solid maxwidth no-overflow">
+	<tr class="heading">
 		<th>Event</th>
 		<th>User</th>
 		[%- IF c.check_user_roles('admin') %]
@@ -8,42 +8,42 @@
 		<th>Round</th>
 		<th>Type</th>
 		<th>Count</th>
-		<th title="Standard deviation">&sigma;</th>
-		<th title="Mean (average)">&mu;</th>
+		<th title="Standard deviation" style="font-variant: normal;">&sigma;</th>
+		<th title="Mean (average)" style="font-variant: normal;">&mu;</th>
 		<th>Filled</th>
 		<th> </th>
 		<th> </th>
 	</tr>
-	[%- WHILE (record = records.next) %]
-	<tr>
-		<td class="left" title="[% record.event.prompt | html %]">
-			[% record.event.prompt | truncate(12) | html %]
+	[%- FOREACH record IN records.all %]
+	<tr class="[% loop.parity %]">
+		<td class="max-75" title="[% record.event.prompt | html %]">
+			[% record.event.prompt | html %]
 		</td>
 		[%- IF record.user_id %]
-		<td title="[% record.user.username %]">
-			[% record.user.username | truncate(12) %]
+		<td class="max-75" title="[% record.user.username %]">
+			[% record.user.username %]
 		</td>
 		[%- ELSE %]
 		<td>Guest</td>
 		[%- END %]
 		[%- IF c.check_user_roles('admin') %]
-		<td title="[% record.ip %]">[% record.ip | truncate(15) %]</td>
+		<td class="max-75" title="[% record.ip %]">[% record.ip %]</td>
 		[%- END %]
-		<td>[% record.round.ucfirst %]</td>
-		<td>[% record.type.ucfirst %]</td>
-		<td>[% record.votes_rs.count %]</td>
+		<td class="center">[% record.round.ucfirst %]</td>
+		<td class="center">[% record.type.ucfirst %]</td>
+		<td class="center">[% record.votes_rs.count %]</td>
 		[%- IF record.round == 'public' %]
-		<td title="[% record.stdev | format('%.5f') %]">
+		<td class="center" title="[% record.stdev | format('%.5f') %]">
 			[% record.stdev | format('%.2f') %]
 		</td>
-		<td title="[% record.mean | format('%.5f') %]">
+		<td class="center" title="[% record.mean | format('%.5f') %]">
 			[% record.mean | format('%.2f') %]
 		</td>
 		[%- ELSE %]
 		<td></td>
 		<td></td>
 		[%- END %]
-		<td>[% format_dt( record.updated, '%d %b %H:%M' ) %]</td>
+		<td class="right">[% format_dt( record.updated, '%d %b %H:%M' ) %]</td>
 		<td>
 			<a href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('view'), [ record.id ]) %]">

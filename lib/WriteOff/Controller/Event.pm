@@ -25,7 +25,7 @@ Grabs an event.
 sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
-	(my $id = $arg) =~ s/^\d+\K.+//;
+	(my $id = $arg) =~ s/^\d+\K.*//;
 	$c->stash->{event} = $c->model('DB::Event')->find($id) or 
 		$c->detach('/default');
 	
@@ -243,6 +243,11 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 		blurb => $c->stash->{event}->blurb,
 		rules => $c->stash->{event}->custom_rules,
 	};
+
+	$c->stash->{staff} = [
+		$c->stash->{event}->organisers->all,
+		$c->stash->{event}->judges->all,
+	];
 	
 	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'event/edit.tt';

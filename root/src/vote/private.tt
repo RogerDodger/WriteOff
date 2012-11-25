@@ -16,8 +16,20 @@
 [%- END %]
 </p>
 
+[%- IF finalists.count %]
+<h3>Finalists</h3>
+
+<ul>
+	[%- FOREACH finalist IN finalists.all %]
+	<li><a class="link" href="[% c.uri_for( c.controller('Fic')
+		.action_for('view'), [ finalist.id_uri ]) %]">[% finalist.title | html %]</a></li>
+	[%- END %]
+</ul>
+
+[% END %]
+
 [%- IF event.private_votes_allowed && judge %]
-<h3>Unfilled Vote Records</h3>
+<h3>My Unfilled Vote Records</h3>
 	[%- IF records.count %]
 <ul>
 		[%- FOREACH record IN records.all %]

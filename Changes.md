@@ -1,10 +1,15 @@
 v0.27
+=====
 
-### 15 Nov 2012
+### 26 Nov 2012
 
 - News tab added (WIP, not actually dynamic right now)
-- WriteOff::Helpers added to store miscellenous subs
+- WriteOff::Helpers added to store miscellaneous useful subs shared throughout the application
 - Fixed password confirmation fields not letting special characters in passwords
+- Style refit to use html5boilerplate's stylesheet template and normalize.css 
+  - Lots of renaming to be more semantic/neat
+- Complete replacement of "slim" table style with the "solid" one (woo!)
+- Private-round finalists display for the public in Controller::Vote::private
 
 v0.26
 =====

@@ -44,7 +44,8 @@
 [%- IF prompts.count %]
 <h3>Current Standings</h3>
 	[%- WHILE (prompt = prompts.next) %]
-	<p class="prompt-listing" style="width: [% (prompt.rating / 4) | format('%dpx;') %]">
+	<p class="prompt ui-state-default ui-corner-all" 
+		style="width: [% (prompt.rating / 3) | format('%dpx;') %]">
 		[% prompt.contents | html %]
 	</p>
 	[%- END %]

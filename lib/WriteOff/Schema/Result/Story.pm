@@ -109,6 +109,18 @@ __PACKAGE__->table("storys");
   default_value: 0
   is_nullable: 1
 
+=head2 is_finalist
+
+  data_type: 'bit'
+  default_value: 0
+  is_nullable: 0
+
+=head2 is_public_candidate
+
+  data_type: 'bit'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -144,6 +156,10 @@ __PACKAGE__->add_columns(
   { data_type => "real", is_nullable => 1 },
   "views",
   { data_type => "integer", default_value => 0, is_nullable => 1 },
+  "is_finalist",
+  { data_type => "bit", default_value => 0, is_nullable => 0 },
+  "is_public_candidate",
+  { data_type => "bit", default_value => 0, is_nullable => 0 },
   "created",
   { data_type => "timestamp", is_nullable => 1 },
   "updated",
@@ -255,8 +271,8 @@ Composing rels: L</image_stories> -> image
 __PACKAGE__->many_to_many("images", "image_stories", "image");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-31 08:53:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oO9zn7UuGBnBxYltffM+3Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-25 22:41:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W1f8zPqQCwSFy2MOzZescg
 
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},

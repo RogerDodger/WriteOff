@@ -54,11 +54,11 @@ jQuery(document).ready(function($) {
 		resetStoryFontSize();
 	});
 	
-	//Event-listing
-	var defaultEventIndex = $('.event-listing h3.event-name').index(
-		$( '.event-listing h3 a' + (window.location.hash || '#null') ).parent()
+	//Event accordion
+	var defaultEventIndex = $('.events h1.prompt').index(
+		$( '.events h1 a' + (window.location.hash || '#null') ).parent()
 	);
-	$('.event-listing').accordion({ 
+	$('.events').accordion({ 
 		active: defaultEventIndex >= 0 ? defaultEventIndex : false,
 		collapsible: true,
 		change: function(event, ui) {

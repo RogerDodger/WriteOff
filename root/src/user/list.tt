@@ -1,7 +1,7 @@
 <h1>User List</h1>
 
 [%- IF users.count %]
-<table class="solid maxwidth">
+<table class="solid maxwidth no-overflow">
 	<tr class="heading">
 		<th>
 			[%- c.req.params.import({ order_by => 'username' }) %]
@@ -33,7 +33,11 @@
 	[%- FOREACH user IN users.all %]
 	<tr class="[% loop.parity %]">
 		<td>[% user.username %]</td>
+		[%- IF c.check_user_roles('admin') %]
+		<td class="max-150"><a class="link" href="mailto:[% user.email %]">[% user.email %]</a></td>
+		[%- ELSE %]
 		<td class="center">&lt;hidden&gt;</td>
+		[%- END %]
 		<td class="center">[% user.prompt_skill | format('%d') %]</td>
 		<td class="center">[% user.hugbox_score | format('%.2f') %]</td>
 		<td class="right">[% format_dt( user.created, '%a, %d %b %Y' ) %]</td>

@@ -78,6 +78,8 @@ Frequently Asked Questions page
 
 sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
+
+	$c->stash->{headers} = [];
 	
 	$c->stash->{title} = 'FAQ';
 	$c->stash->{template} = 'root/faq.tt';

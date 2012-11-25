@@ -355,13 +355,19 @@ sub id_uri {
 sub organisers {
 	my $self = shift;
 	
-	return $self->users->search({ role => 'organiser' });
+	return $self->users->search({ role => 'organiser' }, {
+		'+select' => [ \'role' ],
+		'+as' => [ 'role' ],
+	});
 }
 
 sub judges {
 	my $self = shift;
 	
-	return $self->users->search({ role => 'judge' });
+	return $self->users->search({ role => 'judge' }, { 
+		'+select' => [ \'role' ],
+		'+as' => [ 'role' ],
+	});
 }
 
 sub is_organised_by {
@@ -528,27 +534,50 @@ sub new_prelim_record_for {
 	0;
 }
 
+=head2 judge_distr
+
+Distributes stories for private voting.
+
+=cut
+
 sub judge_distr {
 	my $self = shift;
-	my $SIZE = shift // 5;
+	my $size = shift // 5;
+
+	my @storys = $self->storys->with_scores->order_by({ -desc => 'public_score' })->all;
 	
-	#This is already sorted by score
-	my @storys = $self->storys->with_scores->all;
+	my $no_more_finalists = 0;
+	for( my $i = 0; $i <= $#storys; $i++ ) {
+		my ($story, $prev) = @storys[$i, $i-1];
+
+		if( $no_more_finalists ) {
+			$story->update({ is_finalist => 0 });
+			undef $storys[$i];
+		}
+		else {
+			if($i < $size || $story->public_score == $prev->public_score) {
+				$story->update({ is_finalist => 1 });
+			}
+			else {
+				$no_more_finalists = 1;
+				redo;
+			}
+		}
+	}
+
+	my @finalist_ids = map { $_->id } grep { defined $_ } @storys;
 	
 	for my $judge ( $self->judges->all ) {
 		my $record = $self->create_related('vote_records', {
 			user_id => $judge->id,
 			round   => 'private',
 			type    => 'fic',
+			votes   => [ 
+				map {
+					{ story_id => $_ }
+				} @finalist_ids
+			]
 		});
-		
-		my $size = $SIZE;
-		
-		for( my $i = 0; $i <= $#storys; $i++ ) {
-			$record->create_related('votes', { story_id => $storys[$i]->id });
-			last unless --$size > 0
-				|| $storys[$i]->public_score == $storys[$i-1]->public_score;
-		}
 	}
 }
 

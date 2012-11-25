@@ -2,17 +2,11 @@
 <form class="light" action="[% c.req.uri %]" method="post" >
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 [%- IF c.form.has_error %]
-	[%- FOREACH error IN c.form.messages('submit') %]
-	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-			<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				<strong>Error:</strong> [% error %]
-			</p>
-		</div>
-	</div>
+	[%- FOREACH message IN c.form.messages('submit') %]
+		[% INCLUDE fragment/error_msg.tt %]
 	[%- END %]
 [%- END %]
+
 	<h2>Details</h2>
 	<p>
 		<label>Blurb</label>
@@ -33,22 +27,24 @@
 	<p>
 		<input type="submit" name="submit" value="Edit details" />
 	</p>
+
 	<h2>Staff</h2>
-	<table class="slim">
-		<tr>
+	<table class="solid">
+		<tr class="heading">
 			<th>Username</th>
 			<th>Role</th>
 			<th> </th>
 		</tr>
-	[%- FOREACH user IN event.organisers %]
-		<tr>
+	[%- FOREACH user IN staff %]
+		<tr class="[% loop.parity %]">
 			<td>[% user.username %]</td>
-			<td>Organiser</td>
+			<td>[% user.role.ucfirst %]</td>
 			<td>
-				[%- IF c.check_user_roles('admin') %]
+				[%- IF user.role == 'organiser' && c.check_user_roles('admin')
+					|| user.role == 'judge' %]
 				<a href="[% c.uri_for( c.controller('Event')
-					.action_for('remove_organiser'), [ event.id_uri, user.id ]) %]">
-					<span class="ui-icon ui-icon-closethick" title="Remove organiser"></span>
+					.action_for('remove_' _ user.role), [ event.id_uri, user.id ]) %]">
+					<span class="ui-icon ui-icon-closethick" title="Remove [% user.role %]">[x]</span>
 				</a>
 				[%- ELSE %]
 				<span class="ui-icon ui-icon-locked" title="You cannot remove organisers"></span>
@@ -57,7 +53,7 @@
 		</tr>
 	[%- END %]
 	[%- FOREACH user IN event.judges %]
-		<tr>
+		<!--<tr class="[% loop.parity %]">
 			<td>[% user.username %]</td>
 			<td>Judge</td>
 			<td>
@@ -66,7 +62,7 @@
 					<span class="ui-icon ui-icon-closethick" title="Remove judge"></span>
 				</a>
 			</td>
-		</tr>
+		</tr>-->
 	[%- END %]
 	</table>
 	

@@ -10,17 +10,17 @@
 [%- END %]
 
 [%- vote_range = [0 .. 10]; vote_range.push('N/A') %]
-<form method="post" action="[% c.uri_for( c.action, c.args ) %]">
-	<table class="slim">
-		<tr>
+<form method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+	<table class="solid">
+		<tr class="heading">
 			<th>#</th>
-			<th style="width: 100%">Title</th>
+			<th class="maxwidth">Title</th>
 			[%- FOREACH n IN vote_range %]
 			<th>[% n %]</th>
 			[%- END %]
 		</tr>
 		[%- FOREACH item IN candidates %]
-		<tr>
+		<tr class="[% loop.parity %]">
 			<td class="center">[% loop.count %]</td>
 			<td>[% item.title | html %]</td>
 			[%- FOREACH n IN vote_range %]

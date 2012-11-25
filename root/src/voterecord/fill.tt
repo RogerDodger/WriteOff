@@ -1,4 +1,4 @@
-<h1>Vote Record [% record.id %]</h1>
+<h1>[% record.round.ucfirst %] Record</h1>
 
 <noscript>
 	[%- INCLUDE fragment/status_msg.tt

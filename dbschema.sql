@@ -116,6 +116,8 @@ CREATE TABLE storys (
 	wordcount  INTEGER NOT NULL,
 	seed       REAL,
 	views      INTEGER DEFAULT 0,
+	is_finalist          BIT DEFAULT 0 NOT NULL,
+	is_public_candidate  BIT DEFAULT 0 NOT NULL,
 	created    TIMESTAMP,
 	updated    TIMESTAMP
 );

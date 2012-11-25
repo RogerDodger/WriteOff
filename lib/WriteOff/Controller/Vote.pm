@@ -31,8 +31,9 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	push $c->stash->{title}, 'Vote', 'Prelim';
 	$c->stash->{template} = 'vote/prelim.tt';
 	
-	$c->stash->{error_msg} = $c->forward('prelim_request') if $c->user && 
-		$c->req->method eq 'POST' && $c->stash->{event}->prelim_votes_allowed;
+	$c->stash->{error_msg} = $c->forward('prelim_request') if $c->user 
+		&& $c->req->method eq 'POST' 
+		&& $c->stash->{event}->prelim_votes_allowed;
 }
 
 sub prelim_request :Private {
@@ -40,7 +41,8 @@ sub prelim_request :Private {
 	
 	return "You have empty records to fill in" if $c->stash->{records}->count;
 	
-	return $c->stash->{event}->new_prelim_record_for( $c->user, $c->config->{prelim_distr_size} );
+	return $c->stash->{event}->new_prelim_record_for
+	( $c->user, $c->config->{prelim_distr_size} );
 	
 	0;
 }
@@ -50,6 +52,12 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	
 	$c->detach('/error', [ "There is no private judging for this event." ]) 
 		unless $c->stash->{event}->private;
+
+	$c->stash->{finalists} = $c->stash->{event}->storys->search({
+		is_finalist => 1,
+	}, {
+		order_by => 'title',
+	});
 		
 	$c->stash->{judge} = 
 		$c->stash->{event}->judges->find( $c->user_id );

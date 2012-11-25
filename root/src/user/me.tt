@@ -2,8 +2,8 @@
 
 [%- IF storys.count %]
 <h2>Fic</h2>
-<table class="slim">
-	<tr>
+<table class="solid maxwidth no-overflow">
+	<tr class="heading">
 		<th>Event</th>
 		<th>Title</th>
 		<th>Author</th>
@@ -12,31 +12,31 @@
 		<th> </th>
 		<th> </th>
 	</tr>
-	[%- WHILE (story = storys.next) %]
-	<tr>
-		<td title="[% story.event.prompt | html %]">
-			[% story.event.prompt | truncate(12) | html %]
+	[%- FOREACH story IN storys.all %]
+	<tr class="[% loop.parity %]">
+		<td class="max-75" title="[% story.event.prompt | html %]">
+			[% story.event.prompt | html %]
 		</td>
-		<td title="[% story.title | html %]">
+		<td class="max-200" title="[% story.title | html %]">
 			<a class="link" href="[% c.uri_for(	c.controller('Fic')
 				.action_for('view'), [ story.id_uri ]) %]">
-				[% story.title | truncate(24) | html %]
+				[% story.title | html %]
 			</a>
 		</td>
-		<td title="[% story.author | html %]">
+		<td class="max-150" title="[% story.author | html %]">
 			[%- IF story.website %]
-			<a class="link new-window" href="[% story.website | url %]">
-				[% story.author | truncate(24) | html %]
+			<a class="link new-tab" href="[% story.website | url %]">
+				[% story.author | html %]
 			</a>
 			[%- ELSE %]
-			[% story.author | truncate(24) | html %]
+			[% story.author | html %]
 			[%- END %]
 		</td>
 		<td class="center">[% story.wordcount %]</td>
-		<td>[% format_dt( story.updated, '%d %b %H:%M') %]</td>
+		<td class="right">[% format_dt( story.updated, '%d %b %H:%M') %]</td>
 		[%- IF story.is_manipulable_by(c.user) %]
 		<td>
-			<a href="[% c.uri_for( '/fic/' _ story.id_uri _ '/edit' ) %]">
+			<a href="[% c.uri_for( c.controller('Fic').action_for('edit'), [ story.id_uri ]) %]">
 				<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
 			</a>
 		</td>
@@ -61,8 +61,8 @@
 
 [%- IF images.count %]
 <h2>Art</h2>
-<table class="slim">
-	<tr>
+<table class="solid maxwidth no-overflow">
+	<tr class="heading">
 		<th>Event</th>
 		<th>Title</th>
 		<th>Artist</th>
@@ -70,27 +70,27 @@
 		<th>Submitted</th>
 		<th> </th>
 	</tr>
-	[%- WHILE (image = images.next) %]
-	<tr>
-		<td title="[ image.event.prompt | html %]">
-			[% image.event.prompt | truncate(12) | html %]
+	[%- FOREACH image IN images.all %]
+	<tr class="[% loop.parity %]">
+		<td class="max-75" title="[% image.event.prompt | html %]">
+			[% image.event.prompt | html %]
 		</td>
-		<td title="[% image.title | html %]">
+		<td class="max-200" title="[% image.title | html %]">
 			<a class="link" href="[% c.uri_for( '/art/' _ image.id_uri ) %]">
-				[% image.title | truncate(24) | html %]
+				[% image.title | html %]
 			</a>
 		</td>
-		<td title="[% image.artist | html %]">
+		<td class="max-150" title="[% image.artist | html %]">
 			[%- IF image.website %]
 			<a class="link new-window" href="[% image.website | url %]">
-				[% image.artist | truncate(24) | html %]
+				[% image.artist | html %]
 			</a>
 			[%- ELSE %]
-			[% image.artist | truncate(24) | html %]
+			[% image.artist | html %]
 			[%- END %]
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td>[% format_dt( image.created, '%d %b %H:%M') %]</td>
+		<td class="right">[% format_dt( image.created, '%d %b %H:%M') %]</td>
 		<td>
 		[%- IF image.is_manipulable_by( c.user ) %]
 			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Art')
@@ -108,19 +108,19 @@
 
 [% IF prompts.count %]
 <h2>Prompt</h2>
-<table class="slim">
-	<tr>
+<table class="solid maxwidth no-overflow">
+	<tr class="heading">
 		<th>Event</th>
 		<th>Title</th>
 		<th>Rating</th>
 		<th> </th>
 	</tr>
-	[%- WHILE (prompt = prompts.next) %]
-	<tr>
-		<td title="[% prompt.event.prompt | html %]">
-			[% prompt.event.prompt | truncate(12) | html %]
+	[%- FOREACH prompt IN prompts.all %]
+	<tr class="[% loop.parity %]">
+		<td class="max-75" title="[% prompt.event.prompt | html %]">
+			[% prompt.event.prompt | html %]
 		</td>
-		<td>[% prompt.contents | html %]</td>
+		<td class="maxwidth">[% prompt.contents | html %]</td>
 		<td class="center" title="[% prompt.rating |format('%.2f') %]">
 			[% prompt.rating | format('%d') %]
 		</td>

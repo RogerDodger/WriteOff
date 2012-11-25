@@ -13,8 +13,8 @@ sub simple_uri {
 	my $str = join "-", @_;
 	
 	for ( $str ) {
-		s/[^a-zA-Z0-9\-\x20]//g; # Remove all except English letters, 
-		                         # arabic numerals, hyphens, and spaces.
+		s/[^a-zA-Z0-9\-\x20]/ /g; # Remove all except English letters, 
+		                          # arabic numerals, hyphens, and spaces.
 		s/^\s+|\s+$//g; #Trim
 		s/[\s\-]+/-/g; #Collate spaces and hyphens into a single hyphen
 	}

@@ -2,10 +2,8 @@
 
 [% INCLUDE voterecord/list.tt 
 	records = record.result_source.resultset.search_rs({ id => record.id }).with_stats %]
-
-<h2>Votes</h2>
 	
-<table class="slim votes">
+<table class="solid votes">
 [%-
 	IF record.round == 'public'; 
 		range = [0 .. 10];
@@ -13,15 +11,15 @@
 		range = [record.values.min .. record.values.max];
 	END;
 %]
-	<tr>
-		<th style="width: 100%">Title</th>
+	<tr class="heading">
+		<th class="maxwidth">Title</th>
 		[%- FOREACH n IN range %]
 		<th>[% n %]</th>
 		[%- END %]
 	</tr>
 	[%- FOREACH vote IN record.votes %]
-	<tr>
-		<td>[% vote.item.title %]</td>
+	<tr class="[% loop.parity %]">
+		<td>[% vote.item.title | html %]</td>
 		[%- FOREACH n IN range %]
 		<th>[% '&#x2717;' IF n == vote.value %]</th>
 		[%- END %]

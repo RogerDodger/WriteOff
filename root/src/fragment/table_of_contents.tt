@@ -1,0 +1,11 @@
+<ul class="contents">
+	[% FOREACH header IN headers %]
+	<li class="[% header.class %]">
+		<a class="link" href="#[% simple_uri( header.contents ) %]">
+			[% header.contents %]
+		</a>
+	</li>
+	[% END %]
+</ul>
+
+[% content %]

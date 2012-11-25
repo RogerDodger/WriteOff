@@ -5,6 +5,7 @@ use namespace::autoclean;
 use Template::Stash;
 use Parse::BBCode;
 use Text::Markdown;
+use WriteOff::Helpers;
 
 extends 'Catalyst::View::TT';
 
@@ -14,7 +15,7 @@ __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
 	expose_methods     => [ qw/
-		format_dt md_render bb_render medal_for head_title
+		format_dt md_render bb_render medal_for head_title simple_uri
 	/ ],
 	render_die         => 1,
 );
@@ -43,6 +44,12 @@ $Template::Stash::LIST_OPS->{map_username} = sub {
 };
 
 my $RFC2822 = '%a, %d %b %Y %T %Z';
+
+sub simple_uri {
+	my $self = shift;
+	my $c = shift;
+	return WriteOff::Helpers::simple_uri(@_);
+}
 
 sub format_dt {
 	my( $self, $c, $dt, $fmt ) = @_;
