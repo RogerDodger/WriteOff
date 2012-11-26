@@ -54,9 +54,8 @@
 
 	[%- ELSE %]
 
-<p class="status-msg">
-	To pevent abuse, you must be logged in to use this form
-</p>
+	[% INCLUDE fragment/status_msg.tt 
+		message = 'To pevent abuse, you must be logged in to use this form' %]
 
 	[%- END %]
 	
