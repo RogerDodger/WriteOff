@@ -71,8 +71,8 @@ sub form :Private {
 		}	
 	});
 	
-	my $competitor_rs = $c->model('DB::Virtual::Competitor')->search({
-		competitor => { '!=' => 'Anonymous' },
+	my $virtual_artist_rs = $c->model('DB::Virtual::Artist')->search({
+		name    => { '!=' => 'Anonymous' },
 		# Must allow organisers to edit properly
 		user_id => { '!=' => eval { $c->stash->{story}->user_id } || $c->user_id }
 	});
@@ -100,7 +100,7 @@ sub form :Private {
 		author => [ 
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE', 
-			[ 'DBIC_UNIQUE', $competitor_rs, 'competitor' ],
+			[ 'DBIC_UNIQUE', $virtual_artist_rs, 'name' ],
 		],
 		image_id => [ $c->stash->{event}->art ? 'NOT_BLANK' : () ],
 		website => [ 'HTTP_URL' ],

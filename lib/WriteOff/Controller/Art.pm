@@ -69,8 +69,8 @@ sub do_submit :Private {
 		delete $c->req->params->{image};
 	}
 	
-	my $competitor_rs = $c->model('DB::Virtual::Competitor')->search({
-		competitor => { '!=' => 'Anonymous' },
+	my $virtual_artist_rs = $c->model('DB::Virtual::Artist')->search({
+		name    => { '!=' => 'Anonymous' },
 		user_id => { '!=' => $c->user_id },
 	});
 	
@@ -84,7 +84,7 @@ sub do_submit :Private {
 		artist => [ 
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE',
-			[ 'DBIC_UNIQUE', $competitor_rs, 'competitor' ]
+			[ 'DBIC_UNIQUE', $virtual_artist_rs, 'name' ]
 		],
 		website      => [ 'HTTP_URL' ],
 		image        => [ 'NOT_BLANK' ],

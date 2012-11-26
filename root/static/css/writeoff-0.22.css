@@ -118,6 +118,16 @@ h3, h4 {
 h4 {
 	font-style: italic;
 }
+ol ol,
+ul ol,
+ol ul, 
+ul ul {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+ol ol {
+	list-style-type: lower-alpha;
+}
 code, tt, var {
 	margin: 0 2px;
 	padding: 0px 5px;
@@ -727,15 +737,11 @@ form.light textarea,
 .b {
 	font-weight: bold;
 }
-p.example {
-	width: 350px; 
-	height: 200px;
-	margin-left: auto;
-	margin-right: auto;
-}
-p.example textarea {
-	max-height: 200px;
-	max-width: 350px;
+textarea.example {
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	font-family: monospace;
+	resize: none;
 }
 .inline-block {
 	display: inline-block;

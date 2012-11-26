@@ -28,7 +28,7 @@ while( my $user = $schema->resultset('User')->find({ username => shift }) )
 	my $rs = $schema->resultset('UserEvent');
 	for my $row ( $rs->search({ user_id => $user->id })->all )
 	{
-		unless( $rs->find( $main->id, $row->event_id, $row->role_id ) )
+		unless( $rs->find( $main->id, $row->event_id, $row->role ) )
 		{
 			$row->update({ user_id => $main->id });
 		}
