@@ -1,3 +1,11 @@
+v0.28
+=====
+
+- Removed `br-eater` class from blocks in BBCode, rather just removing any <br>s that follow as a part of the parsing
+- Changed Helpers::simple_uri to consider common word-separating punctuation like slashes and dashes
+- Added a bunch of scripts for data management
+- Added a table of contents to the FAQ
+
 v0.27
 =====
 

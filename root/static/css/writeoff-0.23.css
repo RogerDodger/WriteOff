@@ -211,8 +211,7 @@ form.light textarea {
 	padding: 4px;
 	border-radius: 4px;
 }
-form.light textarea,
-form.light select {
+form.light textarea {
 	font-size: 0.8em;
 	margin-bottom: 0;
 }
@@ -553,8 +552,6 @@ p.prompt {
     border: none;
     border-top: medium double #333;
 	border-bottom: medium solid transparent;
-	position: relative;
-	top: 1.05em;
     color: #333;
 	background: transparent;
     text-align: center;

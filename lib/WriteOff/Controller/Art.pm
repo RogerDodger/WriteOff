@@ -4,6 +4,8 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+use Image::Magick;
+
 =head1 NAME
 
 WriteOff::Controller::Art - Catalyst Controller
@@ -32,7 +34,7 @@ sub begin :Private {
 sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $arg ) = @_;
 	
-	(my $id = $arg) =~ s/^\d+\K.+//;
+	(my $id = $arg) =~ s/^\d+\K.*//;
 	$c->stash->{image} = $c->model('DB::Image')->find($id) or 
 		$c->detach('/default');
 	

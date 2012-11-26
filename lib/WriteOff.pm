@@ -27,11 +27,10 @@ use Catalyst qw/
 	FillInForm
 	Upload::MIME
 /;
-use Image::Magick;
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.27.7';
+our $VERSION = 'v0.27.8';
 
 __PACKAGE__->config(
 	name => 'Write-off',

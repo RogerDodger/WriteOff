@@ -82,17 +82,20 @@ my $bb = Parse::BBCode->new({
 		u => '<span style="text-decoration: underline">%{parse}s</span>',
 		s => '<del>%{parse}s</del>',
 		url => '<a class="link new-tab" href="%{link}a">%{parse}s</a>',
-		size => '<span style="font-size: %{size}apx;">%{parse}s</span>',
+		size => '<span style="font-size: %{size}aem;">%{parse}s</span>',
 		color => '<span style="color: %{color}a;">%{parse}s</span>',
-		center => '<div class="center br-eater">%{parse}s</div>',
 		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
+		center => {
+			class => 'block',
+			output => '<div style="text-align: center">%{parse}s</div>',
+		},
 		quote => {
 			class => 'block',
-			output => '<blockquote class="br-eater">%{parse}s</blockquote>',
+			output => '<blockquote>%{parse}s</blockquote>',
 		},
 		hr => {
 			class => 'block',
-			output => '<hr class="br-eater"/>',
+			output => '<hr>',
 			single => 1,
 		},
 	},
@@ -101,7 +104,7 @@ my $bb = Parse::BBCode->new({
 		size => sub {
 			$_[2] !~ /\D/ && 
 			8 <= $_[2] && $_[2] <= 72 ? 
-			$_[2] : 16;
+			$_[2] / 16 : 1;
 		},
 		color => sub {
 			$_[2] =~ /\A#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
@@ -115,7 +118,12 @@ sub bb_render {
 	return '' unless $text;
 	
 	$text = $bb->render( $text );
-	$text =~ s{<br>}{<br />}g;
+
+	# Remove line breaks that immediately follow blocks
+	for my $block ( '<hr>', '</blockquote>', '</div>' ) {
+		my $e = quotemeta $block;
+		$text =~ s/$e\K\s*?<br>//g;
+	}
 	
 	return $text;
 }
