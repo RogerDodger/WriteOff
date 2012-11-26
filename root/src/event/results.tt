@@ -2,7 +2,7 @@
 
 [%- IF event.is_ended %]
 
-<div class="result-listing">
+<div class="results">
 	[%- PROCESS item_listing
 		items = event.storys_rs.with_scores.with_stats,
 		view = c.controller('Fic').action_for('view')
@@ -12,7 +12,7 @@
 	
 	[%- IF event.art -%]
 	
-<div class="result-listing" style="padding-left: 25px">
+<div class="results" style="padding-left: 25px">
 	[%- PROCESS item_listing
 		items = event.images_rs.with_scores.with_stats,
 		view = c.controller('Art').action_for('view')

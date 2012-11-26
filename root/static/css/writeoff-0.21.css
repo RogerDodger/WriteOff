@@ -320,16 +320,22 @@ nav li:hover ul li:hover a {
 	white-space: nowrap;
 }
 
-.result-listing {
+.results {
 	display: table-cell;
 	vertical-align: top;
 }
-.result-listing p {
-	margin-bottom: 0.5em;
-}
-.result-listing p img {
+.results p img {
 	position: relative;
 	top: 2px;
+}
+.results p {
+	margin-bottom: 0.3em;
+}
+.results p + p {
+	margin-top: 0;
+}
+.results h3 {
+	margin-top: 2em;
 }
 
 ul.contents {

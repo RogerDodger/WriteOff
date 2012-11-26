@@ -111,7 +111,7 @@
 <table class="solid maxwidth no-overflow">
 	<tr class="heading">
 		<th>Event</th>
-		<th>Title</th>
+		<th>Prompt</th>
 		<th>Rating</th>
 		<th> </th>
 	</tr>
