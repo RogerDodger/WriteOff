@@ -31,7 +31,7 @@
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.9.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
-	<script src="[% c.uri_for('/static/js/writeoff-0.14.js') %]"></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.15.js') %]"></script>
 	
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->

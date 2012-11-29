@@ -16,7 +16,7 @@
 			<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 			<a href="[% c.uri_for( c.controller( vote.record.type.ucfirst )
 				.action_for('view'), [ vote.item.id_uri ]) %]" class="new-window">
-				[% vote.item.title %]
+				[% vote.item.title | html %]
 			</a>
 		</li>
 		[%- END %]
