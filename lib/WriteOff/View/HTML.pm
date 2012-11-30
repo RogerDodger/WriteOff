@@ -20,6 +20,10 @@ __PACKAGE__->config(
 	render_die         => 1,
 );
 
+$Template::Stash::SCALAR_OPS->{ucfirst} = sub {
+	return ucfirst shift;
+};
+
 $Template::Stash::LIST_OPS->{join_serial} = sub {
 	my @list = @{+shift};
 	
