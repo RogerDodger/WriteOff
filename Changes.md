@@ -5,6 +5,7 @@ v0.28
 - Changed Helpers::simple_uri to consider common word-separating punctuation like slashes and dashes
 - Added a bunch of scripts for data management
 - Added a table of contents to the FAQ
+- Added a read only config setting to the site
 
 v0.27
 =====

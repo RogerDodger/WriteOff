@@ -599,8 +599,7 @@ figure img {
  */
 
 .status-msg, 
-.error-msg, 
-.popup-msg {
+.error-msg {
 	display: inline-block;
 	padding: 0.7em 0.7em 0.5em 0.7em;
 	white-space: nowrap;
@@ -614,12 +613,13 @@ figure img {
 	top: 2px;
 }
 .popup-msg {
-	float: right;
-	padding-bottom: 0.7em;
+	display: block;
 	font-size: 1em;
+	margin-top: 0;
+	padding: 0.3em 0.7em;
 }
-.popup-msg span.ui-icon {
-	top: 2px;
+.popup-msg span.ui-icon-alert {
+	top: 3px;
 }
 
 /*

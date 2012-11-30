@@ -25,13 +25,13 @@
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/normalize.css') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.2.custom.css') %]">
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.23.css') %]">
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.24.css') %]">
 	
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.9.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
-	<script src="[% c.uri_for('/static/js/writeoff-0.15.js') %]"></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.16.js') %]"></script>
 	
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
@@ -91,11 +91,16 @@
 	[%- END %]
 	</ul>
 	
-	<div style="clear: both"></div>
+	<div class="clearfix"></div>
 </nav>
 
 <article>
-	
+[%- IF c.config.read_only %]
+	<p class="popup-msg ui-state-highlight ui-corner-all">
+		<span class="ui-icon ui-icon-alert"></span> 
+		The site is currently in read only mode
+	</p>
+[%- END %]
 [%- IF status_msg %]
 	<p class="popup-msg ui-state-highlight ui-corner-all">
 		<span class="ui-icon ui-icon-check"></span> 

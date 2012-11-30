@@ -35,9 +35,14 @@ sub auto :Private {
 		$c->req->referer || 'no referer',
 	) unless $so && $c->stash->{no_req_log};
 	
-	$c->detach('index') if !$so && $c->req->method eq 'POST';
-	
 	$c->stash->{now} = $c->model('DB::Event')->now_dt;
+
+	if ($c->req->method eq 'POST') {
+		$c->req->{parameters} = {} if $c->config->{read_only};
+		$c->detach('index') if !$so;
+	}
+
+	1;
 }
 
 =head2 index

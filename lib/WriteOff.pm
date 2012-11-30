@@ -30,7 +30,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.27.9';
+our $VERSION = 'v0.27.10';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -161,7 +161,7 @@ __PACKAGE__->config(
 	judge_distr_size => 5,
 	interim => 60, #minutes
 	use_google_analytics => 1,
-	
+	read_only => 0,
 	
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,

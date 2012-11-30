@@ -154,7 +154,4 @@ jQuery(document).ready(function($) {
 			$(this).data('target', $(this).attr('href') );
 		})
 		.removeAttr('href');
-	
-	//Popups
-	$('.popup-msg').fadeOut(5000, "easeInQuint");
 });
