@@ -71,7 +71,7 @@ sub head_title {
 	
 	return 
 		join " – ",
-		map { Template::Filters::html_filter $_ } 
+		map { Template::Filters::html_filter($_) } 
 		( ref $title eq 'ARRAY' ? @$title : $title || () ), $c->config->{name};
 }
 
