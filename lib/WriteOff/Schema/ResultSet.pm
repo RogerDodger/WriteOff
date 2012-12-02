@@ -21,7 +21,7 @@ sub now {
 }
 
 sub now_dt {
-	#return DateTime->now;
+	return DateTime->now;
 	
 	return shift->parse_datetime('2012-12-03 02:00:00');
 }
