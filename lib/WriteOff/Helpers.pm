@@ -1,8 +1,8 @@
 package WriteOff::Helpers;
+use utf8;
 
 use base 'Exporter';
-use utf8;
-our @EXPORT_OK = qw/wordcount simple_uri/;
+our @EXPORT_OK = qw/wordcount simple_uri check_datetimes_ascend/;
 
 sub wordcount {
 	my $str = shift or return 0;
@@ -17,12 +17,18 @@ sub simple_uri {
 		s/[\\\/—–]/ /g; #Turn punctuation that commonly divide words into spaces
 
 		s/[^a-zA-Z0-9\-\x20]//g; # Remove all except English letters, 
-		                         # arabic numerals, hyphens, and spaces.
+		                         # Arabic numerals, hyphens, and spaces.
 		s/^\s+|\s+$//g; #Trim
 		s/[\s\-]+/-/g; #Collate spaces and hyphens into a single hyphen
 	}
 	
 	return $str;
+}
+
+sub check_datetimes_ascend {	
+	return 1 if join('', @_) eq join('', sort @_);
+
+	0;
 }
 
 1;

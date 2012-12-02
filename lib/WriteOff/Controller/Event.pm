@@ -199,6 +199,9 @@ sub results :PathPart('results') :Chained('index') :Args(0) {
 	
 	$c->stash->{awards} = { map { $_->name => $_ } $c->model('DB::Award')->all };
 
+	$c->stash->{judge_records} = 
+		$c->stash->{event}->vote_records->filled->judge_records;
+
 	push $c->stash->{title}, 'Results';
 	$c->stash->{template} = 'event/results.tt';
 }

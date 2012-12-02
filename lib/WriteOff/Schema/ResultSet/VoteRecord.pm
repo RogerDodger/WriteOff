@@ -81,6 +81,15 @@ sub with_stats {
 	# return $with_stats;
 }
 
+sub judge_records {
+	return shift->search_rs({
+		round => 'private',
+	}, {
+		prefetch => 'user',
+		order_by => { -asc => 'user.username ' },
+	});
+}
+
 sub round {	
 	return shift->search_rs({ round => shift });
 }

@@ -190,6 +190,12 @@ __PACKAGE__->mk_group_accessors(
 	column => 'mean',
 );
 
+use WriteOff::Helpers 'check_datetimes_ascend';
+
+sub now_dt {
+  return shift->result_source->resultset->now_dt;
+}
+
 sub is_filled {
 	my $self = shift;
 	
@@ -212,6 +218,23 @@ sub is_unfilled {
 	1;
 }
 
+sub is_fillable {
+  my $self = shift;
+  my $event = $self->event;
+
+  return 1 if $self->round eq 'prelim'  && $event->prelim_votes_allowed;
+  return 1 if $self->round eq 'private' && $event->private_votes_allowed;
+  0;
+}
+
+
+sub is_publicly_viewable {
+  my $self = shift;
+
+  return 0 unless $self->round eq 'private';
+  return check_datetimes_ascend( $self->event->end, $self->now_dt );
+}
+
 sub stdev {
 	my $self = shift;
 	
@@ -219,10 +242,25 @@ sub stdev {
 		$self->votes->stdev;
 }
 
+sub avg {
+  my $self = shift;
+
+  return $self->{__avg} = $self->values->func('avg');
+}
+
 sub values {
 	my $self = shift;
 	
 	return $self->votes->get_column('value');
+}
+
+sub range {
+  my $self = shift;
+
+  return $self->{__range} //= 
+    $self->round eq 'public' ?
+    [ 0 .. 10 ] : 
+    [ sort { $a <=> $b } $self->values->all ];
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

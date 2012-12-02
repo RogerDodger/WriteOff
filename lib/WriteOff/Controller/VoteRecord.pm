@@ -24,9 +24,6 @@ Grabs a vote record.
 sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $id ) = @_;
 	
-	$c->detach('/forbidden', [ "Guests cannot manipulate VoteRecords." ])
-		unless $c->user;
-	
 	$c->stash->{record} = $c->model('DB::VoteRecord')->find($id) or 
 		$c->detach('/default');
 	$c->stash->{event} = $c->stash->{record}->event;
@@ -38,7 +35,43 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/default') unless $c->stash->{record}->is_filled;
-	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
+	$c->forward( $c->controller('Event')->action_for('assert_organiser') )
+		unless $c->stash->{record}->is_publicly_viewable;
+
+	my $organiser_referer = $c->uri_for( 
+		$c->controller('Event')->action_for('view'), 
+		[ $c->stash->{event}->id_uri ]
+	);
+	my $results_referer = $c->uri_for( 
+		$c->controller('Event')->action_for('results'), 
+		[ $c->stash->{event}->id_uri ]
+	);
+
+	unless( $c->stash->{event}->is_organised_by( $c->user ) ) {
+		$c->session->{vote_record_view_state} = 'public';
+	}
+	elsif( $c->req->referer eq $organiser_referer ) {
+		$c->session->{vote_record_view_state} = 'all';
+	}
+	elsif( $c->req->referer eq $results_referer ) {
+		$c->session->{vote_record_view_state} = 'judges';
+	}
+
+	my $records = $c->stash->{event}->vote_records->filled->ordered;
+	unless( $c->session->{vote_record_view_state} eq 'all' ) {
+		$records = $records->judge_records;
+	}
+
+	my @records = $records->all;
+
+	for(my $i = 0; $i <= $#records; $i++) {
+		if( $c->stash->{record}->id == $records[$i]->id ) {
+			$c->stash->{prev} = $records[$i-1];
+			$c->stash->{i} = ++$i;
+			$c->stash->{next} = $records[$i % @records];
+			last;
+		}
+	}
 	
 	$c->stash->{template} = 'voterecord/view.tt';
 }
@@ -84,15 +117,11 @@ sub fill :PathPart('fill') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->detach('/forbidden', [ "You do not own this record." ])
-		unless $c->stash->{record}->user_id == $c->user->id;
+		unless $c->stash->{record}->user_id == $c->user_id;
 	$c->detach('/error', [ "This record is already filled." ]) 
 		unless $c->stash->{record}->is_unfilled;
-		
 	$c->detach('/error', [ "It is too late to fill this record." ])
-		if  $c->stash->{record}->round eq 'prelim' 
-		&& !$c->stash->{event}->prelim_votes_allowed
-		||  $c->stash->{record}->round eq 'private' 
-		&& !$c->stash->{event}->private_votes_allowed;
+		unless $c->stash->{record}->is_fillable;
 	
 	push $c->stash->{title}, 'Fill';
 	$c->stash->{template} = 'voterecord/fill.tt';

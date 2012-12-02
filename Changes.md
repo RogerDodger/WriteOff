@@ -6,6 +6,8 @@ v0.28
 - Added a bunch of scripts for data management
 - Added a table of contents to the FAQ
 - Added a read only config setting to the site
+- Made judge votes listed in the Controller::Event::results
+  - Utilised session data to determine what record view the user is in
 
 v0.27
 =====

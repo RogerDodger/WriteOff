@@ -2,7 +2,22 @@
 
 [%- IF event.is_ended %]
 
-<div class="results">
+	[%- IF event.private %]
+	<h2>Judge Rankings </h2>
+
+	<ul>
+		[%- FOREACH record IN judge_records.all %]
+		<li>
+			<a class="link" href="[% c.uri_for( c.controller('VoteRecord')
+				.action_for('view'), [ record.id ]) %]">
+				[% record.user.username || 'Guest' %]
+			</a>
+		</li>
+		[%- END %]
+	</ul>
+	[%- END %]
+
+<div class="results" style="min-width: 350px">
 	[%- PROCESS item_listing
 		items = event.storys_rs.with_scores.with_stats,
 		view = c.controller('Fic').action_for('view')
@@ -12,7 +27,7 @@
 	
 	[%- IF event.art -%]
 	
-<div class="results" style="padding-left: 25px">
+<div class="results" style="padding-left: 1em">
 	[%- PROCESS item_listing
 		items = event.images_rs.with_scores.with_stats,
 		view = c.controller('Art').action_for('view')

@@ -141,7 +141,9 @@
 
 [%- IF records.count %]
 <h2>Vote Records</h2>
-[% INCLUDE voterecord/list.tt %]
+[% INCLUDE voterecord/list.tt
+	single = 0 
+	records = records.all %]
 [%- END %]
 
 [%- IF !images.count && !storys.count && !prompts.count && !records.count %]

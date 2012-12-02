@@ -1,24 +1,34 @@
-<table class="solid maxwidth no-overflow">
+<table class="solid maxwidth no-overflow [% 'center' IF single %]">
 	<tr class="heading">
 		<th>Event</th>
-		<th>User</th>
+		<th>[% single && record.round == 'private' ? 'Judge' : 'User' %]</th>
+
 		[%- IF c.check_user_roles('admin') %]
 		<th>IP Address</th>
 		[%- END %]
+
 		<th>Round</th>
 		<th>Type</th>
 		<th>Count</th>
-		<th title="Standard deviation" style="font-variant: normal;">&sigma;</th>
-		<th title="Mean (average)" style="font-variant: normal;">&mu;</th>
+
+		[% IF !single || record.round == 'public' %]
+		<th title="Standard deviation" style="font-variant: normal">&sigma;</th>
+		<th title="Mean (average)" style="font-variant: normal">&mu;</th>
+		[%- END %]
+
 		<th>Filled</th>
+
+		[%- IF event.is_organised_by( c.user ) %]
 		<th> </th>
-		<th> </th>
+		[% '<th> </th>' UNLESS single %]
+		[%- END %]
 	</tr>
-	[%- FOREACH record IN records.all %]
+	[%- FOREACH record IN records %]
 	<tr class="[% loop.parity %]">
 		<td class="max-75" title="[% record.event.prompt | html %]">
 			[% record.event.prompt | html %]
 		</td>
+
 		[%- IF record.user_id %]
 		<td class="max-75" title="[% record.user.username %]">
 			[% record.user.username %]
@@ -26,36 +36,49 @@
 		[%- ELSE %]
 		<td>Guest</td>
 		[%- END %]
+
 		[%- IF c.check_user_roles('admin') %]
 		<td class="max-75" title="[% record.ip %]">[% record.ip %]</td>
 		[%- END %]
+
 		<td class="center">[% record.round.ucfirst %]</td>
 		<td class="center">[% record.type.ucfirst %]</td>
 		<td class="center">[% record.votes_rs.count %]</td>
+
 		[%- IF record.round == 'public' %]
 		<td class="center" title="[% record.stdev | format('%.5f') %]">
 			[% record.stdev | format('%.2f') %]
 		</td>
-		<td class="center" title="[% record.mean | format('%.5f') %]">
-			[% record.mean | format('%.2f') %]
+		<td class="center" title="[% record.avg | format('%.5f') %]">
+			[% record.avg | format('%.2f') %]
 		</td>
-		[%- ELSE %]
+		[%- ELSIF !single %]
 		<td></td>
 		<td></td>
 		[%- END %]
-		<td class="right">[% format_dt( record.updated, '%d %b %H:%M' ) %]</td>
+
+		<td class="[% 'right' UNLESS single %]">
+			[% format_dt( record.updated, '%d %b %H:%M' ) %]
+		</td>
+
+		[%- IF event.is_organised_by( c.user ) -%]
+
+		[%- UNLESS single %]
 		<td>
 			<a href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('view'), [ record.id ]) %]">
-				<span class="ui-icon ui-icon-clipboard" title="More details">[More details]</span>
+				<span class="ui-icon ui-icon-clipboard" title="More details">[i]</span>
 			</a>	
 		</td>
+		[%- END %]
 		<td>
 			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('delete'), [ record.id ]) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
 			</a>	
 		</td>
+
+		[%- END %]
 	</tr>
 	[%- END %]
 </table>
