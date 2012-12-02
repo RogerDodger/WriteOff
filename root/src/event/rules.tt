@@ -36,14 +36,18 @@
 		<ol>
 			[%- IF event.art %]
 			<li>may start drawing only after the prompt is released;</li>
-			<li>may start writing only after the artworks are released; and</li>
+			<li>may start writing only after the artworks are released;</li>
 			[%- ELSE %]
-			<li>may start writing only after the prompt is released; and</li>
+			<li>may start writing only after the prompt is released;</li>
 			[%- END %]
 			<li>
 				must remain publicly disassociated from their submitted works 
 				(i.e., anonymous) within all reasonable means until the event's
-				conclusion.
+				conclusion; and
+			</li>
+			<li>
+				may not attempt to doctor the votes in any way that may give 
+				them or another person an unfair advantage.
 			</li>
 		</ol>
 	</li>
