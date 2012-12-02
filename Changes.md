@@ -8,6 +8,7 @@ v0.28
 - Added a read only config setting to the site
 - Made judge votes listed in the Controller::Event::results
   - Utilised session data to determine what record view the user is in
+- Added action Event::overview for permalinks to event overviews
 
 v0.27
 =====

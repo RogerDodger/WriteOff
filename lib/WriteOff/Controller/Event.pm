@@ -37,6 +37,26 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 	$c->stash->{title} = [ $c->stash->{event}->prompt ];
 }
 
+=head2 overview :Chained('index') :PathPart('') :Args(0)
+
+Redirects to the event overview in the event listings.
+
+=cut
+
+sub overview :Chained('index') :PathPart('') :Args(0) {
+	my ( $self, $c ) = @_;
+
+	$c->res->redirect(
+		$c->uri_for(
+			$c->controller('Root')->action_for(
+				$c->model('DB::Event')->active->find( $c->stash->{event}->id ) ?
+				'index' : 'archive',
+			)
+		)
+		. "#" . $c->stash->{event}->id_uri
+	);
+}
+
 =head2 add :Local :Args(0)
 
 Adds an event.
