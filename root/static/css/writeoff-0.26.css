@@ -526,6 +526,7 @@ table.plain th {
 .promptbox.tie input {
 	font-size: .8em;
 	white-space: nowrap;
+	width: auto;
 }
 .or {
 	width: 25px;
