@@ -30,7 +30,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.27.14';
+our $VERSION = 'v0.27.15';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -177,7 +177,7 @@ $ENV{TZ} = __PACKAGE__->config->{timezone};
 __PACKAGE__->schedule(
 	at    => '0 * * * *',
 	event => '/cron/cleanup',
-);
+) unless __PACKAGE__->config->{no_cleanup};
 
 __PACKAGE__->schedule(
 	at    => '* * * * *',
