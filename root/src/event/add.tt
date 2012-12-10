@@ -1,5 +1,5 @@
+<h1>Add Event</h1>
 <form class="light" method="post" action="[% c.req.uri %]">
-	<h2>Add Event</h2>
 	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
 [%- IF c.form.has_error %]
 	[%- FOREACH error IN c.form.messages('event') %]
