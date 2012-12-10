@@ -88,6 +88,11 @@ __PACKAGE__->table("images");
   data_type: 'text'
   is_nullable: 1
 
+=head2 hovertext
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 contents
 
   data_type: 'blob'
@@ -134,6 +139,8 @@ __PACKAGE__->add_columns(
   "artist",
   { data_type => "text", default_value => "Anonymous", is_nullable => 0 },
   "website",
+  { data_type => "text", is_nullable => 1 },
+  "hovertext",
   { data_type => "text", is_nullable => 1 },
   "contents",
   { data_type => "blob", is_nullable => 0 },
@@ -254,8 +261,8 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-31 08:53:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pT10jO37fbw3q39dbvTKVg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-10 22:15:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9EoUpu8pnozwZb0+mCJZfQ
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},
 );

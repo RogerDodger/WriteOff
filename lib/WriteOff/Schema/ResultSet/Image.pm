@@ -7,7 +7,7 @@ sub metadata {
 	return shift->search_rs(undef, {
 		columns => [ 
 			'id', 'user_id', 'event_id', 'ip',
-			'title', 'artist', 'website',
+			'title', 'artist', 'website', 'hovertext',
 			'filesize', 'mimetype',
 			'seed', 'created'
 		]

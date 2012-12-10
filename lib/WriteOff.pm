@@ -30,7 +30,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.27.17';
+our $VERSION = 'v0.27.18';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -135,6 +135,7 @@ __PACKAGE__->config(
 			user   => 32,
 			pass   => 64,
 			email  => 256,
+			alt    => 256,
 			title  => 64,
 			url    => 256,
 			prompt => 64,

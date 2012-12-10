@@ -88,24 +88,29 @@ sub do_submit :Private {
 			'TRIM_COLLAPSE',
 			[ 'DBIC_UNIQUE', $virtual_artist_rs, 'name' ]
 		],
-		website      => [ 'HTTP_URL' ],
-		image        => [ 'NOT_BLANK' ],
-		mimetype     => [ [ 'IN_ARRAY', @{ $c->config->{biz}{img}{types} } ] ],
-		filesize     => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
+		hovertext => [ 
+			[ 'LENGTH', 1, $c->config->{len}{max}{alt} ],
+			'TRIM_COLLAPSE',
+		],
+		website   => [ 'HTTP_URL' ],
+		image     => [ 'NOT_BLANK' ],
+		mimetype  => [ [ 'IN_ARRAY', @{ $c->config->{biz}{img}{types} } ] ],
+		filesize  => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
 	);
 	
 	if(!$c->form->has_error) {
 		
 		my %row = (
-			event_id => $c->stash->{event}->id,
-			user_id  => $c->user->get('id'),
-			ip       => $c->req->address,
-			title    => $c->form->valid('title'),
-			artist   => $c->form->valid('artist') || 'Anonymous',
-			website  => $c->form->valid('website') || undef,
-			filesize => $img->size,
-			mimetype => $img->mimetype,
-			seed     => rand,
+			event_id  => $c->stash->{event}->id,
+			user_id   => $c->user->get('id'),
+			ip        => $c->req->address,
+			title     => $c->form->valid('title'),
+			artist    => $c->form->valid('artist') || 'Anonymous',
+			hovertext => $c->form->valid('hovertext') || undef,
+			website   => $c->form->valid('website') || undef,
+			filesize  => $img->size,
+			mimetype  => $img->mimetype,
+			seed      => rand,
 		);
 		
 		my $magick = Image::Magick->new;

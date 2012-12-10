@@ -10,6 +10,7 @@ v0.28
   - Utilised session data to determine what record view the user is in
 - Added action Event::overview for permalinks to event overviews
 - Added clause about vote doctoring to rules
+- Added `hovertext` column to Images
 
 v0.27
 =====

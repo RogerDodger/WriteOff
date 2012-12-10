@@ -39,6 +39,13 @@
 				placeholder="Anonymous" />
 		</p>
 	</div>
+
+	<p>
+		<label>Hover text</label>
+		<input name="hovertext" type="text" size="72" class="maxwidth"
+			maxlength="[% c.config.len.max.alt %]"
+			title="Text that will appear when your artwork is hovered over (like this)"/>
+	</p>
 	
 	<p>
 		<label>Website</label>
@@ -47,6 +54,7 @@
 			title="Optional link to your online galleries"
 			placeholder="http://" />
 	</p>
+
 	<p id="imageContainer">
 		<label>Image<span class="required">*</span></label>
 		<input name="image" type="file" id="image"
@@ -63,12 +71,5 @@
 </form>
 [%- END %]
 [%- IF !c.user %]
-	<div class="ui-widget" style="display: inline-block; margin-bottom: 1em">
-		<div class="ui-state-highlight ui-corner-all" style="padding: 0 .7em;"> 
-			<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-				Guests cannot submit art
-			</p>
-		</div>
-	</div>
+	[% INCLUDE fragment/status_msg.tt  message = 'Guests cannot submit art' %]
 [%- END %]
