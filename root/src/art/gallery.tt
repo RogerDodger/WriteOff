@@ -9,7 +9,7 @@
 
 		<img src="[% c.uri_for( c.controller('Art').action_for('view'), [ image.id_uri ]) %]?thumb" 
 			alt="[% image.title | html %]" 
-			title="[% image.hovertext %]" />
+			title="[% image.hovertext | html %]" />
 		
 		<figcaption>
 			<a class="link new-tab em" href="[% c.uri_for( c.controller('Art')
