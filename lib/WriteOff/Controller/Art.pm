@@ -65,6 +65,7 @@ sub do_submit :Private {
 	if( $img ) {
 		$c->req->params->{image}    = 1;
 		$c->req->params->{mimetype} = $img->mimetype;
+		$c->log->info( $c->req->params->{mimetype} );
 		$c->req->params->{filesize} = $img->size;
 	} 
 	else {
