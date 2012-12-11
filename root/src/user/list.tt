@@ -25,7 +25,7 @@
 			</a>
 		</th>
 		<th>
-			<a class="link" href="[% uri_to_sort_by('registered', 'asc', 'asc') %]">
+			<a class="link" href="[% uri_to_sort_by('created', 'asc', 'asc') %]">
 			Registered
 			</a>
 		</th>
