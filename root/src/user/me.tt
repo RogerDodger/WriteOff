@@ -67,7 +67,8 @@
 		<th>Title</th>
 		<th>Artist</th>
 		<th>Filesize</th>
-		<th>Submitted</th>
+		<th>Updated</th>
+		<th> </th>
 		<th> </th>
 	</tr>
 	[%- FOREACH image IN images.all %]
@@ -76,7 +77,11 @@
 			[% image.event.prompt | html %]
 		</td>
 		<td class="max-200" title="[% image.title | html %]">
-			<a class="link" href="[% c.uri_for( '/art/' _ image.id_uri ) %]">
+			<a class="link" href="[% c.uri_for_action(
+				'/art/view',
+				[ image.id_uri ], 
+				{ v => image.version }
+			) %]">
 				[% image.title | html %]
 			</a>
 		</td>
@@ -90,17 +95,28 @@
 			[%- END %]
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td class="right">[% format_dt( image.created, '%d %b %H:%M') %]</td>
+		<td class="right">[% format_dt( image.updated, '%d %b %H:%M') %]</td>
+
+		[%- IF image.is_manipulable_by(c.user) %]
 		<td>
-		[%- IF image.is_manipulable_by( c.user ) %]
+			<a href="[% c.uri_for( c.controller('Art').action_for('edit'), [ image.id_uri ]) %]">
+				<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
+			</a>
+		</td>
+		<td>
 			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Art')
 				.action_for('delete'), [ image.id_uri ]) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
 			</a>
+		</td>
 		[%- ELSE %]
+		<td>
+			<span class="ui-icon ui-icon-locked" title="Edit disabled">[]</span>
+		</td>
+		<td>
 			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
+		</td>
 		[%- END %]
-		</td>	
 	</tr>
 	[%- END %]
 </table>

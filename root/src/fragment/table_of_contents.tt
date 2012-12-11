@@ -1,7 +1,7 @@
 <ul class="contents">
 	[% FOREACH header IN headers %]
 	<li class="[% header.class %]">
-		<a class="link" href="#[% simple_uri( header.contents ) %]">
+		<a class="link" href="#[% header.contents | simple_uri %]">
 			[% header.contents %]
 		</a>
 	</li>

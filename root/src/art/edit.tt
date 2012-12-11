@@ -1,0 +1,4 @@
+<h1>[% image.event.prompt | html %]</h1>
+
+<h2>Art Editing</h2>
+[% INCLUDE art/form.tt %]

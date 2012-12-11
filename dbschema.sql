@@ -136,7 +136,8 @@ CREATE TABLE images (
 	filesize  INTEGER NOT NULL,
 	mimetype  TEXT NOT NULL,
 	seed      REAL,
-	created   TIMESTAMP
+	created   TIMESTAMP,
+	updated   TIMESTAMP
 );
 
 CREATE TABLE image_story (

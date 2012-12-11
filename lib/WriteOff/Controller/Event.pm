@@ -37,13 +37,13 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 	$c->stash->{title} = [ $c->stash->{event}->prompt ];
 }
 
-=head2 overview :Chained('index') :PathPart('') :Args(0)
+=head2 permalink :Chained('index') :PathPart('') :Args(0)
 
 Redirects to the event overview in the event listings.
 
 =cut
 
-sub overview :Chained('index') :PathPart('') :Args(0) {
+sub permalink :Chained('index') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->res->redirect(

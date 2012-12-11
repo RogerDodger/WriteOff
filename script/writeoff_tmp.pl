@@ -8,4 +8,4 @@ BEGIN { push @INC, 'lib'; }
 use WriteOff::Schema;
 my $schema = WriteOff::Schema->connect('dbi:SQLite:WriteOff.db');
 
-say $schema->resultset('Image')->find(25)->alt;
+say ref $schema->resultset('Image')->find(25)->created;

@@ -271,8 +271,8 @@ Composing rels: L</image_stories> -> image
 __PACKAGE__->many_to_many("images", "image_stories", "image");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-25 22:41:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W1f8zPqQCwSFy2MOzZescg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mfqciAIh5aHFiPk4IZpNew
 
 __PACKAGE__->add_columns(
 	created => {data_type => 'timestamp', set_on_create => 1},

@@ -303,8 +303,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-30 11:56:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:twrmDpdZlgjJgB1dSFXgrg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/e++88ZYeIweFZvRD6sWHw
 
 __PACKAGE__->many_to_many( users => 'user_events', 'user' );
 

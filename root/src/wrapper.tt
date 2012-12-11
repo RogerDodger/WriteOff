@@ -25,13 +25,13 @@
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/normalize.css') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.2.custom.css') %]">
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.26.css') %]">
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.27.css') %]">
 	
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.9.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
-	<script src="[% c.uri_for('/static/js/writeoff-0.16.js') %]"></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.17.js') %]"></script>
 	
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
@@ -143,8 +143,8 @@
 		</a>
 	</p>
 [%- IF c.config.footer_addendum %]
-	<div style="margin-top: 0.5em">
-		[% md_render( c.config.footer_addendum ) %]
+	<div class="addendum">
+		[% c.config.footer_addendum | markdown %]
 	</div>
 [%- END %]
 </footer>

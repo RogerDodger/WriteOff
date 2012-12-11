@@ -4,7 +4,7 @@
 
 [%- headers.push({ 'contents' => contents, 'class' => class }) -%]
 
-<a id="[% simple_uri( contents ) %]"> </a>
+<a id="[% contents | simple_uri %]"> </a>
 <[% class %]>[% contents %]</[% class %]>
 
 [%- END %]

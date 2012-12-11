@@ -121,8 +121,10 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	
 	$c->stash->{fillform}{author} = eval { $c->user->username };
 	
-	$c->forward('do_submit') if $c->req->method eq 'POST' && 
-		$c->user && $c->stash->{event}->fic_subs_allowed;
+	$c->forward('do_submit') 
+		if $c->req->method eq 'POST'
+		&& $c->user
+		&& $c->stash->{event}->fic_subs_allowed;
 }
 
 sub do_submit :Private {
@@ -159,8 +161,8 @@ sub do_submit :Private {
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) unless 
-		$c->stash->{story}->is_manipulable_by( $c->user );
+	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) 
+		unless $c->stash->{story}->is_manipulable_by( $c->user );
 		
 	$c->stash->{event} = $c->stash->{story}->event;
 	
@@ -185,7 +187,7 @@ sub do_edit :Private {
 	
 	if( !$c->form->has_error ) {
 	
-		$c->log->info( sprintf "Fic id %d edited by %s, to %s by %s (%d words)",
+		$c->log->info( sprintf "Fic %d edited by %s, to %s by %s (%d words)",
 			$c->stash->{story}->id,
 			$c->user->get('username'),
 			$c->form->valid('title'),

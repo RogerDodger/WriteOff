@@ -81,6 +81,27 @@ jQuery(document).ready(function($) {
 		source: '/user/list?view=json&order_by=username',
 		minLength: 1,
 	});
+
+	// Image upload preview
+	$('#preview img').each( function() {
+		$(this).data('default', $(this).attr('src'));
+	});
+	$('input[name="image"]').on('change', function() {
+		var img = $('#preview img');
+
+		if(this.files && this.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				img.attr('src', e.target.result);
+			};
+
+			reader.readAsDataURL(this.files[0]);
+		}
+		else {
+			img.attr('src', img.data('default'));
+		}
+	});
 	
 	//VoteRecord::fill form handlers
 	var sortable_update = function() {

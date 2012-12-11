@@ -2,41 +2,40 @@
 
 [%- IF users.count %]
 <table class="solid maxwidth no-overflow">
+	[% MACRO uri_to_sort_by(param, def, alt) GET c.req.uri_with({
+		q => param,
+		o => c.req.param('q') == param && c.req.param('o') == def ? alt : def
+	}) %]
 	<tr class="heading">
 		<th>
-			[%- c.req.params.import({ order_by => 'username' }) %]
-			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]">
+			<a class="link" href="[% uri_to_sort_by('username', 'asc', 'desc') %]">
 			Username
 			</a>
 		</th>
-		<th>Email</th>
 		<th>
-			[%- c.req.params.import({ order_by => 'prompt_skill' }) %]
-			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]"
+			<a class="link" href="[% uri_to_sort_by('prompt_skill', 'desc', 'asc') %]"
 				title="The average score of this user's prompts">
 			Prompt Skill
 			</a>
 		</th>
 		<th>
-			[%- c.req.params.import({ order_by => 'hugbox_score' }) %]
-			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]">
+			<a class="link" href="[% uri_to_sort_by('hugbox_score', 'desc', 'asc') %]"
+				title="The average score of the votes this user has cast">
 			Hugbox Score
 			</a>
 		</th>
 		<th>
-			[%- c.req.params.import({ order_by => 'registered' }) %]
-			<a class="link" href="[% c.uri_for( c.action, undef, c.req.params ) %]">
+			<a class="link" href="[% uri_to_sort_by('registered', 'asc', 'asc') %]">
 			Registered
 			</a>
 		</th>
 	</tr>
 	[%- FOREACH user IN users.all %]
 	<tr class="[% loop.parity %]">
-		<td>[% user.username %]</td>
 		[%- IF c.check_user_roles('admin') %]
-		<td class="max-150"><a class="link" href="mailto:[% user.email %]">[% user.email %]</a></td>
+		<td><a class="link" href="mailto:[% user.email | html %]">[% user.username %]</a></td>
 		[%- ELSE %]
-		<td class="center">&lt;hidden&gt;</td>
+		<td>[% user.username %]</td>
 		[%- END %]
 		<td class="center">[% user.prompt_skill | format('%d') %]</td>
 		<td class="center">[% user.hugbox_score | format('%.2f') %]</td>

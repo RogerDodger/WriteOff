@@ -9,7 +9,7 @@ sub metadata {
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'artist', 'website', 'hovertext',
 			'filesize', 'mimetype',
-			'seed', 'created'
+			'seed', 'created', 'updated'
 		]
 	});
 }

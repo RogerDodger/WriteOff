@@ -9,8 +9,6 @@ use Catalyst qw/
 	ConfigLoader
 	Static::Simple
 	Unicode::Encoding
-	
-	Log::Handler
 
 	Scheduler
 	
@@ -30,7 +28,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.27.18';
+our $VERSION = 'v0.28.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -168,10 +166,7 @@ __PACKAGE__->config(
 	enable_catalyst_header => 1,
 );
 
-__PACKAGE__->setup();
-
-__PACKAGE__->log( Catalyst::Log->new( qw/info warn error fatal/ ) )
-	if __PACKAGE__->debug;
+__PACKAGE__->setup( $ENV{CATALYST_DEBUG} ? () : 'Log::Handler' );
 
 $ENV{TZ} = __PACKAGE__->config->{timezone};
 

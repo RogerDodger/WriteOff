@@ -93,6 +93,17 @@ textarea {
    Write-off custom styles
    ========================================================================== */
 
+/* Make placeholder colour consistent across browsers */
+::-webkit-input-placeholder {
+    color: #999;
+}
+:-moz-placeholder {
+    color: #999;
+}
+:-ms-input-placeholder {
+	color: #999;
+}
+
 
 /*
  * Generic
@@ -178,9 +189,12 @@ footer p {
 	font-size: 0.9em;
 	text-align: center;
 }
+footer div.addendum {
+	margin-top: 0.5em;
+}
 
 /*
- * FORM STYLES
+ * Forms
  */
 
 form.light label {
@@ -240,7 +254,7 @@ form.light p .ps {
 }
 
 /*
- * NAV STYLES
+ * Nav
  */
 
 nav ul {
@@ -309,6 +323,11 @@ nav li:hover ul li:hover a {
 }
 .events h4 {
 	font-size: 1.25em;
+}
+.events a.permalink {
+	text-align: super;
+	font-size: .6em;
+	float: right;
 }
 .events td, 
 .events th {
@@ -504,7 +523,7 @@ table.plain th {
 }
 
 /* 
- * Prompts
+ * Containers
  */
 
 .prompt-container {
@@ -535,10 +554,6 @@ p.prompt {
 	padding: 0.25em;
 	margin: 0 0 -1px 0;
 }
-
-/*
- * GALLERY STYLES
- */
 
 .story {
 	clear: both;
@@ -578,15 +593,20 @@ p.prompt {
 .story blockquote hr:after {
 	background: #f9f9f9;
 }
+
 figure {
 	max-width: 230px;
+}
+div.artworks figure {
 	display: inline-block;
 	vertical-align: top;
 	text-align: center;
-	margin: 0 25px 25px 0;
+	margin: 0 1.5em 1.5em 0;
 }
 figure img {
 	margin-bottom: 4px;
+	max-width: 225px;
+	max-height: 225px;
 	border: 1px solid black;
 	background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
 	

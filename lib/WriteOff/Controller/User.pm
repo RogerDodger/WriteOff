@@ -304,12 +304,7 @@ sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
 	}
 }
 
-my %order_by = (
-	prompt_skill => { -desc => 'prompt_skill' },
-	hugbox_score => { -desc => 'hugbox_score' },
-	username     => { -asc => 'username' },
-	registered   => { -asc => 'created' },
-);
+my @allowed = [ 'username', 'hugbox_score', 'prompt_skill', 'created' ];
 
 sub list :Local :Args(0) {
 	my ( $self, $c ) = @_;
@@ -317,12 +312,18 @@ sub list :Local :Args(0) {
 	return $c->res->redirect( $c->uri_for( $c->action ) ) 
 		if defined $c->req->param('term') && $c->req->param('term') eq '';
 
-	$c->stash->{users} = $c->model('DB::User')->search({
+	$c->stash->{users} = $c->model('DB::User')->search(
+	{
 		'me.username' => { like => "%" . $c->req->param('term') . "%" },
 		'me.verified' => 1,
-	})
-	->with_stats
-	->order_by( $order_by{ $c->req->param('order_by') } );
+	}, 
+	{
+		order_by => { 
+			$c->req->param('o') eq 'desc' ? '-desc' : '-asc',
+			$c->req->param('q') ~~ \@allowed ? $c->req->param('q') : undef
+		}
+	}
+	)->with_stats;
 
 	if( $c->req->param('view') eq 'json' ) {
 		$c->stash->{json} = [ 

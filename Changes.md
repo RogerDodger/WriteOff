@@ -1,21 +1,29 @@
-v0.28
-=====
+Changelog for WriteOff.pm
+=========================
+
+v0.28 - 12 Dec 2012
+-------------------
 
 - Removed `br-eater` class from blocks in BBCode, rather just removing any <br>s that follow as a part of the parsing
 - Changed Helpers::simple_uri to consider common word-separating punctuation like slashes and dashes
 - Added a bunch of scripts for data management
 - Added a table of contents to the FAQ
-- Added a read only config setting to the site
+- Added a config setting to make the site read only
 - Made judge votes listed in the Controller::Event::results
   - Utilised session data to determine what record view the user is in
 - Added action Event::overview for permalinks to event overviews
-- Added clause about vote doctoring to rules
-- Added `hovertext` column to Images
+- Added hovertext column to Images
+- Art forms now preview the selected image
+- Art items now editable
+- Changed rules:
+  * Typed with markdown for better readibility
+  * Added clause about using your own artwork
+  * Added clause about vote doctoring
+- Fixed the markup of this document
+- Added permalinks to event listings
 
-v0.27
-=====
-
-### 26 Nov 2012
+v0.27 - 26 Nov 2012
+-------------------
 
 - News tab added (WIP, not actually dynamic right now)
 - WriteOff::Helpers added to store miscellaneous useful subs shared throughout the application
@@ -26,17 +34,13 @@ v0.27
 - Private-round finalists display for the public in Controller::Vote::private
 - Added a dynamically loaded table of contents to the FAQ (finally...)
 
-v0.26
-=====
-
-### 13 Nov 2012
+v0.26 - 13 Nov 2012
+-------------------
 
 - Added font-size chooser for story views
 
-v0.25
-=====
-
-### 7 Nov 2012
+v0.25 - 7 Nov 2012
+------------------
 
 - Cleaned up title logic
 - Put a regex on id_uri extractors instead of int() with no warnings
@@ -46,10 +50,8 @@ v0.25
 - Added new table class, `solid`, currently used for the scoreboard
   - I grow weary of the `slim` table that's used on most of the tables right now
 
-v0.24
-=====
-
-### 4 Nov 2012
+v0.24 - 4 Nov 2012
+------------------
 
 - Boatload of style changes
 - Scoreboard data put into multiple tables for score breakdowns
@@ -59,10 +61,8 @@ v0.24
 - Added config for Google Analytics
 - Put full id_uri for event listing IDs (starting with a number is valid in HTML5)
 
-v0.23
-=====
-
-### 27 Oct 2012
+v0.23 - 27 Oct 2012
+-------------------
 
 - Started using Google Analytics on the site
 - Cleaned up popup messages to be more lightweight in the templates
@@ -72,19 +72,15 @@ v0.23
 - Added humans.txt
 - Added a html filter before rendering markdown, as markdown doesn't do that by default
 
-v0.22
-=====
-
-### 19 Oct 2012
+v0.22 - 19 Oct 2012
+-------------------
 
 - New navbar and other layout changes
 - Art gallery done with data URI base64 images to reduce the number of server requests
   - IE8 and prior have a directive to still work with the gallery
 
-v0.21
-=====
-
-### 18 Oct 2012
+v0.21 - 18 Oct 2012
+-------------------
 
 - Art gallery
 - Related images/artworks listed in galleries
@@ -95,10 +91,8 @@ v0.21
 - Reserved artist/author names for first person to use them (using funky virtual tables, woo)
 - Added logs for Controller::Fic::edit
 
-v0.20
-=====
-
-### 16 Oct 2012
+v0.20 - 16 Oct 2012
+-------------------
 
 - VoteRecord filling and other various logic
 - Prelim distribution
@@ -115,7 +109,8 @@ v0.20
 - Decided that timestamps on changelogs *might* be a good idea
 
 v0.19
-=====
+-----
+
 - Removed delay between events
   - Prelim rounds start with +leeway time so that stories submitted dring the leeway time don't miss out on the prelim distriution
 - Massiely optimised the result listing page
@@ -124,7 +119,8 @@ v0.19
 - Request logging logs the referer of requests without the same origin
 
 v0.18
-=====
+-----
+
 - Delete form prettied up
 - Every submit/edit form prettied up
 - CSS made more generalised (also prettied up, because that word isn't trite by now!)
@@ -146,19 +142,22 @@ v0.18
 - Probably broke something
 
 v0.17
-=====
+-----
+
 - Added placeholder templates/actions for art gallery and voting, and prelim and private voting
 - Prettied up the event/edit form
 - Tidied up the CSS
 
 v0.16
-=====
+-----
+
 - Email notifications
 - Nicer forms (in some places)
   - HTML5 validation woo
 
 v0.15
-=====
+-----
+
 - Wooden spoon award
 - Confetti award
 - Cleaned up voterecord/list
@@ -167,7 +166,8 @@ v0.15
 - Pushed event archive clock back 1 day, so that recently finished events don't go straight in the archive
 
 v0.14
-=====
+-----
+
 - Put parsers where they belong (for reals this time)
 - Organiser/Judge CRUD added
 - Organiser functionality fully implemented
@@ -180,11 +180,13 @@ v0.14
 - Added a FillForm check to Root/end, instead of doing it the silly way
 
 v0.13
-=====
+-----
+
 - Made public votes saveable to session data
 
 v0.12
-=====
+-----
+
 - Moved event management view to event/$id/...
   - Cleans up the logic and makes implementing organisers much easier
 - VoteRecord view/delete added
@@ -199,12 +201,14 @@ v0.12
 - Added login hook for testing purposes
 
 v0.11
-=====
+-----
+
 - Scoreboard done
 - FAQ cleaned up
 
 v0.10
-=====
+-----
+
 - Public voting implemented
 - BBCode parsing done up proper
 - Scoreboard half done
@@ -213,7 +217,8 @@ v0.10
   - i.e., Date math done up proper
 
 v0.09
-=====
+-----
+
 - Fixed some forms & cleaned up the code
 - Parsers put where they belong & links done up right w/o any messy view code
 - Case-sensitive collation put on columns that should have it
@@ -223,11 +228,13 @@ v0.09
 - Nobody reads these anyway
 
 v0.08
-=====
+-----
+
 - Logs
 
 v0.07
-=====
+-----
+
 - Events able to have a pre-set title for descriptiveness before the prompt overwrites it
 - Submission pages requiring logins made more guest-friendly
 - BBCode parser put where it belongs
@@ -239,7 +246,8 @@ v0.07
 - Site's font chain made super long so I look like I know what I'm doing
 
 v0.06
-=====
+-----
+
 - Rules added
 - FAQ mostly completed
 - Stories and images given a seed for randomised listing order
@@ -252,7 +260,8 @@ v0.06
 - Let's do this
 
 v0.05
-=====
+-----
+
 - Per-event blurb added
   - Editable with markdown (should only use links in lists, mostly)
 - Prompt submission/voting logic ironed out
@@ -271,7 +280,8 @@ It'd also be easier to implement.
 Made vote records more generalised, such that the addition of a private judging round can happen. Also considering the possibility of using votes on artworks, though how that ties in to event flow... I'm not sure. Something to ponder, but not a top priority in any case.
 
 v0.04
-=====
+-----
+
 - FAQ added
 - Word limits now on per-event basis
 - Interim set to global 1 hour
@@ -281,7 +291,8 @@ v0.04
 - Added TODO
 
 v0.03
-=====
+-----
+
 - Added CSRF counter-measures
 - Business rules on submissions
 - Prompts
@@ -290,15 +301,17 @@ v0.03
   - Voting (uses Elo comparison)
 
 v0.02
-=====
+-----
+
 - Changed paths on item manipulation to (fic|art)/*/(view|edit|delete)
 
 v0.01
-=====
+-----
 
 ##Implemented
 
 ###Users
+
 - Register
 - Verify
 - Settings
@@ -306,18 +319,21 @@ v0.01
 - Access controls (e.g., restricting admin tasks to the admin)
 
 ###Events
+
 - Create
 - Event flow
 - List
 - Submission time logic
 
 ###Stories
+
 - Submit
 - View (parsed BBCode and plaintext)
 - Edit
 - Delete
 
 ###Images
+
 - Submit
 - Thumbnailing
 - View
@@ -326,19 +342,23 @@ v0.01
 ##To Be Implemented
 
 ###Events
+
 - Results
 
 ###Prompts
+
 - Submit
 - View
 - Delete
 - Comparison logic (ELO Ranking)
 
 ###Heats
+
 - Request
 - Vote
 
 ###Vote Records
+
 - Distribution for participants
 - Distribution for volunteers
 - Relative voting (for prelims)
@@ -347,6 +367,7 @@ v0.01
 - Results
 
 ###Documentation
+
 - Everything
 - FAQ
 - Flow-chart of event operation

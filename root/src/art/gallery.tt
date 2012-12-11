@@ -4,16 +4,27 @@
 
 [%- IF event.art_gallery_opened %]
 
+<div class="artworks">
 	[%- FOREACH image IN images.all %]
 	<figure>
 
-		<img src="[% c.uri_for( c.controller('Art').action_for('view'), [ image.id_uri ]) %]?thumb" 
+		<img src="[% c.uri_for( 
+				c.controller('Art').action_for('view'), 
+				[ image.id_uri ],
+				{
+					view => 'thumb',
+					v => image.version
+				}
+			) %]" 
 			alt="[% image.title | html %]" 
 			title="[% image.hovertext | html %]" />
 		
 		<figcaption>
-			<a class="link new-tab em" href="[% c.uri_for( c.controller('Art')
-				.action_for('view'), [ image.id_uri ]) %]">[% image.title | html %]</a>
+			<a class="link new-tab em" href="[% c.uri_for( 
+				c.controller('Art').action_for('view'), 
+				[ image.id_uri ],
+				{ v => image.version }
+			) %]">[% image.title | html %]</a>
 			
 		[%- IF show_artists %]
 			by
@@ -37,6 +48,7 @@
 		
 	</figure>
 	[%- END %]
+</div>
 
 [%- ELSE %]
 <p>

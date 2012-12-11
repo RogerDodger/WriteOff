@@ -298,8 +298,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-10-30 10:19:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LJkZ7TX8PyiVmJ5seb9LtQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h9iQqxamf8l6DOYkgoAWrw
 
 __PACKAGE__->mk_group_accessors(column => 'role');
 

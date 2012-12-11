@@ -1,6 +1,7 @@
 package WriteOff::Controller::Art;
 use Moose;
 use namespace::autoclean;
+no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -46,34 +47,137 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 	$c->stash->{title} = [ $c->stash->{image}->title ];
 }
 
+sub view :Chained('index') :PathPart('') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->res->content_type( $c->stash->{image}->mimetype );
+	$c->res->body( 
+		$c->req->param('view') eq 'thumb' ? 
+		$c->stash->{image}->thumb : 
+		$c->stash->{image}->contents 
+	);
+	
+	$c->res->header( 'Cache-Control' => 'max-age=' . 30 * 24 * 60 * 60 );
+}
+
+sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{show_artists} = $c->stash->{event}->is_ended;
+	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
+	
+	$c->stash->{images} = $c->stash->{event}->images->seed_order->no_contents;
+	
+	push $c->stash->{title}, 'Gallery';
+	$c->stash->{template} = 'art/gallery.tt';
+}
+
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	push $c->stash->{title}, 'Submit';
-	$c->stash->{template} = 'art/submit.tt';
-	
 	$c->stash->{fillform}{artist} = eval { $c->user->username }; 
 	
-	$c->forward('do_submit') if $c->req->method eq 'POST' && 
-		$c->user && $c->stash->{event}->art_subs_allowed;
+	$c->forward('do_submit') 
+		if $c->req->method eq 'POST'
+		&& $c->user
+		&& $c->stash->{event}->art_subs_allowed;
+
+	push $c->stash->{title}, 'Submit';
+	$c->stash->{template} = 'art/submit.tt';
 }
 
 sub do_submit :Private {
+	my( $self, $c ) = @_;
+
+	$c->forward('form');
+
+	if( !$c->form->has_error ) {
+		$c->detach('/error', [ 'Image upload failed' ])
+			unless $c->stash->{row}{contents};
+
+		$c->stash->{row}{user_id} = $c->user_id;
+		$c->stash->{row}{ip}      = $c->req->address;
+		$c->stash->{row}{seed}    = rand;
+			
+		$c->stash->{event}->create_related('images', $c->stash->{row});
+		
+		$c->flash->{status_msg} = 'Submission successful';
+		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+	}
+}
+
+sub edit :Chained('index') :PathPart('edit') {
 	my ( $self, $c ) = @_;
-	
+
+	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) 
+		unless $c->stash->{image}->is_manipulable_by( $c->user );
+
+	$c->forward('do_edit') if $c->req->method eq 'POST';
+
+	$c->stash->{fillform}{$_} = $c->stash->{image}->$_
+		for qw/title artist hovertext website/;
+
+	$c->stash->{preview} = $c->uri_for( 
+		$self->action_for('view'),
+		[ $c->stash->{image}->id_uri ],
+		{
+			view => 'thumb',
+			v => $c->stash->{image}->version
+		}
+	);
+
+	push $c->stash->{title}, 'Edit';
+	$c->stash->{template} = 'art/edit.tt';
+}
+
+sub do_edit :Private {
+	my ( $self, $c ) = @_;
+
+	$c->forward('form');
+
+	if( !$c->form->has_error ) {
+
+		$c->stash->{image}->update( $c->stash->{row} );
+
+		$c->log->info( sprintf "Art %d edited by %s, to %s by %s (%.2fKB)",
+			$c->stash->{image}->id,
+			$c->user->get('username'),
+			$c->stash->{image}->title,
+			$c->stash->{image}->artist,
+			$c->stash->{image}->filesize / 1024,
+		);
+
+		$c->flash->{status_msg} = 'Edit successful';
+
+		# Redirect in case the title changed
+		$c->res->redirect(
+			$c->uri_for( $c->action, [ $c->stash->{image}->id_uri ] )
+		);
+	}
+}
+
+sub form :Private {
+	my ( $self, $c ) = @_;
+
+	$c->stash->{event} ||= $c->stash->{image}->event;
+
+	# When editing, must allow for the title to be itself
+	my $title_rs = $c->stash->{event}->images->search({
+		title => { 
+			'!=' => eval { $c->stash->{image}->title } || undef
+		}	
+	});
+
 	my $img = $c->req->upload('image');
 	if( $img ) {
-		$c->req->params->{image}    = 1;
 		$c->req->params->{mimetype} = $img->mimetype;
 		$c->req->params->{filesize} = $img->size;
-	} 
-	else {
-		delete $c->req->params->{image};
 	}
 	
 	my $virtual_artist_rs = $c->model('DB::Virtual::Artist')->search({
 		name    => { '!=' => 'Anonymous' },
-		user_id => { '!=' => $c->user_id },
+		# Must allow organisers to edit properly
+		user_id => { '!=' => eval { $c->stash->{image}->user_id } || $c->user_id },
 	});
 	
 	$c->form(
@@ -81,7 +185,7 @@ sub do_submit :Private {
 			'NOT_BLANK',
 			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
 			'TRIM_COLLAPSE', 
-			[ 'DBIC_UNIQUE', $c->stash->{event}->images_rs, 'title' ],
+			[ 'DBIC_UNIQUE', $title_rs, 'title' ],
 		],
 		artist => [ 
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
@@ -93,63 +197,29 @@ sub do_submit :Private {
 			'TRIM_COLLAPSE',
 		],
 		website   => [ 'HTTP_URL' ],
-		image     => [ 'NOT_BLANK' ],
 		mimetype  => [ [ 'IN_ARRAY', @{ $c->config->{biz}{img}{types} } ] ],
 		filesize  => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
 	);
-	
-	if(!$c->form->has_error) {
 		
-		my %row = (
-			event_id  => $c->stash->{event}->id,
-			user_id   => $c->user->get('id'),
-			ip        => $c->req->address,
-			title     => $c->form->valid('title'),
-			artist    => $c->form->valid('artist') || 'Anonymous',
-			hovertext => $c->form->valid('hovertext') || undef,
-			website   => $c->form->valid('website') || undef,
-			filesize  => $img->size,
-			mimetype  => $img->mimetype,
-			seed      => rand,
-		);
+	$c->stash->{row} = {
+		title     => $c->form->valid('title'),
+		artist    => $c->form->valid('artist') || 'Anonymous',
+		hovertext => $c->form->valid('hovertext') || undef,
+		website   => $c->form->valid('website') || undef,
+	};
+
+	if( $img ) {
+		$c->stash->{row}{filesize} = $c->form->valid('filesize');
+		$c->stash->{row}{mimetype} = $c->form->valid('mimetype');
 		
 		my $magick = Image::Magick->new;
-		$magick->Read     ( $img->tempname );
-		$row{contents} =  ( $magick->ImageToBlob )[0];
+
+		$magick->Read( $img->tempname );
+		$c->stash->{row}{contents} = ( $magick->ImageToBlob )[0];
 		
 		$magick->Resize( geometry => '225x225' );
-		$row{thumb} =  ( $magick->ImageToBlob  )[0];
-		
-		$c->model('DB::Image')->create(\%row);
-		
-		$c->flash->{status_msg} = 'Submission successful';
-		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+		$c->stash->{row}{thumb} = ( $magick->ImageToBlob  )[0];
 	}
-}
-
-sub view :PathPart('') :Chained('index') :Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->res->content_type( $c->stash->{image}->mimetype );
-	$c->res->body( 
-		$c->req->query_keywords eq 'thumb' ? 
-		$c->stash->{image}->thumb : 
-		$c->stash->{image}->contents 
-	);
-	
-	$c->res->header( 'Cache-Control' => 'max-age=' . 30 * 24 * 60 * 60 );
-}
-
-sub gallery :PathPart('gallery') :Chained('/event/art') :Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{show_artists} = $c->stash->{event}->is_ended;
-	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
-	
-	$c->stash->{images} = $c->stash->{event}->images->seed_order->no_contents;
-	
-	push $c->stash->{title}, 'Gallery';
-	$c->stash->{template} = 'art/gallery.tt';
 }
 
 sub delete :PathPart('delete') :Chained('index') :Args(0) {

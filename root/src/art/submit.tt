@@ -17,59 +17,9 @@
 </p>
 
 [%- IF event.art_subs_allowed && c.user %]
-<form class="light" action="[% c.req.uri %]" method="post" enctype="multipart/form-data">
-	[%- IF c.form.has_error %]
-	<div>
-		[%- FOREACH message IN c.form.messages('submit') %]
-			[%- INCLUDE fragment/error_msg.tt %]
-		[%- END %]
-	</div>
-	[%- END %]
-	
-	<div class="para">
-		<p class="col">
-			<label>Title<span class="required">*</span></label>
-			<input name="title" type="text" size="30" class="halfwidth"
-				maxlength="[% c.config.len.max.title %]" required />
-		</p>
-		<p class="col final">
-			<label>Artist</label>
-			<input name="artist" type="text" size="30" class="maxwidth"
-				maxlength="[% c.config.len.max.user %]"
-				placeholder="Anonymous" />
-		</p>
-	</div>
-
-	<p>
-		<label>Hover text</label>
-		<input name="hovertext" type="text" size="72" class="maxwidth"
-			maxlength="[% c.config.len.max.alt %]"
-			title="Text that will appear when your artwork is hovered over (like this)"/>
-	</p>
-	
-	<p>
-		<label>Website</label>
-		<input name="website" type="url" size="72" class="maxwidth"
-			maxlength="[% c.config.len.max.url %]"
-			title="Optional link to your online galleries"
-			placeholder="http://" />
-	</p>
-
-	<p id="imageContainer">
-		<label>Image<span class="required">*</span></label>
-		<input name="image" type="file" id="image"
-			title="Allowed types: [% c.config.biz.img.types.join_serial %]"
-			accept="[% c.config.biz.img.types.join(',') %]"
-			onchange="this.setCustomValidity( 
-				this.files[0].size > [% c.config.biz.img.size %] ? 
-				'Max filesize: [% c.config.biz.img.size / 1024 | format('%dKB') %]' : ''
-			)" required />
-	</p>
-	<p>
-		<input type="submit" value="Submit" id="submit"/>
-	</p>
-</form>
+	[% INCLUDE art/form.tt  image_required = 1 %]
 [%- END %]
+
 [%- IF !c.user %]
 	[% INCLUDE fragment/status_msg.tt  message = 'Guests cannot submit art' %]
 [%- END %]

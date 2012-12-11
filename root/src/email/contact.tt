@@ -1,22 +1,19 @@
-<p>
-	<strong>To:</strong>
-	[% c.form.valid('to') | html %]
-	<br />
-	<strong>From:</strong>
-	[% c.user.username_and_email | html %]
-	<br />
-	<strong>Subject:</strong>
-	[% c.form.valid('subject') %]
-</p>
+[% FILTER markdown %]
 
-[% md_render( c.form.valid('message') ) %]</p>
+* __To:__ [% c.form.valid('to') | html %]
+* __From:__ [% c.user.username_and_email | html %]
+* __Subject:__ [% c.form.valid('subject') | html %]
+
+[% c.form.valid('message') | html %]</p>
 
 [%- IF recipient == c.user.username_and_email %]
 
-<hr />
+---
 
-<p>
-	This is a duplicate of the email sent to your recipient. It was sent to you automatically for your convenience. Please do not respond to this email.
-</p>
+This is a duplicate of the email sent to your recipient. 
+It was sent to you automatically for your convenience. 
+Please do not respond to this email.
 
-[% END %]
+[%- END %]
+
+[%- END %]

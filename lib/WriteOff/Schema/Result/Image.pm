@@ -123,6 +123,11 @@ __PACKAGE__->table("images");
   data_type: 'timestamp'
   is_nullable: 1
 
+=head2 updated
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -153,6 +158,8 @@ __PACKAGE__->add_columns(
   "seed",
   { data_type => "real", is_nullable => 1 },
   "created",
+  { data_type => "timestamp", is_nullable => 1 },
+  "updated",
   { data_type => "timestamp", is_nullable => 1 },
 );
 
@@ -261,10 +268,12 @@ Composing rels: L</image_stories> -> story
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-10 22:15:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9EoUpu8pnozwZb0+mCJZfQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rREx3l9RyVZZDnS19eRDUQ
+
 __PACKAGE__->add_columns(
-	created => {data_type => 'timestamp', set_on_create => 1},
+  created => {data_type => 'timestamp', set_on_create => 1},
+  updated => {data_type => 'timestamp', set_on_create => 1, set_on_update => 1},
 );
 
 __PACKAGE__->mk_group_accessors(
@@ -323,6 +332,12 @@ sub id_uri {
 	require WriteOff::Helpers;
 	
 	return WriteOff::Helpers::simple_uri( $self->id, $self->title );
+}
+
+sub version {
+  require Digest::MD5;
+  
+  return substr Digest::MD5::md5_hex(shift->updated), 0, 5;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

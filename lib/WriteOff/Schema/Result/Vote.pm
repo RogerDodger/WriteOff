@@ -163,8 +163,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-09-18 00:41:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:l39rb0Viyz0uRWpMUzrmvg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OxChlPO3YCzyA6TQ1xhf3A
 
 sub item {
 	my $self = shift;
