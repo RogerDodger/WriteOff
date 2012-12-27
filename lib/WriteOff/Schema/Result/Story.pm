@@ -346,7 +346,7 @@ sub id_uri {
 	return WriteOff::Helpers::simple_uri( $self->id, $self->title );
 }
 
-sub is_public_candidate {
+sub _is_public_candidate {
 	my $self = shift;
 	no warnings 'uninitialized';
 	

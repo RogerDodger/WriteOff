@@ -390,7 +390,7 @@ sub public_story_candidates {
 	# Doing the prelim_score search in the resultset doesn't work. 
 	# ...I don't know why, but I guess this'll do.
 	return grep { 
-		$_->is_public_candidate 
+		$_->_is_public_candidate 
 	} $self->storys->with_prelim_stats->seed_order->all;
 }
 
@@ -400,7 +400,7 @@ sub public_story_noncandidates {
 	return () if !$self->prelim || $self->prelim_votes_allowed;
 	
 	return grep { 
-		!$_->is_public_candidate
+		!$_->_is_public_candidate
 	} $self->storys->with_prelim_stats->seed_order->all;
 }
 
