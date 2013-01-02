@@ -89,8 +89,7 @@ other rules is allowed.
 
 [%- END %]
 
-<a id="Formatting"> </a>
-### Story Formatting
+<h3 id="Formatting">Story Formatting</h3>
 
 To aid with author anonymity, the following formatting rules must be applied 
 to all submitted stories.
@@ -102,9 +101,7 @@ to all submitted stories.
 
 #### Example
 
-<textarea class="example" rows="12" cols="48" disabled="disabled">
-	[%- INCLUDE fic/formatting.tt -%]
-</textarea>
+<div><textarea class="example" rows="12" cols="48" disabled="disabled">[% INCLUDE fic/formatting.tt %]</textarea></div>
 
 __Participants should not put their name or other metadata inside of the 
 story field.__ The *story* field should only have the *story* in it.
