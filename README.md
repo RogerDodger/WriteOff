@@ -1,7 +1,7 @@
 Installation
 ============
 
-- `WriteOff$ cp writeoff.conf.template writeoff.conf` - Fill in the details as appropriate
+- `WriteOff$ cp _writeoff.yml writeoff.yml` - Fill in the configuration as appropriate
 - `WriteOff$ sqlite3 WriteOff.db < dbschema.sql`
 - `WriteOff$ perl Makefile.pl`
 - `WriteOff$ make`

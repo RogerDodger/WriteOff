@@ -1,4 +1,5 @@
 WriteOff.db*
+writeoff.yml
 writeoff.conf
 writeoff.log*
 scheduler.state
