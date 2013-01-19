@@ -1,6 +1,11 @@
 Changelog for WriteOff.pm
 =========================
 
+v0.29 - 20 Jan 2012
+-------------------
+
+- Added script for uploading fics to fimfiction
+
 v0.28 - 12 Dec 2012
 -------------------
 
