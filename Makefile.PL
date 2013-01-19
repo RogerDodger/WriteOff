@@ -9,40 +9,46 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
 name 'WriteOff';
 all_from 'lib/WriteOff.pm';
 
-requires 'Catalyst::Runtime' => '5.90013';
-requires 'Catalyst::View::TT';
-requires 'Catalyst::View::JSON';
-requires 'Catalyst::View::Email::Template';
-requires 'Catalyst::Plugin::ConfigLoader';
-requires 'Catalyst::Plugin::Static::Simple';
-requires 'Catalyst::Plugin::Unicode::Encoding';
-requires 'Catalyst::Plugin::Authentication';
-requires 'Catalyst::Authentication::Realm::SimpleDB';
-requires 'Catalyst::Plugin::Authorization::Roles';
-requires 'Catalyst::Plugin::Session';
-requires 'Catalyst::Plugin::Session::Store::File';
-requires 'Catalyst::Plugin::Session::State::Cookie';
-requires 'Catalyst::Plugin::FormValidator::Simple';
-requires 'DateTime::Format::RFC3339';
-requires 'FormValidator::Simple::Plugin::DBIC::Unique';
-requires 'FormValidator::Simple::Plugin::Trim';
-requires 'Catalyst::Plugin::Scheduler';
-requires 'Catalyst::Plugin::FillInForm';
-requires 'Catalyst::Plugin::Upload::MIME';
-requires 'Catalyst::Plugin::RunAfterRequest';
-requires 'Catalyst::TraitFor::Controller::reCAPTCHA';
-requires 'Catalyst::Action::RenderView';
-requires 'DBIx::Class';
-requires 'DBIx::Class::TimeStamp';
-requires 'DBIx::Class::PassphraseColumn';
-requires 'DBIx::Class::InflateColumn::Serializer';
-requires 'Moose';
-requires 'namespace::autoclean';
-requires 'Config::General';
-requires 'Catalyst::Plugin::Log::Handler';
-requires 'Image::Magick';
-requires 'Parse::BBCode';
-requires 'Text::Markdown';
+requires (
+	'Catalyst::Runtime' => '5.90013',
+	'Catalyst::View::TT' => 0,
+	'Catalyst::View::JSON' => 0,
+	'Catalyst::View::Email::Template' => 0,
+	'Catalyst::Plugin::ConfigLoader' => 0,
+	'Catalyst::Plugin::Static::Simple' => 0,
+	'Catalyst::Plugin::Unicode::Encoding' => 0,
+	'Catalyst::Plugin::Authentication' => 0,
+	'Catalyst::Authentication::Realm::SimpleDB' => 0,
+	'Catalyst::Plugin::Authorization::Roles' => 0,
+	'Catalyst::Plugin::Session' => 0,
+	'Catalyst::Plugin::Session::Store::File' => 0,
+	'Catalyst::Plugin::Session::State::Cookie' => 0,
+	'Catalyst::Plugin::FormValidator::Simple' => 0,
+	'DateTime::Format::RFC3339' => 0,
+	'FormValidator::Simple::Plugin::DBIC::Unique' => 0,
+	'FormValidator::Simple::Plugin::Trim' => 0,
+	'Catalyst::Plugin::Scheduler' => 0,
+	'Catalyst::Plugin::FillInForm' => 0,
+	'Catalyst::Plugin::Upload::MIME' => 0,
+	'Catalyst::Plugin::RunAfterRequest' => 0,
+	'Catalyst::TraitFor::Controller::reCAPTCHA' => 0,
+	'Catalyst::Action::RenderView' => 0,
+	'DBIx::Class' => 0,
+	'DBIx::Class::TimeStamp' => 0,
+	'DBIx::Class::PassphraseColumn' => 0,
+	'DBIx::Class::InflateColumn::Serializer' => 0,
+	'Moose' => 0,
+	'namespace::autoclean' => 0,
+	'Config::General' => 0,
+	'Catalyst::Plugin::Log::Handler' => 0,
+	'Image::Magick' => 0,
+	'Parse::BBCode' => 0,
+	'Text::Markdown' => 0,
+	'WWW::Fimfiction' => 0,
+	'Try::Tiny' => 0,
+	'IO::Prompt' => 0,
+);
+
 test_requires 'Test::More' => '0.88';
 catalyst;
 

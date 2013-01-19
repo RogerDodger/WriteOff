@@ -4,6 +4,8 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+use Try::Tiny;
+
 =head1 NAME
 
 WriteOff::Controller::Event - Catalyst Controller
@@ -318,7 +320,7 @@ sub remove_judge :PathPart('remove-judge') :Chained('index') :Args(1) {
 	$c->forward( $self->action_for('remove_user'), [ $user_id, 'judge' ] );
 }
 
-sub remove_organiser :PartPart('remove-organiser') :Chained('index') :Args(1) {
+sub remove_organiser :PathPart('remove-organiser') :Chained('index') :Args(1) {
 	my ( $self, $c, $user_id ) = @_;
 	
 	$c->forward( $c->controller('Root')->action_for('assert_admin') );
