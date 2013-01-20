@@ -4,8 +4,6 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-use Try::Tiny;
-
 =head1 NAME
 
 WriteOff::Controller::Event - Catalyst Controller
@@ -32,8 +30,9 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 		$c->detach('/default');
 	
 	if( $arg ne $c->stash->{event}->id_uri ) {
-		$c->res->redirect
-		( $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] ) );
+		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] );
+		$c->res->redirect($url);
+		$c->detach();
 	}
 	
 	$c->stash->{title} = [ $c->stash->{event}->prompt ];
@@ -359,7 +358,7 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');
-	$c->forward('_notify_mailing_list');
+	$c->run_after_request( sub{ $c->forward('_notify_mailing_list') });;
 	$c->forward('permalink');
 }
 
