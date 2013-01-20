@@ -173,9 +173,9 @@ sub do_add :Private {
 		args   => [ $c->stash->{event}->id ],
 	});
 	
-	$c->run_after_request( sub {
-		$c->forward( $self->action_for('notify_mailing_list') );
-	}) if $c->req->param('notify_mailing_list');
+	if( $c->req->param('notify_mailing_list') ) {
+		$c->run_after_request( sub { $c->forward('_notify_mailing_list') });
+	}
 	
 	$c->flash->{status_msg} = 'Event created';
 	$c->res->redirect( $c->uri_for('/') );
@@ -355,8 +355,18 @@ sub assert_organiser :Private {
 		$c->stash->{event}->is_organised_by( $c->user );
 }
 
-sub notify_mailing_list :Private {
+sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 	my ( $self, $c ) = @_;
+
+	$c->forward('/assert_admin');
+	$c->forward('_notify_mailing_list');
+	$c->forward('permalink');
+}
+
+sub _notify_mailing_list :Private {
+	my ( $self, $c ) = @_;
+
+	$c->forward('/assert_admin');
 	
 	return 0 unless eval { 
 		$c->stash->{event}->isa('WriteOff::Schema::Result::Event');
