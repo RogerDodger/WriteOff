@@ -344,7 +344,9 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');
-	$c->run_after_request( sub{ $c->forward('_notify_mailing_list') });;
+	#$c->run_after_request( sub{ 
+		$c->forward('_notify_mailing_list');
+	#});
 	$c->forward('permalink');
 }
 
