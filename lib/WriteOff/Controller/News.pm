@@ -73,7 +73,7 @@ sub do_add :Private {
 		$c->flash->{status_msg} = 'News article created';
 		$c->res->redirect( $c->uri_for( 
 			$self->action_for('view'), 
-			[ $c->stash->{article}->id_uri ]
+			[ $article->id_uri ]
 		) );
 	}
 }
