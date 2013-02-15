@@ -155,7 +155,7 @@ sub do_add :Private {
 	$c->stash->{event}->reset_schedules;
 	
 	if( $c->req->param('notify_mailing_list') ) {
-		$c->run_after_request( sub { $c->forward('_notify_mailing_list') });
+		$c->run_after_request( sub { $c->forward('/event/_notify_mailing_list') });
 	}
 	
 	$c->flash->{status_msg} = 'Event created';
@@ -344,9 +344,9 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');
-	#$c->run_after_request( sub{ 
-		$c->forward('_notify_mailing_list');
-	#});
+	$c->run_after_request( sub{ 
+		$c->forward('/event/_notify_mailing_list');
+	});
 	$c->forward('permalink');
 }
 
@@ -358,6 +358,9 @@ sub _notify_mailing_list :Private {
 	};
 	
 	my $rs = $c->model('DB::User')->mailing_list;
+
+	#Debugging
+	$rs = $rs->search({ username => 'RogerDodger' });
 	
 	$c->log->info( sprintf "Notifying mailing list of Event: %s - %s",
 		$c->stash->{event}->id,
