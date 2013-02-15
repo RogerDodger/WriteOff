@@ -1,7 +1,13 @@
 Changelog for WriteOff.pm
 =========================
 
-v0.29 - 20 Jan 2012
+v0.30 - 15 Feb 2013
+-------------------
+
+- Added option for having no prompt round to events
+- Added reset_schedules() to Result::Event to make round addition/removal smoother
+
+v0.29 - 20 Jan 2013
 -------------------
 
 - Added script for uploading fics to fimfiction

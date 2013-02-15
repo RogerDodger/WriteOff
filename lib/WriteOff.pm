@@ -28,7 +28,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.29.4';
+our $VERSION = 'v0.30.1';
 
 __PACKAGE__->config(
 	name => 'Write-off',
