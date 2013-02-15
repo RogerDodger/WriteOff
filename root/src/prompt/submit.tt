@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Prompt Submissions</h2>
+<h1>Prompt Submission</h1>
 
 <p>
 	Submissions open: <strong>[% format_dt(event.start) %]</strong>.
@@ -29,7 +27,7 @@
 	[%- END %]
 	<p>
 		<label>Prompt</label>
-		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+		<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 		<input type="text" name="prompt" size="24" class="maxwidth"
 			maxlength="[% c.config.len.max.prompt %]" required />
 	</p>

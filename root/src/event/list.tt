@@ -68,55 +68,7 @@
 				<td>[% event.content_level %]</td>
 			</tr>
 		</table>
-		<ul>
-			<li><a class="link" href="[% c.uri_for( c.controller('Event')
-				.action_for('rules'), [ event.id_uri ]) %]">Rules</a></li>
-		</ul>
-		[%- IF event.has_prompt %]
-		<ul>
-			<li><a class="link" href="[% c.uri_for( c.controller('Prompt')
-				.action_for('submit'), [ event.id_uri ]) %]">Prompt submission</a></li>
-			<li><a class="link" href="[% c.uri_for( c.controller('Prompt')
-				.action_for('vote'), [ event.id_uri ]) %]">Prompt voting</a></li>
-		</ul>
-		[%- END %]
-		<ul>
-			[%- IF event.art %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Art')
-				.action_for('submit'), [ event.id_uri ]) %]">Art submission</a></li>
-			[%- END %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Fic')
-				.action_for('submit'), [ event.id_uri ]) %]">Fic submission</a></li>
-		</ul>
-		<ul>
-			[%- IF event.art %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Art')
-				.action_for('gallery'), [ event.id_uri ]) %]">Art gallery</a></li>
-			[%- END %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Fic')
-				.action_for('gallery'), [ event.id_uri ]) %]">Fic gallery</a></li>
-		</ul>
-		<ul>
-			[%- IF event.art %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Vote::Public')
-				.action_for('art'), [ event.id_uri ]) %]">Art voting</a></li>
-			[%- END %]
-			[%- IF event.prelim %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Vote')
-				.action_for('prelim'), [ event.id_uri ]) %]">Fic voting (prelim)</a></li>
-			[%- END %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Vote::Public')
-				.action_for('fic'), [ event.id_uri ]) %]">Fic voting ([% 
-				event.private ? 'main' : 'finals' %])</a></li>
-			[%- IF event.private %]
-			<li><a class="link" href="[% c.uri_for( c.controller('Vote')
-				.action_for('private'), [ event.id_uri ]) %]">Fic voting (finals)</a></li>
-			[%- END %]
-		</ul>
-		<ul>
-			<li><a class="link" href="[% c.uri_for( c.controller('Event')
-				.action_for('results'), [ event.id_uri ]) %]">Results</a></li>
-		</ul>
+		[% INCLUDE event/links.tt %]
 		[% event.blurb | html | markdown %]
 		[%- IF event.is_organised_by( c.user ) %]
 		<h3>Organiser Tasks</h3>

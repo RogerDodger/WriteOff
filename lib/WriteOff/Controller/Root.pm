@@ -34,13 +34,17 @@ sub auto :Private {
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
 	) unless $so && $c->stash->{no_req_log};
-	
-	$c->stash->{now} = $c->model('DB::Event')->now_dt;
 
 	if ($c->req->method eq 'POST') {
 		$c->req->{parameters} = {} if $c->config->{read_only};
 		$c->detach('index') if !$so;
 	}
+
+	$c->stash->{now}        = $c->model('DB::Event')->now_dt;
+	$c->stash->{news}       = $c->model('DB::News')->search({}, { order_by => { -desc => 'created' }});
+	$c->stash->{title}      = [ $c->config->{name} ];
+	$c->stash->{editor}     = 1 if $c->user && $c->user->obj->is_admin;
+	$c->stash->{csrf_token} = Digest->new('Whirlpool')->add($c->sessionid)->b64digest;
 
 	1;
 }
@@ -56,7 +60,7 @@ sub index :Path :Args(0) {
 	
 	$c->stash->{events} = $c->model('DB::Event')->active;
 	
-	$c->stash->{title} = 'Active Events';
+	push $c->stash->{title}, 'Active Events';
 	$c->stash->{template} = 'root/index.tt';
 }
 
@@ -71,7 +75,7 @@ sub archive :Local :Args(0) {
 	
 	$c->stash->{events} = $c->model('DB::Event')->old;
 	
-	$c->stash->{title} = 'Event Archive';
+	push $c->stash->{title}, 'Event Archive';
 	$c->stash->{template} = 'root/index.tt';
 }
 
@@ -86,7 +90,7 @@ sub faq :Local :Args(0) {
 
 	$c->stash->{headers} = [];
 	
-	$c->stash->{title} = 'FAQ';
+	push $c->stash->{title}, 'FAQ';
 	$c->stash->{template} = 'root/faq.tt';
 }
 
@@ -99,7 +103,7 @@ Standard 404 error page
 sub default :Path {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{title} = [ '404', 'File Not Found' ],
+	push $c->stash->{title}, 'File Not Found' ;
 	$c->stash->{template} = 'root/404.tt';
 	$c->res->status(404);
 }
@@ -115,7 +119,7 @@ sub forbidden :Private {
 	
 	$c->stash->{forbidden_msg} = $msg // 'Access denied';
 	
-	$c->stash->{title} = [ '403', 'Forbidden' ],
+	push $c->stash->{title}, 'Forbidden';
 	$c->stash->{template} = 'root/403.tt';
 	$c->res->status(403);
 }
@@ -131,7 +135,7 @@ sub error :Private {
 	
 	$c->stash->{error} = $msg // 'Something went wrong';
 	
-	$c->stash->{title} = 'Error';
+	push $c->stash->{title}, 'Error';
 	$c->stash->{template} = 'root/error.tt';
 	$c->res->status(404);
 }
@@ -145,7 +149,7 @@ Terms of Service page
 sub tos :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{title} = 'Terms of Service';
+	push $c->stash->{title}, 'Terms of Service';
 	$c->stash->{template} = 'root/tos.tt';
 }
 
@@ -187,7 +191,7 @@ sub contact :Local :Args(0) {
 		}
 	}
 	
-	$c->stash->{title} = 'Contact Us';
+	push $c->stash->{title}, 'Contact Us';
 	$c->stash->{template} = 'root/contact.tt';
 }
 
@@ -227,17 +231,17 @@ sub assert_admin :Private {
 	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin'); 
 }
 
-=head2 assert_valid_session
+=head2 check_csrf_token
 
-Check that the user provided their session id in the request parameters.
+Check that the user provided their csrf token in the request parameters.
 
 =cut
 
-sub assert_valid_session :Private {
+sub check_csrf_token :Private {
 	my ( $self, $c, $msg ) = @_;
 	
 	$c->detach('/error', [ $msg // 'Bad session id.' ])
-		if $c->req->param('sessionid') ne $c->sessionid;
+		if $c->req->param('csrf_token') ne $c->stash->{csrf_token};
 }
 
 =head2 strum

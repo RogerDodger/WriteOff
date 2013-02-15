@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Fic Gallery</h2>
+<h1>Fic Gallery</h1>
 
 [%- BLOCK story_table %]
 <table class="solid">

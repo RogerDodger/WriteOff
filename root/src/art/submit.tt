@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Art Submissions</h2>
+<h1>Art Submission</h1>
 
 <p>
 	Submissions open: <strong>[% format_dt(event.art) %]</strong>.

@@ -166,18 +166,39 @@ a.artist, a.artist:visited {
 	color: inherit;
 	border-bottom: 1px dotted silver;
 }
-article, footer, nav {
+
+.site {
+	width: 1125px;
 	margin: 0 auto;
-	padding: 0 40px;
+}
+.site.no_sidebar {
+	width: 870px;
+}
+.content, 
+footer, 
+nav {
+	margin: 0 auto;
+	float: left;
 	width: 785px;
 }
-article, footer {
+.content,
+.sidebar aside,
+footer {
 	background: #fff;
 	border-radius: 3px;
 	box-shadow: 0 0 8px black;
 }
-article {
+.content {
 	padding: 40px;
+}
+.sidebar {
+	float: right;
+	width: 240px;
+	font-size: 0.8em;
+}
+.site.no_sidebar .sidebar {
+	display: none !important;
+    visibility: hidden;
 }
 footer {
 	margin-top: 20px;
@@ -261,6 +282,9 @@ nav ul {
 	padding: 0;
 	margin: 0;
 }
+nav {
+	padding-left: 40px;
+}
 nav li {
 	display: block;
 	list-style: none;
@@ -309,6 +333,73 @@ nav li.selected a {
 }
 nav li:hover ul li:hover a {
 	color: #fff;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+	line-height: 1.4;
+}
+
+.sidebar aside {
+	padding: 0.002em 0;
+	margin-bottom: 2em;
+}
+
+.sidebar h1 {
+	margin: 0;
+	padding: 0.5em;
+	font-size: 1.5em;
+	border-bottom: 1px solid #cdc3b7;
+	border-radius: 3px 3px 0 0;
+	background-color: #ede4d4;
+
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.sidebar aside ul {
+	list-style-type: none;
+	padding: 0;
+	font-family: Trebuchet MS, Tahoma, Verdana, Free Sans, sans-serif;
+}
+
+.sidebar aside.event ul {
+	padding-left: 2em;
+}
+
+.sidebar aside.news ul {
+	margin: 0;
+}
+
+.sidebar aside.news ul h2 {
+	margin: 0;
+	font-size: 1.2em;
+}
+
+.sidebar aside.news ul p {
+	margin: 0;
+	color: #666;
+}
+
+.sidebar aside.news ul li {
+	padding: 0.8em;
+	border-top: 1px solid #cdc3b7;
+}
+
+.sidebar aside.news ul li:first-child {
+	border: 0;
+}
+
+.sidebar aside.news ul li.even {
+	background-color: #f7f7f7;
+}
+
+.sidebar aside.news ul li.even:last-child {
+	border-radius: 0 0 3px 3px;
 }
 
 /*
@@ -378,6 +469,16 @@ ul.contents li.h3 {
 }
 ul.contents li.h4 {
 	text-indent: 6em;
+}
+
+.news-header { 
+	margin-bottom: 0.2em;
+}
+
+.news-meta {
+	font-size: 0.8em;
+	margin-top: 0;
+	color: #888;
 }
 
 /*

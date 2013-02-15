@@ -1,6 +1,14 @@
 Changelog for WriteOff.pm
 =========================
 
+v0.31 - 16 Feb 2013
+-------------------
+
+- News CRUD tasks/pages added
+- Added a sidebar
+  - Currently contains news and event navigation
+- Made the CSRF token a hashed version of the sessionid, rather than naively dropping the sessionid into the form
+
 v0.30 - 15 Feb 2013
 -------------------
 

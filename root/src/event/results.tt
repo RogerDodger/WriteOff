@@ -1,4 +1,4 @@
-<h1>[% event.prompt | html %] - Results</h1>
+<h1>Results</h1>
 
 [%- IF event.is_ended %]
 

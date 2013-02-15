@@ -7,6 +7,7 @@ use Template::Filters;
 use Parse::BBCode;
 use Text::Markdown;
 use WriteOff::Helpers;
+require DateTime::Format::Human::Duration;
 
 extends 'Catalyst::View::TT';
 
@@ -27,7 +28,7 @@ __PACKAGE__->config(
 		},
 		simple_uri => \&WriteOff::Helpers::simple_uri,
 	},
-	expose_methods => [ qw/format_dt bb_render medal_for head_title/ ],
+	expose_methods => [ qw/format_dt bb_render medal_for title_html/ ],
 	render_die     => 1,
 );
 
@@ -73,7 +74,7 @@ sub format_dt {
 	$dt->set_time_zone($tz)->strftime($fmt // $RFC2822);
 }
 
-sub head_title {
+sub title_html {
 	my( $self, $c ) = @_;
 	
 	my $title = $c->stash->{title};
@@ -81,7 +82,7 @@ sub head_title {
 	return 
 		join " – ",
 		map { Template::Filters::html_filter($_) } 
-		( ref $title eq 'ARRAY' ? @$title : $title || () ), $c->config->{name};
+		ref $title eq 'ARRAY' ? reverse @$title : $title || ();
 }
 
 my $bb = Parse::BBCode->new({
@@ -141,6 +142,26 @@ sub medal_for {
 	my( $self, $c, $pos ) = @_;
 	
 	return $c->model('DB::Award')->medal_for( $pos );
+}
+
+package DateTime;
+
+my $RFC2822 = '%a, %d %b %Y %T %Z';
+
+sub duration_since_now {
+	my $self = shift;
+
+	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
+		$self->set_time_zone('UTC')->strftime($RFC2822), 
+		$self->iso8601, 
+		DateTime::Format::Human::Duration->new->format_duration_between(
+			DateTime->now,
+			$self,
+			past => '%s ago',
+			future => 'in %s',
+			no_time => 'just now',
+			significant_units => 2,
+		);
 }
 
 1;

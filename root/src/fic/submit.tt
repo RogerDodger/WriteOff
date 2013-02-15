@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Fic Submissions</h2>
+<h1>Fic Submission</h1>
 
 <p>
 	Submissions open: <strong>[% format_dt(event.fic) %]</strong>.

@@ -28,7 +28,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.30.1';
+our $VERSION = 'v0.31.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -102,7 +102,6 @@ __PACKAGE__->config(
 				image     => { NOT_BLANK     => 'Image is required' },
 				mimetype  => { IN_ARRAY      => 'Image not a valid type' },
 				captcha   => { EQUAL_TO      => 'Invalid CAPTCHA' },
-				sessionid => { IN_ARRAY      => 'Invalid session' },
 				prompt    => {
 					NOT_BLANK   => 'Prompt is required',
 					DBIC_UNIQUE => 'An identical prompt already exists',

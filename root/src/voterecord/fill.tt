@@ -23,7 +23,7 @@
 	</ul>
 	
 	<p>
-		<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+		<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 		<input type="hidden" name="data" id="sortable-data" value=""/>
 		<input type="text" size="30" id="sortable-confirm" style="width: 60%"
 			placeholder="Name of highest rated item"/>

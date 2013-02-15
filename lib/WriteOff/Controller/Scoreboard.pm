@@ -26,7 +26,7 @@ sub index :Path('') :Args(0) {
 	$c->stash->{artists} = [ $c->model('DB::Artist')->tallied ];
 	$c->stash->{gold_medal} = $c->model('DB::Award')->find({ name => 'gold' });
 	
-	$c->stash->{title} = 'Scoreboard';
+	push $c->stash->{title}, 'Scoreboard';
 	$c->stash->{template} = 'scoreboard/index.tt';
 }
 

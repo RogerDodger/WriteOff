@@ -30,7 +30,7 @@ sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
 		( $c->uri_for( $c->action, [ $c->stash->{prompt}->id_uri ] ) );
 	}
 	
-	$c->stash->{title} = [ $c->stash->{prompt}->contents ];
+	push $c->stash->{title}, [ $c->stash->{prompt}->contents ];
 }
 
 sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
@@ -88,6 +88,8 @@ sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
 
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
+
+	$c->forward('/check_csrf_token');
 	
 	$c->form(
 		prompt => [ 
@@ -96,7 +98,6 @@ sub do_submit :Private {
 			'TRIM_COLLAPSE', 
 			[ 'DBIC_UNIQUE', $c->stash->{event}->prompts_rs, 'contents' ],
 		],
-		sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 		subs_left => [ [ 'GREATER_THAN', 0 ] ],
 	);
 	
@@ -133,7 +134,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/assert_valid_session');
+	$c->forward('/check_csrf_token');
 	
 	$c->log->info( sprintf "Prompt deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),

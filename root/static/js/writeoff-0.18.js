@@ -175,4 +175,16 @@ jQuery(document).ready(function($) {
 			$(this).data('target', $(this).attr('href') );
 		})
 		.removeAttr('href');
+
+	// Sidebar handling
+	$(window)
+		.on('resize', function() {
+			if( $(window).width() > 1150 ) {
+				$('.site').removeClass('no_sidebar');
+			}
+			else {
+				$('.site').addClass('no_sidebar');
+			}
+		})
+		.resize();
 });

@@ -1,4 +1,4 @@
-<h1>[% title.list.join(' - ') | html %]</h1>
+<h1>[% title.-1 %]</h1>
 
 [%- IF storys.count %]
 <h2>Fic</h2>

@@ -1,6 +1,6 @@
 <h1>Add Event</h1>
 <form class="light" method="post" action="[% c.req.uri %]">
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]">
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]">
 [%- IF c.form.has_error %]
 	[%- FOREACH message IN c.form.messages('event') %]
 		[% INCLUDE fragment/error_msg.tt %]

@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Fic Voting &ndash; Private</h2>
+<h1>Fic Voting &ndash; Private</h1>
 
 <p>
 	Votes open: <strong>[% format_dt(event.private) %]</strong>.

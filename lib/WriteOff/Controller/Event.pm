@@ -35,7 +35,7 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 		$c->detach();
 	}
 	
-	$c->stash->{title} = [ $c->stash->{event}->prompt ];
+	push $c->stash->{title}, $c->stash->{event}->prompt;
 }
 
 =head2 permalink :Chained('index') :PathPart('') :Args(0)
@@ -73,7 +73,7 @@ sub add :Local :Args(0) {
 	
 	if($c->req->method eq 'POST') {
 	
-		$c->forward('/assert_valid_session');
+		$c->forward('/check_csrf_token');
 		
 		my $p = $c->req->params; 
 		$c->form(
@@ -233,7 +233,8 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	$c->forward( $self->action_for('assert_organiser') );
 		
 	if( $c->req->method eq 'POST' ) {
-		
+		$c->forward('/check_csrf_token');
+
 		$c->form(
 			user => [ 
 				( $c->req->param('submit') =~ /Add/ ? 'NOT_BLANK' : () ),
@@ -242,7 +243,6 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 			blurb => [ [ 'LENGTH', 1, $c->config->{len}{max}{blurb} ] ],
 			rules => [ [ 'LENGTH', 1, $c->config->{len}{max}{rules} ] ],
 			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
-			sessionid => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->sessionid ] ],
 		);
 		
 		$c->forward('do_edit') if !$c->form->has_error;

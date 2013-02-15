@@ -1,13 +1,12 @@
-<h1>[% event.prompt | html %]</h1>
 <form class="light" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 [%- IF c.form.has_error %]
 	[%- FOREACH message IN c.form.messages('submit') %]
 		[% INCLUDE fragment/error_msg.tt %]
 	[%- END %]
 [%- END %]
 
-	<h2>Details</h2>
+	<h1>Details</h1>
 	<p>
 		<label>Blurb</label>
 		<textarea name="blurb" rows="8" cols="32"></textarea>
@@ -28,7 +27,7 @@
 		<input type="submit" name="submit" value="Edit details" />
 	</p>
 
-	<h2>Staff</h2>
+	<h1>Staff</h1>
 	<table class="solid">
 		<tr class="heading">
 			<th>Username</th>

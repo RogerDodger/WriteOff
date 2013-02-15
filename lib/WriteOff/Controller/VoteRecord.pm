@@ -28,7 +28,7 @@ sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 		$c->detach('/default');
 	$c->stash->{event} = $c->stash->{record}->event;
 	
-	$c->stash->{title} = [ 'Vote Record', $c->stash->{record}->id ];
+	push $c->stash->{title}, [ 'Vote Record', $c->stash->{record}->id ];
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
@@ -96,7 +96,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/assert_valid_session');
+	$c->forward('/check_csrf_token');
 
 	$c->log->info( sprintf "VoteRecord deleted by %s: %s (%s)",
 		$c->user->get('username'),
@@ -132,7 +132,7 @@ sub fill :PathPart('fill') :Chained('index') :Args(0) {
 sub do_fill :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/assert_valid_session');
+	$c->forward('/check_csrf_token');
 	
 	my @params = split ";", $c->req->param('data');
 	my $vote_ids = $c->stash->{record}->votes->get_column('id');

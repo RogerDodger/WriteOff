@@ -1,16 +1,14 @@
 [% FILTER markdown %]
 
-[% event.prompt | html %]
-=========================
-
 Rules
------
+=====
 
 Failure to adhere to any of the following may be grounds for
 submissions being removed. Repeat or serious offences may result
 in culprits being barred from entering future events.
 
-### Generic
+Generic
+-------
 
 1. Submitted works may not be submitted elsewhere until the event's conclusion.
 2. Submitted written works&mdash;
@@ -39,13 +37,16 @@ in culprits being barred from entering future events.
 	another person an unfair advantage.
 
 [%- IF event.custom_rules %]
-### Custom
+
+Custom
+------
 
 [% event.custom_rules | html %]
 
 [%- END %]
 
-### Legal
+Legal
+-----
 
 1. Submitted works&mdash;
 	1. must be the work of the submitter;
@@ -55,7 +56,8 @@ in culprits being barred from entering future events.
 	3. may not be spiteful and/or hateful in nature; and
 	4. may not depict any sexual abuse of minors (See [18 USC § 1466A](http://www.law.cornell.edu/uscode/text/18/1466A) for specifics).
 
-### Content
+Content
+-------
 
 [%- SWITCH event.content_level -%]
 
@@ -89,7 +91,7 @@ other rules is allowed.
 
 [%- END %]
 
-<h3 id="Formatting">Story Formatting</h3>
+<h2 id="Formatting">Story Formatting</h2>
 
 To aid with author anonymity, the following formatting rules must be applied 
 to all submitted stories.
@@ -99,7 +101,7 @@ to all submitted stories.
 3. Weak scene breaks should be indicated by a blank paragraph, i.e, three blank lines.
 4. Sentences should be separated by a single space.
 
-#### Example
+### Example ###
 
 <div><textarea class="example" rows="12" cols="48" disabled="disabled">[% INCLUDE fic/formatting.tt %]</textarea></div>
 

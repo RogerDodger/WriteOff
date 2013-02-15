@@ -15,12 +15,6 @@ Controller for user management - login/logout, registration, settings, etc.
 
 =cut
 
-sub begin :Private {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{title} = [ 'User' ];
-}
-
 sub index :PathPart('user') :Chained('/') :CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 	
@@ -38,7 +32,7 @@ sub me :Local :Args(0) {
 	$c->stash->{storys}  = $c->user->obj->storys;
 	$c->stash->{prompts} = $c->user->obj->prompts;
 	
-	$c->stash->{title} = 'My Submissions';
+	push $c->stash->{title}, 'My Submissions';
 	$c->stash->{template} = 'user/me.tt';
 }
 
@@ -171,7 +165,7 @@ sub settings :Local :Args(0) {
 		mailme   => $c->user->get('mailme') ? 'on' : '',
 	};
 	
-	push $c->stash->{title}, 'Settings';
+	$c->stash->{title} = 'User Settings';
 	$c->stash->{template} = 'user/settings.tt';
 }
 
@@ -180,7 +174,7 @@ sub do_settings :Private {
 	
 	$c->res->redirect( $c->req->referer || $c->uri_for( $c->action ) );
 	
-	return 0 unless $c->req->params->{sessionid} eq $c->sessionid;
+	$c->forward('/check_csrf_token');
 	
 	if( $c->req->params->{submit} eq 'Change password' ) {
 		
@@ -333,7 +327,7 @@ sub list :Local :Args(0) {
 		$c->detach( $c->view('JSON') );
 	}
 	
-	push $c->stash->{title}, 'List';
+	push $c->stash->{title}, 'Users';
 	$c->stash->{template} = 'user/list.tt';
 }
 

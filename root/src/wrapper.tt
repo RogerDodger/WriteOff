@@ -20,18 +20,18 @@
 <head>
 	<meta charset="utf-8" />
 
-	<title>[% head_title %]</title>
+	<title>[% title_html %]</title>
 
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/normalize.css') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.2.custom.css') %]">
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.27.css') %]">
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.28.css') %]">
 	
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.9.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
-	<script src="[% c.uri_for('/static/js/writeoff-0.17.js') %]"></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.18.js') %]"></script>
 	
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
@@ -54,100 +54,131 @@
 
 <body>
 
-<nav>
-[% 
-	navs = [ 
-		{ action => c.controller('Root').action_for('index'),       name => 'Events' },
-		{ action => c.controller('News').action_for('list'),        name => 'News' },
-		{ action => c.controller('Root').action_for('faq'),         name => 'FAQ' },
-		{ action => c.controller('Scoreboard').action_for('index'), name => 'Scoreboard' },
-		{ action => c.controller('User').action_for('list'),        name => 'Users' },
-	];
-%]
-	<ul>
-	[%- FOREACH nav IN navs %]
-		<li>
-			<a href="[% c.uri_for( nav.action ) %]">[% nav.name %]</a>
-		</li>
+<section class="site">
+	<nav>
+	[% 
+		navs = [ 
+			{ action => c.controller('Root').action_for('index'),       name => 'Events' },
+			{ action => c.controller('Root').action_for('faq'),         name => 'FAQ' },
+			{ action => c.controller('Scoreboard').action_for('index'), name => 'Scoreboard' },
+			{ action => c.controller('User').action_for('list'),        name => 'Users' },
+		];
+	%]
+		<ul>
+		[%- FOREACH nav IN navs %]
+			<li>
+				<a href="[% c.uri_for( nav.action ) %]">[% nav.name %]</a>
+			</li>
+		[%- END %]
+		
+		[%- IF c.user %]
+			<li>
+				<a href="#">~[% c.user.username %] &#9660;</a>
+				<ul>
+					<li><a href="[% c.uri_for('/user/me') %]">My Submissions</a></li>
+					<li>
+						<a class="dialog-fetcher" 
+							href="[% c.uri_for('/user/settings') %]">Settings</a>
+					</li>
+					<li><a href="[% c.uri_for('/user/logout') %]">Logout</a></li>
+				</ul>
+			</li>
+		[%- ELSE %]
+			<li>
+				<a class="dialog-fetcher" 
+					href="[% c.uri_for('/user/login') %]">Login / Register</a>
+			</li>
+		[%- END %]
+		</ul>
+		
+		<div class="clearfix"></div>
+	</nav>
+
+	<section class="content">
+	[%- IF c.config.read_only %]
+		<p class="popup-msg ui-state-highlight ui-corner-all">
+			<span class="ui-icon ui-icon-alert"></span> 
+			The site is currently in read-only mode
+		</p>
 	[%- END %]
-	
-	[%- IF c.user %]
-		<li>
-			<a href="#">~[% c.user.username %] &#9660;</a>
+	[%- IF status_msg %]
+		<p class="popup-msg ui-state-highlight ui-corner-all">
+			<span class="ui-icon ui-icon-check"></span> 
+			[% status_msg %]
+		</p>
+	[%- END -%]
+	[%- IF error_msg %]
+		<p class="popup-msg ui-state-error ui-corner-all">
+			<span class="ui-icon ui-icon-alert"></span> 
+			<strong>Error:</strong> [% error_msg %]
+		</p>
+	[%- END %]
+
+	[% content %]
+
+	</section>
+
+	<section class="sidebar">
+		<aside class="news">
+			<h1>
+				News
+				[%- IF editor %]
+				<a style="float: right;" href="[% c.uri_for_action('/news/add') %]">
+					<span class="ui-icon ui-icon-pencil" title="Add article"></span>
+				</a>
+				[%- END %]
+			</h1>
 			<ul>
-				<li><a href="[% c.uri_for('/user/me') %]">My Submissions</a></li>
-				<li>
-					<a class="dialog-fetcher" 
-						href="[% c.uri_for('/user/settings') %]">Settings</a>
+				[%- FOREACH item IN news.all %]
+				<li class="[% loop.parity %]">
+					<h2><a class="link" href="[% c.uri_for( c.controller('News').action_for('view'), 
+						[ item.id_uri ]) %]">[% item.title | html %]</a></h2>
+					<p>[% item.created.duration_since_now %]</p>
 				</li>
-				<li><a href="[% c.uri_for('/user/logout') %]">Logout</a></li>
+				[%- END %]
 			</ul>
-		</li>
-	[%- ELSE %]
-		<li>
-			<a class="dialog-fetcher" 
-				href="[% c.uri_for('/user/login') %]">Login / Register</a>
-		</li>
+		</aside>
+		[%- IF event %]
+		<aside class="event">
+			<h1 title="[% event.prompt | html %]">[% event.prompt | html %]</h1>
+			[% INCLUDE event/links.tt %]
+		</aside>
+		[%- END %]
+	</section>
+
+	<footer>
+		<p>
+			It is currently 
+			[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
+		</p>
+		<p>
+			<a class="link new-tab" href="https://github.com/RogerDodger/WriteOff">
+				WriteOff.pm
+			</a>
+			[% c.app_version %]
+			&ndash;
+			<a class="link new-tab" href="[% c.uri_for('/humans.txt') %]">
+				Contributors
+			</a>
+		</p>
+		<p>
+			<a class="link" href="[% c.uri_for( c.controller('Root').action_for('tos') ) %]">
+				Terms of Service
+			</a>
+			|
+			<a class="link" href="[% c.uri_for( c.controller('Root').action_for('contact') ) %]">
+				Contact Us
+			</a>
+		</p>
+	[%- IF c.config.footer_addendum %]
+		<div class="addendum">
+			[% c.config.footer_addendum | markdown %]
+		</div>
 	[%- END %]
-	</ul>
-	
-	<div class="clearfix"></div>
-</nav>
+	</footer>
 
-<article>
-[%- IF c.config.read_only %]
-	<p class="popup-msg ui-state-highlight ui-corner-all">
-		<span class="ui-icon ui-icon-alert"></span> 
-		The site is currently in read only mode
-	</p>
-[%- END %]
-[%- IF status_msg %]
-	<p class="popup-msg ui-state-highlight ui-corner-all">
-		<span class="ui-icon ui-icon-check"></span> 
-		[% status_msg %]
-	</p>
-[%- END -%]
-[%- IF error_msg %]
-	<p class="popup-msg ui-state-error ui-corner-all">
-		<span class="ui-icon ui-icon-alert"></span> 
-		<strong>Error:</strong> [% error_msg %]
-	</p>
-[%- END %]
-
-[% content %]
-
-</article>
-
-<footer>
-	<p>
-		It is currently 
-		[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
-	</p>
-	<p>
-		<a class="link new-tab" href="https://github.com/RogerDodger/WriteOff">
-			WriteOff.pm
-		</a>
-		[% c.app_version %]
-		&ndash;
-		<a class="link new-tab" href="[% c.uri_for('/humans.txt') %]">
-			humans.txt
-		</a>
-	</p>
-	<p>
-		<a class="link" href="[% c.uri_for( c.controller('Root').action_for('tos') ) %]">
-			Terms of Service
-		</a>
-		|
-		<a class="link" href="[% c.uri_for( c.controller('Root').action_for('contact') ) %]">
-			Contact Us
-		</a>
-	</p>
-[%- IF c.config.footer_addendum %]
-	<div class="addendum">
-		[% c.config.footer_addendum | markdown %]
-	</div>
-[%- END %]
-</footer>
+	<div class="cleafix"></div>
+</section>
 
 </body>
 

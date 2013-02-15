@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Prompt Voting</h2>
+<h1>Prompt Voting</h1>
 
 <p>
 	Votes open: <strong>[% format_dt(event.prompt_voting) %]</strong>.
@@ -42,7 +40,7 @@
 	[%- END %]
 [%- END %]
 [%- IF prompts.count %]
-<h3>Current Standings</h3>
+<h2>Current Standings</h2>
 	[%- WHILE (prompt = prompts.next) %]
 	<p class="prompt ui-state-default ui-corner-all" 
 		style="width: [% (prompt.rating / 3) | format('%dpx;') %]">

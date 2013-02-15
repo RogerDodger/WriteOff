@@ -44,7 +44,7 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 		( $c->uri_for( $c->action, [ $c->stash->{image}->id_uri ] ) );
 	}
 	
-	$c->stash->{title} = [ $c->stash->{image}->title ];
+	push $c->stash->{title}, $c->stash->{image}->title;
 }
 
 sub view :Chained('index') :PathPart('') :Args(0) {
@@ -242,7 +242,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/assert_valid_session');
+	$c->forward('/check_csrf_token');
 	
 	$c->log->info( sprintf "Art deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),

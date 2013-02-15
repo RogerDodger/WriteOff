@@ -34,8 +34,10 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 		$c->res->redirect
 		( $c->uri_for( $c->action, [ $c->stash->{story}->id_uri ] ) );
 	}
+
+	$c->stash->{event} = $c->stash->{story}->event;
 	
-	$c->stash->{title} = [ $c->stash->{story}->title ];
+	push $c->stash->{title}, $c->stash->{event}->prompt, $c->stash->{story}->title;
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
@@ -46,7 +48,6 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 		$c->res->body( $c->stash->{story}->contents );
 	}
 	
-	push $c->stash->{title}, $c->stash->{story}->event->prompt;
 	$c->stash->{template} = 'fic/view.tt';
 }
 
@@ -60,7 +61,7 @@ sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
 sub form :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/assert_valid_session');
+	$c->forward('/check_csrf_token');
 	
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 	
@@ -163,8 +164,6 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	
 	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) 
 		unless $c->stash->{story}->is_manipulable_by( $c->user );
-		
-	$c->stash->{event} = $c->stash->{story}->event;
 	
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 	
@@ -237,7 +236,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->forward('/assert_valid_session');
+	$c->forward('/check_csrf_token');
 		
 	$c->log->info( sprintf "Fic deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),

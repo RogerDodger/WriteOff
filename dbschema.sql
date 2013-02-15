@@ -206,3 +206,13 @@ CREATE TABLE scores (
 	"type"     TEXT,
 	"value"    INTEGER
 );
+
+-- News
+CREATE TABLE news (
+	id       INTEGER PRIMARY KEY,
+	user_id  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+	title    TEXT,
+	body     TEXT,
+	created  TIMESTAMP,
+	updated  TIMESTAMP
+);

@@ -212,6 +212,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 news
+
+Type: has_many
+
+Related object: L<WriteOff::Schema::Result::News>
+
+=cut
+
+__PACKAGE__->has_many(
+  "news",
+  "WriteOff::Schema::Result::News",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 prompts
 
 Type: has_many
@@ -298,8 +313,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h9iQqxamf8l6DOYkgoAWrw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2013-02-16 01:49:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yC+fEAqmA1LIO165DR0VHA
 
 __PACKAGE__->mk_group_accessors(column => 'role');
 

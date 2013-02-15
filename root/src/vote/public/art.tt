@@ -1,6 +1,4 @@
-<h1>[% event.prompt | html %]</h1>
-
-<h2>Art Voting</h2>
+<h1>Art Voting</h1>
 
 <p>
 	Votes open: <strong>[% format_dt(event.art_end) %]</strong>.

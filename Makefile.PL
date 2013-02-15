@@ -47,6 +47,8 @@ requires (
 	'WWW::Fimfiction' => 0,
 	'Try::Tiny' => 0,
 	'IO::Prompt' => 0,
+	'Digest::Whirlpool' => 0,
+	'DateTime::Format::Human::Duration' => 0,
 );
 
 test_requires 'Test::More' => '0.88';

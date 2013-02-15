@@ -1,5 +1,5 @@
 <form class="light" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 	[%- IF c.form.has_error %]
 	<div>
 		[%- FOREACH message IN c.form.messages('submit') %]

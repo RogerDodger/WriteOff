@@ -2,7 +2,7 @@
 
 <p>Please enter the [% key.name %] of the selected item to confirm deletion.</p>
 <form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 	<input type="hidden" name="referer" value="[% c.req.referer | url %]" />
 	
 	<p>

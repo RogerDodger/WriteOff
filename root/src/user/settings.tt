@@ -1,7 +1,7 @@
 <h1>[% title.list.join(' ') %]</h1>
 
 <form class="light" method="post" action="[% c.req.uri %]">
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 	
 	<p>
 		<label>New Password<span class="required">*</span></label>
@@ -35,7 +35,7 @@
 <hr style="margin-bottom: 1em" />
 
 <form class="light" method="post" action="[% c.req.uri %]">
-	<input type="hidden" name="sessionid" value="[% c.sessionid %]" />
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
 	
 	<p>
 		<label>Timezone</label>

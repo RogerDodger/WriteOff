@@ -1,0 +1,14 @@
+<form class="light" method="post">
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]">
+	<p>
+		<label>Title</label>
+		<input name="title" type="text" class="maxwidth" 
+			maxlength="[% c.config.len.max.title %]" required="required">
+	<p>
+		<label>Body</label>
+		<textarea name="body" rows="12" cols="1" required="required"></textarea>
+	</p>
+	<p>
+		<input type="submit" value="[% submit %]">
+	</p>
+</form>
