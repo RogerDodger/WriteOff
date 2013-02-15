@@ -350,8 +350,6 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 
 sub _notify_mailing_list :Private {
 	my ( $self, $c ) = @_;
-
-	$c->forward('/assert_admin');
 	
 	return 0 unless eval { 
 		$c->stash->{event}->isa('WriteOff::Schema::Result::Event');
