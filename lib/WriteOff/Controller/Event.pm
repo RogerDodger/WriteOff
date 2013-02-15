@@ -358,9 +358,6 @@ sub _notify_mailing_list :Private {
 	};
 	
 	my $rs = $c->model('DB::User')->mailing_list;
-
-	#Debugging
-	$rs = $rs->search({ username => 'RogerDodger' });
 	
 	$c->log->info( sprintf "Notifying mailing list of Event: %s - %s",
 		$c->stash->{event}->id,
