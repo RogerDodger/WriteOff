@@ -53,6 +53,7 @@ CREATE TABLE login_attempts (
 CREATE TABLE events (
 	id              INTEGER PRIMARY KEY,
 	prompt          TEXT DEFAULT 'TBD' NOT NULL,
+	has_prompt      BIT(1) DEFAULT 1,
 	blurb           TEXT,
 	wc_min          INTEGER NOT NULL,
 	wc_max          INTEGER NOT NULL,

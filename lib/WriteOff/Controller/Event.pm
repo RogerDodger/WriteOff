@@ -107,70 +107,52 @@ sub do_add :Private {
 	my $interim = $c->config->{interim};
 	
 	my %row;
-	$row{start}         = $dt->clone;
-	$row{prompt_voting} = $dt->add( minutes => $interim )->clone;
-	
-	$dt->add( minutes => $interim );
+	$row{start} = $dt->clone;
+
+	if( $row{has_prompt} = defined $p->{has_prompt} || 0 ) {
+		$row{prompt_voting} = $dt->add( minutes => $interim )->clone;
+		$dt->add( minutes => $interim );
+	}
+	else {
+		# Need to set this to something, since I (stupidly) made the row NOT NULL
+		$row{prompt_voting} = $dt; 
+	}
 	
 	if( $p->{has_art} ) {
 		$row{art}     = $dt->clone;
-		$row{art_end} = $dt->add( hours => $p->{art_dur} )->clone;
+		$row{art_end} = $dt->add( hours => $c->form->valid('art_dur') )->clone;
 	} 
 	
 	$row{fic}     = $dt->clone;
-	$row{fic_end} = $dt->add( hours => $p->{fic_dur} )->clone;
+	$row{fic_end} = $dt->add( hours => $c->form->valid('fic_dur') )->clone;
 	
 	if( $p->{has_prelim} ) {
 		$row{prelim} = $dt->clone->add( minutes => $leeway );
-		$row{public} = $dt->add( days => $p->{prelim_dur} )->clone;
+		$row{public} = $dt->add( days => $c->form->valid('prelim_dur') )->clone;
 	}
 	else {
 		$row{public} = $dt->clone->add( minutes => $leeway );
 	}
 	
 	if( $p->{has_judges} ) {
-		$row{private} = $dt->add( days => $p->{public_dur}  )->clone;
-		$row{end}     = $dt->add( days => $p->{private_dur} )->clone;
+		$row{private} = $dt->add( days => $c->form->valid('public_dur')  )->clone;
+		$row{end}     = $dt->add( days => $c->form->valid('private_dur') )->clone;
 	}
 	else {
-		$row{end} = $dt->add( days => $p->{public_dur} )->clone;
+		$row{end} = $dt->add( days => $c->form->valid('public_dur') )->clone;
 	}
 	
-	$row{prompt}   = $c->form->valid('prompt') || 'TBD';
-	$row{wc_min}   = $p->{wc_min};
-	$row{wc_max}   = $p->{wc_max};
+	$row{prompt} = $c->form->valid('prompt') || 'TBD';
+	$row{wc_min} = $c->form->valid('wc_min');
+	$row{wc_max} = $c->form->valid('wc_max');
 	
 	$c->stash->{event} = $c->model('DB::Event')->create(\%row);
 	$c->stash->{event}->set_content_level( $c->form->valid('content_level') );
-	
-	$c->stash->{event}->add_to_users( $c->model('DB::User')->find
-		({ username => $c->form->valid('organiser') }), 
-		({ role     => 'organiser' })
-	);
-	
-	$c->model('DB::Schedule')->create({
-		action => '/event/set_prompt',
-		at     => $c->stash->{event}->art || $c->stash->{event}->fic,
-		args   => [ $c->stash->{event}->id ],
-	});
-	
-	$c->model('DB::Schedule')->create({
-		action => '/event/prelim_distr',
-		at     => $c->stash->{event}->prelim,
-		args   => [ $c->stash->{event}->id ],
-	}) if $c->stash->{event}->prelim;
-	
-	$c->model('DB::Schedule')->create({
-		action => '/event/judge_distr',
-		at     => $c->stash->{event}->private,
-		args   => [ $c->stash->{event}->id ],
-	}) if $c->stash->{event}->private;
-	
-	$c->model('DB::Schedule')->create({
-		action => '/event/tally_results',
-		at     => $c->stash->{event}->end,
-		args   => [ $c->stash->{event}->id ],
-	});
+
+	my $user = $c->model('DB::User')->find({ username => $c->form->valid('organiser') });
+	$c->stash->{event}->add_to_users($user, { role => 'organiser' });
+
+	$c->stash->{event}->reset_schedules;
 	
 	if( $c->req->param('notify_mailing_list') ) {
 		$c->run_after_request( sub { $c->forward('_notify_mailing_list') });
@@ -189,14 +171,17 @@ sub fic :PathPart('fic') :Chained('index') :CaptureArgs(0) {
 sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/error', ['There is no art component to this event.']) unless
-		$c->stash->{event}->art;
+	$c->detach('/error', ['There is no art component to this event.']) 
+		unless $c->stash->{event}->art;
 		
 	push $c->stash->{title}, 'Art';
 }
 
 sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+
+	$c->detach('/error', ['There is no prompt for this event.'])
+		unless $c->stash->{event}->has_prompt;
 	
 	push $c->stash->{title}, 'Prompt';
 }
@@ -209,9 +194,10 @@ sub vote :PathPart('vote') :Chained('index') :CaptureArgs(0) {
 
 sub rules :PathPart('rules') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
+
+	$c->stash->{start} = $c->stash->{event}->has_prompt ? 'the prompt is released' : 'the event starts';
 	
 	$c->stash->{template} = 'event/rules.tt';
-	
 	push $c->stash->{title}, 'Rules';
 }
 

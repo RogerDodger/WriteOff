@@ -61,6 +61,13 @@ __PACKAGE__->table("events");
   default_value: 'TBD'
   is_nullable: 0
 
+=head2 has_prompt
+
+  data_type: 'bit'
+  default_value: 1
+  is_nullable: 1
+  size: 1
+
 =head2 blurb
 
   data_type: 'text'
@@ -149,6 +156,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "prompt",
   { data_type => "text", default_value => "TBD", is_nullable => 0 },
+  "has_prompt",
+  { data_type => "bit", default_value => 1, is_nullable => 1, size => 1 },
   "blurb",
   { data_type => "text", is_nullable => 1 },
   "wc_min",
@@ -303,8 +312,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-12-11 13:01:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/e++88ZYeIweFZvRD6sWHw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2013-02-15 19:34:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:M3XqA3xsfT3RmK8iCULzLQ
 
 __PACKAGE__->many_to_many( users => 'user_events', 'user' );
 
@@ -498,6 +507,50 @@ sub check_datetimes_ascend {
 	
 	return 1 if join('', @_) eq join('', sort @_);
 	0;
+}
+
+sub datetimes_ascend {
+	require WriteOff::Helpers;
+	return WriteOff::Helpers::check_datetimes_ascend(@_);
+}
+
+sub reset_schedules {
+	my $self = shift;
+	my @schedules;
+
+	my $rs = $self->result_source->schema->resultset('Schedule');
+
+	# Remove old schedules
+	$rs->search({ 
+		action => { like => '/event/%' },
+		args   => '[' . $self->id . ']',
+	})->delete;
+
+	push @schedules, {
+		action => '/event/set_prompt',
+		at     => $self->art || $self->fic,
+		args   => [ $self->id ],
+	} if $self->has_prompt;
+	
+	push @schedules, {
+		action => '/event/prelim_distr',
+		at     => $self->prelim,
+		args   => [ $self->id ],
+	} if $self->prelim;
+	
+	push @schedules, {
+		action => '/event/judge_distr',
+		at     => $self->private,
+		args   => [ $self->id ],
+	} if $self->private;
+
+	push @schedules, {
+		action => '/event/tally_results',
+		at     => $self->end,
+		args   => [ $self->id ],
+	};
+
+	$rs->create($_) for grep { datetimes_ascend($self->now_dt, $_->{at}) } @schedules;
 }
 
 sub new_prelim_record_for {

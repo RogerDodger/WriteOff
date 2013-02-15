@@ -72,12 +72,14 @@
 			<li><a class="link" href="[% c.uri_for( c.controller('Event')
 				.action_for('rules'), [ event.id_uri ]) %]">Rules</a></li>
 		</ul>
+		[%- IF event.has_prompt %]
 		<ul>
 			<li><a class="link" href="[% c.uri_for( c.controller('Prompt')
 				.action_for('submit'), [ event.id_uri ]) %]">Prompt submission</a></li>
 			<li><a class="link" href="[% c.uri_for( c.controller('Prompt')
 				.action_for('vote'), [ event.id_uri ]) %]">Prompt voting</a></li>
 		</ul>
+		[%- END %]
 		<ul>
 			[%- IF event.art %]
 			<li><a class="link" href="[% c.uri_for( c.controller('Art')

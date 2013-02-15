@@ -11,4 +11,4 @@
 	Language: English 
 	Technology: Perl5, Catalyst, Template Toolkit, Git, jQuery, jQueryUI, modernizr
 	Doctype: HTML5
-	IDE: Notepad++
+	Editor: Sublime Text 2

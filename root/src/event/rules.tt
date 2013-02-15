@@ -19,19 +19,19 @@ in culprits being barred from entering future events.
 	2. must be based on at least one of the submitted artworks to a reasonable 
 	and discernible degree, with each related artwork&mdash;and only the 
 	related artwork(s)&mdash;indicated on submission.
-	[%- ELSE %]
+	[%- ELSIF event.has_prompt %]
 	3. must be based on the prompt to a reasonable and discernible degree.
 	[%- END %]
-[%- IF event.art %]
+[%- IF event.art && event.has_prompt %]
 3. Submitted artworks must be based on the prompt to a reasonable and discernible degree.
 [%- END %]
 4. Participants&mdash;
 	[%- IF event.art %]
-	1. may start drawing only after the prompt is released;
+	1. may start drawing only after [% start %];
 	2. may start writing only after the artworks are released;
 	3. may not write a story to their own artwork;
 	[%- ELSE %]
-	1. may start writing only after the prompt is released;
+	1. may start writing only after [% start %];
 	[%- END %]
 	2. must remain publicly disassociated from their submitted works (i.e., 
 	anonymous) within all reasonable means until the event's conclusion; and
