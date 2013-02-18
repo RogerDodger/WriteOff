@@ -146,8 +146,6 @@ sub medal_for {
 
 package DateTime;
 
-my $RFC2822 = '%a, %d %b %Y %T %Z';
-
 sub duration_since_now {
 	my $self = shift;
 

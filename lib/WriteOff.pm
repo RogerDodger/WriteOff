@@ -28,7 +28,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.31.5';
+our $VERSION = 'v0.32.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -57,12 +57,6 @@ __PACKAGE__->config(
 	'Plugin::Session' => {
 		flash_to_stash => 1,
 		expires => 365 * (60 * 60 * 24),
-	},
-	'Log::Handler' => {
-		filename => __PACKAGE__->path_to('writeoff.log')->stringify,
-		fileopen => 1,
-		mode     => 'append',
-		newline  => 1,
 	},
 	timezone => 'UTC',
 	scheduler => { time_zone => 'floating' },
@@ -165,7 +159,16 @@ __PACKAGE__->config(
 	enable_catalyst_header => 1,
 );
 
-__PACKAGE__->setup( $ENV{CATALYST_DEBUG} ? () : 'Log::Handler' );
+if( !$ENV{CATALYST_DEBUG} ) {
+	require WriteOff::Log;
+
+    my $logger = WriteOff::Log->new;
+    $logger->path(__PACKAGE__->path_to('log'));
+
+    __PACKAGE__->log($logger);
+}
+
+__PACKAGE__->setup;
 
 $ENV{TZ} = __PACKAGE__->config->{timezone};
 

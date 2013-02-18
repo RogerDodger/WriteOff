@@ -27,7 +27,7 @@ sub auto :Private {
 	
 	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
 	
-	$c->log->info( sprintf "Request: %s - %s (%s) - %s" . ( $so ? "" : " - %s" ), 
+	$c->log->info( sprintf "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ), 
 		$c->req->method, 
 		$c->req->address,
 		( $c->user ? $c->user->get('username') : 'guest' ),

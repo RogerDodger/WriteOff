@@ -1,6 +1,11 @@
 Changelog for WriteOff.pm
 =========================
 
+v0.32 - 18 Feb 2013
+-------------------
+
+- New logger, saves to separate files for different levels
+
 v0.31 - 16 Feb 2013
 -------------------
 
