@@ -5,8 +5,6 @@ no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-use Image::Magick;
-
 =head1 NAME
 
 WriteOff::Controller::Art - Catalyst Controller
@@ -212,6 +210,7 @@ sub form :Private {
 		$c->stash->{row}{filesize} = $c->form->valid('filesize');
 		$c->stash->{row}{mimetype} = $c->form->valid('mimetype');
 		
+		require Image::Magick;
 		my $magick = Image::Magick->new;
 
 		$magick->Read( $img->tempname );
