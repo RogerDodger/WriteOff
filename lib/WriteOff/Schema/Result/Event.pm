@@ -601,6 +601,8 @@ sub nuke_prelim_round {
 	$self->public ($public);
 	$self->private($private);
 	$self->end    ($end);
+
+	$self->reset_schedules;
 }
 
 =head2 judge_distr
