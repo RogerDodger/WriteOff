@@ -597,10 +597,12 @@ sub nuke_prelim_round {
 	my $private = $self->private && $self->public;
 	my $end     = $self->private || $self->public;
 
-	$self->prelim (undef);
-	$self->public ($public);
-	$self->private($private);
-	$self->end    ($end);
+	$self->update({
+		prelim  => undef,
+		public  => $public,
+		private => $private,
+		end     => $end,
+	});
 
 	$self->reset_schedules;
 }
