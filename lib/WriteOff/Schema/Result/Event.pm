@@ -587,6 +587,22 @@ sub new_prelim_record_for {
 	0;
 }
 
+sub nuke_prelim_round {
+	my $self = shift;
+
+	return unless $self->prelim;
+	$self->vote_records->search({ round => 'prelim' })->delete_all;
+
+	my $public  = $self->prelim;
+	my $private = $self->private && $self->public;
+	my $end     = $self->private || $self->public;
+
+	$self->prelim (undef);
+	$self->public ($public);
+	$self->private($private);
+	$self->end    ($end);
+}
+
 =head2 judge_distr
 
 Distributes stories for private voting.
@@ -659,11 +675,14 @@ sub prelim_distr {
 	my %author_count; $author_count{$_}++ for map { $_->{user_id} } @storys;
 	my $mode_count = List::Util::max values %author_count;
 	
-	# Reduce x_len if there aren't enough stories in the pool for such a size
-	$x_len = List::Util::min $x_len, $y_len - $mode_count;
-	
-	# No point doing prelim distr with size of 1 or fewer
-	return 0 if $x_len <= 1;
+	# No point doing prelim round with so few stories
+	#
+	# Also, the algo will loop forever trying to find a valid cell to swap
+	# with if `$x_len >= $y_len - $mode_count`
+	if( $x_len >= $y_len - $mode_count ) {
+		$self->nuke_prelim_round;
+		return 0;
+	}
 	
 	# System state array. First item is the judge.
 	my @system = map { [ $_ ] } @storys;
