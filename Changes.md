@@ -4,6 +4,7 @@ Changelog for WriteOff.pm
 v0.33
 -----
 
+- Moved "Event archive" link from event/list.tt to sitenav
 - Fixed bug in prelim distr algorithm which resulted in an infinite loop in search of a valid cell to swap with
 - Added `nuke_prelim_round` method to Result::Event, which does what it says on the tin
 
@@ -58,7 +59,7 @@ v0.27 - 26 Nov 2012
 - News tab added (WIP, not actually dynamic right now)
 - WriteOff::Helpers added to store miscellaneous useful subs shared throughout the application
 - Fixed password confirmation fields not letting special characters in passwords
-- Style refit to use html5boilerplate's stylesheet template and normalize.css 
+- Style refit to use html5boilerplate's stylesheet template and normalize.css
   - Lots of renaming to be more semantic/neat
 - Complete replacement of "slim" table style with the "solid" one (woo!)
 - Private-round finalists display for the public in Controller::Vote::private
@@ -128,7 +129,7 @@ v0.20 - 16 Oct 2012
 - Prelim distribution
   - Algorithm surprisingly simpler when using an array rather than a hash
 - Added public story candidate logic
-- Judge distribution 
+- Judge distribution
 - Volunteer distribution
 - Generalised Vote::Public so that Vote::Public::art will be easily implementable
 - Added URL seek to event listing's accordion
@@ -163,7 +164,7 @@ v0.18
 - Added link to plain text view on fic gallery
 - Item deletion logs now
 - Settings form tidied up
-- User list HTML view added 
+- User list HTML view added
   - No public link yet though, because it's kind of useless + ugly
 - Added a clean_unverified_users method to the cleanup schedule, dousing the system of the unpure
 - Started using proper many_to_many create functions
@@ -305,7 +306,7 @@ Added table for event-user association. Possibly going to use this for adding or
 
 Considering doing accolades as purely numerical, following the formula `m - 2p + 1`, where `m` is the count of entries and `p` is the position of the scored item. This way, player scores can be tallied together in one scoresheet without winners in a contest of 5 entries being scored equally to a winner in a contest of 50 entries.
 
-It'd also be easier to implement. 
+It'd also be easier to implement.
 
 Made vote records more generalised, such that the addition of a private judging round can happen. Also considering the possibility of using votes on artworks, though how that ties in to event flow... I'm not sure. Something to ponder, but not a top priority in any case.
 
@@ -405,7 +406,7 @@ v0.01
 
 Fic submissions require a login. Art submissions don't, but you won't be able to manipulate your submissions without one. Art rounds and prelim rounds are both optional on a per-event basis.
 
-I suspect that dealing with the vote distribution will take longer than other components, since a nice interface to the voting will take a bit of javascript magic. That said, the main algorithm for participant distributions is already written from earlier; it just needs a little wrapping to be more modular. 
+I suspect that dealing with the vote distribution will take longer than other components, since a nice interface to the voting will take a bit of javascript magic. That said, the main algorithm for participant distributions is already written from earlier; it just needs a little wrapping to be more modular.
 
 The only thing that isn't trivial is the volunteer distribution. I'm still thinking about how I should handle that. Suggestions are welcome.
 

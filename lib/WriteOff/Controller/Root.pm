@@ -61,7 +61,7 @@ sub index :Path :Args(0) {
 	$c->stash->{events} = $c->model('DB::Event')->active;
 	
 	push $c->stash->{title}, 'Active Events';
-	$c->stash->{template} = 'root/index.tt';
+	$c->stash->{template} = 'event/list.tt';
 }
 
 =head2 archive
@@ -76,7 +76,7 @@ sub archive :Local :Args(0) {
 	$c->stash->{events} = $c->model('DB::Event')->old;
 	
 	push $c->stash->{title}, 'Event Archive';
-	$c->stash->{template} = 'root/index.tt';
+	$c->stash->{template} = 'event/list.tt';
 }
 
 =head2 faq

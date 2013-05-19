@@ -56,22 +56,18 @@
 
 <section class="site">
 	<nav>
-	[% 
-		navs = [ 
-			{ action => c.controller('Root').action_for('index'),       name => 'Events' },
-			{ action => c.controller('Root').action_for('faq'),         name => 'FAQ' },
-			{ action => c.controller('Scoreboard').action_for('index'), name => 'Scoreboard' },
-			{ action => c.controller('User').action_for('list'),        name => 'Users' },
-		];
-	%]
 		<ul>
-		[%- FOREACH nav IN navs %]
 			<li>
-				<a href="[% c.uri_for( nav.action ) %]">[% nav.name %]</a>
+				<a href="[% c.uri_for('/') %]">Events &#9660;</a>
+				<ul>
+					<li><a href="[% c.uri_for('/archive') %]">Archive</a></li>
+				</ul>
 			</li>
-		[%- END %]
+			<li><a href="[% c.uri_for('/faq') %]">FAQ</a></li>
+			<li><a href="[% c.uri_for('/scoreboard') %]">Scoreboard</a></li>
+			<li><a href="[% c.uri_for('/user/list') %]">Users</a></li>
 		
-		[%- IF c.user %]
+			[%- IF c.user %]
 			<li>
 				<a href="#">~[% c.user.username %] &#9660;</a>
 				<ul>
@@ -83,12 +79,12 @@
 					<li><a href="[% c.uri_for('/user/logout') %]">Logout</a></li>
 				</ul>
 			</li>
-		[%- ELSE %]
+			[%- ELSE %]
 			<li>
 				<a class="dialog-fetcher" 
 					href="[% c.uri_for('/user/login') %]">Login / Register</a>
 			</li>
-		[%- END %]
+			[%- END %]
 		</ul>
 		
 		<div class="clearfix"></div>

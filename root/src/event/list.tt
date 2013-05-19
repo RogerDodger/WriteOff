@@ -1,6 +1,8 @@
+<h1>[% title.-1 %]</h1>
+
 [%- IF events.count %]
-	[%- fmt = '%a, %d %b %Y %H:%M %Z' %]
 <div class="events">
+	[%- fmt = '%a, %d %b %Y %H:%M %Z' %]
 	[%- WHILE (event = events.next) %]
 	<h1 class="prompt">
 		<a href="#[% event.id_uri %]" id="[% event.id_uri %]">
@@ -84,4 +86,10 @@
 </div>
 [%- ELSE %]
 <p>No events found.</p>
+[%- END %]
+
+[%- IF c.check_user_roles('admin') %]
+<p>
+	<a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a>
+</p>
 [%- END %]

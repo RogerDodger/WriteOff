@@ -11,37 +11,37 @@ use Catalyst qw/
 	Unicode::Encoding
 
 	Scheduler
-	
+
 	Authentication
 	Authorization::Roles
-	
+
 	Session
 	Session::Store::File
 	Session::State::Cookie
-	
+
 	RunAfterRequest
-	
-	FormValidator::Simple 
+
+	FormValidator::Simple
 	FillInForm
 	Upload::MIME
 /;
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.32.4';
+our $VERSION = 'v0.32.5';
 
 __PACKAGE__->config(
 	name => 'Write-off',
-	
+
 	DevEmail => 'cthor@cpan.org',
-	
+
 	#These should be configured on a per-deployment basis
 	domain     => 'example.com',
 	AdminName  => 'admin',
 	AdminEmail => 'admin@example.com',
-	
+
 	default_view => 'HTML',
-	'View::HTML' => { 
+	'View::HTML' => {
 		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
 	},
 	'View::JSON' => {
@@ -83,7 +83,7 @@ __PACKAGE__->config(
 				captcha      => { NOT_BLANK   => 'Invalid CAPTCHA' },
 			},
 			submit => {
-				title     => { 
+				title     => {
 					NOT_BLANK   => 'Title is required',
 					DBIC_UNIQUE => 'An item with that title already exists',
 				},
@@ -103,7 +103,7 @@ __PACKAGE__->config(
 				blurb     => { LENGTH        => 'Blurb too long' },
 				rules     => { LENGTH        => 'Rules too long' },
 				subs_left => { GREATER_THAN  => 'Submission limit exceeded' },
-				
+
 			},
 			vote => {
 				count   => { GREATER_THAN => 'You must vote on at least half of the entries' },
@@ -154,7 +154,7 @@ __PACKAGE__->config(
 	interim => 60, #minutes
 	use_google_analytics => 1,
 	read_only => 0,
-	
+
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );
@@ -184,32 +184,32 @@ __PACKAGE__->schedule(
 
 sub wordcount {
 	my ( $self, $str ) = @_;
-	
+
 	return scalar split /\s+/, $str;
 }
 
 sub timezones {
 	my $self = @_;
-	
+
 	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
 }
 
 sub mailfrom {
 	my( $self, $name, $user ) = @_;
-	
+
 	$name //= $self->config->{name};
 	$user //= 'noreply';
-	
+
 	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
 }
 
 sub user_id {
 	my $self = shift;
-	
+
 	return $self->user ? $self->user->get('id') : -1;
 }
 
-sub app_version {	
+sub app_version {
 	return version->parse( $VERSION )->stringify;
 }
 
