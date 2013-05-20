@@ -24,11 +24,11 @@ Detaches to index if the request is POST with a differing origin.
 
 sub auto :Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
-	
-	$c->log->info( sprintf "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ), 
-		$c->req->method, 
+
+	$c->log->info( sprintf "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ),
+		$c->req->method,
 		$c->req->address,
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
@@ -40,11 +40,13 @@ sub auto :Private {
 		$c->detach('index') if !$so;
 	}
 
-	$c->stash->{now}        = $c->model('DB::Event')->now_dt;
-	$c->stash->{news}       = $c->model('DB::News')->search({}, { order_by => { -desc => 'created' }});
-	$c->stash->{title}      = [ $c->config->{name} ];
-	$c->stash->{editor}     = 1 if $c->user && $c->user->obj->is_admin;
-	$c->stash->{csrf_token} = Digest->new('Whirlpool')->add($c->sessionid)->b64digest;
+	$c->stash(
+		now        => $c->model('DB::Event')->now_dt,
+		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
+		title      => [ $c->config->{name} ],
+		editor     => $c->user && $c->user->obj->is_admin,
+		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
+	);
 
 	1;
 }
@@ -57,9 +59,9 @@ Lists all active events.
 
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{events} = $c->model('DB::Event')->active;
-	
+
 	push $c->stash->{title}, 'Active Events';
 	$c->stash->{template} = 'event/list.tt';
 }
@@ -72,9 +74,9 @@ Lists all old events.
 
 sub archive :Local :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{events} = $c->model('DB::Event')->old;
-	
+
 	push $c->stash->{title}, 'Event Archive';
 	$c->stash->{template} = 'event/list.tt';
 }
@@ -89,7 +91,7 @@ sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{headers} = [];
-	
+
 	push $c->stash->{title}, 'FAQ';
 	$c->stash->{template} = 'root/faq.tt';
 }
@@ -102,7 +104,7 @@ Standard 404 error page
 
 sub default :Path {
 	my ( $self, $c ) = @_;
-	
+
 	push $c->stash->{title}, 'File Not Found' ;
 	$c->stash->{template} = 'root/404.tt';
 	$c->res->status(404);
@@ -116,9 +118,9 @@ Standard 403 page
 
 sub forbidden :Private {
 	my ( $self, $c, $msg ) = @_;
-	
+
 	$c->stash->{forbidden_msg} = $msg // 'Access denied';
-	
+
 	push $c->stash->{title}, 'Forbidden';
 	$c->stash->{template} = 'root/403.tt';
 	$c->res->status(403);
@@ -132,9 +134,9 @@ Error page
 
 sub error :Private {
 	my ( $self, $c, $msg ) = @_;
-	
+
 	$c->stash->{error} = $msg // 'Something went wrong';
-	
+
 	push $c->stash->{title}, 'Error';
 	$c->stash->{template} = 'root/error.tt';
 	$c->res->status(404);
@@ -148,7 +150,7 @@ Terms of Service page
 
 sub tos :Local :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	push $c->stash->{title}, 'Terms of Service';
 	$c->stash->{template} = 'root/tos.tt';
 }
@@ -161,45 +163,45 @@ Allow users to contact the admin or developer.
 
 sub contact :Local :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	if( $c->user ) {
-	
+
 		$c->stash->{fillform}{from} = $c->user->username_and_email;
-		
+
 		my $staff = $c->stash->{staff} = [
 			sprintf( "%s <%s>", 'Admin', $c->config->{AdminEmail} ),
 			sprintf( "%s <%s>", 'Developer', $c->config->{DevEmail} ),
 		];
-		
-		my $subjects = $c->stash->{subjects} = [ 
-			'Event Idea', 
-			'Feature Request', 
+
+		my $subjects = $c->stash->{subjects} = [
+			'Event Idea',
+			'Feature Request',
 			'Bug Report',
 			'Rule Breakers',
 			'Other',
 		];
-		
+
 		if( $c->req->method eq 'POST' ) {
-		
+
 			$c->form(
 				to => [ 'NOT_BLANK', [ 'IN_ARRAY', @$staff ] ],
 				subject => [ 'NOT_BLANK', [ 'IN_ARRAY', @$subjects ] ],
 				message => [ 'NOT_BLANK' ],
 			);
-			
+
 			$c->forward('send_contact_email') if !$c->form->has_error;
 		}
 	}
-	
+
 	push $c->stash->{title}, 'Contact Us';
 	$c->stash->{template} = 'root/contact.tt';
 }
 
 sub send_contact_email :Private {
 	my ( $self, $c ) = @_;
-	
+
 	for my $recipient ( $c->form->valid('to'), $c->user->username_and_email ) {
-		
+
 		$c->stash->{email} = {
 			to           => $recipient,
 			from         => $c->mailfrom,
@@ -208,13 +210,13 @@ sub send_contact_email :Private {
 			content_type => 'text/html',
 		};
 		$c->stash->{recipient} = $c->stash->{email}{to};
-		
+
 		$c->log->info( "Contact email sent to $recipient" );
-		
+
 		$c->forward( $c->view('Email::Template') );
-		
+
 	}
-	
+
 	$c->stash->{status_msg} = 'Email sent successfully';
 }
 
@@ -226,9 +228,9 @@ Check that the user is the admin, detaching to a 403 if they aren't.
 
 sub assert_admin :Private {
 	my ( $self, $c, $msg ) = @_;
-	
+
 	$msg //= 'You are not the admin.';
-	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin'); 
+	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin');
 }
 
 =head2 check_csrf_token
@@ -239,7 +241,7 @@ Check that the user provided their csrf token in the request parameters.
 
 sub check_csrf_token :Private {
 	my ( $self, $c, $msg ) = @_;
-	
+
 	$c->detach('/error', [ $msg // 'Bad session id.' ])
 		if $c->req->param('csrf_token') ne $c->stash->{csrf_token};
 }
@@ -258,15 +260,15 @@ my %strum_list = (
 
 sub strum :Private {
 	my ( $self, $c ) = @_;
-	
-	while( my($key, $strum) = each %strum_list ) 
+
+	while( my($key, $strum) = each %strum_list )
 	{
-		while( (my $index = CORE::index $c->res->{body}, $key ) >= 0 ) 
+		while( (my $index = CORE::index $c->res->{body}, $key ) >= 0 )
 		{
 			substr( $c->res->{body}, $index, length $key ) = $strum;
 		}
 	}
-	
+
 }
 
 =head2 render

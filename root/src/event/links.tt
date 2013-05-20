@@ -10,39 +10,43 @@
 		.action_for('vote'), [ event.id_uri ]) %]">Prompt voting</a></li>
 </ul>
 [%- END %]
+
+[% IF event.fic || event.art %]
 <ul>
 	[%- IF event.art %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Art')
 		.action_for('submit'), [ event.id_uri ]) %]">Art submission</a></li>
-	[%- END %]
+	[%- END; IF event.fic %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Fic')
 		.action_for('submit'), [ event.id_uri ]) %]">Fic submission</a></li>
+	[%- END %]
 </ul>
 <ul>
 	[%- IF event.art %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Art')
 		.action_for('gallery'), [ event.id_uri ]) %]">Art gallery</a></li>
-	[%- END %]
+	[%- END; IF event.fic %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Fic')
 		.action_for('gallery'), [ event.id_uri ]) %]">Fic gallery</a></li>
+	[%- END %]
 </ul>
 <ul>
 	[%- IF event.art %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Vote::Public')
 		.action_for('art'), [ event.id_uri ]) %]">Art voting</a></li>
-	[%- END %]
-	[%- IF event.prelim %]
+	[%- END; IF event.prelim %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Vote')
 		.action_for('prelim'), [ event.id_uri ]) %]">Fic voting (prelim)</a></li>
-	[%- END %]
+	[%- END; IF event.public %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Vote::Public')
-		.action_for('fic'), [ event.id_uri ]) %]">Fic voting ([% 
+		.action_for('fic'), [ event.id_uri ]) %]">Fic voting ([%
 		event.private ? 'main' : 'finals' %])</a></li>
-	[%- IF event.private %]
+	[%- END; IF event.private %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Vote')
 		.action_for('private'), [ event.id_uri ]) %]">Fic voting (finals)</a></li>
 	[%- END %]
 </ul>
+[%- END %]
 <ul>
 	<li><a class="link" href="[% c.uri_for( c.controller('Event')
 		.action_for('results'), [ event.id_uri ]) %]">Results</a></li>

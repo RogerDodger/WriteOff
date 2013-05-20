@@ -2,7 +2,7 @@ Installation
 ============
 
 - `WriteOff$ cp _writeoff.yml writeoff.yml` - Fill in the configuration as appropriate
-- `WriteOff$ sqlite3 WriteOff.db < dbschema.sql`
+- `WriteOff$ sqlite3 WriteOff.db < data/schema/fresh.sql`
 - `WriteOff$ perl Makefile.pl`
 - `WriteOff$ make`
 - `WriteOff$ make test`

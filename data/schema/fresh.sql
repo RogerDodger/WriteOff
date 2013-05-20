@@ -1,7 +1,10 @@
-------
+-- DESCRIPTION
+--
 -- Schema for WriteOff.pm's database
--- Author: Cameron Thornton <cthor@cpan.org>
-------
+--
+-- AUTHOR
+--
+-- Cameron Thornton <cthor@cpan.org>
 
 PRAGMA foreign_keys = ON;
 
@@ -11,6 +14,7 @@ CREATE TABLE users (
 	username        TEXT COLLATE NOCASE UNIQUE NOT NULL,
 	password        TEXT NOT NULL,
 	email           TEXT COLLATE NOCASE UNIQUE,
+	email_new       TEXT COLLATE NOCASE UNIQUE,
 	timezone        TEXT DEFAULT 'UTC',
 	ip              TEXT,
 	verified        INTEGER DEFAULT 0 NOT NULL,
@@ -53,20 +57,19 @@ CREATE TABLE login_attempts (
 CREATE TABLE events (
 	id              INTEGER PRIMARY KEY,
 	prompt          TEXT DEFAULT 'TBD' NOT NULL,
-	has_prompt      BIT(1) DEFAULT 1,
 	blurb           TEXT,
 	wc_min          INTEGER NOT NULL,
 	wc_max          INTEGER NOT NULL,
 	rule_set        INTEGER DEFAULT 1 NOT NULL,
 	custom_rules    TEXT,
 	"start"         TIMESTAMP NOT NULL,
-	prompt_voting   TIMESTAMP NOT NULL,
+	prompt_voting   TIMESTAMP,
 	art             TIMESTAMP,
 	art_end         TIMESTAMP,
-	fic             TIMESTAMP NOT NULL,
-	fic_end         TIMESTAMP NOT NULL,
+	fic             TIMESTAMP,
+	fic_end         TIMESTAMP,
 	prelim          TIMESTAMP,
-	"public"        TIMESTAMP NOT NULL,
+	"public"        TIMESTAMP,
 	"private"       TIMESTAMP,
 	"end"           TIMESTAMP NOT NULL,
 	created         TIMESTAMP

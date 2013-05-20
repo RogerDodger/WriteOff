@@ -49,6 +49,7 @@ requires (
 	'IO::Prompt' => 0,
 	'Digest::Whirlpool' => 0,
 	'DateTime::Format::Human::Duration' => 0,
+	'DateTime' => '1.01'
 );
 
 test_requires 'Test::More' => '0.88';

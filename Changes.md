@@ -7,6 +7,7 @@ v0.33
 - Moved "Event archive" link from event/list.tt to sitenav
 - Fixed bug in prelim distr algorithm which resulted in an infinite loop in search of a valid cell to swap with
 - Added `nuke_prelim_round` method to Result::Event, which does what it says on the tin
+- Rewrote Schema::Result::* modules to get rid of dbicdump cruft
 
 v0.32 - 18 Feb 2013
 -------------------
