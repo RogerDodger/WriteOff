@@ -38,12 +38,12 @@ $Template::Stash::SCALAR_OPS->{ucfirst} = sub {
 
 $Template::Stash::LIST_OPS->{join_serial} = sub {
 	my @list = @{+shift};
-	
+
 	return join ", ", @list if $#list < 2;
-	
+
 	my $last = pop @list;
 	$list[-1] .= ", and $last";
-	
+
 	return join ", ", @list;
 };
 
@@ -63,26 +63,26 @@ my $RFC2822 = '%a, %d %b %Y %T %Z';
 
 sub format_dt {
 	my( $self, $c, $dt, $fmt ) = @_;
-	
+
 	return '' unless eval { $dt->set_time_zone('UTC')->isa('DateTime') };
-	
+
 	my $tz = $c->user ? $c->user->get('timezone') : 'UTC';
-	
+
 	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
-	$dt->strftime($RFC2822), 
-	$dt->iso8601, 
+	$dt->strftime($RFC2822),
+	$dt->iso8601,
 	$dt->set_time_zone($tz)->strftime($fmt // $RFC2822);
 }
 
 sub title_html {
-	my( $self, $c ) = @_;
-	
+	my ($self, $c) = @_;
+
 	my $title = $c->stash->{title};
-	
-	return 
-		join " – ",
-		map { Template::Filters::html_filter($_) } 
-		ref $title eq 'ARRAY' ? reverse @$title : $title || ();
+
+	return (join " &#8250; ",
+		       map { Template::Filters::html_filter($_) }
+		          ref $title eq 'ARRAY' ? reverse @$title : $title || ())
+                     =~ s/.+&#825\K0/1/r; # Replaces last &#8250 with &#8251
 }
 
 my $bb = Parse::BBCode->new({
@@ -112,8 +112,8 @@ my $bb = Parse::BBCode->new({
 	escapes => {
 		Parse::BBCode::HTML->default_escapes,
 		size => sub {
-			$_[2] !~ /\D/ && 
-			8 <= $_[2] && $_[2] <= 72 ? 
+			$_[2] !~ /\D/ &&
+			8 <= $_[2] && $_[2] <= 72 ?
 			$_[2] / 16 : 1;
 		},
 		color => sub {
@@ -124,9 +124,9 @@ my $bb = Parse::BBCode->new({
 
 sub bb_render {
 	my ( $self, $c, $text ) = @_;
-	
+
 	return '' unless $text;
-	
+
 	$text = $bb->render( $text );
 
 	# Remove line breaks that immediately follow blocks
@@ -134,13 +134,13 @@ sub bb_render {
 		my $e = quotemeta $block;
 		$text =~ s/$e\K\s*?<br>//g;
 	}
-	
+
 	return $text;
 }
 
 sub medal_for {
 	my( $self, $c, $pos ) = @_;
-	
+
 	return $c->model('DB::Award')->medal_for( $pos );
 }
 
@@ -150,8 +150,8 @@ sub duration_since_now {
 	my $self = shift;
 
 	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
-		$self->set_time_zone('UTC')->strftime($RFC2822), 
-		$self->iso8601, 
+		$self->set_time_zone('UTC')->strftime($RFC2822),
+		$self->iso8601,
 		DateTime::Format::Human::Duration->new->format_duration_between(
 			DateTime->now,
 			$self,
