@@ -54,19 +54,24 @@ sub login :Local :Args(0) {
 sub do_login :Private {
     my ( $self, $c ) = @_;
 
-	$c->detach('login_attempts_exceeded') if $c->model('DB::LoginAttempt')
-		->search({ ip => $c->req->address })
-		->created_after
-			( DateTime->now->subtract( minutes => $c->config->{login}{timer} ) )
-		->count >= $c->config->{login}{limit};
+    my $recently = DateTime->now->subtract(minutes => $c->config->{login}{timer});
+    my $attempts = $c->model('DB::LoginAttempt')
+			->search({ ip => $c->req->address })
+			->created_after($recently)
+			->count;
+
+	if ($attempts >= $c->config->{login}{limit}) {
+		$c->detach('login_attempts_exceeded');
+	}
+
 
 	my $success = $c->authenticate({
 		password => $c->req->params->{Password} || '',
 		username => $c->req->params->{Username} || '',
 	});
 
-	if( $success ) {
-		if( !$c->user->verified ) {
+	if ($success) {
+		if (!$c->user->verified) {
 			$c->flash->{error_msg} = 'Your account is not verified';
 			$c->logout;
 		}

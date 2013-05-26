@@ -5,6 +5,8 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
+__PACKAGE__->load_components('PassphraseColumn');
+
 __PACKAGE__->table("users");
 
 __PACKAGE__->add_columns(
