@@ -67,7 +67,7 @@ __PACKAGE__->config(
 				username => {
 					NOT_BLANK   => 'Username is required',
 					REGEX       => 'Username contains invalid characters',
-					DBIC_UNIQUE => 'Username exists',
+					DBIC_UNIQUE => 'Username is unavailable',
 				},
 				password => {
 					NOT_BLANK => 'Password is required',
@@ -80,7 +80,7 @@ __PACKAGE__->config(
 				},
 				old          => { NOT_BLANK   => 'Old Password is invalid' },
 				pass_confirm => { DUPLICATION => 'Passwords do not match' },
-				captcha      => { NOT_BLANK   => 'Invalid CAPTCHA' },
+				captcha      => { EQUAL_TO    => 'Invalid CAPTCHA' },
 			},
 			submit => {
 				title     => {

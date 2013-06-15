@@ -20,14 +20,18 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->result_source_instance->is_virtual(1);
 
-__PACKAGE__->result_source_instance->view_definition(
-	"SELECT artist AS name, user_id FROM images" . " " .
-	"UNION" . " " . 
-	"SELECT author AS name, user_id FROM storys"
-);
+__PACKAGE__->result_source_instance->view_definition(q{
+	SELECT artist AS name, user_id FROM images
+		UNION
+	SELECT author AS name, user_id FROM storys
+		UNION
+	SELECT username AS name, id AS user_id FROM users
+});
 
 __PACKAGE__->result_source_instance->deploy_depends_on([
-	"WriteOff::Schema::Result::Story", "WriteOff::Schema::Result::Image"
+	"WriteOff::Schema::Result::Story",
+	"WriteOff::Schema::Result::Image",
+	"WriteOff::Schema::Result::User",
 ]);
 
 1;

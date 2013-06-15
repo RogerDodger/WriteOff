@@ -87,9 +87,3 @@
 [%- ELSE %]
 <p>No events found.</p>
 [%- END %]
-
-[%- IF c.check_user_roles('admin') %]
-<p>
-	<a class="ui-button" href="[% c.uri_for('/event/add') %]">Add new event</a>
-</p>
-[%- END %]

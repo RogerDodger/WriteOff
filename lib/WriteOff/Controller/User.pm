@@ -116,8 +116,8 @@ sub do_register :Private {
 	$c->form(
 		username => [
 			'NOT_BLANK',
-			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'username' ],
-			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
+			[ 'DBIC_UNIQUE', $c->model('DB::Virtual::Artist'), 'name' ],
+			[ 'LENGTH', 2, $c->config->{len}{max}{user} ],
 			[ 'REGEX', $c->config->{biz}{user}{regex} ]
 		],
 		password => [

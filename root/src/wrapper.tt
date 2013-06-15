@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 
-[%- IF template.name.match('^email/') || 
+[%- IF template.name.match('^email/') ||
 	c.req.header('x-requested-with') == 'XMLHttpRequest' %]
 
 <head>
@@ -26,13 +26,13 @@
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/normalize.css') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.2.custom.css') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.28.css') %]">
-	
+
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.9.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/writeoff-0.18.js') %]"></script>
-	
+
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
 	<script type="text/javascript">
@@ -61,19 +61,22 @@
 				<a href="[% c.uri_for('/') %]">Events &#9660;</a>
 				<ul>
 					<li><a href="[% c.uri_for('/archive') %]">Archive</a></li>
+					[%- IF c.check_user_roles('admin') %]
+					<li><a href="[% c.uri_for('/event/add') %]">Add</a></li>
+					[%- END %]
 				</ul>
 			</li>
 			<li><a href="[% c.uri_for('/faq') %]">FAQ</a></li>
 			<li><a href="[% c.uri_for('/scoreboard') %]">Scoreboard</a></li>
 			<li><a href="[% c.uri_for('/user/list') %]">Users</a></li>
-		
+
 			[%- IF c.user %]
 			<li>
 				<a href="#">~[% c.user.username %] &#9660;</a>
 				<ul>
 					<li><a href="[% c.uri_for('/user/me') %]">My Submissions</a></li>
 					<li>
-						<a class="dialog-fetcher" 
+						<a class="dialog-fetcher"
 							href="[% c.uri_for('/user/settings') %]">Settings</a>
 					</li>
 					<li><a href="[% c.uri_for('/user/logout') %]">Logout</a></li>
@@ -81,31 +84,31 @@
 			</li>
 			[%- ELSE %]
 			<li>
-				<a class="dialog-fetcher" 
+				<a class="dialog-fetcher"
 					href="[% c.uri_for('/user/login') %]">Login / Register</a>
 			</li>
 			[%- END %]
 		</ul>
-		
+
 		<div class="clearfix"></div>
 	</nav>
 
 	<section class="content">
 	[%- IF c.config.read_only %]
 		<p class="popup-msg ui-state-highlight ui-corner-all">
-			<span class="ui-icon ui-icon-alert"></span> 
+			<span class="ui-icon ui-icon-alert"></span>
 			The site is currently in read-only mode
 		</p>
 	[%- END %]
 	[%- IF status_msg %]
 		<p class="popup-msg ui-state-highlight ui-corner-all">
-			<span class="ui-icon ui-icon-check"></span> 
+			<span class="ui-icon ui-icon-check"></span>
 			[% status_msg %]
 		</p>
 	[%- END -%]
 	[%- IF error_msg %]
 		<p class="popup-msg ui-state-error ui-corner-all">
-			<span class="ui-icon ui-icon-alert"></span> 
+			<span class="ui-icon ui-icon-alert"></span>
 			<strong>Error:</strong> [% error_msg %]
 		</p>
 	[%- END %]
@@ -127,7 +130,7 @@
 			<ul>
 				[%- FOREACH item IN news.all %]
 				<li class="[% loop.parity %]">
-					<h2><a class="link" href="[% c.uri_for( c.controller('News').action_for('view'), 
+					<h2><a class="link" href="[% c.uri_for( c.controller('News').action_for('view'),
 						[ item.id_uri ]) %]">[% item.title | html %]</a></h2>
 					<p>[% item.created.duration_since_now %]</p>
 				</li>
@@ -144,7 +147,7 @@
 
 	<footer>
 		<p>
-			It is currently 
+			It is currently
 			[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
 		</p>
 		<p>

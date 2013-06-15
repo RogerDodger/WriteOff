@@ -1,4 +1,4 @@
-<h1>[% title.join(' - ') %]</h1>
+<h1>Register</h1>
 
 [% IF c.req.method != 'POST' || c.form.has_error %]
 <form class="light" method="post" action="[% c.uri_for( c.action ) %]">
@@ -12,30 +12,30 @@
 	<p>
 		<label>Username<span class="required">*</span></label>
 		<input type="text" name="username"  size="30" class="halfwidth"
-			title="Letters, numbers, and underscores only."
+			title="2 or more letters, numbers, and underscores"
 			maxlength="[% c.config.len.max.user %]"
-			pattern="^[a-zA-Z0-9_]+$" required />
+			pattern="^[a-zA-Z0-9_]{2,}$" required />
 	</p>
-	
+
 	<div class="para">
 		<p class="col">
 			<label>Password<span class="required">*</span></label>
 			<input type="password" name="password" size="30" class="halfwidth"
-				title="Must be [% c.config.len.min.pass %] or more characters." 
+				title="Must be [% c.config.len.min.pass %] or more characters."
 				maxlength="[% c.config.len.max.pass %]"
 				onchange="$('input[name=password2]')
 					.attr('pattern', '^' + this.value.regex() + '$')"
 				pattern=".{[% c.config.len.min.pass %],}" required />
 		</p>
-		
+
 		<p class="col final">
 			<label>Confirm Password<span class="required">*</span></label>
 			<input type="password" name="password2" size="30" class="maxwidth"
-				title="Passwords must match" 
+				title="Passwords must match"
 				maxlength="[% c.config.len.max.pass %]" required/>
 		</p>
 	</div>
-	
+
 	<p>
 		<label>Email<span class="required">*</span></label>
 		<input type="email" name="email" size="72" class="maxwidth"
@@ -44,7 +44,7 @@
 		<input type="checkbox" name="mailme" />
 		Email me event notifications
 	</p>
-	
+
 	<p>
 		<label>Timezone</label>
 		<select name="timezone">
@@ -53,15 +53,15 @@
 		[%- END %]
 		</select>
 	</p>
-	
+
 	<label>Prove You Are Human<span class="required">*</span></label>
 	[% recaptcha.remove(' frameborder="0"') %]
 	<p class="confirm">
-		By registering you acknowledge that you have read and agreed to 
+		By registering you acknowledge that you have read and agreed to
 		the site's <a class="link new-tab" href="[% c.uri_for('/tos') %]">
 		Terms of Service</a>.
 	</p>
-	
+
 	<p>
 		<input type="submit" value="Register" />
 	</p>
@@ -70,7 +70,7 @@
 [%- ELSIF user -%]
 
 <p>
-	You must validate your email address before your account may be used on the 
+	You must validate your email address before your account may be used on the
 	site.
 </p>
 <p>
@@ -79,8 +79,8 @@
 </p>
 <p>
 	If you can't find said email, check your spam box and stuff. It should be in
-	there somewhere. If you still can't find it, send an email to <a class="link" 
-	href="mailto:[% c.config.AdminEmail %]">the admin</a> with appropriate 
+	there somewhere. If you still can't find it, send an email to <a class="link"
+	href="mailto:[% c.config.AdminEmail %]">the admin</a> with appropriate
 	information to receive assistance.
 </p>
 
