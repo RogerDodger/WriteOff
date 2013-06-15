@@ -29,7 +29,7 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 	$c->stash->{event} = $c->model('DB::Event')->find($id) or
 		$c->detach('/default');
 
-	if( $arg ne $c->stash->{event}->id_uri ) {
+	if ($arg ne $c->stash->{event}->id_uri) {
 		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] );
 		$c->res->redirect($url);
 		$c->detach();
@@ -71,7 +71,7 @@ sub add :Local :Args(0) {
 
 	$c->stash->{template} = 'event/add.tt';
 
-	if($c->req->method eq 'POST') {
+	if ($c->req->method eq 'POST') {
 
 		$c->forward('/check_csrf_token');
 
@@ -109,7 +109,7 @@ sub do_add :Private {
 	my %row;
 	$row{start} = $dt->clone;
 
-	if( $row{has_prompt} = defined $p->{has_prompt} || 0 ) {
+	if ($p->{has_prompt}) {
 		$row{prompt_voting} = $dt->add( minutes => $interim )->clone;
 		$dt->add( minutes => $interim );
 	}
@@ -118,7 +118,7 @@ sub do_add :Private {
 		$row{prompt_voting} = $dt;
 	}
 
-	if( $p->{has_art} ) {
+	if ($p->{has_art}) {
 		$row{art}     = $dt->clone;
 		$row{art_end} = $dt->add( hours => $c->form->valid('art_dur') )->clone;
 	}
@@ -126,7 +126,7 @@ sub do_add :Private {
 	$row{fic}     = $dt->clone;
 	$row{fic_end} = $dt->add( hours => $c->form->valid('fic_dur') )->clone;
 
-	if( $p->{has_prelim} ) {
+	if ($p->{has_prelim}) {
 		$row{prelim} = $dt->clone->add( minutes => $leeway );
 		$row{public} = $dt->add( days => $c->form->valid('prelim_dur') )->clone;
 	}
@@ -134,7 +134,7 @@ sub do_add :Private {
 		$row{public} = $dt->clone->add( minutes => $leeway );
 	}
 
-	if( $p->{has_judges} ) {
+	if ($p->{has_judges}) {
 		$row{private} = $dt->add( days => $c->form->valid('public_dur')  )->clone;
 		$row{end}     = $dt->add( days => $c->form->valid('private_dur') )->clone;
 	}
@@ -154,7 +154,7 @@ sub do_add :Private {
 
 	$c->stash->{event}->reset_schedules;
 
-	if( $c->req->param('notify_mailing_list') ) {
+	if ($c->req->param('notify_mailing_list')) {
 		$c->run_after_request( sub { $c->forward('/event/_notify_mailing_list') });
 	}
 
@@ -232,7 +232,7 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 
 	$c->forward( $self->action_for('assert_organiser') );
 
-	if( $c->req->method eq 'POST' ) {
+	if ($c->req->method eq 'POST') {
 		$c->forward('/check_csrf_token');
 
 		$c->form(
@@ -266,7 +266,7 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 
-	if( $c->req->param('submit') eq 'Edit details' ) {
+	if ($c->req->param('submit') eq 'Edit details') {
 
 		$c->stash->{event}->content_level( $c->form->valid('content_level') );
 		$c->stash->{event}->update({
@@ -280,7 +280,7 @@ sub do_edit :Private {
 	my $user = $c->model('DB::User')->verified
 		->find({ username => $c->req->param('user') });
 
-	if( $c->req->param('submit') eq 'Add organiser' && $user ) {
+	if ($c->req->param('submit') eq 'Add organiser' && $user) {
 		$c->forward( $c->controller('Root')->action_for('assert_admin') );
 
 		eval { $c->stash->{event}->add_to_users($user, { role => 'organiser' }) };
@@ -288,7 +288,7 @@ sub do_edit :Private {
 		return $c->stash->{status_msg} = $@ ? '' : 'Organiser added';
 	}
 
-	if( $c->req->param('submit') eq 'Add judge' && $user ) {
+	if ($c->req->param('submit') eq 'Add judge' && $user) {
 		return 0 unless $c->stash->{event}->private;
 
 		eval { $c->stash->{event}->add_to_users($user, { role => 'judge' }) };
@@ -322,7 +322,7 @@ sub remove_user :Private {
 		role     => $role,
 	});
 
-	if( defined $junction ) {
+	if (defined $junction) {
 		$junction->delete;
 		$c->flash->{status_msg} = sprintf "%s removed", ucfirst $role;
 	}
