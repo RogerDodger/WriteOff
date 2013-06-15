@@ -1,6 +1,7 @@
 package WriteOff::Schema::Result;
 
 use base 'DBIx::Class::Core';
+require DateTime;
 
 __PACKAGE__->load_components(qw/InflateColumn::DateTime DynamicDefault/);
 
