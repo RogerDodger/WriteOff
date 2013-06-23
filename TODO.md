@@ -5,6 +5,5 @@
 - Box-and-whisker plot for public vote data
 - Author guessing
 - Remove uses of smart match throughout code
-- Added primary_author_name() and primary_artist_name() to User class
 
-Last updated 23 Jun 2013
+Last updated 24 Jun 2013
