@@ -28,7 +28,7 @@ sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 		$c->detach('/default');
 	$c->stash->{event} = $c->stash->{record}->event;
 	
-	push $c->stash->{title}, [ 'Vote Record', $c->stash->{record}->id ];
+	push $c->stash->{title}, 'Vote Record', $c->stash->{record}->id;
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {

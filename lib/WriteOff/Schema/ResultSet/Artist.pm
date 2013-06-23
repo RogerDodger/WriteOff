@@ -77,24 +77,8 @@ sub deal_awards_and_scores {
 sub recalculate_scores {
 	my $self = shift;
 	
-	while( my $artist = $self->next ) {
-		my $total = 0;
-		
-		my @scores = $artist->scores->search(undef, 
-			{ 
-				prefetch => 'event',
-				order_by => 'end' 
-			}
-		);
-		
-		my $prev;
-		for my $score ( @scores ) {
-			$total = 0 if $total < 0 && $prev->event_id != $score->event_id;
-			$total += $score->value;
-			$prev = $score;
-		}
-		
-		$artist->update({ score => $total < 0 ? 0 : $total });
+	while (my $artist = $self->next) {
+		$artist->recalculate_score;
 	}
 }
 

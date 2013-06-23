@@ -2,5 +2,6 @@ WriteOff.db*
 writeoff.yml
 writeoff.conf
 writeoff.log*
+config.yml
 scheduler.state
 nohup.out

@@ -120,7 +120,9 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'fic/submit.tt';
 	
-	$c->stash->{fillform}{author} = eval { $c->user->username };
+	$c->stash->{fillform}{author} = eval { $c->user->last_author
+	                                    || $c->user->last_artist
+	                                    || $c->user->name };
 	
 	$c->forward('do_submit') 
 		if $c->req->method eq 'POST'

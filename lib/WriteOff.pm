@@ -28,7 +28,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.32.7';
+our $VERSION = 'v0.33.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -57,6 +57,9 @@ __PACKAGE__->config(
 	'Plugin::Session' => {
 		flash_to_stash => 1,
 		expires => 365 * (60 * 60 * 24),
+	},
+	'Plugin::ConfigLoader' => {
+		file => 'config.yml',
 	},
 	timezone => 'UTC',
 	scheduler => { time_zone => 'floating' },

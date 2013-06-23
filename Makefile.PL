@@ -1,60 +1,71 @@
 #!/usr/bin/env perl
-# IMPORTANT: if you delete this file your app will not work as
-# expected.  You have been warned.
-use inc::Module::Install 1.02;
-use Module::Install::Catalyst; # Complain loudly if you don't have
-                               # Catalyst::Devel installed or haven't said
-                               # 'make dist' to create a standalone tarball.
+#
+# This isn't a "real" makefile. Catalyst simply expects a file called
+# "Makefile.PL" to exist as its herustic to find the root directory of the
+# app, so I'm calling my installer script this.
+#
+# Don't try and install the app into your system. I don't think it's a good
+# idea and can't guarantee things'll work if you do.
 
-name 'WriteOff';
-all_from 'lib/WriteOff.pm';
+BEGIN {
+	use 5.01;
+	use FindBin '$Bin';
+	chdir($Bin);
+}
+use lib::App::cpanminus;
 
-requires (
-	'Catalyst::Runtime' => '5.90013',
-	'Catalyst::View::TT' => 0,
-	'Catalyst::View::JSON' => 0,
-	'Catalyst::View::Email::Template' => 0,
-	'Catalyst::Plugin::ConfigLoader' => 0,
-	'Catalyst::Plugin::Static::Simple' => 0,
-	'Catalyst::Plugin::Unicode::Encoding' => 0,
-	'Catalyst::Plugin::Authentication' => 0,
-	'Catalyst::Authentication::Realm::SimpleDB' => 0,
-	'Catalyst::Plugin::Authorization::Roles' => 0,
-	'Catalyst::Plugin::Session' => 0,
-	'Catalyst::Plugin::Session::Store::File' => 0,
-	'Catalyst::Plugin::Session::State::Cookie' => 0,
-	'Catalyst::Plugin::FormValidator::Simple' => 0,
-	'DateTime::Format::RFC3339' => 0,
-	'FormValidator::Simple::Plugin::DBIC::Unique' => 0,
-	'FormValidator::Simple::Plugin::Trim' => 0,
-	'Catalyst::Plugin::Scheduler' => 0,
-	'Catalyst::Plugin::FillInForm' => 0,
-	'Catalyst::Plugin::Upload::MIME' => 0,
-	'Catalyst::Plugin::RunAfterRequest' => 0,
-	'Catalyst::TraitFor::Controller::reCAPTCHA' => 0,
-	'Catalyst::Action::RenderView' => 0,
-	'DBIx::Class' => 0,
-	'DBIx::Class::TimeStamp' => 0,
-	'DBIx::Class::PassphraseColumn' => 0,
-	'DBIx::Class::InflateColumn::Serializer' => 0,
-	'Moose' => 0,
-	'namespace::autoclean' => 0,
-	'Config::General' => 0,
-	'Catalyst::Plugin::Log::Handler' => 0,
-	'Image::Magick' => 0,
-	'Parse::BBCode' => 0,
-	'Text::Markdown' => 0,
-	'WWW::Fimfiction' => 0,
-	'Try::Tiny' => 0,
-	'IO::Prompt' => 0,
-	'Digest::Whirlpool' => 0,
-	'DateTime::Format::Human::Duration' => 0,
-	'DateTime' => '1.01'
+my @dependencies = (
+	'Catalyst::Runtime~5.90013',
+	'Catalyst::Restarter',
+	'Catalyst::View::TT',
+	'Catalyst::View::JSON',
+	'Catalyst::View::Email::Template',
+	'Email::Sender::Transport::SMTP::TLS',
+	'Catalyst::Plugin::ConfigLoader',
+	'Catalyst::Plugin::Static::Simple',
+	'Catalyst::Plugin::Unicode::Encoding',
+	'Catalyst::Plugin::Authentication',
+	'Catalyst::Authentication::Realm::SimpleDB',
+	'Catalyst::Plugin::Authorization::Roles',
+	'Catalyst::Plugin::Session',
+	'Catalyst::Plugin::Session::Store::File',
+	'Catalyst::Plugin::Session::State::Cookie',
+	'Catalyst::Plugin::FormValidator::Simple',
+	'DateTime::Format::RFC3339',
+	'FormValidator::Simple::Plugin::DBIC::Unique',
+	'FormValidator::Simple::Plugin::Trim',
+	'Catalyst::Plugin::Scheduler',
+	'Catalyst::Plugin::FillInForm',
+	'Catalyst::Plugin::Upload::MIME',
+	'Catalyst::Plugin::RunAfterRequest',
+	'Catalyst::TraitFor::Controller::reCAPTCHA',
+	'Catalyst::Action::RenderView',
+	'DBIx::Class',
+	'DBIx::Class::TimeStamp',
+	'DBIx::Class::PassphraseColumn',
+	'DBIx::Class::InflateColumn::Serializer',
+	'DBD::SQLite',
+	'SQL::Script',
+	'Moose',
+	'MooseX::MarkAsMethods', # May be unnecessary with new non-moose Schema?
+	'MooseX::NonMoose',      #
+	'namespace::autoclean',
+	'YAML::XS',
+	'Config::General',
+	'Catalyst::Plugin::Log::Handler',
+	'Image::Magick',
+	'Parse::BBCode',
+	'Text::Markdown',
+	'Try::Tiny',
+	'IO::Prompt',
+	'Digest::Whirlpool',
+	'DateTime~1.01',
+	'DateTime::Format::Human::Duration',
+	# 'WWW::Fimfiction',
 );
 
-test_requires 'Test::More' => '0.88';
-catalyst;
+my $cpanm = App::cpanminus::script->new;
+$cpanm->parse_options('--skip-satisfied');
+$cpanm->{argv} = \@dependencies;
+$cpanm->doit or exit(1);
 
-install_script glob('script/*.pl');
-auto_install;
-WriteAll;

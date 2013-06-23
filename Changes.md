@@ -1,14 +1,24 @@
 Changelog for WriteOff.pm
 =========================
 
-v0.33
------
+v0.33 - 24 Jun 2013
+-------------------
 
 - Moved "Event archive" link from event/list.tt to sitenav
 - Fixed bug in prelim distr algorithm which resulted in an infinite loop in search of a valid cell to swap with
 - Added `nuke_prelim_round` method to Result::Event, which does what it says on the tin
 - Rewrote Schema::Result::* modules to get rid of dbicdump cruft
 - Made separators in the title a little fancier
+- Changed Makefile.PL to install dependencies using App::cpanminus
+  - Included App::cpanminus into lib/
+- Moved HTML::FillInForm from inc/ to lib/
+- Removed inc/
+- Renamed config files from `_writeoff.yml` and `writeoff.yml` to `config-template.yml` and `config.yml` respectively
+- Moved database to `data/WriteOff.db`
+- Removed `writeoff_` prefix from scripts
+- Moved scripts into their own libs, called by command.pl
+  - Finished `artist rename` and `user merge` scripts
+  - Updated `backup log` (was `log_archive.pl`) command to work for new location of log files
 
 v0.32 - 18 Feb 2013
 -------------------

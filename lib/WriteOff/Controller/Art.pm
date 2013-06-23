@@ -73,7 +73,9 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{fillform}{artist} = eval { $c->user->username }; 
+	$c->stash->{fillform}{artist} = eval { $c->user->last_artist 
+		                                || $c->user->last_author 
+		                                || $c->user->name };
 	
 	$c->forward('do_submit') 
 		if $c->req->method eq 'POST'

@@ -82,7 +82,7 @@ sub title_html {
 	return (join " &#8250; ",
 		       map { Template::Filters::html_filter($_) }
 		          ref $title eq 'ARRAY' ? reverse @$title : $title || ())
-                     =~ s/.+&#825\K0/1/r; # Replaces last &#8250 with &#8251
+                     . " &#x2022; " . $c->config->{name};
 }
 
 my $bb = Parse::BBCode->new({

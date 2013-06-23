@@ -117,10 +117,26 @@ __PACKAGE__->mk_group_accessors(
 	column => 'hugbox_score',
 );
 
+sub name {
+	return shift->username;
+}
+
 sub username_and_email {
 	my $self = shift;
 
 	return sprintf "%s <%s>", $self->username, $self->email;
+}
+
+sub last_author {
+	my $self = shift;
+	my $last_story = $self->storys->order_by({ -desc => 'updated' })->first;
+	return $last_story ? $last_story->author : undef;
+}
+
+sub last_artist {
+	my $self = shift;
+	my $last_image = $self->images->order_by({ -desc => 'updated' })->first;
+	return $last_image ? $last_image->artist : undef;
 }
 
 sub is_admin {

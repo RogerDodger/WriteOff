@@ -52,4 +52,27 @@ __PACKAGE__->many_to_many(awards => 'artist_awards', 'award');
 
 __PACKAGE__->mk_group_accessors(column => 'rank');
 
+sub recalculate_score {
+	my $self = shift;
+	
+	my $scores = $self->scores->search(undef, 
+		{ 
+			prefetch => 'event',
+			order_by => 'end' 
+		}
+	);
+	
+	my $total = 0;
+	my $prev;
+	while (my $score = $scores->next) {
+		if ($total < 0 && $prev->event_id != $score->event_id) {
+			$total = 0;
+		}
+		$total += $score->value;
+		$prev = $score;
+	}
+	
+	$self->update({ score => $total < 0 ? 0 : $total });
+}
+
 1;

@@ -43,7 +43,7 @@ sub auto :Private {
 	$c->stash(
 		now        => $c->model('DB::Event')->now_dt,
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
-		title      => [ $c->config->{name} ],
+		title      => [],
 		editor     => $c->user && $c->user->obj->is_admin,
 		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
 	);
