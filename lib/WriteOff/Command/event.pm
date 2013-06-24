@@ -87,7 +87,7 @@ sub export {
 			$upload_story->($story->title, $story->contents);
 		}
 	} catch {
-		say $_;
+		chomp and s/ at .+? line \d+$// and say;
 		exit(1);
 	};
 }
