@@ -4,6 +4,7 @@ use WriteOff::Command;
 use WWW::Fimfiction;
 use Try::Tiny;
 use IO::Prompt;
+use HTML::Entities qw/decode_entities/;
 
 sub run {
 	my ($self, $command, @args) = @_;
@@ -45,7 +46,7 @@ sub export {
 			die "Username does not match given story author's name";
 		}
 
-		if ($story->{title} ne $event->prompt) {
+		if (decode_entities($story->{title}) ne $event->prompt) {
 			die "Story title does not match event prompt";
 		}
 
