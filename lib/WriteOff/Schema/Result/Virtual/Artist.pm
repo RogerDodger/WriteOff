@@ -13,9 +13,9 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->belongs_to(
-  "user",
-  "WriteOff::Schema::Result::User",
-  { id => "user_id" },
+	"user",
+	"WriteOff::Schema::Result::User",
+	{ id => "user_id" },
 );
 
 __PACKAGE__->result_source_instance->is_virtual(1);

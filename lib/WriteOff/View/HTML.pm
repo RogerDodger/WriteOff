@@ -80,9 +80,9 @@ sub title_html {
 	my $title = $c->stash->{title};
 
 	return (join " &#8250; ",
-		       map { Template::Filters::html_filter($_) }
-		          ref $title eq 'ARRAY' ? reverse @$title : $title || ())
-                     . " &#x2022; " . $c->config->{name};
+	           map { Template::Filters::html_filter($_) }
+	              ref $title eq 'ARRAY' ? reverse @$title : $title || ())
+	                 . " &#x2022; " . $c->config->{name};
 }
 
 my $bb = Parse::BBCode->new({

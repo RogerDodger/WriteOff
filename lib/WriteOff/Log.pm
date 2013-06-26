@@ -10,20 +10,20 @@ has path => (is => 'rw');
 has timeformat => (is => 'rw', default => '%b %d %H:%M:%S');
 
 sub _log {
-    my( $self, $level, $message ) = @_;
-    return if $self->abort;
+	my( $self, $level, $message ) = @_;
+	return if $self->abort;
 
-    $message .= "\n" unless $message =~ /\n$/;
-    my $timestamp = POSIX::strftime($self->timeformat, localtime);
+	$message .= "\n" unless $message =~ /\n$/;
+	my $timestamp = POSIX::strftime($self->timeformat, localtime);
 
-    open LOG, ">>:encoding(UTF-8)", File::Spec->catfile($self->path, "$level.log");
-    printf LOG "%s %s", $timestamp, $message;
-    close LOG;
+	open LOG, ">>:encoding(UTF-8)", File::Spec->catfile($self->path, "$level.log");
+	printf LOG "%s %s", $timestamp, $message;
+	close LOG;
 }
 
 sub _flush {
-    my $self = shift;
-    $self->abort(0);
+	my $self = shift;
+	$self->abort(0);
 }
 
 no Moose;
