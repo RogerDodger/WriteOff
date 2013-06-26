@@ -23,7 +23,7 @@ Grabs an event.
 =cut
 
 sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
-    my ( $self, $c, $arg ) = @_;
+	my ( $self, $c, $arg ) = @_;
 
 	(my $id = $arg) =~ s/^\d+\K.*//;
 	$c->stash->{event} = $c->model('DB::Event')->find($id) or

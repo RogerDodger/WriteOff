@@ -28,7 +28,7 @@ sub init :Private {
 }
 
 sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
 	$c->forward('init');
 	
@@ -39,11 +39,11 @@ sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 		$c->forward('first_pass') if $c->req->method eq 'POST';
 	}
 	
-    $c->stash->{template} = 'vote/public/fic.tt';
+	$c->stash->{template} = 'vote/public/fic.tt';
 }
 
 sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
 	$c->forward('init');
 	
@@ -54,7 +54,7 @@ sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 		$c->forward('first_pass') if $c->req->method eq 'POST';
 	}
 	
-    $c->stash->{template} = 'vote/public/art.tt';
+	$c->stash->{template} = 'vote/public/art.tt';
 }
 
 sub first_pass :Private {

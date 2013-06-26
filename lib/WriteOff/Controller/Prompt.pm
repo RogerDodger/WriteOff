@@ -19,7 +19,7 @@ Catalyst Controller.
 =cut
 
 sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
-    my ( $self, $c, $arg ) = @_;
+	my ( $self, $c, $arg ) = @_;
 	
 	(my $id = $arg) =~ s/^\d+\K.*//;
 	$c->stash->{prompt} = $c->model('DB::Prompt')->find($id) or 

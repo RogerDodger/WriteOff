@@ -30,7 +30,7 @@ sub auto :Private {
 }
 
 sub index :Chained('/') :PathPart('news') :CaptureArgs(1) {
-    my ( $self, $c, $arg ) = @_;
+	my ( $self, $c, $arg ) = @_;
 	
 	(my $id = $arg) =~ s/^\d+\K.*//;
 	$c->stash->{article} = $c->model('DB::News')->find($id) or 

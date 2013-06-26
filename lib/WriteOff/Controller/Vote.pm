@@ -17,7 +17,7 @@ Catalyst Controller.
 =cut
 
 sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	$c->detach('/error', [ "There is no preliminary voting round for this event." ]) 
 		unless $c->stash->{event}->prelim;
@@ -48,7 +48,7 @@ sub prelim_request :Private {
 }
 
 sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	$c->detach('/error', [ "There is no private judging for this event." ]) 
 		unless $c->stash->{event}->private;
