@@ -76,13 +76,11 @@ sub format_dt {
 
 sub title_html {
 	my ($self, $c) = @_;
-
 	my $title = $c->stash->{title};
-
-	return (join " &#8250; ",
+	$title = join " &#8250; ",
 	           map { Template::Filters::html_filter($_) }
-	              ref $title eq 'ARRAY' ? reverse @$title : $title || ())
-	                 . " &#x2022; " . $c->config->{name};
+	             ref $title eq 'ARRAY' ? reverse @$title : $title || ();
+	return join " &#x2022; ", $title, $c->config->{name};
 }
 
 my $bb = Parse::BBCode->new({
