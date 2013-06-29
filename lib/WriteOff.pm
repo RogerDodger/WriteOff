@@ -28,7 +28,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.34.1';
+our $VERSION = 'v0.34.2';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -222,7 +222,7 @@ WriteOff - Catalyst based application
 
 =head1 SYNOPSIS
 
-	script/writeoff_server.pl
+    script/writeoff_server.pl
 
 =head1 DESCRIPTION
 

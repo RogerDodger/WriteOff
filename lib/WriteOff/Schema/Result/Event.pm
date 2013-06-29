@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use WriteOff::Util 'simple_uri';
+use WriteOff::Util qw/simple_uri sorted/;
 require List::Util;
 
 __PACKAGE__->table("events");
@@ -110,7 +110,7 @@ sub has_results {
 	return shift->public;
 }
 
-sub leeway {
+sub LEEWAY () {
 	return 5; #minutes
 }
 
@@ -211,95 +211,67 @@ sub storys_gallery_order {
 sub prompt_subs_allowed {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend
-	( $row->start, $row->now_dt, $row->prompt_voting);
+	return sorted $row->start, $row->now_dt, $row->prompt_voting;
 }
 
 sub prompt_votes_allowed {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend
-	( $row->prompt_voting, $row->now_dt, $row->art || $row->fic );
+	return sorted $row->prompt_voting, $row->now_dt, $row->art || $row->fic;
 }
 
 sub art_subs_allowed {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend
-	( $row->art, $row->now_dt, $row->art_end->add({ minutes => $row->leeway }) );
+	return sorted $row->art, $row->now_dt, $row->art_end->add({ minutes => LEEWAY });
 }
 
 sub fic_subs_allowed {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend
-	( $row->fic, $row->now_dt, $row->fic_end->add({ minutes => $row->leeway }) );
+	return sorted $row->fic, $row->now_dt, $row->fic_end->add({ minutes => LEEWAY });
 }
 
 sub art_gallery_opened {
 	my $row = shift;
 
-	return 0 unless $row->art;
-
-	return $row->check_datetimes_ascend( $row->fic, $row->now_dt );
+	return $row->fic <= $row->now_dt;
 }
 
 sub fic_gallery_opened {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend
-	( $row->prelim || $row->public , $row->now_dt );
+	return ($row->prelim || $row->public) <= $row->now_dt;
 }
 
 sub art_votes_allowed {
 	my $row = shift;
 
-	return 0 unless $row->art;
-
-	return $row->check_datetimes_ascend
-	( $row->art_end, $row->now_dt, $row->end );
+	return sorted $row->art_end, $row->now_dt, $row->end;
 }
 
 sub prelim_votes_allowed {
 	my $row = shift;
 
-	return 0 unless $row->prelim;
-
-	return $row->check_datetimes_ascend
-	( $row->prelim, $row->now_dt, $row->public );
+	return $row->prelim && sorted $row->prelim, $row->now_dt, $row->public;
 }
 
 sub public_votes_allowed {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend
-	( $row->public, $row->now_dt, $row->private || $row->end );
+	return sorted $row->public, $row->now_dt, $row->private || $row->end;
 }
 
 sub private_votes_allowed {
 	my $row = shift;
 
-	return 0 unless $row->private;
-
-	return $row->check_datetimes_ascend
-	( $row->private, $row->now_dt, $row->end );
+	return $row->private && sorted $row->private, $row->now_dt, $row->end;
 }
 
 sub is_ended {
 	my $row = shift;
 
-	return $row->check_datetimes_ascend( $row->end, $row->now_dt );
-}
-
-sub check_datetimes_ascend {
-	my $row = shift;
-
-	return 1 if join('', @_) eq join('', sort @_);
-	0;
-}
-
-sub datetimes_ascend {
-	return WriteOff::Util::check_datetimes_ascend(@_);
+	return $row->end <= $row->now_dt;
 }
 
 sub reset_schedules {

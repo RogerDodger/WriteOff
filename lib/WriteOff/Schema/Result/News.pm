@@ -5,8 +5,6 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-require WriteOff::Util;
-
 __PACKAGE__->table("news");
 
 __PACKAGE__->add_columns(
@@ -47,8 +45,7 @@ sub id_uri {
 sub is_edited {
 	my $self = shift;
 
-	return WriteOff::Util::check_datetimes_ascend
-	( $self->created->add( minutes => 3 ), $self->updated );
+	return $self->created->add( minutes => 3 ) <= $self->updated;
 }
 
 1;

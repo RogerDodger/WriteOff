@@ -170,15 +170,7 @@ sub new_password {
 sub has_been_mailed_recently {
 	my $self = shift;
 
-	return $self->check_datetimes_ascend
-	( DateTime->now->subtract( hours => 1 ), $self->last_mailed_at );
-}
-
-sub check_datetimes_ascend {
-	my $row = shift;
-
-	return 1 if join('', @_) eq join('', sort @_);
-	0;
+	return DateTime->now->subtract( hours => 1 ) <= $self->last_mailed_at;
 }
 
 1;

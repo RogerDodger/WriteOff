@@ -5,8 +5,6 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use WriteOff::Util 'check_datetimes_ascend';
-
 __PACKAGE__->table("vote_records");
 
 __PACKAGE__->add_columns(
@@ -100,8 +98,7 @@ sub is_fillable {
 sub is_publicly_viewable {
 	my $self = shift;
 
-	return 0 unless $self->round eq 'private';
-	return check_datetimes_ascend( $self->event->end, $self->now_dt );
+	return $self->round eq 'private' && $self->event->end <= $self->now_dt;
 }
 
 sub stdev {
