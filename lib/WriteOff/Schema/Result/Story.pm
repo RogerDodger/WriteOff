@@ -145,9 +145,9 @@ sub is_manipulable_by {
 
 sub id_uri {
 	my $self = shift;
-	require WriteOff::Helpers;
+	require WriteOff::Util;
 
-	return WriteOff::Helpers::simple_uri( $self->id, $self->title );
+	return WriteOff::Util::simple_uri( $self->id, $self->title );
 }
 
 sub _is_public_candidate {

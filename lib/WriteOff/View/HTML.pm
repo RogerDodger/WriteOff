@@ -6,7 +6,7 @@ use Template::Stash;
 use Template::Filters;
 use Parse::BBCode;
 use Text::Markdown;
-use WriteOff::Helpers;
+use WriteOff::Util;
 require DateTime::Format::Human::Duration;
 
 extends 'Catalyst::View::TT';
@@ -26,7 +26,7 @@ __PACKAGE__->config(
 
 			return $text;
 		},
-		simple_uri => \&WriteOff::Helpers::simple_uri,
+		simple_uri => \&WriteOff::Util::simple_uri,
 	},
 	expose_methods => [ qw/format_dt bb_render medal_for title_html/ ],
 	render_die     => 1,

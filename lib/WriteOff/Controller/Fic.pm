@@ -1,7 +1,7 @@
 package WriteOff::Controller::Fic;
 use Moose;
 use namespace::autoclean;
-use WriteOff::Helpers 'wordcount';
+use WriteOff::Util 'wordcount';
 
 BEGIN { extends 'Catalyst::Controller'; }
 

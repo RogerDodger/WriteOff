@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use WriteOff::Helpers 'check_datetimes_ascend';
+use WriteOff::Util 'check_datetimes_ascend';
 
 __PACKAGE__->table("vote_records");
 

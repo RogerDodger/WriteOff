@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use WriteOff::Helpers 'simple_uri';
+use WriteOff::Util 'simple_uri';
 require List::Util;
 
 __PACKAGE__->table("events");
@@ -299,7 +299,7 @@ sub check_datetimes_ascend {
 }
 
 sub datetimes_ascend {
-	return WriteOff::Helpers::check_datetimes_ascend(@_);
+	return WriteOff::Util::check_datetimes_ascend(@_);
 }
 
 sub reset_schedules {

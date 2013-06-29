@@ -1,8 +1,13 @@
 Changelog for WriteOff.pm
 =========================
 
-v0.34
+v0.35
 -----
+
+
+
+v0.34 - 29 Jun 2013
+-------------------
 
 - Added ability for people to resend verification emails
 - Genericised verification and recovery emails since they're basically the same thing (send email with token, accept token and do stuff)

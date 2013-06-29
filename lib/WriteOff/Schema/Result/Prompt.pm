@@ -72,9 +72,9 @@ sub is_manipulable_by {
 
 sub id_uri {
 	my $self = shift;
-	require WriteOff::Helpers;
+	require WriteOff::Util;
 
-	return WriteOff::Helpers::simple_uri($self->id, $self->contents);
+	return WriteOff::Util::simple_uri($self->id, $self->contents);
 }
 
 1;

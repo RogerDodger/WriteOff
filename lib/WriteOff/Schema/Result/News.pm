@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-require WriteOff::Helpers;
+require WriteOff::Util;
 
 __PACKAGE__->table("news");
 
@@ -41,15 +41,14 @@ __PACKAGE__->belongs_to(
 sub id_uri {
 	my $self = shift;
 
-	return WriteOff::Helpers::simple_uri($self->id, $self->title);
+	return WriteOff::Util::simple_uri($self->id, $self->title);
 }
 
 sub is_edited {
 	my $self = shift;
 
-	return WriteOff::Helpers::check_datetimes_ascend
+	return WriteOff::Util::check_datetimes_ascend
 	( $self->created->add( minutes => 3 ), $self->updated );
 }
-
 
 1;
