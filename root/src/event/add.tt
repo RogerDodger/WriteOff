@@ -8,7 +8,7 @@
 [%- END %]
 	<p>
 		<label>Starting Date<span class="required">*</span></label>
-		<input type="datetime-local" name="start" size="32"
+		<input type="datetime" name="start" size="32"
 			placeholder="1970-01-01T00:00:00Z" required autofocus>
 	</p>
 	<p class="inline">
