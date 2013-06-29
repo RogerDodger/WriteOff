@@ -20,7 +20,7 @@ sub import {
 
 sub help {
 	print <<"EOF";
-usage: 
+usage:
     $0 COMMAND [ARGUMENTS]
 
 available commands:
@@ -33,7 +33,7 @@ available commands:
         database is loaded from FILENAME.
 
     backup logs
-        Archives the logs with gunzip.    
+        Archives the logs with gunzip.
 
     deploy
         Creates local config and deploys the SQLite database.

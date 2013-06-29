@@ -40,21 +40,21 @@
 	</p>
 	<p class="inline">
 		<label>Wordcount</label>
-		<input type="number" name="wc_min" 
+		<input type="number" name="wc_min"
 			size="6" max="999999" min="0" step="50" value="2000" required>
 		&ndash;
-		<input type="number" name="wc_max" 
+		<input type="number" name="wc_max"
 			size="6" max="999999" min="0" step="50" value="25000" required>
 	</p>
 	<p class="inline">
 		<label>Public Duration</label>
-		<input type="number" name="public_dur" 
+		<input type="number" name="public_dur"
 			size="4" max="9999" min="1" value="7" required>
 		Days
 	</p>
 	<p class="inline">
 		<label>Art Duration</label>
-		<input type="checkbox" name="has_art" class="toggler"> 
+		<input type="checkbox" name="has_art" class="toggler">
 		Has art
 		<br>
 		<input type="number" name="art_dur" disabled="disabled"
@@ -75,7 +75,7 @@
 		<input type="checkbox" name="has_judges" class="toggler">
 		Has judges
 		<br />
-		<input type="number" name="private_dur" disabled="disabled" 
+		<input type="number" name="private_dur" disabled="disabled"
 			size="4" max="9999" min="1" value="7" required>
 		Days
 	</p>

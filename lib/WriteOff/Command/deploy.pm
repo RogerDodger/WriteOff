@@ -23,7 +23,7 @@ sub run {
 			say "- unlink $cfgfn";
 			$write_cfg->();
 		}
-	} 
+	}
 	else {
 		$write_cfg->();
 	}

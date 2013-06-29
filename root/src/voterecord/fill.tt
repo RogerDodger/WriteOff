@@ -11,7 +11,7 @@
 
 	<ul id="sortable">
 		[%- FOREACH vote IN record.votes %]
-		<li class="ui-state-default" 
+		<li class="ui-state-default"
 			data-name="[% vote.item.title | html %]" data-id="[% vote.id %]" >
 			<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 			<a href="[% c.uri_for( c.controller( vote.record.type.ucfirst )
@@ -29,7 +29,7 @@
 			placeholder="Name of highest rated item"/>
 	</p>
 	<p>
-		<input type="submit" id="sortable-submit" value="Cast Vote" 
+		<input type="submit" id="sortable-submit" value="Cast Vote"
 			disabled="disabled"/>
 	</p>
 	

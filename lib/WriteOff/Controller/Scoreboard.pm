@@ -43,7 +43,7 @@ sub reset :Local :Args(0) {
 	
 	$c->forward('clear') unless $c->req->query_keywords eq 'noclear';
 	
-	$c->forward( $c->controller('Event')->action_for('tally_results'), [ $_ ] ) 
+	$c->forward( $c->controller('Event')->action_for('tally_results'), [ $_ ] )
 		for $c->model('DB::Event')->finished->get_column('id')->all;
 		
 	$c->stash->{status_msg} = 'Scoreboard reset';

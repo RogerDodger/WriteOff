@@ -8,7 +8,7 @@
 /* THANKS */
 	
 /* SITE */
-	Language: English 
+	Language: English
 	Technology: Perl5, Catalyst, Template Toolkit, Git, jQuery, jQueryUI, modernizr
 	Doctype: HTML5
 	Editor: Sublime Text 2

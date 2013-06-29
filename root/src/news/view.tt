@@ -9,8 +9,8 @@
 
 <p class="news-meta">
 	posted [% article.created.duration_since_now -%]
-	[%- format_dt(article.updated, '*').replace('title="\K(.+?)(?=")', 
-				'last edited ' _ article.updated.duration_since_now.remove('<.+?>') ) 
+	[%- format_dt(article.updated, '*').replace('title="\K(.+?)(?=")',
+				'last edited ' _ article.updated.duration_since_now.remove('<.+?>') )
 		IF article.is_edited %]
 	by [% article.user.username %]
 </p>

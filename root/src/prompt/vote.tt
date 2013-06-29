@@ -35,14 +35,14 @@
 </form>
 	[%- ELSE %]
 <h3>Not enough prompts</h3>
-<img src="[% c.uri_for('/static/images/pinkie-tau-shrug.png') %]" 
+<img src="[% c.uri_for('/static/images/pinkie-tau-shrug.png') %]"
 	alt="I just don't know what went wrong"/>
 	[%- END %]
 [%- END %]
 [%- IF prompts.count %]
 <h2>Current Standings</h2>
 	[%- WHILE (prompt = prompts.next) %]
-	<p class="prompt ui-state-default ui-corner-all" 
+	<p class="prompt ui-state-default ui-corner-all"
 		style="width: [% (prompt.rating / 3) | format('%dpx;') %]">
 		[% prompt.contents | html %]
 	</p>

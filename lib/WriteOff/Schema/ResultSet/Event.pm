@@ -6,10 +6,10 @@ use base 'WriteOff::Schema::ResultSet';
 sub active {	
 	my $self = shift;
 	return $self->search(
-		{ end => 
-			{ '>' => 
-				$self->format_datetime( $self->now_dt->subtract( days => 1 ) ) 
-			} 
+		{ end =>
+			{ '>' =>
+				$self->format_datetime( $self->now_dt->subtract( days => 1 ) )
+			}
 		},
 		{ order_by => { -asc => 'end' } },
 	);
@@ -18,10 +18,10 @@ sub active {
 sub old {
 	my $self = shift;
 	return $self->search(
-		{ end => 
-			{ '<' => 
-				$self->format_datetime( $self->now_dt->subtract( days => 1 ) ) 
-			} 
+		{ end =>
+			{ '<' =>
+				$self->format_datetime( $self->now_dt->subtract( days => 1 ) )
+			}
 		},
 		{ order_by => { -desc => 'end' } },
 	);

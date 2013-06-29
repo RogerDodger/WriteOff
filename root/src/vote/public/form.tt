@@ -5,7 +5,7 @@
 	[%- END %]
 	</div>
 [%- ELSE %]
-	[% INCLUDE fragment/status_msg.tt  message = 
+	[% INCLUDE fragment/status_msg.tt  message =
 		'Scores are in ascending order, i.e., 10 is the best score' %]
 [%- END %]
 

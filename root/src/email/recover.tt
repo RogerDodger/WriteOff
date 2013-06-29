@@ -3,7 +3,7 @@
 <p>
 	The account linked with this email, [% user.username %], has had a password
 	reset requested. <a href="[% c.uri_for( c.controller('User')
-		.action_for('do_recover'), [ user.id, user.token ]) %]">Click here</a> 
+		.action_for('do_recover'), [ user.id, user.token ]) %]">Click here</a>
 	to reset the account's password.
 </p>
 

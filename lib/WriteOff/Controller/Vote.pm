@@ -19,7 +19,7 @@ Catalyst Controller.
 sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/error', [ "There is no preliminary voting round for this event." ]) 
+	$c->detach('/error', [ "There is no preliminary voting round for this event." ])
 		unless $c->stash->{event}->prelim;
 	
 	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
@@ -31,8 +31,8 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	push $c->stash->{title}, 'Vote', 'Prelim';
 	$c->stash->{template} = 'vote/prelim.tt';
 	
-	$c->stash->{error_msg} = $c->forward('prelim_request') if $c->user 
-		&& $c->req->method eq 'POST' 
+	$c->stash->{error_msg} = $c->forward('prelim_request') if $c->user
+		&& $c->req->method eq 'POST'
 		&& $c->stash->{event}->prelim_votes_allowed;
 }
 
@@ -50,7 +50,7 @@ sub prelim_request :Private {
 sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/error', [ "There is no private judging for this event." ]) 
+	$c->detach('/error', [ "There is no private judging for this event." ])
 		unless $c->stash->{event}->private;
 
 	$c->stash->{finalists} = $c->stash->{event}->storys->search({
@@ -59,7 +59,7 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 		order_by => 'title',
 	});
 		
-	$c->stash->{judge} = 
+	$c->stash->{judge} =
 		$c->stash->{event}->judges->find( $c->user_id );
 		
 	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({

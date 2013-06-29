@@ -16,7 +16,7 @@ Application cron actions.
 
 =head2 check_schedule
 
-Checks the schedule table and executes any actions that are set to be executed, 
+Checks the schedule table and executes any actions that are set to be executed,
 deleting them afterwards (such that a scheduled task only executes once).
 
 =head2 cleanup

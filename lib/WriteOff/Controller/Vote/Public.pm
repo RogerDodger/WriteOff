@@ -21,7 +21,7 @@ sub init :Private {
 	
 	$c->forward('/captcha_get');
 	
-	$c->stash->{formid} = join "|", 
+	$c->stash->{formid} = join "|",
 		'form', 'event', $c->stash->{event}->id, 'public', $c->action->name;
 		
 	push $c->stash->{title}, 'Vote', 'Public';
@@ -32,7 +32,7 @@ sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 
 	$c->forward('init');
 	
-	if( $c->stash->{event}->public_votes_allowed ) 
+	if( $c->stash->{event}->public_votes_allowed )
 	{
 		$c->stash->{candidates} = [ $c->stash->{event}->public_story_candidates ];
 		
@@ -47,7 +47,7 @@ sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 
 	$c->forward('init');
 	
-	if( $c->stash->{event}->art_votes_allowed ) 
+	if( $c->stash->{event}->art_votes_allowed )
 	{
 		$c->stash->{candidates} = [ $c->stash->{event}->images->metadata->seed_order->all ];
 		
@@ -60,19 +60,19 @@ sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 sub first_pass :Private {
 	my ( $self, $c ) = @_;
 	
-	if( $c->req->params->{submit} eq 'Save vote' ) 
+	if( $c->req->params->{submit} eq 'Save vote' )
 	{
 		$c->session->{ $c->stash->{formid} } = $c->req->params;
 		$c->stash->{status_msg} = 'Vote saved';
 	}
 	
-	elsif( $c->req->params->{submit} eq 'Clear vote' ) 
+	elsif( $c->req->params->{submit} eq 'Clear vote' )
 	{
 		delete $c->session->{ $c->stash->{formid} };
 		$c->stash->{status_msg} = 'Vote cleared';
 	}
 	
-	elsif( $c->req->params->{submit} eq 'Cast vote' ) 
+	elsif( $c->req->params->{submit} eq 'Cast vote' )
 	{
 		$c->forward('do_public');
 	}
@@ -82,12 +82,12 @@ sub first_pass :Private {
 sub do_public :Private {
 	my ( $self, $c ) = @_;
 	
-	my @candidates = 
-		grep { $_->user_id != $c->user_id } 
+	my @candidates =
+		grep { $_->user_id != $c->user_id }
 		@{ $c->stash->{candidates} };
 	
 	#The votes are keyed with the id of the story that the votes are cast on
-	my @votes = 
+	my @votes =
 		grep { $c->req->params->{$_} ne 'N/A' }
 		grep { defined $c->req->params->{$_} }
 		map  { $_->id }
@@ -121,9 +121,9 @@ sub do_public :Private {
 			round   => 'public',
 			type    => $c->action->name,
 			votes   => [ map {
-				{ 
-					$id{ $c->action->name } => $_, 
-					value => $c->form->valid($_) 
+				{
+					$id{ $c->action->name } => $_,
+					value => $c->form->valid($_)
 				}
 			} @votes ]
 		});

@@ -114,7 +114,7 @@ body {
 	padding: 1em;
 	
 	font-family: "Bitstream Charter", "Charter BT", "Book Antiqua",
-		"Bookman Old Style", Palladio, "URW Palladio L", Garamond, 
+		"Bookman Old Style", Palladio, "URW Palladio L", Garamond,
 		"Apple Garamond", Georgia, serif; /* Eeyup */
 }
 h1 + h2 {
@@ -131,7 +131,7 @@ h4 {
 }
 ol ol,
 ul ol,
-ol ul, 
+ol ul,
 ul ul {
 	margin-top: 0;
 	margin-bottom: 0;
@@ -171,8 +171,8 @@ a.artist, a.artist:visited {
 	width: 1125px;
 	margin: 0 auto;
 }
-.content, 
-footer, 
+.content,
+footer,
 nav {
 	margin: 0 auto;
 	float: left;
@@ -260,20 +260,20 @@ form.light p .ps {
 	font-size: 0.95em;
 	line-height: normal;
 }
-#sortable { 
+#sortable {
 	list-style-type: none;
-	padding: 0; 
-	width: 60%; 
+	padding: 0;
+	width: 60%;
 }
-#sortable li { 
-	margin: 0 3px 3px 3px; 
+#sortable li {
+	margin: 0 3px 3px 3px;
 	padding: 0.4em;
 	padding-left: 1.5em;
-	height: 18px; 
+	height: 18px;
 }
-#sortable li span { 
-	position: absolute; 
-	margin-left: -1.3em; 
+#sortable li span {
+	position: absolute;
+	margin-left: -1.3em;
 }
 
 /*
@@ -431,7 +431,7 @@ nav li:hover ul li:hover a {
 	font-size: .6em;
 	float: right;
 }
-.events td, 
+.events td,
 .events th {
 	padding: 4px;
 	font-size: 1.2em;
@@ -482,7 +482,7 @@ ul.contents li.h4 {
 	text-indent: 6em;
 }
 
-.news-header { 
+.news-header {
 	margin-bottom: 0.2em;
 }
 
@@ -495,8 +495,8 @@ ul.contents li.h4 {
 /*
  * Tables
  */
-  
-table { 
+
+table {
 	border-collapse: collapse;
 	word-wrap: break-word;
 	margin: 1em 0;
@@ -517,37 +517,37 @@ table {
 	margin-left: 2em;
 	margin-right: 2em;
 }
-.t-center { 
-	margin-left: auto; 
+.t-center {
+	margin-left: auto;
 	margin-right: auto;
 }
-.left, 
+.left,
 td.left,
-th.left, 
-.left th,    
-.left td { 
-	text-align: left; 
+th.left,
+.left th,
+.left td {
+	text-align: left;
 }
 .justify
 td.justify,
-th.justify, 
-.justify th, 
-.justify td { 
-	text-align: justify; 
+th.justify,
+.justify th,
+.justify td {
+	text-align: justify;
 }
 .right,
-th.right, 
+th.right,
 td.right,
-.right th,   
-.right td { 
-	text-align: right; 
+.right th,
+.right td {
+	text-align: right;
 }
 .center,
-th.center, 
-td.center, 
-.center th,  
-.center td { 
-	text-align: center; 
+th.center,
+td.center,
+.center th,
+.center td {
+	text-align: center;
 }
 table.no-overflow tr th {
 	white-space: nowrap;
@@ -595,23 +595,23 @@ table.plain th {
 .slim {
 	background: #f8f8f8;
 }
-.slim td, 
+.slim td,
 .slim th {
 	padding: 3px 7px;
 	border-top: 2px dotted silver;
 	border-bottom: 2px dotted silver;
 }
-.dotted-right { 
-	border-right: 2px dotted silver; 
+.dotted-right {
+	border-right: 2px dotted silver;
 }
-.dotted-left { 
-	border-left: 2px dotted silver; 
+.dotted-left {
+	border-left: 2px dotted silver;
 }
-.dotted-bottom { 
-	border-bottom: 2px dotted silver; 
+.dotted-bottom {
+	border-bottom: 2px dotted silver;
 }
-.dotted-top { 
-	border-top: 2px dotted silver; 
+.dotted-top {
+	border-top: 2px dotted silver;
 }
 
 /* Solid */
@@ -619,7 +619,7 @@ table.plain th {
 	font-size: 110%;
 	font-variant: small-caps;
 }
-.solid td, 
+.solid td,
 .solid th {
 	padding: 7px 11px;
 }
@@ -634,7 +634,7 @@ table.plain th {
 	background: #ede4d4;
 }
 
-/* 
+/*
  * Containers
  */
 
@@ -731,13 +731,13 @@ figure img {
  * Popups
  */
 
-.status-msg, 
+.status-msg,
 .error-msg {
 	display: inline-block;
 	padding: 0.7em 0.7em 0.5em 0.7em;
 	white-space: nowrap;
 }
-.status-msg span.ui-icon, 
+.status-msg span.ui-icon,
 .error-msg span.ui-icon,
 .popup-msg span.ui-icon {
 	float: left;
@@ -774,9 +774,9 @@ aside.font-size-chooser {
 	padding: 0.1em 0.4em;
 	float: right;
 	
-	-webkit-user-select: none;        
+	-webkit-user-select: none;
 	-moz-user-select: none;
-	-ms-user-select: none; 
+	-ms-user-select: none;
 	-o-user-select: none;
 }
 aside.font-size-chooser a:hover {

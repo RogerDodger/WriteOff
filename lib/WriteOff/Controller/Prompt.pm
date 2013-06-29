@@ -22,7 +22,7 @@ sub index :PathPart('prompt') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $arg ) = @_;
 	
 	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{prompt} = $c->model('DB::Prompt')->find($id) or 
+	$c->stash->{prompt} = $c->model('DB::Prompt')->find($id) or
 		$c->detach('/default');
 		
 	if( $arg ne $c->stash->{prompt}->id_uri ) {
@@ -37,7 +37,7 @@ sub vote :PathPart('vote') :Chained('/event/prompt') :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{prompts} = $c->stash->{event}->prompts->search(undef,
-		{ order_by => { -desc => 'rating' } } 
+		{ order_by => { -desc => 'rating' } }
 	);
 	
 	if ( $c->stash->{event}->prompt_votes_allowed ) {
@@ -75,8 +75,8 @@ sub submit :PathPart('submit') :Chained('/event/prompt') :Args(0) {
 	
 	$c->req->params->{subs_left} = $subs_left->();
 	
-	$c->forward('do_submit') 
-		if $c->req->method eq 'POST' 
+	$c->forward('do_submit')
+		if $c->req->method eq 'POST'
 		&& $c->user_exists
 		&& $c->stash->{event}->prompt_subs_allowed;
 		
@@ -92,10 +92,10 @@ sub do_submit :Private {
 	$c->forward('/check_csrf_token');
 	
 	$c->form(
-		prompt => [ 
+		prompt => [
 			'NOT_BLANK',
-			[ 'LENGTH', 1, $c->config->{len}{max}{prompt} ], 
-			'TRIM_COLLAPSE', 
+			[ 'LENGTH', 1, $c->config->{len}{max}{prompt} ],
+			'TRIM_COLLAPSE',
 			[ 'DBIC_UNIQUE', $c->stash->{event}->prompts_rs, 'contents' ],
 		],
 		subs_left => [ [ 'GREATER_THAN', 0 ] ],
@@ -117,10 +117,10 @@ sub do_submit :Private {
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You cannot delete this item.']) unless 
+	$c->detach('/forbidden', ['You cannot delete this item.']) unless
 		$c->stash->{prompt}->is_manipulable_by( $c->user );
 		
-	$c->stash->{key} = { 
+	$c->stash->{key} = {
 		name  => 'prompt',
 		value => $c->stash->{prompt}->contents,
 	};

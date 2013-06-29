@@ -19,7 +19,7 @@ WriteOff::View::Email::Template - Templated Email View for WriteOff
 
 =head1 DESCRIPTION
 
-View for sending template-generated email from WriteOff. 
+View for sending template-generated email from WriteOff.
 
 =head1 AUTHOR
 

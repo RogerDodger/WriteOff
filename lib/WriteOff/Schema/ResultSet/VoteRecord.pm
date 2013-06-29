@@ -6,7 +6,7 @@ use base 'WriteOff::Schema::ResultSet';
 sub filled {
 	return shift->search_rs(
 		{ 'votes.value' => { '!=' => undef } },
-		{ 
+		{
 			join => 'votes',
 			group_by => 'me.id',
 		}
@@ -15,9 +15,9 @@ sub filled {
 
 sub unfilled {
 	return shift->search_rs(
-		{ 
-			'votes.value' => undef, 
-			'votes.id' => { '!=' => undef } 
+		{
+			'votes.value' => undef,
+			'votes.id' => { '!=' => undef }
 		},
 		{
 			join => 'votes',
@@ -65,7 +65,7 @@ sub with_stats {
 		# }
 	# );
 	
-	# my $variance = 
+	# my $variance =
 		# '(SELECT AVG( (value - mean)*(value - mean) ) ' .
 		# 'FROM votes votes ' .
 		# 'WHERE votes.record_id = me.id)';

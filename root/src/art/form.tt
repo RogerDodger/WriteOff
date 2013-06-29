@@ -42,8 +42,8 @@
 		<input name="image" type="file"
 			title="Allowed types: [% c.config.biz.img.types.join_serial %]"
 			accept="[% c.config.biz.img.types.join(',') %]"
-			onchange="this.setCustomValidity( 
-				this.files[0].size > [% c.config.biz.img.size %] ? 
+			onchange="this.setCustomValidity(
+				this.files[0].size > [% c.config.biz.img.size %] ?
 				'Max filesize: [% c.config.biz.img.size / 1024 | format('%dKB') %]' : ''
 			)" [% 'required="required"' IF image_required %] />
 	</p>

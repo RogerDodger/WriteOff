@@ -2,7 +2,7 @@
 	<input type="hidden" name="csrf_token" value="[% csrf_token %]">
 	<p>
 		<label>Title</label>
-		<input name="title" type="text" class="maxwidth" 
+		<input name="title" type="text" class="maxwidth"
 			maxlength="[% c.config.len.max.title %]" required="required">
 	<p>
 		<label>Body</label>

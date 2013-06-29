@@ -1,3 +1,3 @@
 <h1>404 - File not found</h1>
-<img src="[% c.uri_for('/static/images/pinkie-tau-shrug.png') %]" 
+<img src="[% c.uri_for('/static/images/pinkie-tau-shrug.png') %]"
 	alt="I just don't know what went wrong"/>

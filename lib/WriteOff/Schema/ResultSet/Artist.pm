@@ -35,7 +35,7 @@ sub deal_awards_and_scores {
 	for my $item ( @items ) {
 		my $artist = $self->find_or_create({ name => $item->artist });
 		
-		$artist->update({ user_id => $item->user_id }) 
+		$artist->update({ user_id => $item->user_id })
 			if !defined $artist->user_id;
 		
 		my %event_id_and_type = (
@@ -44,14 +44,14 @@ sub deal_awards_and_scores {
 		);
 		
 		$item->create_related('scores', {
-			%event_id_and_type, 
+			%event_id_and_type,
 			artist_id => $artist->id,
 			value     => $n - ($item->pos + $item->pos_low),
 		});
 		
 		my @awards = (
 			$awards->medal_for($item->pos) // (),
-			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ? 
+			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ?
 					$awards->find({ name => 'confetti' }) : (),
 			$item->pos == $n ? $awards->find({ name => 'spoon' }) : (),
 		);
@@ -120,8 +120,8 @@ WriteOff::Schema::ResultSet::Artist - Site's artists.
 =head2 tally
 
 Tallies scores from either a L<WriteOff::Schema::ResultSet::Story> resultset or
-a L<WriteOff::Schema::ResultSet::Image> resultset by the formula `n - 2p + 1`, 
-where `n` is the number of items in the tally and `p` is the position of the 
+a L<WriteOff::Schema::ResultSet::Image> resultset by the formula `n - 2p + 1`,
+where `n` is the number of items in the tally and `p` is the position of the
 item.
 
 Items with tied sort rank are given a position equal to the average of their
@@ -131,7 +131,7 @@ where `p = avg(1, 2, 3) = 2`. This maintains the system as zero-sum.
 =head2 Awards
 
 Positions 1, 2, and 3 get gold, silver, and bronze medals respectively. In the
-case of ties, everyone gets the most valuable medal possible (i.e., five items 
+case of ties, everyone gets the most valuable medal possible (i.e., five items
 all tied for 3rd will each get a bronze medal).
 
 The item with the highest standard deviation in the public voting is awarded

@@ -55,10 +55,10 @@ __PACKAGE__->mk_group_accessors(column => 'rank');
 sub recalculate_score {
 	my $self = shift;
 	
-	my $scores = $self->scores->search(undef, 
-		{ 
+	my $scores = $self->scores->search(undef,
+		{
 			prefetch => 'event',
-			order_by => 'end' 
+			order_by => 'end'
 		}
 	);
 	

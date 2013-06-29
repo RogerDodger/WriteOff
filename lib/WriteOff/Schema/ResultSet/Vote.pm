@@ -9,7 +9,7 @@ Returns the average score of a set of votes.
 
 Returns -2**31 if there are no votes in the resultset.
 
-While returning undef would be more mathematically correct, undef equals 0 in a 
+While returning undef would be more mathematically correct, undef equals 0 in a
 numeric sort, which would give undesirable results.
 
 Also, returning undef would make the defined-or persistence in the image/story
@@ -48,21 +48,21 @@ sub stdev {
 
 sub prelim {
 	return shift->search_rs(
-		{ 'record.round' => 'prelim' }, 
+		{ 'record.round' => 'prelim' },
 		{ join => 'record' }
 	);	
 }
 
 sub public {	
 	return shift->search_rs(
-		{ 'record.round' => 'public' }, 
+		{ 'record.round' => 'public' },
 		{ join => 'record' }
 	);
 }
 
 sub private {
 	return shift->search_rs(
-		{ 'record.round' => 'private' }, 
+		{ 'record.round' => 'private' },
 		{ join => 'record' }
 	);	
 }

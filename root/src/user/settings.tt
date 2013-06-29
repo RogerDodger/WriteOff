@@ -6,7 +6,7 @@
 	<p>
 		<label>New Password<span class="required">*</span></label>
 		<input type="password" name="password" size="30" class="maxwidth"
-			title="Must be [% c.config.len.min.pass %] or more characters." 
+			title="Must be [% c.config.len.min.pass %] or more characters."
 			maxlength="[% c.config.len.max.pass %]"
 			onchange="$('input[name=password2]')
 				.attr('pattern', '^' + this.value.regex() + '$')"
@@ -22,7 +22,7 @@
 	<p>
 		<label>Old Password<span class="required">*</span></label>
 		<input type="password" name="old" size="30" class="maxwidth"
-			title="Must be [% c.config.len.min.pass %] or more characters." 
+			title="Must be [% c.config.len.min.pass %] or more characters."
 			maxlength="[% c.config.len.max.pass %]"
 			pattern=".{[% c.config.len.min.pass %],}" required />
 	</p>

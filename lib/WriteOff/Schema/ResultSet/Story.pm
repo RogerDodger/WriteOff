@@ -5,7 +5,7 @@ use base 'WriteOff::Schema::ResultSet';
 
 sub metadata {
 	return shift->search_rs(undef, {
-		columns => [ 
+		columns => [
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'author', 'website',
 			'wordcount',
@@ -73,7 +73,7 @@ sub with_prelim_stats {
 	)->count_rs;
 	
 	my $author_story_count = $self->search(
-		{ 
+		{
 			user_id  => { '=' => { -ident => 'me.user_id' } },
 			event_id => { '=' => { -ident => 'me.event_id' } },
 		},

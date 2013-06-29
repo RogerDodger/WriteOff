@@ -27,7 +27,7 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $arg ) = @_;
 	
 	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{story} = $c->model('DB::Story')->find($id) or 
+	$c->stash->{story} = $c->model('DB::Story')->find($id) or
 		$c->detach('/default');
 	
 	if( $arg ne $c->stash->{story}->id_uri ) {
@@ -67,7 +67,7 @@ sub form :Private {
 	
 	# When editing, must allow for the title to be itself
 	my $title_rs = $c->stash->{event}->storys->search({
-		title => { 
+		title => {
 			'!=' => eval { $c->stash->{story}->title } || undef
 		}	
 	});
@@ -92,22 +92,22 @@ sub form :Private {
 	}
 	
 	$c->form(
-		title => [ 
-			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
-			'TRIM_COLLAPSE', 
-			'NOT_BLANK', 
+		title => [
+			[ 'LENGTH', 1, $c->config->{len}{max}{title} ],
+			'TRIM_COLLAPSE',
+			'NOT_BLANK',
 			[ 'DBIC_UNIQUE', $title_rs, 'title' ],
 		],
-		author => [ 
+		author => [
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
-			'TRIM_COLLAPSE', 
+			'TRIM_COLLAPSE',
 			[ 'DBIC_UNIQUE', $virtual_artist_rs, 'name' ],
 		],
 		image_id => [ $c->stash->{event}->art ? 'NOT_BLANK' : () ],
 		website => [ 'HTTP_URL' ],
 		story => [ 'NOT_BLANK' ],
-		wordcount => [ 
-			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ] 
+		wordcount => [
+			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ]
 		],
 	);
 	
@@ -124,7 +124,7 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	                                    || $c->user->last_artist
 	                                    || $c->user->name };
 	
-	$c->forward('do_submit') 
+	$c->forward('do_submit')
 		if $c->req->method eq 'POST'
 		&& $c->user
 		&& $c->stash->{event}->fic_subs_allowed;
@@ -164,7 +164,7 @@ sub do_submit :Private {
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) 
+	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
 		unless $c->stash->{story}->is_manipulable_by( $c->user );
 	
 	$c->forward('do_edit') if $c->req->method eq 'POST';
@@ -221,10 +221,10 @@ sub do_edit :Private {
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->detach('/forbidden', ['You cannot delete this item.']) unless 
+	$c->detach('/forbidden', ['You cannot delete this item.']) unless
 		$c->stash->{story}->is_manipulable_by( $c->user );
 		
-	$c->stash->{key} = { 
+	$c->stash->{key} = {
 		name  => 'title',
 		value => $c->stash->{story}->title,
 	};

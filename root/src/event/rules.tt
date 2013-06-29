@@ -14,8 +14,8 @@ Generic
 2. Submitted written works&mdash;
 	1. must be written primarily in English; and
 	[%- IF event.art %]
-	2. must be based on at least one of the submitted artworks to a reasonable 
-	and discernible degree, with each related artwork&mdash;and only the 
+	2. must be based on at least one of the submitted artworks to a reasonable
+	and discernible degree, with each related artwork&mdash;and only the
 	related artwork(s)&mdash;indicated on submission.
 	[%- ELSIF event.has_prompt %]
 	3. must be based on the prompt to a reasonable and discernible degree.
@@ -31,9 +31,9 @@ Generic
 	[%- ELSE %]
 	1. may start writing only after [% start %];
 	[%- END %]
-	2. must remain publicly disassociated from their submitted works (i.e., 
+	2. must remain publicly disassociated from their submitted works (i.e.,
 	anonymous) within all reasonable means until the event's conclusion; and
-	3. may not attempt to doctor the votes in any way that may give them or 
+	3. may not attempt to doctor the votes in any way that may give them or
 	another person an unfair advantage.
 
 [%- IF event.custom_rules %]
@@ -50,8 +50,8 @@ Legal
 
 1. Submitted works&mdash;
 	1. must be the work of the submitter;
-	2. may not include the likeness of any living persons without express 
-	prior written consent, with exception to cases of parody and/or satire, 
+	2. may not include the likeness of any living persons without express
+	prior written consent, with exception to cases of parody and/or satire,
 	i.e., if the persons presented in the work are distinctly caricatures;
 	3. may not be spiteful and/or hateful in nature; and
 	4. may not depict any sexual abuse of minors (See [18 USC § 1466A](http://www.law.cornell.edu/uscode/text/18/1466A) for specifics).
@@ -63,7 +63,7 @@ Content
 
 [%- CASE 'E' %]
 
-This event's content level is **E** for Everybody. This is loosely defined 
+This event's content level is **E** for Everybody. This is loosely defined
 as material suitable for all ages.
 
 * Submitted works may not contain&mdash;
@@ -77,7 +77,7 @@ as material suitable for all ages.
 
 [%- CASE 'T' %]
 
-This event's content level is **T** for Teen. This is loosely defined as 
+This event's content level is **T** for Teen. This is loosely defined as
 material suitable for teenagers.
 
 * Submitted works may not contain&mdash;
@@ -93,7 +93,7 @@ other rules is allowed.
 
 <h2 id="Formatting">Story Formatting</h2>
 
-To aid with author anonymity, the following formatting rules must be applied 
+To aid with author anonymity, the following formatting rules must be applied
 to all submitted stories.
 
 1. Paragraphs should be separated by a single blank line.
@@ -105,7 +105,7 @@ to all submitted stories.
 
 <div><textarea class="example" rows="12" cols="48" disabled="disabled">[% INCLUDE fic/formatting.tt %]</textarea></div>
 
-__Participants should not put their name or other metadata inside of the 
+__Participants should not put their name or other metadata inside of the
 story field.__ The *story* field should only have the *story* in it.
 
 [% END %]

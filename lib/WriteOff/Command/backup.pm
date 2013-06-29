@@ -30,7 +30,7 @@ sub data {
 	my $dbh = $self->dbh();
 
 	my $fn = "$dbname.$now";
-	for (my $i = 0; -e $fn; $i++) { 
+	for (my $i = 0; -e $fn; $i++) {
 		$fn = "$dbname.$now.$i";
 	}
 
@@ -47,7 +47,7 @@ sub data {
 sub logs {
 	for my $logfile (glob "log/*.log") {
 		my $out = "$logfile.$now.gz";
-		for (my $i = 0; -e $out; $i++) { 
+		for (my $i = 0; -e $out; $i++) {
 			$out = "$logfile.$now.$i.gz";
 		}
 

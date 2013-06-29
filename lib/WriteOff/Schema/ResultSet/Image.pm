@@ -5,7 +5,7 @@ use base 'WriteOff::Schema::ResultSet';
 
 sub metadata {
 	return shift->search_rs(undef, {
-		columns => [ 
+		columns => [
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'artist', 'website', 'hovertext',
 			'filesize', 'mimetype',

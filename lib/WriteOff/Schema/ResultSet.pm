@@ -54,7 +54,7 @@ sub order_by {
 
 =head2 with_stats
 
-Returns a list with position and stdev columns set for row objects made by 
+Returns a list with position and stdev columns set for row objects made by
 L<WriteOff::Schema::ResultSet::Image> or L<WriteOff::Schema::ResultSet::Story>
 resultsets. Must be called after with_scores().
 

@@ -26,7 +26,7 @@ Grabs an image
 sub begin :Private {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{no_req_log} = 1 
+	$c->stash->{no_req_log} = 1
 		if $c->action eq 'art/view' && $c->req->query_keywords eq 'thumb';
 }
 
@@ -34,7 +34,7 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $arg ) = @_;
 	
 	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{image} = $c->model('DB::Image')->find($id) or 
+	$c->stash->{image} = $c->model('DB::Image')->find($id) or
 		$c->detach('/default');
 	
 	if( $arg ne $c->stash->{image}->id_uri ) {
@@ -49,10 +49,10 @@ sub view :Chained('index') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->res->content_type( $c->stash->{image}->mimetype );
-	$c->res->body( 
-		$c->req->param('view') eq 'thumb' ? 
-		$c->stash->{image}->thumb : 
-		$c->stash->{image}->contents 
+	$c->res->body(
+		$c->req->param('view') eq 'thumb' ?
+		$c->stash->{image}->thumb :
+		$c->stash->{image}->contents
 	);
 	
 	$c->res->header( 'Cache-Control' => 'max-age=' . 30 * 24 * 60 * 60 );
@@ -73,11 +73,11 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{fillform}{artist} = eval { $c->user->last_artist 
-		                                || $c->user->last_author 
+	$c->stash->{fillform}{artist} = eval { $c->user->last_artist
+		                                || $c->user->last_author
 		                                || $c->user->name };
 	
-	$c->forward('do_submit') 
+	$c->forward('do_submit')
 		if $c->req->method eq 'POST'
 		&& $c->user
 		&& $c->stash->{event}->art_subs_allowed;
@@ -109,7 +109,7 @@ sub do_submit :Private {
 sub edit :Chained('index') :PathPart('edit') {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/forbidden', [ 'You cannot edit this item.' ]) 
+	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
 		unless $c->stash->{image}->is_manipulable_by( $c->user );
 
 	$c->forward('do_edit') if $c->req->method eq 'POST';
@@ -117,7 +117,7 @@ sub edit :Chained('index') :PathPart('edit') {
 	$c->stash->{fillform}{$_} = $c->stash->{image}->$_
 		for qw/title artist hovertext website/;
 
-	$c->stash->{preview} = $c->uri_for( 
+	$c->stash->{preview} = $c->uri_for(
 		$self->action_for('view'),
 		[ $c->stash->{image}->id_uri ],
 		{
@@ -163,7 +163,7 @@ sub form :Private {
 
 	# When editing, must allow for the title to be itself
 	my $title_rs = $c->stash->{event}->images->search({
-		title => { 
+		title => {
 			'!=' => eval { $c->stash->{image}->title } || undef
 		}	
 	});
@@ -181,18 +181,18 @@ sub form :Private {
 	});
 	
 	$c->form(
-		title => [ 
+		title => [
 			'NOT_BLANK',
-			[ 'LENGTH', 1, $c->config->{len}{max}{title} ], 
-			'TRIM_COLLAPSE', 
+			[ 'LENGTH', 1, $c->config->{len}{max}{title} ],
+			'TRIM_COLLAPSE',
 			[ 'DBIC_UNIQUE', $title_rs, 'title' ],
 		],
-		artist => [ 
+		artist => [
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE',
 			[ 'DBIC_UNIQUE', $virtual_artist_rs, 'name' ]
 		],
-		hovertext => [ 
+		hovertext => [
 			[ 'LENGTH', 1, $c->config->{len}{max}{alt} ],
 			'TRIM_COLLAPSE',
 		],
@@ -229,7 +229,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless
 		$c->stash->{image}->is_manipulable_by( $c->user );
 		
-	$c->stash->{key} = { 
+	$c->stash->{key} = {
 		name  => 'title',
 		value => $c->stash->{image}->title,
 	};

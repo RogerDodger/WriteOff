@@ -24,7 +24,7 @@
 	[%- IF (images = event.images_rs.metadata.seed_order.all) %]
 	<p>
 		<label>Art Title(s)<span class="required">*</span></label>
-		<select name="image_id" size="[% event.images_rs.count + 1 %]" 
+		<select name="image_id" size="[% event.images_rs.count + 1 %]"
 			title="Artwork(s) related to the story."
 			multiple required >
 			<optgroup label="Submitted Artworks">
@@ -52,7 +52,7 @@
 					'' : 'Wordcount: ' + wc
 				)" ></textarea>
 		<span class="ps">
-			Make sure you use 
+			Make sure you use
 			<a class="link" href="[% c.uri_for( c.controller('Event')
 				.action_for('rules'), [ event.id_uri ]) %]#Formatting">the correct formatting</a>.
 		</span>

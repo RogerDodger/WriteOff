@@ -79,7 +79,7 @@
 		<td class="max-200" title="[% image.title | html %]">
 			<a class="link" href="[% c.uri_for_action(
 				'/art/view',
-				[ image.id_uri ], 
+				[ image.id_uri ],
 				{ v => image.version }
 			) %]">
 				[% image.title | html %]
@@ -158,7 +158,7 @@
 [%- IF records.count %]
 <h2>Vote Records</h2>
 [% INCLUDE voterecord/list.tt
-	single = 0 
+	single = 0
 	records = records.all %]
 [%- END %]
 

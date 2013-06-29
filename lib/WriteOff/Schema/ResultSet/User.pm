@@ -15,7 +15,7 @@ sub with_stats {
 	);
 	
 	my $public = $self->result_source->schema->resultset('Vote')->search(
-		{ 
+		{
 			'record.user_id' => { '=' => { -ident => 'me.id' } },
 			'record.round' => 'public',
 		},
@@ -55,8 +55,8 @@ sub unverified {
 }
 
 sub mailing_list {	
-	return shift->search_rs({ 
-		mailme   => 1, 
+	return shift->search_rs({
+		mailme   => 1,
 		verified => 1,
 	});
 }

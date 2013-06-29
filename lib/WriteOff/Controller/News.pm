@@ -33,7 +33,7 @@ sub index :Chained('/') :PathPart('news') :CaptureArgs(1) {
 	my ( $self, $c, $arg ) = @_;
 	
 	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{article} = $c->model('DB::News')->find($id) or 
+	$c->stash->{article} = $c->model('DB::News')->find($id) or
 		$c->detach('/default');
 	
 	if( $arg ne $c->stash->{article}->id_uri ) {
@@ -71,8 +71,8 @@ sub do_add :Private {
 		my $article = $c->user->obj->create_related('news', $c->stash->{row});
 
 		$c->flash->{status_msg} = 'News article created';
-		$c->res->redirect( $c->uri_for( 
-			$self->action_for('view'), 
+		$c->res->redirect( $c->uri_for(
+			$self->action_for('view'),
 			[ $article->id_uri ]
 		) );
 	}
@@ -103,8 +103,8 @@ sub do_edit :Private {
 		$c->stash->{article}->update($c->stash->{row});
 
 		$c->flash->{status_msg} = 'Edit successful';
-		$c->res->redirect( $c->uri_for( 
-			$self->action_for('view'), 
+		$c->res->redirect( $c->uri_for(
+			$self->action_for('view'),
 			[ $c->stash->{article}->id_uri ]
 		) );
 	}

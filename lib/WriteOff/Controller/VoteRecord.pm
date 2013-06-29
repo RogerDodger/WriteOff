@@ -24,7 +24,7 @@ Grabs a vote record.
 sub index :PathPart('voterecord') :Chained('/') :CaptureArgs(1) {
 	my ( $self, $c, $id ) = @_;
 	
-	$c->stash->{record} = $c->model('DB::VoteRecord')->find($id) or 
+	$c->stash->{record} = $c->model('DB::VoteRecord')->find($id) or
 		$c->detach('/default');
 	$c->stash->{event} = $c->stash->{record}->event;
 	
@@ -38,12 +38,12 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 	$c->forward( $c->controller('Event')->action_for('assert_organiser') )
 		unless $c->stash->{record}->is_publicly_viewable;
 
-	my $organiser_referer = $c->uri_for( 
-		$c->controller('Event')->action_for('view'), 
+	my $organiser_referer = $c->uri_for(
+		$c->controller('Event')->action_for('view'),
 		[ $c->stash->{event}->id_uri ]
 	);
-	my $results_referer = $c->uri_for( 
-		$c->controller('Event')->action_for('results'), 
+	my $results_referer = $c->uri_for(
+		$c->controller('Event')->action_for('results'),
 		[ $c->stash->{event}->id_uri ]
 	);
 
@@ -82,7 +82,7 @@ sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	$c->detach('/default') unless $c->stash->{record}->is_filled;
 	$c->forward( $c->controller('Event')->action_for('assert_organiser') );
 	
-	$c->stash->{key} = { 
+	$c->stash->{key} = {
 		name  => 'count',
 		value => $c->stash->{record}->votes->count,
 	};
@@ -107,8 +107,8 @@ sub do_delete :Private {
 	$c->stash->{record}->votes->delete_all;
 	
 	$c->flash->{status_msg} = 'Deletion successful';
-	$c->res->redirect( $c->uri_for( 
-		$c->controller('Event')->action_for('view'), 
+	$c->res->redirect( $c->uri_for(
+		$c->controller('Event')->action_for('view'),
 		[ $c->stash->{event}->id_uri ],
 	) );
 }
@@ -118,7 +118,7 @@ sub fill :PathPart('fill') :Chained('index') :Args(0) {
 	
 	$c->detach('/forbidden', [ "You do not own this record." ])
 		unless $c->stash->{record}->user_id == $c->user_id;
-	$c->detach('/error', [ "This record is already filled." ]) 
+	$c->detach('/error', [ "This record is already filled." ])
 		unless $c->stash->{record}->is_unfilled;
 	$c->detach('/error', [ "It is too late to fill this record." ])
 		unless $c->stash->{record}->is_fillable;
@@ -137,7 +137,7 @@ sub do_fill :Private {
 	my @params = split ";", $c->req->param('data');
 	my $vote_ids = $c->stash->{record}->votes->get_column('id');
 	
-	$c->detach('/error', [ 'Bad form input' ]) 
+	$c->detach('/error', [ 'Bad form input' ])
 		unless [ $vote_ids->all ] ~~ [ sort { $a <=> $b } @params ];
 	
 	for( my $p = 0; $p <= $#params; $p++ ) {
@@ -149,8 +149,8 @@ sub do_fill :Private {
 	$c->stash->{record}->update({ ip => $c->req->address });
 	
 	$c->flash->{status_msg} = 'Vote successful';
-	$c->res->redirect( $c->uri_for( 
-		$c->controller('Vote')->action_for( $c->stash->{record}->round ), 
+	$c->res->redirect( $c->uri_for(
+		$c->controller('Vote')->action_for( $c->stash->{record}->round ),
 		[ $c->stash->{event}->id_uri ]
 	) );
 }

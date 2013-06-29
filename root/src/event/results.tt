@@ -54,8 +54,8 @@
 	<p>
 		[%- pos = item.pos %]
 		[%- award = medal_for(pos) || (pos == items.max ? awards.spoon : awards.ribbon) %]
-		<img src="[% c.uri_for( award.src ) %]" 
-			alt="[% award.alt %]" 
+		<img src="[% c.uri_for( award.src ) %]"
+			alt="[% award.alt %]"
 			title="[% award.alt %]"/>
 		<a class="link em" href="[% c.uri_for( view, [ item.id_uri ]) %]">
 			[% item.title | html %]
@@ -78,11 +78,11 @@
 
 	[%- FOREACH item IN items.sort_stdev %]
 		[%- LAST IF loop.index == 5 %]
-		[%- award = loop.first ? awards.confetti : awards.ribbon %] 
+		[%- award = loop.first ? awards.confetti : awards.ribbon %]
 
 	<p>
-		<img src="[% c.uri_for( award.src ) %]" 
-			alt="[% award.alt %]" 
+		<img src="[% c.uri_for( award.src ) %]"
+			alt="[% award.alt %]"
 			title="[% award.alt %]"/>
 		<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
 			<em>[% item.title | html %]</em>

@@ -332,7 +332,7 @@ sub send_email :Private {
 An email was not sent because that address has been emailed recently. Please
 wait an hour and try again.
 EOF
-		$c->detach('/error'); 
+		$c->detach('/error');
 	}
 
 	$c->log->info("Sending $type email to " . $c->stash->{user}->email);
