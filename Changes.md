@@ -1,6 +1,16 @@
 Changelog for WriteOff.pm
 =========================
 
+v0.34
+-----
+
+- Added ability for people to resend verification emails
+- Genericised verification and recovery emails since they're basically the same thing (send email with token, accept token and do stuff)
+- Added more descriptive error messages to email sending
+  - Catches errors from View::Email and doesn't update the user's last_mailed_at if the email failed to send. This way people don't have to wait for the rate limiting to wear off to reattempt sending the email
+- Moved the sidebar hiding logic from javascript into a css media query
+- Added some more border-radius rules for the dropdown navs
+
 v0.33 - 24 Jun 2013
 -------------------
 

@@ -61,11 +61,9 @@ my @dependencies = (
 	'Digest::Whirlpool',
 	'DateTime~1.01',
 	'DateTime::Format::Human::Duration',
-	# 'WWW::Fimfiction',
+	'WWW::Fimfiction',
 );
 
 my $cpanm = App::cpanminus::script->new;
-$cpanm->parse_options('--skip-satisfied');
 $cpanm->{argv} = \@dependencies;
 $cpanm->doit or exit(1);
-

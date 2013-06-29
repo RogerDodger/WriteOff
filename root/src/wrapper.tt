@@ -25,13 +25,13 @@
 	<link rel="icon" href="[% c.uri_for('/favicon.ico') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/normalize.css') %]">
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/jquery-ui-1.9.2.custom.css') %]">
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.28.css') %]">
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/writeoff-0.29.css') %]">
 
 	<script src="[% c.uri_for('/static/js/modernizr-2.6.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-1.7.2.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery-ui-1.9.2.custom.min.js') %]"></script>
 	<script src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
-	<script src="[% c.uri_for('/static/js/writeoff-0.18.js') %]"></script>
+	<script src="[% c.uri_for('/static/js/writeoff-0.19.js') %]"></script>
 
 	[%- IF c.config.use_google_analytics %]
 	<!-- Google Analytics -->
@@ -85,7 +85,15 @@
 			[%- ELSE %]
 			<li>
 				<a class="dialog-fetcher"
-					href="[% c.uri_for('/user/login') %]">Login / Register</a>
+					href="[% c.uri_for('/user/login') %]">Login &#9660;</a>
+				<ul>
+					<li class="smaller-than-next"><a href=
+						"[% c.uri_for('/user/register') %]">Register</a></li>
+					<li class="smaller-than-next"><a href=
+						"[% c.uri_for('/user/recover') %]">Recover lost password</a></li>
+					<li><a href="[% c.uri_for('/user/verify') %]">
+						Resend verification email</a></li>
+				</ul>
 			</li>
 			[%- END %]
 		</ul>
@@ -121,11 +129,6 @@
 		<aside class="news">
 			<h1>
 				News
-				[%- IF editor %]
-				<a style="float: right;" href="[% c.uri_for_action('/news/add') %]">
-					<span class="ui-icon ui-icon-pencil" title="Add article"></span>
-				</a>
-				[%- END %]
 			</h1>
 			<ul>
 				[%- FOREACH item IN news.all %]
@@ -147,7 +150,7 @@
 
 	<footer>
 		<p>
-			It is currently
+			Page generated
 			[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
 		</p>
 		<p>

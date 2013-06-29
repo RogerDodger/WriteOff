@@ -14,10 +14,8 @@
 		<span class="ps"><a class="link" href="[% c.uri_for( c.controller('User')
 			.action_for('recover') ) %]">Forgot Password?</a></span>
 	</p>
-		<p >
-			<button type="submit">Login</button>		
-			<a class="ui-button" href="[% c.uri_for( c.controller('User')
-				.action_for('register') ) %]" >Register</a>
+		<p>
+			<button type="submit">Login</button>
 		</p>
 	</div>
 </form>

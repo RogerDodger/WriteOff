@@ -1,6 +1,7 @@
 package WriteOff::Controller::User;
 use Moose;
 use namespace::autoclean;
+use feature ':5.10';
 no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -20,7 +21,6 @@ sub index :PathPart('user') :Chained('/') :CaptureArgs(1) {
 
 	$c->stash->{user} = $c->model('DB::User')->find($id)
 		or $c->detach('/default');
-
 }
 
 sub me :Local :Args(0) {
@@ -61,9 +61,14 @@ sub do_login :Private {
 			->count;
 
 	if ($attempts >= $c->config->{login}{limit}) {
-		$c->detach('login_attempts_exceeded');
+		$c->res->status(429);
+		$c->stash->{error} = <<"EOF";
+You have recently made a number of failed login attempts and for security
+reasons have been temporarily blocked from making any more. Please try again
+in around ${ \$c->config->{login}{timer} } minutes.
+EOF
+		$c->detach('/error');
 	}
-
 
 	my $success = $c->authenticate({
 		password => $c->req->params->{Password} || '',
@@ -82,12 +87,6 @@ sub do_login :Private {
 	}
 
 	$c->res->redirect( $c->req->referer || $c->uri_for('/') );
-}
-
-sub login_attempts_exceeded :Private {
-	my ( $self, $c ) = @_;
-
-	$c->stash->{template} = 'user/login_attempts_exceeded.tt';
 }
 
 sub logout :Local :Args(0) {
@@ -142,6 +141,7 @@ sub do_register :Private {
 			timezone => $c->form->valid('timezone'),
 			ip       => $c->req->address,
 			mailme   => $c->req->params->{mailme} ? 1 : 0,
+			last_mailed_at => DateTime->from_epoch(epoch => 0),
 		});
 
 		my $role = $c->model('DB::Role')->find({ role => 'user' });
@@ -152,8 +152,8 @@ sub do_register :Private {
 			$c->stash->{user}->email,
 		);
 
-		$c->forward( $self->action_for('send_verification_email') );
-
+		$c->stash->{mailtype} = { noun => 'verification', verb => 'verify' };
+		$c->forward('send_email');
 		$c->stash->{status_msg} = 'Registration successful!';
 	}
 }
@@ -220,34 +220,42 @@ sub do_settings :Private {
 
 }
 
-sub send_verification_email :Private {
-	my ( $self, $c ) = @_;
+sub verify :Local :Args(0) {
+	my ($self, $c) = @_;
 
-	return unless $c->stash->{user};
+	$c->stash->{mailtype} = { noun => 'verification', verb => 'verify' };
+	
+	push $c->stash->{title}, 'Resend verification email';
+	$c->stash->{template} = 'user/mailme.tt';
 
-	$c->stash->{user}->new_token;
-
-	$c->log->info("Sending verification email to " . $c->stash->{user}->email);
-
-	$c->stash->{email} = {
-		to           => $c->stash->{user}->email,
-		from         => $c->mailfrom,
-		subject      => $c->config->{name} . ' - Verification Email',
-		template     => 'email/verify.tt',
-		content_type => 'text/html',
-	};
-
-	$c->forward( $c->view('Email::Template') );
-
-	$c->stash->{user}->update({ last_mailed_at => DateTime->now });
+	if ($c->req->method eq 'POST') {
+		$c->stash->{user} = $c->model('DB::User')->find({
+			email => $c->req->param('email'),
+		});
+		if (defined $c->stash->{user}) {
+			if ($c->stash->{user}->verified) {
+				$c->stash->{verified} = 1;
+			}
+			else {
+				$c->forward('send_email');
+			}
+		}
+	}
 }
 
-sub verify :PathPart('verify') :Chained('index') :Args(1) {
+sub do_verify :PathPart('verify') :Chained('index') :Args(1) {
 	my ( $self, $c, $token ) = @_;
 
-	if( $c->stash->{user}->token eq $token ) {
+	if ($c->stash->{user}->verified) {
+		$c->stash->{error} = 'This account is already verified';
+		$c->detach('/error');
+	}
+
+	if ($c->stash->{user}->token eq $token) {
 		$c->stash->{user}->update({ verified => 1 })->new_token;
 		$c->set_authenticated( $c->find_user({ id => $c->stash->{user}->id }) );
+
+		push $c->stash->{title}, 'Verification complete';
 		$c->stash->{template} = 'user/verified.tt';
 	}
 	else {
@@ -258,46 +266,39 @@ sub verify :PathPart('verify') :Chained('index') :Args(1) {
 sub recover :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	if( $c->req->method eq 'POST' ) {
-		$c->stash->{user} = $c->model('DB::User')->verified
-			->find({ email => $c->req->param('email') }) and
+	$c->stash->{mailtype} = { noun => 'recovery', verb => 'recover' };
 
-		$c->forward( $self->action_for('send_recovery_email') );
+	push $c->stash->{title}, 'Recover lost password';
+	$c->stash->{template} = 'user/mailme.tt';
+
+	if ($c->req->method eq 'POST') {
+		$c->stash->{user} = $c->model('DB::User')->find({
+			email => $c->req->param('email')
+		});
+		if (defined $c->stash->{user}) {
+			if ($c->stash->{user}->verified) {
+				$c->forward('send_email');
+			}
+			else {
+				$c->stash->{unverified} = 1;
+			}
+		}
 	}
-
-	push $c->stash->{title}, 'Recover';
-	$c->stash->{template} = 'user/recover.tt';
-}
-
-sub send_recovery_email :Private {
-	my ( $self, $c ) = @_;
-
-	return 0 if $c->stash->{user}->has_been_mailed_recently;
-
-	$c->log->info( "Sending recovery email to " . $c->stash->{user}->email );
-
-	$c->stash->{user}->new_token;
-
-	$c->stash->{email} = {
-		to           => $c->stash->{user}->email,
-		from         => $c->mailfrom,
-		subject      => $c->config->{name} . ' - Password Recovery',
-		template     => 'email/recover.tt',
-		content_type => 'text/html',
-	};
-
-	$c->forward( $c->view('Email::Template') );
-
-	$c->stash->{user}->update({ last_mailed_at => DateTime->now });
 }
 
 sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
 	my ( $self, $c, $token ) = @_;
 
-	if( $c->stash->{user}->token eq $token ) {
+	if (!$c->stash->{user}->verified) {
+		$c->stash->{error} = 'This account is not yet verified';
+		$c->detach('/error');
+	}
 
+	if ($c->stash->{user}->token eq $token) {
 		$c->stash->{pass} = $c->stash->{user}->new_password;
 		$c->stash->{user}->new_token;
+
+		push $c->stash->{title}, 'Recover password';
 		$c->stash->{template} = 'user/recovered.tt';
 	}
 	else {
@@ -305,23 +306,80 @@ sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
 	}
 }
 
-my @allowed = [ 'username', 'hugbox_score', 'prompt_skill', 'created' ];
+sub send_email :Private {
+	my ( $self, $c ) = @_;
+	my $type = $c->stash->{mailtype}{noun} || '';
+
+	state $template = {
+		recovery     => 'email/recover.tt',
+		verification => 'email/verify.tt',
+	};
+	state $subject = {
+		recovery     => 'Password Recovery',
+		verification => 'Verification',
+	};
+
+	if (!exists $template->{$type}) {
+		$c->log->warn("Unknown email type '$type' given to User::send_email");
+		return;
+	}
+
+	return unless defined $c->stash->{user};
+
+	if ($c->stash->{user}->has_been_mailed_recently) {
+		$c->res->status(429);
+		$c->stash->{error} = <<EOF;
+An email was not sent because that address has been emailed recently. Please
+wait an hour and try again.
+EOF
+		$c->detach('/error'); 
+	}
+
+	$c->log->info("Sending $type email to " . $c->stash->{user}->email);
+
+	$c->stash->{user}->new_token;
+
+	$c->stash->{email} = {
+		to           => $c->stash->{user}->email,
+		from         => $c->mailfrom,
+		subject      => join(' - ', $c->config->{name}, $subject->{$type}),
+		template     => $template->{$type},
+		content_type => 'text/html',
+	};
+
+	$c->forward( $c->view('Email::Template') );
+
+	if (scalar @{ $c->error }) {
+		$c->log->error($_) for @{ $c->error };
+		$c->error(0);
+		$c->res->status(500);
+		$c->stash->{error} = "The $type email failed to send properly. "
+		                   . "Please wait a few minutes, then try resending it.";
+		$c->detach('/error');
+	}
+	else {
+		$c->stash->{mailsent} = 1;
+		$c->stash->{user}->update({ last_mailed_at => DateTime->now });
+	}
+}
 
 sub list :Local :Args(0) {
 	my ( $self, $c ) = @_;
+	state $allowed = [ 'username', 'hugbox_score', 'prompt_skill', 'created' ];
 
-	return $c->res->redirect( $c->uri_for( $c->action ) )
-		if defined $c->req->param('term') && $c->req->param('term') eq '';
+	if (defined $c->req->param('term') && $c->req->param('term') eq '') {
+		return $c->res->redirect( $c->uri_for( $c->action ) );
+	}
 
 	$c->stash->{users} = $c->model('DB::User')->search(
 	{
-		'me.username' => { like => "%" . $c->req->param('term') . "%" },
+		'me.username' => { like => '%' . $c->req->param('term') . '%' },
 		'me.verified' => 1,
 	},
 	{
 		order_by => {
 			$c->req->param('o') eq 'desc' ? '-desc' : '-asc',
-			$c->req->param('q') ~~ \@allowed ? $c->req->param('q') : undef
+			$c->req->param('q') ~~ $allowed ? $c->req->param('q') : undef
 		}
 	}
 	)->with_stats;

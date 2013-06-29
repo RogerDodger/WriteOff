@@ -18,7 +18,7 @@
 	</li>
 </ul>
 <p>
-	<a href="[% c.uri_for( c.controller('User').action_for('verify'),
+	<a href="[% c.uri_for( c.controller('User').action_for('do_verify'),
 	[ user.id, user.token ]) %]">Click here</a> to verify this account.
 </p>
 

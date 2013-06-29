@@ -1,6 +1,6 @@
+[% IF c.req.method != 'POST' || c.form.has_error %]
 <h1>Register</h1>
 
-[% IF c.req.method != 'POST' || c.form.has_error %]
 <form class="light" method="post" action="[% c.uri_for( c.action ) %]">
 	[% IF c.form.has_error %]
 	<div>

@@ -50,6 +50,10 @@ sub verified {
 	return shift->search_rs({ verified => 1 });
 }
 
+sub unverified {
+	return shift->search_rs({ verified => 0 });
+}
+
 sub mailing_list {	
 	return shift->search_rs({ 
 		mailme   => 1, 

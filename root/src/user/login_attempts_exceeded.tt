@@ -1,6 +1,0 @@
-<h2>Login Attempts Exceeded</h2>
-<p>
-	As you have recently made a number of failed login attempts, you have been 
-	temporarily blocked from making any more. Please try again in around
-	[% c.config.login.timer %] minutes.
-</p>
