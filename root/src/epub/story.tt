@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>[% story.title | html %] [%- IF event.is_ended %] - [% story.author %] [%- END %]</title>
+		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
+		<link href="stylesheet.css" type="text/css" rel="stylesheet"/>
+		<style type="text/css">
+			@page { margin-bottom: 5.000000pt; margin-top: 5.000000pt; }
+		</style>
+	</head>
+	<body>
+		<h1> [% story.title | html %] </h1>
+		[%- IF event.is_ended %] 
+		<h2> by [% story.author %] </h2>
+		[%- END %]
+		[%- IF event.art %]
+		<div>
+			[%- FOREACH art IN story.images %]
+			<img src="[%- images.${art.id}.filename %]" />
+			<h5>[%- images.${art.id}.title %]</h5> 
+			[%- IF event.is_ended %]
+			<h6> by [%- images.${art.id}.artist %]</h6>
+			[%- END %]
+			[%- END %]
+		</div>
+		[%- END %]
+		<div>
+			[% bb_render_xhtml( story.contents ) %]
+		</div>
+	</body>
+</html>
