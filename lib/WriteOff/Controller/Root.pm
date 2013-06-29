@@ -135,11 +135,16 @@ Error page
 sub error :Private {
 	my ( $self, $c, $msg ) = @_;
 
-	$c->stash->{error} = $msg // 'Something went wrong';
+	if (!defined $c->stash->{error}) {
+		$c->stash->{error} = $msg // 'Something went wrong';
+	}
+
+	if ($c->res->status == 200) {
+		$c->res->status(400);
+	}
 
 	push $c->stash->{title}, 'Error';
 	$c->stash->{template} = 'root/error.tt';
-	$c->res->status(404);
 }
 
 =head2 tos

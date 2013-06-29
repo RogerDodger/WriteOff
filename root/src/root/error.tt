@@ -1,2 +1,9 @@
 <h1>Error</h1>
 <p>[% error %]</p>
+
+[%- IF c.res.status.match('^5') %]
+<p>
+	If issues persist, please contact <a href=
+	"mailto:[% c.config.AdminEmail %]">the admin</a>.
+</p>
+[%- END %]
