@@ -417,6 +417,26 @@ sub tally_results :Private {
 	$c->model('DB::Artist')->recalculate_scores;
 }
 
+sub generate_epub :Chained('index') :PathPart('epub') :Args(0) { #:Private {
+#	my ( $self, $c, $id ) = @_;
+	my ( $self, $c ) = @_;
+
+#	my $e = $c->model('DB::Event')->find($id) or return 0;
+	
+#	require File:::Temp;
+#	use File::Temp ();
+#	use File::Temp qw/ :seekable /;
+
+#	my $tempdir = File::Temp->newdir();
+	
+	for $story(@e->storys) {
+		$c->stash->{story} = $story;
+		break;
+	}
+	$$story );
+
+}
+
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>
