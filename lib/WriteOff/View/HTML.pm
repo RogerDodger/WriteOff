@@ -80,7 +80,7 @@ sub title_html {
 	$title = join " &#8250; ",
 	           map { Template::Filters::html_filter($_) }
 	             ref $title eq 'ARRAY' ? reverse @$title : $title || ();
-	return join " &#x2022; ", $title, $c->config->{name};
+	return join " &#x2022; ", $title || (), $c->config->{name};
 }
 
 my $bb = Parse::BBCode->new({
