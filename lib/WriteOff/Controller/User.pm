@@ -17,7 +17,7 @@ Controller for user management - login/logout, registration, settings, etc.
 =cut
 
 sub index :PathPart('user') :Chained('/') :CaptureArgs(1) {
-    my ( $self, $c, $id ) = @_;
+	my ( $self, $c, $id ) = @_;
 
 	$c->stash->{user} = $c->model('DB::User')->find($id)
 		or $c->detach('/default');
@@ -52,10 +52,10 @@ sub login :Local :Args(0) {
 }
 
 sub do_login :Private {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
-    my $recently = DateTime->now->subtract(minutes => $c->config->{login}{timer});
-    my $attempts = $c->model('DB::LoginAttempt')
+	my $recently = DateTime->now->subtract(minutes => $c->config->{login}{timer});
+	my $attempts = $c->model('DB::LoginAttempt')
 			->search({ ip => $c->req->address })
 			->created_after($recently)
 			->count;
@@ -90,7 +90,7 @@ EOF
 }
 
 sub logout :Local :Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	$c->logout;
 	$c->res->redirect( $c->uri_for('/') );
 }
