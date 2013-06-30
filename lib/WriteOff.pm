@@ -19,7 +19,7 @@ use Catalyst qw/
 	Session::Store::File
 	Session::State::Cookie
 
-    Cache
+	Cache
 
 	RunAfterRequest
 
@@ -59,7 +59,7 @@ __PACKAGE__->config(
 		author        => 'Community',
 		anonymous     => 'Anonymous',
 		language      => 'en',
-        skip_cover    => 0,
+		skip_cover    => 0,
 		prefix        => {
 			image      => 'images/image',
 			chapter     => 'chapter',
@@ -191,8 +191,6 @@ __PACKAGE__->config(
 
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
-
-
 );
 
 if( !$ENV{CATALYST_DEBUG} ) {
