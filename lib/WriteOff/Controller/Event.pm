@@ -86,10 +86,10 @@ sub add :Local :Args(0) {
 			],
 			wc_min => [ qw/NOT_BLANK UINT/, [ 'LESS_THAN', $c->req->param('wc_max') ] ],
 			wc_max => [ qw/NOT_BLANK UINT/ ],
-			fic_dur     => [ qw/NOT_BLANK UINT/ ],
-			public_dur  => [ qw/NOT_BLANK UINT/ ],
-			art_dur     => [ $p->{has_art}    ? qw/NOT_BLANK UINT/ : () ],
-			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
+			fic_dur		=> [ qw/NOT_BLANK UINT/ ],
+			public_dur	=> [ qw/NOT_BLANK UINT/ ],
+			art_dur		=> [ $p->{has_art}	  ? qw/NOT_BLANK UINT/ : () ],
+			prelim_dur	=> [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
 			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ]
 		);
 
@@ -119,11 +119,11 @@ sub do_add :Private {
 	}
 
 	if ($p->{has_art}) {
-		$row{art}     = $dt->clone;
+		$row{art}	  = $dt->clone;
 		$row{art_end} = $dt->add( hours => $c->form->valid('art_dur') )->clone;
 	}
 
-	$row{fic}     = $dt->clone;
+	$row{fic}	  = $dt->clone;
 	$row{fic_end} = $dt->add( hours => $c->form->valid('fic_dur') )->clone;
 
 	if ($p->{has_prelim}) {
@@ -136,7 +136,7 @@ sub do_add :Private {
 
 	if ($p->{has_judges}) {
 		$row{private} = $dt->add( days => $c->form->valid('public_dur')  )->clone;
-		$row{end}     = $dt->add( days => $c->form->valid('private_dur') )->clone;
+		$row{end}	  = $dt->add( days => $c->form->valid('private_dur') )->clone;
 	}
 	else {
 		$row{end} = $dt->add( days => $c->form->valid('public_dur') )->clone;
@@ -270,7 +270,7 @@ sub do_edit :Private {
 
 		$c->stash->{event}->content_level( $c->form->valid('content_level') );
 		$c->stash->{event}->update({
-			blurb        => $c->form->valid('blurb'),
+			blurb		 => $c->form->valid('blurb'),
 			custom_rules => $c->form->valid('rules'),
 		});
 
@@ -319,7 +319,7 @@ sub remove_user :Private {
 	my $junction = $c->model('DB::UserEvent')->find({
 		user_id  => $user_id,
 		event_id => $c->stash->{event}->id,
-		role     => $role,
+		role	 => $role,
 	});
 
 	if (defined $junction) {
@@ -358,7 +358,7 @@ sub epub :Chained('index') :PathPart('epub') {
 	my $book;
 	my $cache = $c->cache( backend => 'event-epubs' );
 	unless ( $book = $cache->get($c->stash->{event}->id) ){
-    	$c->forward( 'generate_epub' );
+		$c->forward( 'generate_epub' );
 		$book = $cache->get($c->stash->{event}->id);
 	}
 	$c->res->body($book);
@@ -380,12 +380,12 @@ sub _notify_mailing_list :Private {
 
 	while ( my $user = $rs->next ) {
 		$c->stash->{email} = {
-			to           => $user->email,
-			from         => $c->mailfrom,
-			subject      => $c->config->{name} . " - New Event",
-			template     => 'email/event.tt',
+			to			 => $user->email,
+			from		 => $c->mailfrom,
+			subject		 => $c->config->{name} . " - New Event",
+			template	 => 'email/event.tt',
 			content_type => 'text/html',
-			timezone     => $user->timezone,
+			timezone	 => $user->timezone,
 		};
 
 		$c->forward( $c->view('Email::Template') );
@@ -432,32 +432,32 @@ sub tally_results :Private {
 }
 
 sub generate_epub :Private {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
 	use EBook::Creator;
 	my $epub = EBook::Creator->new;
 
-    my $cover_id = $epub->copy_image($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{cover},$c->config->{epub}{cover}),
+	my $cover_id = $epub->copy_image($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{cover},$c->config->{epub}{cover}),
 	$epub->copy_stylesheet($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{stylesheet},$c->config->{epub}{stylesheet});
 	$epub->add_title($c->stash->{event}->prompt);
 	$epub->add_author($c->config->{epub}{author});
 	$epub->add_language($c->config->{epub}{language});
-    $c->stash->{epub} = $c->config->{epub};
-    $c->stash->{title} = $c->stash->{event}->prompt;
-    my $output = $c->view( "XHTML" )->render($c,'epub/cover.tt');
-    $epub->add_meta_item('cover',$cover_id);
-    my $cover = $epub->add_xhtml('cover.xhtml', $output, linear => 'yes');
+	$c->stash->{epub} = $c->config->{epub};
+	$c->stash->{title} = $c->stash->{event}->prompt;
+	my $output = $c->view( "XHTML" )->render($c,'epub/cover.tt');
+	$epub->add_meta_item('cover',$cover_id);
+	my $cover = $epub->add_xhtml('cover.xhtml', $output, linear => 'yes');
 	$epub->add_reference({
 			type   => 'cover',
 			href   => 'cover.xhtml',
-            title  => 'Cover',
+			title  => 'Cover',
 	});
-    $epub->add_navpoint(
-        'label'      => $c->stash->{event}->prompt,
-        'id'         => $cover,
-        'content'    => 'cover.xhtml',
-        'play_order' => 1,
-    );
+	$epub->add_navpoint(
+		'label'		 => $c->stash->{event}->prompt,
+		'id'		 => $cover,
+		'content'	 => 'cover.xhtml',
+		'play_order' => 1,
+	);
 
 	my $i = 1;
 	my %images = ();
@@ -479,29 +479,29 @@ sub generate_epub :Private {
 	$i = 1;
 	$c->stash->{images} = \%images;
 	for my $story($c->stash->{event}->storys->all) {
-        $c->stash->{title} = $story->title;
-        $c->stash->{title} .= ' - '.$story->author if $c->stash->{event}->is_ended;
+		$c->stash->{title} = $story->title;
+		$c->stash->{title} .= ' - '.$story->author if $c->stash->{event}->is_ended;
 		$c->stash->{story} = $story;
 		$output = $c->view( "XHTML" )->render($c,'epub/story.tt');
-        my $title = $story->title;
-        $title .= ' by '. $story->author if $c->stash->{event}->is_ended;
+		my $title = $story->title;
+		$title .= ' by '. $story->author if $c->stash->{event}->is_ended;
 		push(@stories, { 
-				title    => $title, 
+				title	 => $title, 
 				filename => 'chapter'.$i.'.xhtml', 
-				eid      => $epub->add_xhtml('chapter'.$i.'.xhtml', $output, linear => 'yes')
+				eid		 => $epub->add_xhtml('chapter'.$i.'.xhtml', $output, linear => 'yes')
 		});
 		$i = $i+1;
 	}
-    $i = scalar @stories + 1;
+	$i = scalar @stories + 1;
 	foreach my $story(@stories) {
 		$epub->add_navpoint(
-			label      => $story->{title},
-			id         => $story->{eid},
+			label	   => $story->{title},
+			id		   => $story->{eid},
 			content    => $story->{filename},
-            linear     => 'yes',
-            play_order => $i,
+			linear	   => 'yes',
+			play_order => $i,
 		);
-        $i = $i-1;
+		$i = $i-1;
 	}
 	require File::Temp;
 	use File::Temp ();
@@ -513,11 +513,11 @@ sub generate_epub :Private {
 		local $/;
 		$blob = <$zip>;
 	}
-    # Cause it didn't clean up on its own
-    File::Temp::cleanup();
-    my $cache = $c->cache( backend => 'event-epubs' );
-    $cache->set( $c->stash->{event}->id, $blob);
-    return;
+	# Cause it didn't clean up on its own
+	File::Temp::cleanup();
+	my $cache = $c->cache( backend => 'event-epubs' );
+	$cache->set( $c->stash->{event}->id, $blob);
+	return;
 #	$c->stash->{event}->update({ebook => $blob});
 }
 
