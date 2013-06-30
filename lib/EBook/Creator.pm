@@ -59,8 +59,7 @@ sub add_data {
 }
 
 
-sub copy_xhtml
-{
+sub copy_xhtml {
 	my ($self, $src_filename, $filename, %opts) = @_;
 	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
@@ -75,8 +74,7 @@ sub copy_xhtml
 	return;
 }
 
-sub copy_stylesheet
-{
+sub copy_stylesheet {
 	my ($self, $src_filename, $filename) = @_;
 	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
@@ -91,8 +89,7 @@ sub copy_stylesheet
 	return;
 }
 
-sub copy_image
-{
+sub copy_image {
 	my ($self, $src_filename, $filename, $type) = @_;
 	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
@@ -107,8 +104,7 @@ sub copy_image
 	return;
 }
 
-sub copy_file
-{
+sub copy_file {
 	my ($self, $src_filename, $filename, $type) = @_;
 	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
@@ -138,6 +134,7 @@ sub _mkdir {
 	my ( $dir ) = @_;
 	mkpath($dir);
 }
+
 sub mkdir_and_copy {
 	my ($from, $to) = @_;
 	mkpath(dirname($to));
