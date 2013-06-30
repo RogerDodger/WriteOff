@@ -86,9 +86,9 @@ sub add :Local :Args(0) {
 			],
 			wc_min => [ qw/NOT_BLANK UINT/, [ 'LESS_THAN', $c->req->param('wc_max') ] ],
 			wc_max => [ qw/NOT_BLANK UINT/ ],
-			fic_dur	    => [ qw/NOT_BLANK UINT/ ],
+			fic_dur     => [ qw/NOT_BLANK UINT/ ],
 			public_dur  => [ qw/NOT_BLANK UINT/ ],
-			art_dur	    => [ $p->{has_art}	  ? qw/NOT_BLANK UINT/ : () ],
+			art_dur     => [ $p->{has_art}	  ? qw/NOT_BLANK UINT/ : () ],
 			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
 			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ]
 		);
@@ -382,7 +382,7 @@ sub _notify_mailing_list :Private {
 		$c->stash->{email} = {
 			to           => $user->email,
 			from         => $c->mailfrom,
-			subject	     => $c->config->{name} . " - New Event",
+			subject      => $c->config->{name} . " - New Event",
 			template     => 'email/event.tt',
 			content_type => 'text/html',
 			timezone     => $user->timezone,
