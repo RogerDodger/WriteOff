@@ -116,9 +116,9 @@ sub copy_file
 	if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
 		my $id = $self->nextid('id');
 		$self->manifest->add_item(
-			id			=> $id,
-			href		=> "$filename",
-			media_type	=> $type,
+			id          => $id,
+			href        => "$filename",
+			media_type  => $type,
 		);
 		return $id;
 	}

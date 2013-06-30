@@ -86,10 +86,10 @@ sub add :Local :Args(0) {
 			],
 			wc_min => [ qw/NOT_BLANK UINT/, [ 'LESS_THAN', $c->req->param('wc_max') ] ],
 			wc_max => [ qw/NOT_BLANK UINT/ ],
-			fic_dur		=> [ qw/NOT_BLANK UINT/ ],
-			public_dur	=> [ qw/NOT_BLANK UINT/ ],
-			art_dur		=> [ $p->{has_art}	  ? qw/NOT_BLANK UINT/ : () ],
-			prelim_dur	=> [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
+			fic_dur	    => [ qw/NOT_BLANK UINT/ ],
+			public_dur  => [ qw/NOT_BLANK UINT/ ],
+			art_dur	    => [ $p->{has_art}	  ? qw/NOT_BLANK UINT/ : () ],
+			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
 			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ]
 		);
 
@@ -119,11 +119,11 @@ sub do_add :Private {
 	}
 
 	if ($p->{has_art}) {
-		$row{art}	  = $dt->clone;
+		$row{art}     = $dt->clone;
 		$row{art_end} = $dt->add( hours => $c->form->valid('art_dur') )->clone;
 	}
 
-	$row{fic}	  = $dt->clone;
+	$row{fic}     = $dt->clone;
 	$row{fic_end} = $dt->add( hours => $c->form->valid('fic_dur') )->clone;
 
 	if ($p->{has_prelim}) {
@@ -136,7 +136,7 @@ sub do_add :Private {
 
 	if ($p->{has_judges}) {
 		$row{private} = $dt->add( days => $c->form->valid('public_dur')  )->clone;
-		$row{end}	  = $dt->add( days => $c->form->valid('private_dur') )->clone;
+		$row{end}     = $dt->add( days => $c->form->valid('private_dur') )->clone;
 	}
 	else {
 		$row{end} = $dt->add( days => $c->form->valid('public_dur') )->clone;
@@ -270,7 +270,7 @@ sub do_edit :Private {
 
 		$c->stash->{event}->content_level( $c->form->valid('content_level') );
 		$c->stash->{event}->update({
-			blurb		 => $c->form->valid('blurb'),
+			blurb        => $c->form->valid('blurb'),
 			custom_rules => $c->form->valid('rules'),
 		});
 
@@ -319,7 +319,7 @@ sub remove_user :Private {
 	my $junction = $c->model('DB::UserEvent')->find({
 		user_id  => $user_id,
 		event_id => $c->stash->{event}->id,
-		role	 => $role,
+		role     => $role,
 	});
 
 	if (defined $junction) {
@@ -380,12 +380,12 @@ sub _notify_mailing_list :Private {
 
 	while ( my $user = $rs->next ) {
 		$c->stash->{email} = {
-			to			 => $user->email,
-			from		 => $c->mailfrom,
-			subject		 => $c->config->{name} . " - New Event",
-			template	 => 'email/event.tt',
+			to           => $user->email,
+			from         => $c->mailfrom,
+			subject	     => $c->config->{name} . " - New Event",
+			template     => 'email/event.tt',
 			content_type => 'text/html',
-			timezone	 => $user->timezone,
+			timezone     => $user->timezone,
 		};
 
 		$c->forward( $c->view('Email::Template') );
