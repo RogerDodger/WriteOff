@@ -88,7 +88,7 @@ sub add :Local :Args(0) {
 			wc_max => [ qw/NOT_BLANK UINT/ ],
 			fic_dur     => [ qw/NOT_BLANK UINT/ ],
 			public_dur  => [ qw/NOT_BLANK UINT/ ],
-			art_dur     => [ $p->{has_art}	  ? qw/NOT_BLANK UINT/ : () ],
+			art_dur     => [ $p->{has_art}    ? qw/NOT_BLANK UINT/ : () ],
 			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
 			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ]
 		);
