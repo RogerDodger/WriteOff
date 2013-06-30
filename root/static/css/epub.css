@@ -1,3 +1,10 @@
-h1, h2, h5, h6 {
+body { 
+    background-color: #ffffff;
+    text-align: justify;
+    margin: 2%;
+    adobe-text-layout: optimizeSpeed; 
+}
+
+h1, h2, h5, h6, .art {
     text-align: center;
 }

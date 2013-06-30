@@ -350,12 +350,18 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 	$c->forward('permalink');
 }
 
-sub ebook :Chained('index') :PathPart('ebook') {
+sub epub :Chained('index') :PathPart('epub') {
 	my ( $self, $c ) = @_;
 
 	$c->res->content_type( 'application/epub+zip' );
-	$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{event}->prompt.'.epub');
-	$c->res->body($c->stash->{event}->ebook);
+	$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{event}->prompt =~ s/\s+/_/rg .'.epub');
+	my $book;
+	my $cache = $c->cache( backend => 'event-epubs' );
+	unless ( $book = $cache->get($c->stash->{event}->id) ){
+    	$c->forward( 'generate_epub' );
+		$book = $cache->get($c->stash->{event}->id);
+	}
+	$c->res->body($book);
 }
 
 sub _notify_mailing_list :Private {
@@ -425,15 +431,34 @@ sub tally_results :Private {
 	$c->model('DB::Artist')->recalculate_scores;
 }
 
-sub generate_epub :Chained('index') :PathPart('epub') :Args(0) { #:Private {
-#	my ( $self, $c, $id ) = @_;
-	my ( $self, $c ) = @_;
+sub generate_epub :Private {
+    my ( $self, $c ) = @_;
 
-#	my $e = $c->model('DB::Event')->find($id) or return 0;
-#	$c->stash->{event} = $e;	
+	use EBook::Creator;
+	my $epub = EBook::Creator->new;
 
-	use EBook::EPUB;
-	my $epub = EBook::EPUB->new;
+    my $cover_id = $epub->copy_image($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{cover},$c->config->{epub}{cover}),
+	$epub->copy_stylesheet($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{stylesheet},$c->config->{epub}{stylesheet});
+	$epub->add_title($c->stash->{event}->prompt);
+	$epub->add_author($c->config->{epub}{author});
+	$epub->add_language($c->config->{epub}{language});
+    $c->stash->{epub} = $c->config->{epub};
+    $c->stash->{title} = $c->stash->{event}->prompt;
+    my $output = $c->view( "XHTML" )->render($c,'epub/cover.tt');
+    $epub->add_meta_item('cover',$cover_id);
+    my $cover = $epub->add_xhtml('cover.xhtml', $output, linear => 'yes');
+	$epub->add_reference({
+			type   => 'cover',
+			href   => 'cover.xhtml',
+            title  => 'Cover',
+	});
+    $epub->add_navpoint(
+        'label'      => $c->stash->{event}->prompt,
+        'id'         => $cover,
+        'content'    => 'cover.xhtml',
+        'play_order' => 1,
+    );
+
 	my $i = 1;
 	my %images = ();
 	if ( $c->stash->{event}->art ) {
@@ -441,59 +466,59 @@ sub generate_epub :Chained('index') :PathPart('epub') :Args(0) { #:Private {
 			$image->mimetype =~ /^image\/(.*)/;
 			$c->log->info($image->mimetype);
 			$images{$image->id} = {
-				'title'=> $image->title,
-				'artist'=> $image->artist,
-				'filename'=>'image'.$image->id.'.'.$1,
+				'title'    => $image->title,
+				'artist'   => $image->artist,
+				'filename' => 'images/image'.$image->id.'.'.$1,
 			};
 			$epub->add_image($images{$image->id}{filename},$image->contents,$image->mimetype);
 			$i = $i+1;
 		}
 	}
+
 	my @stories = ();
 	$i = 1;
 	$c->stash->{images} = \%images;
-	$c->stash->{template} = "epub/story.tt";
 	for my $story($c->stash->{event}->storys->all) {
+        $c->stash->{title} = $story->title;
+        $c->stash->{title} .= ' - '.$story->author if $c->stash->{event}->is_ended;
 		$c->stash->{story} = $story;
-		$c->view( "XHTML" )->process($c);
+		$output = $c->view( "XHTML" )->render($c,'epub/story.tt');
+        my $title = $story->title;
+        $title .= ' by '. $story->author if $c->stash->{event}->is_ended;
 		push(@stories, { 
-				'title'=>$story->title, 
-				'filename'=>'chapter'.$i.'.xhtml', 
-				'author'=>$story->_author,
-				'eid'=>$epub->add_xhtml('chapter'.$i.'.xhtml',$c->response->body,{linear=>'yes'})
+				title    => $title, 
+				filename => 'chapter'.$i.'.xhtml', 
+				eid      => $epub->add_xhtml('chapter'.$i.'.xhtml', $output, linear => 'yes')
 		});
 		$i = $i+1;
 	}
-	$epub->copy_stylesheet($c->config->{static_folder}.'/css/epub.css','stylesheet.css');
-	$epub->add_title($c->stash->{event}->prompt);
-	$epub->add_author('Community');
-	$epub->add_language('en');
-	$epub->guide->new({
-			type => 'cover',
-			href => $epub->copy_image($c->config->{static_folder}.'/images/cover.png','cover.png'),
-			title => 'Cover',
-	});
-	$i = 1;
+    $i = scalar @stories + 1;
 	foreach my $story(@stories) {
 		$epub->add_navpoint(
-			'label' => $story->{title}.' by '.$story->{author},
-			'id' => $story->{eid},
-			'content' => $story->{filename},
-			'play_order' => $i
+			label      => $story->{title},
+			id         => $story->{eid},
+			content    => $story->{filename},
+            linear     => 'yes',
+            play_order => $i,
 		);
-		$i = $i+1;
+        $i = $i-1;
 	}
 	require File::Temp;
 	use File::Temp ();
 	use File::Temp qw/ :seekable /;
-	my $zip = File::Temp->new(SUFFIX=>'.epub');
+	my $zip = File::Temp->new(SUFFIX => '.epub');
 	my $blob;
 	$epub->pack_zip($zip->filename);
 	{
 		local $/;
 		$blob = <$zip>;
 	}
-	$c->stash->{event}->update({ebook=>$blob});
+    # Cause it didn't clean up on its own
+    File::Temp::cleanup();
+    my $cache = $c->cache( backend => 'event-epubs' );
+    $cache->set( $c->stash->{event}->id, $blob);
+    return;
+#	$c->stash->{event}->update({ebook => $blob});
 }
 
 =head1 AUTHOR

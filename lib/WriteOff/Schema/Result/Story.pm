@@ -43,8 +43,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 	"is_public_candidate",
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
-    "ebook",
-    { data_type => "blob", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");
@@ -113,12 +111,6 @@ sub pos_low {
 
 sub artist {
 	return shift->author;
-}
-
-sub _author {
-    my $self = shift;
-    return $self->author if $self->event->is_ended;
-    return "Anonymous";
 }
 
 sub stdev {

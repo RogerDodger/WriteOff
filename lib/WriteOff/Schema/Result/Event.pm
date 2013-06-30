@@ -47,8 +47,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "timestamp", is_nullable => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
-    "ebook",
-    { data_type => "blob", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");

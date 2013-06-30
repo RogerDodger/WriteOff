@@ -31,6 +31,8 @@ my @dependencies = (
 	'Catalyst::Plugin::Session::Store::File',
 	'Catalyst::Plugin::Session::State::Cookie',
 	'Catalyst::Plugin::FormValidator::Simple',
+	'Catalyst::Plugin::Cache',
+    'Cache::Memory',
 	'DateTime::Format::RFC3339',
 	'FormValidator::Simple::Plugin::DBIC::Unique',
 	'FormValidator::Simple::Plugin::Trim',
@@ -62,6 +64,11 @@ my @dependencies = (
 	'DateTime~1.01',
 	'DateTime::Format::Human::Duration',
 	'WWW::Fimfiction',
+    'EBook::EPUB', # Used in EBook::Creator, ditto bellow
+    'Carp',
+    'File::Path',
+    'File::Basename',
+    'File::Copy',
 );
 
 my $cpanm = App::cpanminus::script->new;

@@ -3,7 +3,7 @@
 	<head>
 		<title>[% story.title | html %] [%- IF event.is_ended %] - [% story.author %] [%- END %]</title>
 		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
-		<link href="stylesheet.css" type="text/css" rel="stylesheet"/>
+        <link href="[% epub.stylesheet %]" type="text/css" rel="stylesheet"/>
 		<style type="text/css">
 			@page { margin-bottom: 5.000000pt; margin-top: 5.000000pt; }
 		</style>
@@ -14,7 +14,7 @@
 		<h2> by [% story.author %] </h2>
 		[%- END %]
 		[%- IF event.art %]
-		<div>
+		<div class="art">
 			[%- FOREACH art IN story.images %]
 			<img src="[%- images.${art.id}.filename %]" />
 			<h5>[%- images.${art.id}.title %]</h5> 

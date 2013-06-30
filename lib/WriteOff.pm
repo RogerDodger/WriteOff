@@ -19,6 +19,8 @@ use Catalyst qw/
 	Session::Store::File
 	Session::State::Cookie
 
+    Cache
+
 	RunAfterRequest
 
 	FormValidator::Simple
@@ -64,6 +66,15 @@ __PACKAGE__->config(
 	'Plugin::ConfigLoader' => {
 		file => 'config.yml',
 	},
+
+    'Plugin::Cache' => {
+        backend => {
+            namespace => 'WriteOff',
+            class => 'Cache::Memory',
+            default_expires => '600 sec',
+        },
+    },
+
 	timezone => 'UTC',
 	scheduler => { time_zone => 'floating' },
 	validator => {
@@ -164,7 +175,13 @@ __PACKAGE__->config(
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 
-    static_folder => __PACKAGE__->path_to('root', 'static'),
+	epub => {
+		static_folder => __PACKAGE__->path_to('root', 'static'),
+		stylesheet    => 'css/epub.css',
+		cover         => 'images/cover.png',
+		author        => 'Community',
+		language      => 'en',
+	}
 );
 
 if( !$ENV{CATALYST_DEBUG} ) {
