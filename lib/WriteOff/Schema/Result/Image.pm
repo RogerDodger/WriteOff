@@ -148,5 +148,21 @@ sub version {
 	return substr Digest::MD5::md5_hex(shift->updated), 0, 5;
 }
 
+sub extension {
+	my $self = shift;
+	$self->mimetype =~ /^image\/(.*)/;
+
+	return $1;
+}
+
+sub filename {
+	my $self = shift;
+	my $prefix = '';
+	if ( @_ > 0 ) {
+		$prefix = shift;
+	}
+	
+	return $prefix . $self->id . '.' . $self->extension;
+}
 
 1;

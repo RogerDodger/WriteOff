@@ -30,7 +30,7 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 		$c->detach('/default');
 
 	if ($arg ne $c->stash->{event}->id_uri) {
-		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] );
+		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ], $c->req->params );
 		$c->res->redirect($url);
 		$c->detach();
 	}
@@ -350,20 +350,6 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 	$c->forward('permalink');
 }
 
-sub epub :Chained('index') :PathPart('epub') {
-	my ( $self, $c ) = @_;
-
-	$c->res->content_type( 'application/epub+zip' );
-	$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{event}->prompt =~ s/\s+/_/rg .'.epub');
-	my $book;
-	my $cache = $c->cache( backend => 'event-epubs' );
-	unless ( $book = $cache->get($c->stash->{event}->id) ){
-		$c->forward( 'generate_epub' );
-		$book = $cache->get($c->stash->{event}->id);
-	}
-	$c->res->body($book);
-}
-
 sub _notify_mailing_list :Private {
 	my ( $self, $c ) = @_;
 
@@ -429,96 +415,6 @@ sub tally_results :Private {
 	$c->model('DB::Artist')->deal_awards_and_scores( $e->storys_rs );
 	$c->model('DB::Artist')->deal_awards_and_scores( $e->images_rs ) if $e->art;
 	$c->model('DB::Artist')->recalculate_scores;
-}
-
-sub generate_epub :Private {
-	my ( $self, $c ) = @_;
-
-	use EBook::Creator;
-	my $epub = EBook::Creator->new;
-
-	my $cover_id = $epub->copy_image($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{cover},$c->config->{epub}{cover}),
-	$epub->copy_stylesheet($c->config->{epub}{static_folder}.'/'.$c->config->{epub}{stylesheet},$c->config->{epub}{stylesheet});
-	$epub->add_title($c->stash->{event}->prompt);
-	$epub->add_author($c->config->{epub}{author});
-	$epub->add_language($c->config->{epub}{language});
-	$c->stash->{epub} = $c->config->{epub};
-	$c->stash->{title} = $c->stash->{event}->prompt;
-	my $output = $c->view( "XHTML" )->render($c,'epub/cover.tt');
-	$epub->add_meta_item('cover',$cover_id);
-	my $cover = $epub->add_xhtml('cover.xhtml', $output, linear => 'yes');
-	$epub->add_reference({
-			type   => 'cover',
-			href   => 'cover.xhtml',
-			title  => 'Cover',
-	});
-	$epub->add_navpoint(
-		'label'		 => $c->stash->{event}->prompt,
-		'id'		 => $cover,
-		'content'	 => 'cover.xhtml',
-		'play_order' => 1,
-	);
-
-	my $i = 1;
-	my %images = ();
-	if ( $c->stash->{event}->art ) {
-		for my $image($c->stash->{event}->images->all) {
-			$image->mimetype =~ /^image\/(.*)/;
-			$c->log->info($image->mimetype);
-			$images{$image->id} = {
-				'title'    => $image->title,
-				'artist'   => $image->artist,
-				'filename' => 'images/image'.$image->id.'.'.$1,
-			};
-			$epub->add_image($images{$image->id}{filename},$image->contents,$image->mimetype);
-			$i = $i+1;
-		}
-	}
-
-	my @stories = ();
-	$i = 1;
-	$c->stash->{images} = \%images;
-	for my $story($c->stash->{event}->storys->all) {
-		$c->stash->{title} = $story->title;
-		$c->stash->{title} .= ' - '.$story->author if $c->stash->{event}->is_ended;
-		$c->stash->{story} = $story;
-		$output = $c->view( "XHTML" )->render($c,'epub/story.tt');
-		my $title = $story->title;
-		$title .= ' by '. $story->author if $c->stash->{event}->is_ended;
-		push(@stories, { 
-				title	 => $title, 
-				filename => 'chapter'.$i.'.xhtml', 
-				eid		 => $epub->add_xhtml('chapter'.$i.'.xhtml', $output, linear => 'yes')
-		});
-		$i = $i+1;
-	}
-	$i = scalar @stories + 1;
-	foreach my $story(@stories) {
-		$epub->add_navpoint(
-			label	   => $story->{title},
-			id		   => $story->{eid},
-			content    => $story->{filename},
-			linear	   => 'yes',
-			play_order => $i,
-		);
-		$i = $i-1;
-	}
-	require File::Temp;
-	use File::Temp ();
-	use File::Temp qw/ :seekable /;
-	my $zip = File::Temp->new(SUFFIX => '.epub');
-	my $blob;
-	$epub->pack_zip($zip->filename);
-	{
-		local $/;
-		$blob = <$zip>;
-	}
-	# Cause it didn't clean up on its own
-	File::Temp::cleanup();
-	my $cache = $c->cache( backend => 'event-epubs' );
-	$cache->set( $c->stash->{event}->id, $blob);
-	return;
-#	$c->stash->{event}->update({ebook => $blob});
 }
 
 =head1 AUTHOR

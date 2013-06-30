@@ -10,8 +10,9 @@
         </style>
     </head>
     <body>
+        [% view = "View::Epub" %]
         <div>
-            <img src="[% epub.cover %]" />
+            <img src="[% c.config.${view}.cover %]" />
 		</div>
 	</body>
 </html>

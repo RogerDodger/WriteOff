@@ -32,7 +32,7 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 	
 	if( $arg ne $c->stash->{story}->id_uri ) {
 		$c->res->redirect
-		( $c->uri_for( $c->action, [ $c->stash->{story}->id_uri ] ) );
+		( $c->uri_for( $c->action, [ $c->stash->{story}->id_uri ], $c->req->params ) );
 	}
 
 	$c->stash->{event} = $c->stash->{story}->event;
@@ -42,10 +42,23 @@ sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
 
 sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
-	
-	if( $c->req->query_keywords eq 'plain' ) {
+
+	my $view = $c->req->query_params->{view};
+	if( $view eq 'plain' ) {
 		$c->res->content_type('text/plain; charset=utf-8');
 		$c->res->body( $c->stash->{story}->contents );
+	}
+	elsif ( $view eq 'epub' ) {
+        my $cache = $c->cache( backend => 'story-epubs' );
+		$c->res->content_type( 'qpplication/epub+zip' );
+		$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{story}->title =~ s/\s+/_/rg .'.epub');
+		if (my $body = $cache->get($c->stash->{story}->id)) {
+			$c->res->body($body);
+		}
+		else {
+			$c->forward( $c->view( 'Epub' ) );
+			$cache->set( $c->stash->{story}->id, $c->res->body );
+		}
 	}
 	
 	$c->stash->{template} = 'fic/view.tt';
@@ -53,7 +66,20 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 
 sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
+	my $view = $c->req->query_params->{view};
+	if ($view eq 'epub') {
+        my $cache = $c->cache( backend => 'event-epubs' );
+		$c->res->content_type( 'application/epub+zip' );
+		$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{event}->prompt =~ s/\s+/_/rg .'.epub');
+		if (my $body = $cache->get($c->stash->{event}->id)) {
+    		$c->res->body($body);
+		}
+		else {
+			$c->forward( $c->view( 'Epub' ) );
+			$cache->set( $c->stash->{event}->id, $c->res->body );
+		}
+	}	
 	push $c->stash->{title}, 'Gallery';
 	$c->stash->{template} = 'fic/gallery.tt';
 }

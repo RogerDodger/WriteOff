@@ -39,7 +39,7 @@ sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
 	
 	if( $arg ne $c->stash->{image}->id_uri ) {
 		$c->res->redirect
-		( $c->uri_for( $c->action, [ $c->stash->{image}->id_uri ] ) );
+		( $c->uri_for( $c->action, [ $c->stash->{image}->id_uri ], $c->req->params ) );
 	}
 	
 	push $c->stash->{title}, $c->stash->{image}->title;

@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <html xmlns="http://www.w3.org/1999/xhtml">
+    [% view = "View::Epub" %]
 	<head>
 		<title>[% story.title | html %] [%- IF event.is_ended %] - [% story.author %] [%- END %]</title>
 		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
-        <link href="[% epub.stylesheet %]" type="text/css" rel="stylesheet"/>
+        <link href="[% c.config.${view}.stylesheet %]" type="text/css" rel="stylesheet"/>
 		<style type="text/css">
 			@page { margin-bottom: 5.000000pt; margin-top: 5.000000pt; }
 		</style>
@@ -16,10 +17,10 @@
 		[%- IF event.art %]
 		<div class="art">
 			[%- FOREACH art IN story.images %]
-			<img src="[%- images.${art.id}.filename %]" />
-			<h5>[%- images.${art.id}.title %]</h5> 
+            <img src="[% art.filename( c.config.${view}.prefix.image ) %]" />
+			<h5>[% art.title %]</h5> 
 			[%- IF event.is_ended %]
-			<h6> by [%- images.${art.id}.artist %]</h6>
+			<h6> by [% art.artist %]</h6>
 			[%- END %]
 			[%- END %]
 		</div>

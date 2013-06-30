@@ -64,11 +64,7 @@ my @dependencies = (
 	'DateTime~1.01',
 	'DateTime::Format::Human::Duration',
 	'WWW::Fimfiction',
-    'EBook::EPUB', # Used in EBook::Creator, ditto bellow
-    'Carp',
-    'File::Path',
-    'File::Basename',
-    'File::Copy',
+    'EBook::EPUB', # it has same req as View::Epub
 );
 
 my $cpanm = App::cpanminus::script->new;
