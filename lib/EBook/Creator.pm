@@ -61,72 +61,72 @@ sub add_data {
 
 sub copy_xhtml
 {
-    my ($self, $src_filename, $filename, %opts) = @_;
-    my $tmpdir = $self->tmpdir;
+	my ($self, $src_filename, $filename, %opts) = @_;
+	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
 	_mkdir("$tmpdir/OPS/$dir");
-    if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
-        return $self->add_xhtml_entry($filename, %opts);
-    }
-    else {
-        carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
-    }
+	if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
+		return $self->add_xhtml_entry($filename, %opts);
+	}
+	else {
+		carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
+	}
 
-    return;
+	return;
 }
 
 sub copy_stylesheet
 {
-    my ($self, $src_filename, $filename) = @_;
-    my $tmpdir = $self->tmpdir;
+	my ($self, $src_filename, $filename) = @_;
+	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
 	_mkdir("$tmpdir/OPS/$dir");
-    if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
-        return $self->add_stylesheet_entry("$filename");
-    }
-    else {
-        carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
-    }
+	if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
+		return $self->add_stylesheet_entry("$filename");
+	}
+	else {
+		carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
+	}
 
-    return;
+	return;
 }
 
 sub copy_image
 {
-    my ($self, $src_filename, $filename, $type) = @_;
-    my $tmpdir = $self->tmpdir;
+	my ($self, $src_filename, $filename, $type) = @_;
+	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
 	_mkdir("$tmpdir/OPS/$dir");
-    if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
-        return $self->add_image_entry("$filename");
-    }
-    else {
-        carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
-    }
+	if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
+		return $self->add_image_entry("$filename");
+	}
+	else {
+		carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
+	}
 
-    return;
+	return;
 }
 
 sub copy_file
 {
-    my ($self, $src_filename, $filename, $type) = @_;
-    my $tmpdir = $self->tmpdir;
+	my ($self, $src_filename, $filename, $type) = @_;
+	my $tmpdir = $self->tmpdir;
 	my ($name, $dir) = fileparse($filename);
 	_mkdir("$tmpdir/OPS/$dir");
-    if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
-        my $id = $self->nextid('id');
-        $self->manifest->add_item(
-            id          => $id,
-            href        => "$filename",
-            media_type  => $type,
-        );
-        return $id;
-    }
-    else {
-        carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
-    }
+	if (mkdir_and_copy($src_filename, "$tmpdir/OPS/$filename")) {
+		my $id = $self->nextid('id');
+		$self->manifest->add_item(
+			id			=> $id,
+			href		=> "$filename",
+			media_type	=> $type,
+		);
+		return $id;
+	}
+	else {
+		carp ("Failed to copy $src_filename to $tmpdir/OPS/$filename");
+	}
 
-    return;
+	return;
 }
 
 sub add_reference {
@@ -139,9 +139,9 @@ sub _mkdir {
 	mkpath($dir);
 }
 sub mkdir_and_copy {
-    my ($from, $to) = @_;
-    mkpath(dirname($to));
-    return copy($from, $to);
+	my ($from, $to) = @_;
+	mkpath(dirname($to));
+	return copy($from, $to);
 }
 
 no Moose;
