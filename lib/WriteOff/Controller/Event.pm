@@ -30,7 +30,7 @@ sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
 		$c->detach('/default');
 
 	if ($arg ne $c->stash->{event}->id_uri) {
-		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ] );
+		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ], $c->req->params );
 		$c->res->redirect($url);
 		$c->detach();
 	}
@@ -103,7 +103,7 @@ sub do_add :Private {
 	my $p  = $c->req->params;
 	my $dt = $c->form->valid('start');
 
-	my $leeway = $c->model('DB::Event')->result_class->leeway;
+	my $leeway = $c->model('DB::Event')->result_class->LEEWAY;
 	my $interim = $c->config->{interim};
 
 	my %row;
