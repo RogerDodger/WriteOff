@@ -7,6 +7,7 @@ v0.35
 - Renamed WriteOff::Helpers to WriteOff::Util
 - Renamed the horribly named `check_datetimes_ascend` to `sorted` and removed unnecessary use and redefinition of it throughout the app
 - Added some tests for WriteOff::Util
+- Implemented partial templating cacheing with Template::Plugin::Cache
 
 v0.34 - 29 Jun 2013
 -------------------

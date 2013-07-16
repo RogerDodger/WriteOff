@@ -18,6 +18,7 @@ my @dependencies = (
 	'Catalyst::Runtime~5.90013',
 	'Catalyst::Restarter',
 	'Catalyst::View::TT',
+	'Template::Plugin::Cache'
 	'Catalyst::View::JSON',
 	'Catalyst::View::Email::Template',
 	'Email::Sender::Transport::SMTP::TLS',

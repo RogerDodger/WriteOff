@@ -13,5 +13,6 @@ WriteOff.pm TODO
 - Add pagination to /archive
 - Move email tokens into a table of their own such that they can have unique types (verification token, recovery token, some other token) and expire after a certain time
   - Possibly make use of memcacheing for this as well as other temporary data like prompt heats and login attempts
+- Let users view their cast votes
 
 Last updated 29 Jun 2013
