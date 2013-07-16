@@ -19,6 +19,8 @@ use Catalyst qw/
 	Session::Store::File
 	Session::State::Cookie
 
+	Cache
+
 	RunAfterRequest
 
 	FormValidator::Simple
@@ -44,8 +46,28 @@ __PACKAGE__->config(
 	'View::HTML' => {
 		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
 	},
+	'View::XHTML' => {
+		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
+	},
 	'View::JSON' => {
 		expose_stash => 'json',
+	},
+	'View::Epub' => {
+		static_folder => __PACKAGE__->path_to('root', 'static'),
+		stylesheet    => 'css/epub.css',
+		cover         => 'images/cover.png',
+		author        => 'Community',
+		anonymous     => 'Anonymous',
+		language      => 'en',
+		skip_cover    => 0,
+		prefix        => {
+			image      => 'images/image',
+			chapter     => 'chapter',
+		},
+		templates    => {
+			cover     => 'epub/cover.tt',
+			chapter   => 'epub/story.tt',
+		},
 	},
 	'Plugin::Authentication' => {
 		default => {
@@ -61,6 +83,15 @@ __PACKAGE__->config(
 	'Plugin::ConfigLoader' => {
 		file => 'config.yml',
 	},
+
+    'Plugin::Cache' => {
+        backend => {
+            namespace => 'WriteOff',
+            class => 'Cache::Memory',
+            default_expires => '600 sec',
+        },
+    },
+
 	timezone => 'UTC',
 	scheduler => { time_zone => 'floating' },
 	validator => {
