@@ -9,6 +9,7 @@ v0.35
 - Added some tests for WriteOff::Util
 - Implemented template output cacheing with Template::Plugin::Cache
 - EBook output format for stories (credit Kazunekit)
+- Made it possible to change the TT wrapper per-request via stash
 
 v0.34 - 29 Jun 2013
 -------------------

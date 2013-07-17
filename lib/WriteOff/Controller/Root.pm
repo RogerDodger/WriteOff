@@ -40,6 +40,10 @@ sub auto :Private {
 		$c->detach('index') if !$so;
 	}
 
+	if ($c->req->header('x-requested-with') eq 'XMLHttpRequest') {
+		$c->stash->{wrapper} = 'wrapper/bare.tt';
+	}
+
 	$c->stash(
 		now        => $c->model('DB::Event')->now_dt,
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),

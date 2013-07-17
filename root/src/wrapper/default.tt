@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="utf-8">
+
+		<title>[% title_html %]</title>
+
+		<link rel="icon" href="/favicon.ico">
+		<link rel="stylesheet" href="/static/css/normalize.css">
+		<link rel="stylesheet" href="/static/css/jquery-ui-1.9.2.custom.css">
+		<link rel="stylesheet" href="/static/css/writeoff-0.29.css">
+
+		<script src="/static/js/modernizr-2.6.2.custom.min.js"></script>
+		<script src="/static/js/jquery-1.7.2.min.js"></script>
+		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
+		<script src="/static/js/jquery.cookie.js"></script>
+		<script src="/static/js/writeoff-0.19.js"></script>
+
+		[%- IF c.config.use_google_analytics %]
+		<!-- Google Analytics -->
+		<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', '[% c.config.google_analytics_id %]']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
+		[%- END %]
+
+	</head>
+
+	<body>
+		<section class="site">
+			<nav>
+				<ul>
+					<li>
+						<a href="/">Events &#9660;</a>
+						<ul>
+							<li><a href="/archive">Archive</a></li>
+							[%- IF c.check_user_roles('admin') %]
+							<li><a href="/event/add">Add</a></li>
+							[%- END %]
+						</ul>
+					</li>
+					<li><a href="/faq">FAQ</a></li>
+					<li><a href="/scoreboard">Scoreboard</a></li>
+					<li><a href="/user/list">Users</a></li>
+
+					[%- IF c.user %]
+					<li>
+						<a href="#">~[% c.user.username %] &#9660;</a>
+						<ul>
+							<li><a href="/user/me">My Submissions</a></li>
+							<li><a href="/user/settings" class="dialog-fetcher">Settings</a></li>
+							<li><a href="/user/logout">Logout</a></li>
+						</ul>
+					</li>
+					[%- ELSE %]
+					<li>
+						<a href="/user/login" class="dialog-fetcher">Login &#9660;</a>
+						<ul>
+							<li class="smaller-than-next">
+								<a href="/user/register">Register</a>
+							</li>
+							<li class="smaller-than-next">
+								<a href="/user/recover">Recover lost password</a>
+							</li>
+							<li>
+								<a href="/user/verify">Resend verification email</a>
+							</li>
+						</ul>
+					</li>
+					[%- END %]
+				</ul>
+
+				<div class="clearfix"></div>
+			</nav>
+
+			<section class="content">
+			[%- IF c.config.read_only %]
+				<p class="popup-msg ui-state-highlight ui-corner-all">
+					<span class="ui-icon ui-icon-alert"></span>
+					The site is currently in read-only mode
+				</p>
+			[%- END %]
+			[%- IF status_msg %]
+				<p class="popup-msg ui-state-highlight ui-corner-all">
+					<span class="ui-icon ui-icon-check"></span>
+					[% status_msg %]
+				</p>
+			[%- END -%]
+			[%- IF error_msg %]
+				<p class="popup-msg ui-state-error ui-corner-all">
+					<span class="ui-icon ui-icon-alert"></span>
+					<strong>Error:</strong> [% error_msg %]
+				</p>
+			[%- END %]
+
+			[% content %]
+
+			</section>
+
+			<section class="sidebar">
+				<aside class="news">
+					<h1>
+						News
+					</h1>
+					<ul>
+						[%- FOREACH item IN news.all %]
+						<li class="[% loop.parity %]">
+							<h2><a class="link" href="[% c.uri_for( c.controller('News').action_for('view'),
+								[ item.id_uri ]) %]">[% item.title | html %]</a></h2>
+							<p>[% item.created.duration_since_now %]</p>
+						</li>
+						[%- END %]
+					</ul>
+				</aside>
+				[%- IF event %]
+				<aside class="event">
+					<h1 title="[% event.prompt | html %]">[% event.prompt | html %]</h1>
+					[% INCLUDE event/links.tt %]
+				</aside>
+				[%- END %]
+			</section>
+
+			<footer>
+				<p>
+					Page generated
+					[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
+				</p>
+				<p>
+					<a class="link new-tab" href="https://github.com/RogerDodger/WriteOff">
+						WriteOff.pm
+					</a>
+					[% c.app_version %]
+					&ndash;
+					<a class="link new-tab" href="[% c.uri_for('/humans.txt') %]">
+						Contributors
+					</a>
+				</p>
+				<p>
+					<a class="link" href="[% c.uri_for( c.controller('Root').action_for('tos') ) %]">
+						Terms of Service
+					</a>
+					|
+					<a class="link" href="[% c.uri_for( c.controller('Root').action_for('contact') ) %]">
+						Contact Us
+					</a>
+				</p>
+			[%- IF c.config.footer_addendum %]
+				<div class="addendum">
+					[% c.config.footer_addendum | markdown %]
+				</div>
+			[%- END %]
+			</footer>
+
+			<div class="cleafix"></div>
+		</section>
+	</body>
+</html>
