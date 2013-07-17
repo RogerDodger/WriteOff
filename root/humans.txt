@@ -6,7 +6,8 @@
 	From: Adelaide, Australia
 
 /* THANKS */
-	
+	Kazunekit: EBook output for stories
+
 /* SITE */
 	Language: English
 	Technology: Perl5, Catalyst, Template Toolkit, Git, jQuery, jQueryUI, modernizr
