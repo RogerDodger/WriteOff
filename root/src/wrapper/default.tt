@@ -116,7 +116,7 @@
 						<li class="[% loop.parity %]">
 							<h2><a class="link" href="[% c.uri_for( c.controller('News').action_for('view'),
 								[ item.id_uri ]) %]">[% item.title | html %]</a></h2>
-							<p>[% item.created.duration_since_now %]</p>
+							<p>[% item.created.delta_html %]</p>
 						</li>
 						[%- END %]
 					</ul>

@@ -8,10 +8,8 @@
 <h1 class="news-header">[% article.title | html %]</h1>
 
 <p class="news-meta">
-	posted [% article.created.duration_since_now -%]
-	[%- format_dt(article.updated, '*').replace('title="\K(.+?)(?=")',
-				'last edited ' _ article.updated.duration_since_now.remove('<.+?>') )
-		IF article.is_edited %]
+	posted [% article.created.delta_html -%]
+	[%- IF article.is_edited -%]<time title="last updated [% article.updated.delta %]" datetime="[% article.updated.iso8601 %]">*</time>[%- END -%]
 	by [% article.user.username %]
 </p>
 
