@@ -70,33 +70,40 @@ our $BBCODE_CONFIG = {
 	},
 };
 
-$Template::Stash::SCALAR_OPS->{ucfirst} = sub {
-	return ucfirst shift;
+$Template::Stash::SCALAR_OPS = {
+	%$Template::Stash::SCALAR_OPS,
+
+	ucfirst => sub {
+		return ucfirst shift;
+	},
 };
 
-$Template::Stash::LIST_OPS->{join_serial} = sub {
-	my @list = @{+shift};
+$Template::Stash::LIST_OPS = {
+	%$Template::Stash::LIST_OPS,
 
-	return join ", ", @list if $#list < 2;
+	join_serial => sub {
+		my @list = @{+shift};
 
-	my $last = pop @list;
-	$list[-1] .= ", and $last";
+		return join ", ", @list if $#list < 2;
 
-	return join ", ", @list;
+		my $last = pop @list;
+		$list[-1] .= ", and $last";
+
+		return join ", ", @list;
+	},
+
+	join_en => sub {
+		join " – ", @{$_[0]};
+	},
+
+	sort_stdev => sub {
+		return [ sort { $b->stdev <=> $a->stdev } @{ $_[0] } ]
+	},
+
+	map_username => sub {
+		return [ map { $_->username } @{ $_[0] } ];
+	},
 };
-
-$Template::Stash::LIST_OPS->{join_en} = sub {
-	join " – ", @{$_[0]};
-};
-
-$Template::Stash::LIST_OPS->{sort_stdev} = sub {
-	return [ sort { $b->stdev <=> $a->stdev } @{ $_[0] } ]
-};
-
-$Template::Stash::LIST_OPS->{map_username} = sub {
-	return [ map { $_->username } @{ $_[0] } ];
-};
-
 
 sub format_dt {
 	my ($self, $c, $dt, $fmt) = @_;
@@ -121,7 +128,6 @@ sub title_html {
 	             ref $title eq 'ARRAY' ? reverse @$title : $title || ();
 	return join " &#x2022; ", $title || (), $c->config->{name};
 }
-
 
 sub bb_render {
 	my ( $self, $c, $text ) = @_;
