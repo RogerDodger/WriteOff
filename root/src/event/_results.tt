@@ -1,0 +1,104 @@
+<h1>Results</h1>
+
+[%- IF event.is_ended %]
+
+	[%- IF event.private %]
+	<h2>Judge Rankings </h2>
+
+	<ul>
+		[%- FOREACH record IN judge_records.all %]
+		<li>
+			<a class="link" href="[% c.uri_for( c.controller('VoteRecord')
+				.action_for('view'), [ record.id ]) %]">
+				[% record.user.username || 'Guest' %]
+			</a>
+		</li>
+		[%- END %]
+	</ul>
+	[%- END %]
+
+<div class="results" style="min-width: 350px">
+	[%- PROCESS item_listing
+		items = event.storys_rs.with_scores.with_stats,
+		view = c.controller('Fic').action_for('view')
+		heading = 'Stories'
+	-%]
+</div>
+	
+	[%- IF event.art -%]
+	
+<div class="results" style="padding-left: 1em">
+	[%- PROCESS item_listing
+		items = event.images_rs.with_scores.with_stats,
+		view = c.controller('Art').action_for('view')
+		heading = 'Artworks'
+	-%]	
+</div>
+
+	[%- END -%]
+	
+[%- ELSE %]
+<p>
+	Results open: <strong>[% format_dt( event.end ) %]</strong>.
+	<br />
+	Results are <strong class="bad">closed</strong>.
+</p>
+[%- END %]
+
+[%- BLOCK item_listing %]
+
+	<h2>[% heading %]</h2>
+
+	[%- FOREACH item IN items %]
+
+	<p>
+		[%- pos = item.pos %]
+		[%- award = medal_for(pos) || (pos == items.max ? awards.spoon : awards.ribbon) %]
+		<img src="[% c.uri_for( award.src ) %]"
+			alt="[% award.alt %]"
+			title="[% award.alt %]"/>
+		<a class="link em" href="[% c.uri_for( view, [ item.id_uri ]) %]">
+			[% item.title | html %]
+		</a>
+		[%- IF item.website %]
+		by <a class="author new-window" href="[% item.website | url %]">[% item.artist | html %]</a>
+		[%- ELSE %]
+		by [% item.artist | html %]
+		[%- END %]
+		[%- IF item.final_score %]
+		<span title="[% item.final_score | format('(%.5f)') %]">
+			[% item.final_score | format('(%.2f)') %]
+		</span>
+		[%- END %]
+	</p>
+	
+	[%- END %]
+
+	<h3>Controversial [% heading %]</h3>
+
+	[%- FOREACH item IN items.sort_stdev %]
+		[%- LAST IF loop.index == 5 %]
+		[%- award = loop.first ? awards.confetti : awards.ribbon %]
+
+	<p>
+		<img src="[% c.uri_for( award.src ) %]"
+			alt="[% award.alt %]"
+			title="[% award.alt %]"/>
+		<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
+			<em>[% item.title | html %]</em>
+		</a>
+		[%- IF item.website %]
+		by <a class="author new-window" href="[% item.website | url %]">[% item.artist | html %]</a>
+		[%- ELSE %]
+		by [% item.artist | html %]
+		[%- END %]
+		[%- IF item.stdev %]
+		<span title="[% item.stdev | format('(%.5f)') %]">
+			[% item.stdev | format('(%.2f)') %]
+		</span>
+		[%- END %]
+	</p>
+
+	[%- END %]
+
+[%- END %]

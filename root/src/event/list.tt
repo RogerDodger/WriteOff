@@ -1,4 +1,4 @@
-[% USE cache = Cache; %]
+[% USE cache = Cache %]
 <h1>[% title.-1 %]</h1>
 
 [%- IF events.count %]
