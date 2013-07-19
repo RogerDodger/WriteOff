@@ -1,45 +1,11 @@
-<h1 class="center">[% name %] Hall of Fame</h1>
-
-<table class="solid t-center center">
-	<tr class="heading">
-		<th>#</th>
-		<th>Competitor</th>
-		<th>Score</th>
-		<th>Awards</th>
-	</tr>
-[%- IF artists.size != 0 %]
-	[%- FOREACH artist IN artists %]
-	<tr class="[% loop.parity %]">
-		<td>[% artist.rank %]</td>
-		<td>[% artist.name | html %]</td>
-		<td>
-			<a href="[% c.uri_for( c.controller('Artist')
-				.action_for('scores'), [ artist.id ]) %]"
-				class="dialog-fetcher author" title="View score breakdown" >
-				[% artist.score %]
-			</a>
-		</td>
-		<td class="flat">
-		[%- FOREACH award IN artist.awards_rs.ordered.all %]
-			<img src="[% award.src %]"
-				alt="[% award.alt %]"
-				title="[% award.alt %]" />
-		[%- END %]
-		</td>
-	</tr>
-	[%- END %]
-[%- ELSE %]
-	<tr>
-		<td>NaN</td>
-		<td>Anonymous</td>
-		<td>&infin;</td>
-		<td>
-		[%- FOREACH n IN [ 0 .. 4 ] %]
-			<img src="[% gold_medal.src %]"
-				alt="[% gold_medal.alt %]"
-				title="[% gold_medal.alt %]" />
-		[%- END %]
-		</td>
-	</tr>
-[%- END %]
-</table>
+[% USE cache = Cache -%]
+[%
+	cache.inc(
+		'template' => 'scoreboard/index_.tt',
+		'ttl' => 360,
+		'keys' => {
+			'type' => 'scoreboard',
+			'scores' => artists.get_column('score').all.join(';'),
+		},
+	);
+-%]
