@@ -6,24 +6,21 @@
 	[%- FOREACH image IN images.all %]
 	<figure>
 
-		<img src="[% c.uri_for(
-				c.controller('Art').action_for('view'),
+		<img src="[% c.uri_for_action(
+				'/art/view',
 				[ image.id_uri ],
-				{
-					view => 'thumb',
-					v => image.version
-				}
+				{ format => 'thumb', v => image.version }
 			) %]"
 			alt="[% image.title | html %]"
 			title="[% image.hovertext | html %]" />
-		
+
 		<figcaption>
 			<a class="link new-tab em" href="[% c.uri_for(
 				c.controller('Art').action_for('view'),
 				[ image.id_uri ],
 				{ v => image.version }
 			) %]">[% image.title | html %]</a>
-			
+
 		[%- IF show_artists %]
 			by
 			[%- IF image.website %]
@@ -33,7 +30,7 @@
 				[% image.artist | html %]
 			[%- END %]
 		[%- END -%]
-		
+
 		[%- IF show_storys && image.stories_rs.count %]
 			<a class="dialog-fetcher inline-block" title="Show related story(s)"
 				href="[% c.uri_for( c.controller('Art').action_for('rels'), [ image.id_uri ]) %]"
@@ -41,9 +38,9 @@
 				<span class="ui-icon ui-icon-script">[Related Story(s)]</span>
 			</a>
 		[%- END -%]
-		
+
 		</figcaption>
-		
+
 	</figure>
 	[%- END %]
 </div>

@@ -1,32 +1,28 @@
 <?xml version='1.0' encoding='utf-8'?>
 <html xmlns="http://www.w3.org/1999/xhtml">
-    [% view = "View::Epub" %]
 	<head>
-		<title>[% story.title | html %] [%- IF event.is_ended %] - [% story.author %] [%- END %]</title>
+		<title>[% story.title | html %][%- IF event.is_ended %] – [% story.author | html %][%- END %]</title>
 		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
-        <link href="[% c.config.${view}.stylesheet %]" type="text/css" rel="stylesheet"/>
-		<style type="text/css">
-			@page { margin-bottom: 5.000000pt; margin-top: 5.000000pt; }
-		</style>
+		<link href="story.css" type="text/css" rel="stylesheet"/>
 	</head>
 	<body>
-		<h1> [% story.title | html %] </h1>
-		[%- IF event.is_ended %] 
-		<h2> by [% story.author %] </h2>
+		<h1>[% story.title | html %]</h1>
+		[%- IF event.is_ended %]
+		<h2>by [% story.author | html %] </h2>
 		[%- END %]
 		[%- IF event.art %]
 		<div class="art">
 			[%- FOREACH art IN story.images %]
-            <img src="[% art.filename( c.config.${view}.prefix.image ) %]" />
-			<h5>[% art.title %]</h5> 
-			[%- IF event.is_ended %]
-			<h6> by [% art.artist %]</h6>
-			[%- END %]
+				<img src="images/[% art.filename %]"/>
+				<h5>[% art.title %]</h5>
+				[%- IF event.is_ended %]
+				<h6> by [% art.artist | html %]</h6>
+				[%- END %]
 			[%- END %]
 		</div>
 		[%- END %]
-		<div>
-			[% bb_render_xhtml( story.contents ) %]
+		<div class="story">
+			[% story.contents | bbcode('xhtml' => 1) %]
 		</div>
 	</body>
 </html>

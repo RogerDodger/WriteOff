@@ -53,21 +53,7 @@ __PACKAGE__->config(
 		expose_stash => 'json',
 	},
 	'View::Epub' => {
-		static_folder => __PACKAGE__->path_to('root', 'static'),
-		stylesheet    => 'css/epub.css',
-		cover         => 'images/cover.png',
-		author        => 'Community',
-		anonymous     => 'Anonymous',
-		language      => 'en',
-		skip_cover    => 0,
-		prefix        => {
-			image      => 'images/image',
-			chapter     => 'chapter',
-		},
-		templates    => {
-			cover     => 'epub/cover.tt',
-			chapter   => 'epub/story.tt',
-		},
+		language => 'en',
 	},
 	'Plugin::Authentication' => {
 		default => {

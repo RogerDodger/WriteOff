@@ -9,19 +9,19 @@ our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 sub wordcount ($) {
 	my $str = shift or return 0;
-	
+
 	return scalar split /\s+/, $str;
 }
 
 sub simple_uri {
 	local $_ = join "-", @_;
-	
+
 	s/[\\\/—–]/ /g; #Turn punctuation that commonly divide words into spaces
 	s/[^a-zA-Z0-9\-\x20]//g; # Remove all except English letters,
 	                         # Arabic numerals, hyphens, and spaces.
 	s/^\s+|\s+$//g; #Trim
 	s/[\s\-]+/-/g; #Collate spaces and hyphens into a single hyphen
-	
+
 	return $_;
 }
 

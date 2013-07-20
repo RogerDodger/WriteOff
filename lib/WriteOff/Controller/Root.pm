@@ -49,6 +49,7 @@ sub auto :Private {
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
 		title      => [],
 		editor     => $c->user && $c->user->obj->is_admin,
+		format     => $c->req->params->{format} // '',
 		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
 	);
 

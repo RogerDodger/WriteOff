@@ -157,12 +157,7 @@ sub extension {
 
 sub filename {
 	my $self = shift;
-	my $prefix = '';
-	if ( @_ > 0 ) {
-		$prefix = shift;
-	}
-	
-	return $prefix . $self->id . '.' . $self->extension;
+	$self->id_uri . '.' . $self->extension;
 }
 
 1;

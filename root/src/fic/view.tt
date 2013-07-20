@@ -7,8 +7,8 @@
 </aside>
 
 <div class="story">
-	[% bb_render( story.contents ).replace( '\n' , "\n\t" ) %]
-	<!-- [% story.wordcount %] words -->
+[% story.contents | bbcode %]
+<!-- [% story.wordcount %] words -->
 </div>
 
 [%- IF story.event.fic_gallery_opened %]
@@ -17,7 +17,7 @@
 	[%- storys = story.event.storys_gallery_order %]
 	[%- FOREACH s IN storys %]
 		[%- NEXT IF story.id != s.id %]
-	
+
 		[%- prev = loop.prev || storys.-1 %]
 	<a class="link" href="[% c.uri_for( c.action, [ prev.id_uri ]) %]">« Prev</a>
 	&nbsp;
@@ -25,7 +25,7 @@
 	&nbsp;
 		[%- next = loop.next || storys.0 %]
 	<a class="link" href="[% c.uri_for( c.action, [ next.id_uri ]) %]">Next »</a>
-	
+
 	[%- END %]
 </p>
 <p class="center">

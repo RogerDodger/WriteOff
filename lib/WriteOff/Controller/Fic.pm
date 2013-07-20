@@ -24,90 +24,79 @@ Grabs a story
 =cut
 
 sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
-	my ( $self, $c, $arg ) = @_;
-	
-	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{story} = $c->model('DB::Story')->find($id) or
+	my ($self, $c, $arg) = @_;
+	my ($id, $desc, $ext) = $arg =~ /^(\d+)(.*?)(\.[a-z]+)?$/;
+	$ext ||= '';
+
+	unless (defined $id and $c->stash->{story} = $c->model('DB::Story')->find($id)) {
 		$c->detach('/default');
-	
-	if( $arg ne $c->stash->{story}->id_uri ) {
-		$c->res->redirect
-		( $c->uri_for( $c->action, [ $c->stash->{story}->id_uri ], $c->req->params ) );
 	}
 
+	if ($id . $desc ne $c->stash->{story}->id_uri) {
+		$c->res->redirect(
+			$c->uri_for(
+				$c->action, [ $c->stash->{story}->id_uri . $ext ], $c->req->params
+			)
+		);
+	}
+
+	$c->stash->{format} ||= $ext ? substr($ext, 1) : 'html';
 	$c->stash->{event} = $c->stash->{story}->event;
-	
+
 	push $c->stash->{title}, $c->stash->{event}->prompt, $c->stash->{story}->title;
 }
 
 sub view :PathPart('') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	my $view = $c->req->query_params->{view};
-	if( $view eq 'plain' ) {
+	if ($c->stash->{format} eq 'txt') {
 		$c->res->content_type('text/plain; charset=utf-8');
 		$c->res->body( $c->stash->{story}->contents );
 	}
-	elsif ( $view eq 'epub' ) {
-        my $cache = $c->cache( backend => 'story-epubs' );
-		$c->res->content_type( 'qpplication/epub+zip' );
-		$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{story}->title =~ s/\s+/_/rg .'.epub');
-		if (my $body = $cache->get($c->stash->{story}->id)) {
-			$c->res->body($body);
-		}
-		else {
-			$c->forward( $c->view( 'Epub' ) );
-			$cache->set( $c->stash->{story}->id, $c->res->body );
-		}
+	elsif ($c->stash->{format} eq 'epub') {
+		$c->forward('View::Epub');
 	}
-	
-	$c->stash->{template} = 'fic/view.tt';
+	else {
+		$c->stash->{template} = 'fic/view.tt';
+	}
 }
 
 sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	my $view = $c->req->query_params->{view};
-	if ($view eq 'epub') {
-        my $cache = $c->cache( backend => 'event-epubs' );
-		$c->res->content_type( 'application/epub+zip' );
-		$c->res->headers->header( 'Content-Disposition' => 'attachment; filename='.$c->stash->{event}->prompt =~ s/\s+/_/rg .'.epub');
-		if (my $body = $cache->get($c->stash->{event}->id)) {
-    		$c->res->body($body);
-		}
-		else {
-			$c->forward( $c->view( 'Epub' ) );
-			$cache->set( $c->stash->{event}->id, $c->res->body );
-		}
-	}	
-	push $c->stash->{title}, 'Gallery';
-	$c->stash->{template} = 'fic/gallery.tt';
+	if ($c->stash->{format} eq 'epub') {
+		$c->forward('View::Epub');
+	}
+	else {
+		push $c->stash->{title}, 'Gallery';
+		$c->stash->{template} = 'fic/gallery.tt';
+	}
 }
 
 sub form :Private {
 	my ( $self, $c ) = @_;
-	
+
 	$c->forward('/check_csrf_token');
-	
+
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
-	
+
 	# When editing, must allow for the title to be itself
 	my $title_rs = $c->stash->{event}->storys->search({
 		title => {
 			'!=' => eval { $c->stash->{story}->title } || undef
-		}	
+		}
 	});
-	
+
 	my $virtual_artist_rs = $c->model('DB::Virtual::Artist')->search({
 		name    => { '!=' => 'Anonymous' },
 		# Must allow organisers to edit properly
 		user_id => { '!=' => eval { $c->stash->{story}->user_id } || $c->user_id }
 	});
-	
+
 	if( $c->stash->{event}->art ) {
 		my @ids = $c->stash->{event}->images->get_column('id')->all;
 		my @params = $c->req->param('image_id') or return 0;
-		
+
 		# Make sure each image_id is unique and in the set of valid image_ids
 		my %uniq;
 		for( @params ) {
@@ -116,7 +105,7 @@ sub form :Private {
 			$uniq{$_} = 1;
 		}
 	}
-	
+
 	$c->form(
 		title => [
 			[ 'LENGTH', 1, $c->config->{len}{max}{title} ],
@@ -136,20 +125,20 @@ sub form :Private {
 			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ]
 		],
 	);
-	
+
 	1;
 }
 
 sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'fic/submit.tt';
-	
+
 	$c->stash->{fillform}{author} = eval { $c->user->last_author
 	                                    || $c->user->last_artist
 	                                    || $c->user->name };
-	
+
 	$c->forward('do_submit')
 		if $c->req->method eq 'POST'
 		&& $c->user
@@ -158,11 +147,11 @@ sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
 
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
-	
+
 	$c->forward('form') or $c->detach('/error', [ 'Bad input' ]);
-	
+
 	if(!$c->form->has_error) {
-		
+
 		my $story = $c->model('DB::Story')->create({
 			event_id  => $c->stash->{event}->id,
 			user_id   => $c->user->id,
@@ -174,14 +163,14 @@ sub do_submit :Private {
 			wordcount => $c->form->valid('wordcount'),
 			seed      => rand,
 		});
-		
+
 		if( $c->stash->{event}->art ) {
 			for my $image_id ( $c->req->param('image_id') ) {
 				my $image = $c->model('DB::Image')->find( $image_id );
 				$story->add_to_images( $image );
 			}
 		}
-		
+
 		$c->flash->{status_msg} = 'Submission successful';
 		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
 	}
@@ -189,12 +178,12 @@ sub do_submit :Private {
 
 sub edit :PathPart('edit') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
 		unless $c->stash->{story}->is_manipulable_by( $c->user );
-	
+
 	$c->forward('do_edit') if $c->req->method eq 'POST';
-	
+
 	$c->stash->{fillform} = {
 		author   => $c->stash->{story}->author,
 		title    => $c->stash->{story}->title,
@@ -202,18 +191,18 @@ sub edit :PathPart('edit') :Chained('index') :Args(0) {
 		website  => $c->stash->{story}->website,
 		story    => $c->stash->{story}->contents,
 	};
-	
+
 	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'fic/edit.tt';
 }
 
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
-	
+
 	$c->forward( $self->action_for('form') ) or return 0;
-	
+
 	if( !$c->form->has_error ) {
-	
+
 		$c->log->info( sprintf "Fic %d edited by %s, to %s by %s (%d words)",
 			$c->stash->{story}->id,
 			$c->user->get('username'),
@@ -221,7 +210,7 @@ sub do_edit :Private {
 			$c->form->valid('author'),
 			$c->form->valid('wordcount'),
 		);
-		
+
 		$c->stash->{story}->update({
 			title     => $c->form->valid('title'),
 			author    => $c->form->valid('author') || 'Anonymous',
@@ -229,7 +218,7 @@ sub do_edit :Private {
 			contents  => $c->form->valid('story'),
 			wordcount => $c->form->valid('wordcount'),
 		});
-		
+
 		if( $c->stash->{event}->art ) {
 			$c->stash->{story}->image_stories->delete;
 			for my $image_id ( $c->req->param('image_id') ) {
@@ -237,55 +226,55 @@ sub do_edit :Private {
 				$c->stash->{story}->add_to_images( $image );
 			}
 		}
-		
-		
+
+
 		$c->stash->{status_msg} = 'Edit successful';
 	}
-	
+
 }
 
 sub delete :PathPart('delete') :Chained('index') :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless
 		$c->stash->{story}->is_manipulable_by( $c->user );
-		
+
 	$c->stash->{key} = {
 		name  => 'title',
 		value => $c->stash->{story}->title,
 	};
-	
+
 	$c->forward('do_delete') if $c->req->method eq 'POST';
-	
+
 	push $c->stash->{title}, 'Delete';
 	$c->stash->{template} = 'item/delete.tt';
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
-	
+
 	$c->forward('/check_csrf_token');
-		
+
 	$c->log->info( sprintf "Fic deleted by %s: %s (%s - %s)",
 		$c->user->get('username'),
 		$c->stash->{story}->title,
 		$c->stash->{story}->ip,
 		$c->stash->{story}->user->username,
 	);
-		
+
 	$c->stash->{story}->delete;
-		
+
 	$c->flash->{status_msg} = 'Deletion successful';
 	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
 sub rels :PathPart('rels') :Chained('index') {
 	my ( $self, $c ) = @_;
-	
+
 	$c->detach('/default') if !$c->stash->{story}->event->fic_gallery_opened;
-	
+
 	$c->stash->{items} = $c->stash->{story}->images->metadata;
-	
+
 	push $c->stash->{title}, 'Related Artwork(s)';
 	$c->stash->{template} = 'item/list.tt';
 }

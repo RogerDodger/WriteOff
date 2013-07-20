@@ -112,7 +112,7 @@ textarea {
 body {
 	background: #ccc;
 	padding: 1em;
-	
+
 	font-family: "Bitstream Charter", "Charter BT", "Book Antiqua",
 		"Bookman Old Style", Palladio, "URW Palladio L", Garamond,
 		"Apple Garamond", Georgia, serif; /* Eeyup */
@@ -152,13 +152,17 @@ code, tt, var {
 a {
 	text-decoration: none;
 }
-a.link, a.link:visited {
+a.link,
+a.link:visited,
+a.link:link,
+a.link:link:visited {
 	color: brown;
 	transition: .05s all linear;
 	-moz-transition: .05s all linear;
 	-webkit-transition: .05s all linear;
 }
-a.link:hover {
+a.link:hover,
+a.link:link:hover {
 	color: coral;
 }
 a.author, a.author:visited,
@@ -197,7 +201,7 @@ footer {
 	.sidebar {
 		display: none !important;
 		visibility: hidden;
-	}	
+	}
 	.site {
 		width: 870px;
 	}
@@ -721,7 +725,7 @@ figure img {
 	max-height: 225px;
 	border: 1px solid black;
 	background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
-	
+
 	-webkit-box-shadow: 2px 2px 2px black;
 	-moz-box-shadow: 2px 2px 2px black;
 	box-shadow: 2px 2px 2px black;
@@ -773,7 +777,7 @@ a.dialog-fetcher:hover {
 aside.font-size-chooser {
 	padding: 0.1em 0.4em;
 	float: right;
-	
+
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;

@@ -15,39 +15,39 @@ use File::Temp qw/tempdir/;
 use File::Basename qw/dirname fileparse/;
 use File::Copy;
 use File::Path;
+use File::Spec;
 use Carp;
 
 extends 'Catalyst::View';
 
-__PACKAGE__->mk_accessors( qw( static_folder stylesheet cover author anonymous language skip_cover prefix templates ) );
+__PACKAGE__->mk_accessors(qw/language/);
 
 has metadata => (
-	isa     => 'Object', 
+	isa     => 'Object',
 	is      => 'ro',
 	default => sub { EBook::EPUB::Metadata->new() },
 	handles => [ qw/add_contributor
-					add_creator
-					add_coverage
-					add_date
-					add_meta_dcitem
-					add_description
-					add_format
-					add_meta_item
-					add_language
-					add_publisher
-					add_relation
-					add_rights
-					add_source
-					add_subject
-					add_translator
-					add_type
-				/],
+	                add_creator
+	                add_coverage
+	                add_date
+	                add_meta_dcitem
+	                add_description
+	                add_format
+	                add_meta_item
+	                add_language
+	                add_publisher
+	                add_relation
+	                add_rights
+	                add_source
+	                add_subject
+	                add_translator
+	                add_type/ ],
 	clearer => '_clear_metadata',
 	lazy    => 1,
 );
 
 has manifest => (
-	isa     => 'Object', 
+	isa     => 'Object',
 	is      => 'ro',
 	default => sub { EBook::EPUB::Manifest->new() },
 	clearer => '_clear_manifest',
@@ -55,7 +55,7 @@ has manifest => (
 );
 
 has spine => (
-	isa     => 'Object', 
+	isa     => 'Object',
 	is      => 'ro',
 	default => sub { EBook::EPUB::Spine->new() },
 	clearer => '_clear_spine',
@@ -63,7 +63,7 @@ has spine => (
 );
 
 has guide => (
-	isa     => 'Object', 
+	isa     => 'Object',
 	is      => 'ro',
 	default => sub { EBook::EPUB::Guide->new() },
 	clearer => '_clear_guide',
@@ -71,7 +71,7 @@ has guide => (
 );
 
 has ncx => (
-	isa     => 'Object', 
+	isa     => 'Object',
 	is      => 'ro',
 	default => sub { EBook::EPUB::NCX->new() },
 	handles => [ qw/add_navpoint/ ],
@@ -87,23 +87,23 @@ has _uuid => (
 	lazy    => 1,
 );
 
-has id_counters => ( 
-	isa     => 'HashRef', 
-	is      => 'ro', 
+has id_counters => (
+	isa     => 'HashRef',
+	is      => 'ro',
 	default =>  sub { {} },
 	clearer => '_clear_id_counters',
 	lazy    => 1,
 );
-has tmpdir => ( 
-	isa     => 'Str', 
-	is      => 'rw', 
+has tmpdir => (
+	isa     => 'Str',
+	is      => 'rw',
 	default =>  sub { tempdir( CLEANUP => 1 ); },
 	clearer => '_clear_tmpdir',
 	lazy    => 1,
 );
 
 sub clear {
-	my ( $self ) = shift;
+	my $self = shift;
 
 	$self->_clear_metadata;
 	$self->_clear_manifest;
@@ -116,94 +116,119 @@ sub clear {
 };
 
 sub process {
-	my ( $self, $c ) = @_;
+	my ($self, $c) = @_;
+
+	my $cache = $c->cache(backend => $c->action->private_path);
+	my $item = $c->stash->{story} || $c->stash->{event}
+		or Carp::croak "Bad stash";
+
+	$c->res->content_type('application/epub+zip');
+	$c->res->headers->header(
+		'Content-Disposition',
+		'attachment; filename=' . $item->id_uri . '.epub',
+	);
+
+	if (my $body = $cache->get($item->id)) {
+		$c->res->body($body);
+		return;
+	}
+
+	$c->stash->{wrapper} = 'wrapper/none.tt';
 
 	# Prepare
 	$self->manifest->add_item(
-		id			=> 'ncx',
-		href		=> 'toc.ncx', 
-		media_type	=> 'application/x-dtbncx+xml'
+		id          => 'ncx',
+		href        => 'toc.ncx',
+		media_type  => 'application/x-dtbncx+xml'
 	);
 
 	$self->spine->toc('ncx');
 	mkdir ($self->tmpdir . "/OPS") or die "Can't make OPS dir in " . $self->tmpdir;
 	# Implicitly generate UUID for book
-	my $ug = new Data::UUID;
-	my $uuid = $ug->create_str();
-	$self->_set_uuid( $uuid );
-	
+	$self->_set_uuid(Data::UUID->new->create_str);
+
 	#start adding general
-	$self->copy_stylesheet( $self->static_folder . '/' . $self->stylesheet, $self->stylesheet );
-	$self->add_language( $self->language );
-	
-	#cover
-	unless ( $self->skip_cover ) {
-		my $cover_img = $self->copy_image( $self->static_folder . '/' . $self->cover, $self->cover );
-		my $cover_xhtml = $c->view( "XHTML" )->render( $c, $self->templates->{cover} );
-		my $cover_id = $self->add_xhtml( 'cover.xhtml', $cover_xhtml, linear => 'no' );
-		$self->add_meta_item( 'cover', $cover_img );
-		# meta cover isn't accepted by all ereaders, so add cover as page
-		$self->add_reference({
-				type   => 'cover',
-				href   => 'cover.xhtml',
-				title  => 'Cover',
-		});
-	}
+	$self->copy_stylesheet(
+		$c->path_to('root', 'static', 'css/epub.css'),
+		'chapter.css'
+	);
+	$self->add_language($self->language);
 
 	# single story ebook
-	if ( exists $c->stash->{story} ) {
-		$self->add_title( $c->stash->{story}->title );
-		my $author = $c->stash->{story}->author;
-		$author = $self->anonymous unless $c->stash->{event}->is_ended;
-		$self->add_author( $author );
-		my $story_xml = $c->view( "XHTML" )->render( $c, $self->templates->{chapter} );
-		my $story_id = $self->add_xhtml( $self->prefix->{chapter} . '.xhtml', $story_xml, linear => 'yes' );
+	if (defined(my $story = $c->stash->{story})) {
+		$self->add_title($story->title);
+		$self->add_author($story->event->is_ended ? $story->author : 'Anonymous');
+
+		my $id = $self->add_xhtml(
+			'chapter.xhtml',
+			$c->view("HTML")->render($c, 'epub/story.tt'),
+			linear => 'yes',
+		);
+
 		$self->add_navpoint(
-			label      => $c->stash->{story}->title,
-			id         => $story_id,
-			content    => $self->prefix->{chapter} . '.xhtml',
+			label      => $story->title,
+			id         => $id,
+			content    => 'chapter.xhtml',
 			play_order => 1,
 		);
-		if ( $c->stash->{event}->art ) {
-			for my $image( $c->stash->{story}->images->all ) {
-				$self->add_image( $image->filename( $self->prefix->{image} ), $image->contents, $image->mimetype );
+
+		if ($story->event->art) {
+			my $images = $story->images;
+			while (my $image = $images->next) {
+				$self->add_image(
+					File::Spec->catfile('images', $image->filename),
+					$image->contents,
+					$image->mimetype,
+				);
 			}
 		}
 	}
 	# multi story ebook
-	elsif ( exists $c->stash->{event} ) {
-		my $i = 1;
-		$self->add_title( $c->stash->{event}->prompt );
-		$self->add_author( $self->author );
-		if ( $c->stash->{event}->art ) {
-			for my $image( $c->stash->{event}->images->all ) {
-				$self->add_image( $image->filename( 'images/image' ), $image->contents, $image->mimetype );
+	elsif (defined(my $event = $c->stash->{event})) {
+		$self->add_title($event->prompt);
+		$self->add_author('Write-off Participants');
+
+		if ($event->art) {
+			my $images = $event->images;
+			while (my $image = $images->next) {
+				$self->add_image(
+					File::Spec->catfile('images', $image->filename),
+					$image->contents,
+					$image->mimetype,
+				);
 			}
 		}
-		for my $story( $c->stash->{event}->storys->all ) {
-			$c->stash->{story} = $story;
-			my $story_xhtml = $c->view( "XHTML" )->render( $c, $self->templates->{chapter} );
-			my $story_id = $self->add_xhtml( $self->prefix->{chapter} . $i . '.xhtml', $story_xhtml, linear => 'yes' );
-			my $title = $story->title;
-			$title .= ' by ' . $story->author if $c->stash->{event}->is_ended;
+
+		my $i = 1;
+		my $storys = $event->storys;
+		while (my $story = $storys->next) {
+			local $c->stash->{story} = $story;
+
+			my $id = $self->add_xhtml(
+				"chapter$i.xhtml",
+				$c->view('HTML')->render($c, 'epub/story.tt'),
+				linear => 'yes'
+			);
+
 			$self->add_navpoint(
-				label      => $title,
-				id         => $story_id,
-				content    => $self->prefix->{chapter} . $i . '.xhtml',
+				label      => $story->title,
+				id         => $id,
+				content    => "chapter$i.xhtml",
 				play_order => $i,
 			);
-			$i = $i + 1;
+			$i++;
 		}
 	}
 
-	my $zip = File::Temp->new( SUFFIX => '.epub' );
-	$self->pack_zip( $zip->filename );
-	my $output = do { local $/; <$zip> };
-	$c->response->body( $output );
+	my $zip = File::Temp->new(SUFFIX => '.epub');
+	$self->pack_zip($zip->filename);
+	$c->res->body(do { local $/; <$zip> });
+
+	$cache->set($item->id, $c->res->body);
 
 	#clean up
 	$self->clear;
-	File::Temp::cleanup();
+	File::Temp::cleanup;
 }
 
 sub to_xml {
@@ -217,7 +242,7 @@ sub to_xml {
 	);
 
 	$writer->xmlDecl( "utf-8" );
-	$writer->startTag( 'package', 
+	$writer->startTag( 'package',
 		xmlns               => 'http://www.idpf.org/2007/opf',
 		version             => '2.0',
 		'unique-identifier' => 'BookId',
@@ -243,12 +268,12 @@ sub add_title {
 	$self->metadata->add_title( $title );
 	my $ncx_title =  $self->ncx->title;
 	# Collect all titles in a row for NCX
-	$title = "$ncx_title $title" if ( defined( $ncx_title ) );
-	$self->ncx->title( $title );
+	$title = "$ncx_title $title" if defined $ncx_title;
+	$self->ncx->title($title);
 }
 
 sub _set_uuid {
-	my ( $self, $uuid ) = @_; 
+	my ( $self, $uuid ) = @_;
 
 	# Just some naive check for key to be UUID
 	if ( $uuid !~ /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i ) {
@@ -284,7 +309,7 @@ sub add_xhtml_entry {
 	my ( $self, $filename, %opts ) = @_;
 	my $linear = 1;
 
-	$linear = 0 if ( defined ( $opts{linear} ) && 
+	$linear = 0 if ( defined ( $opts{linear} ) &&
 			$opts{linear} eq 'no');
 
 

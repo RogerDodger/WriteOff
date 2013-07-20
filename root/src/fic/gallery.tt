@@ -4,20 +4,13 @@
 <table class="solid">
 	<tr class="heading">
 		<th style="min-width: 28px">#</th>
-		<th> </th>
 		[% '<th> </th>' IF event.art %]
-		<th style="width: 100%">Story</th>
+		<th colspan="2">Story</th>
 		<th>Wordcount</th>
 	</tr>
 	[%- FOREACH story IN storys; i = i + 1 %]
 	<tr class="[% loop.parity %]">
 		<td class="center">[% i %]</td>
-		<td class="center">
-			<a href="[% c.uri_for( c.controller('Fic').action_for('view'),
-				[ story.id_uri ] ) %]?plain" class="new-tab">
-				<span class="ui-icon ui-icon-script" title="View as plain text"></span>
-			</a>
-		</td>
 		[%- IF event.art %]
 		<td>
 			<a class="dialog-fetcher" title="Show related artwork(s)"
@@ -26,11 +19,15 @@
 			</a>
 		</td>
 		[%- END %]
-		<td>
+		<td style="width: 100%">
 			<a class="link" href="[% c.uri_for( c.controller('Fic')
 				.action_for('view'), [ story.id_uri ]) %]">
 				[% story.title | html %]
 			</a>
+		</td>
+		<td style="white-space: nowrap">
+			(<a class="link" href="[% c.uri_for_action('/fic/view', [ story.id_uri ]) %].txt">txt</a>,
+			<a class="link" href="[% c.uri_for_action('/fic/view', [ story.id_uri ]) %].epub">epub</a>)
 		</td>
 		<td class="center">[% story.wordcount.chunk(-3).join(',') %]</td>
 	</tr>
@@ -38,22 +35,25 @@
 </table>
 [%- END %]
 
-[%- IF event.fic_gallery_opened; i = 0 -%]
+[%- IF event.fic_gallery_opened -%]
+	[%- i = 0 %]
 
 	[%- PROCESS story_table  storys = event.public_story_candidates -%]
 
 	[%- IF event.prelim && !event.prelim_votes_allowed %]
 		[%- PROCESS story_table  storys = event.public_story_noncandidates -%]
 	[%- END -%]
-	
-<p class="ui-state-default center" style="padding: 7px">
-	Total wordcount: [% event.storys_rs.wordcount.chunk(-3).join(',') %]
-</p>
 
+	<p class="ui-state-default center" style="padding: 7px">
+		Total wordcount: [% event.storys_rs.wordcount.chunk(-3).join(',') %]<br>
+		<a class="link" href="[% c.uri_for(c.action, [ event.id_uri ], { 'format' => 'epub'}) %]">
+			Download all as epub
+		</a>
+	</p>
 [%- ELSE %]
-<p>
-	Gallery opens: <strong>[% format_dt( event.prelim || event.public ) %]</strong>.
-	<br />
-	Gallery is <strong class="bad">closed</strong>.
-</p>
+	<p>
+		Gallery opens: <strong>[% format_dt( event.prelim || event.public ) %]</strong>.
+		<br />
+		Gallery is <strong class="bad">closed</strong>.
+	</p>
 [%- END %]
