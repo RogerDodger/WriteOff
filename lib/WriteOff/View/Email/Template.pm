@@ -9,7 +9,7 @@ __PACKAGE__->config(
 	default => {
 		content_type => 'text/html',
 		charset => 'utf-8',
-		view => 'HTML',
+		view => 'TT',
 	},
 );
 

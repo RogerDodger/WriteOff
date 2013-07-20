@@ -161,7 +161,7 @@ sub process {
 
 		my $id = $self->add_xhtml(
 			'chapter.xhtml',
-			$c->view("HTML")->render($c, 'epub/story.tt'),
+			$c->view('TT')->render($c, 'epub/story.tt'),
 			linear => 'yes',
 		);
 
@@ -206,7 +206,7 @@ sub process {
 
 			my $id = $self->add_xhtml(
 				"chapter$i.xhtml",
-				$c->view('HTML')->render($c, 'epub/story.tt'),
+				$c->view('TT')->render($c, 'epub/story.tt'),
 				linear => 'yes'
 			);
 

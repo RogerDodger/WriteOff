@@ -30,7 +30,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.34.2';
+our $VERSION = 'v0.34.3';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -42,11 +42,8 @@ __PACKAGE__->config(
 	AdminName  => 'admin',
 	AdminEmail => 'admin@example.com',
 
-	default_view => 'HTML',
-	'View::HTML' => {
-		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
-	},
-	'View::XHTML' => {
+	default_view => 'TT',
+	'View::TT' => {
 		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
 	},
 	'View::JSON' => {

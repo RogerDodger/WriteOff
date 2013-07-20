@@ -1,4 +1,4 @@
-package WriteOff::View::HTML;
+package WriteOff::View::TT;
 use utf8;
 use 5.014;
 use Moose;
@@ -17,8 +17,8 @@ __PACKAGE__->config(
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
-	expose_methods => [ qw/format_dt bb_render medal_for title_html/ ],
-	render_die     => 1,
+	expose_methods     => [ qw/format_dt medal_for title_html/ ],
+	render_die         => 1,
 );
 
 our $BBCODE_CONFIG = {
@@ -154,24 +154,6 @@ sub title_html {
 	           map { Template::Filters::html_filter($_) }
 	             ref $title eq 'ARRAY' ? reverse @$title : $title || ();
 	return join " &#x2022; ", $title || (), $c->config->{name};
-}
-
-sub bb_render {
-	my ( $self, $c, $text ) = @_;
-
-	return '' unless $text;
-
-	my $bb = Parse::BBCode->new($BBCODE_CONFIG);
-
-	$text = $bb->render( $text );
-
-	# Remove line breaks that immediately follow blocks
-	for my $block ( '<hr>', '</blockquote>', '</div>' ) {
-		my $e = quotemeta $block;
-		$text =~ s/$e\K\s*?<br>//g;
-	}
-
-	return $text;
 }
 
 sub medal_for {
