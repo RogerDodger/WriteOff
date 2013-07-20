@@ -17,6 +17,10 @@ h6,
 	text-align: center;
 }
 
+img {
+	width: 100%;
+}
+
 hr {
 	display: block;
 	height: 1px;
