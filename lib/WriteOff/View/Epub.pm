@@ -80,11 +80,12 @@ has ncx => (
 );
 
 has _uuid => (
-	isa     => 'Str',
-	is      => 'rw',
-	clearer => '_clear_uuid',
-	default => '',
-	lazy    => 1,
+	isa       => 'Str',
+	is        => 'rw',
+	clearer   => '_clear_uuid',
+	predicate => '_has_uuid',
+	default   => '',
+	lazy      => 1,
 );
 
 has id_counters => (
@@ -94,6 +95,7 @@ has id_counters => (
 	clearer => '_clear_id_counters',
 	lazy    => 1,
 );
+
 has tmpdir => (
 	isa     => 'Str',
 	is      => 'rw',
@@ -102,7 +104,7 @@ has tmpdir => (
 	lazy    => 1,
 );
 
-sub clear {
+sub _clear {
 	my $self = shift;
 
 	$self->_clear_metadata;
@@ -227,7 +229,7 @@ sub process {
 	$cache->set($item->id, $c->res->body);
 
 	#clean up
-	$self->clear;
+	$self->_clear;
 	File::Temp::cleanup;
 }
 
@@ -280,18 +282,14 @@ sub _set_uuid {
 		carp "$uuid - is not valid UUID";
 		return;
 	}
-	my $key = $uuid;
 
-	$key =~ s/-//g;
-	$key =~ s/([a-f0-9]{2})/chr(hex($1))/egi;
-	if ( defined( $self->_uuid ) ) {
+	if ($self->_has_uuid) {
 		warn "Overriding existing uuid " . $self->_uuid;
-		$self->_uuid( $uuid );
 	}
 
-	$self->ncx->uid( "urn:uuid:$uuid" );
-	$self->metadata->set_book_id( "urn:uuid:$uuid" );
-	$self->_uuid( $uuid );
+	$self->ncx->uid("urn:uuid:$uuid");
+	$self->metadata->set_book_id("urn:uuid:$uuid");
+	$self->_uuid($uuid);
 }
 
 sub add_identifier {
