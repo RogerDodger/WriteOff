@@ -1,11 +1,13 @@
 Changelog for WriteOff.pm
 =========================
 
-v0.35
------
+v0.35 - 20 Jul 2013
+-------------------
 
 - Renamed WriteOff::Helpers to WriteOff::Util
+- Renamed WriteOff::View::HTML to WriteOff::View::TT
 - Renamed the horribly named `check_datetimes_ascend` to `sorted` and removed unnecessary use and redefinition of it throughout the app
+- Split `DateTime::duration_since_now` into `DateTime::delta` and `DateTime::delta_html`
 - Added some tests for WriteOff::Util
 - Implemented template output cacheing with Template::Plugin::Cache
 - EBook output format for stories (credit Kazunekit)
