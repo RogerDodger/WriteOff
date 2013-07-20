@@ -202,8 +202,7 @@ sub process {
 		}
 
 		my $i = 1;
-		my $storys = $event->storys;
-		while (my $story = $storys->next) {
+		for my $story ($event->public_story_candidates, $event->public_story_noncandidates) {
 			local $c->stash->{story} = $story;
 
 			my $id = $self->add_xhtml(
