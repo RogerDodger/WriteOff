@@ -11,6 +11,7 @@
 			'keys' => {
 				'type' => 'event-listing',
 				'id' => event.id,
+				'timzone' => c.user.timezone,
 			},
 		)
 	%]

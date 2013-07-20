@@ -142,9 +142,10 @@ sub format_dt {
 	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
 		$dt->rfc2822,
 		$dt->iso8601,
-		defined $fmt
-			? $dt->set_time_zone($tz)->strftime($fmt)
-			: $dt->rfc2822;
+		do {
+			$dt->set_time_zone($tz);
+			defined $fmt ? $dt->strftime($fmt) : $dt->rfc2822;
+		};
 }
 
 sub title_html {
