@@ -1,6 +1,11 @@
 Changelog for WriteOff.pm
 =========================
 
+v0.36
+-----
+
+- Added cacheing of some TT output
+
 v0.35 - 20 Jul 2013
 -------------------
 
