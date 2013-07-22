@@ -1,12 +1,21 @@
-[% USE cache = Cache -%]
-[%
-	cache.inc(
-		'template' => 'event/results_.tt',
-		'ttl' => 360,
-		'keys' => {
-			'type' => 'event-results',
-			'id' => event.id,
-			'ended' => event.is_ended,
-		},
-	);
--%]
+<h1>Results</h1>
+
+[%- IF event.is_ended -%]
+	[%-
+		USE cache = Cache;
+		cache.inc(
+			'template' => 'event/results_.tt',
+			'ttl' => 360,
+			'keys' => {
+				'type' => 'event-results',
+				'id' => event.id,
+			},
+		);
+	-%]
+[%- ELSE %]
+<p>
+	Results open: <strong>[% format_dt( event.end ) %]</strong>.
+	<br>
+	Results are <strong class="bad">closed</strong>.
+</p>
+[%- END %]

@@ -458,18 +458,19 @@ nav li:hover ul li:hover a {
 	display: table-cell;
 	vertical-align: top;
 }
-.results p img {
-	position: relative;
-	top: 2px;
-}
-.results p {
-	margin-bottom: 0.3em;
-}
-.results p + p {
-	margin-top: 0;
-}
 .results h3 {
 	margin-top: 2em;
+}
+.results .items {
+	padding-left: 0;
+	list-style-type: none;
+	line-height: 1.6;
+}
+.results.fic {
+	min-width: 350px;
+}
+.results.art {
+	padding-left: 1em;
 }
 
 ul.contents {
