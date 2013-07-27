@@ -1,6 +1,8 @@
 package WriteOff::Controller::Root;
 use Moose;
 use namespace::autoclean;
+require WriteOff::DateTime;
+
 no warnings "uninitialized";
 
 BEGIN { extends 'Catalyst::Controller' }
@@ -26,7 +28,7 @@ sub auto :Private {
 	my ( $self, $c ) = @_;
 
 	$c->stash(
-		now        => $c->model('DB::Event')->now_dt,
+		now        => WriteOff::DateTime->now,
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
 		title      => [],
 		editor     => $c->user && $c->user->obj->is_admin,

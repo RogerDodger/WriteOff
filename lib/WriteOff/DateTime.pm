@@ -2,6 +2,7 @@ package WriteOff::DateTime;
 
 require DateTime;
 require DateTime::Format::Human::Duration;
+require DateTime::Format::RFC3339;
 use 5.014;
 
 sub DateTime::rfc2822 {
@@ -29,6 +30,17 @@ sub DateTime::delta_html {
 		$self->rfc2822,
 		$self->iso8601,
 		$self->delta;
+}
+
+sub now {
+	if (defined(my $t = $ENV{WRITEOFF_DATETIME})) {
+		return DateTime::Format::RFC3339->parse_datetime($t);
+	}
+	return DateTime->now;
+}
+
+sub timezones {
+	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
 }
 
 1;

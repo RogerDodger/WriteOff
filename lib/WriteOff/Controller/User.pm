@@ -119,11 +119,11 @@ sub do_register :Private {
 			'EMAIL_MX',
 			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'email' ]
 		],
-		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', $c->timezones ] ],
+		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', WriteOff::DateTime->timezones ] ],
 		captcha  => [ [ 'EQUAL_TO', 1 ] ],
 	);
 
-	if(!$c->form->has_error) {
+	if (!$c->form->has_error) {
 		$c->stash->{user} = $c->model('DB::User')->create({
 			username => $c->form->valid('username'),
 			password => $c->form->valid('password'),
@@ -152,6 +152,8 @@ sub settings :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
+
+	$c->stash->{timezones} = [ WriteOff::DateTime->timezones ];
 
 	$c->forward('do_settings') if $c->req->method eq 'POST';
 
@@ -185,7 +187,7 @@ sub do_settings :Private {
 			old => [ 'NOT_BLANK' ],
 		);
 
-		if( !$c->form->has_error ) {
+		if (!$c->form->has_error) {
 			$c->user->update({ password => $c->form->valid('password') });
 			$c->flash->{status_msg} = 'Password changed successfully';
 		}
@@ -194,11 +196,10 @@ sub do_settings :Private {
 		}
 	}
 
-	if( $c->req->params->{submit} eq 'Change settings' ) {
-
+	if ($c->req->params->{submit} eq 'Change settings') {
 		my $tz = $c->req->param('timezone');
 
-		if( $tz ~~ [ $c->timezones ] ) {
+		if (grep { $_ eq $tz } WriteOff::DateTime->timezones) {
 			$c->user->update({
 				timezone => $tz,
 				mailme   => $c->req->param('mailme') ? 1 : 0,

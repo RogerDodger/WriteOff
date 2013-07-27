@@ -2,6 +2,7 @@ package WriteOff::Schema::ResultSet;
 
 use strict;
 use base 'DBIx::Class::ResultSet';
+require WriteOff::DateTime;
 
 sub datetime_parser {
 	return shift->result_source->schema->storage->datetime_parser;
@@ -15,15 +16,13 @@ sub parse_datetime {
 	return shift->datetime_parser->parse_datetime(shift);
 }
 
-sub now {	
+sub now {
 	my $self = shift;
-	return $self->format_datetime( $self->now_dt );
+	return $self->format_datetime($self->now_dt);
 }
 
 sub now_dt {
-	return DateTime->now;
-	
-	return shift->parse_datetime('2012-12-03 02:00:00');
+	return WriteOff::DateTime->now;
 }
 
 sub created_before {
@@ -48,7 +47,7 @@ sub seed_order {
 
 sub order_by {
 	my $self = shift;
-	
+
 	return $self->search_rs(undef, { order_by => shift });
 }
 
@@ -62,22 +61,22 @@ resultsets. Must be called after with_scores().
 
 sub with_stats {
 	my $self = shift;
-	
+
 	my @items = $self->all;
 	my $n = $#items;
-	
+
 	for( my $i = 0; $i <= $n; $i++ ) {
 		my $this = $items[$i];
 		my ($pos, $pos_low) = ($i, $i);
-		
+
 		$pos-- while $pos > 0 && $this == $items[$pos-1];
 		$this->{__pos} = $pos;
-		
+
 		$pos_low++ while $pos_low < $n && $this == $items[$pos_low+1];
 		$this->{__pos_low} = $pos_low;
-		
+
 		my (@votes, $sum) = $this->votes->public->get_column('value')->all;
-		
+
 		if( @votes ) {
 			$sum += ($_ - $this->public_score) ** 2 for @votes;
 			$this->{__stdev} = sqrt $sum / @votes;
@@ -86,7 +85,7 @@ sub with_stats {
 			$this->{__stdev} = 0;
 		}
 	}
-	
+
 	return @items;
 }
 

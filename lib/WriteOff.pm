@@ -30,7 +30,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.35.1';
+our $VERSION = 'v0.35.2';
 
 __PACKAGE__->config(
 	name => 'Write-off',
@@ -176,7 +176,7 @@ __PACKAGE__->config(
 	enable_catalyst_header => 1,
 );
 
-if( !$ENV{CATALYST_DEBUG} ) {
+if (!$ENV{CATALYST_DEBUG}) {
 	require WriteOff::Log;
 
     my $logger = WriteOff::Log->new;
@@ -189,6 +189,10 @@ __PACKAGE__->setup;
 
 $ENV{TZ} = __PACKAGE__->config->{timezone};
 
+if (defined __PACKAGE__->config->{now}) {
+	$ENV{WRITEOFF_DATETIME} = __PACKAGE__->config->{now};
+}
+
 __PACKAGE__->schedule(
 	at    => '0 * * * *',
 	event => '/cron/cleanup',
@@ -199,20 +203,8 @@ __PACKAGE__->schedule(
 	event => '/cron/check_schedule',
 );
 
-sub wordcount {
-	my ( $self, $str ) = @_;
-
-	return scalar split /\s+/, $str;
-}
-
-sub timezones {
-	my $self = @_;
-
-	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
-}
-
 sub mailfrom {
-	my( $self, $name, $user ) = @_;
+	my ($self, $name, $user) = @_;
 
 	$name //= $self->config->{name};
 	$user //= 'noreply';
@@ -227,7 +219,7 @@ sub user_id {
 }
 
 sub app_version {
-	return version->parse( $VERSION )->stringify;
+	return version->parse($VERSION)->stringify;
 }
 
 =head1 NAME
