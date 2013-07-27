@@ -5,6 +5,9 @@ v0.36
 -----
 
 - Added cacheing of some TT output
+- Added WriteOff::Action::Fetch and refractored stuff appropriately
+- Made timelording easier
+- Let events have no voting rounds, and hence no results
 
 v0.35 - 20 Jul 2013
 -------------------
