@@ -16,7 +16,7 @@
 		<input type="text" name="organiser" class="autocomplete-user"
 			maxlength="[% c.config.len.max.user %]" required>
 	</p>
-			
+
 	<p class="inline">
 		<label>Initial prompt</label>
 		<input type="text" name="prompt" placeholder="TBD" maxlength="[% c.config.len.max.prompt %]">
@@ -34,6 +34,9 @@
 	</p>
 	<p class="inline">
 		<label>Fic Duration</label>
+		<input type="checkbox" name="has_fic" class="toggler" checked="checked">
+		Has fic
+		<br>
 		<input type="number" name="fic_dur"
 			size="4" max="9999" min="1" value="72" required>
 		Hours
@@ -48,6 +51,9 @@
 	</p>
 	<p class="inline">
 		<label>Public Duration</label>
+		<input type="checkbox" name="has_public" class="toggler" checked="checked">
+		Has public
+		<br>
 		<input type="number" name="public_dur"
 			size="4" max="9999" min="1" value="7" required>
 		Days

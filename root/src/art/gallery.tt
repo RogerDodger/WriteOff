@@ -47,7 +47,7 @@
 
 [%- ELSE %]
 <p>
-	Gallery opens: <strong>[% format_dt( event.fic ) %]</strong>.
+	Gallery opens: <strong>[% format_dt(event.art_gallery_opens) %]</strong>.
 	<br />
 	Gallery is <strong class="bad">closed</strong>.
 </p>

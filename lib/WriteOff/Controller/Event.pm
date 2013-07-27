@@ -40,13 +40,13 @@ sub add :Local :Args(0) {
 				'NOT_BLANK',
 				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
 			],
-			wc_min => [ qw/NOT_BLANK UINT/, [ 'LESS_THAN', $c->req->param('wc_max') ] ],
-			wc_max => [ qw/NOT_BLANK UINT/ ],
-			fic_dur     => [ qw/NOT_BLANK UINT/ ],
-			public_dur  => [ qw/NOT_BLANK UINT/ ],
+			wc_min => [ $p->{has_fic} ? qw/NOT_BLANK UINT/ : () ],
+			wc_max => [ $p->{has_fic} ? qw/NOT_BLANK UINT/ : () ],
+			fic_dur     => [ $p->{has_fic}    ? qw/NOT_BLANK UINT/ : () ],
+			public_dur  => [ $p->{has_public} ? qw/NOT_BLANK UINT/ : () ],
 			art_dur     => [ $p->{has_art}    ? qw/NOT_BLANK UINT/ : () ],
 			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
-			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ]
+			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ],
 		);
 
 		$c->forward('do_add') if !$c->form->has_error;
@@ -69,38 +69,43 @@ sub do_add :Private {
 		$row{prompt_voting} = $dt->add( minutes => $interim )->clone;
 		$dt->add( minutes => $interim );
 	}
-	else {
-		# Need to set this to something, since I (stupidly) made the row NOT NULL
-		$row{prompt_voting} = $dt;
-	}
 
 	if ($p->{has_art}) {
 		$row{art}     = $dt->clone;
 		$row{art_end} = $dt->add( hours => $c->form->valid('art_dur') )->clone;
 	}
 
-	$row{fic}     = $dt->clone;
-	$row{fic_end} = $dt->add( hours => $c->form->valid('fic_dur') )->clone;
+	if ($p->{has_fic}) {
+		$row{wc_min}  = $c->form->valid('wc_min');
+		$row{wc_max}  = $c->form->valid('wc_max');
+		if ($row{wc_min} > $row{wc_max}) {
+			($row{wc_min}, $row{wc_max}) = ($row{wc_max}, $row{wc_min});
+		}
+
+		$row{fic}     = $dt->clone;
+		$row{fic_end} = $dt->add(hours => $c->form->valid('fic_dur'))->clone;
+	}
 
 	if ($p->{has_prelim}) {
-		$row{prelim} = $dt->clone->add( minutes => $leeway );
-		$row{public} = $dt->add( days => $c->form->valid('prelim_dur') )->clone;
+		$row{prelim} = $dt->clone;
+		$row{prelim}->add(minutes => $leeway);
+		$dt->add(days => $c->form->valid('prelim_dur'));
 	}
-	else {
-		$row{public} = $dt->clone->add( minutes => $leeway );
+
+	if ($p->{has_public}) {
+		$row{public} = $dt->clone;
+		$row{public}->add(minutes => $leeway) if !$p->{has_prelim};
+		$dt->add(days => $c->form->valid('public_dur'));
 	}
 
 	if ($p->{has_judges}) {
-		$row{private} = $dt->add( days => $c->form->valid('public_dur')  )->clone;
-		$row{end}     = $dt->add( days => $c->form->valid('private_dur') )->clone;
-	}
-	else {
-		$row{end} = $dt->add( days => $c->form->valid('public_dur') )->clone;
+		$row{private} = $dt->clone;
+		$row{private}->add(minutes => $leeway) if !$p->{has_prelim} && !$p->{has_public};
+		$dt->add(days => $c->form->valid('private_dur'));
 	}
 
+	$row{end} = $dt->clone;
 	$row{prompt} = $c->form->valid('prompt') || 'TBD';
-	$row{wc_min} = $c->form->valid('wc_min');
-	$row{wc_max} = $c->form->valid('wc_max');
 
 	$c->stash->{event} = $c->model('DB::Event')->create(\%row);
 	$c->stash->{event}->set_content_level( $c->form->valid('content_level') );
@@ -120,6 +125,9 @@ sub do_add :Private {
 
 sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+
+	$c->detach('/error', ['There is no fic component to this event.'])
+		unless $c->stash->{event}->fic;
 
 	push $c->stash->{title}, 'Fic';
 }
@@ -145,13 +153,18 @@ sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {
 sub vote :Chained('fetch') :PathPart('vote') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
+	$c->detach('/error', ['There is no voting component to this event.'])
+		unless $c->stash->{event}->has_results;
+
 	push $c->stash->{title}, 'Vote';
 }
 
 sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{start} = $c->stash->{event}->has_prompt ? 'the prompt is released' : 'the event starts';
+	$c->stash->{start} = $c->stash->{event}->has_prompt
+		? 'the prompt is released'
+		: 'the event starts';
 
 	$c->stash->{template} = 'event/rules.tt';
 	push $c->stash->{title}, 'Rules';
@@ -159,6 +172,9 @@ sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 
 sub results :Chained('fetch') :PathPart('results') :Args(0) {
 	my ( $self, $c ) = @_;
+
+	$c->detach('/error', ['There are no results for this event.'])
+		unless $c->stash->{event}->has_results;
 
 	$c->stash->{awards} = { map { $_->name => $_ } $c->model('DB::Award')->all };
 

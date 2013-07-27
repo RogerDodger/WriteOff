@@ -68,7 +68,17 @@ jQuery(document).ready(function($) {
 
 	$('input[type="checkbox"].toggler')
 		.on('change', function() {
-			$(this).nextAll('input').get(0).disabled = !this.checked;
+			var caller = this;
+			$(this).parent().find('input').each(function() {
+				if (this.name !== caller.name) {
+					this.disabled = !caller.checked;
+				}
+			});
+			if (this.name == 'has_fic') {
+				$('input[name="wc_min"], input[name="wc_max"]').each(function () {
+					this.disabled = !caller.checked;
+				});
+			}
 		})
 		.trigger('change');
 

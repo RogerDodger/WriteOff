@@ -111,7 +111,8 @@ sub has_prompt {
 }
 
 sub has_results {
-	return shift->public;
+	my $self = shift;
+	return $self->prelim || $self->public || $self->private;
 }
 
 sub LEEWAY () {
@@ -224,28 +225,36 @@ sub prompt_votes_allowed {
 	return sorted $row->prompt_voting, $row->now_dt, $row->art || $row->fic;
 }
 
+sub art_gallery_opens {
+	return shift->art_end->clone->add(minutes => LEEWAY);
+}
+
+sub fic_gallery_opens {
+	return shift->fic_end->clone->add(minutes => LEEWAY);
+}
+
 sub art_subs_allowed {
 	my $row = shift;
 
-	return sorted $row->art, $row->now_dt, $row->art_end->add({ minutes => LEEWAY });
+	return sorted $row->art, $row->now_dt, $row->art_gallery_opens;
 }
 
 sub fic_subs_allowed {
 	my $row = shift;
 
-	return sorted $row->fic, $row->now_dt, $row->fic_end->add({ minutes => LEEWAY });
+	return sorted $row->fic, $row->now_dt, $row->fic_gallery_opens;
 }
 
 sub art_gallery_opened {
 	my $row = shift;
 
-	return $row->fic <= $row->now_dt;
+	return $row->art_gallery_opens <= $row->now_dt;
 }
 
 sub fic_gallery_opened {
 	my $row = shift;
 
-	return ($row->prelim || $row->public) <= $row->now_dt;
+	return $row->fic_gallery_opens <= $row->now_dt;
 }
 
 sub art_votes_allowed {

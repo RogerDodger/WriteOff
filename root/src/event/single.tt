@@ -50,6 +50,10 @@
 			<th>Organiser[% 's' IF event.organisers.max != 0 %]:</th>
 			<td>[% event.organisers.map_username.join_serial %]</td>
 		</tr>
+		<tr>
+			<th>Rated:</th>
+			<td>[% event.has_results ? 'Yes' : 'No' %]</td>
+		</tr>
 		[%- IF event.private %]
 		<tr>
 			<th>Judge[% 's' IF event.judges.max != 0 %]:</th>

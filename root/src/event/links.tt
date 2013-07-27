@@ -46,8 +46,9 @@
 		.action_for('private'), [ event.id_uri ]) %]">Fic voting (finals)</a></li>
 	[%- END %]
 </ul>
-[%- END %]
+[%- END; IF event.has_results %]
 <ul>
 	<li><a class="link" href="[% c.uri_for( c.controller('Event')
 		.action_for('results'), [ event.id_uri ]) %]">Results</a></li>
 </ul>
+[%- END %]
