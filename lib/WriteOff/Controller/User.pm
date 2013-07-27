@@ -6,17 +6,7 @@ no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-=head1 NAME
-
-WriteOff::Controller::User - Catalyst Controller
-
-=head1 DESCRIPTION
-
-Controller for user management - login/logout, registration, settings, etc.
-
-=cut
-
-sub index :PathPart('user') :Chained('/') :CaptureArgs(1) {
+sub fetch :Chained('/') :PathPart('user') :CaptureArgs(1) :ActionClass('~Fetch') {
 	my ( $self, $c, $id ) = @_;
 
 	$c->stash->{user} = $c->model('DB::User')->find($id)
@@ -224,7 +214,7 @@ sub verify :Local :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{mailtype} = { noun => 'verification', verb => 'verify' };
-	
+
 	push $c->stash->{title}, 'Resend verification email';
 	$c->stash->{template} = 'user/mailme.tt';
 
@@ -243,7 +233,7 @@ sub verify :Local :Args(0) {
 	}
 }
 
-sub do_verify :PathPart('verify') :Chained('index') :Args(1) {
+sub do_verify :Chained('fetch') :PathPart('verify') :Args(1) {
 	my ( $self, $c, $token ) = @_;
 
 	if ($c->stash->{user}->verified) {
@@ -286,7 +276,7 @@ sub recover :Local :Args(0) {
 	}
 }
 
-sub do_recover :PathPart('recover') :Chained('index') :Args(1) {
+sub do_recover :Chained('fetch') :PathPart('recover') :Args(1) {
 	my ( $self, $c, $token ) = @_;
 
 	if (!$c->stash->{user}->verified) {

@@ -4,38 +4,13 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-=head1 NAME
+__PACKAGE__->config(model => 'Artist');
 
-WriteOff::Controller::Artist - Catalyst Controller
+sub fetch :Chained('/') :PathPart('artist') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-=head1 DESCRIPTION
-
-Catalyst Controller.
-
-=head1 METHODS
-
-=head2 index
-
-Grabs an artist
-
-=cut
-
-sub index :Chained('/') :PathPart('artist') :CaptureArgs(1) {
-	my ( $self, $c, $id ) = @_;
-	
-	$c->stash->{artist} = $c->model('DB::Artist')->find($id)
-		or $c->detach('/default');
-}
-
-=head2 scores
-
-Displays the scores for an artist.
-
-=cut
-
-sub scores :Chained('index') :PathPart('scores') :Args(0) {
+sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{scores} = $c->stash->{artist}->scores->search(undef, {
 		prefetch => 'event',
 		order_by => [
@@ -43,7 +18,7 @@ sub scores :Chained('index') :PathPart('scores') :Args(0) {
 			{ -desc => 'value' },
 		]
 	});
-	
+
 	$c->stash->{title} = 'Score Breakdown for ' . $c->stash->{artist}->name;
 	$c->stash->{template} = 'scoreboard/scores.tt';
 }

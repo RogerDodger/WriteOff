@@ -25,7 +25,17 @@ Detaches to index if the request is POST with a differing origin.
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
+	$c->stash(
+		now        => $c->model('DB::Event')->now_dt,
+		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
+		title      => [],
+		editor     => $c->user && $c->user->obj->is_admin,
+		format     => scalar($c->req->param('format')) || 'html',
+		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
+	);
+
 	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
+	my $quiet = $c->stash->{format} eq 'thumb' && $c->action eq 'art/view';
 
 	$c->log->info( sprintf "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ),
 		$c->req->method,
@@ -33,7 +43,7 @@ sub auto :Private {
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
-	) unless $so && $c->stash->{no_req_log};
+	) unless $so && $quiet;
 
 	if ($c->req->method eq 'POST') {
 		$c->req->{parameters} = {} if $c->config->{read_only};
@@ -43,15 +53,6 @@ sub auto :Private {
 	if ($c->req->header('x-requested-with') eq 'XMLHttpRequest') {
 		$c->stash->{wrapper} = 'wrapper/bare.tt';
 	}
-
-	$c->stash(
-		now        => $c->model('DB::Event')->now_dt,
-		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
-		title      => [],
-		editor     => $c->user && $c->user->obj->is_admin,
-		format     => $c->req->params->{format} // '',
-		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
-	);
 
 	1;
 }

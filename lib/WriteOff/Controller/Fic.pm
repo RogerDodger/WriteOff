@@ -3,50 +3,20 @@ use Moose;
 use namespace::autoclean;
 use WriteOff::Util 'wordcount';
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'Catalyst::Controller' }
 
-=head1 NAME
+__PACKAGE__->config(model => 'Story');
 
-WriteOff::Controller::Fic - Catalyst Controller
+sub _fetch :ActionClass('~Fetch') {}
 
-=head1 DESCRIPTION
-
-Catalyst Controller.
-
-=head1 METHODS
-
-=cut
-
-=head2 index :PathPart('fic') :Chained('/') CaptureArgs(1)
-
-Grabs a story
-
-=cut
-
-sub index :PathPart('fic') :Chained('/') :CaptureArgs(1) {
-	my ($self, $c, $arg) = @_;
-	my ($id, $desc, $ext) = $arg =~ /^(\d+)(.*?)(\.[a-z]+)?$/;
-	$ext ||= '';
-
-	unless (defined $id and $c->stash->{story} = $c->model('DB::Story')->find($id)) {
-		$c->detach('/default');
-	}
-
-	if ($id . $desc ne $c->stash->{story}->id_uri) {
-		$c->res->redirect(
-			$c->uri_for(
-				$c->action, [ $c->stash->{story}->id_uri . $ext ], $c->req->params
-			)
-		);
-	}
-
-	$c->stash->{format} ||= $ext ? substr($ext, 1) : 'html';
+sub fetch :Chained('/') :PathPart('fic') :CaptureArgs(1) {
+	my ($self, $c) = @_;
+	$c->forward('_fetch');
 	$c->stash->{event} = $c->stash->{story}->event;
-
-	push $c->stash->{title}, $c->stash->{event}->prompt, $c->stash->{story}->title;
+	unshift $c->stash->{title}, $c->stash->{event}->title;
 }
 
-sub view :PathPart('') :Chained('index') :Args(0) {
+sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	if ($c->stash->{format} eq 'txt') {
@@ -61,7 +31,7 @@ sub view :PathPart('') :Chained('index') :Args(0) {
 	}
 }
 
-sub gallery :PathPart('gallery') :Chained('/event/fic') :Args(0) {
+sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	if ($c->stash->{format} eq 'epub') {
@@ -93,7 +63,7 @@ sub form :Private {
 		user_id => { '!=' => eval { $c->stash->{story}->user_id } || $c->user_id }
 	});
 
-	if( $c->stash->{event}->art ) {
+	if ($c->stash->{event}->art) {
 		my @ids = $c->stash->{event}->images->get_column('id')->all;
 		my @params = $c->req->param('image_id') or return 0;
 
@@ -129,7 +99,7 @@ sub form :Private {
 	1;
 }
 
-sub submit :PathPart('submit') :Chained('/event/fic') :Args(0) {
+sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	push $c->stash->{title}, 'Submit';
@@ -176,7 +146,7 @@ sub do_submit :Private {
 	}
 }
 
-sub edit :PathPart('edit') :Chained('index') :Args(0) {
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
@@ -233,7 +203,7 @@ sub do_edit :Private {
 
 }
 
-sub delete :PathPart('delete') :Chained('index') :Args(0) {
+sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless
@@ -268,7 +238,7 @@ sub do_delete :Private {
 	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
 }
 
-sub rels :PathPart('rels') :Chained('index') {
+sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/default') if !$c->stash->{story}->event->fic_gallery_opened;

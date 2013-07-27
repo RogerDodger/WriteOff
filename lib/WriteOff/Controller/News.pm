@@ -4,49 +4,19 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-=head1 NAME
-
-WriteOff::Controller::News - Catalyst Controller
-
-=head1 DESCRIPTION
-
-Catalyst Controller.
-
-=head1 METHODS
-
-=cut
-
-
-=head2 list
-
-=cut
+__PACKAGE__->config(fetch => 'article');
 
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
 	push $c->stash->{title}, 'News';
-
-	1;
 }
 
-sub index :Chained('/') :PathPart('news') :CaptureArgs(1) {
-	my ( $self, $c, $arg ) = @_;
-	
-	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{article} = $c->model('DB::News')->find($id) or
-		$c->detach('/default');
-	
-	if( $arg ne $c->stash->{article}->id_uri ) {
-		my $url = $c->uri_for( $c->action, [ $c->stash->{article}->id_uri ] );
-		$c->res->redirect($url);
-		$c->detach();
-	}
-}
+sub fetch :PathPart('news') :Chained('/') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-sub view :Chained('index') :PathPart('') :Args(0) {
+sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	push $c->stash->{title}, $c->stash->{article}->title;
 	$c->stash->{template} = 'news/view.tt';
 }
 
@@ -78,7 +48,7 @@ sub do_add :Private {
 	}
 }
 
-sub edit :Chained('index') :PathPart('edit') :Args(0) {
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');

@@ -59,6 +59,10 @@ __PACKAGE__->belongs_to(
 	},
 );
 
+sub title {
+	return shift->contents;
+}
+
 sub is_manipulable_by {
 	my $self = shift;
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)

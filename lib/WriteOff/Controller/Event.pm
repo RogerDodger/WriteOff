@@ -4,47 +4,9 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-=head1 NAME
+sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-WriteOff::Controller::Event - Catalyst Controller
-
-=head1 DESCRIPTION
-
-Chained actions for grabbing an event and determining if the requested event
-part allows submissions at the current time.
-
-
-=head1 METHODS
-
-=head2 index :PathPart('event') :Chained('/') :CaptureArgs(1)
-
-Grabs an event.
-
-=cut
-
-sub index :PathPart('event') :Chained('/') :CaptureArgs(1) {
-	my ( $self, $c, $arg ) = @_;
-
-	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{event} = $c->model('DB::Event')->find($id) or
-		$c->detach('/default');
-
-	if ($arg ne $c->stash->{event}->id_uri) {
-		my $url = $c->uri_for( $c->action, [ $c->stash->{event}->id_uri ], $c->req->params );
-		$c->res->redirect($url);
-		$c->detach();
-	}
-
-	push $c->stash->{title}, $c->stash->{event}->prompt;
-}
-
-=head2 permalink :Chained('index') :PathPart('') :Args(0)
-
-Redirects to the event overview in the event listings.
-
-=cut
-
-sub permalink :Chained('index') :PathPart('') :Args(0) {
+sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->res->redirect(
@@ -57,12 +19,6 @@ sub permalink :Chained('index') :PathPart('') :Args(0) {
 		. "#" . $c->stash->{event}->id_uri
 	);
 }
-
-=head2 add :Local :Args(0)
-
-Adds an event.
-
-=cut
 
 sub add :Local :Args(0) {
 	my ( $self, $c ) = @_;
@@ -162,13 +118,13 @@ sub do_add :Private {
 	$c->res->redirect( $c->uri_for('/') );
 }
 
-sub fic :PathPart('fic') :Chained('index') :CaptureArgs(0) {
+sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	push $c->stash->{title}, 'Fic';
 }
 
-sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
+sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no art component to this event.'])
@@ -177,7 +133,7 @@ sub art :PathPart('art') :Chained('index') :CaptureArgs(0) {
 	push $c->stash->{title}, 'Art';
 }
 
-sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
+sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no prompt for this event.'])
@@ -186,13 +142,13 @@ sub prompt :PathPart('prompt') :Chained('index') :CaptureArgs(0) {
 	push $c->stash->{title}, 'Prompt';
 }
 
-sub vote :PathPart('vote') :Chained('index') :CaptureArgs(0) {
+sub vote :Chained('fetch') :PathPart('vote') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	push $c->stash->{title}, 'Vote';
 }
 
-sub rules :PathPart('rules') :Chained('index') :Args(0) {
+sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{start} = $c->stash->{event}->has_prompt ? 'the prompt is released' : 'the event starts';
@@ -201,7 +157,7 @@ sub rules :PathPart('rules') :Chained('index') :Args(0) {
 	push $c->stash->{title}, 'Rules';
 }
 
-sub results :PathPart('results') :Chained('index') :Args(0) {
+sub results :Chained('fetch') :PathPart('results') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{awards} = { map { $_->name => $_ } $c->model('DB::Award')->all };
@@ -213,7 +169,7 @@ sub results :PathPart('results') :Chained('index') :Args(0) {
 	$c->stash->{template} = 'event/results.tt';
 }
 
-sub view :PathPart('submissions') :Chained('index') :Args(0) {
+sub view :Chained('fetch') :PathPart('submissions') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward( $self->action_for('assert_organiser') );
@@ -227,7 +183,7 @@ sub view :PathPart('submissions') :Chained('index') :Args(0) {
 	$c->stash->{template} = 'user/me.tt';
 }
 
-sub edit :PathPart('edit') :Chained('index') :Args(0) {
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward( $self->action_for('assert_organiser') );
@@ -297,7 +253,7 @@ sub do_edit :Private {
 	}
 }
 
-sub remove_judge :PathPart('remove-judge') :Chained('index') :Args(1) {
+sub remove_judge :Chained('fetch') :PathPart('remove-judge') :Args(1) {
 	my ( $self, $c, $user_id ) = @_;
 
 	$c->forward( $self->action_for('assert_organiser') );
@@ -305,7 +261,7 @@ sub remove_judge :PathPart('remove-judge') :Chained('index') :Args(1) {
 	$c->forward( $self->action_for('remove_user'), [ $user_id, 'judge' ] );
 }
 
-sub remove_organiser :PathPart('remove-organiser') :Chained('index') :Args(1) {
+sub remove_organiser :Chained('fetch') :PathPart('remove-organiser') :Args(1) {
 	my ( $self, $c, $user_id ) = @_;
 
 	$c->forward( $c->controller('Root')->action_for('assert_admin') );
@@ -340,7 +296,7 @@ sub assert_organiser :Private {
 		$c->stash->{event}->is_organised_by( $c->user );
 }
 
-sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
+sub notify_mailing_list :Chained('fetch') :PathPart('notify_mailing_list') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');
@@ -353,9 +309,7 @@ sub notify_mailing_list :Chained('index') :PathPart('notify_mailing_list') {
 sub _notify_mailing_list :Private {
 	my ( $self, $c ) = @_;
 
-	return 0 unless eval {
-		$c->stash->{event}->isa('WriteOff::Schema::Result::Event');
-	};
+	return 0 if !UNIVERSAL::isa($c->stash->{event}, 'WriteOff::Schema::Result::Event');
 
 	my $rs = $c->model('DB::User')->mailing_list;
 
@@ -408,12 +362,10 @@ sub tally_results :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 
-	$c->log->info( sprintf "Tallying results for: Event %02d - %s",
-		$e->id, $e->prompt
-	);
+	$c->log->info(sprintf "Tallying results for: Event %d - %s", $e->id, $e->prompt);
 
-	$c->model('DB::Artist')->deal_awards_and_scores( $e->storys_rs );
-	$c->model('DB::Artist')->deal_awards_and_scores( $e->images_rs ) if $e->art;
+	$c->model('DB::Artist')->deal_awards_and_scores($e->storys_rs);
+	$c->model('DB::Artist')->deal_awards_and_scores($e->images_rs) if $e->art;
 	$c->model('DB::Artist')->recalculate_scores;
 }
 

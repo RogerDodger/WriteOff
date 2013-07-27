@@ -5,47 +5,11 @@ no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-=head1 NAME
+__PACKAGE__->config(model => 'Image');
 
-WriteOff::Controller::Art - Catalyst Controller
+sub fetch :Chained('/') :PathPart('art') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-=head1 DESCRIPTION
-
-Catalyst Controller.
-
-=head1 METHODS
-
-=cut
-
-=head2 index :PathPart('art') :Chained('/') CaptureArgs(1)
-
-Grabs an image
-
-=cut
-
-sub begin :Private {
-	my ( $self, $c ) = @_;
-
-	$c->stash->{no_req_log} = 1
-		if $c->action eq 'art/view' && $c->req->query_keywords eq 'thumb';
-}
-
-sub index :PathPart('art') :Chained('/') :CaptureArgs(1) {
-	my ( $self, $c, $arg ) = @_;
-
-	(my $id = $arg) =~ s/^\d+\K.*//;
-	$c->stash->{image} = $c->model('DB::Image')->find($id) or
-		$c->detach('/default');
-
-	if( $arg ne $c->stash->{image}->id_uri ) {
-		$c->res->redirect
-		( $c->uri_for( $c->action, [ $c->stash->{image}->id_uri ], $c->req->params ) );
-	}
-
-	push $c->stash->{title}, $c->stash->{image}->title;
-}
-
-sub view :Chained('index') :PathPart('') :Args(0) {
+sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->res->content_type($c->stash->{image}->mimetype);
@@ -70,7 +34,7 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 	$c->stash->{template} = 'art/gallery.tt';
 }
 
-sub submit :PathPart('submit') :Chained('/event/art') :Args(0) {
+sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{fillform}{artist} = eval { $c->user->last_artist
@@ -106,7 +70,7 @@ sub do_submit :Private {
 	}
 }
 
-sub edit :Chained('index') :PathPart('edit') {
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
@@ -135,8 +99,7 @@ sub do_edit :Private {
 
 	$c->forward('form');
 
-	if( !$c->form->has_error ) {
-
+	if (!$c->form->has_error) {
 		$c->stash->{image}->update( $c->stash->{row} );
 
 		$c->log->info( sprintf "Art %d edited by %s, to %s by %s (%.2fKB)",
@@ -169,7 +132,7 @@ sub form :Private {
 	});
 
 	my $img = $c->req->upload('image');
-	if( $img ) {
+	if ($img) {
 		$c->req->params->{mimetype} = $img->mimetype;
 		$c->req->params->{filesize} = $img->size;
 	}
@@ -208,7 +171,7 @@ sub form :Private {
 		website   => $c->form->valid('website') || undef,
 	};
 
-	if( $img ) {
+	if ($img) {
 		$c->stash->{row}{filesize} = $c->form->valid('filesize');
 		$c->stash->{row}{mimetype} = $c->form->valid('mimetype');
 
@@ -223,7 +186,7 @@ sub form :Private {
 	}
 }
 
-sub delete :PathPart('delete') :Chained('index') :Args(0) {
+sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', ['You cannot delete this item.']) unless
@@ -259,7 +222,7 @@ sub do_delete :Private {
 
 }
 
-sub rels :PathPart('rels') :Chained('index') {
+sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/default') if !$c->stash->{image}->event->fic_gallery_opened;

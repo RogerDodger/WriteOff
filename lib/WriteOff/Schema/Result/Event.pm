@@ -102,6 +102,10 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->many_to_many(users => 'user_events', 'user');
 
+sub title {
+	return shift->prompt;
+}
+
 sub has_prompt {
 	return shift->prompt_voting;
 }
