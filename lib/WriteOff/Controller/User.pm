@@ -375,12 +375,12 @@ sub list :Local :Args(0) {
 	}
 	)->with_stats;
 
-	if( $c->req->param('view') eq 'json' ) {
+	if ($c->stash->{format} eq 'json') {
 		$c->stash->{json} = [
 			$c->stash->{users}->get_column('username')->all
 		];
 
-		$c->detach( $c->view('JSON') );
+		$c->detach('View::JSON');
 	}
 
 	push $c->stash->{title}, 'Users';

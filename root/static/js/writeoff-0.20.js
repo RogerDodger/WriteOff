@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
 	});
 
 	$('input.autocomplete-user').autocomplete({
-		source: '/user/list?view=json&order_by=username',
+		source: '/user/list?format=json&q=username',
 		minLength: 1,
 	});
 
