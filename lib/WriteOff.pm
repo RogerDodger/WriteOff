@@ -161,8 +161,8 @@ __PACKAGE__->config(
 		},
 	},
 	login => {
-		limit => 5,
-		timer => 5, #minutes
+		limit => 10,
+		timer => '10 minutes', #default cache expiration time
 	},
 	elo_base => 1500,
 	prompts_per_user => 5,
@@ -224,15 +224,7 @@ sub app_version {
 
 =head1 NAME
 
-WriteOff - Catalyst based application
-
-=head1 SYNOPSIS
-
-    script/writeoff_server.pl
-
-=head1 DESCRIPTION
-
-Web application for handling the logic required to run a write-off event.
+WriteOff - Writing contests with anonymous voting
 
 =head1 SEE ALSO
 

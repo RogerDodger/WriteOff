@@ -47,12 +47,6 @@ CREATE TABLE bans (
 	created  TIMESTAMP
 );
 
-CREATE TABLE login_attempts (
-	id       INTEGER PRIMARY KEY,
-	ip       TEXT NOT NULL,
-	created  TIMESTAMP
-);
-
 -- Event tables
 CREATE TABLE events (
 	id              INTEGER PRIMARY KEY,

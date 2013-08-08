@@ -44,18 +44,16 @@ sub login :Local :Args(0) {
 sub do_login :Private {
 	my ( $self, $c ) = @_;
 
-	my $recently = DateTime->now->subtract(minutes => $c->config->{login}{timer});
-	my $attempts = $c->model('DB::LoginAttempt')
-			->search({ ip => $c->req->address })
-			->created_after($recently)
-			->count;
+	my $cache = $c->cache(backend => 'login-attempts');
+	my $key = $c->req->address;
+	my $attempts = $cache->get($key) // 0;
 
-	if ($attempts >= $c->config->{login}{limit}) {
+	if (++$attempts > $c->config->{login}{limit}) {
 		$c->res->status(429);
 		$c->stash->{error} = <<"EOF";
 You have recently made a number of failed login attempts and for security
 reasons have been temporarily blocked from making any more. Please try again
-in around ${ \$c->config->{login}{timer} } minutes.
+in around ${ \$c->config->{login}{timer} }.
 EOF
 		$c->detach('/error');
 	}
@@ -72,7 +70,7 @@ EOF
 		}
 	}
 	else {
-		$c->model('DB::LoginAttempt')->create({ ip => $c->req->address });
+		$cache->set($key, $attempts);
 		$c->flash->{error_msg} = 'Bad username or password';
 	}
 

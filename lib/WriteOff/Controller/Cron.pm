@@ -27,9 +27,9 @@ Cleans old data from the database.
 
 sub check_schedule :Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $rs = $c->model('DB::Schedule')->active_schedules;
-	
+
 	# Extract and delete schedules *before* executing them, lest long-running
 	# tasks execute twice.
 	my @schedules = $rs->all; $rs->delete;
@@ -39,9 +39,8 @@ sub check_schedule :Private {
 
 sub cleanup :Private {
 	my ( $self, $c ) = @_;
-	
+
 	$c->model('DB::Heat')->clean_old_entries;
-	$c->model('DB::LoginAttempt')->clean_old_entries;
 	$c->model('DB::User')->clean_unverified;
 }
 
