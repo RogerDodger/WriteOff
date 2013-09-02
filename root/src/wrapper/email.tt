@@ -1,0 +1,8 @@
+[% FILTER markdown -%]
+Hi there,
+
+[% content %]
+
+[% c.config.AdminName %]<br>
+[% name %] admin
+[%- END %]
