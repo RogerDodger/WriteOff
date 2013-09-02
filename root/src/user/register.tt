@@ -48,7 +48,7 @@
 	<p>
 		<label>Timezone</label>
 		<select name="timezone">
-		[%- FOREACH timezone IN c.timezones %]
+		[%- FOREACH timezone IN timezones %]
 			<option value="[% timezone %]">[% timezone | replace('_', ' ') %]</option>
 		[%- END %]
 		</select>

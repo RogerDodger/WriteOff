@@ -1,30 +1,14 @@
-<p>Hello,</p>
-<p>
-	You have been signed up to <a href="[% c.uri_for('/') %]">[% name %]</a>
-	with the following details:
-</p>
-<ul>
-	<li>
-		<strong>Username:</strong>
-		[% user.username %]
-	</li>
-	<li>
-		<strong>Password:</strong>
-		<em>&lt;encrypted&gt;</em>
-	</li>
-	<li>
-		<strong>Email:</strong>
-		[% user.email %]
-	</li>
-</ul>
-<p>
-	<a href="[% c.uri_for( c.controller('User').action_for('do_verify'),
-	[ user.id, user.token ]) %]">Click here</a> to verify this account.
-</p>
+[% WRAPPER wrapper/email.tt %]
 
-<hr />
+You have been signed up to <a href="[% c.uri_for('/') %]">[% name %]</a> with the following details:
 
-<p>
-	If you did not solicit this email, please ignore it. Unverified accounts
-	are periodically purged from the system.
-</p>
+* __Username:__ [% user.username %]
+* __Password:__ *&lt;encrypted&gt;*
+* __Email:__ [% user.email %]
+
+Go ahead and [verify this account]([% c.uri_for_action('/user/do_verify', [ user.id, token.value ]) %]).
+
+If you don't have any idea what this is, please ignore it. Unverified accounts
+are periodically purged from our system.
+
+[%- END %]

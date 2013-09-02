@@ -88,10 +88,12 @@ sub register :Local :Args(0) {
 
 	$c->res->redirect( $c->uri_for('/') ) if $c->user;
 
+	$c->stash->{timezones} = [ WriteOff::DateTime->timezones ];
+	$c->forward('/captcha_get');
+
 	push $c->stash->{title}, 'Register';
 	$c->stash->{template} = 'user/register.tt';
 
-	$c->forward('/captcha_get');
 	$c->forward('do_register') if $c->req->method eq 'POST';
 }
 
@@ -146,67 +148,99 @@ sub do_register :Private {
 	}
 }
 
-sub settings :Local :Args(0) {
+sub prefs :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
 
 	$c->stash->{timezones} = [ WriteOff::DateTime->timezones ];
 
-	$c->forward('do_settings') if $c->req->method eq 'POST';
+	$c->forward('do_prefs') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
 		timezone => $c->user->get('timezone'),
 		mailme   => $c->user->get('mailme') ? 'on' : '',
 	};
 
-	$c->stash->{title} = 'User Settings';
-	$c->stash->{template} = 'user/settings.tt';
+	push $c->stash->{title}, qw/User Preferences/;
+	$c->stash->{template} = 'user/prefs.tt';
 }
 
-sub do_settings :Private {
+sub do_prefs :Private {
 	my ( $self, $c ) = @_;
-
-	$c->res->redirect( $c->req->referer || $c->uri_for( $c->action ) );
 
 	$c->forward('/check_csrf_token');
 
-	if( $c->req->params->{submit} eq 'Change password' ) {
+	my $tz = $c->req->param('timezone');
 
-		$c->req->params->{old} = $c->user->obj->discard_changes
-			->check_password( $c->req->params->{old} );
+	if (grep { $_ eq $tz } WriteOff::DateTime->timezones) {
+		$c->user->update({
+			timezone => $tz,
+			mailme   => $c->req->param('mailme') ? 1 : 0,
+		});
+		$c->persist_user;
+		$c->flash->{status_msg} = 'Preferences changed successfully';
+	}
 
-		$c->form(
-			password => [
-				'NOT_BLANK',
-				[ 'LENGTH', $c->config->{len}{min}{pass}, $c->config->{len}{max}{pass} ]
-			],
-			{ pass_confirm => [qw/password password2/] } => ['DUPLICATION'],
-			old => [ 'NOT_BLANK' ],
-		);
+	$c->res->redirect($c->req->referer || $c->uri_for($c->action));
+}
 
-		if (!$c->form->has_error) {
-			$c->user->update({ password => $c->form->valid('password') });
+sub credentials :Path('credentials') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
+
+	my $key = $c->stash->{key} = $c->req->param('key') || '';
+	if ($key ne 'password' && $key ne 'email') {
+		$c->detach('/default');
+	}
+
+	if ($c->req->method eq 'POST') {
+		$c->forward('do_credentials');
+	}
+
+	push $c->stash->{title}, qw/User Credentials/;
+	$c->stash->{template} = 'user/credentials.tt';
+}
+
+sub do_credentials :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('/check_csrf_token');
+
+	my $user = $c->stash->{user} = $c->user->obj->discard_changes;
+
+	if (!$user->check_password(scalar $c->req->param('password'))) {
+		$c->flash->{error_msg} = 'Current password is invalid';
+	}
+	elsif ($c->stash->{key} eq 'password') {
+		my $new1 = $c->req->param('newpassword')  // '';
+		my $new2 = $c->req->param('confirmpassword') // '';
+
+		if ($new1 eq $new2) {
+			$c->user->update({ password => $new1 });
+			$c->persist_user;
 			$c->flash->{status_msg} = 'Password changed successfully';
 		}
 		else {
-			$c->flash->{error_msg} = 'Old Password is invalid';
+			$c->flash->{error_msg} = 'Passwords do not match';
+		}
+	}
+	elsif ($c->stash->{key} eq 'email') {
+		my $mailto = $c->stash->{mailto} = $c->req->param('email');
+
+		if (!defined $c->model('DB::User')->find({ email => $mailto })) {
+			$c->stash->{mailtype}{noun} = 'relocation';
+			$c->forward('send_email');
+			$c->flash->{status_msg} =
+				"Verification email sent to <strong>$mailto</strong>";
+		}
+		else {
+			$c->flash->{error_msg} = 'A user with that email address already exists';
 		}
 	}
 
-	if ($c->req->params->{submit} eq 'Change settings') {
-		my $tz = $c->req->param('timezone');
-
-		if (grep { $_ eq $tz } WriteOff::DateTime->timezones) {
-			$c->user->update({
-				timezone => $tz,
-				mailme   => $c->req->param('mailme') ? 1 : 0,
-			});
-			$c->persist_user;
-			$c->flash->{status_msg} = 'Settings changed successfully';
-		}
-	}
-
+	$c->res->redirect($c->req->referer || $c->uri_for($c->action));
 }
 
 sub verify :Local :Args(0) {
@@ -233,23 +267,23 @@ sub verify :Local :Args(0) {
 }
 
 sub do_verify :Chained('fetch') :PathPart('verify') :Args(1) {
-	my ( $self, $c, $token ) = @_;
+	my ($self, $c, $hash, $token) = @_;
 
-	if ($c->stash->{user}->verified) {
-		$c->stash->{error} = 'This account is already verified';
-		$c->detach('/error');
+	if ($token = $c->stash->{user}->find_token('verification', $hash)) {
+		$c->stash->{user}->update({ verified => 1 });
+		$c->flash->{status_msg} = 'Account verified successfully';
 	}
-
-	if ($c->stash->{user}->token eq $token) {
-		$c->stash->{user}->update({ verified => 1 })->new_token;
-		$c->set_authenticated( $c->find_user({ id => $c->stash->{user}->id }) );
-
-		push $c->stash->{title}, 'Verification complete';
-		$c->stash->{template} = 'user/verified.tt';
+	elsif ($token = $c->stash->{user}->find_token('relocation', $hash)) {
+		$c->stash->{user}->update({ email => $token->address });
+		$c->flash->{status_msg} = 'Email changed successfully';
 	}
 	else {
-		$c->res->redirect( $c->uri_for('/') );
+		return $c->detach('/default');
 	}
+
+	$token->delete;
+	$c->set_authenticated( $c->find_user({ id => $c->stash->{user}->id }) );
+	$c->res->redirect('/');
 }
 
 sub recover :Local :Args(0) {
@@ -278,20 +312,15 @@ sub recover :Local :Args(0) {
 sub do_recover :Chained('fetch') :PathPart('recover') :Args(1) {
 	my ( $self, $c, $token ) = @_;
 
-	if (!$c->stash->{user}->verified) {
-		$c->stash->{error} = 'This account is not yet verified';
-		$c->detach('/error');
-	}
-
-	if ($c->stash->{user}->token eq $token) {
+	if (my $token = $c->stash->{user}->find_token('recovery', $token)) {
+		$token->delete;
 		$c->stash->{pass} = $c->stash->{user}->new_password;
-		$c->stash->{user}->new_token;
 
-		push $c->stash->{title}, 'Recover password';
+		push $c->stash->{title}, 'Password Recovery';
 		$c->stash->{template} = 'user/recovered.tt';
 	}
 	else {
-		$c->res->redirect( $c->uri_for('/') );
+		$c->detach('/default');
 	}
 }
 
@@ -300,10 +329,12 @@ sub send_email :Private {
 	my $type = $c->stash->{mailtype}{noun} || '';
 
 	state $template = {
+		relocation   => 'email/relocate.tt',
 		recovery     => 'email/recover.tt',
 		verification => 'email/verify.tt',
 	};
 	state $subject = {
+		relocation   => 'Email Change',
 		recovery     => 'Password Recovery',
 		verification => 'Verification',
 	};
@@ -315,28 +346,31 @@ sub send_email :Private {
 
 	return unless defined $c->stash->{user};
 
-	if ($c->stash->{user}->has_been_mailed_recently) {
+	my $mailto = $c->stash->{mailto} || $c->stash->{user}->email;
+	my $cache  = $c->cache(backend => 'recent-emails');
+
+	if ($cache->get($mailto)) {
 		$c->res->status(429);
 		$c->stash->{error} = <<EOF;
 An email was not sent because that address has been emailed recently. Please
-wait an hour and try again.
+wait 10 minutes and try again.
 EOF
 		$c->detach('/error');
 	}
 
-	$c->log->info("Sending $type email to " . $c->stash->{user}->email);
+	$c->log->info("Sending $type email to $mailto");
 
-	$c->stash->{user}->new_token;
+	$c->stash->{token} = $c->stash->{user}->new_token($type, $mailto);
 
 	$c->stash->{email} = {
-		to           => $c->stash->{user}->email,
+		to           => $mailto,
 		from         => $c->mailfrom,
 		subject      => join(' - ', $c->config->{name}, $subject->{$type}),
 		template     => $template->{$type},
 		content_type => 'text/html',
 	};
 
-	$c->forward( $c->view('Email::Template') );
+	$c->forward('View::Email::Template');
 
 	if (scalar @{ $c->error }) {
 		$c->log->error($_) for @{ $c->error };
@@ -348,7 +382,7 @@ EOF
 	}
 	else {
 		$c->stash->{mailsent} = 1;
-		$c->stash->{user}->update({ last_mailed_at => DateTime->now });
+		$cache->set($mailto, 1);
 	}
 }
 

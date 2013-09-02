@@ -5,6 +5,8 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
+use WriteOff::Util;
+
 __PACKAGE__->load_components('PassphraseColumn');
 
 __PACKAGE__->table("users");
@@ -27,8 +29,6 @@ __PACKAGE__->add_columns(
 	},
 	"email",
 	{ data_type => "text", is_nullable => 1 },
-	"email_new",
-	{ data_type => "text", is_nullable => 1 },
 	"timezone",
 	{ data_type => "text", default_value => "UTC", is_nullable => 1 },
 	"ip",
@@ -39,8 +39,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
 	"last_mailed_at",
 	{ data_type => "timestamp", is_nullable => 1 },
-	"token",
-	{ data_type => "text", is_nullable => 1 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
@@ -84,6 +82,13 @@ __PACKAGE__->has_many(
 __PACKAGE__->has_many(
 	"storys",
 	"WriteOff::Schema::Result::Story",
+	{ "foreign.user_id" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
+__PACKAGE__->has_many(
+	"tokens",
+	"WriteOff::Schema::Result::Token",
 	{ "foreign.user_id" => "self.id" },
 	{ cascade_copy => 0, cascade_delete => 0 },
 );
@@ -145,32 +150,48 @@ sub is_admin {
 	return $self->roles->search({ role => 'admin' })->count;
 }
 
+sub find_token {
+	my ($self, $type, $value) = @_;
+
+	return $self->tokens->search({
+		type => $type,
+		value => $value,
+		expires => { '>' => DateTime->now },
+	})->single;
+}
+
 sub new_token {
-	my $self = shift;
+	my ($self, $type, $address) = @_;
+	my %token = (
+		address => $address,
+		expires => DateTime->now->add(days => 1),
+		value   => WriteOff::Util::token(),
+	);
 
-	my $token = Digest->new('MD5')
-		->add( join("", time, $self->password, rand(10000), $$) )
-		->hexdigest;
-
-	$self->update({ token => $token });
-
-	return $token;
+	if (my $row = $self->tokens->find($self->id, $type)) {
+		$row->update(\%token);
+		return $row;
+	}
+	else {
+		$token{type} = $type;
+		return $self->create_related('tokens', \%token);
+	}
 }
 
 sub new_password {
 	my $self = shift;
 
-	my $pass = substr Digest->new('MD5')->add( rand, $$ )->hexdigest, 0, 5;
+	my $pass = join q{}, map { ('a'..'z')[rand 26] } 0..4;
 
 	$self->update({ password => $pass });
 
 	return $pass;
 }
 
-sub has_been_mailed_recently {
-	my $self = shift;
+# sub has_been_mailed_recently {
+# 	my $self = shift;
 
-	return DateTime->now->subtract( hours => 1 ) <= $self->last_mailed_at;
-}
+# 	return DateTime->now->subtract( hours => 1 ) <= $self->last_mailed_at;
+# }
 
 1;

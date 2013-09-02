@@ -4,14 +4,10 @@ use utf8;
 use strict;
 use warnings;
 use base 'Exporter';
-our @EXPORT_OK = qw/wordcount simple_uri sorted/;
+use Digest;
+
+our @EXPORT_OK = qw/simple_uri sorted token wordcount/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
-
-sub wordcount ($) {
-	my $str = shift or return 0;
-
-	return scalar split /\s+/, $str;
-}
 
 sub simple_uri {
 	local $_ = join "-", @_;
@@ -36,6 +32,19 @@ sub sorted {
 	1;
 }
 
+sub token {
+	my $salt = shift // '';
+	return Digest->new(shift // 'MD5')
+	             ->add($salt . $$ . time . rand)
+	             ->hexdigest;
+}
+
+sub wordcount ($) {
+	my $str = shift or return 0;
+
+	return scalar split /\s+/, $str;
+}
+
 1;
 
 __END__
@@ -48,10 +57,6 @@ WriteOff::Util - miscellenous subs used in L<WriteOff>
 
 =head1 METHODS
 
-=head2 wordcount
-
-Returns the wordcount of a given string.
-
 =head2 simple_uri
 
 Performs one-way substitutions on arguments to return a URI-safe string for
@@ -59,18 +64,26 @@ human-readable (but lossy) URIs.
 
 =head2 sorted
 
-    sorted 1, 2, 3;                          # True
-    sorted 1, 3, 9;                          # True
-    sorted 1, 2, 10;                         # False
-    sorted sub { $_[0] <=> $_[1] } 1, 2, 10; # True
+    sorted 1, 2, 3;                           # True
+    sorted 1, 3, 9;                           # True
+    sorted 1, 2, 10;                          # False
+    sorted sub { $_[0] <=> $_[1] }, 1, 2, 10; # True
 
 Returns true if the arguments are sorted and false otherwise. Takes an
 optional code ref which will do the comparisons. Defaults to string
 comparison.
 
+=head2 token
+
+Returns a token for use as a nonce.
+
+=head2 wordcount
+
+Returns the wordcount of a given string.
+
 =head1 AUTHOR
 
-Cameron Thornton E<lt>cthor@cpan.orgE<gt>
+Cameron Thornton <cthor@cpan.org>
 
 =head1 LICENSE
 

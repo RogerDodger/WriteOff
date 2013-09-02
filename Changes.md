@@ -8,6 +8,8 @@ v0.36
 - Added WriteOff::Action::Fetch and refractored stuff appropriately
 - Made timelording easier
 - Let events have no voting rounds, and hence no results
+- Enabled changing of email addresses
+- Increased fidelity of email tokens by abstracting them to their own table, localised to the type of email sent (meaning someone can't use a verification token to reset their password, for example)
 
 v0.35 - 20 Jul 2013
 -------------------

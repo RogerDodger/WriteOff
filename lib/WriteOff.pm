@@ -95,7 +95,7 @@ __PACKAGE__->config(
 					EMAIL_MX    => 'Invalid email address',
 					DBIC_UNIQUE => 'A user with that email already exists',
 				},
-				old          => { NOT_BLANK   => 'Old Password is invalid' },
+				passcheck    => { NOT_BLANK   => 'Current password is invalid' },
 				pass_confirm => { DUPLICATION => 'Passwords do not match' },
 				captcha      => { EQUAL_TO    => 'Invalid CAPTCHA' },
 			},

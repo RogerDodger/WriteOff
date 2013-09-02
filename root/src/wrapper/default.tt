@@ -42,23 +42,31 @@
 					<li>
 						<a href="/">Events &#9660;</a>
 						<ul>
-							<li><a href="/archive">Archive</a></li>
+							<li><a href="/archive">Archive</a>
 							[%- IF c.check_user_roles('admin') %]
-							<li><a href="/event/add">Add</a></li>
+							<li><a href="/event/add">Add</a>
 							[%- END %]
 						</ul>
-					</li>
-					<li><a href="/faq">FAQ</a></li>
-					<li><a href="/scoreboard">Scoreboard</a></li>
-					<li><a href="/user/list">Users</a></li>
+
+					<li><a href="/faq">FAQ</a>
+					<li><a href="/scoreboard">Scoreboard</a>
+					<li><a href="/user/list">Users</a>
 
 					[%- IF c.user %]
 					<li>
 						<a href="#">~[% c.user.username %] &#9660;</a>
 						<ul>
-							<li><a href="/user/me">My Submissions</a></li>
-							<li><a href="/user/settings" class="dialog-fetcher">Settings</a></li>
-							<li><a href="/user/logout">Logout</a></li>
+							<li class="smaller-than-next"><a href="/user/me">My Submissions</a>
+							<li>
+								<a href="/user/credentials?key=password" class="dialog-fetcher">
+									Change password
+								</a>
+							<li>
+								<a href="/user/credentials?key=email" class="dialog-fetcher">
+									Change email
+								</a>
+							<li><a href="/user/prefs" class="dialog-fetcher">Preferences</a>
+							<li><a href="/user/logout">Logout</a>
 						</ul>
 					</li>
 					[%- ELSE %]
@@ -67,15 +75,11 @@
 						<ul>
 							<li class="smaller-than-next">
 								<a href="/user/register">Register</a>
-							</li>
 							<li class="smaller-than-next">
 								<a href="/user/recover">Recover lost password</a>
-							</li>
 							<li>
 								<a href="/user/verify">Resend verification email</a>
-							</li>
 						</ul>
-					</li>
 					[%- END %]
 				</ul>
 

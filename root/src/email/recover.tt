@@ -1,13 +1,8 @@
-<p>Hello,</p>
+[% WRAPPER wrapper/email.tt -%]
 
-<p>
-	The account linked with this email, [% user.username %], has had a password
-	reset requested. <a href="[% c.uri_for( c.controller('User')
-		.action_for('do_recover'), [ user.id, user.token ]) %]">Click here</a>
-	to reset the account's password.
-</p>
+Your [% name %] account, __[% user.username %]__, has had a password
+	reset requested. If you made this request, then go ahead and [reset your password]([% c.uri_for_action('/user/do_recover', [ user.id, token.value ]) %]).
 
-<hr />
-<p>
-	If you did not request this password reset, please ignore this email.
-</p>
+If you did not make this request, someone may be trying to compromise your account. Please [let me know](mailto:[% c.config.AdminEmail %]) about the situation.
+
+[%- END %]

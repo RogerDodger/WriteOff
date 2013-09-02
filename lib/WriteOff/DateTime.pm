@@ -40,7 +40,9 @@ sub now {
 }
 
 sub timezones {
-	return qw/UTC/, grep {/\//} DateTime::TimeZone->all_names;
+	# The grep matches only location-based timezones, e.g.,
+	# "Australia/Adelaide", removing things like "EST" and "CET"
+	return qw/UTC/, grep { m{/} } DateTime::TimeZone->all_names;
 }
 
 1;

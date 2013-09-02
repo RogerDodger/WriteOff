@@ -14,13 +14,11 @@ CREATE TABLE users (
 	username        TEXT COLLATE NOCASE UNIQUE NOT NULL,
 	password        TEXT NOT NULL,
 	email           TEXT COLLATE NOCASE UNIQUE,
-	email_new       TEXT COLLATE NOCASE UNIQUE,
 	timezone        TEXT DEFAULT 'UTC',
 	ip              TEXT,
 	verified        INTEGER DEFAULT 0 NOT NULL,
 	mailme          INTEGER DEFAULT 0 NOT NULL,
 	last_mailed_at  TIMESTAMP,
-	token           TEXT,
 	created         TIMESTAMP,
 	updated         TIMESTAMP
 );
