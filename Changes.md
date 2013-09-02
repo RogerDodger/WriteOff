@@ -1,8 +1,8 @@
 Changelog for WriteOff.pm
 =========================
 
-v0.36
------
+v0.36 - 03 Sep 2013
+-------------------
 
 - Added cacheing of some TT output
 - Added WriteOff::Action::Fetch and refractored stuff appropriately
