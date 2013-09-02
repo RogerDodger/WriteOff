@@ -10,6 +10,7 @@ v0.36 - 03 Sep 2013
 - Let events have no voting rounds, and hence no results
 - Enabled changing of email addresses
 - Increased fidelity of email tokens by abstracting them to their own table, localised to the type of email sent (meaning someone can't use a verification token to reset their password, for example)
+- Dropped `login_attempts` table, using the cache for rate limiting instead
 
 v0.35 - 20 Jul 2013
 -------------------
