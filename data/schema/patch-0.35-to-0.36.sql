@@ -20,7 +20,6 @@ BEGIN TRANSACTION;
 		ip              TEXT,
 		verified        INTEGER DEFAULT 0 NOT NULL,
 		mailme          INTEGER DEFAULT 0 NOT NULL,
-		last_mailed_at  TIMESTAMP,
 		created         TIMESTAMP,
 		updated         TIMESTAMP
 	);
@@ -28,8 +27,8 @@ BEGIN TRANSACTION;
 	INSERT INTO
 		users
 	SELECT
-		id, username, password, email, timezone, ip, verified,
-		mailme, last_mailed_at, created, updated
+		id, username, password, email, timezone, ip,
+		verified, mailme, created, updated
 	FROM
 		users_tmp;
 

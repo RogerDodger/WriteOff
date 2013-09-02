@@ -37,8 +37,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
 	"mailme",
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
-	"last_mailed_at",
-	{ data_type => "timestamp", is_nullable => 1 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
@@ -187,11 +185,5 @@ sub new_password {
 
 	return $pass;
 }
-
-# sub has_been_mailed_recently {
-# 	my $self = shift;
-
-# 	return DateTime->now->subtract( hours => 1 ) <= $self->last_mailed_at;
-# }
 
 1;

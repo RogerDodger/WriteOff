@@ -131,7 +131,6 @@ sub do_register :Private {
 			timezone => $c->form->valid('timezone'),
 			ip       => $c->req->address,
 			mailme   => $c->req->params->{mailme} ? 1 : 0,
-			last_mailed_at => DateTime->from_epoch(epoch => 0),
 		});
 
 		my $role = $c->model('DB::Role')->find({ role => 'user' });

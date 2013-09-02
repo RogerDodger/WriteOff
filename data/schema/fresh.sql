@@ -18,7 +18,6 @@ CREATE TABLE users (
 	ip              TEXT,
 	verified        INTEGER DEFAULT 0 NOT NULL,
 	mailme          INTEGER DEFAULT 0 NOT NULL,
-	last_mailed_at  TIMESTAMP,
 	created         TIMESTAMP,
 	updated         TIMESTAMP
 );
