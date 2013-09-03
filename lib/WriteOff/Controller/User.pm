@@ -288,6 +288,8 @@ sub do_verify :Chained('fetch') :PathPart('verify') :Args(1) {
 sub recover :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
+	return $c->res->redirect('/') if $c->user;
+
 	$c->stash->{mailtype} = { noun => 'recovery', verb => 'recover' };
 
 	push $c->stash->{title}, 'Recover lost password';
@@ -319,7 +321,7 @@ sub do_recover :Chained('fetch') :PathPart('recover') :Args(1) {
 		$c->stash->{template} = 'user/recovered.tt';
 	}
 	else {
-		$c->detach('/default');
+		$c->res->redirect('/');
 	}
 }
 
