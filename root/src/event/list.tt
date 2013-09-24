@@ -11,7 +11,7 @@
 			'keys' => {
 				'type' => 'event-listing',
 				'id' => event.id,
-				'organiser' => event.is_organised_by(user),
+				'organiser' => event.is_organised_by(c.user),
 				'timzone' => c.user.timezone,
 			},
 		)
