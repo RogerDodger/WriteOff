@@ -23,7 +23,8 @@
 <ul>
 	<li>be a short phrase or figure of speech;
 	<li>not lock participants into certain characters, settings, or plots; and
-	<li>be suitable for use as a title (for the anthology).
+	<li>be suitable for use as a title (for the anthology); and therefore
+	<li>be in <a class="link new-tab" href="http://en.wikipedia.org/wiki/Title_case">title case</a>.
 </ul>
 
 <form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
