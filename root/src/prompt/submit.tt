@@ -17,6 +17,15 @@
 </p>
 
 [%- IF event.prompt_subs_allowed && subs_left > 0 %]
+<p class="list-heading">
+	Prompts should&mdash;
+</p>
+<ul>
+	<li>be a short phrase or figure of speech;
+	<li>not lock participants into certain characters, settings, or plots; and
+	<li>be suitable for use as a title (for the anthology).
+</ul>
+
 <form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
 	[%- IF c.form.has_error %]
 	<div>

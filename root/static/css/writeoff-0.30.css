@@ -843,6 +843,13 @@ form.light textarea,
 .flat {
 	line-height: 0;
 }
+.list-heading {
+	margin-bottom: 0;
+}
+.list-heading + ul,
+.list-heading + ol {
+	margin-top: 0;
+}
 
 /*
  * Miscellaneous
