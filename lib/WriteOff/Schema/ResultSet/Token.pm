@@ -7,12 +7,12 @@ use base 'WriteOff::Schema::ResultSet';
 sub clean_expired {
 	my $self = shift;
 
-	$self->search({ expires => { '<' => { $self->now }}})->delete;
+	$self->search({ expires => { '<' => $self->now } })->delete;
 }
 
 sub unexpired {
 	my $self = shift;
-	return $self->search({ expires => { '>' => { $self->now }}});
+	return $self->search({ expires => { '>' => $self->now } });
 }
 
 1;
