@@ -36,6 +36,15 @@ CREATE TABLE user_role (
 	PRIMARY KEY (user_id, role_id)
 );
 
+CREATE TABLE tokens (
+	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+	"type"    TEXT NOT NULL,
+	value     TEXT NOT NULL,
+	address   TEXT,
+	expires   TIMESTAMP NOT NULL,
+	PRIMARY KEY (user_id, "type")
+);
+
 CREATE TABLE bans (
 	id       INTEGER PRIMARY KEY,
 	ip       TEXT NOT NULL,
