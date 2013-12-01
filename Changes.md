@@ -1,6 +1,8 @@
 Changelog for WriteOff.pm
 =========================
 
+I don't think this file is very necessary, as it seems more useful to put changes in commit messages. This file will remain for the commits which unhelpfully read "See Changes.md", but from now on most changes will go in commit messages.
+
 v0.36 - 03 Sep 2013
 -------------------
 
