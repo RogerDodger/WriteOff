@@ -246,7 +246,7 @@ form.light input[type="email"],
 form.light input[type="url"],
 form.light input[type="number"],
 form.light input[type="search"],
-form.light input[type="datetime-local"],
+form.light input[type="datetime"],
 form.light textarea {
 	border: 1px solid #aaa;
 	padding: 4px;
@@ -670,6 +670,10 @@ table.plain th {
 p.prompt {
 	padding: 0.25em;
 	margin: 0 0 -1px 0;
+}
+.prompts {
+	list-style-type: none;
+	padding-left: 0;
 }
 
 .story {

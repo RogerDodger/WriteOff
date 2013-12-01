@@ -57,13 +57,12 @@ CREATE TABLE bans (
 CREATE TABLE events (
 	id              INTEGER PRIMARY KEY,
 	prompt          TEXT DEFAULT 'TBD' NOT NULL,
+	prompt_type     TEXT DEFAULT 'faceoff',
 	blurb           TEXT,
 	wc_min          INTEGER NOT NULL,
 	wc_max          INTEGER NOT NULL,
 	rule_set        INTEGER DEFAULT 1 NOT NULL,
 	custom_rules    TEXT,
-	"start"         TIMESTAMP NOT NULL,
-	prompt_voting   TIMESTAMP,
 	art             TIMESTAMP,
 	art_end         TIMESTAMP,
 	fic             TIMESTAMP,
@@ -99,13 +98,14 @@ CREATE TABLE heats (
 
 -- Resource tables
 CREATE TABLE prompts (
-	id        INTEGER PRIMARY KEY,
-	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
-	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	ip        TEXT,
-	contents  TEXT COLLATE NOCASE NOT NULL,
-	rating    REAL DEFAULT 1500 NOT NULL,
-	created   TIMESTAMP
+	id         INTEGER PRIMARY KEY,
+	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	ip         TEXT,
+	contents   TEXT COLLATE NOCASE NOT NULL,
+	rating     REAL,
+	approvals  INTEGER,
+	created    TIMESTAMP
 );
 
 CREATE TABLE storys (

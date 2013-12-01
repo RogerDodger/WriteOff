@@ -6,7 +6,7 @@ use warnings;
 use base 'Exporter';
 use Digest;
 
-our @EXPORT_OK = qw/simple_uri sorted token wordcount/;
+our @EXPORT_OK = qw/simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 sub simple_uri {
@@ -45,6 +45,12 @@ sub wordcount ($) {
 	return scalar split /\s+/, $str;
 }
 
+sub uniq {
+	my %uniq;
+	$uniq{$_} = 1 for @_;
+	return keys %uniq;
+}
+
 1;
 
 __END__
@@ -80,6 +86,10 @@ Returns a token for use as a nonce.
 =head2 wordcount
 
 Returns the wordcount of a given string.
+
+=head2 uniq
+
+Returns the unique items of a given list.
 
 =head1 AUTHOR
 

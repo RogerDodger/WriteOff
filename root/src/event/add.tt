@@ -18,11 +18,16 @@
 	</p>
 
 	<p class="inline">
+		<label>Prompt type</label>
+		<select name="prompt_type">
+			<option value="" selected="selected">No prompt</option>
+			<option value="faceoff">Face-off</option>
+			<option value="approval">Approval</option>
+		</select>
+	</p>
+	<p class="inline">
 		<label>Initial prompt</label>
 		<input type="text" name="prompt" placeholder="TBD" maxlength="[% c.config.len.max.prompt %]">
-		<br>
-		<input type="checkbox" name="has_prompt" checked="checked">
-		Has prompt round
 	</p>
 	<p class="inline">
 		<label>Content level</label>
@@ -32,6 +37,7 @@
 			<option value="M">Mature</option>
 		</select>
 	</p>
+
 	<p class="inline">
 		<label>Fic Duration</label>
 		<input type="checkbox" name="has_fic" class="toggler" checked="checked">
@@ -58,6 +64,7 @@
 			size="4" max="9999" min="1" value="7" required>
 		Days
 	</p>
+
 	<p class="inline">
 		<label>Art Duration</label>
 		<input type="checkbox" name="has_art" class="toggler">

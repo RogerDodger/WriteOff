@@ -1,5 +1,6 @@
 package WriteOff::Controller::Event;
 use Moose;
+use List::Util qw/shuffle/;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -36,6 +37,7 @@ sub add :Local :Args(0) {
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
 			prompt => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
 			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
+			prompt_type => [ [ 'IN_ARRAY', qw/faceoff approval/ ] ],
 			organiser => [
 				'NOT_BLANK',
 				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
@@ -60,14 +62,10 @@ sub do_add :Private {
 	my $dt = $c->form->valid('start');
 
 	my $leeway = $c->model('DB::Event')->result_class->LEEWAY;
-	my $interim = $c->config->{interim};
 
 	my %row;
-	$row{start} = $dt->clone;
-
-	if ($p->{has_prompt}) {
-		$row{prompt_voting} = $dt->add( minutes => $interim )->clone;
-		$dt->add( minutes => $interim );
+	if (exists $p->{prompt_type}) {
+		$row{prompt_type} = $p->{prompt_type};
 	}
 
 	if ($p->{has_art}) {
@@ -352,9 +350,25 @@ sub set_prompt :Private {
 	my ( $self, $c, $id ) = @_;
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
-	my $p = $e->prompts->search(undef, { order_by => { -desc => 'rating' } });
 
-	$e->update({ prompt => $p->first->contents });
+	my @p = shuffle $e->prompts->all;
+	my $best = $p[0];
+	if ($e->prompt_type eq 'approval') {
+		for my $p (@p) {
+			if ($p->approvals > $best->approvals) {
+				$best = $p;
+			}
+		}
+	}
+	elsif ($e->prompt_type eq 'faceoff') {
+		for my $p (@p) {
+			if ($p->rating > $best->rating) {
+				$best = $p;
+			}
+		}
+	}
+
+	$e->update({ prompt => $best->contents });
 }
 
 sub prelim_distr :Private {

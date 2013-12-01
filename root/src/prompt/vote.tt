@@ -2,49 +2,17 @@
 
 <p>
 	Votes open: <strong>[% format_dt(event.prompt_voting) %]</strong>.
-	<br />
+	<br>
 	Votes close: <strong>[% format_dt(event.art || event.fic) %]</strong>.
-	<br />
+	<br>
 [%- IF event.prompt_votes_allowed %]
 	Votes are <strong class="good">open</strong>.
 [%- ELSE %]
 	Votes are <strong class="bad">closed</strong>.
 [%- END %]
 </p>
-[%- IF event.prompt_votes_allowed %]
-	[%- IF heat %]
-<h2 class="center">Which Prompt Is Better?</h2>
-<form method="post" action="[% c.req.uri %]">
-	<table class="prompt-container">
-		<input name="heat" type="hidden" value="[% heat.id %]" />
-		<tr>
-			<td class="promptbox">
-				<input type="submit" name="left" value="[% heat.left.contents | html %]" />
-			</td>
-			<td class="or">OR</td>
-			<td class="promptbox">
-				<input type="submit" name="right" value="[% heat.right.contents | html %]" />
-			</td>
-		</tr>
-		<tr>
-			<td class="promptbox tie" colspan="3">
-				<input type="submit" name="tie" value="Tie?" />
-			</td>
-		</tr>
-	</table>
-</form>
-	[%- ELSE %]
-<h3>Not enough prompts</h3>
-<img src="[% c.uri_for('/static/images/pinkie-tau-shrug.png') %]"
-	alt="I just don't know what went wrong"/>
-	[%- END %]
-[%- END %]
-[%- IF prompts.count %]
-<h2>Current Standings</h2>
-	[%- WHILE (prompt = prompts.next) %]
-	<p class="prompt ui-state-default ui-corner-all"
-		style="width: [% (prompt.rating / 3) | format('%dpx;') %]">
-		[% prompt.contents | html %]
-	</p>
-	[%- END %]
+
+[%- SWITCH event.prompt_type %]
+	[%- CASE 'faceoff'; INCLUDE prompt/vote/faceoff.tt %]
+	[%- CASE 'approval'; INCLUDE prompt/vote/approval.tt %]
 [%- END %]

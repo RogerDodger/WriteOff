@@ -19,7 +19,9 @@ __PACKAGE__->add_columns(
 	"contents",
 	{ data_type => "text", is_nullable => 0 },
 	"rating",
-	{ data_type => "real", default_value => 1500, is_nullable => 0 },
+	{ data_type => "real", is_nullable => 1 },
+	"approvals",
+	{ data_type => "integer", is_nullable => 1 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 );

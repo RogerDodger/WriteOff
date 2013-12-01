@@ -1,6 +1,7 @@
 use utf8;
 package WriteOff::Schema::Result::Event;
 
+use 5.01;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
@@ -15,6 +16,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
 	"prompt",
 	{ data_type => "text", default_value => "TBD", is_nullable => 0 },
+	"prompt_type",
+	{ data_type => "text", default_value => "faceoff", is_nullable => 1 },
 	"blurb",
 	{ data_type => "text", is_nullable => 1 },
 	"wc_min",
@@ -25,10 +28,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", default_value => 1, is_nullable => 0 },
 	"custom_rules",
 	{ data_type => "text", is_nullable => 1 },
-	"start",
-	{ data_type => "timestamp", is_nullable => 0 },
-	"prompt_voting",
-	{ data_type => "timestamp", is_nullable => 1 },
 	"art",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"art_end",
@@ -106,8 +105,34 @@ sub title {
 	return shift->prompt;
 }
 
+sub start {
+	my $self = shift;
+	return (sort grep defined, $self->fic, $self->art)[0];
+}
+
 sub has_prompt {
-	return shift->prompt_voting;
+	return shift->prompt_type;
+}
+
+sub has_started {
+	my $self = shift;
+	return sorted $self->start, $self->now_dt;
+}
+
+sub prompt_voting {
+	my $self = shift;
+
+	state $durations = {
+		faceoff  => 1,
+		approval => 24,
+	};
+
+	if (exists $durations->{$self->prompt_type}) {
+		return $self->start->clone->subtract(
+			hours => $durations->{$self->prompt_type}
+		);
+	}
+	return undef;
 }
 
 sub has_results {
@@ -216,7 +241,7 @@ sub storys_gallery_order {
 sub prompt_subs_allowed {
 	my $row = shift;
 
-	return sorted $row->start, $row->now_dt, $row->prompt_voting;
+	return sorted $row->now_dt, $row->prompt_voting;
 }
 
 sub prompt_votes_allowed {
@@ -301,7 +326,7 @@ sub reset_schedules {
 
 	push @schedules, {
 		action => '/event/set_prompt',
-		at     => $self->art || $self->fic,
+		at     => $self->start,
 		args   => [ $self->id ],
 	} if $self->has_prompt;
 

@@ -1,6 +1,6 @@
 -- DESCRIPTION
 --
--- Schema patch for WriteOff.pm's database from 0.35 to 0.36
+-- Schema patch for WriteOff.pm's database from 0.36 to 0.37
 --
 -- AUTHOR
 --
