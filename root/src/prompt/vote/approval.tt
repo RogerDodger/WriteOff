@@ -21,6 +21,7 @@
 	[%- END %]
 [%- END %]
 
+[%- IF prompts.count %]
 <h2>Current Standings</h2>
 
 <table class="solid">
@@ -38,4 +39,6 @@
 
 [%- IF !show_results %]
 	<p>Approval counts will be shown once votes close.</p>
+[%- END %]
+
 [%- END %]
