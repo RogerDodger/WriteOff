@@ -6,6 +6,9 @@
 		[%- INCLUDE fragment/status_msg.tt
 			message = 'You have already voted' %]
 	[%- ELSIF !user_just_voted %]
+<p>
+	Check the prompts that you approve of.
+</p>
 <form method="post">
 	<ul class="prompts">
 		[%- FOREACH prompt IN prompts.all %]
