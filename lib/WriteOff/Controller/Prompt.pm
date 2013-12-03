@@ -28,12 +28,9 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 
 	if ($c->stash->{event}->prompt_type eq 'approval') {
 		$c->stash->{show_results} = $c->stash->{event}->has_started;
-		$c->stash->{cache} = $c->cache(
-			backend => 'prompt-voters',
-			event => $c->stash->{event}->id
+		$c->stash->{user_has_voted} = $c->model("DB::UserEvent")->find(
+			$c->user_id, $c->stash->{event}->id, 'prompt-voter'
 		);
-		# I feel like using a cache for this is going to bite me one day
-		$c->stash->{user_has_voted} = $c->stash->{cache}->get($c->user_id);
 	}
 
 	if ($c->stash->{event}->prompt_votes_allowed) {
@@ -80,7 +77,11 @@ sub do_vote_approval :Private {
 		}
 	}
 
-	$c->stash->{cache}->set($c->user_id, 1, '48h');
+	$c->model("DB::UserEvent")->create({
+		user_id  => $c->user_id,
+		event_id => $c->stash->{event}->id,
+		role     => 'prompt-voter',
+	});
 	$c->stash->{status_msg} = 'Thank you for voting!';
 	$c->stash->{user_just_voted} = 1;
 }
