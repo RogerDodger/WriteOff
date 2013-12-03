@@ -24,13 +24,17 @@ sub fetch :Chained('/') :PathPart('prompt') :CaptureArgs(1) :ActionClass('~Fetch
 sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{cache} = $c->cache(
-		backend => 'prompt-voters',
-		event => $c->stash->{event}->id
-	);
 	$c->stash->{prompts}        = $c->stash->{event}->prompts;
-	$c->stash->{show_results}   = $c->stash->{event}->has_started;
-	$c->stash->{user_has_voted} = $c->stash->{cache}->get($c->user_id);
+
+	if ($c->stash->{event}->prompt_type eq 'approval') {
+		$c->stash->{show_results} = $c->stash->{event}->has_started;
+		$c->stash->{cache} = $c->cache(
+			backend => 'prompt-voters',
+			event => $c->stash->{event}->id
+		);
+		# I feel like using a cache for this is going to bite me one day
+		$c->stash->{user_has_voted} = $c->stash->{cache}->get($c->user_id);
+	}
 
 	if ($c->stash->{event}->prompt_votes_allowed) {
 		if ($c->stash->{event}->prompt_type eq 'faceoff') {
@@ -76,7 +80,7 @@ sub do_vote_approval :Private {
 		}
 	}
 
-	$c->stash->{cache}->set($c->user_id, 1, '24h');
+	$c->stash->{cache}->set($c->user_id, 1, '48h');
 	$c->stash->{status_msg} = 'Thank you for voting!';
 	$c->stash->{user_just_voted} = 1;
 }

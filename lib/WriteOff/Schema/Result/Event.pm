@@ -124,7 +124,7 @@ sub prompt_voting {
 
 	state $durations = {
 		faceoff  => 1,
-		approval => 24,
+		approval => 48,
 	};
 
 	if (exists $durations->{$self->prompt_type}) {
