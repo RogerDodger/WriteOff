@@ -24,7 +24,7 @@ sub fetch :Chained('/') :PathPart('prompt') :CaptureArgs(1) :ActionClass('~Fetch
 sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{prompts}        = $c->stash->{event}->prompts;
+	$c->stash->{prompts} = $c->stash->{event}->prompts;
 
 	if ($c->stash->{event}->prompt_type eq 'approval') {
 		$c->stash->{show_results} = $c->stash->{event}->has_started;
