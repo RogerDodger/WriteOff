@@ -5,6 +5,10 @@
 	<br>
 	Votes close: <strong>[% format_dt(event.art || event.fic) %]</strong>.
 	<br>
+[%- IF event.prompt_type == 'approval' %]
+	Votes received: <strong>[% votes_received %]</strong>
+	<br>
+[%- END %]
 [%- IF event.prompt_votes_allowed %]
 	Votes are <strong class="good">open</strong>.
 [%- ELSE %]

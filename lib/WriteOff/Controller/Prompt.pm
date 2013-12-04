@@ -27,10 +27,19 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	$c->stash->{prompts} = $c->stash->{event}->prompts;
 
 	if ($c->stash->{event}->prompt_type eq 'approval') {
-		$c->stash->{show_results} = $c->stash->{event}->has_started;
+		$c->stash->{show_results} = $c->stash->{event}->has_started
+		                         || $c->stash->{event}->is_organised_by($c->user);
+
 		$c->stash->{user_has_voted} = $c->model("DB::UserEvent")->find(
-			$c->user_id, $c->stash->{event}->id, 'prompt-voter'
+			$c->user_id,
+			$c->stash->{event}->id,
+			'prompt-voter',
 		);
+
+		$c->stash->{votes_received} = $c->model("DB::UserEvent")->search({
+			event_id => $c->stash->{event}->id,
+			role => 'prompt-voter'
+		})->count;
 	}
 
 	if ($c->stash->{event}->prompt_votes_allowed) {
