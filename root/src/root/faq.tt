@@ -29,8 +29,8 @@
 	The [% name %] is split into a series of rounds, all of which are optional:
 	some events will have no prompt round; some events will have no fic round;
 	and some events will have no voting at all, making the event unranked. The
-	structure of each event is very configurable, so the following explanations
-	will contain a whole bunch of “if” clauses.
+	most common operating procedure is to have a prompt round, a fic round,
+	and a public voting round.
 </p>
 
 [% INCLUDE header contents = 'Prompt round'  class = 'h3' %]
@@ -68,15 +68,15 @@
 	rarely enforced) that entries will bear some resemblance to it.
 </p>
 
-[% INCLUDE header contents = 'Art round'  class = 'h3' %]
+[% INCLUDE header contents = 'Submission rounds'  class = 'h3' %]
 <p>
-	Artists submit artworks that mean to act as prompts for stories.
+	The submission rounds constitute the main part of the event where
+	participants actually create something. As such, the start of the first
+	submission round is considered the event's starting time, as indicated by
+	the time accompanying the prompt in the event overview.
 </p>
-
-[% INCLUDE header contents = 'Fic round'  class = 'h3' %]
 <p>
-	Stories are written to either the submitted artworks (in the case of an art
-	round) or the event's prompt.
+	If there is both an art and fic round, the art round will precede the fic round. Artists submit artworks that mean to act as prompts for stories.
 </p>
 
 [% INCLUDE header contents = 'Preliminary voting round'  class = 'h3' %]
