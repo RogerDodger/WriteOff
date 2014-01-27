@@ -10,7 +10,7 @@
 [%- END %]
 
 [%- vote_range = [0 .. 10]; vote_range.push('N/A') %]
-<form method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+<form id="public-vote" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
 	<table class="solid">
 		<tr class="heading">
 			<th>#</th>
@@ -23,17 +23,14 @@
 		<tr class="[% loop.parity %]">
 			<td class="center">[% loop.count %]</td>
 			<td>[% item.title | html %]</td>
+			[%- SET disabled = item.user_id == c.user_id ? " disabled" : "" %]
 			[%- FOREACH n IN vote_range %]
-			<td class="center"><input [% 'disabled' IF item.user_id == c.user_id %]
-				type="radio" name="[% item.id %]" value="[% n %]"/></td>
+			<td class="center">
+				<input type="radio" name="[% item.id %]" value="[% n %]"[% disabled %]>
+			</td>
 			[%- END %]
 		</tr>
 		[%- END %]
 	</table>
-	<p>
-		<input type="submit" name="submit" value="Save vote" />
-		<input type="submit" name="submit" value="Clear vote" />
-	</p>
-	<p>[% recaptcha %]</p>
-	<p><input type="submit" name="submit" value="Cast vote" /></p>
+	<p><input type="submit" name="submit" value="Update vote"></p>
 </form>

@@ -186,3 +186,19 @@ jQuery(document).ready(function($) {
 		})
 		.removeAttr('href');
 });
+
+//==========================================================================
+// Auto-updating form for public votes
+//==========================================================================
+
+$(document).ready(function() {
+	var $form = $('#public-vote');
+	if ($form) {
+		// Remove the manual update button
+		$form.find('input[type="submit"]').parent().remove();
+
+		$form.find('input').change(function(e) {
+			$.post(window.location.pathname, $(this).serialize());
+		});
+	}
+});

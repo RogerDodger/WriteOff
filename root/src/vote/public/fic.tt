@@ -16,13 +16,6 @@
 
 [%- IF event.public_votes_allowed %]
 
-<h3>Guidelines</h3>
-<ul>
-	<li>You must vote on at least half of the entries.</li>
-	<li>Only vote on stories that you have read.</li>
-	<li>Do not vote on a story if you are its author.</li>
-</ul>
-
 [% INCLUDE vote/public/form.tt %]
 
 [%- END %]

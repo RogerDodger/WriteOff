@@ -16,12 +16,6 @@
 
 [%- IF event.art_votes_allowed %]
 
-<h3>Guidelines</h3>
-<ul>
-	<li>You must vote on at least half of the entries.</li>
-	<li>Do not vote on an artwork if you are its artist.</li>
-</ul>
-
 [% INCLUDE vote/public/form.tt %]
 
 [%- END %]

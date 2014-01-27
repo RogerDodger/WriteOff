@@ -1,6 +1,7 @@
 package WriteOff::Controller::Vote::Public;
 use Moose;
 use namespace::autoclean;
+use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -16,129 +17,95 @@ Catalyst Controller.
 
 =cut
 
-sub init :Private {
-	my ( $self, $c ) = @_;
-	
-	$c->forward('/captcha_get');
-	
-	$c->stash->{formid} = join "|",
-		'form', 'event', $c->stash->{event}->id, 'public', $c->action->name;
-		
-	push $c->stash->{title}, 'Vote', 'Public';
-}
-
 sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->forward('init');
-	
-	if( $c->stash->{event}->public_votes_allowed )
-	{
-		$c->stash->{candidates} = [ $c->stash->{event}->public_story_candidates ];
-		
-		$c->forward('first_pass') if $c->req->method eq 'POST';
+	if ($c->stash->{event}->public_votes_allowed) {
+		$c->stash->{candidates} = [
+			$c->stash->{event}->public_story_candidates
+		];
+
+		$c->forward('do_public') if $c->req->method eq 'POST';
 	}
-	
+
+	$c->forward('fillform');
+
+	push $c->stash->{title}, 'Vote', 'Public';
 	$c->stash->{template} = 'vote/public/fic.tt';
 }
 
 sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->forward('init');
-	
-	if( $c->stash->{event}->art_votes_allowed )
-	{
-		$c->stash->{candidates} = [ $c->stash->{event}->images->metadata->seed_order->all ];
-		
-		$c->forward('first_pass') if $c->req->method eq 'POST';
-	}
-	
-	$c->stash->{template} = 'vote/public/art.tt';
-}
+	if ($c->stash->{event}->art_votes_allowed) {
+		$c->stash->{candidates} = [
+			$c->stash->{event}->images->metadata->seed_order->all
+		];
 
-sub first_pass :Private {
-	my ( $self, $c ) = @_;
-	
-	if( $c->req->params->{submit} eq 'Save vote' )
-	{
-		$c->session->{ $c->stash->{formid} } = $c->req->params;
-		$c->stash->{status_msg} = 'Vote saved';
+		$c->forward('do_public') if $c->req->method eq 'POST';
 	}
-	
-	elsif( $c->req->params->{submit} eq 'Clear vote' )
-	{
-		delete $c->session->{ $c->stash->{formid} };
-		$c->stash->{status_msg} = 'Vote cleared';
-	}
-	
-	elsif( $c->req->params->{submit} eq 'Cast vote' )
-	{
-		$c->forward('do_public');
-	}
-	
+
+	$c->forward('fillform');
+
+	push $c->stash->{title}, 'Vote', 'Public';
+	$c->stash->{template} = 'vote/public/art.tt';
 }
 
 sub do_public :Private {
 	my ( $self, $c ) = @_;
-	
-	my @candidates =
-		grep { $_->user_id != $c->user_id }
-		@{ $c->stash->{candidates} };
-	
-	#The votes are keyed with the id of the story that the votes are cast on
-	my @votes =
-		grep { $c->req->params->{$_} ne 'N/A' }
-		grep { defined $c->req->params->{$_} }
-		map  { $_->id }
-		@candidates;
-	
-	$c->req->params->{count}   = @votes;
-	$c->req->params->{user_id} = $c->user_id;
-	$c->req->params->{captcha} = $c->forward('/captcha_check');
-	
-	my $rs = $c->stash->{event}->vote_records->public->type( $c->action->name );
-	
-	$c->form(
-		user_id  => [ [ 'DBIC_UNIQUE', $rs, 'user_id' ] ],
-		
-		#For whatever reason, FormValidator::Simple doesn't have a >= operator
-		count    => [ [ 'GREATER_THAN', @candidates / 2 - 0.001 ] ],
-		
-		captcha  => [ [ 'EQUAL_TO', 1 ] ],
-		map { $_ => [ 'NOT_BLANK', 'UINT', [ 'BETWEEN', 0, 10 ] ] } @votes,
-	);
-	
-	if( !$c->form->has_error ) {
-		my %id = (
-			fic => 'story_id',
-			art => 'image_id',
-		);
-		
-		$c->stash->{event}->create_related('vote_records', {
-			user_id => $c->user ? $c->user->get('id') : undef,
-			ip      => $c->req->address,
-			round   => 'public',
-			type    => $c->action->name,
-			votes   => [ map {
-				{
-					$id{ $c->action->name } => $_,
-					value => $c->form->valid($_)
-				}
-			} @votes ]
-		});
-		
-		delete $c->session->{ $c->stash->{formid} };
-		$c->stash->{status_msg} = 'Vote successful';
+	return unless $c->user;
+
+	# 'fic', 'art', ...
+	my $type = $c->action->name;
+
+	my $record = $c->model('DB::VoteRecord')->find_or_create({
+		event_id => $c->stash->{event}->id,
+		user_id  => $c->user_id,
+		round    => 'public',
+		type     => $type,
+	});
+
+	my $item_id_col = { art => 'image_id', fic => 'story_id' }->{$type};
+	if (!defined $item_id_col) {
+		$c->log->warn("Unrecognised vote type: $type");
+		return;
 	}
+
+	for my $item (@{ $c->stash->{candidates} }) {
+		# Users cannot vote on their own entries
+		next if $item->user_id == $c->user_id;
+
+		my $score = $c->req->param($item->id);
+		next unless defined $score;
+
+		my $vote = $c->model('DB::Vote')->find_or_new({
+			$item_id_col => $item->id,
+			record_id    => $record->id,
+		});
+
+		if (looks_like_number($score) && $score >= 0 && 10 >= $score) {
+			$vote->insert;
+			$vote->update({ value => $score });
+		} elsif ($vote->in_storage) {
+			$vote->delete;
+		}
+	}
+
+	$c->stash->{status_msg} = 'Vote updated';
 }
 
-sub end :Private {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{fillform} = $c->session->{ $c->stash->{formid} };
-	
-	$c->forward('/end');
+sub fillform :Private {
+	my ($self, $c) = @_;
+	return unless $c->user;
+
+	my $record = $c->stash->{event}->vote_records->public->find({
+		user_id => $c->user_id,
+		type    => $c->action->name,
+	});
+
+	$c->stash->{fillform} = {
+		map { $_->item->id => $_->value } $record->votes->all,
+	};
 }
 
 =head1 AUTHOR
