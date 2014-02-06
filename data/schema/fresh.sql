@@ -109,39 +109,44 @@ CREATE TABLE prompts (
 );
 
 CREATE TABLE storys (
-	id         INTEGER PRIMARY KEY,
-	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
-	user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	ip         TEXT,
-	title      TEXT COLLATE NOCASE NOT NULL,
-	author     TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
-	website    TEXT,
-	contents   TEXT NOT NULL,
-	wordcount  INTEGER NOT NULL,
-	seed       REAL,
-	views      INTEGER DEFAULT 0,
-	is_finalist          BIT DEFAULT 0 NOT NULL,
-	is_public_candidate  BIT DEFAULT 0 NOT NULL,
-	created    TIMESTAMP,
-	updated    TIMESTAMP
+	id             INTEGER PRIMARY KEY,
+	event_id       INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	user_id        INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	ip             TEXT,
+	title          TEXT COLLATE NOCASE NOT NULL,
+	author         TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
+	website        TEXT,
+	contents       TEXT NOT NULL,
+	wordcount      INTEGER NOT NULL,
+	seed           REAL,
+	views          INTEGER DEFAULT 0,
+	finalist       BIT DEFAULT 0 NOT NULL,
+	candidate      BIT DEFAULT 0 NOT NULL,
+	private_score  INTEGER,
+	public_score   REAL,
+	public_stdev   REAL,
+	created        TIMESTAMP,
+	updated        TIMESTAMP
 );
 
 CREATE TABLE images (
-	id        INTEGER PRIMARY KEY,
-	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
-	user_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	ip        TEXT,
-	title     TEXT COLLATE NOCASE NOT NULL,
-	artist    TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
-	website   TEXT,
-	hovertext TEXT,
-	contents  BLOB NOT NULL,
-	thumb     BLOB NOT NULL,
-	filesize  INTEGER NOT NULL,
-	mimetype  TEXT NOT NULL,
-	seed      REAL,
-	created   TIMESTAMP,
-	updated   TIMESTAMP
+	id            INTEGER PRIMARY KEY,
+	event_id      INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	ip            TEXT,
+	title         TEXT COLLATE NOCASE NOT NULL,
+	artist        TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
+	website       TEXT,
+	hovertext     TEXT,
+	contents      BLOB NOT NULL,
+	thumb         BLOB NOT NULL,
+	filesize      INTEGER NOT NULL,
+	mimetype      TEXT NOT NULL,
+	seed          REAL,
+	public_score  REAL,
+	public_stdev  REAL,
+	created       TIMESTAMP,
+	updated       TIMESTAMP
 );
 
 CREATE TABLE image_story (
@@ -157,6 +162,7 @@ CREATE TABLE vote_records (
 	ip        TEXT,
 	"round"   TEXT NOT NULL,
 	"type"    TEXT NOT NULL,
+	filled    BIT NOT NULL DEFAULT 0,
 	created   TIMESTAMP,
 	updated   TIMESTAMP
 );

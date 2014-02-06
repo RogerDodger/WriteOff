@@ -21,7 +21,7 @@ sub average {
 	my $self = shift->search({ value => { '!=' => undef } });
 
 	return -(1 << 31) if $self->count == 0;
-	
+
 	return $self->get_column('value')->func('avg');
 }
 
@@ -35,25 +35,25 @@ Returns 0 if there are no votes in the resultset.
 
 sub stdev {
 	my $self = shift->search({ value => { '!=' => undef } });
-	
+
 	return 0 if $self->count == 0;
-	
+
 	my $mean = $self->average;
-	
+
 	my $sum;
 	$sum += ($_ - $mean) ** 2 for $self->get_column('value')->all;
-	
-	return sqrt($sum / $self->count);
+
+	return sqrt($sum / ($self->count-1));
 }
 
 sub prelim {
 	return shift->search_rs(
 		{ 'record.round' => 'prelim' },
 		{ join => 'record' }
-	);	
+	);
 }
 
-sub public {	
+sub public {
 	return shift->search_rs(
 		{ 'record.round' => 'public' },
 		{ join => 'record' }
@@ -64,7 +64,7 @@ sub private {
 	return shift->search_rs(
 		{ 'record.round' => 'private' },
 		{ join => 'record' }
-	);	
+	);
 }
 
 1;

@@ -85,7 +85,7 @@ sub do_public :Private {
 
 		if (looks_like_number($score) && $score >= 0 && 10 >= $score) {
 			$vote->insert;
-			$vote->update({ value => $score });
+			$vote->update({ value => int $score });
 		} elsif ($vote->in_storage) {
 			$vote->delete;
 		}

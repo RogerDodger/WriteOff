@@ -4,7 +4,15 @@ use strict;
 use base 'WriteOff::Schema::ResultSet';
 
 sub filled {
-	return shift->search_rs(
+	my $self = shift;
+
+	if ($self->round eq 'public') {
+		return $self->search({ filled => 1 });
+	}
+
+	# Current logic for prelim/private records;
+	# will set the "filled" value later
+	return $self->search_rs(
 		{ 'votes.value' => { '!=' => undef } },
 		{
 			join => 'votes',
@@ -35,9 +43,9 @@ sub ordered {
 
 sub with_stats {
 	my $self = shift;
-	
+
 	my $votes_rs = $self->result_source->schema->resultset('Vote');
-	
+
 	my $mean = $votes_rs->search(
 		{
 			"votes.record_id" => { '=' => { -ident => 'me.id' } }
@@ -47,14 +55,14 @@ sub with_stats {
 			alias => 'votes',
 		}
 	);
-	
+
 	my $with_mean = $self->search_rs(undef, {
 		'+select' => [
 			{ '' => $mean->as_query, -as => 'mean' },
 		],
 		'+as' => [ 'mean' ],
 	});
-	
+
 	# my $variance = $votes_rs->search(
 		# {
 			# "votes.record_id" => { '=' => { -ident => 'me.id' } },
@@ -64,12 +72,12 @@ sub with_stats {
 			# alias => 'votes',
 		# }
 	# );
-	
+
 	# my $variance =
 		# '(SELECT AVG( (value - mean)*(value - mean) ) ' .
 		# 'FROM votes votes ' .
 		# 'WHERE votes.record_id = me.id)';
-	
+
 	# my $with_stats = $with_mean->as_subselect_rs->search(undef, {
 		# '+select' => [
 			# 'mean',
@@ -77,7 +85,7 @@ sub with_stats {
 		# ],
 		# '+as' => [ 'mean', 'variance' ],
 	# });
-	
+
 	# return $with_stats;
 }
 
@@ -90,7 +98,7 @@ sub judge_records {
 	});
 }
 
-sub round {	
+sub round {
 	return shift->search_rs({ round => shift });
 }
 

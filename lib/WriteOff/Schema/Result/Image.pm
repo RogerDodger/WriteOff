@@ -22,6 +22,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", default_value => "Anonymous", is_nullable => 0 },
 	"website",
 	{ data_type => "text", is_nullable => 1 },
+	"hovertext",
+	{ data_type => "text", is_nullable => 1 },
 	"contents",
 	{ data_type => "blob", is_nullable => 0 },
 	"thumb",
@@ -32,10 +34,12 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 0 },
 	"seed",
 	{ data_type => "real", is_nullable => 1 },
+	"public_score",
+	{ data_type => "real", is_nullable => 0 },
+	"public_stdev",
+	{ data_type => "real", is_nullable => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
-	"hovertext",
-	{ data_type => "text", is_nullable => 1 },
 	"updated",
 	{ data_type => "timestamp", is_nullable => 1 },
 );
@@ -83,11 +87,6 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
-
-__PACKAGE__->mk_group_accessors(
-	column => 'public_score',
-	column => 'story_count',
-);
 
 sub type {
 	return 'art';

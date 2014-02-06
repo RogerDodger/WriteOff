@@ -18,12 +18,14 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 1 },
 	"round",
 	{ data_type => "text", is_nullable => 0 },
+	"type",
+	{ data_type => "text", default_value => "unknown", is_nullable => 0 },
+	"filled",
+	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
 	{ data_type => "timestamp", is_nullable => 1 },
-	"type",
-	{ data_type => "text", default_value => "unknown", is_nullable => 0 },
 );
 
 __PACKAGE__->set_primary_key("id");

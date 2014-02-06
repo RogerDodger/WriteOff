@@ -35,14 +35,20 @@ __PACKAGE__->add_columns(
 	{ data_type => "real", is_nullable => 1 },
 	"views",
 	{ data_type => "integer", default_value => 0, is_nullable => 1 },
+	"finalist",
+	{ data_type => "bit", default_value => 0, is_nullable => 0 },
+	"candidate",
+	{ data_type => "bit", default_value => 0, is_nullable => 0 },
+	"public_score",
+	{ data_type => "real", is_nullable => 0 },
+	"public_stdev",
+	{ data_type => "real", is_nullable => 0 },
+	"private_score",
+	{ data_type => "integer", is_nullable => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
 	{ data_type => "timestamp", is_nullable => 1 },
-	"is_finalist",
-	{ data_type => "bit", default_value => 0, is_nullable => 0 },
-	"is_public_candidate",
-	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 );
 
 __PACKAGE__->set_primary_key("id");
@@ -93,8 +99,6 @@ __PACKAGE__->mk_group_accessors(
 	column => 'prelim_score',
 	column => 'author_vote_count',
 	column => 'author_story_count',
-	column => 'public_score',
-	column => 'private_score',
 );
 
 sub type {
