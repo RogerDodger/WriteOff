@@ -2,7 +2,7 @@
 <h2>Judge Rankings</h2>
 
 <ul>
-	[%- FOREACH record IN judge_records.all %]
+	[%- FOREACH record IN j_records.all %]
 	<li>
 		<a class="link" href="[% c.uri_for_action('/voterecord/view', [ record.id ]) %]">
 			[% record.user.username || 'Guest' %]
@@ -15,9 +15,10 @@
 <div class="results fic">
 	[%-
 		PROCESS Items
-			items = event.storys_rs.with_scores.with_stats,
-			view = c.controller('Fic').action_for('view')
-			heading = 'Stories'
+			leaderboard   = storys.leaderboard
+			controversial = storys.controversial
+			view          = c.controller('Fic').action_for('view')
+			heading       = 'Stories'
 	-%]
 </div>
 
@@ -25,9 +26,10 @@
 <div class="results art">
 	[%-
 		PROCESS Items
-			items = event.images_rs.with_scores.with_stats,
-			view = c.controller('Art').action_for('view')
-			heading = 'Artworks'
+			leaderboard   = images.leaderboard
+			controversial = images.controversial
+			view          = c.controller('Art').action_for('view')
+			heading       = 'Artworks'
 	-%]
 </div>
 [%- END #IF %]
@@ -36,26 +38,28 @@
 <h2>[% heading %]</h2>
 
 <ul class="items">
-[%- FOREACH item IN items %]
+[%- FOREACH item IN leaderboard.all %]
 	[%-
 		INCLUDE Item
 			award = medal_for(item.pos) || (item.pos == items.max ? awards.spoon : awards.ribbon)
-			score = item.final_score
+			score = item.public_score
 	-%]
 [%- END #FOREACH %]
 </ul>
 
+[%- IF controversial.count %]
 <h3>Controversial [% heading %]</h3>
 
 <ul class="items">
-[%- FOREACH item IN items.sort_stdev.slice(0, 4) %]
+[%- FOREACH item IN controversial.all %]
 	[%-
 		INCLUDE Item
 			award = loop.first ? awards.confetti : awards.ribbon
-			score = item.stdev
+			score = item.public_stdev
 	-%]
 [%- END #FOREACH %]
 </ul>
+[%- END #IF %]
 
 [%- END #BLOCK %]
 

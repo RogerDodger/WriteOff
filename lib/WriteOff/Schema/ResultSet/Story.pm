@@ -7,60 +7,26 @@ sub metadata {
 	return shift->search_rs(undef, {
 		columns => [
 			'id', 'user_id', 'event_id', 'ip',
-			'title', 'author', 'website',
-			'wordcount',
+			'title', 'author', 'website', 'wordcount',
+			'candidate', 'public_score', 'public_stdev',
+			'finalist', 'private_score', 'pos', 'pos_low',
 			'seed', 'created', 'updated'
 		]
 	});
 }
 
-sub with_scores {
-	my $self = shift;
-	
-	my $vote_rs = $self->result_source->schema->resultset('Vote');
-
-	my $public = $vote_rs->public->search(
-		{ 'public.story_id' => { '=' => { -ident => 'me.id' } } },
-		{
-			select => [{ avg => 'public.value' }],
-			alias => 'public',
-		}
-	);
-	
-	my $private = $vote_rs->private->search(
-		{ 'private.story_id' => { '=' => { -ident => 'me.id' } } },
-		{
-			select => [{ sum => 'private.value' }],
-			alias => 'private',
-		}
-	);
-	
-	my $with_scores = $self->search_rs(undef, {
-		'+select' => [
-			{ '' => $public->as_query,  -as => 'public_score' },
-			{ '' => $private->as_query, -as => 'private_score' },
-		],
-		'+as' => [ 'public_score', 'private_score' ],
-		order_by => [
-			{ -desc => 'private_score' },
-			{ -desc => 'public_score' },
-			{ -asc  => 'title' },
-		],
-	});
-}
-
 sub with_prelim_stats {
 	my $self = shift;
-	
+
 	my $vote_rs = $self->result_source->schema->resultset('Vote');
-	
+
 	my $prelim = $vote_rs->prelim->search(
 		{ story_id => { '=' => { -ident => 'me.id' } } },
 		{ alias => 'prelim' }
 	)->get_column('value')->sum_rs;
-	
+
 	my $record_rs = $self->result_source->schema->resultset('VoteRecord');
-	
+
 	my $author_vote_count = $record_rs->filled->prelim->search(
 		{
 			user_id  => { '=' => { -ident => 'me.user_id' } },
@@ -71,7 +37,7 @@ sub with_prelim_stats {
 			alias => 'record',
 		}
 	)->count_rs;
-	
+
 	my $author_story_count = $self->search(
 		{
 			user_id  => { '=' => { -ident => 'me.user_id' } },
@@ -79,7 +45,7 @@ sub with_prelim_stats {
 		},
 		{ alias => 'storys' }
 	)->count_rs;
-	
+
 	return $self->search_rs(undef, {
 		'+select' => [
 			{ '' => $prelim->as_query, -as => 'prelim_score' },
@@ -92,7 +58,7 @@ sub with_prelim_stats {
 
 sub wordcount {
 	my $self = shift;
-	
+
 	return $self->get_column('wordcount')->sum;
 }
 

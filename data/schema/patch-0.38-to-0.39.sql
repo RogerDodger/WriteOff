@@ -74,6 +74,16 @@ DROP TABLE storys_tmp;
 UPDATE
 	storys
 SET
+	candidate
+		= (SELECT COUNT(*) FROM votes v, vote_records r
+			WHERE v.record_id = r.id
+			AND r.round = 'public'
+			AND v.story_id = storys.id) != 0,
+	finalist
+		= (SELECT COUNT(*) FROM votes v, vote_records r
+			WHERE v.record_id = r.id
+			AND r.round = 'private'
+			AND v.story_id = storys.id) != 0,
 	public_score
 		= (SELECT AVG(v.value) FROM votes v, vote_records r
 			WHERE v.record_id = r.id

@@ -387,8 +387,8 @@ sub new_prelim_record_for {
 
 sub nuke_prelim_round {
 	my $self = shift;
-
 	return unless $self->prelim;
+
 	$self->vote_records->search({ round => 'prelim' })->delete_all;
 
 	my $public  = $self->prelim;
@@ -403,6 +403,8 @@ sub nuke_prelim_round {
 	});
 
 	$self->reset_schedules;
+
+	$self->storys->update({ candidate => 1 });
 }
 
 =head2 judge_distr
@@ -422,12 +424,12 @@ sub judge_distr {
 		my ($story, $prev) = @storys[$i, $i-1];
 
 		if( $no_more_finalists ) {
-			$story->update({ is_finalist => 0 });
+			$story->update({ finalist => 0 });
 			undef $storys[$i];
 		}
 		else {
 			if($i < $size || $story->public_score == $prev->public_score) {
-				$story->update({ is_finalist => 1 });
+				$story->update({ finalist => 1 });
 			}
 			else {
 				$no_more_finalists = 1;

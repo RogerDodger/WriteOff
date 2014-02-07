@@ -174,10 +174,26 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 	$c->detach('/error', ['There are no results for this event.'])
 		unless $c->stash->{event}->has_results;
 
-	$c->stash->{awards} = { map { $_->name => $_ } $c->model('DB::Award')->all };
+	my $event = $c->stash->{event};
+	my @ccond = {
+		public_stdev => { '!=' => undef }
+	}, {
+		rows => 5,
+		order_by => { -desc => 'public_stdev' },
+	};
 
-	$c->stash->{judge_records} =
-		$c->stash->{event}->vote_records->filled->judge_records;
+	$c->stash(
+		j_records => $c->stash->{event}->vote_records->filled->judge_records,
+		awards => { map { $_->name => $_ } $c->model('DB::Award')->all },
+		images => {
+			leaderboard   => $event->images->order_by('pos'),
+			controversial => $event->images->search_rs(@ccond),
+		},
+		storys => {
+			leaderboard   => $event->storys->order_by('pos'),
+			controversial => $event->storys->search_rs(@ccond),
+		},
+	);
 
 	push $c->stash->{title}, 'Results';
 	$c->stash->{template} = 'event/results.tt';
