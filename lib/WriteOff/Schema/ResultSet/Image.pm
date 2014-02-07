@@ -9,6 +9,8 @@ sub metadata {
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'artist', 'website', 'hovertext',
 			'filesize', 'mimetype',
+			'public_score', 'public_stdev',
+			'rank', 'rank_low',
 			'seed', 'created', 'updated'
 		]
 	});
@@ -22,7 +24,7 @@ sub no_contents {
 
 sub with_scores {
 	my $self = shift;
-	
+
 	my $vote_rs = $self->result_source->schema->resultset('Vote');
 	my $rel_rs = $self->result_source->schema->resultset('ImageStory');
 
@@ -33,7 +35,7 @@ sub with_scores {
 			alias => 'public',
 		}
 	);
-	
+
 	my $story_count = $rel_rs->search(
 		{ 'rels.image_id' => { '=' => { -ident => 'me.id' } } },
 		{
@@ -41,7 +43,7 @@ sub with_scores {
 			alias => 'rels',
 		}
 	);
-	
+
 	my $with_scores = $self->search_rs(undef, {
 		'+select' => [
 			{ '' => $public->as_query, -as => 'public_score' },

@@ -18,6 +18,8 @@ ALTER TABLE vote_records ADD COLUMN filled BIT NOT NULL DEFAULT 0;
 -- Images
 ALTER TABLE images ADD COLUMN public_score REAL;
 ALTER TABLE images ADD COLUMN public_stdev REAL;
+ALTER TABLE images ADD COLUMN rank         INTEGER;
+ALTER TABLE images ADD COLUMN rank_low     INTEGER;
 
 UPDATE
 	images
@@ -35,6 +37,20 @@ SET
 	public_score
 		= (SELECT COUNT(*) FROM image_story WHERE image_id = images.id)
 		+ IFNULL(public_score, 0);
+
+UPDATE
+	images
+SET
+	rank
+		= (SELECT COUNT(*) FROM images inn
+			WHERE inn.event_id = images.event_id
+			AND IFNULL(inn.public_score, -1)
+				> IFNULL(images.public_score, -1)),
+	rank_low
+		= -1 + (SELECT COUNT(*) FROM images inn
+			WHERE inn.event_id = images.event_id
+			AND IFNULL(inn.public_score, -1)
+				>= IFNULL(images.public_score, -1));
 
 -- Storys
 ALTER TABLE storys RENAME TO storys_tmp;
@@ -56,6 +72,8 @@ CREATE TABLE storys (
 	private_score  INTEGER,
 	public_score   REAL,
 	public_stdev   REAL,
+	rank           INTEGER,
+	rank_low       INTEGER,
 	created        TIMESTAMP,
 	updated        TIMESTAMP
 );
@@ -99,4 +117,29 @@ SET
 			THEN (SELECT STDEV(votes.value) FROM votes WHERE story_id = storys.id)
 			ELSE NULL END;
 
+UPDATE
+	storys
+SET
+	rank
+		= (SELECT COUNT(*) FROM storys inn
+			WHERE inn.event_id = storys.event_id
+			AND (
+				IFNULL(inn.private_score, -99)
+					> IFNULL(storys.private_score, -99)
+				OR IFNULL(inn.private_score, -99)
+					= IFNULL(storys.private_score, -99)
+						AND IFNULL(inn.public_score, -1)
+							> IFNULL(storys.public_score, -1)
+			)),
+	rank_low
+		= -1 + (SELECT COUNT(*) FROM storys inn
+			WHERE inn.event_id = storys.event_id
+			AND (
+				IFNULL(inn.private_score, -99)
+					> IFNULL(storys.private_score, -99)
+				OR IFNULL(inn.private_score, -99)
+					= IFNULL(storys.private_score, -99)
+						AND IFNULL(inn.public_score, -1)
+							>= IFNULL(storys.public_score, -1)
+			));
 COMMIT;

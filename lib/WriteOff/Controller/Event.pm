@@ -175,22 +175,33 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 		unless $c->stash->{event}->has_results;
 
 	my $event = $c->stash->{event};
-	my @ccond = {
+
+	my @lcond = (undef, {
+		order_by => [
+			{ -asc => 'rank' },
+			{ -asc => 'title' },
+		],
+	});
+
+	my @ccond = ({
 		public_stdev => { '!=' => undef }
 	}, {
 		rows => 5,
-		order_by => { -desc => 'public_stdev' },
-	};
+		order_by => [
+			{ -desc => 'public_stdev' },
+			{ -asc  => 'title' },
+		],
+	});
 
 	$c->stash(
 		j_records => $c->stash->{event}->vote_records->filled->judge_records,
 		awards => { map { $_->name => $_ } $c->model('DB::Award')->all },
 		images => {
-			leaderboard   => $event->images->order_by('pos'),
+			leaderboard   => $event->images->search_rs(@lcond),
 			controversial => $event->images->search_rs(@ccond),
 		},
 		storys => {
-			leaderboard   => $event->storys->order_by('pos'),
+			leaderboard   => $event->storys->search_rs(@lcond),
 			controversial => $event->storys->search_rs(@ccond),
 		},
 	);

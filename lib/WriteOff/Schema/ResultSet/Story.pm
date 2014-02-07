@@ -9,7 +9,7 @@ sub metadata {
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'author', 'website', 'wordcount',
 			'candidate', 'public_score', 'public_stdev',
-			'finalist', 'private_score', 'pos', 'pos_low',
+			'finalist', 'private_score', 'rank', 'rank_low',
 			'seed', 'created', 'updated'
 		]
 	});

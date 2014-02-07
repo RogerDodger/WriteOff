@@ -38,6 +38,10 @@ __PACKAGE__->add_columns(
 	{ data_type => "real", is_nullable => 0 },
 	"public_stdev",
 	{ data_type => "real", is_nullable => 0 },
+	"rank",
+	{ data_type => "integer", is_nullable => 1 },
+	"rank_low",
+	{ data_type => "integer", is_nullable => 1 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
@@ -93,11 +97,11 @@ sub type {
 }
 
 sub pos {
-	return shift->{__pos} // 0;
+	return shift->rank;
 }
 
 sub pos_low {
-	return shift->{__pos_low} // 0;
+	return shift->rank_low;
 }
 
 sub final_score {

@@ -125,6 +125,8 @@ CREATE TABLE storys (
 	private_score  INTEGER,
 	public_score   REAL,
 	public_stdev   REAL,
+	rank           INTEGER,
+	rank_low       INTEGER,
 	created        TIMESTAMP,
 	updated        TIMESTAMP
 );
@@ -145,6 +147,8 @@ CREATE TABLE images (
 	seed          REAL,
 	public_score  REAL,
 	public_stdev  REAL,
+	rank          INTEGER,
+	rank_low      INTEGER,
 	created       TIMESTAMP,
 	updated       TIMESTAMP
 );
