@@ -1,7 +1,7 @@
 package WriteOff::Schema::ResultSet::Story;
 
 use strict;
-use base 'WriteOff::Schema::ResultSet';
+use base 'WriteOff::Schema::Item';
 
 sub metadata {
 	return shift->search_rs(undef, {
