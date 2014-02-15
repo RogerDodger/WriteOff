@@ -17,12 +17,17 @@ rows not work.
 
 =cut
 
-sub average {
+sub mean {
 	my $self = shift->search({ value => { '!=' => undef } });
 
-	return -(1 << 31) if $self->count == 0;
+	return $self->{__mean} //=
+		$self->count == 0
+			? -(1 << 31)
+			: $self->get_column('value')->func('avg');
+}
 
-	return $self->get_column('value')->func('avg');
+sub average {
+	return shift->mean;
 }
 
 =head2 stdev
@@ -38,7 +43,7 @@ sub stdev {
 
 	return 0 if $self->count == 0;
 
-	my $mean = $self->average;
+	my $mean = $self->mean;
 
 	my $sum;
 	$sum += ($_ - $mean) ** 2 for $self->get_column('value')->all;

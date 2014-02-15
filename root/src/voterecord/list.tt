@@ -49,8 +49,8 @@
 		<td class="center" title="[% record.stdev | format('%.5f') %]">
 			[% record.stdev | format('%.2f') %]
 		</td>
-		<td class="center" title="[% record.avg | format('%.5f') %]">
-			[% record.avg | format('%.2f') %]
+		<td class="center" title="[% record.mean | format('%.5f') %]">
+			[% record.mean | format('%.2f') %]
 		</td>
 		[%- ELSIF !single %]
 		<td></td>
@@ -68,14 +68,14 @@
 			<a href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('view'), [ record.id ]) %]">
 				<span class="ui-icon ui-icon-clipboard" title="More details">[i]</span>
-			</a>	
+			</a>
 		</td>
 		[%- END %]
 		<td>
 			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('VoteRecord')
 				.action_for('delete'), [ record.id ]) %]">
 				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
-			</a>	
+			</a>
 		</td>
 
 		[%- END %]

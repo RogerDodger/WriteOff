@@ -14,6 +14,14 @@ BEGIN TRANSACTION;
 
 -- Voterecords
 ALTER TABLE vote_records ADD COLUMN filled BIT NOT NULL DEFAULT 0;
+ALTER TABLE vote_records ADD COLUMN mean  REAL;
+ALTER TABLE vote_records ADD COLUMN stdev REAL;
+
+UPDATE
+	vote_records
+SET
+	mean = (SELECT AVG(value) FROM votes WHERE record_id = vote_records.id),
+	stdev = (SELECT STDEV(value) FROM votes WHERE record_id = vote_records.id);
 
 -- Images
 ALTER TABLE images ADD COLUMN public_score REAL;
@@ -25,18 +33,15 @@ UPDATE
 	images
 SET
 	public_score
-		= (SELECT AVG(votes.value) FROM votes WHERE image_id = images.id),
+		= (SELECT COUNT(*) FROM image_story WHERE image_id = images.id)
+		+ IFNULL(
+			(SELECT AVG(votes.value) FROM votes WHERE image_id = images.id),
+			0
+		),
 	public_stdev
 		= CASE WHEN (SELECT COUNT(*) FROM votes WHERE image_id = images.id) != 0
 			THEN (SELECT STDEV(votes.value) FROM votes WHERE image_id = images.id)
 			ELSE NULL END;
-
-UPDATE
-	images
-SET
-	public_score
-		= (SELECT COUNT(*) FROM image_story WHERE image_id = images.id)
-		+ IFNULL(public_score, 0);
 
 UPDATE
 	images

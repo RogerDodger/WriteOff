@@ -22,6 +22,10 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", default_value => "unknown", is_nullable => 0 },
 	"filled",
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
+	"mean",
+	{ data_type => "real", is_nullable => 1 },
+	"stdev",
+	{ data_type => "real", is_nullable => 1 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
@@ -56,11 +60,6 @@ __PACKAGE__->has_many(
 	{ cascade_copy => 0, cascade_delete => 0 },
 );
 
-__PACKAGE__->mk_group_accessors(
-	column => 'variance',
-	column => 'mean',
-);
-
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
@@ -68,32 +67,27 @@ sub now_dt {
 sub is_filled {
 	my $self = shift;
 
-	return 1 if defined $self->votes->get_column('value')->next;
-	0;
+	return defined $self->votes->get_column('value')->next;
 }
 
 sub is_empty {
 	my $self = shift;
 
-	return 1 if $self->votes->count == 0;
-	0;
+	return $self->votes->count == 0;
 }
 
 sub is_unfilled {
 	my $self = shift;
 
-	return 0 if $self->is_filled;
-	return 0 if $self->is_empty;
-	1;
+	return !$self->is_filled && !$self->is_empty;
 }
 
 sub is_fillable {
 	my $self = shift;
 	my $event = $self->event;
 
-	return 1 if $self->round eq 'prelim'  && $event->prelim_votes_allowed;
-	return 1 if $self->round eq 'private' && $event->private_votes_allowed;
-	0;
+	return $self->round eq 'prelim'  && $event->prelim_votes_allowed
+	    || $self->round eq 'private' && $event->private_votes_allowed;
 }
 
 
@@ -103,17 +97,10 @@ sub is_publicly_viewable {
 	return $self->round eq 'private' && $self->event->end <= $self->now_dt;
 }
 
-sub stdev {
-	my $self = shift;
-
-	return $self->{__stdev} = #eval { sqrt $self->variance } //
-		$self->votes->stdev;
-}
-
 sub avg {
 	my $self = shift;
 
-	return $self->{__avg} = $self->values->func('avg');
+	return $self->mean;
 }
 
 sub values {
@@ -126,9 +113,9 @@ sub range {
 	my $self = shift;
 
 	return $self->{__range} //=
-		$self->round eq 'public' ?
-		[ 0 .. 10 ] :
-		[ sort { $a <=> $b } $self->values->all ];
+		$self->round eq 'public'
+			? [ 0 .. 10 ]
+			: [ sort { $a <=> $b } $self->values->all ];
 }
 
 1;

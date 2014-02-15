@@ -6,32 +6,11 @@ use base 'WriteOff::Schema::ResultSet';
 sub filled {
 	my $self = shift;
 
-	if ($self->round eq 'public') {
-		return $self->search({ filled => 1 });
-	}
-
-	# Current logic for prelim/private records;
-	# will set the "filled" value later
-	return $self->search_rs(
-		{ 'votes.value' => { '!=' => undef } },
-		{
-			join => 'votes',
-			group_by => 'me.id',
-		}
-	);
+	return $self->search({ filled => 1 });
 }
 
 sub unfilled {
-	return shift->search_rs(
-		{
-			'votes.value' => undef,
-			'votes.id' => { '!=' => undef }
-		},
-		{
-			join => 'votes',
-			group_by => 'me.id',
-		}
-	);
+	return shift->search_rs({ filled => 0 });
 }
 
 sub ordered {
@@ -44,49 +23,22 @@ sub ordered {
 sub with_stats {
 	my $self = shift;
 
-	my $votes_rs = $self->result_source->schema->resultset('Vote');
+	$self->recalc_stats;
 
-	my $mean = $votes_rs->search(
-		{
-			"votes.record_id" => { '=' => { -ident => 'me.id' } }
-		},
-		{
-			select => [{ avg => 'votes.value' }],
-			alias => 'votes',
-		}
-	);
+	return $self;
+}
 
-	my $with_mean = $self->search_rs(undef, {
-		'+select' => [
-			{ '' => $mean->as_query, -as => 'mean' },
-		],
-		'+as' => [ 'mean' ],
-	});
+sub recalc_stats {
+	my $self = shift;
 
-	# my $variance = $votes_rs->search(
-		# {
-			# "votes.record_id" => { '=' => { -ident => 'me.id' } },
-		# },
-		# {
-			# select => [ \'(AVG( (value - mean)*(value - mean) ))' ],
-			# alias => 'votes',
-		# }
-	# );
+	while (my $row = $self->next) {
+		my $votes = $row->votes;
 
-	# my $variance =
-		# '(SELECT AVG( (value - mean)*(value - mean) ) ' .
-		# 'FROM votes votes ' .
-		# 'WHERE votes.record_id = me.id)';
-
-	# my $with_stats = $with_mean->as_subselect_rs->search(undef, {
-		# '+select' => [
-			# 'mean',
-			# $variance,
-		# ],
-		# '+as' => [ 'mean', 'variance' ],
-	# });
-
-	# return $with_stats;
+		$row->update({
+			mean  => $votes->mean,
+			stdev => $votes->stdev,
+		});
+	}
 }
 
 sub judge_records {
