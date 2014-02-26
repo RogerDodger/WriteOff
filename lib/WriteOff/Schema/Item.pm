@@ -15,16 +15,16 @@ sub recalc_stats {
 
 	for (my $i = 0; $i <= $n; $i++) {
 		my $item = $items[$i];
-		my ($pos, $pos_low) = ($i, $i);
+		my ($rank, $rank_low) = ($i, $i);
 
-		$pos-- while $pos > 0 && $item == $items[$pos-1];
-		$pos_low++ while $pos_low < $n && $item == $items[$pos_low+1];
+		$rank-- while $rank > 0 && $item == $items[$rank-1];
+		$rank_low++ while $rank_low < $n && $item == $items[$rank_low+1];
 
 		my $votes = $item->votes;
 
 		$item->update({
-			rank     => $pos,
-			rank_low => $pos_low,
+			rank     => $rank,
+			rank_low => $rank_low,
 			mean     => $votes->mean,
 			stdev    => $votes->stdev,
 		});
