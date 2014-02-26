@@ -91,6 +91,7 @@ sub do_delete :Private {
 	);
 
 	$c->stash->{record}->votes->delete_all;
+	$c->stash->{record}->update({ filled => 0 });
 
 	$c->flash->{status_msg} = 'Deletion successful';
 	$c->res->redirect( $c->uri_for(
@@ -120,19 +121,30 @@ sub do_fill :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my @params = split ";", $c->req->param('data');
-	my $vote_ids = $c->stash->{record}->votes->get_column('id');
+	my @votes = split ";", $c->req->param('data');
+	my @candidates = $c->stash->{record}->votes->get_column('id')->all;
 
-	$c->detach('/error', [ 'Bad form input' ])
-		unless [ $vote_ids->all ] ~~ [ sort { $a <=> $b } @params ];
+	# Make sure each vote is accounted for in input
+	if (@votes != @candidates) {
+		return $c->detach('/error', [ 'Bad form input' ]);
+	}
 
-	for( my $p = 0; $p <= $#params; $p++ ) {
-		$c->model('DB::Vote')->find( $params[$p] )->update({
-			value => $#params - 2 * $p,
+	for (sort { $a <=> $b } @votes) {
+		if ($_ != shift @candidates) {
+			return $c->detach('/error', [ 'Bad form input' ]);
+		}
+	}
+
+	for my $p (0..$#votes) {
+		$c->model('DB::Vote')->find($votes[$p])->update({
+			value => $#votes - 2 * $p,
 		});
 	}
 
-	$c->stash->{record}->update({ ip => $c->req->address });
+	$c->stash->{record}->update({
+		ip     => $c->req->address,
+		filled => 1,
+	});
 
 	$c->flash->{status_msg} = 'Vote successful';
 	$c->res->redirect( $c->uri_for(

@@ -71,7 +71,8 @@ sub do_public :Private {
 		return;
 	}
 
-	for my $item (@{ $c->stash->{candidates} }) {
+	my @candidates = @{ $c->stash->{candidates} };
+	for my $item (@candidates) {
 		# Users cannot vote on their own entries
 		next if $item->user_id == $c->user_id;
 
@@ -90,6 +91,9 @@ sub do_public :Private {
 			$vote->delete;
 		}
 	}
+
+	# A record is filled if it has votes for more than half the candidates
+	$record->update({ filled => $record->votes->count >= @candidates/2 });
 
 	$c->stash->{status_msg} = 'Vote updated';
 }

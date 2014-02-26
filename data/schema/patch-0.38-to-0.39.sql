@@ -20,8 +20,14 @@ ALTER TABLE vote_records ADD COLUMN stdev REAL;
 UPDATE
 	vote_records
 SET
-	mean = (SELECT AVG(value) FROM votes WHERE record_id = vote_records.id),
-	stdev = (SELECT STDEV(value) FROM votes WHERE record_id = vote_records.id);
+	filled
+		= (SELECT COUNT(*) FROM votes
+			WHERE record_id = vote_records.id
+			AND value IS NOT NULL) != 0,
+	mean
+		= (SELECT AVG(value) FROM votes WHERE record_id = vote_records.id),
+	stdev
+		= (SELECT STDEV(value) FROM votes WHERE record_id = vote_records.id);
 
 -- Images
 ALTER TABLE images ADD COLUMN public_score REAL;

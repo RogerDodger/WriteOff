@@ -22,24 +22,26 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	$c->detach('/error', [ "There is no preliminary voting round for this event." ])
 		unless $c->stash->{event}->prelim;
 
-	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
-		round   => 'prelim',
-		type    => 'fic',
-		user_id => $c->user->get('id'),
-	}) if $c->user;
 
-	if (
-		$c->user &&
-		$c->req->method eq 'POST' &&
-		$c->stash->{event}->prelim_votes_allowed
-	) {
-		if ($c->stash->{records}->count) {
-			$c->stash->{event}->new_prelim_record_for(
-				$c->user, $c->config->{prelim_distr_size}
-			);
-		}
-		else {
-			$c->stash->{error_msg} = "You have empty records to fill in";
+	if ($c->user) {
+		$c->stash->{records} = $c->stash->{event}->vote_records->search({
+			filled  => 0,
+			round   => 'prelim',
+			type    => 'fic',
+			user_id => $c->user->get('id'),
+		});
+
+		if ($c->req->method eq 'POST' && $c->stash->{event}->prelim_votes_allowed) {
+			if (!$c->stash->{records}->count) {
+				my $err = $c->stash->{event}->new_prelim_record_for(
+					$c->user, $c->config->{prelim_distr_size}
+				);
+
+				$c->stash->{error_msg} = $err if $err;
+			}
+			else {
+				$c->stash->{error_msg} = "You have empty records to fill in";
+			}
 		}
 	}
 

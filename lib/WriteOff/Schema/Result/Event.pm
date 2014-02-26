@@ -337,6 +337,12 @@ sub reset_schedules {
 	} if $self->prelim;
 
 	push @schedules, {
+		action => '/event/set_candidates',
+		at     => $self->public,
+		args   => [ $self->id ],
+	} if $self->prelim && $self->public;
+
+	push @schedules, {
 		action => '/event/judge_distr',
 		at     => $self->private,
 		args   => [ $self->id ],
@@ -377,7 +383,7 @@ sub new_prelim_record_for {
 		type    => 'fic',
 	});
 
-	for( List::Util::shuffle $candidates->get_column('id')->all ) {
+	for (List::Util::shuffle $candidates->get_column('id')->all) {
 		$record->create_related('votes', { story_id => $_ });
 		last if --$size == 0;
 	}
