@@ -48,7 +48,7 @@ sub stdev {
 	my $sum;
 	$sum += ($_ - $mean) ** 2 for $self->get_column('value')->all;
 
-	return sqrt($sum / ($self->count-1));
+	return sqrt $sum / ~-$self->count;
 }
 
 sub prelim {
