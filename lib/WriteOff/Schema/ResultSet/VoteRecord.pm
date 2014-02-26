@@ -20,14 +20,6 @@ sub ordered {
 	]);
 }
 
-sub with_stats {
-	my $self = shift;
-
-	$self->recalc_stats;
-
-	return $self;
-}
-
 sub recalc_stats {
 	my $self = shift;
 

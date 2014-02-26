@@ -37,10 +37,4 @@ sub seed_order {
 	return shift->search_rs(undef, { order_by => { -desc => 'seed' } } );
 }
 
-sub with_stats {
-	my $self = shift;
-	$self->recalc_stats;
-	return $self;
-}
-
 1;

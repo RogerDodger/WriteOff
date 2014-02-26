@@ -5,7 +5,7 @@ use base 'WriteOff::Schema::ResultSet';
 
 sub with_pos {
 	my $self = shift;
-	
+
 	my $pos = $self->search(
 		{ 'other.score' => { '>' => { -ident => 'me.score' } } },
 		{
@@ -13,7 +13,7 @@ sub with_pos {
 			alias => 'other',
 		}
 	);
-	
+
 	return $self->search_rs(undef, {
 		'+select' => [ { '' => $pos->as_query, -as => 'pos' } ],
 		'+as'     => [ 'pos' ],
@@ -23,52 +23,52 @@ sub with_pos {
 sub deal_awards_and_scores {
 	my( $self, $rs ) = @_;
 	my $awards = $self->result_source->schema->resultset('Award');
-	
-	my @items = $rs->with_scores->with_stats;
+
+	my @items = $rs->all;
 	my $n = $#items;
-	
+
 	my $max_stdev = $items[0];
 	for my $item ( @items ) {
 		$max_stdev = $item if $item->stdev > $max_stdev->stdev;
 	}
-	
+
 	for my $item ( @items ) {
 		my $artist = $self->find_or_create({ name => $item->artist });
-		
+
 		$artist->update({ user_id => $item->user_id })
 			if !defined $artist->user_id;
-		
+
 		my %event_id_and_type = (
 			event_id => $item->event_id,
 			type     => $item->type,
 		);
-		
+
 		$item->create_related('scores', {
 			%event_id_and_type,
 			artist_id => $artist->id,
 			value     => $n - ($item->pos + $item->pos_low),
 		});
-		
+
 		my @awards = (
 			$awards->medal_for($item->pos) // (),
 			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ?
 					$awards->find({ name => 'confetti' }) : (),
 			$item->pos == $n ? $awards->find({ name => 'spoon' }) : (),
 		);
-		
+
 		$artist->add_to_awards( $_, \%event_id_and_type ) for @awards;
 	}
-	
+
 	#Give ribbons to anyone who didn't get an award
 	my $ribbon = $awards->find({ name => 'ribbon' });
 	for my $item ( @items ) {
 		my $artist = $self->find({ name => $item->artist });
-		
+
 		my %event_id_and_type = (
 			event_id => $item->event_id,
 			type     => $item->type,
 		);
-		
+
 		$artist->add_to_awards( $ribbon, \%event_id_and_type )
 			if $artist->awards->search(\%event_id_and_type) == 0;
 	}
@@ -76,7 +76,7 @@ sub deal_awards_and_scores {
 
 sub recalculate_scores {
 	my $self = shift;
-	
+
 	while (my $artist = $self->next) {
 		$artist->recalculate_score;
 	}
@@ -84,7 +84,7 @@ sub recalculate_scores {
 
 sub tallied {
 	my $self = shift;
-	
+
 	my $rank_rs = $self->search(
 		{
 			score => { '>' => { -ident => 'me.score' } }
