@@ -13,7 +13,7 @@ sub recalc_stats {
 	my @items = $self->all;
 	my $n = $#items;
 
-	for (my $i = 0; $i <= $n; $i++) {
+	for my $i (0..$n) {
 		my $item = $items[$i];
 		my ($rank, $rank_low) = ($i, $i);
 
@@ -30,7 +30,7 @@ sub recalc_stats {
 		});
 	}
 
-	$self;
+	return $self;
 }
 
 sub seed_order {
