@@ -423,18 +423,16 @@ sub judge_distr {
 	my $self = shift;
 	my $size = shift // 5;
 
-	my @storys = $self->storys->with_scores->order_by({ -desc => 'public_score' })->all;
+	my @storys = $self->storys->order_by({ -desc => 'public_score' })->all;
+	my ($prev, $no_more_finalists);
 
-	my $no_more_finalists = 0;
-	for( my $i = 0; $i <= $#storys; $i++ ) {
-		my ($story, $prev) = @storys[$i, $i-1];
-
-		if( $no_more_finalists ) {
+	for my $story (@storys) {
+		if ($no_more_finalists) {
 			$story->update({ finalist => 0 });
-			undef $storys[$i];
+			undef $story;
 		}
 		else {
-			if($i < $size || $story->public_score == $prev->public_score) {
+			if ($i < $size || $story->public_score == $prev->public_score) {
 				$story->update({ finalist => 1 });
 			}
 			else {
@@ -442,6 +440,7 @@ sub judge_distr {
 				redo;
 			}
 		}
+		$prev = $story;
 	}
 
 	my @finalist_ids = map { $_->id } grep { defined $_ } @storys;
