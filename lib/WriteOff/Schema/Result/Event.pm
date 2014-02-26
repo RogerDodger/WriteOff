@@ -432,7 +432,7 @@ sub judge_distr {
 			undef $story;
 		}
 		else {
-			if ($i < $size || $story->public_score == $prev->public_score) {
+			if (--$size < 0 || $story->public_score == $prev->public_score) {
 				$story->update({ finalist => 1 });
 			}
 			else {
