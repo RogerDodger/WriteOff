@@ -39,16 +39,9 @@ Returns 0 if there are no votes in the resultset.
 =cut
 
 sub stdev {
-	my $self = shift->search({ value => { '!=' => undef } });
+	my $self = shift;
 
-	return 0 if $self->count == 0;
-
-	my $mean = $self->mean;
-
-	my $sum;
-	$sum += ($_ - $mean) ** 2 for $self->get_column('value')->all;
-
-	return sqrt $sum / ~-$self->count;
+	return $self->get_column('value')->func('stdev');
 }
 
 sub prelim {

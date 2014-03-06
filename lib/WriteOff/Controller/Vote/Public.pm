@@ -94,6 +94,7 @@ sub do_public :Private {
 
 	# A record is filled if it has votes for more than half the candidates
 	$record->update({ filled => $record->votes->count >= @candidates/2 });
+	$record->recalc_stats;
 
 	$c->stash->{status_msg} = 'Vote updated';
 }
