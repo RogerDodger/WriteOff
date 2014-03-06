@@ -68,10 +68,6 @@ Lists all active events.
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{status_msg} = $c->model('DB::Vote')
-		->search({ id => { '<' => 100 } })
-		->stdev;
-
 	$c->stash->{events} = $c->model('DB::Event')->active;
 
 	push $c->stash->{title}, 'Active Events';
