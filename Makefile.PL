@@ -13,6 +13,19 @@ BEGIN {
 	chdir($Bin);
 }
 use lib::App::cpanminus;
+use File::stat;
+
+# Compile SQLite extension functions
+
+my $i = "lib/extension-functions.c";
+my $o = "bin/libsqlitefunctions.so";
+if (stat($i)->mtime > eval { stat($o)->mtime } ) {
+	print "Compiling $i...\n";
+	system(qw/gcc -fPIC -lm -shared/, $i, '-o', $o) == 0
+		or die "Failed to compile $i";
+}
+
+# Install required CPAN modules
 
 my @dependencies = (
 	'Catalyst::Runtime~5.90013',
