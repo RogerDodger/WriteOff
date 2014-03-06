@@ -22,4 +22,8 @@ sub no_contents {
 	});
 }
 
+sub order_by_score {
+	return shift->order_by({ -desc => 'public_score' });
+}
+
 1;

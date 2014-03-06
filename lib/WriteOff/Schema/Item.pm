@@ -7,10 +7,10 @@ package WriteOff::Schema::Item;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
-sub recalc_stats {
+sub recalc_rank {
 	my $self = shift;
 
-	my @items = $self->all;
+	my @items = $self->order_by_score->all;
 	my $n = $#items;
 
 	for my $i (0..$n) {
@@ -20,13 +20,22 @@ sub recalc_stats {
 		$rank-- while $rank > 0 && $item == $items[$rank-1];
 		$rank_low++ while $rank_low < $n && $item == $items[$rank_low+1];
 
-		my $votes = $item->votes;
-
 		$item->update({
 			rank     => $rank,
 			rank_low => $rank_low,
-			mean     => $votes->mean,
-			stdev    => $votes->stdev,
+		});
+	}
+}
+
+sub recalc_public_stats {
+	my $self = shift;
+
+	for my $item ($self->all) {
+		my $votes = $item->votes->public;
+
+		$item->update({
+			public_score => $votes->mean,
+			public_stdev => $votes->stdev,
 		});
 	}
 

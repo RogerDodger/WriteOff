@@ -15,6 +15,20 @@ sub metadata {
 	});
 }
 
+sub order_by_score {
+	return shift->order_by({ -desc => [ qw/private_score public_score/ ]});
+}
+
+sub recalc_private_stats {
+	my $self = shift;
+
+	for my $item ($self->all) {
+		my $votes = $item->votes->private;
+
+		$item->update({ private_score => $votes->get_column('value')->sum });
+	}
+}
+
 sub with_prelim_stats {
 	my $self = shift;
 
