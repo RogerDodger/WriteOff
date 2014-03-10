@@ -1,7 +1,7 @@
 Installation
 ============
 
-    perl Makefile.PL
+    perl Makefile.PL && make
     ./script/command.pl deploy
     ./script/server.pl
 
