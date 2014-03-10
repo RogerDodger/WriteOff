@@ -12,8 +12,14 @@ __PACKAGE__->config(
 				sqlite_unicode => 1,
 				on_connect_do => q{PRAGMA foreign_keys = ON},
 			});
+
+			local $SIG{__WARN__} = sub {
+				die "Failed to load `libsqlitefunctions.so`. "
+				  . "Have you run `make` yet?";
+			};
 			$dbh->sqlite_enable_load_extension(1);
 			$dbh->sqlite_load_extension('./bin/libsqlitefunctions.so');
+
 			return $dbh;
 		},
 	},
