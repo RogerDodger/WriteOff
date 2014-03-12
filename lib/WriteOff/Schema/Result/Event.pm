@@ -324,37 +324,18 @@ sub reset_schedules {
 		args   => '[' . $self->id . ']',
 	})->delete;
 
-	push @schedules, {
-		action => '/event/set_prompt',
-		at     => $self->start,
-		args   => [ $self->id ],
-	} if $self->has_prompt;
+	my @schedules =
+		map {{ action => $_->[0], at => $_->[1], args => [ $self->id ] }}
+		  (['/event/set_prompt',    $self->start]) x!! $self->has_prompt,
+		  (['/event/prelim_distr', $self->prelim]) x!! $self->prelim,
+		  (['/event/public_distr', $self->public]) x!! $self->public,
+		  (['/event/judge_distr', $self->private]) x!! $self->private,
+		  (['/event/tally_results',   $self->end]) x!! $self->has_results;
 
-	push @schedules, {
-		action => '/event/prelim_distr',
-		at     => $self->prelim,
-		args   => [ $self->id ],
-	} if $self->prelim;
-
-	push @schedules, {
-		action => '/event/set_candidates',
-		at     => $self->public,
-		args   => [ $self->id ],
-	} if $self->prelim && $self->public;
-
-	push @schedules, {
-		action => '/event/judge_distr',
-		at     => $self->private,
-		args   => [ $self->id ],
-	} if $self->private;
-
-	push @schedules, {
-		action => '/event/tally_results',
-		at     => $self->end,
-		args   => [ $self->id ],
-	} if $self->has_results;
-
-	$rs->create($_) for grep { $_->{at} > $self->now_dt } @schedules;
+	for my $schedule (@schedules) {
+		next if $schedule->{at} < $self->now_dt;
+		$rs->create($schedule);
+	}
 }
 
 sub new_prelim_record_for {
@@ -456,6 +437,34 @@ sub judge_distr {
 				} @finalist_ids
 			]
 		});
+	}
+}
+
+=head2 public_distr
+
+Determines candidates for the public voting round from prelim results.
+
+Criteria: story has a prelim score greater than zero, and author filled in
+their prelim records. If there was no prelim round, all stories are
+candidates.
+
+=cut
+
+sub public_distr {
+	my $self = shift;
+
+	if (!$self->prelim) {
+		$self->storys->update({ candidate => 1 });
+		return;
+	}
+
+	my $storys = $self->storys->with_prelim_stats;
+	while (my $story = $storys->next) {
+		if ($story->prelim_score >= 0) {
+			if ($story->author_vote_count >= $story->author_story_count) {
+				$story->update({ candidate => 1 });
+			}
+		}
 	}
 }
 
