@@ -600,18 +600,15 @@ sub judge_distr {
 		$prev = $story;
 	}
 
-	my @finalist_ids = map { $_->id } grep { defined $_ } @storys;
+	my $finalists = [ map {{ story_id => $_->id }}
+	                    grep { defined $_ } @storys ];
 
 	for my $judge ( $self->judges->all ) {
 		my $record = $self->create_related('vote_records', {
 			user_id => $judge->id,
 			round   => 'private',
 			type    => 'fic',
-			votes   => [
-				map {
-					{ story_id => $_ }
-				} @finalist_ids
-			]
+			votes   => $finalists,
 		});
 	}
 }
