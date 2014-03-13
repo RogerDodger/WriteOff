@@ -19,6 +19,26 @@ sub order_by_score {
 	return shift->order_by({ -desc => [ qw/private_score public_score/ ]});
 }
 
+sub recalc_candidates {
+	my $self = shift;
+
+	$self->update({
+		candidate => \[q{
+				(SELECT COUNT(*) FROM vote_records r
+					WHERE r.event_id = storys.event_id
+					AND round = 'prelim'
+					AND filled = 1) >=
+				(SELECT COUNT(*) FROM storys
+					WHERE r.event_id = storys.event_id)
+			AND
+				(SELECT SUM(v.values) FROM votes v, vote_records r
+					WHERE v.record_id = r.id
+					AND r.round = 'prelim'
+					AND story_id = storys.id) >= 0
+		}]
+	});
+}
+
 sub recalc_public_stats {
 	my $self = shift;
 	my $votes = $self->result_source->schema->resultset('Vote');
