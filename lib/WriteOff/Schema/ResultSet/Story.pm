@@ -19,14 +19,33 @@ sub order_by_score {
 	return shift->order_by({ -desc => [ qw/private_score public_score/ ]});
 }
 
+sub recalc_public_stats {
+	my $self = shift;
+	my $votes = $self->result_source->schema->resultset('Vote');
+
+	my $public_values = $votes->public->search(
+		{ story_id => { '=' => { -ident => 'storys.id' } } },
+		{ alias => 'inn' }
+	)->get_column('value');
+
+	$self->update({
+		public_score => $public_values->func_rs('avg')->as_query,
+		public_stdev => $public_values->func_rs('stdev')->as_query,
+	});
+}
+
 sub recalc_private_stats {
 	my $self = shift;
+	my $votes = $self->result_source->schema->resultset('Vote');
 
-	for my $item ($self->all) {
-		my $votes = $item->votes->private;
+	my $private_values = $votes->public->search(
+		{ story_id => { '=' => { -ident => 'storys.id' } } },
+		{ alias => 'inn' }
+	)->get_column('value');
 
-		$item->update({ private_score => $votes->get_column('value')->sum });
-	}
+	$self->update({
+		private_score => $private_values->func_rs('sum')->as_query,
+	});
 }
 
 sub with_prelim_stats {
