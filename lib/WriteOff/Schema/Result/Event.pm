@@ -314,7 +314,6 @@ sub is_ended {
 
 sub reset_schedules {
 	my $self = shift;
-	my @schedules;
 
 	my $rs = $self->result_source->schema->resultset('Schedule');
 
