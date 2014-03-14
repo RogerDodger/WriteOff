@@ -23,19 +23,23 @@ sub recalc_candidates {
 	my $self = shift;
 
 	$self->update({
-		candidate => \[q{
+		candidate => \q{
+				(SELECT COUNT(prelim) FROM events e WHERE e.id = event_id) = 0
+			OR
 				(SELECT COUNT(*) FROM vote_records r
 					WHERE r.event_id = storys.event_id
 					AND round = 'prelim'
+					AND type = 'fic'
 					AND filled = 1) >=
-				(SELECT COUNT(*) FROM storys
-					WHERE r.event_id = storys.event_id)
+				(SELECT COUNT(*) FROM storys inn
+					WHERE storys.user_id = inn.user_id
+					AND storys.event_id = inn.event_id)
 			AND
-				(SELECT SUM(v.values) FROM votes v, vote_records r
+				(SELECT SUM(v.value) FROM votes v, vote_records r
 					WHERE v.record_id = r.id
 					AND r.round = 'prelim'
-					AND story_id = storys.id) >= 0
-		}]
+					AND v.story_id = storys.id) >= 0
+		},
 	});
 }
 

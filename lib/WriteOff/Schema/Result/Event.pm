@@ -541,34 +541,6 @@ sub prelim_distr {
 	1;
 }
 
-=head2 public_distr
-
-Determines candidates for the public voting round from prelim results.
-
-Criteria: story has a prelim score greater than zero, and author filled in
-their prelim records. If there was no prelim round, all stories are
-candidates.
-
-=cut
-
-sub public_distr {
-	my $self = shift;
-
-	if (!$self->prelim) {
-		$self->storys->update({ candidate => 1 });
-		return;
-	}
-
-	my $storys = $self->storys->with_prelim_stats;
-	while (my $story = $storys->next) {
-		if ($story->prelim_score >= 0) {
-			if ($story->author_vote_count >= $story->author_story_count) {
-				$story->update({ candidate => 1 });
-			}
-		}
-	}
-}
-
 =head2 judge_distr
 
 Distributes stories for private voting.
