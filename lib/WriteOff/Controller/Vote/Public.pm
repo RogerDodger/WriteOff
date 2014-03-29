@@ -30,6 +30,9 @@ sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 
 	$c->forward('fillform');
 
+	$c->stash->{votes_received} =
+		$c->stash->{event}->vote_records->public->fic->filled->count;
+
 	push $c->stash->{title}, 'Vote', 'Public';
 	$c->stash->{template} = 'vote/public/fic.tt';
 }
@@ -108,9 +111,12 @@ sub fillform :Private {
 		type    => $c->action->name,
 	});
 
-	$c->stash->{fillform} = {
-		map { $_->item->id => $_->value } $record->votes->all,
-	};
+	if (defined $record) {
+		$c->stash->{fillform} = {
+			map { $_->item->id => $_->value } $record->votes->all,
+		};
+	}
+
 }
 
 =head1 AUTHOR
