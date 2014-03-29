@@ -19,6 +19,18 @@ sub order_by_score {
 	return shift->order_by({ -desc => [ qw/private_score public_score/ ]});
 }
 
+sub candidates {
+	return shift->search({ candidate => 1 });
+}
+
+sub noncandidates {
+	return shift->search({ candidate => 0 });
+}
+
+sub gallery {
+	return shift->order_by({ -desc => [qw/candidate seed/] })
+}
+
 sub recalc_candidates {
 	my $self = shift;
 

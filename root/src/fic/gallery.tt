@@ -8,7 +8,7 @@
 		<th colspan="2">Story</th>
 		<th>Wordcount</th>
 	</tr>
-	[%- FOREACH story IN storys; i = i + 1 %]
+	[%- FOREACH story IN storys.all; i = i + 1 %]
 	<tr class="[% loop.parity %]">
 		<td class="center">[% i %]</td>
 		[%- IF event.art %]
@@ -38,10 +38,10 @@
 [%- IF event.fic_gallery_opened -%]
 	[%- i = 0 %]
 
-	[%- PROCESS story_table  storys = event.public_story_candidates -%]
+	[%- PROCESS story_table  storys = candidates -%]
 
 	[%- IF event.prelim && !event.prelim_votes_allowed %]
-		[%- PROCESS story_table  storys = event.public_story_noncandidates -%]
+		[%- PROCESS story_table  storys = noncandidates -%]
 	[%- END -%]
 
 	<p class="ui-state-default center" style="padding: 7px">

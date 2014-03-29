@@ -22,7 +22,7 @@ sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 
 	if ($c->stash->{event}->public_votes_allowed) {
 		$c->stash->{candidates} = [
-			$c->stash->{event}->public_story_candidates
+			$c->stash->{event}->storys->metadata->seed_order->candidates->all
 		];
 
 		$c->forward('do_public') if $c->req->method eq 'POST';

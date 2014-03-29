@@ -77,13 +77,15 @@ sub export {
 			say 'done';
 		};
 
-		for my $story ($event->public_story_candidates) {
+		my $storys = $event->storys->seed_order;
+
+		for my $story ($storys->candidates->all) {
 			$upload_story->($story->title, $story->contents);
 		}
 
 		$upload_story->('VOTING');
 
-		for my $story ($event->public_story_noncandidates) {
+		for my $story ($storys->noncandidates->all) {
 			$upload_story->($story->title, $story->contents);
 		}
 	} catch {

@@ -206,38 +206,6 @@ sub is_organised_by {
 	    || $user->is_admin;
 }
 
-sub public_story_candidates {
-	my $self = shift;
-
-	return $self->storys->seed_order->all
-		if !$self->prelim || $self->prelim_votes_allowed;
-
-	# Doing the prelim_score search in the resultset doesn't work.
-	# ...I don't know why, but I guess this'll do.
-	#
-	# Because you didn't put it in a HAVING statement, silly!!
-	# --6 months later
-	return grep {
-		$_->_is_public_candidate
-	} $self->storys->with_prelim_stats->seed_order->all;
-}
-
-sub public_story_noncandidates {
-	my $self = shift;
-
-	return () if !$self->prelim || $self->prelim_votes_allowed;
-
-	return grep {
-		!$_->_is_public_candidate
-	} $self->storys->with_prelim_stats->seed_order->all;
-}
-
-sub storys_gallery_order {
-	my $self = shift;
-
-	return ( $self->public_story_candidates, $self->public_story_noncandidates );
-}
-
 sub prompt_subs_allowed {
 	my $row = shift;
 

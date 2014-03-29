@@ -202,7 +202,7 @@ sub process {
 		}
 
 		my $i = 1;
-		for my $story ($event->public_story_candidates, $event->public_story_noncandidates) {
+		for my $story ($event->storys->gallery->all) {
 			local $c->stash->{story} = $story;
 
 			my $id = $self->add_xhtml(
