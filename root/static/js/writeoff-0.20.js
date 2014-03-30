@@ -193,12 +193,71 @@ jQuery(document).ready(function($) {
 
 $(document).ready(function() {
 	var $form = $('#public-vote');
+	var $status_area = $(
+		'<p class="status-msg ui-widget ui-corner-all ui-state-highlight">' +
+		'<span class="ui-icon ui-icon-alert"></span> Automatic updates enabled' +
+		'</p>');
+
+	// Keep track of dirty fields in case the update fails.
+	//
+	// Similarly, to ensure there's no issue with concurrency (two votes being
+	// submitted simultaneously), the dirty fields have to be cleared as soon
+	// as they're accessed. There's still a *slight* possibility of race
+	// conditions occuring with this setup, though, because JS culture doesn't
+	// seem to like the idea of a proper locking mechanism. Disabling the form
+	// while a vote updates is obviously not a good solution.
+	var $dirty_fields = $();
+
 	if ($form) {
 		// Remove the manual update button
 		$form.find('input[type="submit"]').parent().remove();
 
+		// Add status updater below the form
+		$status_area.insertAfter($form);
+
 		$form.find('input').change(function(e) {
-			$.post(window.location.pathname, $(this).serialize());
+			// Each callback needs its own $submitting_fields to ensure
+			// concurrent calls don't clobber it before it's used.
+			var $submitting_fields;
+
+			$status_area.removeClass('ui-state-error');
+			$status_area.addClass('ui-state-highlight');
+			$status_area.html(
+				'<span class="ui-icon ui-icon-spinner"></span>' + "\n" +
+				'Updating vote...'
+			);
+
+			$submitting_fields = $dirty_fields.add(this);
+			// If an interrupt happens here, then its possible some dirty
+			// fields never get updated. Unlikely, but possible.
+			$dirty_fields = $();
+
+			$.ajax({
+				type: 'POST',
+				url: window.location.pathname,
+				data: $submitting_fields.serialize(),
+				success: function(res, status, xhr) {
+					$status_area.html(
+						'<span class="ui-icon ui-icon-check"></span>' + "\n" +
+						'Vote updated'
+					);
+
+					$('#votes-received').html(
+						$(res).find('#votes-received').text()
+					);
+				},
+				error: function(xhr, status, err) {
+					$status_area.removeClass('ui-state-highlight');
+					$status_area.addClass('ui-state-error');
+					$status_area.html(
+						'<span class="ui-icon ui-icon-alert"></span>' + "\n" +
+						'Error updating vote: ' + err + '.'
+					);
+
+					// The fields failed to send, so they're still dirty
+					$dirty_fields = $dirty_fields.add($submitting_fields);
+				}
+			});
 		});
 	}
 });

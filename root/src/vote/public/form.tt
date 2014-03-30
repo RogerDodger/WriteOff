@@ -1,13 +1,12 @@
-[%- IF c.form.has_error %]
-	<div>
-	[%- FOREACH message IN c.form.messages('vote') %]
-		[% INCLUDE fragment/error_msg.tt %]
-	[%- END %]
-	</div>
+[%- IF !c.user %]
+
+[% INCLUDE fragment/status_msg.tt  message =
+		'You must be logged in to vote' %]
+
 [%- ELSE %]
-	[% INCLUDE fragment/status_msg.tt  message =
+
+[% INCLUDE fragment/status_msg.tt  message =
 		'Scores are in ascending order, i.e., 10 is the best score' %]
-[%- END %]
 
 [%- vote_range = [0 .. 10]; vote_range.push('N/A') %]
 <form id="public-vote" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
@@ -34,3 +33,5 @@
 	</table>
 	<p><input type="submit" name="submit" value="Update vote"></p>
 </form>
+
+[%- END %]

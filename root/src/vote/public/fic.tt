@@ -5,7 +5,7 @@
 	<br />
 	Votes close: <strong>[% format_dt(event.private || event.end) %]</strong>.
 	<br />
-	Votes received: <strong>[% votes_received %]</strong>.
+	Votes received: <strong id="votes-received">[% votes_received %]</strong>.
 	<br />
 [%- IF event.public_votes_allowed %]
 	Votes are <strong class="good">open</strong>.

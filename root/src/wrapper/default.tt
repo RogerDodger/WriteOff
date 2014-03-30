@@ -96,7 +96,7 @@
 			[%- IF status_msg %]
 				<p class="popup-msg ui-state-highlight ui-corner-all">
 					<span class="ui-icon ui-icon-check"></span>
-					[% status_msg %]
+					<span id="status-msg">[% status_msg %]</span>
 				</p>
 			[%- END -%]
 			[%- IF error_msg %]

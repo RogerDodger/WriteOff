@@ -118,4 +118,14 @@ sub range {
 			: [ sort { $a <=> $b } $self->values->all ];
 }
 
+sub recalc_stats {
+	my $self = shift;
+	my $votes = $self->votes;
+
+	$self->update({
+		mean  => $votes->mean,
+		stdev => $votes->stdev,
+	});
+}
+
 1;

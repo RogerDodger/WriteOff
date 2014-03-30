@@ -743,7 +743,7 @@ figure img {
 .status-msg,
 .error-msg {
 	display: inline-block;
-	padding: 0.7em 0.7em 0.5em 0.7em;
+	padding: 0.7em 0.9em 0.5em 0.7em;
 	white-space: nowrap;
 }
 .status-msg span.ui-icon,
@@ -865,6 +865,9 @@ form.light textarea,
 }
 .loading:before {
 	content: 'Loading...';
+}
+.ui-icon.ui-icon-spinner {
+	background: url('images/loading.gif') no-repeat;
 }
 .good {
 	color: green;
