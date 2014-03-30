@@ -9,6 +9,7 @@ __PACKAGE__->config(
 	connect_info => {
 		dbh_maker => sub {
 			my $dbh = DBI->connect("dbi:SQLite:data/WriteOff.db","","", {
+				RaiseError => 1,
 				sqlite_unicode => 1,
 				on_connect_do => q{PRAGMA foreign_keys = ON},
 			});
