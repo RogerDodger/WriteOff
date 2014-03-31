@@ -74,7 +74,7 @@ sub recalc_private_stats {
 	my $self = shift;
 	my $votes = $self->result_source->schema->resultset('Vote');
 
-	my $private_values = $votes->public->search(
+	my $private_values = $votes->private->search(
 		{ story_id => { '=' => { -ident => 'storys.id' } } },
 		{ alias => 'inn' }
 	)->get_column('value');
