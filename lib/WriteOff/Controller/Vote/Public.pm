@@ -95,9 +95,12 @@ sub do_public :Private {
 		}
 	}
 
-	# A record is filled if it has votes for more than half the candidates
-	$record->update({ filled => $record->votes->count >= @candidates/2 });
 	$record->recalc_stats;
+
+	# A record is filled if it has votes for more than half the candidates,
+	# excluding those the voter has authored
+	my $minvotes = 0.5 * grep { $_->user_id != $c->user_id } @candidates;
+	$record->update({ filled => $record->votes->count >= $minvotes });
 
 	$c->stash->{status_msg} = 'Vote updated';
 }
