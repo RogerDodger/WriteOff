@@ -55,21 +55,6 @@ sub recalc_candidates {
 	});
 }
 
-sub recalc_public_stats {
-	my $self = shift;
-	my $votes = $self->result_source->schema->resultset('Vote');
-
-	my $public_values = $votes->public->search(
-		{ story_id => { '=' => { -ident => 'storys.id' } } },
-		{ alias => 'inn' }
-	)->get_column('value');
-
-	$self->update({
-		public_score => $public_values->func_rs('avg')->as_query,
-		public_stdev => $public_values->func_rs('stdev')->as_query,
-	});
-}
-
 sub recalc_private_stats {
 	my $self = shift;
 	my $votes = $self->result_source->schema->resultset('Vote');

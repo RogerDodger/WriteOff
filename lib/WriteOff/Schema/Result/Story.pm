@@ -122,9 +122,7 @@ sub artist {
 }
 
 sub stdev {
-	my $self = shift;
-
-	return $self->{__stdev} //= $self->votes->stdev;
+	return shift->public_stdev;
 }
 
 sub _compare_scores {

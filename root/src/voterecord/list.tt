@@ -16,7 +16,7 @@
 		<th title="Mean (average)" style="font-variant: normal">&mu;</th>
 		[%- END %]
 
-		<th>Filled</th>
+		<th>Updated</th>
 
 		[%- IF event.is_organised_by( c.user ) %]
 		<th> </th>

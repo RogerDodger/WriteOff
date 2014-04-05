@@ -3,23 +3,6 @@ package WriteOff::Schema::ResultSet::Artist;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
-sub with_pos {
-	my $self = shift;
-
-	my $pos = $self->search(
-		{ 'other.score' => { '>' => { -ident => 'me.score' } } },
-		{
-			select => [{ '1 + count' => 'other.score' }],
-			alias => 'other',
-		}
-	);
-
-	return $self->search_rs(undef, {
-		'+select' => [ { '' => $pos->as_query, -as => 'pos' } ],
-		'+as'     => [ 'pos' ],
-	});
-}
-
 sub deal_awards_and_scores {
 	my( $self, $rs ) = @_;
 	my $awards = $self->result_source->schema->resultset('Award');
@@ -46,14 +29,14 @@ sub deal_awards_and_scores {
 		$item->create_related('scores', {
 			%event_id_and_type,
 			artist_id => $artist->id,
-			value     => $n - ($item->pos + $item->pos_low),
+			value     => $n - ($item->rank + $item->rank_low),
 		});
 
 		my @awards = (
-			$awards->medal_for($item->pos) // (),
+			$awards->medal_for($item->rank) // (),
 			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ?
 					$awards->find({ name => 'confetti' }) : (),
-			$item->pos == $n ? $awards->find({ name => 'spoon' }) : (),
+			$item->rank == $n ? $awards->find({ name => 'spoon' }) : (),
 		);
 
 		$artist->add_to_awards( $_, \%event_id_and_type ) for @awards;

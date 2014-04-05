@@ -519,6 +519,9 @@ sub judge_distr {
 	my $self = shift;
 	my $size = shift // 5;
 
+	# Make sure the public_score column is up-to-date
+	$self->storys->recalc_public_stats;
+
 	my @storys = $self->storys->order_by({ -desc => 'public_score' })->all;
 	my ($prev, $no_more_finalists);
 

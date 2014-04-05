@@ -105,15 +105,11 @@ sub pos_low {
 }
 
 sub final_score {
-	my $self = shift;
-
-	return ($self->story_count || 0) + ($self->public_score || 0 );
+	return shift->public_score;
 }
 
 sub stdev {
-	my $self = shift;
-
-	return $self->{__stdev} //= $self->votes->stdev;
+	return shift->public_stdev;
 }
 
 use overload "==" => '_compare_scores',

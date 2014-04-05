@@ -5,7 +5,32 @@ package WriteOff::Schema::Item;
 # resultset with no associated result.
 
 use strict;
+use warnings;
 use base 'WriteOff::Schema::ResultSet';
+
+sub recalc_public_stats {
+	my $self = shift;
+	my $votes = $self->result_source->schema->resultset('Vote');
+
+	# Foo::Bar::Baz -> baz
+	my $class = (lc ref $self) =~ s/.*:://r;
+
+	my $public_values = $votes->public->search(
+		{
+			"${class}_id" => { '=' => { -ident => "${class}s.id" } },
+			'record.filled' => 1,
+		},
+		{
+			alias => 'inn',
+			join => 'record',
+		},
+	)->get_column('value');
+
+	$self->update({
+		public_score => $public_values->func_rs('avg')->as_query,
+		public_stdev => $public_values->func_rs('stdev')->as_query,
+	});
+}
 
 sub recalc_rank {
 	my $self = shift;
@@ -25,21 +50,6 @@ sub recalc_rank {
 			rank_low => $rank_low,
 		});
 	}
-}
-
-sub recalc_public_stats {
-	my $self = shift;
-
-	for my $item ($self->all) {
-		my $votes = $item->votes->public;
-
-		$item->update({
-			public_score => $votes->mean,
-			public_stdev => $votes->stdev,
-		});
-	}
-
-	return $self;
 }
 
 sub seed_order {
