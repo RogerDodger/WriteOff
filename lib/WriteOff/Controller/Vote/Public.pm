@@ -19,10 +19,11 @@ Catalyst Controller.
 
 sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
+	my $e = $c->stash->{event};
 
-	if ($c->stash->{event}->public_votes_allowed) {
+	if ($e->public_votes_allowed) {
 		$c->stash->{candidates} = [
-			$c->stash->{event}->storys->metadata->seed_order->candidates->all
+			$e->storys->metadata->seed_order->candidates->all
 		];
 
 		$c->forward('do_public') if $c->req->method eq 'POST';
@@ -30,15 +31,21 @@ sub fic :PathPart('vote/public') :Chained('/event/fic') :Args(0) {
 
 	$c->forward('fillform');
 
-	$c->stash->{votes_received} =
-		$c->stash->{event}->vote_records->public->fic->filled->count;
+	$c->stash(
+		open  => $e->public,
+		close => $e->private // $e->end,
+		heading => 'Fic Voting &ndash; Public',
+		votes_allowed  => $e->public_votes_allowed,
+		votes_received => $e->vote_records->public->fic->filled->count,
+	);
 
 	push $c->stash->{title}, 'Vote', 'Public';
-	$c->stash->{template} = 'vote/public/fic.tt';
+	$c->stash->{template} = 'vote/public.tt';
 }
 
 sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 	my ( $self, $c ) = @_;
+	my $e = $c->stash->{event};
 
 	if ($c->stash->{event}->art_votes_allowed) {
 		$c->stash->{candidates} = [
@@ -50,8 +57,16 @@ sub art :PathPart('vote/public') :Chained('/event/art') :Args(0) {
 
 	$c->forward('fillform');
 
+	$c->stash(
+		open  => $e->art_end,
+		close => $e->end,
+		heading => 'Art Voting',
+		votes_allowed  => $e->art_votes_allowed,
+		votes_received => $e->vote_records->public->art->filled->count,
+	);
+
 	push $c->stash->{title}, 'Vote', 'Public';
-	$c->stash->{template} = 'vote/public/art.tt';
+	$c->stash->{template} = 'vote/public.tt';
 }
 
 sub do_public :Private {

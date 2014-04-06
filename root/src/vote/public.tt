@@ -1,0 +1,55 @@
+<h1>[% heading %]</h1>
+
+<p>
+	Votes open: <strong>[% format_dt(open) %]</strong>.
+	<br>
+	Votes close: <strong>[% format_dt(close) %]</strong>.
+	<br>
+	Votes received: <strong id="votes-received">[% votes_received %]</strong>.
+	<br>
+[%- IF votes_allowed %]
+	Votes are <strong class="good">open</strong>.
+[%- ELSE %]
+	Votes are <strong class="bad">closed</strong>.
+[%- END %]
+</p>
+
+[%- IF votes_allowed %]
+	[%- IF !c.user %]
+
+	[%- INCLUDE fragment/status_msg.tt  message =
+			'You must be logged in to vote' %]
+
+	[%- ELSE %]
+
+	[%- INCLUDE fragment/status_msg.tt  message =
+			'Scores are in ascending order, i.e., 10 is the best score' %]
+
+	[%- vote_range = [0 .. 10]; vote_range.push('N/A') %]
+	<form id="public-vote" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+		<table class="solid">
+			<tr class="heading">
+				<th>#</th>
+				<th class="maxwidth">Title</th>
+				[%- FOREACH n IN vote_range %]
+				<th>[% n %]</th>
+				[%- END %]
+			</tr>
+			[%- FOREACH item IN candidates %]
+			<tr class="[% loop.parity %]">
+				<td class="center">[% loop.count %]</td>
+				<td>[% item.title | html %]</td>
+				[%- SET disabled = item.user_id == c.user_id ? " disabled" : "" %]
+				[%- FOREACH n IN vote_range %]
+				<td class="center">
+					<input type="radio" name="[% item.id %]" value="[% n %]"[% disabled %]>
+				</td>
+				[%- END %]
+			</tr>
+			[%- END %]
+		</table>
+		<p><input type="submit" name="submit" value="Update vote"></p>
+	</form>
+
+	[%- END %]
+[%- END %]
