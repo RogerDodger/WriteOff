@@ -8,13 +8,13 @@
 		<link rel="icon" href="/favicon.ico">
 		<link rel="stylesheet" href="/static/css/normalize.css">
 		<link rel="stylesheet" href="/static/css/jquery-ui-1.9.2.custom.css">
-		<link rel="stylesheet" href="/static/css/writeoff-0.32.css">
+		<link rel="stylesheet" href="/static/css/writeoff-0.33.css">
 
 		<script src="/static/js/modernizr-2.6.2.custom.min.js"></script>
 		<script src="/static/js/jquery-1.7.2.min.js"></script>
 		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
 		<script src="/static/js/jquery.cookie.js"></script>
-		<script src="/static/js/writeoff-0.20.js"></script>
+		<script src="/static/js/writeoff-0.21.js"></script>
 
 		[%- IF c.config.use_google_analytics %]
 		<!-- Google Analytics -->
