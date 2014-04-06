@@ -359,7 +359,7 @@ sub _notify_mailing_list :Private {
 		$c->stash->{event}->prompt,
 	);
 
-	while ( my $user = $rs->next ) {
+	while (my $user = $rs->next) {
 		$c->stash->{email} = {
 			to           => $user->email,
 			from         => $c->mailfrom,
@@ -370,6 +370,11 @@ sub _notify_mailing_list :Private {
 		};
 
 		$c->forward( $c->view('Email::Template') );
+
+		if (scalar @{ $c->error }) {
+			$c->log->error($_) for @{ $c->error };
+			$c->error(0);
+		}
 	}
 }
 

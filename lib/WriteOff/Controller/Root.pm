@@ -213,8 +213,7 @@ sub contact :Local :Args(0) {
 sub send_contact_email :Private {
 	my ( $self, $c ) = @_;
 
-	for my $recipient ( $c->form->valid('to'), $c->user->username_and_email ) {
-
+	for my $recipient ($c->form->valid('to'), $c->user->username_and_email) {
 		$c->stash->{email} = {
 			to           => $recipient,
 			from         => $c->mailfrom,
@@ -228,6 +227,10 @@ sub send_contact_email :Private {
 
 		$c->forward( $c->view('Email::Template') );
 
+		if (scalar @{ $c->error }) {
+			$c->log->error($_) for @{ $c->error };
+			$c->error(0);
+		}
 	}
 
 	$c->stash->{status_msg} = 'Email sent successfully';
