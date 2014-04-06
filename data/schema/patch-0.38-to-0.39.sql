@@ -118,15 +118,16 @@ SET
 			WHERE v.record_id = r.id
 			AND r.round = 'public'
 			AND v.story_id = storys.id),
+	public_stdev
+		= (SELECT STDEV(v.value) FROM votes v, vote_records r
+			WHERE v.record_id = r.id
+			AND r.round = 'public'
+			AND v.story_id = storys.id),
 	private_score
 		= (SELECT SUM(v.value) FROM votes v, vote_records r
 			WHERE v.record_id = r.id
 			AND r.round = 'private'
-			AND v.story_id = storys.id),
-	public_stdev
-		= CASE WHEN (SELECT COUNT(*) FROM votes WHERE story_id = storys.id) != 0
-			THEN (SELECT STDEV(votes.value) FROM votes WHERE story_id = storys.id)
-			ELSE NULL END;
+			AND v.story_id = storys.id);
 
 UPDATE
 	storys
