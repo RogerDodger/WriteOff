@@ -1,11 +1,13 @@
 # Makefile for WriteOff.pm
 
 C_COMP = gcc
+EF_DST = bin/libsqlitefunctions.so
+EF_SRC = lib/extension-functions.c
 
-all: bin/libsqlitefunctions.so
+all: $(EF_DST)
 
-bin/libsqlitefunctions.so : lib/extension-functions.c
-	$(C_COMP) -fPIC -shared lib/extension-functions.c -o bin/libsqlitefunctions.so -lm
+$(EF_DST) : $(EF_SRC)
+	$(C_COMP) -fPIC -shared $(EF_SRC) -o $(EF_DST) -lm
 
 clean:
-	rm bin/libsqlitefunctions.so
+	rm $(EF_DST)
