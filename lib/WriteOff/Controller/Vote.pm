@@ -18,22 +18,22 @@ Catalyst Controller.
 
 sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
+	my $e = $c->stash->{event};
 
 	$c->detach('/error', [ "There is no preliminary voting round for this event." ])
-		unless $c->stash->{event}->prelim;
-
+		unless $e->prelim;
 
 	if ($c->user) {
-		$c->stash->{records} = $c->stash->{event}->vote_records->search({
+		$c->stash->{records} = $e->vote_records->search({
 			filled  => 0,
 			round   => 'prelim',
 			type    => 'fic',
 			user_id => $c->user->get('id'),
 		});
 
-		if ($c->req->method eq 'POST' && $c->stash->{event}->prelim_votes_allowed) {
+		if ($c->req->method eq 'POST' && $e->prelim_votes_allowed) {
 			if (!$c->stash->{records}->count) {
-				my $err = $c->stash->{event}->new_prelim_record_for(
+				my $err = $e->new_prelim_record_for(
 					$c->user, $c->config->{prelim_distr_size}
 				);
 
@@ -45,25 +45,32 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 		}
 	}
 
+	$c->stash(
+		votes_received => $e->vote_records->prelim->filled->count,
+	);
+
 	push $c->stash->{title}, 'Vote', 'Prelim';
 	$c->stash->{template} = 'vote/prelim.tt';
 }
 
 sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
+	my $e = $c->stash->{event};
 
 	$c->detach('/error', [ "There is no private judging for this event." ])
-		unless $c->stash->{event}->private;
+		unless $e->private;
 
-	$c->stash->{finalists} = $c->stash->{event}->storys->search(
+	$c->stash->{finalists} = $e->storys->search(
 		{ finalist => 1 },
 		{ order_by => 'title' },
 	);
 
-	$c->stash->{judge} =
-		$c->stash->{event}->judges->find( $c->user_id );
+	$c->stash(
+		judge => $e->judges->find($c->user_id),
+		votes_received => $e->vote_records->private->filled->count,
+	);
 
-	$c->stash->{records} = $c->stash->{event}->vote_records->unfilled->search({
+	$c->stash->{records} = $e->vote_records->unfilled->search({
 		round    => 'private',
 		type     => 'fic',
 		user_id  => $c->stash->{judge}->id,
