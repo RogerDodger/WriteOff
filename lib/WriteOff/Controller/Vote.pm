@@ -56,8 +56,8 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 		unless $c->stash->{event}->private;
 
 	$c->stash->{finalists} = $c->stash->{event}->storys->search(
-		{ is_finalist => 1 },
-		{ order_by => 'title'},
+		{ finalist => 1 },
+		{ order_by => 'title' },
 	);
 
 	$c->stash->{judge} =
