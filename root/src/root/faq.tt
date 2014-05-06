@@ -146,8 +146,22 @@
 	guarantees.)
 </p>
 
+[% INCLUDE header contents = 'How are the numbers for “controversial stories” calculated?' class = 'h4' %]
+
+<p>
+	The controversy rating of a story is the standard deviation of the votes it
+	received.
+</p>
+
+[% INCLUDE header contents = 'Can I submit more than one story per event?'  class = 'h2' %]
+
+<p>Yes</p>
+
+<p>Note that for events with a preliminary round, you are assigned a group of stories to rate <em>for each story you've submitted</em>, and you must fill all of them for any of your stories to be candidates in the public voting round.</p>
+
 <a id="Tags"> </a>
-[% INCLUDE header contents = 'How do I get style?'  class = 'h2' %]
+<a id="How-do-I-get-style"> </a>
+[% INCLUDE header contents = 'How do I format my story?'  class = 'h2' %]
 <p>The following markup will work for submitted stories:</p>
 
 [%- tags = [
