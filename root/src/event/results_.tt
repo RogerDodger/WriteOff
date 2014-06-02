@@ -38,10 +38,11 @@
 <h2>[% heading %]</h2>
 
 <ul class="items">
+[%- SET count = leaderboard.count %]
 [%- FOREACH item IN leaderboard.all %]
 	[%-
 		INCLUDE Item
-			award = medal_for(item.pos) || (item.pos == items.max ? awards.spoon : awards.ribbon)
+			award = award_for(item.pos, count)
 			score = item.public_score
 	-%]
 [%- END #FOREACH %]

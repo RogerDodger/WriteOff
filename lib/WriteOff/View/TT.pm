@@ -17,7 +17,7 @@ __PACKAGE__->config(
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
-	expose_methods     => [ qw/format_dt medal_for title_html/ ],
+	expose_methods     => [ qw/format_dt title_html/ ],
 	render_die         => 1,
 );
 
@@ -155,12 +155,6 @@ sub title_html {
 	           map { Template::Filters::html_filter($_) }
 	             ref $title eq 'ARRAY' ? reverse @$title : $title || ();
 	return join " &#x2022; ", $title || (), $c->config->{name};
-}
-
-sub medal_for {
-	my( $self, $c, $pos ) = @_;
-
-	return $c->model('DB::Award')->medal_for( $pos );
 }
 
 1;
