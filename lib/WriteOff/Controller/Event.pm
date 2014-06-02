@@ -446,6 +446,8 @@ sub tally_results :Private {
 	}
 
 	$c->model('DB::Artist')->recalculate_scores;
+
+	$c->stash->{event}->update({ tallied => 1 });
 }
 
 =head1 AUTHOR

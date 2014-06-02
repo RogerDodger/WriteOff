@@ -44,6 +44,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "timestamp", is_nullable => 1 },
 	"end",
 	{ data_type => "timestamp", is_nullable => 0 },
+	"tallied",
+	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 );

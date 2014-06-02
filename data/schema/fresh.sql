@@ -71,6 +71,7 @@ CREATE TABLE events (
 	"public"        TIMESTAMP,
 	"private"       TIMESTAMP,
 	"end"           TIMESTAMP NOT NULL,
+	tallied         BIT DEFAULT 0 NOT NULL,
 	created         TIMESTAMP
 );
 
