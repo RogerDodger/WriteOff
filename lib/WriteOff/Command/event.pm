@@ -9,7 +9,7 @@ use HTML::Entities qw/decode_entities/;
 sub run {
 	my ($self, $command, @args) = @_;
 
-	if (defined $command && $command =~ /^(?:export)$/) {
+	if (defined $command && $command =~ /^(?:export|tally)$/) {
 		$self->$command(@args);
 	}
 	else {
@@ -92,6 +92,21 @@ sub export {
 		chomp and s/ at .+? line \d+$// and say;
 		exit(1);
 	};
+}
+
+sub tally {
+	my $self = shift;
+	if (@_ < 1) {
+		$self->help;
+	}
+
+	my $e = $self->db('Event')->find(shift);
+	if (!defined $e) {
+		say "Invalid event id";
+		exit(1);
+	}
+
+	$e->tally;
 }
 
 1;

@@ -6,6 +6,7 @@ use base 'WriteOff::Schema::ResultSet';
 sub deal_awards_and_scores {
 	my( $self, $rs ) = @_;
 	my $awards = $self->result_source->schema->resultset('Award');
+	my @medals = map { $awards->find({ name => $_ }) } qw/gold silver bronze/;
 
 	my @items = $rs->all;
 	my $n = $#items;
@@ -33,7 +34,7 @@ sub deal_awards_and_scores {
 		});
 
 		my @awards = (
-			$awards->medal_for($item->rank) // (),
+			$medals[$item->rank] // (),
 			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ?
 					$awards->find({ name => 'confetti' }) : (),
 			$item->rank == $n ? $awards->find({ name => 'spoon' }) : (),

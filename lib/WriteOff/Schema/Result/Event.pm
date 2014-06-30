@@ -557,4 +557,28 @@ sub judge_distr {
 	}
 }
 
+sub tally {
+	my $self = shift;
+	my $artists = $self->result_source->schema->resultset('Artist');
+
+	# Clean up possible old tallying
+	$self->artist_awards->delete_all;
+	$self->scores->delete_all;
+
+	$self->storys->recalc_public_stats;
+	$self->storys->recalc_private_stats;
+	$self->storys->recalc_rank;
+	$artists->deal_awards_and_scores($self->storys_rs);
+
+	if ($self->art) {
+		$self->images->recalc_public_stats;
+		$self->images->recalc_rank;
+		$artists->deal_awards_and_scores($self->images_rs);
+	}
+
+	$artists->recalculate_scores;
+
+	$self->update({ tallied => 1 });
+}
+
 1;

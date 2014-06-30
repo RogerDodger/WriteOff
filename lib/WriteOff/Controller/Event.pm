@@ -449,20 +449,7 @@ sub tally_results :Private {
 
 	$c->log->info(sprintf "Tallying results for: Event %d - %s", $e->id, $e->prompt);
 
-	$e->storys->recalc_public_stats;
-	$e->storys->recalc_private_stats;
-	$e->storys->recalc_rank;
-	$c->model('DB::Artist')->deal_awards_and_scores($e->storys_rs);
-
-	if ($e->art) {
-		$e->images->recalc_public_stats;
-		$e->images->recalc_rank;
-		$c->model('DB::Artist')->deal_awards_and_scores($e->images_rs);
-	}
-
-	$c->model('DB::Artist')->recalculate_scores;
-
-	$c->stash->{event}->update({ tallied => 1 });
+	$e->tally;
 }
 
 =head1 AUTHOR

@@ -83,23 +83,33 @@ sub config {
 sub db {
 	my $self = shift;
 
-	require WriteOff::Schema;
-	state $schema = WriteOff::Schema->connect('dbi:SQLite:data/WriteOff.db','','', {
-		sqlite_unicode => 1,
-		on_connect_do => q{PRAGMA foreign_keys = ON},
-	});
-
 	if (my $rs = shift) {
-		return $schema->resultset($rs);
+		return $self->schema->resultset($rs);
 	}
 	eles {
-		return $schema;
+		return $self->schema;
 	}
 }
 
 sub dbh {
 	require DBI;
 	return DBI->connect('dbi:SQLite:data/WriteOff.db','','');
+}
+
+sub schema {
+	my $self = shift;
+	state $schema;
+	return $schema if defined $schema;
+
+	require WriteOff::Schema;
+	$schema = WriteOff::Schema->connect('dbi:SQLite:data/WriteOff.db','','', {
+		sqlite_unicode => 1,
+		on_connect_do => q{PRAGMA foreign_keys = ON},
+	});
+
+	$schema->storage->dbh->sqlite_enable_load_extension(1);
+	$schema->storage->dbh->sqlite_load_extension('./bin/libsqlitefunctions.so');
+	$schema;
 }
 
 1;
