@@ -24,7 +24,7 @@ BEGIN {
 
 our @ISA = qw/Exporter/;
 our @EXPORT_OK = ( @awards, qw/sort_awards/ );
-our %EXPORT_TAGS = ( all => \@EXPORT_OK );
+our %EXPORT_TAGS = ( awards => \@awards, all => \@EXPORT_OK );
 
 my %attr = (
 	_GOLD()     => [ 'gold',     'Gold medal' ],

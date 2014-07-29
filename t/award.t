@@ -32,3 +32,5 @@ cmp_deeply(
 	],
 	'Awards sort correctly',
 );
+
+done_testing;
