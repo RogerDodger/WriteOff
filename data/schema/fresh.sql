@@ -8,7 +8,10 @@
 
 PRAGMA foreign_keys = ON;
 
--- User tables
+-- ===========================================================================
+-- User stuff
+-- ===========================================================================
+
 CREATE TABLE users (
 	id              INTEGER PRIMARY KEY,
 	username        TEXT COLLATE NOCASE UNIQUE NOT NULL,
@@ -53,7 +56,10 @@ CREATE TABLE bans (
 	created  TIMESTAMP
 );
 
--- Event tables
+-- ===========================================================================
+-- Event stuff
+-- ===========================================================================
+
 CREATE TABLE events (
 	id              INTEGER PRIMARY KEY,
 	prompt          TEXT DEFAULT 'TBD' NOT NULL,
@@ -89,15 +95,10 @@ CREATE TABLE schedules (
 	args    TEXT
 );
 
-CREATE TABLE heats (
-	id        INTEGER PRIMARY KEY,
-	"left"    INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
-	"right"   INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
-	ip        TEXT,
-	created   TIMESTAMP
-);
+-- ===========================================================================
+-- Entries
+-- ===========================================================================
 
--- Resource tables
 CREATE TABLE prompts (
 	id         INTEGER PRIMARY KEY,
 	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
@@ -107,6 +108,14 @@ CREATE TABLE prompts (
 	rating     REAL,
 	approvals  INTEGER,
 	created    TIMESTAMP
+);
+
+CREATE TABLE heats (
+	id        INTEGER PRIMARY KEY,
+	"left"    INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
+	"right"   INTEGER REFERENCES prompts(id) ON DELETE CASCADE NOT NULL,
+	ip        TEXT,
+	created   TIMESTAMP
 );
 
 CREATE TABLE storys (
@@ -180,48 +189,42 @@ CREATE TABLE votes (
 	"value"    INTEGER
 );
 
--- Scoreboard tables
+-- ===========================================================================
+-- Scoreboard stuff
+-- ===========================================================================
+
 CREATE TABLE artists (
-	id        INTEGER PRIMARY KEY,
-	name      TEXT COLLATE NOCASE UNIQUE NOT NULL,
-	user_id   INTEGER REFERENCES users(id),
-	score     INTEGER
+	id       INTEGER PRIMARY KEY,
+	name     TEXT COLLATE NOCASE UNIQUE NOT NULL,
+	user_id  INTEGER REFERENCES users(id),
+	score    INTEGER,
+	score8   INTEGER
 );
-
-CREATE TABLE awards (
-	id         INTEGER PRIMARY KEY,
-	name       TEXT COLLATE NOCASE UNIQUE,
-	sort_rank  INTEGER
-);
-
-INSERT INTO awards VALUES (1, 'gold', 10);
-INSERT INTO awards VALUES (2, 'silver', 20);
-INSERT INTO awards VALUES (3, 'bronze', 30);
-INSERT INTO awards VALUES (4, 'confetti', 40);
-INSERT INTO awards VALUES (5, 'spoon', 90);
-INSERT INTO awards VALUES (6, 'ribbon', 100);
-INSERT INTO awards VALUES (7, 'ribbonx5', 99);
-INSERT INTO awards VALUES (8, 'ribbonx10', 98);
 
 CREATE TABLE artist_award (
 	id         INTEGER PRIMARY KEY,
 	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE NOT NULL,
 	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+	story_id   INTEGER REFERENCES storys(id) ON DELETE SET NULL,
+	image_id   INTEGER REFERENCES images(id) ON DELETE SET NULL,
 	"type"     TEXT,
-	award_id   INTEGER REFERENCES awards(id) ON DELETE CASCADE NOT NULL
+	award_id   INTEGER NOT NULL
 );
 
 CREATE TABLE scores (
 	id         INTEGER PRIMARY KEY,
 	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE NOT NULL,
 	event_id   INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
-	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
-	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
+	story_id   INTEGER REFERENCES storys(id) ON DELETE SET NULL,
+	image_id   INTEGER REFERENCES images(id) ON DELETE SET NULL,
 	"type"     TEXT,
 	"value"    INTEGER
 );
 
--- News
+-- ===========================================================================
+-- Misc
+-- ===========================================================================
+
 CREATE TABLE news (
 	id       INTEGER PRIMARY KEY,
 	user_id  INTEGER REFERENCES users(id) ON DELETE SET NULL,
