@@ -20,6 +20,7 @@ __PACKAGE__->config(
 			};
 			$dbh->sqlite_enable_load_extension(1);
 			$dbh->sqlite_load_extension('./bin/libsqlitefunctions.so');
+			$dbh->sqlite_load_extension('./bin/libsqlitebcsum.so');
 
 			return $dbh;
 		},

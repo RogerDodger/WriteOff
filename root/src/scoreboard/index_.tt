@@ -5,6 +5,7 @@
 		<th>#</th>
 		<th>Competitor</th>
 		<th>Score</th>
+		<th><span title="Over all events">&forall;</span></th>
 		<th>Awards</th>
 	</tr>
 [%- IF artists.size != 0 %]
@@ -12,6 +13,9 @@
 	<tr class="[% loop.parity %]">
 		<td>[% artist.rank %]</td>
 		<td>[% artist.name | html %]</td>
+		<td>
+			[% artist.score8 %]
+		</td>
 		<td>
 			<a href="[% c.uri_for( c.controller('Artist')
 				.action_for('scores'), [ artist.id ]) %]"

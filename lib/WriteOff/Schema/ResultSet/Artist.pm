@@ -70,10 +70,30 @@ sub deal_awards_and_scores {
 
 sub recalculate_scores {
 	my $self = shift;
+	my $schema = $self->result_source->schema;
 
-	while (my $artist = $self->next) {
-		$artist->recalculate_score;
-	}
+	my @events = $schema->resultset('Event')->finished;
+	my $e8_cut = $self->format_datetime($events[@events-8]->end);
+
+	$schema->storage->dbh_do(sub {
+		my ($storage, $dbh) = @_;
+
+		$dbh->do(qq{
+			UPDATE
+				artists
+			SET
+				score =
+					(SELECT bcsum(value, events.end)
+						FROM scores,events
+						WHERE artist_id=artists.id AND event_id=events.id),
+				score8 =
+					(SELECT bcsum(value, events.end)
+						FROM scores,events
+						WHERE artist_id=artists.id AND event_id=events.id
+						AND events.end >= ?
+			);
+		}, undef, $e8_cut);
+	});
 }
 
 sub tallied {
@@ -81,7 +101,7 @@ sub tallied {
 
 	my $rank_rs = $self->search(
 		{
-			score => { '>' => { -ident => 'me.score' } }
+			score8 => { '>' => { -ident => 'me.score8' } }
 		},
 		{
 			'select' => [ \'COUNT(*) + 1' ],
@@ -93,7 +113,7 @@ sub tallied {
 		'+select' => [ $rank_rs->as_query ],
 		'+as' => [ 'rank' ],
 		order_by => [
-			{ -desc => 'score' },
+			{ -desc => 'score8' },
 			{ -asc  => 'name'  },
 		]
 	})->all;
