@@ -2,7 +2,7 @@
 [%
 	cache.inc(
 		'template' => 'scoreboard/index_.tt',
-		'ttl' => 1,
+		'ttl' => c.debug || 360,
 		'keys' => {
 			'type' => 'scoreboard',
 			'scores' => artists.get_column('score').all.join(';'),

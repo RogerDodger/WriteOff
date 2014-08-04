@@ -11,7 +11,9 @@ use WriteOff::Schema;
 use WriteOff::Award qw/:all/;
 use Data::Dump;
 
-my $s = WriteOff::Schema->connect("dbi:SQLite:data/test.db","","");
+my $s = WriteOff::Schema->connect("dbi:SQLite:data/WriteOff.db","","");
+$s->storage->dbh->sqlite_enable_load_extension(1);
+$s->storage->dbh->sqlite_load_extension('./bin/libsqlitebcsum.so');
 
 my $aa = $s->resultset('ArtistAward');
 my $artists = $s->resultset('Artist');
@@ -81,3 +83,6 @@ $aa->populate([ grep { !exists $_->{image_id} } @data ]);
 # For some extraordinarily bizarre and unexplainable reason, ->populate
 # removes the image_id column from all the art rows, so we do it the slow way
 $aa->create($_) for grep { exists $_->{image_id} } @data;
+
+
+$artists->recalculate_scores;

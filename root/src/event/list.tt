@@ -7,12 +7,12 @@
 	[%
 		cache.inc(
 			'template' => 'event/single.tt',
-			'ttl' => 360,
+			'ttl' => c.debug || 360,
 			'keys' => {
 				'type' => 'event-listing',
 				'id' => event.id,
 				'organiser' => event.is_organised_by(c.user),
-				'timzone' => c.user.timezone,
+				'timezone' => c.user.timezone,
 			},
 		)
 	%]

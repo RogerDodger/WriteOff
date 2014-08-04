@@ -5,7 +5,7 @@
 		USE cache = Cache;
 		cache.inc(
 			'template' => 'event/results_.tt',
-			'ttl' => 1,
+			'ttl' => c.debug || 360,
 			'keys' => {
 				'type' => 'event-results',
 				'id' => event.id,
