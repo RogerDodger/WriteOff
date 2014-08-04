@@ -9,7 +9,6 @@ BEGIN {
 }
 use WriteOff::Schema;
 use WriteOff::Award qw/:all/;
-use Data::Dump;
 
 my $s = WriteOff::Schema->connect("dbi:SQLite:data/WriteOff.db","","");
 $s->storage->dbh->sqlite_enable_load_extension(1);
