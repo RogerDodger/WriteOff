@@ -98,10 +98,13 @@ sub recalculate_scores {
 
 sub tallied {
 	my $self = shift;
+	my $alltime = shift;
+
+	my $col = $alltime ? 'score' : 'score8';
 
 	my $rank_rs = $self->search(
 		{
-			score8 => { '>' => { -ident => 'me.score8' } }
+			$col => { '>' => { -ident => "me.$col" } }
 		},
 		{
 			'select' => [ \'COUNT(*) + 1' ],
@@ -113,7 +116,7 @@ sub tallied {
 		'+select' => [ $rank_rs->as_query ],
 		'+as' => [ 'rank' ],
 		order_by => [
-			{ -desc => 'score8' },
+			{ -desc => "$col" },
 			{ -asc  => 'name'  },
 		]
 	})->all;

@@ -4,8 +4,16 @@
 	<tr class="heading">
 		<th>#</th>
 		<th>Competitor</th>
-		<th>Score</th>
-		<th><span title="Over all events">&forall;</span></th>
+		<th>
+			<a class="link" href="/scoreboard" title="Score across recent events">
+				Score
+			</a>
+		</th>
+		<th>
+			<a class="link" href="/scoreboard/alltime" title="Score across all events">
+				&forall;
+			</a>
+		</th>
 		<th>Awards</th>
 	</tr>
 [%- IF artists.size != 0 %]
