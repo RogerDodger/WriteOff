@@ -35,7 +35,7 @@ for my $e ($s->resultset('Event')->all) {
 		for my $item ($items->order_by({ -asc => 'rank' })->all) {
 			my @awards = (
 				$medals[$item->rank] // (),
-				defined $cnfti && $item->public_stdev == $cnfti ? (CONFETTI) : (),
+				$cnfti && $item->public_stdev == $cnfti ? (CONFETTI) : (),
 				$item->rank == $spoon ? (SPOON) : (),
 			);
 

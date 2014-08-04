@@ -2,59 +2,69 @@ package WriteOff::Schema::ResultSet::Artist;
 
 use strict;
 use base 'WriteOff::Schema::ResultSet';
+use WriteOff::Award qw/:all/;
 
 sub deal_awards_and_scores {
 	my( $self, $rs ) = @_;
-	my $awards = $self->result_source->schema->resultset('Award');
-	my @medals = map { $awards->find({ name => $_ }) } qw/gold silver bronze/;
+	return unless $rs->count;
 
-	my @items = $rs->all;
-	my $n = $#items;
 
-	my $max_stdev = $items[0];
-	for my $item ( @items ) {
-		$max_stdev = $item if $item->stdev > $max_stdev->stdev;
-	}
+	my $type = $rs->first->type;
+	my $colname = { fic => 'story_id', art => 'image_id' }->{$type};
+	my %meta = ( type => $type, event_id => $rs->first->event_id );
 
-	for my $item ( @items ) {
+	my %artists;
+	my %last;
+	my @medals = ( GOLD, SILVER, BRONZE );
+
+	my $mxstdv = $rs->get_column('public_stdev')->max;
+	my $n = $rs->count - 1;
+	for my $item ($rs->order_by({ -asc => [qw/rank title/] })->all) {
 		my $artist = $self->find_or_create({ name => $item->artist });
-
-		$artist->update({ user_id => $item->user_id })
-			if !defined $artist->user_id;
-
-		my %event_id_and_type = (
-			event_id => $item->event_id,
-			type     => $item->type,
-		);
-
-		$item->create_related('scores', {
-			%event_id_and_type,
-			artist_id => $artist->id,
-			value     => $n - ($item->rank + $item->rank_low),
-		});
+		my $aid = $artist->id;
 
 		my @awards = (
-			$medals[$item->rank] // (),
-			$max_stdev->id == $item->id && $max_stdev->stdev != 0 ?
-					$awards->find({ name => 'confetti' }) : (),
-			$item->rank == $n ? $awards->find({ name => 'spoon' }) : (),
+			$mxstdv && $item->public_stdev == $mxstdv ? (CONFETTI) : (),
+			$item->rank == $n ? (SPOON) : (),
 		);
 
-		$artist->add_to_awards( $_, \%event_id_and_type ) for @awards;
+		if (!exists $artists{$aid}) {
+			if (%last && $last{rank} == $item->rank) {
+				push @awards, $last{medal};
+				shift @medals;
+			} elsif (@medals) {
+				push @awards, shift @medals;
+				%last = (rank => $item->rank, medal => $awards[-1]);
+			} else {
+				undef %last;
+			}
+
+			$artists{$aid} = [ [ $item, RIBBON ] ];
+		}
+
+		for my $award (@awards) {
+			push @{ $artists{$aid} }, [ $item, $award ];
+		}
+
+		$artist->create_related('scores', { %meta,
+			$colname => $item->id,
+			value    => $n - ($item->rank + $item->rank_low),
+		});
 	}
 
-	#Give ribbons to anyone who didn't get an award
-	my $ribbon = $awards->find({ name => 'ribbon' });
-	for my $item ( @items ) {
-		my $artist = $self->find({ name => $item->artist });
+	while (my ($aid, $awards) = each %artists) {
+		# Shift ribbon off
+		if (@$awards != 1) {
+			shift @$awards;
+		}
 
-		my %event_id_and_type = (
-			event_id => $item->event_id,
-			type     => $item->type,
-		);
-
-		$artist->add_to_awards( $ribbon, \%event_id_and_type )
-			if $artist->awards->search(\%event_id_and_type) == 0;
+		for (@$awards) {
+			my ($item, $award) = @$_;
+			$self->find($aid)->create_related('artist_awards', { %meta,
+				$colname  => $item->id,
+				award_id  => $award->id,
+			});
+		}
 	}
 }
 
