@@ -45,9 +45,7 @@
 		<td>&infin;</td>
 		<td>
 		[%- FOREACH n IN [ 0 .. 4 ] %]
-			<img src="[% gold_medal.src %]"
-				alt="[% gold_medal.alt %]"
-				title="[% gold_medal.alt %]" />
+			[% gold_medal.html %]
 		[%- END %]
 		</td>
 	</tr>
