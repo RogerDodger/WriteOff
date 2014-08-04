@@ -15,7 +15,7 @@ __PACKAGE__->config(
 			});
 
 			local $SIG{__WARN__} = sub {
-				die "Failed to load `libsqlitefunctions.so`. "
+				die "Failed to load extension functions. "
 				  . "Have you run `make` yet?";
 			};
 			$dbh->sqlite_enable_load_extension(1);
