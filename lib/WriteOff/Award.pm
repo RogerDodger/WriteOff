@@ -49,8 +49,18 @@ sub id {
 	return ${ +shift };
 }
 
+sub is {
+	return shift->id == shift->id;
+}
+
 sub alt {
 	return $attr{shift->id}->[1];
+}
+
+sub html {
+	my $self = shift;
+	return sprintf q{<img src="%s" alt="%s" title="%s">},
+	                 $self->src, $self->alt, $self->title;
 }
 
 sub name {
@@ -60,6 +70,8 @@ sub name {
 sub src {
 	return '/static/images/awards/' . shift->name . '.png';
 }
+
+*title = \&alt;
 
 *type = \&name;
 

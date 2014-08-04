@@ -6,6 +6,7 @@
 		<th>Entry</th>
 		<th>Type</th>
 		<th>Score</th>
+		<th>Awards</th>
 	</tr>
 	[%- FOREACH score IN scores.all %]
 	<tr>
@@ -23,6 +24,9 @@
 		</td>
 		<td class="center">[% score.type.ucfirst %]</td>
 		<td class="center">[% score.value %]</td>
+		<td class="center">
+			[% FOREACH award IN score.item.awards; award.html; END %]
+		</td>
 	</tr>
 	[%- END %]
 </table>

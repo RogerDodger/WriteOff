@@ -1,5 +1,6 @@
 package WriteOff::Controller::Scoreboard;
 use Moose;
+use WriteOff::Award qw/:all/;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -8,7 +9,7 @@ sub index :Path('') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{artists} = [ $c->model('DB::Artist')->tallied ];
-	$c->stash->{gold_medal} = $c->model('DB::Award')->find({ name => 'gold' });
+	$c->stash->{gold_medal} = GOLD();
 
 	push $c->stash->{title}, 'Scoreboard';
 	$c->stash->{template} = 'scoreboard/index.tt';

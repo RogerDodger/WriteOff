@@ -4,6 +4,7 @@ package WriteOff::Schema::Result::Artist;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
+use WriteOff::Award;
 
 __PACKAGE__->table("artists");
 
@@ -48,20 +49,22 @@ __PACKAGE__->belongs_to(
 	},
 );
 
-__PACKAGE__->many_to_many(awards => 'artist_awards', 'award');
-
 __PACKAGE__->mk_group_accessors(column => 'rank');
+
+sub awards {
+	shift->artist_awards->awards;
+}
 
 sub recalculate_score {
 	my $self = shift;
-	
+
 	my $scores = $self->scores->search(undef,
 		{
 			prefetch => 'event',
 			order_by => 'end'
 		}
 	);
-	
+
 	my $total = 0;
 	my $prev;
 	while (my $score = $scores->next) {
@@ -71,7 +74,7 @@ sub recalculate_score {
 		$total += $score->value;
 		$prev = $score;
 	}
-	
+
 	$self->update({ score => $total < 0 ? 0 : $total });
 }
 

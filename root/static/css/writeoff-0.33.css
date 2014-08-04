@@ -462,8 +462,6 @@ nav li:hover ul li:hover a {
 	margin-top: 2em;
 }
 .results .items {
-	padding-left: 0;
-	list-style-type: none;
 	line-height: 1.6;
 }
 .results.fic {

@@ -50,6 +50,13 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+__PACKAGE__->has_many(
+	"artist_awards",
+	"WriteOff::Schema::Result::ArtistAward",
+	{ "foreign.image_id" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
 __PACKAGE__->belongs_to(
 	"event",
 	"WriteOff::Schema::Result::Event",
@@ -91,6 +98,10 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->many_to_many("stories", "image_stories", "story");
+
+sub awards {
+	return shift->artist_awards->awards;
+}
 
 sub type {
 	return 'art';

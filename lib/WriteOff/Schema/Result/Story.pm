@@ -57,6 +57,13 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+__PACKAGE__->has_many(
+	"artist_awards",
+	"WriteOff::Schema::Result::ArtistAward",
+	{ "foreign.story_id" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
 __PACKAGE__->belongs_to(
 	"event",
 	"WriteOff::Schema::Result::Event",
@@ -104,6 +111,10 @@ __PACKAGE__->mk_group_accessors(
 	column => 'author_vote_count',
 	column => 'author_story_count',
 );
+
+sub awards {
+	return shift->artist_awards->awards;
+}
 
 sub type {
 	return 'fic';

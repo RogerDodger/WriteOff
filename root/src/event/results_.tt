@@ -37,53 +37,50 @@
 [%- BLOCK Items %]
 <h2>[% heading %]</h2>
 
-<ul class="items">
+<table class="items">
 [%- SET count = leaderboard.count %]
 [%- FOREACH item IN leaderboard.all %]
-	[%-
-		INCLUDE Item
-			award = award_for(item.pos, count)
-			score = item.public_score
-	-%]
+	[%- INCLUDE Item  score = item.public_score -%]
 [%- END #FOREACH %]
-</ul>
+</table>
 
 [%- IF controversial.count %]
 <h3>Controversial [% heading %]</h3>
 
-<ul class="items">
+<table class="items">
 [%- FOREACH item IN controversial.all %]
-	[%-
-		INCLUDE Item
-			award = loop.first ? awards.confetti : awards.ribbon
-			score = item.public_stdev
-	-%]
+	[%- INCLUDE Item  score = item.public_stdev -%]
 [%- END #FOREACH %]
-</ul>
+</table>
 [%- END #IF %]
 
 [%- END #BLOCK %]
 
 [%- BLOCK Item %]
-<li>
-	<img src="[% award.src %]" alt="[% award.alt %]" title="[% award.alt %]">
-	<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
-		<em>[% item.title | html %]</em>
-	</a>
+<tr>
+	<td class="center">
+		[% FOREACH award IN item.awards; award.html; END %]
+	</td>
 
-	by
-	[%- IF item.website %]
-	<a class="author new-tab" href="[% item.website | url %]">
-		[% item.artist | html %]
-	</a>
-	[%- ELSE %]
-		[% item.artist | html %]
-	[%- END %]
+	<td>
+		<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
+			<em>[% item.title | html %]</em>
+		</a>
 
-	[%- IF score %]
-	<span title="[% score | format('(%.5f)') %]">
-		[% score | format('(%.2f)') %]
-	</span>
-	[%- END #IF %]
-</li>
+		by
+		[%- IF item.website %]
+		<a class="author new-tab" href="[% item.website | url %]">
+			[% item.artist | html %]
+		</a>
+		[%- ELSE %]
+			[% item.artist | html %]
+		[%- END %]
+
+		[%- IF score %]
+		<span title="[% score | format('(%.5f)') %]">
+			[% score | format('(%.2f)') %]
+		</span>
+		[%- END #IF %]
+	</td>
+</tr>
 [%- END #BLOCK %]

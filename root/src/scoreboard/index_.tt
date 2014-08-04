@@ -20,10 +20,8 @@
 			</a>
 		</td>
 		<td class="flat">
-		[%- FOREACH award IN artist.awards_rs.ordered.all %]
-			<img src="[% award.src %]"
-				alt="[% award.alt %]"
-				title="[% award.alt %]" />
+		[%- FOREACH award IN artist.awards %]
+			[% award.html %]
 		[%- END %]
 		</td>
 	</tr>

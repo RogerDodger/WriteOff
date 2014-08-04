@@ -1,6 +1,7 @@
 package WriteOff::Controller::Event;
 use Moose;
 use List::Util qw/shuffle/;
+use WriteOff::Award qw/:all/;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -193,11 +194,8 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 		],
 	});
 
-	my %awards = map { $_->name => $_ } $c->model('DB::Award')->all;
-	my @medals = qw/gold silver bronze/;
 	$c->stash(
 		j_records => $c->stash->{event}->vote_records->filled->judge_records,
-		awards => \%awards,
 		images => {
 			leaderboard   => $event->images->search_rs(@lcond),
 			controversial => $event->images->search_rs(@ccond),
@@ -206,19 +204,6 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 			leaderboard   => $event->storys->search_rs(@lcond),
 			controversial => $event->storys->search_rs(@ccond),
 		},
-		award_for => sub {
-			my ($rank, $setsize) = @_;
-
-			if (my $medal = $medals[$rank]) {
-				return $awards{$medal};
-			}
-			elsif ($rank == $setsize-1) {
-				return $awards{spoon};
-			}
-			else {
-				return $awards{ribbon};
-			}
-		}
 	);
 
 	push $c->stash->{title}, 'Results';

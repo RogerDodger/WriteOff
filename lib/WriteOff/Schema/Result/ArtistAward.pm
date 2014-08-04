@@ -14,10 +14,14 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"event_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+	"story_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+	"image_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"type",
 	{ data_type => "text", is_nullable => 1 },
 	"award_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+	{ data_type => "integer", is_nullable => 0 },
 );
 
 __PACKAGE__->set_primary_key("id");
@@ -30,17 +34,34 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->belongs_to(
-	"award",
-	"WriteOff::Schema::Result::Award",
-	{ id => "award_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->belongs_to(
 	"event",
 	"WriteOff::Schema::Result::Event",
 	{ id => "event_id" },
 	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+__PACKAGE__->belongs_to(
+	"image",
+	"WriteOff::Schema::Result::Image",
+	{ id => "image_id" },
+	{
+		is_deferrable => 1,
+		join_type     => "LEFT",
+		on_delete     => "CASCADE",
+		on_update     => "CASCADE",
+	},
+);
+
+__PACKAGE__->belongs_to(
+	"story",
+	"WriteOff::Schema::Result::Story",
+	{ id => "story_id" },
+	{
+		is_deferrable => 1,
+		join_type     => "LEFT",
+		on_delete     => "CASCADE",
+		on_update     => "CASCADE",
+	},
 );
 
 1;
