@@ -218,7 +218,8 @@ CREATE TABLE scores (
 	story_id   INTEGER REFERENCES storys(id) ON DELETE SET NULL,
 	image_id   INTEGER REFERENCES images(id) ON DELETE SET NULL,
 	"type"     TEXT,
-	"value"    INTEGER
+	"value"    REAL,
+	orig       REAL
 );
 
 -- ===========================================================================

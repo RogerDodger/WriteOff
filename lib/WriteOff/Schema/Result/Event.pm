@@ -559,11 +559,16 @@ sub judge_distr {
 
 sub tally {
 	my $self = shift;
-	my $artists = $self->result_source->schema->resultset('Artist');
+	my $schema = $self->result_source->schema;
+	my $artists = $schema->resultset('Artist');
+	my $scores => $schema->resultset('Score');
 
 	# Clean up possible old tallying
 	$self->artist_awards->delete_all;
 	$self->scores->delete_all;
+
+	# Apply decay to older events' scores;
+	$scores->decay;
 
 	$self->storys->recalc_public_stats;
 	$self->storys->recalc_private_stats;

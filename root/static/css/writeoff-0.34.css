@@ -495,6 +495,14 @@ ul.contents li.h4 {
 	color: #888;
 }
 
+.artist-breakdown {
+	cursor: pointer;
+}
+.artist-breakdown-row table {
+	font-size: 0.9em;
+	margin: 0 auto;
+}
+
 /*
  * Tables
  */
@@ -551,6 +559,13 @@ td.center,
 .center th,
 .center td {
 	text-align: center;
+}
+.start,
+th.start,
+td.start,
+.start th,
+.start td {
+	text-align: start;
 }
 table.no-overflow tr th {
 	white-space: nowrap;
@@ -899,9 +914,9 @@ textarea.example {
 .ui-widget p {
 	margin: 1em 0;
 }
-
-
-
+.muted {
+	color: #666;
+}
 
 /* ==========================================================================
    Helper classes

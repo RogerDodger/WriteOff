@@ -55,8 +55,12 @@ sub recalc_rank {
 	}
 }
 
+sub rank_order {
+	return shift->order_by({ -asc => [qw/rank title/] });
+}
+
 sub seed_order {
-	return shift->search_rs(undef, { order_by => { -desc => 'seed' } } );
+	return shift->order_by({ -desc => 'seed' });
 }
 
 1;

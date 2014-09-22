@@ -4,14 +4,12 @@ use strict;
 use base 'WriteOff::Schema::ResultSet';
 use WriteOff::Award qw/:all/;
 
-sub deal_awards_and_scores {
-	my( $self, $rs ) = @_;
-	return unless $rs->count;
-
+sub _award {
+	my ($self, $rs, %p) = @_;
 
 	my $type = $rs->first->type;
 	my $colname = { fic => 'story_id', art => 'image_id' }->{$type};
-	my %meta = ( type => $type, event_id => $rs->first->event_id );
+	my %meta = (type => $type, event_id => $rs->first->event_id);
 
 	my %artists;
 	my %last;
@@ -19,7 +17,8 @@ sub deal_awards_and_scores {
 
 	my $mxstdv = $rs->get_column('public_stdev')->max;
 	my $n = $rs->count - 1;
-	for my $item ($rs->order_by({ -asc => [qw/rank title/] })->all) {
+
+	for my $item ($rs->rank_order->all) {
 		my $artist = $self->find_or_create({ name => $item->artist });
 		my $aid = $artist->id;
 
@@ -45,11 +44,6 @@ sub deal_awards_and_scores {
 		for my $award (@awards) {
 			push @{ $artists{$aid} }, [ $item, $award ];
 		}
-
-		$artist->create_related('scores', { %meta,
-			$colname => $item->id,
-			value    => $n - ($item->rank + $item->rank_low),
-		});
 	}
 
 	while (my ($aid, $awards) = each %artists) {
@@ -68,14 +62,63 @@ sub deal_awards_and_scores {
 	}
 }
 
+sub _distr {
+	my ($i, $n, $e) = @_;
+
+	# bigger number -> more brutal curve
+	$e //= 1.6;
+
+	# simple exponential curve
+	return (($n-$i+1)/($n+2))**$e;
+}
+
+sub _score {
+	my ($self, $rs) = @_;
+
+	my $type = $rs->first->type;
+	my $colname = { fic => 'story_id', art => 'image_id' }->{$type};
+	my %meta = (type => $type, event_id => $rs->first->event_id);
+
+	# Multiply by 10 because whole numbers are nicer to display than
+	# numbers with one decimal place
+	my $D = $rs->difficulty * 10;
+
+	my $n = $rs->count - 1;
+	my %artists;
+	for my $item ($rs->rank_order->all) {
+		my $artist = $self->find_or_create({ name => $item->artist });
+		my $aid = $artist->id;
+
+		my $score = $D * _distr(($item->rank + $item->rank_low) / 2, $n);
+
+		if (exists $artists{$aid}) {
+			# Additional entries have a small deduction
+			$score -= $D * 0.2;
+		}
+		else {
+			$artists{$aid} = 1;
+		}
+
+		$artist->create_related('scores', { %meta,
+			$colname => $item->id,
+			value    => $score,
+			orig     => $score,
+		});
+	}
+}
+
+sub deal_awards_and_score {
+	my ($self, $rs) = @_;
+	return unless $rs->count;
+
+	$self->_award($rs);
+	$self->_score($rs);
+}
+
 sub recalculate_scores {
 	my $self = shift;
-	my $schema = $self->result_source->schema;
 
-	my @events = $schema->resultset('Event')->finished;
-	my $e8_cut = $self->format_datetime($events[@events-8]->end);
-
-	$schema->storage->dbh_do(sub {
+	$self->result_source->schema->storage->dbh_do(sub {
 		my ($storage, $dbh) = @_;
 
 		$dbh->do(qq{
@@ -83,16 +126,10 @@ sub recalculate_scores {
 				artists
 			SET
 				score =
-					(SELECT bcsum(value, events.end)
-						FROM scores,events
-						WHERE artist_id=artists.id AND event_id=events.id),
-				score8 =
-					(SELECT bcsum(value, events.end)
-						FROM scores,events
-						WHERE artist_id=artists.id AND event_id=events.id
-						AND events.end >= ?
-			);
-		}, undef, $e8_cut);
+					(SELECT SUM(value)
+						FROM scores
+						WHERE artist_id=artists.id);
+		});
 	});
 }
 
@@ -100,11 +137,9 @@ sub tallied {
 	my $self = shift;
 	my $alltime = shift;
 
-	my $col = $alltime ? 'score' : 'score8';
-
 	my $rank_rs = $self->search(
 		{
-			$col => { '>' => { -ident => "me.$col" } }
+			score => { '>' => { -ident => "me.score" } }
 		},
 		{
 			'select' => [ \'COUNT(*) + 1' ],
@@ -116,7 +151,7 @@ sub tallied {
 		'+select' => [ $rank_rs->as_query ],
 		'+as' => [ 'rank' ],
 		order_by => [
-			{ -desc => "$col" },
+			{ -desc => "score" },
 			{ -asc  => 'name'  },
 		]
 	})->all;

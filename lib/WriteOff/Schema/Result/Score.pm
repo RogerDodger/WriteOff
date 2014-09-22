@@ -21,7 +21,9 @@ __PACKAGE__->add_columns(
 	"type",
 	{ data_type => "text", is_nullable => 1 },
 	"value",
-	{ data_type => "integer", is_nullable => 1 },
+	{ data_type => "real", is_nullable => 1 },
+	"orig",
+	{ data_type => "real", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");

@@ -3,6 +3,11 @@ package WriteOff::Schema::ResultSet::Story;
 use strict;
 use base 'WriteOff::Schema::Item';
 
+sub difficulty {
+	shift->get_column('wordcount')->func_rs('sqrt')
+	     ->get_column('wordcount')->func('avg');
+}
+
 sub metadata {
 	return shift->search_rs(undef, {
 		columns => [

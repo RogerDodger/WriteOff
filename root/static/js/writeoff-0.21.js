@@ -261,3 +261,72 @@ $(document).ready(function() {
 		});
 	}
 });
+
+//==========================================================================
+// Collapsing score breakdowns
+//==========================================================================
+
+$(document).ready(function() {
+	var er_class = 'artist-breakdown-row';
+
+	$('.artist-breakdown')
+		.click(function() {
+			var $icon = $(this).find('span');
+			var $row = $(this).parent().parent();
+			var $next = $row.next();
+
+			// Expand
+			if ($icon.hasClass('ui-icon-plus')) {
+				$icon.removeClass('ui-icon-plus');
+				$icon.addClass('ui-icon-minus');
+				$(this).attr('title', 'Hide breakdown');
+
+				if ($next.hasClass(er_class)) {
+					$next.removeClass('hidden');
+				}
+				else {
+					var $expand_row = $('<tr class="' + er_class + '"></tr>');
+					var $expand_cell = $('<td colspan="5"></td>');
+
+					$expand_row.addClass(
+						$row.hasClass('odd') ? 'odd' : 'even'
+					);
+					$expand_row.html($expand_cell);
+					$expand_row.insertAfter($row);
+
+					$expand_cell.load(
+						$(this).data('target'),
+						function(res, status, xhr) {
+							if (status != 'error') {
+								$expand_cell.find('h1').remove();
+							}
+							else {
+								$expand_cell.html(xhr.statusText);
+							}
+						}
+					);
+				}
+			}
+			else {
+				// Collapse
+				$icon.removeClass('ui-icon-minus');
+				$icon.addClass('ui-icon-plus');
+				$(this).attr('title', 'Show breakdown');
+
+				if ($next.hasClass(er_class)) {
+					// Check that the previous expand succeeded, to see
+					// if we want to save the block or not
+					if ($next.find('table')) {
+						$next.addClass('hidden');
+					}
+					else {
+						$next.remove();
+					}
+				}
+			}
+		})
+		.each(function() {
+			$(this).data('target', $(this).attr('href'));
+		})
+		.removeAttr('href');
+});

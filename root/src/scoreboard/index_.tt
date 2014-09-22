@@ -4,17 +4,8 @@
 	<tr class="heading">
 		<th>#</th>
 		<th>Competitor</th>
-		<th>
-			<a class="link" href="/scoreboard" title="Score across recent events">
-				Score
-			</a>
-		</th>
-		<th>
-			<a class="link" href="/scoreboard/alltime" title="Score across all events">
-				&forall;
-			</a>
-		</th>
-		<th>Awards</th>
+		<th>Score</th>
+		<th colspan="2">Awards</th>
 	</tr>
 [%- IF artists.size != 0 %]
 	[%- FOREACH artist IN artists %]
@@ -22,19 +13,20 @@
 		<td>[% artist.rank %]</td>
 		<td>[% artist.name | html %]</td>
 		<td>
-			[% artist.score8 %]
-		</td>
-		<td>
-			<a href="[% c.uri_for( c.controller('Artist')
-				.action_for('scores'), [ artist.id ]) %]"
-				class="dialog-fetcher author" title="View score breakdown" >
-				[% artist.score %]
-			</a>
+			<span title="[% artist.score | format('%.5f') %]">
+				[% artist.score | format('%d') %]
+			</span>
 		</td>
 		<td class="flat">
 		[%- FOREACH award IN artist.awards %]
 			[% award.html %]
 		[%- END %]
+		</td>
+		<td>
+			<a title="Show breakdown" class="artist-breakdown"
+				href="[% c.uri_for_action('/artist/scores' [ artist.id ]) %]">
+					<span class="ui-icon ui-icon-plus"></span>
+			</a>
 		</td>
 	</tr>
 	[%- END %]

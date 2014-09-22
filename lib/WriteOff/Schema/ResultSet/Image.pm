@@ -3,6 +3,8 @@ package WriteOff::Schema::ResultSet::Image;
 use strict;
 use base 'WriteOff::Schema::Item';
 
+sub difficulty { 50 }
+
 sub metadata {
 	return shift->search_rs(undef, {
 		columns => [
