@@ -10,7 +10,7 @@ sub run {
 	}
 	else {
 		$self->help;
-	}	
+	}
 }
 
 sub rename {
@@ -34,8 +34,9 @@ sub rename {
 	my $newname = shift;
 	my $new = $self->db('Artist')->find({ name => $newname });
 
+	# Should apply multi-submission penalty if relevant
 	my @scores = $old->scores;
-	
+
 	if (!defined $new) {
 		printf "Renaming `%s` to `%s`...\n", $old->name, $newname;
 		$old->update({ name => $newname });
@@ -43,6 +44,7 @@ sub rename {
 	else {
 		$newname = $new->name;
 		printf "Merging `%s` into `%s`...\n", $old->name, $newname;
+
 		$old->scores->update({ artist_id => $new->id });
 		$old->artist_awards->update({ artist_id => $new->id });
 		$old->delete;

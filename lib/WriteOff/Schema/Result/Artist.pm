@@ -16,9 +16,7 @@ __PACKAGE__->add_columns(
 	"user_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"score",
-	{ data_type => "integer", is_nullable => 1 },
-	"score8",
-	{ data_type => "integer", is_nullable => 1 },
+	{ data_type => "real", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");
@@ -60,24 +58,7 @@ sub awards {
 sub recalculate_score {
 	my $self = shift;
 
-	my $scores = $self->scores->search(undef,
-		{
-			prefetch => 'event',
-			order_by => 'end'
-		}
-	);
-
-	my $total = 0;
-	my $prev;
-	while (my $score = $scores->next) {
-		if ($total < 0 && $prev->event_id != $score->event_id) {
-			$total = 0;
-		}
-		$total += $score->value;
-		$prev = $score;
-	}
-
-	$self->update({ score => $total < 0 ? 0 : $total });
+	$self->update({ score => $self->scores->sum_rs->as_query });
 }
 
 1;
