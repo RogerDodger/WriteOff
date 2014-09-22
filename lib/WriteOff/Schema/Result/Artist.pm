@@ -58,7 +58,9 @@ sub awards {
 sub recalculate_score {
 	my $self = shift;
 
-	$self->update({ score => $self->scores->sum_rs->as_query });
+	$self->update({
+		score => $self->scores->get_column('value')->sum_rs->as_query
+	});
 }
 
 1;
