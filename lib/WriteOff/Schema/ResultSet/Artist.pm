@@ -107,7 +107,7 @@ sub _score {
 	}
 }
 
-sub deal_awards_and_score {
+sub deal_awards_and_scores {
 	my ($self, $rs) = @_;
 	return unless $rs->count;
 
