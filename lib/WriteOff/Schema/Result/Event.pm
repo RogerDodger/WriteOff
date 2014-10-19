@@ -561,7 +561,7 @@ sub tally {
 	my $self = shift;
 	my $schema = $self->result_source->schema;
 	my $artists = $schema->resultset('Artist');
-	my $scores => $schema->resultset('Score');
+	my $scores = $schema->resultset('Score');
 
 	# Clean up possible old tallying
 	$self->artist_awards->delete_all;
