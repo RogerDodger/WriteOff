@@ -4,6 +4,10 @@ package WriteOff::Schema::Result::Image;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
+use Digest::MD5;
+use File::Spec;
+use File::Copy;
+use WriteOff::Util;
 
 __PACKAGE__->table("images");
 
@@ -147,27 +151,37 @@ sub is_manipulable_by {
 
 sub id_uri {
 	my $self = shift;
-	require WriteOff::Util;
 
 	return WriteOff::Util::simple_uri( $self->id, $self->title );
 }
 
 sub version {
-	require Digest::MD5;
-
 	return substr Digest::MD5::md5_hex(shift->updated), 0, 5;
 }
 
 sub extension {
-	my $self = shift;
-	$self->mimetype =~ /^image\/(.*)/;
-
-	return $1;
+	return shift->mimetype =~ s{^image/}{}r =~ s{jpeg}{jpg}r;
 }
 
-sub filename {
-	my $self = shift;
-	$self->id_uri . '.' . $self->extension;
+sub path {
+	my ($self, $thumb) = @_;
+	'/static/art/' . ('thumb/' x!! $thumb) . $self->id_uri . '.' . $self->extension;
+}
+
+sub write {
+	require Image::Magick;
+	my ($self, $img) = @_;
+
+	my $magick = Image::Magick->new;
+	$magick->Read($img->tempname);
+	$magick->Resize(geometry => '225x225');
+
+	my $e = $magick->Write(File::Spec->catfile('root', $self->path('thumb')));
+	return $e if $e;
+
+	copy($img->tempname, File::Spec->catfile('root', $self->path)) or return $!;
+
+	0;
 }
 
 1;

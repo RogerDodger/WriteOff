@@ -5,21 +5,14 @@
 <div class="artworks">
 	[%- FOREACH image IN images.all %]
 	<figure>
-
-		<img src="[% c.uri_for_action(
-				'/art/view',
-				[ image.id_uri ],
-				{ format => 'thumb', v => image.version }
-			) %]"
+		<img src="[% image.path('thumb') %]"
 			alt="[% image.title | html %]"
-			title="[% image.hovertext | html %]" />
+			title="[% image.hovertext | html %]">
 
 		<figcaption>
-			<a class="link new-tab em" href="[% c.uri_for(
-				c.controller('Art').action_for('view'),
-				[ image.id_uri ],
-				{ v => image.version }
-			) %]">[% image.title | html %]</a>
+			<a class="link em" href="[% image.path %]">
+				[% image.title | html %]
+			</a>
 
 		[%- IF show_artists %]
 			by

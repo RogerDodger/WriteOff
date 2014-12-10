@@ -1,6 +1,8 @@
 package WriteOff::Controller::Art;
 use Moose;
 use namespace::autoclean;
+require Image::Magick;
+
 no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -12,14 +14,9 @@ sub fetch :Chained('/') :PathPart('art') :CaptureArgs(1) :ActionClass('~Fetch') 
 sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->content_type($c->stash->{image}->mimetype);
-	$c->res->body(
-		$c->stash->{format} eq 'thumb'
-			? $c->stash->{image}->thumb
-			: $c->stash->{image}->contents
+	$c->res->redirect(
+		$c->stash->{image}->path($c->stash->{format} eq 'thumb')
 	);
-
-	$c->res->header('Cache-Control' => 'max-age=' . 30 * 24 * 60 * 60);
 }
 
 sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
@@ -55,18 +52,24 @@ sub do_submit :Private {
 
 	$c->forward('form');
 
-	if( !$c->form->has_error ) {
-		$c->detach('/error', [ 'Image upload failed' ])
-			unless $c->stash->{row}{contents};
-
+	if (!$c->form->has_error) {
 		$c->stash->{row}{user_id} = $c->user_id;
 		$c->stash->{row}{ip}      = $c->req->address;
 		$c->stash->{row}{seed}    = rand;
 
-		$c->stash->{event}->create_related('images', $c->stash->{row});
+		my $img = $c->stash->{event}->create_related(
+			'images', $c->stash->{row}
+		);
+		my $err = $img->write($c->req->upload('image'));
 
-		$c->flash->{status_msg} = 'Submission successful';
-		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+		if (!$err) {
+			$c->flash->{status_msg} = 'Submission successful';
+			$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+		} else {
+			$img->delete;
+			$c->detach('/error', [ 'Image upload failed.' ]);
+			$c->log->error($err);
+		}
 	}
 }
 
@@ -81,14 +84,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	$c->stash->{fillform}{$_} = $c->stash->{image}->$_
 		for qw/title artist hovertext website/;
 
-	$c->stash->{preview} = $c->uri_for(
-		$self->action_for('view'),
-		[ $c->stash->{image}->id_uri ],
-		{
-			view => 'thumb',
-			v => $c->stash->{image}->version
-		}
-	);
+	$c->stash->{preview} = $c->stash->{image}->path('thumb');
 
 	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'art/edit.tt';
@@ -100,6 +96,19 @@ sub do_edit :Private {
 	$c->forward('form');
 
 	if (!$c->form->has_error) {
+		# Set this in memory so the file is written to the right filename. We
+		# don't want to update the DB until the image has been written
+		# successfully.
+		$c->stash->{image}->title($c->stash->{row}{title});
+
+		if (my $upload = $c->req->upload('image')) {
+			my $err = $c->stash->{image}->write($upload);
+			if ($err) {
+				$c->detach('/error', [ 'Image upload failed.' ]);
+				$c->log->error($err);
+			}
+		}
+
 		$c->stash->{image}->update( $c->stash->{row} );
 
 		$c->log->info( sprintf "Art %d edited by %s, to %s by %s (%.2fKB)",
@@ -174,15 +183,6 @@ sub form :Private {
 	if ($img) {
 		$c->stash->{row}{filesize} = $c->form->valid('filesize');
 		$c->stash->{row}{mimetype} = $c->form->valid('mimetype');
-
-		require Image::Magick;
-		my $magick = Image::Magick->new;
-
-		$magick->Read( $img->tempname );
-		$c->stash->{row}{contents} = ( $magick->ImageToBlob )[0];
-
-		$magick->Resize( geometry => '225x225' );
-		$c->stash->{row}{thumb} = ( $magick->ImageToBlob  )[0];
 	}
 }
 
