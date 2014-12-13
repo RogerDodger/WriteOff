@@ -7,7 +7,7 @@ use base "WriteOff::Schema::Result";
 use Digest::MD5;
 use File::Spec;
 use File::Copy;
-use WriteOff::Util;
+use WriteOff::Util qw/simple_uri/;
 
 __PACKAGE__->table("images");
 
@@ -35,6 +35,8 @@ __PACKAGE__->add_columns(
 	"filesize",
 	{ data_type => "integer", is_nullable => 0 },
 	"mimetype",
+	{ data_type => "text", is_nullable => 0 },
+	"version",
 	{ data_type => "text", is_nullable => 0 },
 	"seed",
 	{ data_type => "real", is_nullable => 1 },
@@ -137,6 +139,17 @@ sub _compare_scores {
 	1;
 }
 
+sub clean {
+	my $self = shift;
+
+	my $fn = $self->filename;
+	for my $dir (qw{root/static/art root/static/art/thumb}) {
+		for my $img (glob File::Spec->catfile($dir, $self->id . '-*')) {
+			$img =~ qr{$fn$} or unlink $img;
+		}
+	}
+}
+
 sub is_manipulable_by {
 	my $self = shift;
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
@@ -152,35 +165,39 @@ sub is_manipulable_by {
 sub id_uri {
 	my $self = shift;
 
-	return WriteOff::Util::simple_uri( $self->id, $self->title );
-}
-
-sub version {
-	return substr Digest::MD5::md5_hex(shift->updated), 0, 5;
+	return simple_uri $self->id, $self->title;
 }
 
 sub extension {
 	return shift->mimetype =~ s{^image/}{}r =~ s{jpeg}{jpg}r;
 }
 
+sub filename {
+	my $self = shift;
+	return $self->id . '-' . $self->version . '.' .$self->extension;
+}
+
 sub path {
 	my ($self, $thumb) = @_;
-	'/static/art/' . ('thumb/' x!! $thumb) . $self->id_uri . '.' . $self->extension;
+	'/static/art/' . ('thumb/' x!! $thumb) . $self->filename;
 }
 
 sub write {
 	require Image::Magick;
 	my ($self, $img) = @_;
+	$self->version(substr Digest::MD5->md5_hex(time . rand() . $$), -6);
 
 	my $magick = Image::Magick->new;
-	$magick->Read($img->tempname);
+	$magick->Read($img);
 	$magick->Resize(geometry => '225x225');
 
 	my $e = $magick->Write(File::Spec->catfile('root', $self->path('thumb')));
 	return $e if $e;
 
-	copy($img->tempname, File::Spec->catfile('root', $self->path)) or return $!;
+	copy($img, File::Spec->catfile('root', $self->path)) or return $!;
 
+	$self->update;
+	$self->clean;
 	0;
 }
 

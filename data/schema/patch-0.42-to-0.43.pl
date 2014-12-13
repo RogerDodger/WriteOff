@@ -1,6 +1,6 @@
 use 5.01;
 use autodie;
-use File::Spec;
+use File::Temp qw/tempfile/;
 use FindBin '$Bin';
 BEGIN {
 	chdir "$Bin/../..";
@@ -13,10 +13,9 @@ my $s = WriteOff::Schema->connect("dbi:SQLite:data/WriteOff.db","","", {
 });
 
 for my $img ($s->resultset('Image')->all) {
-	my $thumb = 0;
-	for ($img->contents, $img->thumb) {
-		open my $fh, '>', File::Spec->catfile('root', $img->path($thumb++));
-		print $fh $_;
-		close $fh;
-	}
+	my ($fh, $tmp) = tempfile();
+	print $fh $img->contents;
+	close $fh;
+	my $e = $img->write($tmp);
+	warn "$e\n" if $e;
 }

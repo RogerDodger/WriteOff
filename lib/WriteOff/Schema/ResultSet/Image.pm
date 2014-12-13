@@ -10,17 +10,11 @@ sub metadata {
 		columns => [
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'artist', 'website', 'hovertext',
-			'filesize', 'mimetype',
+			'filesize', 'mimetype', 'version',
 			'public_score', 'public_stdev',
 			'rank', 'rank_low',
 			'seed', 'created', 'updated'
 		]
-	});
-}
-
-sub no_contents {
-	return shift->metadata->search_rs(undef, {
-		'+columns' => [ 'thumb' ],
 	});
 }
 

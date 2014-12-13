@@ -25,7 +25,7 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 	$c->stash->{show_artists} = $c->stash->{event}->is_ended;
 	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
 
-	$c->stash->{images} = $c->stash->{event}->images->seed_order->no_contents;
+	$c->stash->{images} = $c->stash->{event}->images->seed_order;
 
 	push $c->stash->{title}, 'Gallery';
 	$c->stash->{template} = 'art/gallery.tt';
@@ -60,7 +60,7 @@ sub do_submit :Private {
 		my $img = $c->stash->{event}->create_related(
 			'images', $c->stash->{row}
 		);
-		my $err = $img->write($c->req->upload('image'));
+		my $err = $img->write($c->req->upload('image')->tempname);
 
 		if (!$err) {
 			$c->flash->{status_msg} = 'Submission successful';
@@ -102,7 +102,7 @@ sub do_edit :Private {
 		$c->stash->{image}->title($c->stash->{row}{title});
 
 		if (my $upload = $c->req->upload('image')) {
-			my $err = $c->stash->{image}->write($upload);
+			my $err = $c->stash->{image}->write($upload->tempname);
 			if ($err) {
 				$c->detach('/error', [ 'Image upload failed.' ]);
 				$c->log->error($err);
