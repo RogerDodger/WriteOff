@@ -12,7 +12,6 @@ BEGIN {
 	use FindBin '$Bin';
 	chdir($Bin);
 }
-use lib::App::cpanminus;
 
 my @dependencies = (
 	'Catalyst::Runtime~5.90013',
@@ -68,6 +67,13 @@ my @dependencies = (
 	'EBook::EPUB', # it has same req as View::Epub
 );
 
-my $cpanm = App::cpanminus::script->new;
-$cpanm->{argv} = \@dependencies;
-$cpanm->doit or exit(1);
+if (eval { require App::cpanminus; 1; }) {
+	*install = sub { system 'cpanm', @_ };
+}
+else {
+	require CPAN;
+	CPAN->import;
+}
+
+say "Installing dependencies...";
+install(@dependencies);
