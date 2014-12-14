@@ -276,11 +276,25 @@ sub private_votes_allowed {
 	return $row->private && sorted $row->private, $row->now_dt, $row->end;
 }
 
-sub is_ended {
+sub author_guessing_allowed {
+	my $row = shift;
+
+	return $row->fic_gallery_opened && !$row->ended;
+}
+
+sub artist_guessing_allowed {
+	my $row = shift;
+
+	return $row->art_gallery_opened && !$row->ended;
+}
+
+sub ended {
 	my $row = shift;
 
 	return $row->end <= $row->now_dt;
 }
+
+BEGIN { *is_ended = \&end; }
 
 sub reset_schedules {
 	my $self = shift;

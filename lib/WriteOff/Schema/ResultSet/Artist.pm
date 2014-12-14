@@ -51,9 +51,10 @@ sub _award {
 			shift @$awards;
 		}
 
+		my $artist = $self->find($aid);
 		for (@$awards) {
 			my ($item, $award) = @$_;
-			$self->find($aid)->create_related('artist_awards', { %meta,
+			$artist->create_related('artist_awards', { %meta,
 				$colname  => $item->id,
 				award_id  => $award->id,
 			});
@@ -97,7 +98,7 @@ sub _score {
 			$artists{$aid} = 1;
 		}
 
-		$artist->create_related('scores', { %meta,
+		$self->find($aid)->create_related('scores', { %meta,
 			$colname => $item->id,
 			value    => $score,
 			orig     => $score,
@@ -145,14 +146,17 @@ sub tallied {
 		}
 	);
 
-	return $self->search(undef, {
-		'+select' => [ $rank_rs->as_query ],
-		'+as' => [ 'rank' ],
-		order_by => [
-			{ -desc => "score" },
-			{ -asc  => 'name'  },
-		]
-	})->all;
+	return $self->search(
+		{ score => { '!=' => undef } },
+		{
+			'+select' => [ $rank_rs->as_query ],
+			'+as' => [ 'rank' ],
+			order_by => [
+				{ -desc => "score" },
+				{ -asc  => 'name'  },
+			]
+		}
+	)->all;
 }
 
 1;

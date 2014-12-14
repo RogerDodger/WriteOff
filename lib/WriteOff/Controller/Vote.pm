@@ -80,7 +80,6 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	$c->stash->{template} = 'vote/private.tt';
 }
 
-
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

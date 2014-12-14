@@ -134,7 +134,6 @@ sub fillform :Private {
 			map { $_->item->id => $_->value } $record->votes->all,
 		};
 	}
-
 }
 
 =head1 AUTHOR

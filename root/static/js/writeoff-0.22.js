@@ -25,6 +25,9 @@ String.prototype.regex = function() {
 	//http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 	return this.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 };
+String.prototype.ucfirst = function() {
+	return this.substring(0, 1).toUpperCase() + this.substring(1, this.length);
+}
 
 jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
@@ -192,11 +195,13 @@ jQuery(document).ready(function($) {
 //==========================================================================
 
 $(document).ready(function() {
-	var $form = $('#public-vote');
+	var $form = $('#auto-update');
 	var $status_area = $(
 		'<p class="status-msg ui-widget ui-corner-all ui-state-highlight">' +
 		'<span class="ui-icon ui-icon-alert"></span> Automatic updates enabled' +
 		'</p>');
+
+	var type = $form.hasClass('public') ? 'vote' : 'guess';
 
 	// Keep track of dirty fields in case the update fails.
 	//
@@ -215,7 +220,7 @@ $(document).ready(function() {
 		// Add status updater below the form
 		$status_area.insertAfter($form);
 
-		$form.find('input').change(function(e) {
+		$form.find('input,select').change(function(e) {
 			// Each callback needs its own $submitting_fields to ensure
 			// concurrent calls don't clobber it before it's used.
 			var $submitting_fields;
@@ -224,7 +229,7 @@ $(document).ready(function() {
 			$status_area.addClass('ui-state-highlight');
 			$status_area.html(
 				'<span class="ui-icon ui-icon-spinner"></span>' + "\n" +
-				'Updating vote...'
+				'Updating ' + type + '...'
 			);
 
 			$submitting_fields = $dirty_fields.add(this);
@@ -239,7 +244,7 @@ $(document).ready(function() {
 				success: function(res, status, xhr) {
 					$status_area.html(
 						'<span class="ui-icon ui-icon-check"></span>' + "\n" +
-						'Vote updated'
+						type.ucfirst() + ' updated'
 					);
 
 					$('#votes-received').html(
@@ -251,7 +256,7 @@ $(document).ready(function() {
 					$status_area.addClass('ui-state-error');
 					$status_area.html(
 						'<span class="ui-icon ui-icon-alert"></span>' + "\n" +
-						'Error updating vote: ' + err + '.'
+						'Error updating ' + type + ': ' + err + '.'
 					);
 
 					// The fields failed to send, so they're still dirty

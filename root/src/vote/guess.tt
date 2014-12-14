@@ -1,0 +1,58 @@
+<h1>[% heading %]</h1>
+
+<p>
+	Guessing opens: <strong>[% format_dt(open) %]</strong>.
+	<br>
+	Guessing closes: <strong>[% format_dt(close) %]</strong>.
+	<br>
+	Guesses received: <strong id="votes-received">[% votes_received %]</strong>.
+	<br>
+[%- IF votes_allowed %]
+	Guessing is <strong class="good">opened</strong>.
+[%- ELSE %]
+	Guessing is <strong class="bad">closed</strong>.
+[%- END %]
+</p>
+
+
+[%- IF votes_allowed %]
+	[%- IF !c.user %]
+
+	[%- INCLUDE fragment/status_msg.tt  message =
+			'You must be logged in to vote' %]
+
+	[%- ELSE %]
+
+	<form id="auto-update" class="guess" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+		<table class="solid">
+			<tr class="heading">
+				<th>#</th>
+				<th class="maxwidth">Title</th>
+				<th>[% c.action.name == 'fic' ? 'Author' : 'Artist' %]</th>
+			</tr>
+
+			[% options = BLOCK %]
+				<option value="" selected></option>
+				[% FOREACH artist IN artists %]
+				<option value="[% artist.id %]">[% artist.name | html %]</option>
+				[%- END %]
+			[% END %]
+
+			[%- FOREACH item IN candidates.all %]
+			<tr class="[% loop.parity %]">
+				<td class="center">[% loop.count %]</td>
+				<td>[% item.title | html %]</td>
+				[%- SET disabled = item.user_id == c.user_id ? " disabled" : "" %]
+				<td>
+					<select name="[% item.id %]" [% disabled %]>
+						[% options %]
+					</select>
+				</td>
+			</tr>
+			[%- END %]
+		</table>
+		<p><input type="submit" name="submit" value="Update vote"></p>
+	</form>
+
+	[%- END %]
+[%- END %]

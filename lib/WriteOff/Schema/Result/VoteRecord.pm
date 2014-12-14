@@ -41,6 +41,13 @@ __PACKAGE__->belongs_to(
 	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+__PACKAGE__->has_many(
+	"guesses",
+	"WriteOff::Schema::Result::Guess",
+	{ "foreign.record_id" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
 __PACKAGE__->belongs_to(
 	"user",
 	"WriteOff::Schema::Result::User",

@@ -9,6 +9,10 @@ sub filled {
 	return $self->search({ filled => 1 });
 }
 
+sub guess {
+	return shift->search({ round => 'guess' });
+}
+
 sub unfilled {
 	return shift->search_rs({ filled => 0 });
 }

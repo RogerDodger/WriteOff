@@ -26,7 +26,7 @@
 			'Scores are in ascending order, i.e., 10 is the best score' %]
 
 	[%- vote_range = [0 .. 10]; vote_range.push('N/A') %]
-	<form id="public-vote" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+	<form id="auto-update" class="public" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
 		<table class="solid">
 			<tr class="heading">
 				<th>#</th>

@@ -188,13 +188,13 @@ CREATE TABLE votes (
 	"value"    INTEGER
 );
 
-CREATE TABLE guesses {
+CREATE TABLE guesses (
 	id         INTEGER PRIMARY KEY,
 	record_id  INTEGER REFERENCES vote_records(id) ON DELETE CASCADE NOT NULL,
-	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE NOT NULL,
 	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
-	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE
-}
+	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
+	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE
+);
 
 -- ===========================================================================
 -- Scoreboard stuff
