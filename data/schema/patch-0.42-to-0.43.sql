@@ -1,0 +1,1 @@
+ALTER TABLE images ADD COLUMN version TEXT;
