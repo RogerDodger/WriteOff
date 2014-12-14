@@ -19,8 +19,7 @@ sub _award {
 	my $n = $rs->count - 1;
 
 	for my $item ($rs->rank_order->all) {
-		my $artist = $self->find_or_create({ name => $item->artist });
-		my $aid = $artist->id;
+		my $aid = $item->artist_id;
 
 		my @awards = (
 			$mxstdv && $item->public_stdev == $mxstdv ? (CONFETTI) : (),
@@ -86,8 +85,7 @@ sub _score {
 	my $n = $rs->count - 1;
 	my %artists;
 	for my $item ($rs->rank_order->all) {
-		my $artist = $self->find_or_create({ name => $item->artist });
-		my $aid = $artist->id;
+		my $aid = $item->artist_id;
 
 		my $score = $D * _distr(($item->rank + $item->rank_low) / 2, $n);
 

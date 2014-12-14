@@ -133,13 +133,13 @@ sub username_and_email {
 sub last_author {
 	my $self = shift;
 	my $last_story = $self->storys->order_by({ -desc => 'updated' })->first;
-	return $last_story ? $last_story->author : undef;
+	return $last_story ? $last_story->artist->name : undef;
 }
 
 sub last_artist {
 	my $self = shift;
 	my $last_image = $self->images->order_by({ -desc => 'updated' })->first;
-	return $last_image ? $last_image->artist : undef;
+	return $last_image ? $last_image->artist->name : undef;
 }
 
 sub is_admin {

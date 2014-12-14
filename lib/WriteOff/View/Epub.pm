@@ -159,7 +159,9 @@ sub process {
 	# single story ebook
 	if (defined(my $story = $c->stash->{story})) {
 		$self->add_title($story->title);
-		$self->add_author($story->event->is_ended ? $story->author : 'Anonymous');
+		$self->add_author(
+			$story->event->is_ended ? $story->artist->name : 'Anonymous'
+		);
 
 		my $id = $self->add_xhtml(
 			'chapter.xhtml',

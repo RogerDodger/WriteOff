@@ -18,9 +18,9 @@
 			by
 			[%- IF image.website %]
 			<a class="author new-tab" href="[% image.website | url %]">
-				[% image.artist | html %]</a>
+				[% image.artist.name | html %]</a>
 			[%- ELSE %]
-				[% image.artist | html %]
+				[% image.artist.name | html %]
 			[%- END %]
 		[%- END -%]
 

@@ -81,8 +81,12 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 
-	$c->stash->{fillform}{$_} = $c->stash->{image}->$_
-		for qw/title artist hovertext website/;
+	$c->stash->{fillform} = {
+		artist    => $c->stash->{image}->artist->name,
+		title     => $c->stash->{image}->title,
+		hovertext => $c->stash->{image}->hovertext,
+		website   => $c->stash->{image}->website,
+	};
 
 	$c->stash->{preview} = $c->stash->{image}->path('thumb');
 
@@ -115,7 +119,7 @@ sub do_edit :Private {
 			$c->stash->{image}->id,
 			$c->user->get('username'),
 			$c->stash->{image}->title,
-			$c->stash->{image}->artist,
+			$c->stash->{image}->artist->name,
 			$c->stash->{image}->filesize / 1024,
 		);
 

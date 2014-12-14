@@ -22,8 +22,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 1 },
 	"title",
 	{ data_type => "text", is_nullable => 0 },
-	"artist",
-	{ data_type => "text", default_value => "Anonymous", is_nullable => 0 },
+	"artist_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"website",
 	{ data_type => "text", is_nullable => 1 },
 	"hovertext",
@@ -55,6 +55,13 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key("id");
+
+__PACKAGE__->belongs_to(
+	"artist",
+	"WriteOff::Schema::Result::Artist",
+	{ id => "artist_id" },
+	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 __PACKAGE__->has_many(
 	"artist_awards",

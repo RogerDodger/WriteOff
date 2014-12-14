@@ -70,10 +70,10 @@
 		by
 		[%- IF item.website %]
 		<a class="author new-tab" href="[% item.website | url %]">
-			[% item.artist | html %]
+			[% item.artist.name | html %]
 		</a>
 		[%- ELSE %]
-			[% item.artist | html %]
+			[% item.artist.name | html %]
 		[%- END %]
 
 		[%- IF score %]

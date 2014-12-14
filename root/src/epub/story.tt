@@ -8,7 +8,7 @@
 	<body>
 		<h1>[% story.title | xml %]</h1>
 		[%- IF event.is_ended %]
-		<h2>by [% story.author | xml %] </h2>
+		<h2>by [% story.artist.name | xml %] </h2>
 		[%- END %]
 		[%- IF event.art %]
 		<div class="art">
@@ -16,7 +16,7 @@
 				<img src="images/[% art.filename %]"/>
 				<h5>[% art.title | xml %]</h5>
 				[%- IF event.is_ended %]
-				<h6> by [% art.artist | xml %]</h6>
+				<h6> by [% art.artist.name | xml %]</h6>
 				[%- END %]
 			[%- END %]
 		</div>

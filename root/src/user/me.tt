@@ -23,13 +23,13 @@
 				[% story.title | html %]
 			</a>
 		</td>
-		<td class="max-150" title="[% story.author | html %]">
+		<td class="max-150" title="[% story.artist.name | html %]">
 			[%- IF story.website %]
 			<a class="link new-tab" href="[% story.website | url %]">
-				[% story.author | html %]
+				[% story.artist.name | html %]
 			</a>
 			[%- ELSE %]
-			[% story.author | html %]
+			[% story.artist.name | html %]
 			[%- END %]
 		</td>
 		<td class="center">[% story.wordcount %]</td>
@@ -85,13 +85,13 @@
 				[% image.title | html %]
 			</a>
 		</td>
-		<td class="max-150" title="[% image.artist | html %]">
+		<td class="max-150" title="[% image.artist.name | html %]">
 			[%- IF image.website %]
 			<a class="link new-window" href="[% image.website | url %]">
-				[% image.artist | html %]
+				[% image.artist.name | html %]
 			</a>
 			[%- ELSE %]
-			[% image.artist | html %]
+			[% image.artist.name | html %]
 			[%- END %]
 		</td>
 		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>

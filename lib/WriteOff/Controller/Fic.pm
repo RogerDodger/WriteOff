@@ -163,7 +163,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
-		author   => $c->stash->{story}->author,
+		author   => $c->stash->{story}->author->name,
 		title    => $c->stash->{story}->title,
 		image_id => [ $c->stash->{story}->images->get_column('id')->all ],
 		website  => $c->stash->{story}->website,

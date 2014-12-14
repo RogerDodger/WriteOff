@@ -122,9 +122,9 @@ CREATE TABLE storys (
 	id             INTEGER PRIMARY KEY,
 	event_id       INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id        INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	artist_id      INTEGER REFERENCES artists(id) ON DELETE CASCADE,
 	ip             TEXT,
 	title          TEXT COLLATE NOCASE NOT NULL,
-	author         TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website        TEXT,
 	contents       TEXT NOT NULL,
 	wordcount      INTEGER NOT NULL,
@@ -145,14 +145,12 @@ CREATE TABLE images (
 	id            INTEGER PRIMARY KEY,
 	event_id      INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	artist_id     INTEGER REFERENCES artists(id) ON DELETE CASCADE,
 	ip            TEXT,
 	title         TEXT COLLATE NOCASE NOT NULL,
-	artist        TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website       TEXT,
 	version       TEXT,
 	hovertext     TEXT,
-	contents      BLOB NOT NULL,
-	thumb         BLOB NOT NULL,
 	filesize      INTEGER NOT NULL,
 	mimetype      TEXT NOT NULL,
 	seed          REAL,
@@ -189,6 +187,14 @@ CREATE TABLE votes (
 	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
 	"value"    INTEGER
 );
+
+CREATE TABLE guesses {
+	id         INTEGER PRIMARY KEY,
+	record_id  INTEGER REFERENCES vote_records(id) ON DELETE CASCADE NOT NULL,
+	artist_id  INTEGER REFERENCES artists(id) ON DELETE CASCADE NOT NULL,
+	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
+	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE
+}
 
 -- ===========================================================================
 -- Scoreboard stuff
