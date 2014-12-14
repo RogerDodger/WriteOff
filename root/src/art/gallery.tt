@@ -10,7 +10,7 @@
 			title="[% image.hovertext | html %]">
 
 		<figcaption>
-			<a class="link em" href="[% image.path %]">
+			<a class="link em" href="[% c.uri_for_action('/art/view', [ image.id_uri ]) %]">
 				[% image.title | html %]
 			</a>
 
