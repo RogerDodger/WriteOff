@@ -149,6 +149,7 @@ CREATE TABLE images (
 	title         TEXT COLLATE NOCASE NOT NULL,
 	artist        TEXT DEFAULT 'Anonymous' COLLATE NOCASE NOT NULL,
 	website       TEXT,
+	version       TEXT,
 	hovertext     TEXT,
 	contents      BLOB NOT NULL,
 	thumb         BLOB NOT NULL,
