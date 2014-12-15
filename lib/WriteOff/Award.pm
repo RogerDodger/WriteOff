@@ -8,7 +8,7 @@ use Exporter;
 my @awards;
 
 BEGIN {
-	@awards = qw/GOLD SILVER BRONZE CONFETTI SPOON RIBBON/;
+	@awards = qw/GOLD SILVER BRONZE CONFETTI SPOON RIBBON SLEUTH/;
 
 	my $i = 0;
 	for my $award (@awards) {
@@ -33,6 +33,7 @@ my %attr = (
 	_CONFETTI() => [ 'confetti', 'Most controversial' ],
 	_SPOON()    => [ 'spoon',    'Wooden spoon' ],
 	_RIBBON()   => [ 'ribbon',   'Participation ribbon' ],
+	_SLEUTH()   => [ 'sleuth',   'Best guesser' ],
 );
 
 sub new {
@@ -76,7 +77,9 @@ sub src {
 *type = \&name;
 
 sub sort_awards {
-	state $order = [ _GOLD, _SILVER, _BRONZE, _CONFETTI, _SPOON, _RIBBON ];
+	state $order = [
+		_GOLD, _SILVER, _BRONZE, _SLEUTH, _CONFETTI, _SPOON, _RIBBON
+	];
 
 	my %bin;
 	for my $award (@_) {

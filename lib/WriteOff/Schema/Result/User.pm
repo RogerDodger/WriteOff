@@ -142,6 +142,28 @@ sub last_artist {
 	return $last_image ? $last_image->artist->name : undef;
 }
 
+sub primary_artist {
+	my $self = shift;
+
+	my %freq;
+	$freq{$_->artist_id}++ for $self->storys, $self->images;
+
+	if (!%freq) {
+		# No artist, make one
+		return $self->create_related('artists', {
+			name => $self->username,
+			score => 0,
+		});
+	}
+	else {
+		my $max = [0, 0];
+		while (my ($aid, $count) = each %freq) {
+			$max = [$aid, $count] if $count > $max->[1];
+		}
+		return $self->result_source->schema->resultset('Artist')->find($max->[0]);
+	}
+}
+
 sub is_admin {
 	my $self = shift;
 

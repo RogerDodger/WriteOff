@@ -194,6 +194,17 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 		],
 	});
 
+	my @gcond = ({
+		round => 'guess',
+	}, {
+		prefetch => 'artist',
+		rows => 5,
+		order_by => [
+			{ -desc => 'me.score' },
+			{ -asc => 'artist.name' },
+		],
+	});
+
 	$c->stash(
 		j_records => $c->stash->{event}->vote_records->filled->judge_records,
 		images => {
@@ -204,6 +215,11 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 			leaderboard   => $event->storys->search_rs(@lcond),
 			controversial => $event->storys->search_rs(@ccond),
 		},
+		guesses => {
+			fic => $event->vote_records->fic->search_rs(@gcond),
+			art => $event->vote_records->art->search_rs(@gcond),
+		},
+		sleuth => SLEUTH(),
 	);
 
 	push $c->stash->{title}, 'Results';

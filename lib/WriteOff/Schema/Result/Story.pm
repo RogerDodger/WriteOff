@@ -79,6 +79,13 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->has_many(
+	"guesses",
+	"WriteOff::Schema::Result::Guess",
+	{ "foreign.story_id" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
+__PACKAGE__->has_many(
 	"image_stories",
 	"WriteOff::Schema::Result::ImageStory",
 	{ "foreign.story_id" => "self.id" },

@@ -17,6 +17,7 @@
 		PROCESS Items
 			leaderboard   = storys.leaderboard
 			controversial = storys.controversial
+			guesses       = guesses.fic
 			view          = c.controller('Fic').action_for('view')
 			heading       = 'Stories'
 	-%]
@@ -28,6 +29,7 @@
 		PROCESS Items
 			leaderboard   = images.leaderboard
 			controversial = images.controversial
+			guesses       = guesses.art
 			view          = c.controller('Art').action_for('view')
 			heading       = 'Artworks'
 	-%]
@@ -53,6 +55,30 @@
 [%- END #FOREACH %]
 </table>
 [%- END #IF %]
+
+[% IF event.guessing %]
+<h3>Best Guessers</h3>
+
+<table class="solid">
+	<tr class="heading">
+		<td>Guesser</td>
+		<td>Guessed</td>
+	</tr>
+	[%- FOREACH record IN guesses.all %]
+	<tr class="[% loop.parity %]">
+		<td class="nowrap">[% record.artist.name | html %]</td>
+
+		<td>
+		[%- FOREACH guess IN record.guesses_rs.correct %]
+			<a class="link" href="[% c.uri_for(view, [ guess.item.id_uri ]) %]">
+				<em>[% guess.item.title | html %]</em>[%
+			%]</a>[% ',' IF !loop.last %]
+		[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+</table>
+[% END #IF %]
 
 [%- END #BLOCK %]
 

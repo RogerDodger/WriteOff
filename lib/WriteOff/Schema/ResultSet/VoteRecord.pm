@@ -2,15 +2,12 @@ package WriteOff::Schema::ResultSet::VoteRecord;
 
 use strict;
 use base 'WriteOff::Schema::ResultSet';
+use WriteOff::Award qw/:awards/;
 
 sub filled {
 	my $self = shift;
 
 	return $self->search({ filled => 1 });
-}
-
-sub guess {
-	return shift->search({ round => 'guess' });
 }
 
 sub unfilled {
@@ -46,8 +43,44 @@ sub judge_records {
 	});
 }
 
+sub process_guesses {
+	my $self = shift;
+	my $best = 0;
+
+	while (my $row = $self->next) {
+		my $correct = 0;
+		for my $guess ($row->guesses->search({}, { prefetch => 'artist' })) {
+			$correct += $guess->artist->id == $guess->item->artist_id;
+		}
+
+		$row->update({
+			artist_id => $row->user->primary_artist->id,
+			score     => $correct,
+		});
+
+		$best = $correct if $correct > $best;
+	}
+
+	my $row = $self->first;
+	my %aa_row = (
+		event_id => $row->event_id,
+		type     => $row->type,
+		award_id => SLEUTH()->id,
+	);
+
+	while (my $row = $self->next) {
+		next unless $row->score == $best;
+
+		$row->artist->create_related('artist_awards', \%aa_row);
+	}
+}
+
 sub round {
 	return shift->search_rs({ round => shift });
+}
+
+sub guess {
+	return shift->round('guess');
 }
 
 sub prelim {

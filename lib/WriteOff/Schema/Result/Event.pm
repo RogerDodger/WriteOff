@@ -28,6 +28,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", default_value => 1, is_nullable => 0 },
 	"custom_rules",
 	{ data_type => "text", is_nullable => 1 },
+	"guessing",
+	{ data_type => "bit", default_value => 1, is_nullable => 0 },
 	"art",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"art_end",
@@ -593,6 +595,13 @@ sub tally {
 		$self->images->recalc_public_stats;
 		$self->images->recalc_rank;
 		$artists->deal_awards_and_scores($self->images_rs);
+	}
+
+	if ($self->guessing) {
+		$self->vote_records->guess->fic->process_guesses;
+		if ($self->art) {
+			$self->vote_records->guess->art->process_guesses;
+		}
 	}
 
 	$artists->recalculate_scores;

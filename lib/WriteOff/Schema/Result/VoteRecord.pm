@@ -14,6 +14,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"user_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+	"artist_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"ip",
 	{ data_type => "text", is_nullable => 1 },
 	"round",
@@ -22,6 +24,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", default_value => "unknown", is_nullable => 0 },
 	"filled",
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
+	"score",
+	{ data_type => "integer", is_nullable => 1 },
 	"mean",
 	{ data_type => "real", is_nullable => 1 },
 	"stdev",
@@ -33,6 +37,18 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key("id");
+
+__PACKAGE__->belongs_to(
+	"artist",
+	"WriteOff::Schema::Result::Artist",
+	{ id => "artist_id" },
+	{
+		is_deferrable => 1,
+		join_type     => "LEFT",
+		on_delete     => "SET NULL",
+		on_update     => "CASCADE",
+	},
+);
 
 __PACKAGE__->belongs_to(
 	"event",

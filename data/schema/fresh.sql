@@ -69,6 +69,7 @@ CREATE TABLE events (
 	wc_max          INTEGER NOT NULL,
 	rule_set        INTEGER DEFAULT 1 NOT NULL,
 	custom_rules    TEXT,
+	guessing        BIT DEFAULT 1 NOT NULL,
 	art             TIMESTAMP,
 	art_end         TIMESTAMP,
 	fic             TIMESTAMP,
@@ -172,10 +173,14 @@ CREATE TABLE vote_records (
 	id        INTEGER PRIMARY KEY,
 	event_id  INTEGER REFERENCES events(id) ON DELETE CASCADE NOT NULL,
 	user_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
+	artist_id INTEGER REFERENCES artists(id) ON DELETE SET NULL,
 	ip        TEXT,
 	"round"   TEXT NOT NULL,
 	"type"    TEXT NOT NULL,
 	filled    BIT NOT NULL DEFAULT 0,
+	score     INTEGER,
+	mean      REAL,
+	stdev     REAL,
 	created   TIMESTAMP,
 	updated   TIMESTAMP
 );

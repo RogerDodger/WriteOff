@@ -33,3 +33,9 @@
 </p>
 
 [%- END %]
+
+[%- IF story.event.tallied %]
+<h3>Suspected authors</h3>
+
+<p>[% story.guesses_rs.tally %]</p>
+[%- END %]
