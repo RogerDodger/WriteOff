@@ -34,7 +34,7 @@
 
 [%- END %]
 
-[%- IF story.event.tallied %]
+[%- IF story.event.tallied && story.event.guessing %]
 <h3>Suspected authors</h3>
 
 <p>[% story.guesses_rs.tally %]</p>
