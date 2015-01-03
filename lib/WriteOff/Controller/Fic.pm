@@ -2,6 +2,7 @@ package WriteOff::Controller::Fic;
 use Moose;
 use namespace::autoclean;
 use WriteOff::Util 'wordcount';
+use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -65,7 +66,7 @@ sub form :Private {
 		}
 	});
 
-	my $virtual_artist_rs = $c->model('DB::Virtual::Artist')->search({
+	my $artist_rs = $c->model('DB::Artist')->search({
 		name    => { '!=' => 'Anonymous' },
 		# Must allow organisers to edit properly
 		user_id => { '!=' => eval { $c->stash->{story}->user_id } || $c->user_id }
@@ -75,11 +76,13 @@ sub form :Private {
 		my @ids = $c->stash->{event}->images->get_column('id')->all;
 		my @params = $c->req->param('image_id') or return 0;
 
-		# Make sure each image_id is unique and in the set of valid image_ids
 		my %uniq;
-		for( @params ) {
-			return 0 unless $_ ~~ \@ids;
-			return 0 if exists $uniq{$_};
+		for my $id (@params) {
+			# Param must be in the set ot valid image_ids
+			return 0 unless looks_like_number($id) && grep { $id == $_ } @ids;
+
+			# Param must be unique
+			return 0 if $uniq{$_};
 			$uniq{$_} = 1;
 		}
 	}
@@ -94,7 +97,7 @@ sub form :Private {
 		author => [
 			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
 			'TRIM_COLLAPSE',
-			[ 'DBIC_UNIQUE', $virtual_artist_rs, 'name' ],
+			[ 'DBIC_UNIQUE', $artist_rs, 'name' ],
 		],
 		image_id => [ $c->stash->{event}->art ? 'NOT_BLANK' : () ],
 		website => [ 'HTTP_URL' ],
@@ -128,24 +131,27 @@ sub do_submit :Private {
 
 	$c->forward('form') or $c->detach('/error', [ 'Bad input' ]);
 
-	if(!$c->form->has_error) {
+	if (!$c->form->has_error) {
+		my $author = $c->form->valid('author') // 'Anonymous';
+		my $artist = $c->model('DB::Artist')->find({ name => $author })
+			// $c->user->create_related(artists => { name => $author });
 
 		my $story = $c->model('DB::Story')->create({
 			event_id  => $c->stash->{event}->id,
 			user_id   => $c->user->id,
+			artist_id => $artist->id,
 			ip        => $c->req->address,
 			title     => $c->form->valid('title'),
-			author    => $c->form->valid('author') || 'Anonymous',
 			website   => $c->form->valid('website') || undef,
 			contents  => $c->form->valid('story'),
 			wordcount => $c->form->valid('wordcount'),
 			seed      => rand,
 		});
 
-		if( $c->stash->{event}->art ) {
-			for my $image_id ( $c->req->param('image_id') ) {
-				my $image = $c->model('DB::Image')->find( $image_id );
-				$story->add_to_images( $image );
+		if ($c->stash->{event}->art) {
+			for my $id ($c->req->param('image_id')) {
+				my $image = $c->model('DB::Image')->find($id);
+				$story->add_to_images($image);
 			}
 		}
 
@@ -163,7 +169,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	$c->forward('do_edit') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
-		author   => $c->stash->{story}->author->name,
+		author   => $c->stash->{story}->artist->name,
 		title    => $c->stash->{story}->title,
 		image_id => [ $c->stash->{story}->images->get_column('id')->all ],
 		website  => $c->stash->{story}->website,
@@ -179,29 +185,34 @@ sub do_edit :Private {
 
 	$c->forward( $self->action_for('form') ) or return 0;
 
-	if( !$c->form->has_error ) {
+	if (!$c->form->has_error) {
+		my $story = $c->stash->{story};
 
 		$c->log->info( sprintf "Fic %d edited by %s, to %s by %s (%d words)",
-			$c->stash->{story}->id,
+			$story->id,
 			$c->user->get('username'),
 			$c->form->valid('title'),
 			$c->form->valid('author'),
 			$c->form->valid('wordcount'),
 		);
 
+		my $author = $c->form->valid('author') // 'Anonymous';
+		my $artist = $c->model('DB::Artist')->find({ name => $author })
+			// $story->user->create_related(artists => { name => $author });
+
 		$c->stash->{story}->update({
 			title     => $c->form->valid('title'),
-			author    => $c->form->valid('author') || 'Anonymous',
+			artist_id => $artist->id,
 			website   => $c->form->valid('website') || undef,
 			contents  => $c->form->valid('story'),
 			wordcount => $c->form->valid('wordcount'),
 		});
 
-		if( $c->stash->{event}->art ) {
+		if ($c->stash->{event}->art) {
 			$c->stash->{story}->image_stories->delete;
-			for my $image_id ( $c->req->param('image_id') ) {
-				my $image = $c->model('DB::Image')->find( $image_id );
-				$c->stash->{story}->add_to_images( $image );
+			for my $id ($c->req->param('image_id')) {
+				my $image = $c->model('DB::Image')->find($id);
+				$c->stash->{story}->add_to_images($image);
 			}
 		}
 
