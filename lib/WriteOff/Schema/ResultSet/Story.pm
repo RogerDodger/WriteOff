@@ -12,7 +12,7 @@ sub metadata {
 	return shift->search_rs(undef, {
 		columns => [
 			'id', 'user_id', 'event_id', 'ip',
-			'title', 'author', 'website', 'wordcount',
+			'title', 'artist_id', 'website', 'wordcount',
 			'candidate', 'public_score', 'public_stdev',
 			'finalist', 'private_score', 'rank', 'rank_low',
 			'seed', 'created', 'updated'
