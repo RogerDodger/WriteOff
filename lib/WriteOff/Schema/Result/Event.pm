@@ -296,7 +296,7 @@ sub ended {
 	return $row->end <= $row->now_dt;
 }
 
-BEGIN { *is_ended = \&end; }
+BEGIN { *is_ended = \&ended; }
 
 sub reset_schedules {
 	my $self = shift;
