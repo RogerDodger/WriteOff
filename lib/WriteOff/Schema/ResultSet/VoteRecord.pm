@@ -49,8 +49,8 @@ sub process_guesses {
 
 	while (my $row = $self->next) {
 		my $correct = 0;
-		for my $guess ($row->guesses->search({}, { prefetch => 'artist' })) {
-			$correct += $guess->artist->id == $guess->item->artist_id;
+		for my $guess ($row->guesses) {
+			$correct += $guess->artist_id == $guess->item->artist_id;
 		}
 
 		$row->update({

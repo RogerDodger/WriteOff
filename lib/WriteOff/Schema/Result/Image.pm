@@ -153,6 +153,8 @@ sub _compare_scores {
 	1;
 }
 
+sub avoided_detection { 0; }
+
 sub clean {
 	my $self = shift;
 

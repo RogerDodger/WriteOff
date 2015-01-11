@@ -144,23 +144,30 @@ sub last_artist {
 
 sub primary_artist {
 	my $self = shift;
+	my $artists = $self->result_source->schema->resultset('Artist');
 
 	my %freq;
 	$freq{$_->artist_id}++ for $self->storys, $self->images;
 
 	if (!%freq) {
 		# No artist, make one
-		return $self->create_related('artists', {
-			name => $self->username,
-			score => 0,
-		});
+		my $artist = $artists->find_or_new({ name => $self->username });
+
+		# Shouldn't need to do this -- create artist when user is created
+		if (!$artist->in_storage) {
+			$artist->user_id($self->id);
+			$artist->score(0);
+			$artist->insert;
+		}
+
+		return $artist;
 	}
 	else {
 		my $max = [0, 0];
 		while (my ($aid, $count) = each %freq) {
 			$max = [$aid, $count] if $count > $max->[1];
 		}
-		return $self->result_source->schema->resultset('Artist')->find($max->[0]);
+		return $artists->find($max->[0]);
 	}
 }
 

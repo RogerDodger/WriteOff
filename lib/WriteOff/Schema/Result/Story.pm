@@ -155,6 +155,12 @@ sub _compare_scores {
 	    && $left->public_score == $right->public_score;
 }
 
+sub avoided_detection {
+	my $self = shift;
+
+	return 0 == $self->guesses->search({ artist_id => $self->artist_id });
+}
+
 sub final_score {
 	return shift->public_score;
 }
