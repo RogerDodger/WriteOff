@@ -347,7 +347,7 @@ $(document).ready(function() {
 	var min = $story.data('min');
 	var max = $story.data('max');
 
-	$story.bind('keypress change', function(e) {
+	$story.bind('input change', function(e) {
 		story = this.value.trim();
 		if (story.length) {
 			wc = story.split(/\s+/).length;
