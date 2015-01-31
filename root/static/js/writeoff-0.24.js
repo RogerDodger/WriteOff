@@ -342,13 +342,19 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-	var $story = $("#story-field");
+	var $story = $("#story-field"), story;
 	var $wc = $("#wordcount"), wc;
 	var min = $story.data('min');
 	var max = $story.data('max');
 
 	$story.bind('keypress change', function(e) {
-		wc = this.value.split(/\s+/).length;
+		story = this.value.trim();
+		if (story.length) {
+			wc = story.split(/\s+/).length;
+		}
+		else {
+			wc = 0;
+		}
 		$wc.val(wc);
 	});
 
