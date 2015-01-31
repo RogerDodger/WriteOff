@@ -20,7 +20,7 @@
 				placeholder="Anonymous" />
 		</p>
 	</div>
-	
+
 	[%- IF (images = event.images_rs.metadata.seed_order.all) %]
 	<p>
 		<label>Art Title(s)<span class="required">*</span></label>
@@ -44,13 +44,9 @@
 	</p>
 	<p>
 		<label>Story<span class="required">*</span></label>
-		<textarea name="story" rows="18" cols="32" required
+		<textarea name="story" id="story-field" rows="18" cols="32" required
 			title="Word limit: [% event.wc_min _ '–' _ event.wc_max %]"
-			onchange="var wc = this.value.split(/\s+/).length;
-				this.setCustomValidity(
-					[% event.wc_min %] <= wc && wc <= [% event.wc_max %] ?
-					'' : 'Wordcount: ' + wc
-				)" ></textarea>
+			data-max="[% event.wc_max %]" data-min="[% event.wc_min %]"></textarea>
 		<span class="ps">
 			Make sure you use
 			<a class="link" href="[% c.uri_for( c.controller('Event')
@@ -58,6 +54,10 @@
 		</span>
 	</p>
 	<p>
-		<input type="submit" value="Submit"/>
+		<label>Wordcount</label>
+		<input type="text" id="wordcount" size="72" class="maxwidth" disabled>
+	</p>
+	<p>
+		<input type="submit" value="Submit">
 	</p>
 </form>

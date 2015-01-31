@@ -335,3 +335,27 @@ $(document).ready(function() {
 		})
 		.removeAttr('href');
 });
+
+//==========================================================================
+// Story form wordcount checker
+//==========================================================================
+
+
+$(document).ready(function() {
+	var $story = $("#story-field");
+	var $wc = $("#wordcount"), wc;
+	var min = $story.data('min');
+	var max = $story.data('max');
+
+	$story.bind('keypress change', function(e) {
+		wc = this.value.split(/\s+/).length;
+		$wc.val(wc);
+	});
+
+	$story.bind('change', function(e) {
+		this.setCustomValidity(
+			min >= wc ? 'Too few words' :
+			max <= wc ? 'Too many words' : ''
+		);
+	});
+});
