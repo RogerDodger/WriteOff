@@ -26,6 +26,7 @@ Detaches to index if the request is POST with a differing origin.
 
 sub auto :Private {
 	my ( $self, $c ) = @_;
+
 	$c->stash(
 		now        => WriteOff::DateTime->now,
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),

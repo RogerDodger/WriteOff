@@ -38,9 +38,11 @@
 [%- IF event.fic_gallery_opened -%]
 	[%- i = 0 %]
 
-	[%- PROCESS story_table  storys = candidates -%]
+	[%- IF candidates.count %]
+		[%- PROCESS story_table  storys = candidates -%]
+	[%- END %]
 
-	[%- IF event.prelim && !event.prelim_votes_allowed %]
+	[%- IF noncandidates.count %]
 		[%- PROCESS story_table  storys = noncandidates -%]
 	[%- END -%]
 

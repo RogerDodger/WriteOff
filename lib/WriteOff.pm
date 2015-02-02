@@ -166,11 +166,18 @@ __PACKAGE__->config(
 	},
 	elo_base => 1500,
 	prompts_per_user => 5,
-	prelim_distr_size => 6,
 	judge_distr_size => 5,
 	interim => 60, #minutes
 	use_google_analytics => 1,
 	read_only => 0,
+
+	# See FAQ for explanation of these constants
+	work => {
+		rate => 200,
+		offset => 11.275,
+		threshold => 511.875,
+		prelim => 2/5,
+	},
 
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,

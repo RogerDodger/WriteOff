@@ -323,11 +323,35 @@ sub reset_schedules {
 	}
 }
 
+sub _prelim_params {
+	my ($self, $work) = @_;
+
+	# Order by user_id so that initial seeding is faster
+	my @storys = $self->storys->search(undef, {
+		select       => [ 'id', 'wordcount', 'user_id' ],
+		order_by     => 'user_id',
+		result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+	})->all;
+
+	my $w = 0;
+	for my $story (@storys) {
+		$w += $work->{offset} + $story->{wordcount} / $work->{rate};
+	}
+
+	my $x_len = int(0.5 +
+		($work->{threshold} * $work->{prelim}) /
+		($w / @storys)
+	);
+
+	return ($w, $x_len, @storys);
+}
+
 sub new_prelim_record_for {
-	my $self   = shift;
+	my ($self, $user, $work) = @_;
 	my $schema = $self->result_source->schema;
-	my $user   = $schema->resultset('User')->resolve(shift) or return 0;
-	my $size   = shift // 6;
+	$user = $schema->resultset('User')->resolve($user) or return 0;
+
+	my (undef, $size) = $self->_prelim_params($work);
 
 	my $voted_storys = $schema->resultset('Vote')->search({
 		"record.user_id"  => $user->id,
@@ -389,25 +413,16 @@ judges' wordcounts is minimalised.
 =cut
 
 sub prelim_distr {
-	my $self = shift;
-	my $x_len = shift // 6;
-	my $y_len = $self->storys->count;
+	my ($self, $work) = @_;
 
-	# Order by user_id so that initial seeding is faster
-	my @storys = $self->storys->search(undef, {
-		select       => [ 'id', 'wordcount', 'user_id' ],
-		order_by     => 'user_id',
-		result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-	})->all;
+	my ($w, $x_len, @storys) = $self->_prelim_params($work);
+	my $y_len = @storys;
 
 	my %author_count; $author_count{$_}++ for map { $_->{user_id} } @storys;
-	my $mode_count = List::Util::max values %author_count;
+	my $ac_mode = List::Util::max values %author_count;
 
-	# No point doing prelim round with so few stories
-	#
-	# Also, the algo will loop forever trying to find a valid cell to swap
-	# with if `$x_len >= $y_len - $mode_count`
-	if( $x_len >= $y_len - $mode_count ) {
+	# If there aren't many entries, skip the prelim round
+	if ($w < $work->{threshold} * 1.5 || $x_len >= $y_len - $ac_mode) {
 		$self->nuke_prelim_round;
 		return 0;
 	}
@@ -416,22 +431,27 @@ sub prelim_distr {
 	my @system = map { [ $_ ] } @storys;
 
 	# Seed initial system.
-	for( my $col = 0; $col < $x_len; $col++ ) {
-		for( my $i = 0; $i < $y_len; $i++ ) {
-			# Shift up by $mode_count so that judges are not given their
+	for my $col (0..$x_len-1) {
+		for my $i (0..$y_len-1) {
+			# Shift up by $ac_mode so that judges are not given their
 			# own stories, and by $col so that there are no dupes in any set
-			push $system[$i], $storys[ ($i + $mode_count + $col) % $y_len ];
+			push $system[$i], $storys[ ($i + $ac_mode + $col) % $y_len ];
 		}
 	}
 
 	my $check_system_constraints = sub {
 		for my $row ( @system ) {
-			# Judges cannot have their own stories
-			return 0 if $row->[0]->{user_id} ~~ [ map { $_->{user_id} } @$row[1 .. $x_len] ];
+			my %uniq;
+			for my $cell (@$row[1..$x_len]) {
+				# Judges cannot have their own stories
+				if ($cell->{user_id} == $row->[0]->{user_id}) {
+					return 0;
+				}
 
-			# No dupes
-			my %story_count; $story_count{$_}++ for map { $_->{id} } @$row;
-			return 0 unless List::Util::max( values %story_count ) == 1;
+				# No dupes
+				return 0 if exists $uniq{$cell->{id}};
+				$uniq{$cell->{id}} = 1;
+			}
 		}
 		1;
 	};

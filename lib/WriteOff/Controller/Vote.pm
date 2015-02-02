@@ -34,7 +34,7 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 		if ($c->req->method eq 'POST' && $e->prelim_votes_allowed) {
 			if (!$c->stash->{records}->count) {
 				my $err = $e->new_prelim_record_for(
-					$c->user, $c->config->{prelim_distr_size}
+					$c->user, $c->config->{work},
 				);
 
 				$c->stash->{error_msg} = $err if $err;

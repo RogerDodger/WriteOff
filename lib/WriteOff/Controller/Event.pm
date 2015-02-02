@@ -424,7 +424,7 @@ sub prelim_distr :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 
-	$e->prelim_distr( $c->config->{prelim_distr_size} );
+	$e->prelim_distr($c->config->{work});
 }
 
 sub public_distr :Private {
