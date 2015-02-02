@@ -360,8 +360,8 @@ $(document).ready(function() {
 
 	$story.bind('change', function(e) {
 		this.setCustomValidity(
-			min >= wc ? 'Too few words' :
-			max <= wc ? 'Too many words' : ''
+			min > wc ? 'Too few words' :
+			max < wc ? 'Too many words' : ''
 		);
 	});
 });
