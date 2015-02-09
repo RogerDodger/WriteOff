@@ -37,27 +37,18 @@ sub gallery {
 }
 
 sub recalc_candidates {
-	my $self = shift;
+	my ($self, $work) = @_;
 
-	$self->update({
-		candidate => \q{
-				(SELECT COUNT(prelim) FROM events e WHERE e.id = event_id) = 0
-			OR
-				(SELECT COUNT(*) FROM vote_records r
-					WHERE r.event_id = storys.event_id
-					AND round = 'prelim'
-					AND type = 'fic'
-					AND filled = 1) >=
-				(SELECT COUNT(*) FROM storys inn
-					WHERE storys.user_id = inn.user_id
-					AND storys.event_id = inn.event_id)
-			AND
-				(SELECT SUM(v.value) FROM votes v, vote_records r
-					WHERE v.record_id = r.id
-					AND r.round = 'prelim'
-					AND v.story_id = storys.id) >= 0
-		},
-	});
+	my $w = 0;
+	my $storys = $self->with_prelim_stats->order_by({ -desc => 'prelim_score' });
+	for my $story ($storys->all) {
+		next if $story->author_vote_count < $story->author_story_count;
+
+		$w += $work->{offset} + $story->wordcount / $work->{rate};
+		$story->update({ candidate => 1 });
+
+		last if $w >= $work->{threshold};
+	}
 }
 
 sub recalc_private_stats {

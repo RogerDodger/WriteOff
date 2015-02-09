@@ -432,7 +432,7 @@ sub public_distr :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 
-	$e->storys->recalc_candidates;
+	$e->storys->recalc_candidates($c->config->{work});
 }
 
 sub judge_distr :Private {

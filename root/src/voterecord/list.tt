@@ -3,10 +3,6 @@
 		<th>Event</th>
 		<th>[% single && record.round == 'private' ? 'Judge' : 'User' %]</th>
 
-		[%- IF c.check_user_roles('admin') %]
-		<th>IP Address</th>
-		[%- END %]
-
 		<th>Round</th>
 		<th>Type</th>
 		<th>Count</th>
@@ -35,10 +31,6 @@
 		</td>
 		[%- ELSE %]
 		<td>Guest</td>
-		[%- END %]
-
-		[%- IF c.check_user_roles('admin') %]
-		<td class="max-75" title="[% record.ip %]">[% record.ip %]</td>
 		[%- END %]
 
 		<td class="center">[% record.round.ucfirst %]</td>
