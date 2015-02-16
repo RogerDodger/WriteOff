@@ -606,7 +606,6 @@ sub tally {
 	# Apply decay to older events' scores;
 	$scores->decay;
 
-	$self->storys->recalc_prelim_stats;
 	if ($self->public) {
 		$self->storys->recalc_public_stats;
 	}
