@@ -189,7 +189,8 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 	}, {
 		rows => 5,
 		order_by => [
-			{ -desc => 'public_stdev' },
+			{ -desc => 'controversial' },
+			# { -desc => 'public_stdev' },
 			{ -asc  => 'title' },
 		],
 	});

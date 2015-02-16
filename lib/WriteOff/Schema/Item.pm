@@ -10,9 +10,10 @@ use base 'WriteOff::Schema::ResultSet';
 
 sub recalc_public_stats {
 	my $self = shift;
+
 	my $votes = $self->result_source->schema->resultset('Vote');
 
-	# Foo::Bar::Baz -> baz
+	# Foo::Bar::Baz -> Baz
 	my $class = (lc ref $self) =~ s/.*:://r;
 
 	my $public_values = $votes->public->search(
@@ -23,16 +24,13 @@ sub recalc_public_stats {
 		{
 			alias => 'inn',
 			join => 'record',
-		},
+		}
 	)->get_column('value');
 
 	$self->update({
 		public_score => $public_values->func_rs('avg')->as_query,
 		public_stdev => $public_values->func_rs('stdev')->as_query,
 	});
-
-	# Ensure non-null public scores
-	$self->search({ public_score => undef })->update({ public_score => 0 });
 }
 
 sub recalc_rank {

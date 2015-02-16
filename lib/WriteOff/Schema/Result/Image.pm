@@ -166,6 +166,8 @@ sub clean {
 	}
 }
 
+BEGIN { *controversial = \&public_stdev; }
+
 sub is_manipulable_by {
 	my $self = shift;
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)

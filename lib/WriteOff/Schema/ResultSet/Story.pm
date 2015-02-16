@@ -21,7 +21,7 @@ sub metadata {
 }
 
 sub order_by_score {
-	return shift->order_by({ -desc => [ qw/private_score public_score/ ]});
+	return shift->order_by({ -desc => [ qw/private_score public_score prelim_score/ ]});
 }
 
 sub candidates {
@@ -39,9 +39,11 @@ sub gallery {
 sub recalc_candidates {
 	my ($self, $work) = @_;
 
+	$self->recalc_prelim_stats;
+
 	my $w = 0;
-	my $storys = $self->with_prelim_stats->order_by({ -desc => 'prelim_score' });
-	for my $story ($storys->all) {
+	for my $story ($self->order_by({ -desc => 'prelim_score' })->all) {
+		# TODO: change this to checking an assoc. prelim record's fillled status
 		next if $story->author_vote_count < $story->author_story_count;
 
 		$w += $work->{offset} + $story->wordcount / $work->{rate};
@@ -49,6 +51,54 @@ sub recalc_candidates {
 
 		last if $w >= $work->{threshold};
 	}
+}
+
+sub recalc_controversial {
+	my $self = shift;
+
+	my $pre_min = $self->get_column('prelim_stdev')->min;
+	my $pre_max = $self->get_column('prelim_stdev')->max;
+
+	my $pub_min = $self->get_column('public_stdev')->min;
+	my $pub_max = $self->get_column('public_stdev')->max;
+
+	if (defined $pre_min) {
+		$self->candidates->update({
+			controversial => \qq{
+				(public_stdev - $pub_min)/($pub_max - $pub_min)/2 +
+				(prelim_stdev - $pre_min)/($pre_max - $pre_min)/2
+			}
+		});
+
+		$self->noncandidates->update({
+			controversial => \qq{
+				(prelim_stdev - $pre_min)/($pre_max - $pre_min)
+			}
+		})
+	}
+	else {
+		$self->update({
+			controversial => \qq{
+				(public_stdev - $pub_min)/($pub_max - $pub_min)
+			}
+		})
+	}
+}
+
+sub recalc_prelim_stats {
+	my $self = shift;
+
+	my $votes = $self->result_source->schema->resultset('Vote');
+
+	my $prelim_values = $votes->prelim->search(
+		{ story_id => { '=' => { -ident => 'storys.id' } } },
+		{ alias => 'inn' }
+	)->get_column('value');
+
+	$self->update({
+		prelim_score => $prelim_values->func_rs('sum')->as_query,
+		prelim_stdev => $prelim_values->func_rs('stdev')->as_query,
+	})
 }
 
 sub recalc_private_stats {

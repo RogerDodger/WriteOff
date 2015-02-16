@@ -106,6 +106,8 @@ sub tally {
 		exit(1);
 	}
 
+	$e->storys->recalc_prelim_stats;
+
 	$e->tally;
 }
 

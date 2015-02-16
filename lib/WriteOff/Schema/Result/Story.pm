@@ -6,7 +6,7 @@ use warnings;
 use base "WriteOff::Schema::Result";
 
 use overload (
-	"==" => '_compare_scores',
+	"<=>" => \&_compare_scores,
 	fallback => 1,
 );
 
@@ -39,12 +39,18 @@ __PACKAGE__->add_columns(
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 	"candidate",
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
+	"prelim_score",
+	{ data_type => "integer", is_nullable => 1 },
+	"prelim_stdev",
+	{ data_type => "real", is_nullable => 1 },
 	"public_score",
-	{ data_type => "real", is_nullable => 0 },
+	{ data_type => "real", is_nullable => 1 },
 	"public_stdev",
-	{ data_type => "real", is_nullable => 0 },
+	{ data_type => "real", is_nullable => 1 },
 	"private_score",
-	{ data_type => "integer", is_nullable => 0 },
+	{ data_type => "integer", is_nullable => 1 },
+	"controversial",
+	{ data_type => "real", is_nullable => 1 },
 	"rank",
 	{ data_type => "integer", is_nullable => 1 },
 	"rank_low",
@@ -149,10 +155,20 @@ sub stdev {
 sub _compare_scores {
 	my ($left, $right) = @_;
 
-	no warnings 'uninitialized';
+	for my $round (qw/private public prelim/) {
+		my $meth = "${round}_score";
+		if (defined $left->$meth && defined $right->$meth) {
+			return $left->$meth <=> $right->$meth;
+		}
+		elsif (defined $left->$meth) {
+			return 1;
+		}
+		elsif (defined $right->$meth) {
+			return -1;
+		}
+	}
 
-	return $left->private_score == $right->private_score
-	    && $left->public_score == $right->public_score;
+	0;
 }
 
 sub avoided_detection {

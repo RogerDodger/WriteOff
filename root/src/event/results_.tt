@@ -51,7 +51,7 @@
 
 <table class="items">
 [%- FOREACH item IN controversial.all %]
-	[%- INCLUDE Item  score = item.public_stdev -%]
+	[%- INCLUDE Item  score = item.controversial -%]
 [%- END #FOREACH %]
 </table>
 [%- END #IF %]

@@ -606,8 +606,18 @@ sub tally {
 	# Apply decay to older events' scores;
 	$scores->decay;
 
-	$self->storys->recalc_public_stats;
-	$self->storys->recalc_private_stats;
+	$self->storys->recalc_prelim_stats;
+	if ($self->public) {
+		$self->storys->recalc_public_stats;
+	}
+
+	if ($self->private) {
+		$self->storys->recalc_private_stats;
+	}
+
+	# remove
+
+	$self->storys->recalc_controversial;
 	$self->storys->recalc_rank;
 	$artists->deal_awards_and_scores($self->storys_rs);
 
@@ -619,9 +629,6 @@ sub tally {
 
 	if ($self->guessing) {
 		$self->vote_records->guess->fic->process_guesses;
-		if ($self->art) {
-			$self->vote_records->guess->art->process_guesses;
-		}
 	}
 
 	$artists->recalculate_scores;

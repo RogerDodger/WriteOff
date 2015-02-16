@@ -15,14 +15,14 @@ sub _award {
 	my %last;
 	my @medals = ( GOLD, SILVER, BRONZE );
 
-	my $mxstdv = $rs->get_column('public_stdev')->max;
+	my $mxstdv = $rs->get_column('controversial')->max;
 	my $n = $rs->count - 1;
 
 	for my $item ($rs->rank_order->all) {
 		my $aid = $item->artist_id;
 
 		my @awards = (
-			$mxstdv && $item->public_stdev == $mxstdv ? (CONFETTI) : (),
+			$mxstdv && $item->controversial == $mxstdv ? (CONFETTI) : (),
 			$item->rank == $n ? (SPOON) : (),
 			$item->avoided_detection ? (MASK) : (),
 		);

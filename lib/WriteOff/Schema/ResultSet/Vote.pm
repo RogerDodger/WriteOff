@@ -36,4 +36,11 @@ sub private {
 	);
 }
 
+sub valid {
+	return shift->search_rs(
+		{ 'record.filled' => 1 },
+		{ join => 'record' },
+	);
+}
+
 1;
