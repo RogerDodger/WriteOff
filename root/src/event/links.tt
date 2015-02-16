@@ -25,13 +25,14 @@
 	[%- IF event.art %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Art')
 		.action_for('gallery'), [ event.id_uri ]) %]">Art gallery</a></li>
-	<li><a class="link" href="[% c.uri_for_action('/guess/art',
-		[ event.id_uri ]) %]">Artist guessing</a></li>
-	[%- END; IF event.fic %]
+	[%- END %]
+	[%- IF event.fic %]
 	<li><a class="link" href="[% c.uri_for( c.controller('Fic')
 		.action_for('gallery'), [ event.id_uri ]) %]">Fic gallery</a></li>
+		[%- IF event.guessing %]
 	<li><a class="link" href="[% c.uri_for_action('/guess/fic',
 		[ event.id_uri ]) %]">Author guessing</a></li>
+		[%- END %]
 	[%- END %]
 </ul>
 <ul>

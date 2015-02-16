@@ -132,7 +132,10 @@ sub do_submit :Private {
 	$c->forward('form') or $c->detach('/error', [ 'Bad input' ]);
 
 	if (!$c->form->has_error) {
-		my $author = $c->form->valid('author') // 'Anonymous';
+		my $author = length $c->form->valid('author')
+			? $c->form->valid('author')
+			: 'Anonymous';
+
 		my $artist = $c->model('DB::Artist')->find({ name => $author })
 			// $c->user->create_related(artists => { name => $author });
 
@@ -196,7 +199,10 @@ sub do_edit :Private {
 			$c->form->valid('wordcount'),
 		);
 
-		my $author = $c->form->valid('author') // 'Anonymous';
+		my $author = length $c->form->valid('author')
+			? $c->form->valid('author')
+			: 'Anonymous';
+
 		my $artist = $c->model('DB::Artist')->find({ name => $author })
 			// $story->user->create_related(artists => { name => $author });
 
