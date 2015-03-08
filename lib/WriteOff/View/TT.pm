@@ -35,6 +35,10 @@ our $BBCODE_CONFIG = {
 			class => 'block',
 			output => '<div style="text-align: center">%{parse}s</div>',
 		},
+		right => {
+			class => 'block',
+			outpost => '<div style="text-align: right">%{parse}s</div>',
+		},
 		quote => {
 			class => 'block',
 			output => '<blockquote>%{parse}s</blockquote>',
