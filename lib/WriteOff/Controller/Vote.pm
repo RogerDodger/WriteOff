@@ -38,7 +38,12 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 					$c->user, $c->config->{work},
 				);
 
-				$c->stash->{error_msg} = $err if $err;
+				if ($err) {
+					$c->stash->{error_msg} = $err;
+				}
+				else {
+					$c->res->redirect($c->req->url);
+				};
 			}
 			else {
 				$c->stash->{error_msg} = "You have empty records to fill in";

@@ -42,6 +42,7 @@ sub recalc_candidates {
 	$self->recalc_prelim_stats;
 
 	my $w = 0;
+	my @ids;
 	for my $story ($self->order_by({ -desc => 'prelim_score' })->all) {
 		if ($story->vote_records->count != 1) {
 			Carp::croak "Story $story->id bad record count";
@@ -50,10 +51,12 @@ sub recalc_candidates {
 		next if !$story->vote_records->single->filled;
 
 		$w += $work->{offset} + $story->wordcount / $work->{rate};
-		$story->update({ candidate => 1 });
+		push @ids, $story->id;
 
 		last if $w >= $work->{threshold};
 	}
+
+	$self->search({ id => { -in => \@ids } })->update({ candidate => 1 });
 }
 
 sub recalc_controversial {
