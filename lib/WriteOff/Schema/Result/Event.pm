@@ -538,6 +538,7 @@ sub prelim_distr {
 			user_id  => $_->[0]->{user_id},
 			round    => 'prelim',
 			type     => 'fic',
+			story_id => $_->[0]->{id},
 			votes    => [ map {
 				{ story_id => $_->{id} }
 			} @$_[ 1..$x_len ] ],

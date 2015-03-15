@@ -43,8 +43,11 @@ sub recalc_candidates {
 
 	my $w = 0;
 	for my $story ($self->order_by({ -desc => 'prelim_score' })->all) {
-		# TODO: change this to checking an assoc. prelim record's fillled status
-		next if $story->author_vote_count < $story->author_story_count;
+		if ($story->vote_records->count != 1) {
+			Carp::croak "Story $story->id bad record count";
+		}
+
+		next if !$story->vote_records->single->filled;
 
 		$w += $work->{offset} + $story->wordcount / $work->{rate};
 		$story->update({ candidate => 1 });
@@ -56,33 +59,15 @@ sub recalc_candidates {
 sub recalc_controversial {
 	my $self = shift;
 
-	my $pre_min = $self->get_column('prelim_stdev')->min;
-	my $pre_max = $self->get_column('prelim_stdev')->max;
+	my $votes = $self->result_source->schema->resultset('Vote');
 
-	my $pub_min = $self->get_column('public_stdev')->min;
-	my $pub_max = $self->get_column('public_stdev')->max;
+	my $values = $votes->search(
+		{ "inn.story_id" => { '=' => { -ident => 'storys.id' } } },
+		{ alias => 'inn' }
+	)->get_column('percentile');
 
-	if (defined $pre_min) {
-		$self->candidates->update({
-			controversial => \qq{
-				(public_stdev - $pub_min)/($pub_max - $pub_min)/2 +
-				(prelim_stdev - $pre_min)/($pre_max - $pre_min)/2
-			}
-		});
-
-		$self->noncandidates->update({
-			controversial => \qq{
-				(prelim_stdev - $pre_min)/($pre_max - $pre_min)
-			}
-		})
-	}
-	else {
-		$self->update({
-			controversial => \qq{
-				(public_stdev - $pub_min)/($pub_max - $pub_min)
-			}
-		})
-	}
+	$self->update({ controversial => $values->func_rs('stdev')->as_query });
+	$self->update({ controversial => \qq{ controversial / 10.0 } });
 }
 
 sub recalc_prelim_stats {
@@ -91,7 +76,7 @@ sub recalc_prelim_stats {
 	my $votes = $self->result_source->schema->resultset('Vote');
 
 	my $prelim_values = $votes->prelim->search(
-		{ story_id => { '=' => { -ident => 'storys.id' } } },
+		{ "inn.story_id" => { '=' => { -ident => 'storys.id' } } },
 		{ alias => 'inn' }
 	)->get_column('value');
 
@@ -106,7 +91,7 @@ sub recalc_private_stats {
 	my $votes = $self->result_source->schema->resultset('Vote');
 
 	my $private_values = $votes->private->search(
-		{ story_id => { '=' => { -ident => 'storys.id' } } },
+		{ "inn.story_id" => { '=' => { -ident => 'storys.id' } } },
 		{ alias => 'inn' }
 	)->get_column('value');
 

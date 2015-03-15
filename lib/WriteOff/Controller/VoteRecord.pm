@@ -105,10 +105,12 @@ sub fill :Chained('fetch') :PathPart('fill') :Args(0) {
 
 	$c->detach('/forbidden', [ "You do not own this record." ])
 		unless $c->stash->{record}->user_id == $c->user_id;
-	$c->detach('/error', [ "This record is already filled." ])
-		unless $c->stash->{record}->is_unfilled;
-	$c->detach('/error', [ "It is too late to fill this record." ])
+	$c->detach('/error', [ "This record can no longer be filled." ])
 		unless $c->stash->{record}->is_fillable;
+
+	$c->stash->{abstain} =
+		$c->stash->{record}->filled &&
+		!defined $c->stash->{record}->votes->next->value;
 
 	push $c->stash->{title}, 'Fill';
 	$c->stash->{template} = 'voterecord/fill.tt';
@@ -121,32 +123,37 @@ sub do_fill :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my @votes = split ";", $c->req->param('data');
-	my @candidates = $c->stash->{record}->votes->get_column('id')->all;
-
-	# Make sure each vote is accounted for in input
-	if (@votes != @candidates) {
-		return $c->detach('/error', [ 'Bad form input' ]);
+	if ($c->req->param('abstain')) {
+		$c->stash->{record}->votes->update({ value => undef });
 	}
+	else {
+		my @votes = split ";", $c->req->param('data');
+		my @candidates = $c->stash->{record}->votes->get_column('id')->all;
 
-	for (sort { $a <=> $b } @votes) {
-		if ($_ != shift @candidates) {
-			return $c->detach('/error', [ 'Bad form input' ]);
+		# Make sure each vote is accounted for in input
+		if (@votes != @candidates) {
+			$c->detach('/error', [ 'Bad form input' ]);
 		}
+
+		for (sort { $a <=> $b } @votes) {
+			if ($_ != shift @candidates) {
+				$c->detach('/error', [ 'Bad form input' ]);
+			}
+		}
+
+		for my $p (0..$#votes) {
+			my $value = $#votes - 2 * $p;
+			$c->model('DB::Vote')->find($votes[$p])->update({
+				value => $value,
+				percentile => 100*($value + $#votes)/($#votes * 2),
+			});
+		}
+
 	}
 
-	for my $p (0..$#votes) {
-		$c->model('DB::Vote')->find($votes[$p])->update({
-			value => $#votes - 2 * $p,
-		});
-	}
-
-	$c->stash->{record}->update({
-		ip     => $c->req->address,
-		filled => 1,
-	});
-
+	$c->stash->{record}->update({ filled => 1 });
 	$c->flash->{status_msg} = 'Vote successful';
+
 	$c->res->redirect( $c->uri_for(
 		$c->controller('Vote')->action_for( $c->stash->{record}->round ),
 		[ $c->stash->{event}->id_uri ]

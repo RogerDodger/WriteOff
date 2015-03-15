@@ -18,7 +18,7 @@ sub recalc_public_stats {
 
 	my $public_values = $votes->public->search(
 		{
-			"${class}_id" => { '=' => { -ident => "${class}s.id" } },
+			"inn.${class}_id" => { '=' => { -ident => "${class}s.id" } },
 			'record.filled' => 1,
 		},
 		{

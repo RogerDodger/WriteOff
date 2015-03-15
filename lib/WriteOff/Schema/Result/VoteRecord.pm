@@ -16,6 +16,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"artist_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+	"story_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"ip",
 	{ data_type => "text", is_nullable => 1 },
 	"round",
@@ -62,6 +64,18 @@ __PACKAGE__->has_many(
 	"WriteOff::Schema::Result::Guess",
 	{ "foreign.record_id" => "self.id" },
 	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
+__PACKAGE__->belongs_to(
+	"story",
+	"WriteOff::Schema::Result::Story",
+	{ id => "story_id" },
+	{
+		is_deferrable => 1,
+		join_type     => "LEFT",
+		on_delete     => "CASCADE",
+		on_update     => "CASCADE",
+	},
 );
 
 __PACKAGE__->belongs_to(

@@ -24,6 +24,9 @@
 				.action_for('view'), [ story.id_uri ]) %]">
 				[% story.title | html %]
 			</a>
+			[%- IF show_author %]
+			by [% story.artist.name | html %]
+			[%- END %]
 		</td>
 		<td style="white-space: nowrap">
 			(<a class="link" href="[% c.uri_for_action('/fic/view', [ story.id_uri ]) %].txt">txt</a>,
@@ -39,11 +42,15 @@
 	[%- i = 0 %]
 
 	[%- IF candidates.count %]
-		[%- PROCESS story_table  storys = candidates -%]
+		[%- PROCESS story_table
+			storys = candidates
+			show_author = event.ended -%]
 	[%- END %]
 
 	[%- IF noncandidates.count %]
-		[%- PROCESS story_table  storys = noncandidates -%]
+		[%- PROCESS story_table
+			storys = noncandidates
+			show_author = candidates.count -%]
 	[%- END -%]
 
 	<p class="ui-state-default center" style="padding: 7px">

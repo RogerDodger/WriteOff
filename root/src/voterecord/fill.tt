@@ -1,16 +1,19 @@
-<h1>[% record.round.ucfirst %] Record</h1>
+<h1>[% record.round.ucfirst %] Record #[% record.id %]</h1>
 
 <noscript>
-	[%- INCLUDE fragment/status_msg.tt
-		message = 'This page requires javascript be enabled.' %]
+	[%- INCLUDE fragment/error_msg.tt
+		message = 'This form requires javascript to work.' %]
 </noscript>
 
-<p>Click and drag the items to sort them into your preferred order.</p>
+[%- INCLUDE fragment/status_msg.tt  message =
+	"Click and drag the items to sort them from best (top) to worst (bottom)." %]
 
 <form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
+	<input type="hidden" name="csrf_token" value="[% csrf_token %]">
+	<input type="hidden" name="data" id="sortable-data" value="">
 
 	<ul id="sortable">
-		[%- FOREACH vote IN record.votes %]
+		[%- FOREACH vote IN record.votes_rs.order_by({ "-desc" => 'value' }).all %]
 		<li class="ui-state-default"
 			data-name="[% vote.item.title | html %]" data-id="[% vote.id %]" >
 			<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
@@ -21,16 +24,11 @@
 		</li>
 		[%- END %]
 	</ul>
-	
 	<p>
-		<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
-		<input type="hidden" name="data" id="sortable-data" value=""/>
-		<input type="text" size="30" id="sortable-confirm" style="width: 60%"
-			placeholder="Name of highest rated item"/>
+		<input type="checkbox" name="abstain"[%
+			' checked="checked"' IF abstain %]> Abstain from voting
 	</p>
 	<p>
-		<input type="submit" id="sortable-submit" value="Cast Vote"
-			disabled="disabled"/>
+		<input type="submit" value="Cast Vote">
 	</p>
-	
 </form>

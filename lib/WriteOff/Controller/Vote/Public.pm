@@ -104,7 +104,10 @@ sub do_public :Private {
 
 		if (looks_like_number($score) && $score >= 0 && 10 >= $score) {
 			$vote->insert;
-			$vote->update({ value => int $score });
+			$vote->update({
+				value => int $score,
+				percentile => 10 * $score,
+			});
 		} elsif ($vote->in_storage) {
 			$vote->delete;
 		}

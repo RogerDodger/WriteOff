@@ -118,6 +118,13 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->has_many(
+	"vote_records",
+	"WriteOff::Schema::Result::VoteRecord",
+	{ "foreign.story_id" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
+);
+
+__PACKAGE__->has_many(
 	"votes",
 	"WriteOff::Schema::Result::Vote",
 	{ "foreign.story_id" => "self.id" },

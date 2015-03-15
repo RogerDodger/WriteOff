@@ -389,7 +389,9 @@ EOF
 
 sub list :Local :Args(0) {
 	my ( $self, $c ) = @_;
-	state $allowed = [ 'username', 'hugbox_score', 'prompt_skill', 'created' ];
+	state $allowed = {
+		map { $_ => $_ } qw/username hugbox_score prompt_skill created/,
+	};
 
 	if (defined $c->req->param('term') && $c->req->param('term') eq '') {
 		return $c->res->redirect( $c->uri_for( $c->action ) );
@@ -403,7 +405,7 @@ sub list :Local :Args(0) {
 	{
 		order_by => {
 			$c->req->param('o') eq 'desc' ? '-desc' : '-asc',
-			$c->req->param('q') ~~ $allowed ? $c->req->param('q') : undef
+			$allowed->{$c->req->param('q')},
 		}
 	}
 	)->with_stats;

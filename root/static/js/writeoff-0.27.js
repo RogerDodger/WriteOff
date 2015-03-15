@@ -116,36 +116,12 @@ jQuery(document).ready(function($) {
 		}
 	});
 
-	//VoteRecord::fill form handlers
-	var sortable_update = function() {
-		if(	$(this).children(':first').attr('data-name').collate()
-			!= $('#sortable-confirm').attr('value').collate() )
-		{
-			$('#sortable-submit').button('disable');
-			$('#sortable-confirm').attr('value', '');
-		}
-		var data = '';
-		$(this).children().each( function(i) {
-			if( i != 0 ) data += ';';
-			data += $(this).attr('data-id');
-		});
-		$('#sortable-data').attr('value', data);
-	};
-	$('#sortable').sortable({
-		update: sortable_update,
-		create: sortable_update
-	});
-	$('#sortable-confirm').on('input', function() {
-		if( this.value.collate()
-			== $('#sortable').children(':first').attr('data-name').collate() ) {
-			$('#sortable-submit').button('enable');
-		}
-	});
-
 	//Dialogs
 	$('.dialog-fetcher')
 		.click( function(e) {
-			var div = $('<div class="dialog"><div class="loading"></div></div>').appendTo('body');
+			var div = $(
+				'<div class="dialog"><div class="loading"></div></div>'
+			).appendTo('body');
 
 			var pos = [ 'center', 40 ];
 
@@ -340,7 +316,6 @@ $(document).ready(function() {
 // Story form wordcount checker
 //==========================================================================
 
-
 $(document).ready(function() {
 	var $story = $("#story-field"), story;
 	var $wc = $("#wordcount"), wc;
@@ -364,4 +339,37 @@ $(document).ready(function() {
 			max < wc ? 'Too many words' : ''
 		);
 	});
+});
+
+//==========================================================================
+// VoteRecord::fill magic
+//==========================================================================
+
+$(document).ready(function() {
+	var datamunge = function() {
+		var data = '';
+		$(this).children().each( function(i) {
+			if( i != 0 ) data += ';';
+			data += $(this).attr('data-id');
+		});
+		$('#sortable-data').attr('value', data);
+	};
+
+	$('#sortable').sortable({
+		update: datamunge,
+		create: datamunge
+	});
+
+
+	var absCheck = function () {
+		if (this.checked) {
+			$('#sortable li').addClass('ui-state-disabled');
+		}
+		else {
+			$('#sortable li').removeClass('ui-state-disabled');
+		}
+	};
+
+	// Set the handler and call it with right context
+	absCheck.call($('input[name=abstain]').click(absCheck).get(0));
 });

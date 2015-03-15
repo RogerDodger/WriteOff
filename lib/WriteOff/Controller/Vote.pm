@@ -25,14 +25,15 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 
 	if ($c->user) {
 		$c->stash->{records} = $e->vote_records->search({
-			filled  => 0,
 			round   => 'prelim',
 			type    => 'fic',
 			user_id => $c->user->get('id'),
 		});
 
+		$c->stash->{requestable} = !$c->stash->{records}->unfilled->count;
+
 		if ($c->req->method eq 'POST' && $e->prelim_votes_allowed) {
-			if (!$c->stash->{records}->count) {
+			if ($c->stash->{requestable}) {
 				my $err = $e->new_prelim_record_for(
 					$c->user, $c->config->{work},
 				);

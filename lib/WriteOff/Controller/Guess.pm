@@ -5,39 +5,6 @@ use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-sub art :PathPart('guess') :Chained('/event/art') :Args(0) {
-	my ($self, $c) = @_;
-	my $e = $c->stash->{event};
-
-	if ($e->artist_guessing_allowed) {
-		my $artists_rs = $c->model('DB::Artist');
-
-		$c->stash(
-			artists => [ map { $_->artist }
-				$e->images->search({}, {
-					group_by => 'artist_id',
-					prefetch => 'artist',
-					order_by => 'artist.name',
-				})
-			],
-			candidates => $e->images->seed_order->metadata,
-		);
-
-		$c->forward('do_guess') if $c->req->method eq 'POST';
-	}
-
-	$c->stash(
-		open  => $e->art_end,
-		close => $e->end,
-		heading => 'Artist Guessing',
-		votes_allowed  => $e->artist_guessing_allowed,
-		votes_received => $e->vote_records->guess->art->count,
-	);
-
-	push $c->stash->{title}, 'Artist Guessing';
-	$c->stash->{template} = 'vote/guess.tt';
-}
-
 sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 	my ($self, $c) = @_;
 	my $e = $c->stash->{event};
@@ -45,16 +12,19 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 	if ($e->author_guessing_allowed) {
 		my $artists_rs = $c->model('DB::Artist');
 
-		$c->stash(
-			artists => [ map { $_->artist }
-				$e->storys->search({}, {
+		$c->stash->{candidates} =
+			$e->prelim_votes_allowed
+				? $e->storys->metadata->seed_order
+				: $e->storys->metadata->candidates;
+
+		$c->stash->{artists} = [
+			map { $_->artist }
+				$c->stash->{candidates}->search({}, {
 					group_by => 'artist_id',
 					prefetch => 'artist',
 					order_by => 'artist.name',
 				})
-			],
-			candidates => $e->storys->seed_order->metadata,
-		);
+		];
 
 		$c->forward('do_guess') if $c->req->method eq 'POST';
 	}

@@ -8,7 +8,6 @@ use Catalyst::Runtime 5.80;
 use Catalyst qw/
 	ConfigLoader
 	Static::Simple
-	Unicode::Encoding
 
 	Scheduler
 
@@ -30,10 +29,11 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.45.0';
+our $VERSION = 'v0.47.0';
 
 __PACKAGE__->config(
 	name => 'Write-off',
+	encoding => 'UTF-8',
 
 	DevEmail => 'cthor@cpan.org',
 

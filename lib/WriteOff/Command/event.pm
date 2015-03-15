@@ -106,9 +106,9 @@ sub tally {
 		exit(1);
 	}
 
-	$e->storys->recalc_prelim_stats;
-
-	$e->tally;
+	# $e->storys->recalc_prelim_stats;
+	$e->storys->recalc_candidates($self->config->{work});
+	# $e->tally;
 }
 
 1;
