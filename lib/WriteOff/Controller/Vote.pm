@@ -42,7 +42,7 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 					$c->stash->{error_msg} = $err;
 				}
 				else {
-					$c->res->redirect($c->req->url);
+					$c->res->redirect($c->req->uri);
 				};
 			}
 			else {
