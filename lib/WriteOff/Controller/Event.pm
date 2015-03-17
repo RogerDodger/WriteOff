@@ -184,16 +184,15 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 		],
 	});
 
-	my @ccond = ({
+	my $ccond = sub { ({
 		public_stdev => { '!=' => undef }
 	}, {
 		rows => 5,
 		order_by => [
-			{ -desc => 'controversial' },
-			# { -desc => 'public_stdev' },
+			{ -desc => shift },
 			{ -asc  => 'title' },
 		],
-	});
+	}) };
 
 	my @gcond = ({
 		round => 'guess',
@@ -210,11 +209,11 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 		j_records => $c->stash->{event}->vote_records->filled->judge_records,
 		images => {
 			leaderboard   => $event->images->search_rs(@lcond),
-			controversial => $event->images->search_rs(@ccond),
+			controversial => $event->images->search_rs($ccond->('public_stdev')),
 		},
 		storys => {
 			leaderboard   => $event->storys->search_rs(@lcond),
-			controversial => $event->storys->search_rs(@ccond),
+			controversial => $event->storys->search_rs($ccond->('controversial')),
 		},
 		guesses => {
 			fic => $event->vote_records->fic->search_rs(@gcond),
