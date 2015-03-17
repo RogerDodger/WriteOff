@@ -1,11 +1,6 @@
 WriteOff.pm TODO
 ----------------
 
-- (high) Author guessing
-  - Fix artist/author submit/edit stuff
-  - Deal mask awards out properly (note: check ribbons!)
-- (low) Box-and-whisker plot for public vote data
-- (low) Make "News" scalable (let people know when there's new news?)
-- (low) Organiser can't edit artist field after gallery is posted
+- UI redesign
 
-Last updated 15 Dec 2014
+Last updated 17 Mar 2015
