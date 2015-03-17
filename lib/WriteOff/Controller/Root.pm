@@ -27,6 +27,14 @@ Detaches to index if the request is POST with a differing origin.
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
+	if ($c->req->uri->path =~ m{^/static/(css|js)/writeoff-.+(css|js)$}) {
+		if ($1 eq $2) {
+			$c->serve_static_file("root/static/$1/writeoff.$2");
+			$c->log->abort(1);
+			return 0;
+		}
+	}
+
 	$c->stash(
 		now        => WriteOff::DateTime->now,
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
@@ -37,7 +45,6 @@ sub auto :Private {
 	);
 
 	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
-	my $quiet = $c->stash->{format} eq 'thumb' && $c->action eq 'art/view';
 
 	$c->log->info( sprintf "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ),
 		$c->req->method,
@@ -45,7 +52,7 @@ sub auto :Private {
 		( $c->user ? $c->user->get('username') : 'guest' ),
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
-	) unless $so && $quiet;
+	);
 
 	if ($c->req->method eq 'POST') {
 		$c->req->{parameters} = {} if $c->config->{read_only};
