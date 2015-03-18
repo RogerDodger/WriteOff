@@ -2,5 +2,11 @@ WriteOff.pm TODO
 ----------------
 
 - UI redesign
+- Notifications
+- Artist profiles
+- View counter
+- Cyclic gallery order
+- Change user auth internals
+- Remove cases of smartmatch in code
 
-Last updated 17 Mar 2015
+Last updated 18 Mar 2015
