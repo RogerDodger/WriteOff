@@ -13,9 +13,10 @@ sub metadata {
 		columns => [
 			'id', 'user_id', 'event_id', 'ip',
 			'title', 'artist_id', 'website', 'wordcount',
+			'prelim_score', 'prelim_stdev',
 			'candidate', 'public_score', 'public_stdev',
 			'finalist', 'private_score', 'rank', 'rank_low',
-			'seed', 'created', 'updated'
+			'controversial', 'seed', 'created', 'updated',
 		]
 	});
 }
@@ -33,7 +34,12 @@ sub noncandidates {
 }
 
 sub gallery {
-	return shift->order_by({ -desc => [qw/candidate seed/] })
+	my ($self, $offset) = @_;
+
+	shift->metadata->order_by([
+		{ -desc => 'candidate' },
+		{ -desc => \qq{ seed+$offset - floor(seed+$offset) } },
+	]);
 }
 
 sub recalc_candidates {

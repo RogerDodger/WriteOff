@@ -5,7 +5,6 @@ WriteOff.pm TODO
 - Notifications
 - Artist profiles
 - View counter
-- Cyclic gallery order
 - Change user auth internals
 - Remove cases of smartmatch in code
 

@@ -6,6 +6,7 @@ use warnings;
 use base "WriteOff::Schema::Result";
 
 use WriteOff::Util;
+use Digest::MD5 qw/md5_hex/;
 
 __PACKAGE__->load_components('PassphraseColumn');
 
@@ -213,6 +214,10 @@ sub new_password {
 	$self->update({ password => $pass });
 
 	return $pass;
+}
+
+sub offset {
+	(hex substr md5_hex(shift->id), 0, 8) / (1 << 32);
 }
 
 1;

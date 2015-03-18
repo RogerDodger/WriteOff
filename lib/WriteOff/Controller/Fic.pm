@@ -29,7 +29,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 	}
 	else {
 		$c->stash->{gallery} = [
-			$c->stash->{event}->storys->metadata->gallery->all
+			$c->stash->{event}->storys->gallery($c->user->offset)->all
 		];
 		$c->stash->{template} = 'fic/view.tt';
 	}
@@ -42,7 +42,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 		$c->forward('View::Epub');
 	}
 	else {
-		my $storys = $c->stash->{event}->storys->seed_order;
+		my $storys = $c->stash->{event}->storys->gallery($c->user->offset);
 
 		$c->stash->{candidates} = $storys->candidates;
 		$c->stash->{noncandidates} = $storys->noncandidates;
