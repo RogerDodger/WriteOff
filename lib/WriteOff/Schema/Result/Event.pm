@@ -481,19 +481,21 @@ sub prelim_distr {
 	};
 
 	my $cell_swap = sub {
-		my( $c1, $c2 ) = @_;
+		my ($c1, $c2) = @_;
 
-		my $temp = $system[ $c1->{y} ][ $c1->{x} ];
-
-		$system[ $c1->{y} ][ $c1->{x} ] = $system[ $c2->{y} ][ $c2->{x} ];
-
-		$system[ $c2->{y} ][ $c2->{x} ] = $temp;
+		(
+			$system[ $c1->{y} ][ $c1->{x} ],
+			$system[ $c2->{y} ][ $c2->{x} ]
+		) = (
+			$system[ $c2->{y} ][ $c2->{x} ],
+			$system[ $c1->{y} ][ $c1->{x} ]
+		);
 	};
 
 	# Main algorithm. Take random cells and see if swapping them would decrease
 	# the total work in the system.
 	my $current_work = $system_work->();
-	for( my $i = 0; $i <= 1000; $i++ ) {
+	TICK: for (my $i = 0; $i <= 1000; $i++) {
 
 		# Define two random cells to be swapped, with x in range (1..$x_len) so
 		# that judges are never moved
@@ -517,18 +519,24 @@ sub prelim_distr {
 		redo if $system[ $c2->{y} ][0]->{user_id} == $item1->{user_id};
 
 		# Don't put an item in a set if it's already there
-		redo if $item1->{id} ~~ [ map { $_->{id} } @{ $system[ $c2->{y} ] } ];
-		redo if $item2->{id} ~~ [ map { $_->{id} } @{ $system[ $c1->{y} ] } ];
+		for my $col (@{ $system[$c2->{y}] }) {
+			redo TICK if $col->{id} == $item1->{id};
+		}
 
-		$cell_swap->( $c1, $c2 );
+		for my $col (@{ $system[$c1->{y}] }) {
+			redo TICK if $col->{id} == $item2->{id};
+		}
+
+		# Swap cells and check if it's an improvement
+		$cell_swap->($c1, $c2);
 		my $new_work = $system_work->();
 
-		if( $new_work < $current_work ) {
+		if ($new_work < $current_work) {
 			$i = 0;
 			$current_work = $new_work;
 		}
 		else {
-			$cell_swap->( $c1, $c2 );
+			$cell_swap->($c1, $c2);
 		}
 	}
 

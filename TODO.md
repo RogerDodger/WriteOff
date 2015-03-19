@@ -7,6 +7,5 @@ WriteOff.pm TODO
 - View counter
 - Change user auth internals
 - Mask story IDs to prevent leaking author information
-- Remove cases of smartmatch in code
 
-Last updated 18 Mar 2015
+Last updated 20 Mar 2015
