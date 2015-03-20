@@ -11,8 +11,7 @@ use Catalyst qw/
 
 	Scheduler
 
-	Authentication
-	Authorization::Roles
+	+WriteOff::Plugin::Auth
 
 	Session
 	Session::Store::File

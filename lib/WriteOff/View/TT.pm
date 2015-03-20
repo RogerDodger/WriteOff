@@ -141,7 +141,7 @@ sub format_dt {
 
 	return '' unless eval { $dt->set_time_zone('UTC')->isa('DateTime') };
 
-	my $tz = $c->user ? $c->user->get('timezone') : 'UTC';
+	my $tz = $c->user->timezone || 'UTC';
 
 	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
 		$dt->rfc2822,

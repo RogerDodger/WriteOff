@@ -39,7 +39,7 @@ sub auto :Private {
 		now        => WriteOff::DateTime->now,
 		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
 		title      => [],
-		editor     => $c->user && $c->user->obj->is_admin,
+		editor     => $c->user->admin,
 		format     => scalar($c->req->param('format')) || 'html',
 		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
 	);
@@ -49,7 +49,7 @@ sub auto :Private {
 	$c->log->info( sprintf "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ),
 		$c->req->method,
 		$c->req->address,
-		( $c->user ? $c->user->get('username') : 'guest' ),
+		( $c->user ? $c->user->username : 'guest' ),
 		$c->req->uri->path,
 		$c->req->referer || 'no referer',
 	);

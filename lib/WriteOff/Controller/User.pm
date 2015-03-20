@@ -29,11 +29,13 @@ sub me :Local :Args(0) {
 sub login :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->set_authenticated( $c->find_user({
-		username => $c->req->params->{as} || $c->user->username
-	}) ) if $c->check_user_roles('admin');
+	if ($c->user->admin && exists $c->req->params->{as}) {
+		$c->user(
+			$c->model('DB::User')->find({ username => $c->req->params->{as} })
+		);
+	}
 
-	$c->res->redirect( $c->uri_for('/') ) and return 0 if $c->user;
+	$c->detach('/error', [ 'You are already logged in.' ]) if $c->user;
 
 	push $c->stash->{title}, 'Login';
 	$c->stash->{template} = 'user/login.tt';
@@ -58,12 +60,7 @@ EOF
 		$c->detach('/error');
 	}
 
-	my $success = $c->authenticate({
-		password => $c->req->params->{Password} || '',
-		username => $c->req->params->{Username} || '',
-	});
-
-	if ($success) {
+	if ($c->authenticate(@{$c->req->params}{qw/Username Password/})) {
 		if (!$c->user->verified) {
 			$c->flash->{error_msg} = 'Your account is not verified';
 			$c->logout;

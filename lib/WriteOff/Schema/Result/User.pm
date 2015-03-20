@@ -5,10 +5,13 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use WriteOff::Util;
+use Bytes::Random::Secure qw/random_bytes/;
+use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 use Digest::MD5 qw/md5_hex/;
+use MIME::Base64 2.21 qw/decode_base64/;
+use WriteOff::Util;
 
-__PACKAGE__->load_components('PassphraseColumn');
+__PACKAGE__->load_components(qw/FilterColumn/);
 
 __PACKAGE__->table("users");
 
@@ -17,17 +20,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
 	"username",
 	{ data_type => "text", is_nullable => 0 },
-	"password", {
-		data_type        => "text",
-		is_nullable      => 0,
-		passphrase       => 'rfc2307',
-		passphrase_class => 'SaltedDigest',
-		passphrase_args  => {
-			algorithm   => 'SHA-1',
-			salt_random => 20,
-		},
-		passphrase_check_method => 'check_password',
-	},
+	"password",
+	{ data_type => "text", is_nullable => 0 },
 	"email",
 	{ data_type => "text", is_nullable => 1 },
 	"timezone",
@@ -121,6 +115,43 @@ __PACKAGE__->mk_group_accessors(
 	column => 'hugbox_score',
 );
 
+__PACKAGE__->filter_column('password', {
+	filter_to_storage => sub {
+		my ($obj, $plain) = @_;
+
+		my $cost = '10';
+		my $salt = en_base64 random_bytes 16;
+		my $settings = join '$', '$2', $cost, $salt;
+
+		bcrypt($plain, $settings);
+	},
+});
+
+sub check_password {
+	my ($self, $plain) = @_;
+
+	# Old passwords on SHA-1
+	if ($self->password =~ /^\{SSHA\}(.+)$/) {
+		my $bits = decode_base64 $1;
+
+		my $salt = substr $bits, 20;
+		my $hash = substr $bits, 0, 20;
+
+		if (Digest->new('SHA1')->add($plain, $salt)->digest eq $hash) {
+			# Update the password to use bcrypt now that we have the plaintext
+			# in memory
+			$self->update({ password => $plain });
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
+	else {
+		return bcrypt($plain, $self->password) eq $self->password;
+	}
+}
+
 sub name {
 	return shift->username;
 }
@@ -177,6 +208,8 @@ sub is_admin {
 
 	return $self->roles->search({ role => 'admin' })->count;
 }
+
+BEGIN { *admin = \&is_admin; }
 
 sub find_token {
 	my ($self, $type, $value) = @_;
