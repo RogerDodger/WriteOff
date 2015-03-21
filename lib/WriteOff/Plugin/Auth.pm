@@ -34,6 +34,12 @@ sub user {
 	return Class::Null->new;
 }
 
+sub user_id {
+	my $self = shift;
+
+	return $self->user->id || -1;
+}
+
 sub logout {
 	my $c = shift;
 

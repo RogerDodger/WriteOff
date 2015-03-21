@@ -1,5 +1,5 @@
 [%- IF event.prompt_votes_allowed %]
-	[%- IF !c.user_exists %]
+	[%- IF !c.user %]
 		[%- INCLUDE fragment/status_msg.tt
 			message = 'Guests cannot vote' %]
 	[%- ELSIF user_has_voted %]

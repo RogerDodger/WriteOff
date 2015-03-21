@@ -27,7 +27,7 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 		$c->stash->{records} = $e->vote_records->search({
 			round   => 'prelim',
 			type    => 'fic',
-			user_id => $c->user->get('id'),
+			user_id => $c->user->id,
 		});
 
 		$c->stash->{requestable} = !$c->stash->{records}->unfilled->count;

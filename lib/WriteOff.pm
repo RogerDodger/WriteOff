@@ -218,12 +218,6 @@ sub mailfrom {
 	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
 }
 
-sub user_id {
-	my $self = shift;
-
-	return $self->user ? $self->user->get('id') : -1;
-}
-
 sub app_version {
 	return version->parse($VERSION)->stringify;
 }

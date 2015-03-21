@@ -37,8 +37,8 @@ sub do_add :Private {
 
 	$c->forward('form');
 
-	if( !$c->form->has_error ) {
-		my $article = $c->user->obj->create_related('news', $c->stash->{row});
+	if (!$c->form->has_error) {
+		my $article = $c->user->create_related('news', $c->stash->{row});
 
 		$c->flash->{status_msg} = 'News article created';
 		$c->res->redirect( $c->uri_for(
@@ -69,7 +69,7 @@ sub do_edit :Private {
 
 	$c->forward('form');
 
-	if(!$c->form->has_error) {
+	if (!$c->form->has_error) {
 		$c->stash->{article}->update($c->stash->{row});
 
 		$c->flash->{status_msg} = 'Edit successful';
@@ -90,7 +90,7 @@ sub form :Private {
 		body  => [ 'NOT_BLANK' ],
 	);
 
-	if(!$c->form->has_error) {
+	if (!$c->form->has_error) {
 		$c->stash->{row} = {
 			title => $c->form->valid('title'),
 			body  => $c->form->valid('body'),

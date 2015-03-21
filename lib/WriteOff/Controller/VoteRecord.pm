@@ -85,7 +85,7 @@ sub do_delete :Private {
 	$c->forward('/check_csrf_token');
 
 	$c->log->info( sprintf "VoteRecord deleted by %s: %s (%s)",
-		$c->user->get('username'),
+		$c->user->name,
 		$c->stash->{record}->ip,
 		eval { $c->stash->{record}->user->username } || 'Guest',
 	);

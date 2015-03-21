@@ -18,9 +18,9 @@ sub me :Local :Args(0) {
 
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
 
-	$c->stash->{images}  = $c->user->obj->images;
-	$c->stash->{storys}  = $c->user->obj->storys;
-	$c->stash->{prompts} = $c->user->obj->prompts;
+	$c->stash->{images}  = $c->user->images;
+	$c->stash->{storys}  = $c->user->storys;
+	$c->stash->{prompts} = $c->user->prompts;
 
 	push $c->stash->{title}, 'My Submissions';
 	$c->stash->{template} = 'user/me.tt';
@@ -154,8 +154,8 @@ sub prefs :Local :Args(0) {
 	$c->forward('do_prefs') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
-		timezone => $c->user->get('timezone'),
-		mailme   => $c->user->get('mailme') ? 'on' : '',
+		timezone => $c->user->timezone,
+		mailme   => $c->user->mailme ? 'on' : '',
 	};
 
 	push $c->stash->{title}, qw/User Preferences/;
@@ -174,7 +174,6 @@ sub do_prefs :Private {
 			timezone => $tz,
 			mailme   => $c->req->param('mailme') ? 1 : 0,
 		});
-		$c->persist_user;
 		$c->flash->{status_msg} = 'Preferences changed successfully';
 	}
 
@@ -204,7 +203,7 @@ sub do_credentials :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my $user = $c->stash->{user} = $c->user->obj->discard_changes;
+	my $user = $c->stash->{user};
 
 	if (!$user->check_password(scalar $c->req->param('password'))) {
 		$c->flash->{error_msg} = 'Current password is invalid';
@@ -215,7 +214,6 @@ sub do_credentials :Private {
 
 		if ($new1 eq $new2) {
 			$c->user->update({ password => $new1 });
-			$c->persist_user;
 			$c->flash->{status_msg} = 'Password changed successfully';
 		}
 		else {
@@ -278,7 +276,7 @@ sub do_verify :Chained('fetch') :PathPart('verify') :Args(1) {
 	}
 
 	$token->delete;
-	$c->set_authenticated( $c->find_user({ id => $c->stash->{user}->id }) );
+	$c->user($c->stash->{user});
 	$c->res->redirect('/');
 }
 

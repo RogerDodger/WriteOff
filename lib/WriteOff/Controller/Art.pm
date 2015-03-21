@@ -117,7 +117,7 @@ sub do_edit :Private {
 
 		$c->log->info( sprintf "Art %d edited by %s, to %s by %s (%.2fKB)",
 			$c->stash->{image}->id,
-			$c->user->get('username'),
+			$c->user->name,
 			$c->stash->{image}->title,
 			$c->stash->{image}->artist->name,
 			$c->stash->{image}->filesize / 1024,
@@ -213,7 +213,7 @@ sub do_delete :Private {
 	$c->forward('/check_csrf_token');
 
 	$c->log->info( sprintf "Art deleted by %s: %s (%s - %s)",
-		$c->user->get('username'),
+		$c->user->name,
 		$c->stash->{image}->title,
 		$c->stash->{image}->ip,
 		$c->stash->{image}->user->username,

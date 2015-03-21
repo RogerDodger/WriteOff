@@ -76,7 +76,7 @@ sub do_vote_faceoff :Private {
 sub do_vote_approval :Private {
 	my ( $self, $c ) = @_;
 
-	return if !$c->user_exists || $c->stash->{user_has_voted};
+	return if !$c->user || $c->stash->{user_has_voted};
 
 	my $prompts = $c->stash->{event}->prompts;
 
@@ -108,7 +108,7 @@ sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {
 
 	$c->forward('do_submit')
 		if $c->req->method eq 'POST'
-		&& $c->user_exists
+		&& $c->user
 		&& $c->stash->{event}->prompt_subs_allowed;
 
 	$c->stash->{subs_left} = $subs_left->();
@@ -179,7 +179,7 @@ sub do_delete :Private {
 	$c->forward('/check_csrf_token');
 
 	$c->log->info( sprintf "Prompt deleted by %s: %s (%s - %s)",
-		$c->user->get('username'),
+		$c->user->name,
 		$c->stash->{prompt}->contents,
 		$c->stash->{prompt}->ip,
 		$c->stash->{prompt}->user->username,

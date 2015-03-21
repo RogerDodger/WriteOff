@@ -193,7 +193,7 @@ sub do_edit :Private {
 
 		$c->log->info( sprintf "Fic %d edited by %s, to %s by %s (%d words)",
 			$story->id,
-			$c->user->get('username'),
+			$c->user->name,
 			$c->form->valid('title'),
 			$c->form->valid('author'),
 			$c->form->valid('wordcount'),
@@ -251,7 +251,7 @@ sub do_delete :Private {
 	$c->forward('/check_csrf_token');
 
 	$c->log->info( sprintf "Fic deleted by %s: %s (%s - %s)",
-		$c->user->get('username'),
+		$c->user->name,
 		$c->stash->{story}->title,
 		$c->stash->{story}->ip,
 		$c->stash->{story}->user->username,
