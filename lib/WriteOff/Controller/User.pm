@@ -203,7 +203,7 @@ sub do_credentials :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my $user = $c->stash->{user};
+	my $user = $c->stash->{user} = $c->user;
 
 	if (!$user->check_password(scalar $c->req->param('password'))) {
 		$c->flash->{error_msg} = 'Current password is invalid';
