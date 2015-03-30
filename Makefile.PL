@@ -16,7 +16,6 @@ my @dependencies = (
 	'Catalyst::View::JSON',
 	'Catalyst::View::Email::Template',
 	'Template::Plugin::Cache',
-	'Email::Sender::Transport::SMTP::TLS',
 	'Catalyst::Plugin::ConfigLoader',
 	'Catalyst::Plugin::Static::Simple',
 	'Catalyst::Plugin::Unicode::Encoding',
