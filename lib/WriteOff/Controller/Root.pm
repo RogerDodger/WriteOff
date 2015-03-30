@@ -253,7 +253,7 @@ sub assert_admin :Private {
 	my ( $self, $c, $msg ) = @_;
 
 	$msg //= 'You are not the admin.';
-	$c->detach('/forbidden', [ $msg ]) unless $c->check_user_roles('admin');
+	$c->detach('/forbidden', [ $msg ]) unless $c->user->admin;
 }
 
 =head2 check_csrf_token

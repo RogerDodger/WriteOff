@@ -43,7 +43,7 @@
 						<a href="/">Events &#9660;</a>
 						<ul>
 							<li><a href="/archive">Archive</a>
-							[%- IF c.check_user_roles('admin') %]
+							[%- IF c.user.admin %]
 							<li><a href="/event/add">Add</a>
 							[%- END %]
 						</ul>

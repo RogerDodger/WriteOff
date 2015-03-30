@@ -32,8 +32,12 @@
 	</tr>
 	[%- FOREACH user IN users.all %]
 	<tr class="[% loop.parity %]">
-		[%- IF c.check_user_roles('admin') %]
-		<td><a class="link" href="mailto:[% user.email | html %]">[% user.username %]</a></td>
+		[%- IF c.user.admin %]
+		<td>
+			<a class="link" href="mailto:[% user.email | html %]">
+				[% user.username %]
+			</a>
+		</td>
 		[%- ELSE %]
 		<td>[% user.username %]</td>
 		[%- END %]
