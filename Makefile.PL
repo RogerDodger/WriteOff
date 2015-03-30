@@ -7,11 +7,7 @@
 # Don't try and install the app into your system. I don't think it's a good
 # idea and can't guarantee things'll work if you do.
 
-BEGIN {
-	use 5.01;
-	use FindBin '$Bin';
-	chdir($Bin);
-}
+use 5.01;
 
 my @dependencies = (
 	'Catalyst::Runtime~5.90013',
