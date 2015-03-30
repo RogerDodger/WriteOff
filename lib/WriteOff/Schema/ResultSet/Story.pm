@@ -2,6 +2,7 @@ package WriteOff::Schema::ResultSet::Story;
 
 use strict;
 use base 'WriteOff::Schema::Item';
+use Scalar::Util qw/looks_like_number/;
 
 sub difficulty {
 	shift->get_column('wordcount')->func_rs('sqrt')
@@ -36,9 +37,13 @@ sub noncandidates {
 sub gallery {
 	my ($self, $offset) = @_;
 
+	my $seed = defined $offset && looks_like_number "$offset"
+		? \qq{ seed+$offset - floor(seed+$offset) }
+		: 'seed';
+
 	shift->metadata->order_by([
 		{ -desc => 'candidate' },
-		{ -desc => \qq{ seed+$offset - floor(seed+$offset) } },
+		{ -desc => $seed },
 	]);
 }
 
