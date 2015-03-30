@@ -34,6 +34,7 @@ my @dependencies = (
 	'Catalyst::Plugin::RunAfterRequest',
 	'Catalyst::TraitFor::Controller::reCAPTCHA',
 	'Catalyst::Action::RenderView',
+	'Catalyst::Model::DBIC::Schema',
 	'DBIx::Class',
 	'DBIx::Class::FilterColumn',
 	'DBIx::Class::InflateColumn::Serializer',
