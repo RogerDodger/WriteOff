@@ -1,11 +1,11 @@
 WriteOff.pm TODO
 ----------------
 
-- UI redesign
-- Notifications
-- Artist profiles
-- View counter
-- Change user auth internals
-- Mask story IDs to prevent leaking author information
+- [high] Award masks only to finalists; renege masks that don't meet this criteria
+- [high] Non auto-incrementing story IDs to prevent leaking author information
+- [med] Notifications
+- [med] Artist profiles
+- [low] UI redesign
+- [low] View counter for stories
 
-Last updated 20 Mar 2015
+Last updated 01 Apr 2015
