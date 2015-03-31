@@ -27,14 +27,14 @@ our @EXPORT_OK = ( @awards, qw/sort_awards/ );
 our %EXPORT_TAGS = ( awards => \@awards, all => \@EXPORT_OK );
 
 my %attr = (
-	_GOLD()     => [ 'gold',     'Gold medal' ],
-	_SILVER()   => [ 'silver',   'Silver medal' ],
-	_BRONZE()   => [ 'bronze',   'Bronze medal' ],
-	_CONFETTI() => [ 'confetti', 'Most controversial' ],
-	_SPOON()    => [ 'spoon',    'Wooden spoon' ],
-	_RIBBON()   => [ 'ribbon',   'Participation ribbon' ],
-	_SLEUTH()   => [ 'sleuth',   'Best guesser' ],
-	_MASK()     => [ 'mask',     'Avoided detection' ],
+	_GOLD()     => [ 'gold',     'Gold medal',   'First place'        ],
+	_SILVER()   => [ 'silver',   'Silver medal', 'Second place'       ],
+	_BRONZE()   => [ 'bronze',   'Bronze medal', 'Third place'        ],
+	_CONFETTI() => [ 'confetti', 'Confetti',     'Most controversial' ],
+	_SPOON()    => [ 'spoon',    'Wooden spoon', 'Last place'         ],
+	_RIBBON()   => [ 'ribbon',   'Ribbon',       'Consolation prize'  ],
+	_SLEUTH()   => [ 'sleuth',   'Sleuth',       'Best guesser'       ],
+	_MASK()     => [ 'mask',     'Mask',         'Avoided detection'  ],
 );
 
 sub new {
@@ -73,7 +73,9 @@ sub src {
 	return '/static/images/awards/' . shift->name . '.png';
 }
 
-*title = \&alt;
+sub title {
+	return $attr{shift->id}->[2];
+}
 
 *type = \&name;
 
