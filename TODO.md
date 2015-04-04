@@ -8,3 +8,4 @@ WriteOff.pm TODO
 - [med] Artist profiles
 - [low] UI redesign
 - [low] View counter for stories
+- [low] Provide stylometric analysis of entries for author guessing
