@@ -139,7 +139,7 @@ sub do_submit :Private {
 		my $artist = $c->model('DB::Artist')->find({ name => $author })
 			// $c->user->create_related(artists => { name => $author });
 
-		my $story = $c->model('DB::Story')->create({
+		my $story = $c->model('DB::Story')->new_result({
 			event_id  => $c->stash->{event}->id,
 			user_id   => $c->user->id,
 			artist_id => $artist->id,
@@ -150,6 +150,14 @@ sub do_submit :Private {
 			wordcount => $c->form->valid('wordcount'),
 			seed      => rand,
 		});
+
+		# Choose a random ID until it works (i.e., until it's unique)
+		while (!$story->in_storage) {
+			# TODO
+			# make max value determined by story count on event's creation
+			$story->id(int rand 10_000);
+			eval { $story->insert };
+		}
 
 		if ($c->stash->{event}->art) {
 			for my $id ($c->req->param('image_id')) {

@@ -18,9 +18,9 @@ sub me :Local :Args(0) {
 
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
 
-	$c->stash->{images}  = $c->user->images;
-	$c->stash->{storys}  = $c->user->storys;
-	$c->stash->{prompts} = $c->user->prompts;
+	$c->stash->{images}  = $c->user->images->order_by('created');
+	$c->stash->{storys}  = $c->user->storys->order_by('created');
+	$c->stash->{prompts} = $c->user->prompts->order_by('created');
 
 	push $c->stash->{title}, 'My Submissions';
 	$c->stash->{template} = 'user/me.tt';
