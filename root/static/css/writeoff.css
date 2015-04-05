@@ -155,15 +155,18 @@ a {
 a.link,
 a.link:visited,
 a.link:link,
-a.link:link:visited {
+a.link:link:visited,
+.expander.active {
 	color: brown;
 	transition: .05s all linear;
 	-moz-transition: .05s all linear;
 	-webkit-transition: .05s all linear;
 }
 a.link:hover,
-a.link:link:hover {
+a.link:link:hover,
+.expander.active:hover {
 	color: coral;
+	cursor: pointer;
 }
 a.author, a.author:visited,
 a.artist, a.artist:visited {
@@ -507,6 +510,56 @@ ul.contents li.h4 {
 }
 
 /*
+ * 1. So that the expander link only works when you hover the text
+ * 2. So that the expander is still a block
+ */
+
+.expander {
+	display: inline; /* 1 */
+	font-size: 1.1em;
+}
+
+.expander:before,
+.expander:after {
+	content: " ";
+	display: block; /* 2 */
+	height: 0.1em;
+}
+
+.expandable {
+	padding: 0 1em;
+	position: relative;
+	background: #eef;
+	border: 0.05em solid #446;
+	border-radius: 0.5em;
+	margin: 0.7em 0;
+}
+
+.expandable:after,
+.expandable:before {
+	bottom: 100%;
+	left: 1.75em;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.expandable:after {
+	border-bottom-color: #eef;
+	border-width: 0.73em;
+	margin-left: -0.73em;
+}
+
+.expandable:before {
+	border-bottom-color: #446;
+	border-width: 0.83em;
+	margin-left: -0.83em;
+}
+
+/*
  * Tables
  */
 
@@ -699,7 +752,8 @@ p.prompt {
 	margin-bottom: 1.8em;
 	text-align: justify;
 }
-.story hr {
+.story hr,
+.markup-example hr {
 	padding: 0;
 	margin: 1.2em 0;
     border: none;
@@ -709,7 +763,8 @@ p.prompt {
 	background: transparent;
     text-align: center;
 }
-.story hr:after {
+.story hr:after,
+.markup-example hr:after {
     content: "§";
 	position: relative;
 	top: -0.7em;
@@ -719,7 +774,8 @@ p.prompt {
     padding: 0 0.25em;
     background: white;
 }
-.story blockquote {
+.story blockquote,
+.markup-example blockquote {
 	padding: 1.8em;
 	margin: 0;
 	border: 1px solid gainsboro;
@@ -727,7 +783,8 @@ p.prompt {
 	box-shadow: 2px 2px 2px grey;
 }
 .story blockquote,
-.story blockquote hr:after {
+.story blockquote hr:after,
+.markup-example blockquote {
 	background: #f9f9f9;
 }
 

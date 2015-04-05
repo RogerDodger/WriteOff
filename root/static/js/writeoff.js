@@ -373,3 +373,21 @@ $(document).ready(function() {
 	// Set the handler and call it with right context
 	absCheck.call($('input[name=abstain]').click(absCheck).get(0));
 });
+
+// ===========================================================================
+// Expander
+// ===========================================================================
+
+$(document).ready(function() {
+	$('.expander').each(function() {
+		var $btn = $(this);
+		var $target = $btn.next();
+		if ($target && $target.hasClass('expandable')) {
+			$btn.addClass('active');
+			$target.addClass('hidden');
+			$btn.click(function() {
+				$target.toggleClass('hidden');
+			});
+		}
+	});
+});
