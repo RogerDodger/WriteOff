@@ -530,7 +530,7 @@ ul.contents li.h4 {
 	padding: 0 1em;
 	position: relative;
 	background: #eef;
-	border: 0.1em solid #446;
+	border: 1px solid #446;
 	border-radius: 0.5em;
 	margin: 0.7em 0;
 }
@@ -549,14 +549,14 @@ ul.contents li.h4 {
 
 .expandable:after {
 	border-bottom-color: #eef;
-	border-width: 0.73em;
-	margin-left: -0.73em;
+	border-width: 11px;
+	margin-left: -11px;
 }
 
 .expandable:before {
 	border-bottom-color: #446;
-	border-width: 0.83em;
-	margin-left: -0.83em;
+	border-width: 13px;
+	margin-left: -13px;
 }
 
 /*
