@@ -5,6 +5,7 @@ WriteOff.pm TODO
 - [med] Persistent ids for stories in range [1..n]
 - [med] Notifications
 - [med] Artist profiles
+- [med] Multiple scoreboards
 - [low] UI redesign
 - [low] View counter for stories
 - [low] Provide stylometric analysis of entries for author guessing
