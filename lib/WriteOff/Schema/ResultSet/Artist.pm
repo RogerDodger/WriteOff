@@ -70,7 +70,7 @@ sub _distr {
 	$e //= 1.6;
 
 	# simple exponential curve
-	return (($n-$i+1)/($n+2))**$e;
+	return (($n-$i)/($n+1))**$e;
 }
 
 sub _score {
