@@ -138,7 +138,7 @@
 	<p>
 		The work function of a story is defined as <code>w(s) = s/[% w.rate %] + [% w.offset %]</code>, where <i>s</i> is the story's wordcount.
 	<p>
-		These arbitrary-looking number are derived from the approximation of the average reader's reading speed as 200wpm, and the desire for approximately 15 and 35 stories to qualify for short story and minific contests respectively.
+		These arbitrary-looking numbers are derived from the approximation of the average reader's reading speed as 200wpm, and the desire for approximately 15 and 35 stories to qualify for short story and minific contests respectively.
 </div>
 
 <h3 class="expander">How many stories do I get in my assigned prelim ballot?</h3>
