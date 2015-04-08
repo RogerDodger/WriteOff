@@ -49,7 +49,7 @@
 <p>
 	Each participant is assigned a ballot of entries to read and rate.
 	Participants must fill this ballot or abstain for their entry to qualify.
-	The scores from these ballots determines which entries go through to the next voting round.
+	The scores from these ballots determine which entries go through to the next voting round.
 </p>
 
 <h4>Public voting round</h3>
@@ -161,7 +161,7 @@
 	<p>
 		For art submissions, this is always 500.
 	<p>
-		For fic submissions, this is equal to ten times the average square root of event’s story’s wordcounts.
+		For fic submissions, this is equal to ten times the average square root of the event’s story’s wordcounts.
 		For minific and short story contests, this is approximately 250 and 600 respectively.
 	<p>
 		Entries are awarded a fraction of this score based on their performance.
