@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 use Digest::MD5;
+use Image::Magick;
 use File::Spec;
 use File::Copy;
 use WriteOff::Util qw/simple_uri/;
@@ -201,7 +202,6 @@ sub path {
 }
 
 sub write {
-	require Image::Magick;
 	my ($self, $img) = @_;
 	$self->version(substr Digest::MD5->md5_hex(time . rand() . $$), -6);
 
