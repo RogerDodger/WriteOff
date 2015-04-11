@@ -178,12 +178,10 @@ sub _compare_scores {
 	0;
 }
 
-sub avoided_detection {
+sub detected {
 	my $self = shift;
 
-	return $self->candidate && $self->guesses->search({
-		artist_id => $self->artist_id
-	});
+	return $self->guesses->search({ artist_id => $self->artist_id })->count;
 }
 
 sub final_score {

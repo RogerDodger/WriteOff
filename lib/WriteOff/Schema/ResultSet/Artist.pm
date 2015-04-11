@@ -24,7 +24,7 @@ sub _award {
 		my @awards = (
 			$mxstdv && $item->controversial == $mxstdv ? (CONFETTI) : (),
 			$item->rank == $n ? (SPOON) : (),
-			$item->avoided_detection ? (MASK) : (),
+			$item->candidate && !$item->detected ? (MASK) : (),
 		);
 
 		if (!exists $artists{$aid}) {
