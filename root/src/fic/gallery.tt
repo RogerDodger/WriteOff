@@ -8,9 +8,9 @@
 		<th colspan="2">Story</th>
 		<th>Wordcount</th>
 	</tr>
-	[%- FOREACH story IN storys.all; i = i + 1 %]
+	[%- FOREACH story IN storys.all %]
 	<tr class="[% loop.parity %]">
-		<td class="center">[% i %]</td>
+		<td class="center">[% story.num %]</td>
 		[%- IF event.art %]
 		<td>
 			<a class="dialog-fetcher" title="Show related artwork(s)"
@@ -39,8 +39,6 @@
 [%- END %]
 
 [%- IF event.fic_gallery_opened -%]
-	[%- i = 0 %]
-
 	[%- IF candidates.count %]
 		[%- PROCESS story_table
 			storys = candidates

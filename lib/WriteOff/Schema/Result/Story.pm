@@ -137,6 +137,7 @@ __PACKAGE__->mk_group_accessors(
 	column => 'prelim_score',
 	column => 'author_vote_count',
 	column => 'author_story_count',
+	column => 'num',
 );
 
 sub awards {

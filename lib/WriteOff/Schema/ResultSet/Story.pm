@@ -37,14 +37,29 @@ sub noncandidates {
 sub gallery {
 	my ($self, $offset) = @_;
 
+	my $num_rs = $self->search(
+		{
+			event_id => { '=' => { -ident => 'me.event_id' }},
+			seed => { '>' => { -ident => "me.seed" } },
+		},
+		{
+			'select' => [ \'COUNT(*) + 1' ],
+			'alias' => 'subq',
+		}
+	);
+
 	my $seed = defined $offset && looks_like_number "$offset"
 		? \qq{ seed+$offset - floor(seed+$offset) }
 		: 'seed';
 
-	shift->metadata->order_by([
-		{ -desc => 'candidate' },
-		{ -desc => $seed },
-	]);
+	$self->metadata->search({}, {
+		'+select' => [ $num_rs->as_query ],
+		'+as' => [ 'num' ],
+		order_by => [
+			{ -desc => 'candidate' },
+			{ -desc => $seed },
+		],
+	});
 }
 
 sub recalc_candidates {

@@ -2,7 +2,6 @@ WriteOff.pm TODO
 ----------------
 
 - [high] Award masks only to finalists; renege masks that don't meet this criteria
-- [med] Persistent ids for stories in range [1..n]
 - [med] Notifications
 - [med] Artist profiles
 - [med] Multiple scoreboards
