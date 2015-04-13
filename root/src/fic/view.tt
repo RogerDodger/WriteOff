@@ -20,7 +20,7 @@
 		[%- prev = loop.prev || gallery.-1 %]
 	<a class="link" href="[% c.uri_for( c.action, [ prev.id_uri ]) %]">« Prev</a>
 	&nbsp;
-	<strong>[% loop.count %]</strong>
+	<strong>[% s.num %]</strong>
 	&nbsp;
 		[%- next = loop.next || gallery.0 %]
 	<a class="link" href="[% c.uri_for( c.action, [ next.id_uri ]) %]">Next »</a>
