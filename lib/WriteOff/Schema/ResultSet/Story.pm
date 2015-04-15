@@ -37,6 +37,8 @@ sub noncandidates {
 sub gallery {
 	my ($self, $offset) = @_;
 
+	$offset = 0.5 unless defined $offset && looks_like_number "$offset";
+
 	my $num_rs = $self->search(
 		{
 			event_id => { '=' => { -ident => 'me.event_id' }},
@@ -48,16 +50,17 @@ sub gallery {
 		}
 	);
 
-	my $seed = defined $offset && looks_like_number "$offset"
-		? \qq{ seed+$offset - floor(seed+$offset) }
-		: 'seed';
-
 	$self->metadata->search({}, {
 		'+select' => [ $num_rs->as_query ],
 		'+as' => [ 'num' ],
 		order_by => [
 			{ -desc => 'candidate' },
-			{ -desc => $seed },
+			{
+				-desc => \qq{
+					(CAST(seed*$offset*4294967296 AS INTEGER)
+						* 1103515245 + 12345) % 65536
+				}
+			},
 		],
 	});
 }
