@@ -77,7 +77,7 @@ EOF
 sub logout :Local :Args(0) {
 	my ( $self, $c ) = @_;
 	$c->logout;
-	$c->res->redirect( $c->uri_for('/') );
+	$c->res->redirect( $c->req->referer || $c->uri_for('/') );
 }
 
 sub register :Local :Args(0) {
