@@ -68,21 +68,27 @@ sub recalc_candidates {
 	$self->recalc_prelim_stats;
 
 	my $w = 0;
-	my @ids;
+	my @candidates;
 	for my $story ($self->order_by({ -desc => 'prelim_score' })->all) {
 		if ($story->vote_records->count != 1) {
-			Carp::croak "Story $story->id bad record count";
+			Carp::croak sprintf "Story %d bad record count", $story->id;
+		}
+
+		if ($w >= $work->{threshold}) {
+			last if $candidates[-1]->prelim_score != $story->prelim_score;
 		}
 
 		next if !$story->vote_records->single->filled;
 
 		$w += $work->{offset} + $story->wordcount / $work->{rate};
-		push @ids, $story->id;
-
-		last if $w >= $work->{threshold};
+		push @candidates, $story;
 	}
 
-	$self->search({ id => { -in => \@ids } })->update({ candidate => 1 });
+	# We want to mark as candidates simultaneously. Using a transaction does
+	# not guarantee a read does not occur intermittently, which could reveal
+	# authors unintentionally (via fic/gallery.tt).
+	$self->search({ id => { -in => [ map { $_->id } @candidates ] } })
+	     ->update({ candidate => 1 });
 }
 
 sub recalc_controversial {
@@ -110,7 +116,7 @@ sub recalc_prelim_stats {
 	)->get_column('value');
 
 	$self->update({
-		prelim_score => $prelim_values->func_rs('sum')->as_query,
+		prelim_score => $prelim_values->func_rs('avg')->as_query,
 		prelim_stdev => $prelim_values->func_rs('stdev')->as_query,
 	})
 }
