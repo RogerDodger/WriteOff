@@ -460,21 +460,11 @@ nav li:hover ul li:hover a {
 	white-space: nowrap;
 }
 
-.results {
-	display: table-cell;
-	vertical-align: top;
-}
 .results h3 {
 	margin-top: 2em;
 }
 .results .items {
 	line-height: 1.6;
-}
-.results.fic {
-	min-width: 350px;
-}
-.results.art {
-	padding-left: 1em;
 }
 
 ul.contents {

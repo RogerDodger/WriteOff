@@ -17,7 +17,7 @@ __PACKAGE__->config(
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
-	expose_methods     => [ qw/format_dt title_html/ ],
+	expose_methods     => [ qw/format_dt title_html spectrum/ ],
 	render_die         => 1,
 );
 
@@ -150,6 +150,20 @@ sub format_dt {
 			$dt->set_time_zone($tz);
 			defined $fmt ? $dt->strftime($fmt) : $dt->rfc2822;
 		};
+}
+
+sub spectrum {
+	my ($self, $c, $left, $right, $pos) = @_;
+
+	# Assuming RGB triplets;
+	my @left = map { hex $_ x 2 } split //, $left;
+	my @right = map { hex $_ x 2 } split //, $right;
+
+	my @diff = map { $right[$_] - $left[$_] } 0..2;
+
+	return join '', map {
+		sprintf "%02x", int($left[$_] + $diff[$_] * $pos)
+	} 0..2;
 }
 
 sub title_html {

@@ -1,62 +1,64 @@
-[%- IF event.private %]
+[%- TAGS {{ }} -%]
+
+{{- IF event.private }}
 <h2>Judge Rankings</h2>
 
 <ul>
-	[%- FOREACH record IN j_records.all %]
+	{{- FOREACH record IN j_records.all }}
 	<li>
-		<a class="link" href="[% c.uri_for_action('/voterecord/view', [ record.id ]) %]">
-			[% record.user.username || 'Guest' %]
+		<a class="link" href="{{ c.uri_for_action('/voterecord/view', [ record.id ]) }}">
+			{{ record.user.username || 'Guest' }}
 		</a>
 	</li>
-	[%- END #FOREACH %]
+	{{- END }}
 </ul>
-[%- END #IF %]
+{{- END }}
 
 <div class="results fic">
-	[%-
+	{{-
 		PROCESS Items
 			leaderboard   = storys.leaderboard
 			controversial = storys.controversial
 			guesses       = guesses.fic
 			view          = c.controller('Fic').action_for('view')
 			heading       = 'Stories'
-	-%]
+	-}}
 </div>
 
-[%- IF event.art %]
+{{- IF event.art }}
 <div class="results art">
-	[%-
-		PROCESS Items
-			leaderboard   = images.leaderboard
-			controversial = images.controversial
-			guesses       = guesses.art
-			view          = c.controller('Art').action_for('view')
-			heading       = 'Artworks'
-	-%]
+	{{- PROCESS Items
+		leaderboard   = images.leaderboard
+		controversial = images.controversial
+		guesses       = guesses.art
+		view          = c.controller('Art').action_for('view')
+		heading       = 'Artworks' -}}
 </div>
-[%- END #IF %]
+{{- END #IF }}
 
-[%- BLOCK Items %]
-<h2>[% heading %]</h2>
+{{- BLOCK Items }}
+<h2>{{ heading }}</h2>
 
-<table class="items">
-[%- SET count = leaderboard.count %]
-[%- FOREACH item IN leaderboard.all %]
-	[%- INCLUDE Item  score = item.public_score -%]
-[%- END #FOREACH %]
+<table class="items maxwidth">
+{{- SET count = leaderboard.count }}
+{{- FOREACH item IN leaderboard.all }}
+	{{- INCLUDE Item
+		score = item.public_score
+		votes = item.votes_rs.public.order_by({ '-desc' => 'value' }).all -}}
+{{- END #FOREACH }}
 </table>
 
-[%- IF controversial.count %]
-<h3>Controversial [% heading %]</h3>
+{{- IF controversial.count }}
+<h3>Controversial {{ heading }}</h3>
 
 <table class="items">
-[%- FOREACH item IN controversial.all %]
-	[%- INCLUDE Item  score = item.controversial -%]
-[%- END #FOREACH %]
+{{- FOREACH item IN controversial.all }}
+	{{- INCLUDE Item  score = item.controversial -}}
+{{- END #FOREACH }}
 </table>
-[%- END #IF %]
+{{- END #IF }}
 
-[% IF event.guessing %]
+{{ IF event.guessing }}
 <h3>Best Guessers</h3>
 
 <table class="solid">
@@ -64,49 +66,63 @@
 		<td>Guesser</td>
 		<td>Guessed</td>
 	</tr>
-	[%- FOREACH record IN guesses.all %]
-	<tr class="[% loop.parity %]">
-		<td class="nowrap">[% record.artist.name | html %]</td>
+	{{- FOREACH record IN guesses.all }}
+	<tr class="{{ loop.parity }}">
+		<td class="nowrap">{{ record.artist.name | html }}</td>
 
 		<td>
-		[%- FOREACH guess IN record.guesses_rs.correct %]
-			<a class="link" href="[% c.uri_for(view, [ guess.item.id_uri ]) %]">
-				<em>[% guess.item.title | html %]</em>[%
-			%]</a>[% ',' IF !loop.last %]
-		[%- END %]
+		{{- FOREACH guess IN record.guesses_rs.correct }}
+			<a class="link" href="{{ c.uri_for(view, [ guess.item.id_uri ]) }}">
+				<em>{{ guess.item.title | html }}</em>{{
+			}}</a>{{ ',' IF !loop.last }}
+		{{- END }}
 		</td>
 	</tr>
-	[%- END %]
+	{{- END }}
 </table>
-[% END #IF %]
+{{- END }}
 
-[%- END #BLOCK %]
+{{- END #Items }}
 
-[%- BLOCK Item %]
+{{- BLOCK Item }}
 <tr>
 	<td class="center">
-		[% FOREACH award IN item.awards; award.html; END %]
+		{{ FOREACH award IN item.awards; award.html; END }}
 	</td>
 
 	<td>
-		<a class="link" href="[% c.uri_for( view, [ item.id_uri ]) %]">
-			<em>[% item.title | html %]</em>
+		<a class="link" href="{{ c.uri_for( view, [ item.id_uri ]) }}">
+			<em>{{ item.title | html }}</em>
 		</a>
 
 		by
-		[%- IF item.website %]
-		<a class="author new-tab" href="[% item.website | url %]">
-			[% item.artist.name | html %]
+		{{- IF item.website }}
+		<a class="author new-tab" href="{{ item.website | url }}">
+			{{ item.artist.name | html }}
 		</a>
-		[%- ELSE %]
-			[% item.artist.name | html %]
-		[%- END %]
+		{{- ELSE }}
+			{{ item.artist.name | html }}
+		{{- END }}
 
-		[%- IF score %]
-		<span title="[% score | format('(%.5f)') %]">
-			[% score | format('(%.2f)') %]
+		{{- IF score }}
+		<span title="{{ score | format('(%.5f)') }}">
+			{{ score | format('(%.2f)') }}
 		</span>
-		[%- END #IF %]
+		{{- END #IF }}
 	</td>
 </tr>
-[%- END #BLOCK %]
+{{ IF votes }}
+<tr>
+	<td colspan="2">
+		<div style="display: flex; width: {{ score * 10 }}%;">
+			{{- FOREACH vote IN votes }}
+			<div style="height: 1em; flex-grow: {{ vote.value + 5 }};
+				background-color: #{{ spectrum('f00', '0f0', 0.1 * vote.value) }};">
+			</div>
+			{{- END }}
+		</div>
+	</td>
+</tr>
+{{- END }}
+
+{{- END #Item }}
