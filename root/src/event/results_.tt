@@ -114,10 +114,11 @@
 {{ IF votes }}
 <tr>
 	<td colspan="2">
-		<div style="display: flex; width: {{ score * 10 }}%;">
+		<div class="votebar" style="width: {{ score * 10 }}%;">
 			{{- FOREACH vote IN votes }}
-			<div style="height: 1em; flex-grow: {{ vote.value + 5 }};
-				background-color: #{{ spectrum('f00', '0f0', 0.1 * vote.value) }};">
+			<div class="votebox" style="flex-grow: {{ vote.value }};
+				background-color: #{{ spectrum('f00', '0f0', 0.1 * vote.value) }};"
+				title="{{ vote.value }}">
 			</div>
 			{{- END }}
 		</div>

@@ -467,18 +467,28 @@ nav li:hover ul li:hover a {
 	line-height: 1.6;
 }
 
-ul.contents {
-	list-style-type: none;
-	padding-left: 0;
+.no-flexbox .votebar {
+	display: none;
 }
-ul.contents li.h2 {
-	text-indent: 2em;
+
+.votebar {
+	display: flex;
+	height: 0.6em;
 }
-ul.contents li.h3 {
-	text-indent: 4em;
+
+.votebox {
+	border: 1px solid transparent;
+	border-right: 0;
+	border-left: 0;
+	padding-left: 1px;
+	padding-right: 1px;
+	color: transparent;
 }
-ul.contents li.h4 {
-	text-indent: 6em;
+
+.votebox:hover {
+	color: black;
+	border: 1px solid black;
+	padding: 0;
 }
 
 .news-header {
