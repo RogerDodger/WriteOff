@@ -113,12 +113,11 @@ sub recalc_prelim_stats {
 	my $prelim_values = $votes->prelim->search(
 		{ "inn.story_id" => { '=' => { -ident => 'storys.id' } } },
 		{ alias => 'inn' }
-	)->get_column('value');
+	)->get_column('percentile');
 
 	$self->update({
 		prelim_score => $prelim_values->func_rs('avg')->as_query,
-		prelim_stdev => $prelim_values->func_rs('stdev')->as_query,
-	})
+	});
 }
 
 sub recalc_private_stats {
