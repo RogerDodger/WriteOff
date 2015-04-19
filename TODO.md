@@ -1,7 +1,8 @@
 WriteOff.pm TODO
 ----------------
 
-- [high] Award masks only to finalists; renege masks that don't meet this criteria
+- [high] Fix new_prelim_record algorithm
+- [med] Change mask criteria to involve probabilistic modelling
 - [med] Notifications
 - [med] Artist profiles
 - [med] Multiple scoreboards
