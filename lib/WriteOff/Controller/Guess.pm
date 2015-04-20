@@ -78,7 +78,7 @@ sub do_guess :Private {
 
 		if (looks_like_number($aid) && grep { $aid == $_->id } @artists) {
 			$guess->artist_id(int $aid);
-			$guess->insert;
+			$guess->update_or_insert;
 		} elsif ($guess->in_storage) {
 			$guess->delete;
 		}

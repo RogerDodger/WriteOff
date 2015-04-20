@@ -103,11 +103,11 @@ sub do_public :Private {
 		});
 
 		if (looks_like_number($score) && $score >= 0 && 10 >= $score) {
-			$vote->insert;
-			$vote->update({
+			$vote->set_columns({
 				value => int $score,
 				percentile => 10 * $score,
 			});
+			$vote->update_or_insert;
 		} elsif ($vote->in_storage) {
 			$vote->delete;
 		}
