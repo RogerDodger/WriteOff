@@ -5,6 +5,7 @@ UPDATE users SET
 	-- "hunter2"
 	password = '$2$10$6F2eyWuzX1DmtnRsrDkU0uOa7PeedmRNO9TlVCCADtF9RIZD0ecwu',
 	email = NULL,
+	timezone = 'UTC',
 	ip = NULL;
 
 DELETE FROM tokens;
