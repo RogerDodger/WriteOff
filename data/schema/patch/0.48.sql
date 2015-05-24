@@ -1,5 +1,5 @@
-ALTER TABLE storys ADD COLUMN disqualified BIT DEFAULT 0;
-ALTER TABLE images ADD COLUMN disqualified BIT DEFAULT 0;
+ALTER TABLE storys ADD COLUMN disqualified BIT DEFAULT 0 NOT NULL;
+ALTER TABLE images ADD COLUMN disqualified BIT DEFAULT 0 NOT NULL;
 
 UPDATE storys
 SET disqualified = 1
