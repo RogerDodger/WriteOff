@@ -14,8 +14,8 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 
 		$c->stash->{candidates} =
 			$e->prelim_votes_allowed
-				? $e->storys->metadata->seed_order
-				: $e->storys->metadata->candidates->seed_order;
+				? $e->storys->gallery($c->user->offset)->eligible
+				: $e->storys->gallery($c->user->offset)->eligible->candidates;
 
 		$c->stash->{artists} = [
 			map { $_->artist }

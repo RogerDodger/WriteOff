@@ -40,7 +40,7 @@
 
 			[%- FOREACH item IN candidates.all %]
 			<tr class="[% loop.parity %]">
-				<td class="center">[% loop.count %]</td>
+				<td class="center">[% item.num || loop.count %]</td>
 				<td>[% item.title | html %]</td>
 				[%- SET disabled = item.user_id == c.user_id ? " disabled" : "" %]
 				<td>
