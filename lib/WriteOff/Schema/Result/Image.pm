@@ -128,6 +128,8 @@ sub type {
 	return 'art';
 }
 
+sub num { undef }
+
 sub pos {
 	return shift->rank;
 }
