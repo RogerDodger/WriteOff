@@ -52,7 +52,7 @@ sub gallery {
 		? \qq{ seed+$offset - floor(seed+$offset) }
 		: 'seed';
 
-	$self->metadata->search({}, {
+	$self->search({}, {
 		'+select' => [ $num_rs->as_query ],
 		'+as' => [ 'num' ],
 		order_by => [
