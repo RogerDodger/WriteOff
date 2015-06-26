@@ -148,7 +148,7 @@ sub stdev {
 	return shift->public_stdev;
 }
 
-sub scores {
+sub score_totals {
 	return [ shift->public_score ];
 }
 

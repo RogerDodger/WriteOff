@@ -43,7 +43,7 @@
 {{- SET count = leaderboard.count }}
 {{- FOREACH item IN leaderboard.all }}
 	{{- INCLUDE Item
-		scores = item.scores
+		scores = item.score_totals
 		votes = item.votes_rs.public.order_by({ '-desc' => 'value' }).all -}}
 {{- END #FOREACH }}
 </table>
@@ -114,7 +114,7 @@
 {{ IF votes }}
 <tr>
 	<td colspan="2">
-		<div class="votebar" style="width: {{ score * 10 }}%;">
+		<div class="votebar" style="width: {{ item.public_score * 10 }}%;">
 			{{- FOREACH vote IN votes }}
 			<div class="votebox" style="flex-grow: {{ vote.value }};
 				background-color: #{{ spectrum('f00', '0f0', 0.1 * vote.value) }};"

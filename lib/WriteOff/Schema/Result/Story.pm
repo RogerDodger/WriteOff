@@ -181,13 +181,13 @@ sub _compare_scores {
 	0;
 }
 
-sub scores {
+sub score_totals {
 	my $self = shift;
 
 	return [
 		($self->private_score) x!! $self->private_score,
 		($self->public_score) x!! $self->public_score,
-		($self->prelim_score) x!! $self->prelim_score
+		($self->prelim_score / 10) x!! $self->prelim_score
 	];
 }
 
