@@ -33,6 +33,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_nullable => 0 },
 	"seed",
 	{ data_type => "real", is_nullable => 1 },
+	"disqualified",
+	{ data_type => 'bit', default_value => 0, is_nullable => 0 },
 	"views",
 	{ data_type => "integer", default_value => 0, is_nullable => 1 },
 	"finalist",

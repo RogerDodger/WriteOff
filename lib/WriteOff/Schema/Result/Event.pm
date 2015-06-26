@@ -360,7 +360,7 @@ sub new_prelim_record_for {
 		"record.type"     => 'fic',
 	}, { join => 'record' })->get_column('me.story_id');
 
-	my $candidates = $self->storys->search({
+	my $candidates = $self->storys->eligible->search({
 		id      => { -not_in => $voted_storys->as_query },
 		user_id => { '!=' => $user->id },
 	});
@@ -607,6 +607,8 @@ sub tally {
 	my $schema = $self->result_source->schema;
 	my $artists = $schema->resultset('Artist');
 	my $scores = $schema->resultset('Score');
+	my $storys = $self->storys->eligible;
+	my $images = $self->images->eligible;
 
 	# Clean up possible old tallying
 	$self->artist_awards->delete_all;
@@ -616,23 +618,21 @@ sub tally {
 	$scores->decay;
 
 	if ($self->public) {
-		$self->storys->recalc_public_stats;
+		$storys->recalc_public_stats;
 	}
 
 	if ($self->private) {
-		$self->storys->recalc_private_stats;
+		$storys->recalc_private_stats;
 	}
 
-	# remove
-
-	$self->storys->recalc_controversial;
-	$self->storys->recalc_rank;
-	$artists->deal_awards_and_scores($self->storys_rs);
+	$storys->recalc_controversial;
+	$storys->recalc_rank;
+	$artists->deal_awards_and_scores($storys);
 
 	if ($self->art) {
-		$self->images->recalc_public_stats;
-		$self->images->recalc_rank;
-		$artists->deal_awards_and_scores($self->images_rs);
+		$images->recalc_public_stats;
+		$images->recalc_rank;
+		$artists->deal_awards_and_scores($images);
 	}
 
 	if ($self->guessing) {

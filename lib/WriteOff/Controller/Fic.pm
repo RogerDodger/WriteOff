@@ -44,8 +44,9 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 	else {
 		my $storys = $c->stash->{event}->storys->gallery($c->user->offset);
 
-		$c->stash->{candidates} = $storys->candidates;
-		$c->stash->{noncandidates} = $storys->noncandidates;
+		$c->stash->{candidates} = $storys->eligible->candidates;
+		$c->stash->{noncandidates} = $storys->eligible->noncandidates;
+		$c->stash->{disqualified} = $storys->disqualified;
 
 		push $c->stash->{title}, 'Gallery';
 		$c->stash->{template} = 'fic/gallery.tt';

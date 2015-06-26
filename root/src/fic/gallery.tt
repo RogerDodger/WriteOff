@@ -51,6 +51,12 @@
 			show_author = candidates.count -%]
 	[%- END -%]
 
+	[%- IF disqualified.count %]
+		[%- PROCESS story_table
+			storys = disqualified
+			show_author = 1 -%]
+	[%- END %]
+
 	<p class="ui-state-default center" style="padding: 7px">
 		Total wordcount: [% event.storys_rs.wordcount.chunk(-3).join(',') %]<br>
 		<a class="link" href="[% c.uri_for(c.action, [ event.id_uri ], { 'format' => 'epub'}) %]">

@@ -17,7 +17,7 @@ sub metadata {
 			'prelim_score', 'prelim_stdev',
 			'candidate', 'public_score', 'public_stdev',
 			'finalist', 'private_score', 'rank', 'rank_low',
-			'controversial', 'seed', 'created', 'updated',
+			'controversial', 'seed', 'disqualified', 'created', 'updated',
 		]
 	});
 }
@@ -52,10 +52,11 @@ sub gallery {
 		? \qq{ seed+$offset - floor(seed+$offset) }
 		: 'seed';
 
-	$self->metadata->search({}, {
+	$self->search({}, {
 		'+select' => [ $num_rs->as_query ],
 		'+as' => [ 'num' ],
 		order_by => [
+			{ -asc => 'disqualified' },
 			{ -desc => 'candidate' },
 			{ -desc => $seed },
 		],

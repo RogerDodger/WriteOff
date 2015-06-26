@@ -62,6 +62,7 @@ my @dependencies = (
 	'DateTime::Format::Human::Duration',
 	'WWW::Fimfiction',
 	'EBook::EPUB',
+	'Class::Null',
 );
 
 if (eval { require App::cpanminus; 1; }) {

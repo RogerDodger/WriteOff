@@ -165,4 +165,21 @@ sub recalc_stats {
 	});
 }
 
+sub recalibrate {
+	# For prelim/private records, if an entry becomes disqualified, we need to
+	# recalculate the scores of already filled records
+	my $self = shift;
+	return if $self->round eq 'public' || !$self->filled;
+
+	my $votes = $self->votes;
+	my ($n, $i) = ($votes->count - 1, 0);
+	for my $vote ($votes->order_by({ -desc => 'value' })->all) {
+		my $value = $n - 2 * $i++;
+		$vote->update({
+			value => $value,
+			percentile => 100*($value + $n)/(2*$n),
+		});
+	}
+}
+
 1;

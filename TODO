@@ -1,4 +1,5 @@
 - [high] Fix new_prelim_record algorithm
+- [med] Add controller to disqualify entries
 - [med] Change mask criteria to involve probabilistic modelling
 - [med] Notifications
 - [med] Artist profiles

@@ -208,18 +208,17 @@ sub results :Chained('fetch') :PathPart('results') :Args(0) {
 	$c->stash(
 		j_records => $c->stash->{event}->vote_records->filled->judge_records,
 		images => {
-			leaderboard   => $event->images->search_rs(@lcond),
-			controversial => $event->images->search_rs($ccond->('public_stdev')),
+			leaderboard   => $event->images->eligible->search_rs(@lcond),
+			controversial => $event->images->eligible->search_rs($ccond->('public_stdev')),
 		},
 		storys => {
-			leaderboard   => $event->storys->search_rs(@lcond),
-			controversial => $event->storys->search_rs($ccond->('controversial')),
+			leaderboard   => $event->storys->eligible->search_rs(@lcond),
+			controversial => $event->storys->eligible->search_rs($ccond->('controversial')),
 		},
 		guesses => {
 			fic => $event->vote_records->fic->search_rs(@gcond),
 			art => $event->vote_records->art->search_rs(@gcond),
 		},
-		sleuth => SLEUTH(),
 	);
 
 	push $c->stash->{title}, 'Results';
@@ -434,7 +433,7 @@ sub public_distr :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 
-	$e->storys->recalc_candidates($c->config->{work});
+	$e->storys->eligible->recalc_candidates($c->config->{work});
 }
 
 sub judge_distr :Private {

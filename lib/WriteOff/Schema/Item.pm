@@ -53,6 +53,14 @@ sub recalc_rank {
 	}
 }
 
+sub eligible {
+	shift->search({ disqualified => 0 });
+}
+
+sub disqualified {
+	shift->search({ disqualified => 1 });
+}
+
 sub rank_order {
 	return shift->order_by({ -asc => [qw/rank title/] });
 }
