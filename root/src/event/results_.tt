@@ -43,7 +43,7 @@
 {{- SET count = leaderboard.count }}
 {{- FOREACH item IN leaderboard.all }}
 	{{- INCLUDE Item
-		score = item.public_score
+		scores = item.scores
 		votes = item.votes_rs.public.order_by({ '-desc' => 'value' }).all -}}
 {{- END #FOREACH }}
 </table>
@@ -53,7 +53,7 @@
 
 <table class="items">
 {{- FOREACH item IN controversial.all }}
-	{{- INCLUDE Item  score = item.controversial -}}
+	{{- INCLUDE Item  scores = [ item.controversial ] -}}
 {{- END #FOREACH }}
 </table>
 {{- END #IF }}
@@ -104,7 +104,7 @@
 			{{ item.artist.name | html }}
 		{{- END }}
 
-		{{- IF score }}
+		{{- FOREACH score IN scores }}
 		<span title="{{ score | format('(%.5f)') }}">
 			{{ score | format('(%.2f)') }}
 		</span>

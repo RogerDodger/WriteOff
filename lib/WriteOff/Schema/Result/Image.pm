@@ -144,6 +144,10 @@ sub stdev {
 	return shift->public_stdev;
 }
 
+sub scores {
+	return [ shift->public_score ];
+}
+
 use overload "==" => '_compare_scores',
 	fallback => 1;
 
