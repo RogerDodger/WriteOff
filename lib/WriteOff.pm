@@ -12,6 +12,7 @@ use Catalyst qw/
 	Scheduler
 
 	+WriteOff::Plugin::Auth
+	+WriteOff::Plugin::Strings
 
 	Session
 	Session::Store::File

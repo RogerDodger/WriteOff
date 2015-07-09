@@ -1,4 +1,4 @@
-- [high] Fix new_prelim_record algorithm
+- [high] Redesign voting system
 - [med] Add controller to disqualify entries
 - [med] Change mask criteria to involve probabilistic modelling
 - [med] Notifications

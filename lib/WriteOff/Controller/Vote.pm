@@ -20,8 +20,7 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	my $e = $c->stash->{event};
 
-	$c->detach('/error', [ "There is no preliminary voting round for this event." ])
-		unless $e->prelim;
+	$c->detach('/error', [ $c->strings->{noPrelim} ]) unless $e->prelim;
 
 	if ($c->user) {
 		$c->stash->{records} = $e->vote_records->search({
