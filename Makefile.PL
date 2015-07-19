@@ -63,6 +63,7 @@ my @dependencies = (
 	'WWW::Fimfiction',
 	'EBook::EPUB',
 	'Class::Null',
+	'Text::Sass::XS',
 );
 
 if (eval { require App::cpanminus; 1; }) {
