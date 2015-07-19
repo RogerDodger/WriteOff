@@ -55,15 +55,20 @@ sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	);
 
 	push $c->stash->{title}, 'Vote', 'Prelim';
-	$c->stash->{template} = 'vote/prelim.tt';
+	$c->stash->{template} = 'vote/rank.tt';
 }
 
 sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	my $e = $c->stash->{event};
 
-	$c->detach('/error', [ "There is no private judging for this event." ])
-		unless $e->private;
+	$c->detach('/error', [ $c->strings->{noPrivate} ]) unless $e->private;
+
+	$c->stash->{record} = $e->vote_records->search({
+		round => 'private',
+		type => 'fic',
+		user_id => $c->user->id
+	});
 
 	$c->stash->{finalists} = $e->storys->search(
 		{ finalist => 1 },
@@ -82,7 +87,7 @@ sub private :PathPart('vote/private') :Chained('/event/fic') :Args(0) {
 	})->unfilled if $c->stash->{judge};
 
 	push $c->stash->{title}, 'Vote', 'Private';
-	$c->stash->{template} = 'vote/private.tt';
+	$c->stash->{template} = 'vote/rank.tt';
 }
 
 =head1 AUTHOR

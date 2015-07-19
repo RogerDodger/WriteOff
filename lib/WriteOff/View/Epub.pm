@@ -151,7 +151,7 @@ sub process {
 
 	#start adding general
 	$self->copy_stylesheet(
-		$c->path_to('root', 'static', 'css/epub.css'),
+		$c->path_to(qw/root static style epub.css/),
 		'story.css',
 	);
 	$self->add_language($self->language);

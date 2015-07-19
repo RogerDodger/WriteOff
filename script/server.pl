@@ -8,6 +8,7 @@ BEGIN {
 
 use Catalyst::ScriptRunner;
 Catalyst::ScriptRunner->run('WriteOff', 'Server');
+      Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
 
 1;
 

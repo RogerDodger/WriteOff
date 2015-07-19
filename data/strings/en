@@ -1,2 +1,3 @@
 loginRequired=You must be logged in to perform this action
 noPrelim=There is no prelim round for this event
+noPrivate=There is no private judging round for this event
