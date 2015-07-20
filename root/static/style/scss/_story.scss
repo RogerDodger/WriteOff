@@ -16,7 +16,43 @@
 
 .Story {
 	font-family: serif;
-	text-align: justify;
 	font-size: 1.1em;
 	line-height: 1.618;
+	margin-bottom: 2em;
+	text-align: justify;
+
+	hr {
+		padding: 0;
+		margin: 1.2em 0;
+	    border: none;
+	    border-top: medium double #666;
+		border-bottom: medium solid transparent;
+	    color: #666;
+		background: transparent;
+	    text-align: center;
+
+		&:after {
+		    content: "§";
+			position: relative;
+			top: -0.7em;
+		    display: inline-block;
+		    font-size: 1.5em;
+			line-height: normal;
+		    padding: 0 0.25em;
+		    background: hsla(0, 0%, 98%, 1);
+		}
+	}
+
+	blockquote {
+		padding: 1.8em;
+		margin: 0;
+		border: 1px solid gainsboro;
+		border-radius: 4px 0 0 0;
+		box-shadow: 2px 2px 2px grey;
+	}
+
+	blockquote,
+	hr:after {
+		background: hsla(0, 0%, 99%, 1);
+	}
 }

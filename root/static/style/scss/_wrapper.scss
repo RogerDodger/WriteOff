@@ -95,7 +95,7 @@ body {
 .Document {
 	@include container;
 
-	background: transparent linear-gradient(#fcfcfc, #fafafa);
+	background-color: hsla(0, 0%, 98%, 1);
 	box-shadow: 0 0 3px #b6b6b6;
 	padding: 2em;
 }
