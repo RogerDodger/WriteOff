@@ -1,5 +1,7 @@
 [%- TAGS {{ }} %]
 {{- DEFAULT fmt = '%a, %d %b %Y %H:%M %Z' }}
+{{- SET id = [ event.id_uri ] }}
+
 <div class="Event-header">
 	<a class="Event-expand">
 		{{ event.prompt | html }}
@@ -8,73 +10,125 @@
 	</a>
 </div>
 <div class="Event-details">
-	<table>
-		<tr>
-			<th> </th>
-			<th class="center">Begins</th>
-			<th class="center">Ends</th>
-		</tr>
-		{{- IF event.art }}
-		<tr>
-			<th>Drawing</th>
-			<td>{{ format_dt(event.art, fmt) }}</td>
-			<td>{{ format_dt(event.art_end, fmt) }}</td>
-		</tr>
-		{{- END; IF event.fic }}
-		<tr>
-			<th>Writing</th>
-			<td>{{ format_dt(event.fic, fmt) }}</td>
-			<td>{{ format_dt(event.fic_end, fmt) }}</td>
-		</tr>
-		{{- END; IF event.prelim }}
-		<tr>
-			<th>Prelims</th>
-			<td>{{ format_dt(event.prelim, fmt) }}</td>
-			<td>{{ format_dt(event.public, fmt) }}</td>
-		</tr>
-		{{- END; IF event.public }}
-		<tr>
-			<th>{{ event.private ? 'Main' : 'Finals' }}</th>
-			<td>{{ format_dt(event.public, fmt) }}</td>
-			<td>{{ format_dt(event.private || event.end, fmt) }}</td>
-		</tr>
-		{{- END; IF event.private }}
-		<tr>
-			<th>Finals</th>
-			<td>{{ format_dt(event.private, fmt) }}</td>
-			<td>{{ format_dt(event.end, fmt) }}</td>
-		</tr>
-		{{- END }}
-	</table>
-	<table class="minutae">
-		<tr>
-			<th>Organiser{{ 's' IF event.organisers.max != 0 }}:</th>
-			<td>{{ event.organisers.map_username.join_serial }}</td>
-		</tr>
-		{{- IF event.private }}
-		<tr>
-			<th>Judge{{ 's' IF event.judges.max != 0 }}:</th>
-			<td>{{ event.judges.map_username.join_serial }}</td>
-		</tr>
-		{{- END }}
-		<tr>
-			<th>Word limit:</th>
-			<td>{{ event.wc_min }}&ndash;{{ event.wc_max }}</td>
-		</tr>
-		<tr>
-			<th>Content level:</th>
-			<td>{{ event.content_level }}</td>
-		</tr>
-	</table>
-	{{ INCLUDE event/links.tt }}
-	{{ event.blurb | html | markdown }}
-	{{- IF event.is_organised_by( c.user ) }}
-	<h3>Organiser Tasks</h3>
-	<ul>
-		<li><a class="link" href="{{ c.uri_for( c.controller('Event')
-			.action_for('view'), [ event.id_uri ]) }}">View submissions</a></li>
-		<li><a class="link" href="{{ c.uri_for( c.controller('Event')
-			.action_for('edit'), [ event.id_uri ]) }}">Edit event</a></li>
+	<div class="Event-staff--container">
+		Organised by
+		<span class="Event-staff">
+			{{ event.organisers.map_username.join_serial }}
+		</span>
+	</div>
+
+	{{ IF event.private }}
+	<div class="Event-staff--container">
+		Judged by
+		<span class="Event-staff">
+			{{ event.judges.map_username.join_serial }}
+		</span>
+	</div>
+	{{ END }}
+
+	<div class="Event-timeline hidden"></div>
+	<script type="text/javascript">
+		timelines.push({{ event.timeline_json }});
+	</script>
+
+	<noscript>
+		<table>
+			<tr>
+				<th> </th>
+				<th class="center">Begins</th>
+				<th class="center">Ends</th>
+			</tr>
+			{{- IF event.art }}
+			<tr>
+				<th>Drawing</th>
+				<td>{{ format_dt(event.art, fmt) }}</td>
+				<td>{{ format_dt(event.art_end, fmt) }}</td>
+			</tr>
+			{{- END; IF event.fic }}
+			<tr>
+				<th>Writing</th>
+				<td>{{ format_dt(event.fic, fmt) }}</td>
+				<td>{{ format_dt(event.fic_end, fmt) }}</td>
+			</tr>
+			{{- END; IF event.prelim }}
+			<tr>
+				<th>Prelims</th>
+				<td>{{ format_dt(event.prelim, fmt) }}</td>
+				<td>{{ format_dt(event.public, fmt) }}</td>
+			</tr>
+			{{- END; IF event.public }}
+			<tr>
+				<th>{{ event.private ? 'Main' : 'Finals' }}</th>
+				<td>{{ format_dt(event.public, fmt) }}</td>
+				<td>{{ format_dt(event.private || event.end, fmt) }}</td>
+			</tr>
+			{{- END; IF event.private }}
+			<tr>
+				<th>Finals</th>
+				<td>{{ format_dt(event.private, fmt) }}</td>
+				<td>{{ format_dt(event.end, fmt) }}</td>
+			</tr>
+			{{- END }}
+		</table>
+	</noscript>
+
+	<ul class="Event-links rules">
+		<li><a href="{{ c.uri_for_action('/event/rules', id) }}">Rules</a>
+	</ul>
+
+	{{- IF event.has_prompt }}
+	<ul class="Event-links prompt">
+		<li><a href="{{ c.uri_for_action('/prompt/submit', id) }}">Prompt Submission</a>
+		<li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a></li>
 	</ul>
 	{{- END }}
+
+	{{ IF event.fic }}
+	<ul class="Event-links fic">
+		<li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
+		<li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
+		<li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
+
+		{{ IF event.prelim }}
+		<li><a href="{{ c.uri_for_action('/vote/prelim', id) }}">Prelims</a>
+		{{ END }}
+
+		{{ IF event.public }}
+		<li><a href="{{ c.uri_for_action('/vote/public/fic', id) }}">{{ event.public_label }}</a>
+		{{ END }}
+
+		{{ IF event.private }}
+		<li><a href="{{ c.uri_for_action('/vote/private', id) }}">Finals</a>
+		{{ END }}
+
+		{{ IF event.has_results }}
+		<li><a href="{{ c.uri_for_action('/event/results', id) }}">Results</a>
+		{{ END }}
+	</ul>
+	{{ END }}
+
+
+	{{ IF event.art }}
+	<ul class="Event-links art">
+		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
+		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
+
+		{{ IF event.public }}
+		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
+		<li><a href="{{ c.uri_for_action('/event/results', id) }}">Results</a>
+		{{ END }}
+	</ul>
+	{{ END }}
+
+	{{ IF event.is_organised_by( c.user ) }}
+	<ul class="Event-admin">
+		<li><a href="{{ c.uri_for_action('/event/view', id) }}">View submissions</a>
+		<li><a href="{{ c.uri_for_action('/event/edit', id) }}">Edit event</a>
+	</ul>
+	{{- END }}
+
+	<div class="Event-blurb">
+	{{ event.blurb | html | markdown }}
+	</div>
+
 </div>

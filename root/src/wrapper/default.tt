@@ -15,6 +15,10 @@
 		<script src="/static/js/jquery-1.7.2.min.js"></script>
 		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
 		<script src="/static/js/jquery.cookie.js"></script>
+		<script src="/static/js/d3.v3.min.js"></script>
+		<script>
+			var timelines = [];
+		</script>
 		<script src="/static/js/writeoff-0.27.js"></script>
 	</head>
 
@@ -53,6 +57,11 @@
 			{{ FOREACH msg IN messages }}
 				<div class="Global-message">{{ msg }}</div>
 			{{ END }}
+
+			{{ IF event }}
+				{{ INCLUDE event/single.tt }}
+			{{ END }}
+
 			{{ content }}
 		</main>
 

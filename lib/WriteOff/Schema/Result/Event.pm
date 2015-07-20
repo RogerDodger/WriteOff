@@ -6,6 +6,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
+use JSON;
 use WriteOff::Util qw/simple_uri sorted/;
 require List::Util;
 
@@ -297,6 +298,79 @@ sub ended {
 }
 
 BEGIN { *is_ended = \&ended; }
+
+sub public_label {
+	my $self = shift;
+
+	$self->private
+		? $self->prelim
+			? "Round 2"
+			: "Prelims"
+		: "Finals";
+}
+
+
+# var times = [
+# 	{
+# 		end: new Date("2015-07-14T06:00:00Z")
+# 	},
+# 	{
+# 		round: "Writing",
+# 		start: new Date("2015-07-14T06:00:00Z"),
+# 		end: new Date("2015-07-17T06:00:00Z")
+# 	},
+# 	{
+# 		round: "Prelims",
+# 		start: new Date("2015-07-17T06:00:00Z"),
+# 		end: new Date("2015-07-23T06:00:00Z")
+# 	},
+# 	{
+# 		round: "Finals",
+# 		start: new Date("2015-07-23T06:00:00Z"),
+# 		end: new Date("2015-07-27T06:00:00Z")
+# 	}
+# ];
+
+sub timeline_json {
+	my $self = shift;
+	my @data;
+
+	push @data, {
+		end => ($self->art || $self->fic)->iso8601,
+	};
+
+	push @data, {
+		round => "Drawing",
+		start => $self->art->iso8601,
+		end => $self->art_end->iso8601,
+	} if $self->art;
+
+	push @data, {
+		round => "Writing",
+		start => $self->fic->iso8601,
+		end => $self->fic_end->iso8601,
+	};
+
+	push @data, {
+		round => "Prelims",
+		start => $self->prelim->iso8601,
+		end => $self->public->iso8601,
+	} if $self->prelim;
+
+	push @data, {
+		round => $self->public_label,
+		start => $self->public->iso8601,
+		end => ($self->private || $self->end)->iso8601,
+	};
+
+	push @data, {
+		round => "Finals",
+		start => $self->private->iso8601,
+		end => $self->end->iso8601,
+	} if $self->private;
+
+	return encode_json \@data;
+}
 
 sub reset_schedules {
 	my $self = shift;

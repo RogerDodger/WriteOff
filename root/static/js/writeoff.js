@@ -29,6 +29,10 @@ String.prototype.ucfirst = function() {
 	return this.substring(0, 1).toUpperCase() + this.substring(1, this.length);
 }
 
+Date.prototype.getShortMonth = function () {
+	return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][this.getMonth()];
+}
+
 jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
 	$('.fake-ui-button').button({ disabled: true });
@@ -392,6 +396,135 @@ $(document).ready(function() {
 	});
 });
 
+
+// ===========================================================================
+// Draw event timelines
+// ===========================================================================
+
+function DrawTimeline (e) {
+	var data = $(e).data('timeline');
+	var width = $(e).width();
+	var height = 95;
+	var fontsize = 14;
+	var xpad = fontsize * 3;
+
+	// Don't draw if the container is hidden
+	if (!width) {
+		return;
+	}
+
+	var scale = d3.time.scale()
+		.domain([data[1].start, data[data.length-1].end])
+		.range([0 + xpad, width - xpad]);
+
+	// Clear previous draw
+	d3.select(e).selectAll('svg').remove();
+
+	var svg = d3.select(e)
+		.append('svg')
+		.attr('width', width)
+		.attr('height', height);
+
+	svg.append('line')
+		.attr('stroke', 'black')
+		.attr('x1', 0)
+		.attr('y1', height / 2)
+		.attr('x2', width)
+		.attr('y2', height / 2);
+
+	svg.selectAll('circle.boundary')
+		.data(data)
+		.enter()
+		.append('circle')
+		.attr('title', function(d, i) {
+			return d.end.toUTCString();
+		})
+		.attr('cx', function(d, i) {
+			return scale(d.end);
+		})
+		.attr('cy', height / 2)
+		.attr('r', 5)
+		.attr('fill', 'grey')
+		.attr('stroke', 'black')
+		.attr('stroke-width', 1);
+
+	svg.append('circle')
+		.attr('title', function(d, i) {
+			return new Date().toUTCString();
+		})
+		.attr('cx', scale(Date.now()))
+		.attr('cy', height / 2)
+		.attr('r', 4)
+		.attr('fill', 'red')
+		.attr('stroke', 'black')
+		.attr('stroke-width', 1);
+
+	var times = svg.selectAll('text.dates')
+		.data(data)
+		.enter()
+		.append('text')
+		.text(function(d, i) {
+			return d.end.getDate() + " " + d.end.getShortMonth();
+		})
+		.attr('title', function(d, i) {
+			return d.end.toUTCString();
+		})
+		.attr('text-anchor', 'middle')
+		.attr('y', height / 2 + fontsize * 1.5)
+		.attr('x', function(d, i) {
+			return scale(d.end);
+		})
+		.attr('fill', 'black')
+		.attr('font-size', fontsize * 0.9)
+		.attr('font-family', 'sans-serif');
+
+	svg.selectAll('text.rounds')
+		.data(data.slice(1))
+		.enter()
+		.append('text')
+		.text(function(d, i) {
+			return d.round;
+		})
+		.attr('text-anchor', 'middle')
+		.attr('x', function(d, i) {
+			return (scale(d.end) + scale(d.start)) / 2;
+		})
+		.attr('y', height / 2 - fontsize * 0.75)
+		.attr('fill', 'black')
+		.attr('font-size', fontsize)
+		.attr('font-family', 'sans-serif');
+};
+
+$(document).ready(function () {
+	$('.Event-timeline').each(function () {
+		var timeline = timelines.shift();
+
+		if (!timeline) {
+			console.log(this);
+			console.log("PANIC!!!!");
+			return;
+		}
+
+		// Coerce
+		timeline.forEach(function (t) {
+			if ('start' in t) {
+				t.start = new Date(t.start + "Z");
+			}
+			t.end = new Date(t.end + "Z");
+		});
+
+		$(this).removeClass('hidden');
+		$(this).data('timeline', timeline);
+		DrawTimeline(this);
+	});
+
+	$(document).on('resize', function () {
+		$('.Event-timeline').each(function () {
+			DrawTimeLine(this);
+		});
+	});
+});
+
 // ===========================================================================
 // Event Expander
 // ===========================================================================
@@ -400,13 +533,16 @@ $(document).ready(function () {
 	$('.Event-expand').each(function () {
 		var $btn = $(this);
 		var $target = $btn.parent().next();
-		console.log($target);
 		if ($target && $target.hasClass('Event-details')) {
 			$btn.addClass('active');
 			$target.addClass('hidden');
 			$btn.click(function () {
 				$target.toggleClass('hidden');
-			})
+
+				if (!$target.hasClass('hidden')) {
+					DrawTimeline($target.find('.Event-timeline').get(0));
+				}
+			});
 		}
 	})
-})
+});

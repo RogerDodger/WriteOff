@@ -1,5 +1,5 @@
 // =============================================================================
-// Style for event details
+// Event listing styles
 // =============================================================================
 
 .Event-header {
@@ -22,6 +22,50 @@
 .Event-header + .Event-details.hidden {
 	margin-bottom: 0;
 }
+
+.Event-staff--container {
+	color: #666;
+	padding-left: 2em;
+	text-indent: -2em;
+}
+
+.Event-staff {
+	color: #333;
+}
+
+.Event-links,
+.Event-admin,
+.Event-blurb > ul:first-child {
+	font-size: 0.9em;
+	margin: 0.2em 0 0 0;
+}
+
+.Event-links {
+	&.rules {
+		@include button-group($hue: 260);
+	}
+
+	&.prompt {
+		@include button-group($hue: 290);
+	}
+
+	&.fic {
+		@include button-group($hue: 320);
+	}
+
+	&.art {
+		@include button-group($hue: 350);
+	}
+}
+
+.Event-admin {
+	@include button-group($hue: 200);
+}
+
+.Event-blurb > ul:first-child {
+	@include button-group($hue: 230);
+}
+
 
 .Archive-button--container {
 	margin-top: 0.5em;

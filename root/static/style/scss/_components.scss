@@ -11,6 +11,7 @@
 
 	background: hsla($hue, $sat, 80%, 1);
 	border-color: hsla($hue, $sat, 60%, 1);
+	color: hsla($hue, $sat, 15%, 1);
 
 	&:hover {
 		background: hsla($hue, $sat, 75%, 1);
@@ -18,5 +19,23 @@
 
 	&:active {
 		box-shadow: 0 0.5em 0.7em hsla($hue, $sat, 70%, 1) inset;
+	}
+}
+
+@mixin button-group($hue: 200, $sat: 30%) {
+	list-style-type: none;
+	padding: 0;
+
+	li {
+		display: inline-block;
+
+		&:not(:last-child) {
+			margin-right: -1px;
+			margin-bottom: -1px;
+		}
+
+		a {
+			@include button($hue, $sat);
+		}
 	}
 }
