@@ -1,83 +1,80 @@
-[%- DEFAULT fmt = '%a, %d %b %Y %H:%M %Z' %]
-<h1 class="prompt">
-	<a href="#[% event.id_uri %]" id="[% event.id_uri %]">
-		[% event.prompt | html %] – [% format_dt(event.start, fmt) %]
+[%- TAGS {{ }} %]
+{{- DEFAULT fmt = '%a, %d %b %Y %H:%M %Z' }}
+<div class="Event-header">
+	<a class="Event-expand">
+		{{ event.prompt | html }}
+		&middot;
+		{{ format_dt(event.start, fmt) }}
 	</a>
-	<a href="[% c.uri_for_action('/event/permalink', [ event.id_uri ]) %]"
-		class="permalink" >Permalink</a>
-</h1>
-<div>
+</div>
+<div class="Event-details">
 	<table>
 		<tr>
 			<th> </th>
 			<th class="center">Begins</th>
 			<th class="center">Ends</th>
 		</tr>
-		[%- IF event.art %]
+		{{- IF event.art }}
 		<tr>
 			<th>Drawing</th>
-			<td>[% format_dt(event.art, fmt) %]</td>
-			<td>[% format_dt(event.art_end, fmt) %]</td>
+			<td>{{ format_dt(event.art, fmt) }}</td>
+			<td>{{ format_dt(event.art_end, fmt) }}</td>
 		</tr>
-		[%- END; IF event.fic %]
+		{{- END; IF event.fic }}
 		<tr>
 			<th>Writing</th>
-			<td>[% format_dt(event.fic, fmt) %]</td>
-			<td>[% format_dt(event.fic_end, fmt) %]</td>
+			<td>{{ format_dt(event.fic, fmt) }}</td>
+			<td>{{ format_dt(event.fic_end, fmt) }}</td>
 		</tr>
-		[%- END; IF event.prelim %]
+		{{- END; IF event.prelim }}
 		<tr>
 			<th>Prelims</th>
-			<td>[% format_dt(event.prelim, fmt) %]</td>
-			<td>[% format_dt(event.public, fmt) %]</td>
+			<td>{{ format_dt(event.prelim, fmt) }}</td>
+			<td>{{ format_dt(event.public, fmt) }}</td>
 		</tr>
-		[%- END; IF event.public %]
+		{{- END; IF event.public }}
 		<tr>
-			<th>[% event.private ? 'Main' : 'Finals' %]</th>
-			<td>[% format_dt(event.public, fmt) %]</td>
-			<td>[% format_dt(event.private || event.end, fmt) %]</td>
+			<th>{{ event.private ? 'Main' : 'Finals' }}</th>
+			<td>{{ format_dt(event.public, fmt) }}</td>
+			<td>{{ format_dt(event.private || event.end, fmt) }}</td>
 		</tr>
-		[%- END; IF event.private %]
+		{{- END; IF event.private }}
 		<tr>
 			<th>Finals</th>
-			<td>[% format_dt(event.private, fmt) %]</td>
-			<td>[% format_dt(event.end, fmt) %]</td>
+			<td>{{ format_dt(event.private, fmt) }}</td>
+			<td>{{ format_dt(event.end, fmt) }}</td>
 		</tr>
-		[%- END %]
+		{{- END }}
 	</table>
 	<table class="minutae">
 		<tr>
-			<th>Organiser[% 's' IF event.organisers.max != 0 %]:</th>
-			<td>[% event.organisers.map_username.join_serial %]</td>
+			<th>Organiser{{ 's' IF event.organisers.max != 0 }}:</th>
+			<td>{{ event.organisers.map_username.join_serial }}</td>
 		</tr>
+		{{- IF event.private }}
 		<tr>
-			<th>Rated:</th>
-			<td>[% event.has_results ? 'Yes' : 'No' %]</td>
+			<th>Judge{{ 's' IF event.judges.max != 0 }}:</th>
+			<td>{{ event.judges.map_username.join_serial }}</td>
 		</tr>
-		[%- IF event.private %]
-		<tr>
-			<th>Judge[% 's' IF event.judges.max != 0 %]:</th>
-			<td>[% event.judges.map_username.join_serial %]</td>
-		</tr>
-		[%- END %]
+		{{- END }}
 		<tr>
 			<th>Word limit:</th>
-			<td>[% event.wc_min %]&ndash;[% event.wc_max %]</td>
+			<td>{{ event.wc_min }}&ndash;{{ event.wc_max }}</td>
 		</tr>
 		<tr>
 			<th>Content level:</th>
-			<td>[% event.content_level %]</td>
+			<td>{{ event.content_level }}</td>
 		</tr>
 	</table>
-	[% INCLUDE event/links.tt %]
-	[% event.blurb | html | markdown %]
-	[%- IF event.is_organised_by( c.user ) %]
+	{{ INCLUDE event/links.tt }}
+	{{ event.blurb | html | markdown }}
+	{{- IF event.is_organised_by( c.user ) }}
 	<h3>Organiser Tasks</h3>
 	<ul>
-		<li><a class="link" href="[% c.uri_for( c.controller('Event')
-			.action_for('view'), [ event.id_uri ]) %]">View submissions</a></li>
-		<li><a class="link" href="[% c.uri_for( c.controller('Event')
-			.action_for('edit'), [ event.id_uri ]) %]">Edit event</a></li>
+		<li><a class="link" href="{{ c.uri_for( c.controller('Event')
+			.action_for('view'), [ event.id_uri ]) }}">View submissions</a></li>
+		<li><a class="link" href="{{ c.uri_for( c.controller('Event')
+			.action_for('edit'), [ event.id_uri ]) }}">Edit event</a></li>
 	</ul>
-	[%- END %]
+	{{- END }}
 </div>

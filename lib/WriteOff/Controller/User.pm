@@ -71,7 +71,7 @@ EOF
 		$c->flash->{error_msg} = 'Bad username or password';
 	}
 
-	$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+	$c->res->redirect( $c->uri_for('/') );
 }
 
 sub logout :Local :Args(0) {

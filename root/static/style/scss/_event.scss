@@ -1,0 +1,32 @@
+// =============================================================================
+// Style for event details
+// =============================================================================
+
+.Event-header {
+	@include header-boxed($hue: 100);
+}
+
+.Event-expand.active {
+	cursor: pointer;
+}
+
+.Event-details {
+	@extend .Document;
+	margin-bottom: 1em;
+}
+
+.Event-details + .Event-header {
+	margin-top: 0.5em;
+}
+
+.Event-header + .Event-details.hidden {
+	margin-bottom: 0;
+}
+
+.Archive-button--container {
+	margin-top: 0.5em;
+}
+
+.Archive-button {
+	@include button($hue: 180);
+}

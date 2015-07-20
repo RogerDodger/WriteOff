@@ -375,7 +375,7 @@ $(document).ready(function() {
 });
 
 // ===========================================================================
-// Expander
+// FAQ Expander
 // ===========================================================================
 
 $(document).ready(function() {
@@ -391,3 +391,22 @@ $(document).ready(function() {
 		}
 	});
 });
+
+// ===========================================================================
+// Event Expander
+// ===========================================================================
+
+$(document).ready(function () {
+	$('.Event-expand').each(function () {
+		var $btn = $(this);
+		var $target = $btn.parent().next();
+		console.log($target);
+		if ($target && $target.hasClass('Event-details')) {
+			$btn.addClass('active');
+			$target.addClass('hidden');
+			$btn.click(function () {
+				$target.toggleClass('hidden');
+			})
+		}
+	})
+})

@@ -33,8 +33,8 @@
 					<a href="/user/me">~{{ c.user.username | html }}</a>
 					<a href="/user/credentials?key=password">Change password</a>
 					<a href="/user/credentials?key=email">Change email</a>
-					<a href="/user/prefs" class="dialog-fetcher">Preferences</a>
-					<a href="#">Logout</a>
+					<a href="/user/prefs">Preferences</a>
+					<a href="/user/logout">Logout</a>
 					{{ ELSE }}
 					<a href="/user/login">Login</a>
 					<a href="/user/register">Register</a>
@@ -48,6 +48,8 @@
 		</nav>
 
 		<main class="Site-content">
+			{{ messages.push(error_msg) IF error_msg }}
+			{{ messages.push(status_msg) IF status_msg }}
 			{{ FOREACH msg IN messages }}
 				<div class="Global-message">{{ msg }}</div>
 			{{ END }}

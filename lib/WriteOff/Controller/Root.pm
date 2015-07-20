@@ -80,7 +80,7 @@ sub index :Path :Args(0) {
 
 	$c->stash->{events} = $c->model('DB::Event')->active;
 
-	push $c->stash->{title}, 'Active Events';
+	push $c->stash->{title}, 'Events';
 	$c->stash->{template} = 'event/list.tt';
 }
 
