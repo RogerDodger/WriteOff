@@ -1,41 +1,27 @@
-<h1 style="float: left">[% story.title | html %]</h1>
+[% TAGS {{ }} %]
+<div class="Story-container">
+	<div class="Story-title">{{ story.title | html }}</div>
 
-<aside class="font-size-chooser ui-state-highlight ui-corner-all" unselectable="on">
-	<a class="smaller" title="Decrease font size">A</a>
-	<a class="default" title="Reset font size">A</a>
-	<a class="bigger" title="Increase font size">A</a>
-</aside>
+	<div class="Story">
+		{{ story.contents | bbcode }}
+		<!-- {{ story.wordcount }} words -->
+	</div>
 
-<div class="story">
-[% story.contents | bbcode %]
-<!-- [% story.wordcount %] words -->
+	{{- IF story.event.fic_gallery_opened }}
+	<p class="center">
+		{{- FOREACH s IN gallery }}
+			{{- NEXT IF story.id != s.id }}
+
+			{{- prev = loop.prev || gallery.-1 }}
+		<a class="link" href="{{ c.uri_for( c.action, [ prev.id_uri ]) }}">« Prev</a>
+		&nbsp;
+		<strong>{{ s.num }}</strong>
+		&nbsp;
+			{{- next = loop.next || gallery.0 }}
+		<a class="link" href="{{ c.uri_for( c.action, [ next.id_uri ]) }}">Next »</a>
+
+		{{- END }}
+	</p>
+	{{- END }}
+
 </div>
-
-[%- IF story.event.fic_gallery_opened %]
-
-<p class="center">
-	[%- FOREACH s IN gallery %]
-		[%- NEXT IF story.id != s.id %]
-
-		[%- prev = loop.prev || gallery.-1 %]
-	<a class="link" href="[% c.uri_for( c.action, [ prev.id_uri ]) %]">« Prev</a>
-	&nbsp;
-	<strong>[% s.num %]</strong>
-	&nbsp;
-		[%- next = loop.next || gallery.0 %]
-	<a class="link" href="[% c.uri_for( c.action, [ next.id_uri ]) %]">Next »</a>
-
-	[%- END %]
-</p>
-<p class="center">
-	<a class="ui-button" href="[% c.uri_for( c.controller('Fic')
-		.action_for('gallery'), [ story.event.id_uri ]) %]">Back to gallery</a>
-</p>
-
-[%- END %]
-
-[%- IF story.event.tallied && story.event.guessing %]
-<h3>Suspected authors</h3>
-
-<p>[% story.guesses_rs.tally %]</p>
-[%- END %]
