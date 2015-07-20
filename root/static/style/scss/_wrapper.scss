@@ -1,0 +1,134 @@
+// =============================================================================
+// Style for the default wrapper
+// =============================================================================
+
+/*
+ * Sticky footer
+ */
+
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100%; /* IE */
+	height: 100vh;
+	padding: 0;
+	margin: 0;
+}
+
+.Site-header,
+.Site-footer {
+	flex: none;
+}
+
+.Site-content {
+	flex: 1 0 auto;
+	width: 100%;
+}
+
+.Site-content::after {
+	content: "\00a0"; /* nbsp */
+	display: block;
+	margin-top: 1em;
+	height: 0;
+	visibility: hidden;
+}
+
+/*
+ * Global background color -- slightly grey to allow contrast
+ */
+
+body {
+	background: hsla(0, 0%, 92%, 1);
+}
+
+/*
+ * Header
+ */
+
+.Site-header--container {
+	max-width: 1040px;
+	width: 95%;
+	margin: 0 auto;
+}
+
+.Site-header {
+	background: hsla(0, 0%, 21%, 1) linear-gradient(hsla(0, 0%, 23%, 1), hsla(0, 0%, 18%, 1));
+	line-height: 42px;
+
+	a {
+		display: inline-block;
+		color: #bdc3cf;
+		height: 42px;
+		padding: 0 8px;
+		font-size: 0.9em;
+		text-decoration: none;
+
+		&:hover {
+			background-color: hsla(0, 0%, 10%, 1);
+		}
+	}
+}
+
+.Site-logo {
+	margin: 5px 0 4px 0;
+	vertical-align: middle;
+	line-height: 0;
+	height: 32px;
+}
+
+/*
+ * Content - generic top-level containers
+ */
+
+$document-width: 900px;
+
+
+.Site-content {
+	// TEMPORARY!! - better to have no content styling in the wrapper
+	//
+	// Old templates assume they are boxed, and we don't want them spanning
+	// the whole page on large screens, so this is here for now
+	max-width: $document-width;
+	margin: 0 auto;
+}
+
+.Global-message {
+	background: hsla(200, 50%, 85%, 1);
+	border: 1px solid hsla(200, 50%, 65%, 1);
+	color: hsla(200, 50%, 20%, 1);
+	font-size: 0.8em;
+	margin: 1em auto;
+	max-width: $document-width;
+	padding: 1em;
+}
+
+/*
+ * Footer
+ */
+
+.Site-footer--container {
+	max-width: 900px;
+	width: 95%;
+	padding: 1em 0;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.Site-footer {
+	background: hsla(0, 0%, 98%, 1);
+	margin-top: 1em;
+	border-top: 4px solid #d8d8d8;
+	font-size: 0.9em;
+}
+
+.Site-footer--links > a {
+	color: #222;
+	display: inline-block;
+	margin: 0 1em 0.5em 1em;
+	text-decoration: none;
+	font-weight: bold;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}

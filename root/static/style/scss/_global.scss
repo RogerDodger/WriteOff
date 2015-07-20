@@ -1,0 +1,51 @@
+// =============================================================================
+// Styles applied to all or specific elements
+// =============================================================================
+
+* {
+	box-sizing: border-box;
+	font-family: sans-serif;
+	color: #222;
+}
+
+body {
+	font-size: 16px;
+}
+
+/* Light selection rather than dark with inverted text */
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+/* More sensible positioning behaviour for img elements */
+
+img {
+    vertical-align: middle;
+}
+
+/* Resizing horizontally is unncessary and can cause ugliness */
+
+textarea {
+    resize: vertical;
+}
+
+/* Make placeholder text consistent across browsers */
+
+::-webkit-input-placeholder {
+    color: #999;
+}
+
+:-moz-placeholder {
+    color: #999;
+}
+
+:-ms-input-placeholder {
+	color: #999;
+}

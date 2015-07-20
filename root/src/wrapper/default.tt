@@ -1,9 +1,10 @@
+[%- TAGS {{ }} -%]
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 	<head>
 		<meta charset="utf-8">
 
-		<title>[% title_html %]</title>
+		<title>{{ title_html }}</title>
 
 		<link rel="icon" href="/favicon.ico">
 		<link rel="stylesheet" href="/static/style/normalize.css">
@@ -15,156 +16,57 @@
 		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
 		<script src="/static/js/jquery.cookie.js"></script>
 		<script src="/static/js/writeoff-0.27.js"></script>
-
-		[%- IF c.config.use_google_analytics %]
-		<!-- Google Analytics -->
-		<script type="text/javascript">
-
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', '[% c.config.google_analytics_id %]']);
-			_gaq.push(['_trackPageview']);
-
-			(function() {
-				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			})();
-
-		</script>
-		[%- END %]
-
 	</head>
 
 	<body>
-		<section class="site">
-			<nav>
-				<ul>
-					<li>
-						<a href="/">Events &#9660;</a>
-						<ul>
-							<li><a href="/archive">Archive</a>
-							[%- IF c.user.admin %]
-							<li><a href="/event/add">Add</a>
-							[%- END %]
-						</ul>
+		<nav class="Site-header">
+			<div class="Site-header--container">
+				<a href="/">
+					<img class="Site-logo" src="/static/images/logo.png">
+				</a>
 
-					<li><a href="/faq">FAQ</a>
-					<li><a href="/scoreboard">Scoreboard</a>
-					<li><a href="/user/list">Users</a>
+				<a href="/artists">Artists</a>
+				<a href="/scoreboard">Scoreboard</a>
 
-					[%- IF c.user %]
-					<li>
-						<a href="#">~[% c.user.username %] &#9660;</a>
-						<ul>
-							<li class="smaller-than-next"><a href="/user/me">My Submissions</a>
-							<li>
-								<a href="/user/credentials?key=password" class="dialog-fetcher">
-									Change password
-								</a>
-							<li>
-								<a href="/user/credentials?key=email" class="dialog-fetcher">
-									Change email
-								</a>
-							<li><a href="/user/prefs" class="dialog-fetcher">Preferences</a>
-							<li><a href="/user/logout">Logout</a>
-						</ul>
-					</li>
-					[%- ELSE %]
-					<li>
-						<a href="/user/login" class="dialog-fetcher">Login &#9660;</a>
-						<ul>
-							<li class="smaller-than-next">
-								<a href="/user/register">Register</a>
-							<li class="smaller-than-next">
-								<a href="/user/recover">Recover lost password</a>
-							<li>
-								<a href="/user/verify">Resend verification email</a>
-						</ul>
-					[%- END %]
-				</ul>
+				<div class="pull-right">
+					{{ IF c.user }}
+					<a href="/user/me">~{{ c.user.username | html }}</a>
+					<a href="/user/credentials?key=password">Change password</a>
+					<a href="/user/credentials?key=email">Change email</a>
+					<a href="/user/prefs" class="dialog-fetcher">Preferences</a>
+					<a href="#">Logout</a>
+					{{ ELSE }}
+					<a href="/user/login">Login</a>
+					<a href="/user/register">Register</a>
+					<a href="/user/recover">Recover lost password</a>
+					<a href="/user/verify">Resend verification email</a>
+					{{ END }}
+				</div>
 
 				<div class="clearfix"></div>
-			</nav>
+			</div>
+		</nav>
 
-			<section class="content">
-			[%- IF c.config.read_only %]
-				<p class="popup-msg ui-state-highlight ui-corner-all">
-					<span class="ui-icon ui-icon-alert"></span>
-					The site is currently in read-only mode
-				</p>
-			[%- END %]
-			[%- IF status_msg %]
-				<p class="popup-msg ui-state-highlight ui-corner-all">
-					<span class="ui-icon ui-icon-check"></span>
-					[% status_msg %]
-				</p>
-			[%- END -%]
-			[%- IF error_msg %]
-				<p class="popup-msg ui-state-error ui-corner-all">
-					<span class="ui-icon ui-icon-alert"></span>
-					<strong>Error:</strong> [% error_msg %]
-				</p>
-			[%- END %]
+		<main class="Site-content">
+			{{ FOREACH msg IN messages }}
+				<div class="Global-message">{{ msg }}</div>
+			{{ END }}
+			{{ content }}
+		</main>
 
-			[% content %]
-
-			</section>
-
-			<section class="sidebar">
-				<aside class="news">
-					<h1>
-						News
-					</h1>
-					<ul>
-						[%- FOREACH item IN news.all %]
-						<li class="[% loop.parity %]">
-							<h2><a class="link" href="[% c.uri_for( c.controller('News').action_for('view'),
-								[ item.id_uri ]) %]">[% item.title | html %]</a></h2>
-							<p>[% item.created.delta_html %]</p>
-						</li>
-						[%- END %]
-					</ul>
-				</aside>
-				[%- IF event %]
-				<aside class="event">
-					<h1 title="[% event.prompt | html %]">[% event.prompt | html %]</h1>
-					[% INCLUDE event/links.tt %]
-				</aside>
-				[%- END %]
-			</section>
-
-			<footer>
-				<p>
-					Page generated
-					[% format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) %]
-				</p>
-				<p>
-					<a class="link new-tab" href="https://github.com/RogerDodger/WriteOff">
-						WriteOff.pm
-					</a>
-					[% c.app_version %]
-					&ndash;
-					<a class="link new-tab" href="[% c.uri_for('/humans.txt') %]">
-						Contributors
-					</a>
-				</p>
-				<p>
-					<a class="link" href="[% c.uri_for( c.controller('Root').action_for('tos') ) %]">
-						Terms of Service
-					</a>
-					|
-					<a class="link" href="[% c.uri_for( c.controller('Root').action_for('contact') ) %]">
-						Contact Us
-					</a>
-				</p>
-			[%- IF c.config.footer_addendum %]
-				<div class="addendum">
-					[% c.config.footer_addendum | markdown %]
+		<footer class="Site-footer">
+			<div class="Site-footer--container">
+				<div class="Site-footer--links">
+					<a href="/tos">Terms of Service</a>
+					<a href="/faq">FAQ</a>
+					<a href="/humans.txt">Contributors</a>
+					<a href="//github.com/RogerDoger/WriteOff">Source code</a>
+					<a href="mailto:cthor@cpan.org">Email me</a>
 				</div>
-			[%- END %]
-			</footer>
-
-			<div class="cleafix"></div>
-		</section>
+				<div>
+					{{ format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) }}
+				</div>
+			</div>
+		</footer>
 	</body>
 </html>

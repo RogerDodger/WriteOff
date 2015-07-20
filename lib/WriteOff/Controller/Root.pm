@@ -40,6 +40,7 @@ sub auto :Private {
 		editor     => $c->user->admin,
 		format     => scalar($c->req->param('format')) || 'html',
 		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
+		messages   => [],
 	);
 
 	my $so = $c->req->uri->host eq eval { URI->new( $c->req->referer )->host };
@@ -59,6 +60,10 @@ sub auto :Private {
 
 	if ($c->req->header('x-requested-with') eq 'XMLHttpRequest') {
 		$c->stash->{wrapper} = 'wrapper/bare.tt';
+	}
+
+	if ($c->config->{read_only}) {
+		push $c->stash->{messages}, 'The site is currently in read-only mode.';
 	}
 
 	1;
