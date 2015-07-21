@@ -2,13 +2,18 @@
 {{- DEFAULT fmt = '%a, %d %b %Y %H:%M %Z' }}
 {{- SET id = [ event.id_uri ] }}
 
-<div class="Event-header">
-	<a class="Event-expand">
+<div class="Event-header" data-autoexpand="{{ event.autoexpand }}">
+	<div class="Event-overview">
 		{{ event.prompt | html }}
 		&middot;
 		{{ format_dt(event.start, fmt) }}
-	</a>
+	</div>
+	<div class="Event-permalink">
+		<a href="{{ c.uri_for_action('/event/permalink', [ event.id_uri ]) }}">Permalink</a>
+	</div>
+	<div class="clearfix"></div>
 </div>
+
 <div class="Event-details">
 	<div class="Event-staff--container">
 		Organised by

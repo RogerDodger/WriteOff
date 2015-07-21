@@ -396,7 +396,6 @@ $(document).ready(function() {
 	});
 });
 
-
 // ===========================================================================
 // Draw event timelines
 // ===========================================================================
@@ -448,7 +447,7 @@ function DrawTimeline (e) {
 		.attr('stroke', 'black')
 		.attr('stroke-width', 1);
 
-	svg.append('circle')
+	svg.append('circle.now')
 		.attr('title', function(d, i) {
 			return new Date().toUTCString();
 		})
@@ -459,7 +458,7 @@ function DrawTimeline (e) {
 		.attr('stroke', 'black')
 		.attr('stroke-width', 1);
 
-	var times = svg.selectAll('text.dates')
+	svg.selectAll('text.dates')
 		.data(data)
 		.enter()
 		.append('text')
@@ -505,7 +504,6 @@ $(document).ready(function () {
 			return;
 		}
 
-		// Coerce
 		timeline.forEach(function (t) {
 			if ('start' in t) {
 				t.start = new Date(t.start + "Z");
@@ -530,15 +528,24 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Event-expand').each(function () {
+	$('.Event-header').each(function () {
+		if (this.dataset.autoexpand) {
+			return;
+		}
+
 		var $btn = $(this);
-		var $target = $btn.parent().next();
+		var $target = $btn.next();
+
 		if ($target && $target.hasClass('Event-details')) {
 			$btn.addClass('active');
 			$target.addClass('hidden');
-			$btn.click(function () {
-				$target.toggleClass('hidden');
+			$btn.click(function (e) {
+				if (e.target.localName == 'a') {
+					// Disable expand if the "permalink" is clicked
+					return;
+				}
 
+				$target.toggleClass('hidden');
 				if (!$target.hasClass('hidden')) {
 					DrawTimeline($target.find('.Event-timeline').get(0));
 				}

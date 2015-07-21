@@ -11,15 +11,8 @@ sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch'
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->redirect(
-		$c->uri_for(
-			$c->controller('Root')->action_for(
-				$c->model('DB::Event')->active->find( $c->stash->{event}->id ) ?
-				'index' : 'archive',
-			)
-		)
-		. "#" . $c->stash->{event}->id_uri
-	);
+	$c->stash->{event}{autoexpand} = 1;
+	$c->stash->{template} = 'event/view.tt';
 }
 
 sub add :Local :Args(0) {
