@@ -27,13 +27,12 @@ Generic
 	[%- IF event.art %]
 	1. may start drawing only after [% start %];
 	2. may start writing only after the artworks are released;
-	3. may not write a story to their own artwork;
 	[%- ELSE %]
 	1. may start writing only after [% start %];
 	[%- END %]
-	2. must remain publicly disassociated from their submitted works (i.e.,
-	anonymous) within all reasonable means until the event's conclusion; and
-	3. may not attempt to doctor the votes in any way that may give them or
+	2. may not disclose authorship explicitly or implicitly until this website has done so;
+	3. may not submit works explicitly connected to another work of theirs; and
+	4. may not attempt to doctor the votes in any way that may give them or
 	another person an unfair advantage.
 
 [%- IF event.custom_rules %]
