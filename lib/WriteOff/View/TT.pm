@@ -144,8 +144,8 @@ sub format_dt {
 		$dt->rfc2822,
 		$dt->iso8601,
 		do {
-			$dt->set_time_zone($tz);
-			defined $fmt ? $dt->strftime($fmt) : $dt->rfc2822;
+			my $local = $dt->clone->set_time_zone($tz);
+			defined $fmt ? $local->strftime($fmt) : $local->rfc2822;
 		};
 }
 
