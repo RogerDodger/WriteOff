@@ -27,11 +27,17 @@ String.prototype.regex = function() {
 };
 String.prototype.ucfirst = function() {
 	return this.substring(0, 1).toUpperCase() + this.substring(1, this.length);
-}
+};
 
 Date.prototype.getShortMonth = function () {
 	return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][this.getMonth()];
-}
+};
+
+Date.prototype.getDateSuffixed = function () {
+	var ii = this.getDate();
+	var i = ii % 10;
+	return ii + (i == 0 || i >= 4 || ii >= 11 && ii <= 13 ? "th" : ["st", "nd", "rd"][i-1]);
+};
 
 jQuery(document).ready(function($) {
 	$('a.ui-button, input[type=submit], button').button();
@@ -458,12 +464,19 @@ function DrawTimeline (e) {
 		.attr('stroke', 'black')
 		.attr('stroke-width', 1);
 
+	var m = data[0].end.getMonth();
 	svg.selectAll('text.dates')
 		.data(data)
 		.enter()
 		.append('text')
 		.text(function(d, i) {
-			return d.end.getDate() + " " + d.end.getShortMonth();
+			if (m != d.end.getMonth()) {
+				m = d.end.getMonth();
+				return d.end.getDate() + " " + d.end.getShortMonth();
+			}
+			else {
+				return d.end.getDateSuffixed();
+			}
 		})
 		.attr('title', function(d, i) {
 			return d.end.toUTCString();
