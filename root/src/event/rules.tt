@@ -30,7 +30,7 @@ Generic
 	[%- ELSE %]
 	1. may start writing only after [% start %];
 	[%- END %]
-	2. may not disclose authorship explicitly or implicitly until this website has done so;
+	2. may not disclose their authorship explicitly or implicitly until this website has done so;
 	3. may not submit works explicitly connected to another work of theirs; and
 	4. may not attempt to doctor the votes in any way that may give them or
 	another person an unfair advantage.
