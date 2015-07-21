@@ -464,19 +464,12 @@ function DrawTimeline (e) {
 		.attr('stroke', 'black')
 		.attr('stroke-width', 1);
 
-	var m = data[0].end.getMonth();
 	svg.selectAll('text.dates')
 		.data(data)
 		.enter()
 		.append('text')
 		.text(function(d, i) {
-			if (m != d.end.getMonth()) {
-				m = d.end.getMonth();
-				return d.end.getDate() + " " + d.end.getShortMonth();
-			}
-			else {
-				return d.end.getDateSuffixed();
-			}
+			return d.end.getDate() + " " + d.end.getShortMonth();
 		})
 		.attr('title', function(d, i) {
 			return d.end.toUTCString();
