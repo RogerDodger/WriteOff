@@ -83,11 +83,14 @@
 	@include button-group($hue: 230);
 }
 
-
 .Archive-button--container {
 	margin-top: 0.5em;
 }
 
 .Archive-button {
 	@include button($hue: 180);
+}
+
+.New-event--button {
+	@include button($hue: 30);
 }
