@@ -20,7 +20,7 @@ sub setup {
 			} else {
 				$app->log->debug("Write $out");
 			}
-			open my $fh, '>', $out;
+			open my $fh, '>:utf8', $out;
 			print $fh $css;
 			close $fh;
 		}
