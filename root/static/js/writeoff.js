@@ -522,7 +522,7 @@ $(document).ready(function () {
 		DrawTimeline(this);
 	});
 
-	$(document).on('resize', function () {
+	$(window).on('resize', function () {
 		$('.Event-timeline').each(function () {
 			DrawTimeLine(this);
 		});
