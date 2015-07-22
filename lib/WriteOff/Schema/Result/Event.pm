@@ -369,11 +369,6 @@ sub timeline_json {
 		end => $self->end->iso8601,
 	} if $self->private;
 
-	use Data::Dump;
-	dd @data;
-	my $fic = $self->fic;
-	dd $fic;
-
 	return encode_json \@data;
 }
 

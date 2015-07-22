@@ -511,12 +511,10 @@ $(document).ready(function () {
 		}
 
 		timeline.forEach(function (t) {
-			console.log(t);
 			if ('start' in t) {
 				t.start = new Date(t.start + "Z");
 			}
 			t.end = new Date(t.end + "Z");
-			console.log(t);
 		});
 
 		$(this).removeClass('hidden');
