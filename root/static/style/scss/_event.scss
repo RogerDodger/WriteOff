@@ -22,16 +22,11 @@
 .Event-permalink {
 	font-size: 0.8em;
 	position: absolute;
-	left: 92%;
-	left: calc(100% - 5em);
-	top: 0.4em;
+	right: 0.5em;
+	top: 0.5em;
 
 	a {
 		color: inherit;
-
-		&:hover {
-			text-decoration: underline;
-		}
 	}
 }
 
