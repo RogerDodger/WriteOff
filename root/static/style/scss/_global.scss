@@ -36,6 +36,16 @@ textarea {
     resize: vertical;
 }
 
+/* Link behaviour appropriate in more contexts */
+
+a {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 /* Make placeholder text consistent across browsers */
 
 ::-webkit-input-placeholder {

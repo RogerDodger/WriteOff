@@ -66,8 +66,12 @@ __PACKAGE__->config->{FILTERS} = {
 	markdown => sub {
 		my $text = shift;
 		$text = Text::Markdown->new->markdown($text);
-
+		$text =~ s{</li>}{}g;
 		return $text;
+	},
+
+	externallinks => sub {
+		return shift =~ s{(<a [^>]+ >) ([^<]+) </a>}{$1<i class="fa fa-external-link"></i> $2</a>}rgx;
 	},
 
 	bbcode => [sub {

@@ -11,7 +11,6 @@
 	<div class="Event-permalink">
 		<a href="{{ c.uri_for_action('/event/permalink', [ event.id_uri ]) }}">Permalink</a>
 	</div>
-	<div class="clearfix"></div>
 </div>
 
 <div class="Event-details">
@@ -133,7 +132,7 @@
 	{{- END }}
 
 	<div class="Event-blurb">
-	{{ event.blurb | html | markdown }}
+	{{ event.blurb | html | markdown | externallinks }}
 	</div>
 
 </div>

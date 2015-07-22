@@ -6,7 +6,8 @@
 	border-style: solid;
 	border-width: 1px;
 	display: inline-block;
-	padding: 0.5em 0.8em;
+	line-height: 1;
+	padding: 0.8em;
 	text-decoration: none;
 
 	background: hsla($hue, $sat, 80%, 1);
@@ -15,6 +16,7 @@
 
 	&:hover {
 		background: hsla($hue, $sat, 75%, 1);
+		text-decoration: none;
 	}
 
 	&:active {
