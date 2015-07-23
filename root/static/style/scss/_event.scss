@@ -35,14 +35,19 @@
 	margin-bottom: 1em;
 }
 
-.Event-staff--container {
+.Event-staff--container,
+.Event-wordcount--container {
 	color: #666;
-	padding-left: 2em;
-	text-indent: -2em;
 }
 
-.Event-staff {
+.Event-staff,
+.Event-wordcount {
 	color: #333;
+}
+
+.Event-wordcount--container {
+	padding-left: 2em;
+	text-indent: -2em;
 }
 
 .Event-links,

@@ -21,6 +21,13 @@
 		</span>
 	</div>
 
+	<div class="Event-wordcount--container">
+		Word limit
+		<span class="Event-wordcount">
+			{{ event.wc_min }}&ndash;{{ event.wc_max }}
+		</span>
+	</div>
+
 	{{ IF event.private }}
 	<div class="Event-staff--container">
 		Judged by
