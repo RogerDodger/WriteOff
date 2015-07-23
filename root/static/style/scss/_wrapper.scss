@@ -43,7 +43,7 @@ body {
 
 body.inverted {
 	background: hsla(240, 20%, 8%, 1);
-	filter: invert(100%);
+	filter: #{ "invert(100%)" };
 }
 
 /*
