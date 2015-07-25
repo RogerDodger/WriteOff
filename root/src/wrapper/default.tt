@@ -20,6 +20,7 @@
 		<script src="/static/js/d3.v3.min.js"></script>
 		<script>
 			var timelines = [];
+			var now = new Date("{{ now.iso8601 }}Z");
 		</script>
 		<script src="/static/js/writeoff-0.28.js"></script>
 	</head>

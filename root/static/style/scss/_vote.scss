@@ -2,11 +2,11 @@
 // Ballot styles
 // =============================================================================
 
-.Ballot {
+.Ballot-part {
 	table-layout: fixed;
 	width: 100%;
 
-	tr {
+	& > tbody > tr {
 		&:nth-child(odd) {
 			background-color: hsla(200, 30%, 90%, 1);
 		}

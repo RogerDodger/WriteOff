@@ -461,7 +461,7 @@ function DrawTimeline (e) {
 		.attr('title', function(d, i) {
 			return new Date().toUTCString();
 		})
-		.attr('cx', scale(Date.now()))
+		.attr('cx', scale(now))
 		.attr('cy', height / 2)
 		.attr('r', 4)
 		.attr('fill', 'red')
@@ -571,19 +571,22 @@ $(document).ready(function () {
 $(document).ready(function () {
 	var opt = {
 		group: "ballot",
-		filter: '.Ballot-directions, .Ballot-append',
-		onSort: function () {
-			$('.Ballot.ordered .Ballot-vote').each(function (i) {
-				this.cells[0].innerHTML = (i+1).ordinal();
-			});
-
-			$('.Ballot.unordered .Ballot-vote').each(function () {
-				this.cells[0].innerHTML = 'N/A';
-			})
-		}
+		filter: '.Ballot-directions, .Ballot-append'
 	};
 
-	$('.Ballot tbody').each(function () {
+	$('.Ballot tbody').each(function (i) {
+		if (i == 1) {
+			opt.onSort = function () {
+				console.log(arguments);
+				$('.Ballot.ordered .Ballot-vote').each(function (i) {
+					this.cells[0].innerHTML = (i+1).ordinal();
+				});
+
+				$('.Ballot.unordered .Ballot-vote').each(function () {
+					this.cells[0].innerHTML = 'N/A';
+				})
+			}
+		}
 		Sortable.create(this, opt);
 	});
 })

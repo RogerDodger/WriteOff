@@ -1,45 +1,57 @@
 [% TAGS {{ }} %]
+
+{{ BLOCK Itemcell }}
+	<input name="order" value="vote.item.id" type="hidden">
+	<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title }}</a>
+{{ END }}
+
 <div class="Document">
 	<div class="Document-title">
 		{{ label }}
 	</div>
 
-	{{ BLOCK Itemcell }}
-		<input name="order" value="vote.item.id" type="hidden">
-		<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title }}</a>
+	{{ IF end }}
+	<div class="Countdown">
+		<div class="Countdown-label">{{ label == 'Finals' ? 'Votes close' : 'Next round' }} in</div>
+		<div class="Countdown-time">{{ end.delta_html }}</div>
+	</div>
 	{{ END }}
 
-	<table class="Ballot ordered">
-		<tbody>
-			{{ FOREACH vote IN ordered.all }}
-			<tr class="Ballot-vote">
-				<td>{{ loop.count }}</td>
-				<td>{{ PROCESS Itemcell }}</td>
-			</tr>
-			{{ END }}
+	{{ IF record }}
+	<form class="Ballot" action="{{ c.uri_for_action(c.action, [ event.id_uri ]) }}" method="post">
+		<table class="Ballot-part ordered">
+			<tbody>
+				{{ FOREACH vote IN ordered.all }}
+				<tr class="Ballot-vote">
+					<td>{{ loop.count }}</td>
+					<td>{{ PROCESS Itemcell }}</td>
+				</tr>
+				{{ END }}
 
-			<tr class="Ballot-directions">
-				<td></td>
-				<td>Drag candidates here to rank them</td>
-			</tr>
-		</tbody>
-	</table>
+				<tr class="Ballot-directions">
+					<td></td>
+					<td>Drag candidates here to rank them</td>
+				</tr>
+			</tbody>
+		</table>
 
-	<div class="Ballot-divider"></div>
+		<div class="Ballot-divider"></div>
 
-	<table class="Ballot unordered">
-		<tbody>
-			{{ FOREACH vote IN unordered.all }}
-			<tr class="Ballot-vote">
-				<td>N/A</td>
-				<td>{{ PROCESS Itemcell }} </td>
-			</tr>
-			{{ END }}
+		<table class="Ballot-part unordered">
+			<tbody>
+				{{ FOREACH vote IN unordered.all }}
+				<tr class="Ballot-vote">
+					<td>N/A</td>
+					<td>{{ PROCESS Itemcell }}</td>
+				</tr>
+				{{ END }}
 
-			<tr class="Ballot-append">
-				<td></td>
-				<td>Add more</td>
-			</tr>
-		</tbody>
-	</table>
+				<tr class="Ballot-append">
+					<td></td>
+					<td>Add more</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	{{ END }}
 </div>

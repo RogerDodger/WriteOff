@@ -12,7 +12,7 @@ sub DateTime::rfc2822 {
 
 sub DateTime::delta {
 	my $self  = shift;
-	my $other = shift || DateTime->now;
+	my $other = shift || __PACKAGE__->now;
 	state $fmt = DateTime::Format::Human::Duration->new;
 
 	return $fmt->format_duration_between($other, $self,
