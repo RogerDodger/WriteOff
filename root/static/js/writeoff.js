@@ -457,7 +457,7 @@ function DrawTimeline (e) {
 		.attr('stroke', 'black')
 		.attr('stroke-width', 1);
 
-	svg.append('circle.now')
+	svg.append('circle')
 		.attr('title', function(d, i) {
 			return new Date().toUTCString();
 		})
