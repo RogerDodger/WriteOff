@@ -304,32 +304,10 @@ sub public_label {
 
 	$self->private
 		? $self->prelim
-			? "Round 2"
+			? "Semifinals"
 			: "Prelims"
 		: "Finals";
 }
-
-
-# var times = [
-# 	{
-# 		end: new Date("2015-07-14T06:00:00Z")
-# 	},
-# 	{
-# 		round: "Writing",
-# 		start: new Date("2015-07-14T06:00:00Z"),
-# 		end: new Date("2015-07-17T06:00:00Z")
-# 	},
-# 	{
-# 		round: "Prelims",
-# 		start: new Date("2015-07-17T06:00:00Z"),
-# 		end: new Date("2015-07-23T06:00:00Z")
-# 	},
-# 	{
-# 		round: "Finals",
-# 		start: new Date("2015-07-23T06:00:00Z"),
-# 		end: new Date("2015-07-27T06:00:00Z")
-# 	}
-# ];
 
 sub timeline_json {
 	my $self = shift;

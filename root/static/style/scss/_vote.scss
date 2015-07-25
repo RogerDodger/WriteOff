@@ -1,0 +1,51 @@
+// =============================================================================
+// Ballot styles
+// =============================================================================
+
+.Ballot {
+	table-layout: fixed;
+	width: 100%;
+
+	tr {
+		&:nth-child(odd) {
+			background-color: hsla(200, 30%, 90%, 1);
+		}
+
+		&:nth-child(even) {
+			background-color: hsla(200, 30%, 95%, 1);
+		}
+
+		& > td {
+			padding: 0.6em 0.3em;
+
+			&:first-child {
+				width: 4.2em;
+			}
+
+			&:not(:last-child) {
+				text-align: center;
+			}
+
+			&:last-child {
+				width: 100%;
+			}
+		}
+	}
+}
+
+.Ballot-divider {
+	$bg: hsla(0, 0%, 60%, 1);
+	background: linear-gradient(to right, transparent 0%, $bg 10%, $bg 90%, transparent 100%);
+	width: 80%;
+	height: 1px;
+	margin: 1em auto;
+}
+
+.Ballot-directions,
+.Ballot-append {
+	opacity: 0.6;
+
+	&:not(:only-child) {
+		display: none;
+	}
+}

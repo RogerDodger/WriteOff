@@ -9,7 +9,7 @@
 		{{ format_dt(event.start, fmt) }}
 	</div>
 	<div class="Event-permalink">
-		<a href="{{ c.uri_for_action('/event/permalink', [ event.id_uri ]) }}">Permalink</a>
+		<a href="{{ c.uri_for_action('/event/permalink', id) }}">Permalink</a>
 	</div>
 </div>
 
@@ -21,13 +21,6 @@
 		</span>
 	</div>
 
-	<div class="Event-wordcount--container">
-		Word limit
-		<span class="Event-wordcount">
-			{{ event.wc_min }}&ndash;{{ event.wc_max }}
-		</span>
-	</div>
-
 	{{ IF event.private }}
 	<div class="Event-staff--container">
 		Judged by
@@ -36,6 +29,13 @@
 		</span>
 	</div>
 	{{ END }}
+
+	<div class="Event-wordcount--container">
+		Word limit
+		<span class="Event-wordcount">
+			{{ event.wc_min }}&ndash;{{ event.wc_max }}
+		</span>
+	</div>
 
 	<div class="Event-timeline hidden"></div>
 	<script type="text/javascript">
@@ -100,19 +100,8 @@
 		<li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
 		<li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
 
-		{{ IF event.prelim }}
-		<li><a href="{{ c.uri_for_action('/vote/prelim', id) }}">Prelims</a>
-		{{ END }}
-
-		{{ IF event.public }}
-		<li><a href="{{ c.uri_for_action('/vote/public/fic', id) }}">{{ event.public_label }}</a>
-		{{ END }}
-
-		{{ IF event.private }}
-		<li><a href="{{ c.uri_for_action('/vote/private', id) }}">Finals</a>
-		{{ END }}
-
 		{{ IF event.has_results }}
+		<li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/event/results', id) }}">Results</a>
 		{{ END }}
 	</ul>

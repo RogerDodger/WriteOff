@@ -22,6 +22,10 @@ sub metadata {
 	});
 }
 
+sub finalists {
+	return shift->search({ finalist => 1 });
+}
+
 sub order_by_score {
 	return shift->order_by({ -desc => [ qw/private_score public_score prelim_score/ ]});
 }
@@ -32,6 +36,21 @@ sub candidates {
 
 sub noncandidates {
 	return shift->search({ candidate => 0 });
+}
+
+sub sample {
+	shift->search({
+		value => { '!=' => undef },
+	}, {
+		'+select', => [ \'COUNT(votes.value)' ],
+		'+as' => [ 'priority' ],
+		join => 'votes',
+		group_by => 'me.id',
+		order_by => [
+			{ -asc => \'count(votes.value)' },
+			{ -desc => \'RANDOM()' },
+		],
+	});
 }
 
 sub gallery {

@@ -16,6 +16,76 @@ Catalyst Controller.
 
 =cut
 
+sub cast :Private {
+	my ($self, $c) = @_;
+
+	if ($c->stash->{round} && $c->user) {
+		my $record = $c->stash->{event}->vote_records->search({
+			user_id => $c->user->id,
+			round   => $c->stash->{round},
+			type    => $c->stash->{type},
+		})->first;
+
+		if (!$record) {
+			$record = $c->stash->{event}->create_related('vote_records', {
+				user_id => $c->user->id,
+				round => $c->stash->{round},
+				type  => $c->stash->{type},
+			});
+
+			if ($c->stash->{type} eq 'fic') {
+				my $mins = $c->stash->{end}->delta_ms($c->stash->{now})->in_units('minutes');
+				my $w = $mins / 1440 * $c->config->{work}{threshold};
+
+				while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
+					$w -= $story->wordcount / $c->config->{work}{rate} + $c->config->{work}{offset};
+					$story->create_related('votes', { record_id => $record->id });
+				}
+			}
+		}
+
+		$c->stash->{record} = $record;
+		$c->stash->{ordered} = $record->votes->search(
+			{ value => { '!=' => undef }},
+			{ order_by => { -desc => 'value' }}
+		);
+		$c->stash->{unordered} = $record->votes->search({ value => undef });
+	}
+
+	push $c->stash->{title}, $c->stash->{label} || 'Vote';
+	$c->stash->{template} = 'vote/cast.tt';
+}
+
+sub fic :PathPart('vote') :Chained('/event/fic') :Args(0) {
+	my ($self, $c) = @_;
+
+	my $e = $c->stash->{event};
+
+	$c->stash->{type} = 'fic';
+	$c->stash->{view} = $c->controller('Fic')->action_for('view');
+	if ($e->fic_end > $e->now_dt) {
+		$c->stash->{end} = $e->prelim || $e->public || $e->private;
+	}
+	elsif ($e->prelim_votes_allowed) {
+		$c->stash->{round} = 'prelim';
+		$c->stash->{label} = 'Prelims';
+		$c->stash->{end} = $e->public;
+		$c->stash->{candidates} = $e->storys->eligible->sample;
+	} elsif ($e->public_votes_allowed) {
+		$c->stash->{round} = 'public';
+		$c->stash->{label} = $e->public_label;
+		$c->stash->{end} = $e->private || $e->end;
+		$c->stash->{candidates} = $e->storys->candidates->sample;
+	} elsif ($e->private_votes_allowed) {
+		$c->stash->{round} = 'private';
+		$c->stash->{label} = 'Finals';
+		$c->stash->{end} = $e->end;
+		$c->stash->{candidates} = $e->storys->finalists->sample;
+	}
+
+	$c->forward('cast');
+}
+
 sub prelim :PathPart('vote/prelim') :Chained('/event/fic') :Args(0) {
 	my ( $self, $c ) = @_;
 	my $e = $c->stash->{event};

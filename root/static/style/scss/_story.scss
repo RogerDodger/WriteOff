@@ -4,14 +4,10 @@
 
 .Story-container {
 	@extend .Document;
-	margin-top: 1em;
 }
 
 .Story-title {
-	font-size: 1.4em;
-	padding-bottom: 0.6em;
-	margin-bottom: 1em;
-	border-bottom: 1px solid hsla(0, 0%, 80%, 1);
+	@extend .Document-title;
 }
 
 .Story {

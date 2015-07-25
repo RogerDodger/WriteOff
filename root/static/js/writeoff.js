@@ -34,9 +34,13 @@ Date.prototype.getShortMonth = function () {
 };
 
 Date.prototype.getDateSuffixed = function () {
-	var ii = this.getDate();
-	var i = ii % 10;
-	return ii + (i == 0 || i >= 4 || ii >= 11 && ii <= 13 ? "th" : ["st", "nd", "rd"][i-1]);
+	this.getDate().ordinal();
+};
+
+Number.prototype.ordinal = function () {
+	var ii = this % 100;
+	var i = this % 10;
+	return this + (i == 0 || i >= 4 || ii >= 11 && ii <= 13 ? "th" : ["st", "nd", "rd"][i-1]);
 };
 
 jQuery(document).ready(function($) {
@@ -559,3 +563,27 @@ $(document).ready(function () {
 		}
 	})
 });
+
+// ===========================================================================
+// Ballot magic
+// ===========================================================================
+
+$(document).ready(function () {
+	var opt = {
+		group: "ballot",
+		filter: '.Ballot-directions, .Ballot-append',
+		onSort: function () {
+			$('.Ballot.ordered .Ballot-vote').each(function (i) {
+				this.cells[0].innerHTML = (i+1).ordinal();
+			});
+
+			$('.Ballot.unordered .Ballot-vote').each(function () {
+				this.cells[0].innerHTML = 'N/A';
+			})
+		}
+	};
+
+	$('.Ballot tbody').each(function () {
+		Sortable.create(this, opt);
+	});
+})

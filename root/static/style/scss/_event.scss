@@ -7,11 +7,11 @@
 	position: relative;
 }
 
-.Event-header + .Event-details.hidden {
-	margin-bottom: 0;
+.Event-details + .Event-header {
+	margin-top: 1em;
 }
 
-.Event-details + .Event-header {
+.Event-details.hidden + .Event-header {
 	margin-top: 0.5em;
 }
 
@@ -31,8 +31,7 @@
 }
 
 .Event-details {
-	@extend .Document;
-	margin-bottom: 1em;
+	@extend .Canvas;
 }
 
 .Event-staff--container,
@@ -45,7 +44,7 @@
 	color: #333;
 }
 
-.Event-wordcount--container {
+.Event-staff--container {
 	padding-left: 2em;
 	text-indent: -2em;
 }

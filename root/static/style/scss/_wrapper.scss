@@ -98,12 +98,25 @@ body.inverted {
 	@include container;
 }
 
-.Document {
+.Canvas {
 	@include container;
 
 	background-color: hsla(0, 0%, 98%, 1);
 	box-shadow: 0 0 3px #b6b6b6;
 	padding: 2em;
+}
+
+.Document {
+	@extend .Canvas;
+
+	margin-top: 1em;
+}
+
+.Document-title {
+	font-size: 1.4em;
+	padding-bottom: 0.6em;
+	margin-bottom: 1em;
+	border-bottom: 1px solid hsla(0, 0%, 80%, 1);
 }
 
 .Heading-unboxed {

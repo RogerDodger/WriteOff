@@ -175,9 +175,9 @@ __PACKAGE__->config(
 	# See FAQ for explanation of these constants
 	work => {
 		rate => 200,
-		offset => 11.275,
-		threshold => 511.875,
-		prelim => 2/5,
+		offset => 11,
+		threshold => 73,
+		voter => 0.5,
 	},
 
 	disable_component_resolution_regex_fallback => 1,
