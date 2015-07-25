@@ -7,12 +7,15 @@
 
 <div class="Document">
 	<div class="Document-title">
-		{{ label }}
+		{{ type.ucfirst }} Voting
+		{{ IF label }}
+			&#8250; {{ label }}
+		{{ END }}
 	</div>
+
 
 	{{ IF end }}
 	<div class="Countdown">
-		<div class="Countdown-label">{{ label == 'Finals' ? 'Votes close' : 'Next round' }} in</div>
 		<div class="Countdown-time">{{ end.delta_html }}</div>
 	</div>
 	{{ END }}
@@ -22,7 +25,7 @@
 		<table class="Ballot-part ordered">
 			<tbody>
 				{{ FOREACH vote IN ordered.all }}
-				<tr class="Ballot-vote">
+				<tr class="Ballot-item">
 					<td>{{ loop.count }}</td>
 					<td>{{ PROCESS Itemcell }}</td>
 				</tr>
@@ -40,7 +43,7 @@
 		<table class="Ballot-part unordered">
 			<tbody>
 				{{ FOREACH vote IN unordered.all }}
-				<tr class="Ballot-vote">
+				<tr class="Ballot-item">
 					<td>N/A</td>
 					<td>{{ PROCESS Itemcell }}</td>
 				</tr>

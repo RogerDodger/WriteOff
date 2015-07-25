@@ -565,7 +565,7 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
-// Ballot magic
+// Ballot sorting and posting
 // ===========================================================================
 
 $(document).ready(function () {
@@ -578,11 +578,11 @@ $(document).ready(function () {
 		if (i == 1) {
 			opt.onSort = function () {
 				console.log(arguments);
-				$('.Ballot.ordered .Ballot-vote').each(function (i) {
+				$('.ordered .Ballot-item').each(function (i) {
 					this.cells[0].innerHTML = (i+1).ordinal();
 				});
 
-				$('.Ballot.unordered .Ballot-vote').each(function () {
+				$('.unordered .Ballot-item').each(function () {
 					this.cells[0].innerHTML = 'N/A';
 				})
 			}
@@ -590,3 +590,41 @@ $(document).ready(function () {
 		Sortable.create(this, opt);
 	});
 })
+
+// ===========================================================================
+// Countdowns
+// ===========================================================================
+
+$(document).ready(function () {
+	var $times = $('.Countdown-time time');
+	if ($times.size()) {
+		var elapsed = 0;
+		var tick = function () {
+			// `now` is defined in the global scope as the server's current time
+			// this is used so that it's spoofable, and so that ountdowns are
+			// based off the server's clock rather than the client's
+			var now_ = now.getTime() + elapsed;
+
+			$times.each(function () {
+				var ms = (new Date(this.dateTime)).getTime() - now_;
+				var s = ms / 1000;
+				var m = s / 60;
+				var h = m / 60;
+				var d = h / 24;
+
+				s = Math.floor(s) % 60;
+				m = Math.floor(m) % 60;
+				h = Math.floor(h) % 24;
+				d = Math.floor(d);
+
+				this.textContent = d + "d " +
+					(h < 10 ? "0" + h : h) + "h " +
+					(m < 10 ? "0" + m : m) + "m " +
+					(s < 10 ? "0" + s : s) + "s";
+			});
+			elapsed += 1000;
+		};
+		setInterval(tick, 1000);
+		tick();
+	}
+});
