@@ -569,26 +569,30 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	var opt = {
-		group: "ballot",
-		filter: '.Ballot-directions, .Ballot-append'
-	};
-
-	$('.Ballot tbody').each(function (i) {
-		if (i == 1) {
-			opt.onSort = function () {
-				console.log(arguments);
+	var $ballot = $('.Ballot');
+	if ($ballot.length) {
+		Sortable.create($('.ordered tbody')[0], {
+			group: "ballot",
+			filter: '.Ballot-directions',
+			onSort: function () {
+				var n = $('.ordered .Ballot-item').length;
 				$('.ordered .Ballot-item').each(function (i) {
-					this.cells[0].innerHTML = (i+1).ordinal();
-				});
-
-				$('.unordered .Ballot-item').each(function () {
-					this.cells[0].innerHTML = 'N/A';
+					var score = 100 * (1 - i/(n - 1));
+					this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '</span>';
 				})
 			}
-		}
-		Sortable.create(this, opt);
-	});
+		});
+
+		Sortable.create($('.unordered tbody')[0], {
+			group: "ballot",
+			filter: '.Ballot-append',
+			onSort: function () {
+				$('.unordered .Ballot-item').each(function () {
+					this.cells[0].textContent = 'N/A';
+				})
+			}
+		});
+	}
 })
 
 // ===========================================================================
@@ -596,8 +600,8 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	var $times = $('.Countdown-time time');
-	if ($times.size()) {
+	var $times = $('.Countdown time');
+	if ($times.length) {
 		var elapsed = 0;
 		var tick = function () {
 			// `now` is defined in the global scope as the server's current time
@@ -607,6 +611,11 @@ $(document).ready(function () {
 
 			$times.each(function () {
 				var ms = (new Date(this.dateTime)).getTime() - now_;
+
+				if (ms < 0) {
+					ms = 0;
+				}
+
 				var s = ms / 1000;
 				var m = s / 60;
 				var h = m / 60;

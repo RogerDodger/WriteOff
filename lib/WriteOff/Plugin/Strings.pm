@@ -36,7 +36,7 @@ sub setup {
 sub strings {
 	my ($app, $key) = @_;
 
-	my $lang = $app->user->lang;
+	my $lang = 'en';
 	my $strings = exists $files{$lang} ? $files{$lang} : $files{en};
 
 	if (defined $string) {

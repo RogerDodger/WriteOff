@@ -1,9 +1,5 @@
 [% TAGS {{ }} %]
 
-{{ BLOCK Itemcell }}
-	<input name="order" value="vote.item.id" type="hidden">
-	<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title }}</a>
-{{ END }}
 
 <div class="Document">
 	<div class="Document-title">
@@ -13,15 +9,21 @@
 		{{ END }}
 	</div>
 
-
-	{{ IF end }}
 	<div class="Countdown">
-		<div class="Countdown-time">{{ end.delta_html }}</div>
+		{{ IF countdown }}
+			{{ countdown.delta_html }}
+		{{ ELSE }}
+			{{ c.string.votesClosed }}
+		{{ END }}
 	</div>
-	{{ END }}
 
 	{{ IF record }}
 	<form class="Ballot" action="{{ c.uri_for_action(c.action, [ event.id_uri ]) }}" method="post">
+		{{ BLOCK Itemcell }}
+			<input name="order" value="vote.item.id" type="hidden">
+			<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title | html }}</a>
+		{{ END }}
+
 		<table class="Ballot-part ordered">
 			<tbody>
 				{{ FOREACH vote IN ordered.all }}
@@ -38,7 +40,9 @@
 			</tbody>
 		</table>
 
-		<div class="Ballot-divider"></div>
+		<div class="Ballot-divider">
+			<input name="order" value="-1" type="hidden">
+		</div>
 
 		<table class="Ballot-part unordered">
 			<tbody>

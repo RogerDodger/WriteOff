@@ -34,7 +34,7 @@ sub cast :Private {
 			});
 
 			if ($c->stash->{type} eq 'fic') {
-				my $mins = $c->stash->{end}->delta_ms($c->stash->{now})->in_units('minutes');
+				my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
 				my $w = $mins / 1440 * $c->config->{work}{threshold};
 
 				while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
@@ -63,24 +63,24 @@ sub fic :PathPart('vote') :Chained('/event/fic') :Args(0) {
 
 	$c->stash->{type} = 'fic';
 	$c->stash->{view} = $c->controller('Fic')->action_for('view');
-	if ($e->fic_end > $e->now_dt) {
-		$c->stash->{end} = $e->prelim || $e->public || $e->private;
-	}
-	elsif ($e->prelim_votes_allowed) {
+
+	if ($e->prelim_votes_allowed) {
 		$c->stash->{round} = 'prelim';
 		$c->stash->{label} = 'Prelims';
-		$c->stash->{end} = $e->public;
+		$c->stash->{countdown} = $e->public;
 		$c->stash->{candidates} = $e->storys->eligible->sample;
 	} elsif ($e->public_votes_allowed) {
 		$c->stash->{round} = 'public';
 		$c->stash->{label} = $e->public_label;
-		$c->stash->{end} = $e->private || $e->end;
+		$c->stash->{countdown} = $e->private || $e->end;
 		$c->stash->{candidates} = $e->storys->candidates->sample;
 	} elsif ($e->private_votes_allowed) {
 		$c->stash->{round} = 'private';
 		$c->stash->{label} = 'Finals';
-		$c->stash->{end} = $e->end;
+		$c->stash->{countdown} = $e->end;
 		$c->stash->{candidates} = $e->storys->finalists->sample;
+	} elsif (!$e->ended) {
+		$c->stash->{countdown} = $e->prelim || $e->public || $e->private;
 	}
 
 	$c->forward('cast');
