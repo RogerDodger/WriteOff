@@ -13,7 +13,6 @@ use Catalyst qw/
 
 	+WriteOff::Plugin::Auth
 	+WriteOff::Plugin::Strings
-	+WriteOff::Plugin::Preprocessor
 
 	Session
 	Session::Store::File

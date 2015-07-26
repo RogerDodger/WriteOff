@@ -610,7 +610,8 @@ $(document).ready(function () {
 			var now_ = now.getTime() + elapsed;
 
 			$times.each(function () {
-				var ms = (new Date(this.dateTime)).getTime() - now_;
+				var ms = (new Date($(this).attr('datetime'))).getTime() - now_;
+				console.log(ms);
 
 				if (ms < 0) {
 					ms = 0;

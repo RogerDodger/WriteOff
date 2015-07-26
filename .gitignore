@@ -5,4 +5,3 @@ writeoff.log*
 config.yml
 scheduler.state
 nohup.out
-root/static/style/writeoff.css
