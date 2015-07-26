@@ -22,7 +22,7 @@
 			var timelines = [];
 			var now = new Date("{{ now.iso8601 }}Z");
 		</script>
-		<script src="/static/js/writeoff-0.30.js"></script>
+		<script src="/static/js/writeoff-0.31.js"></script>
 	</head>
 
 	<body>
