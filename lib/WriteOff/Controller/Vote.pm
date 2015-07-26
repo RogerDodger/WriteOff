@@ -37,12 +37,15 @@ sub cast :Private {
 
 			if ($c->stash->{type} eq 'fic') {
 				my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
-				$c->log->info($mins);
+				$c->log->warn($mins);
 				my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
+				$c->log->warn($w);
 
 				while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
 					next if $story->user_id == $c->user->id;
 					$w -= $story->wordcount / $c->config->{work}{rate} + $c->config->{work}{offset};
+					$c->log->warn($w);
+					$c->log->warn($record->id);
 					$story->create_related('votes', { record_id => $record->id });
 				}
 			}
