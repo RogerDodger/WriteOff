@@ -214,10 +214,12 @@ BEGIN { *admin = \&is_admin; }
 sub find_token {
 	my ($self, $type, $value) = @_;
 
-	return $self->tokens->search({
+	my $tokens = $self->tokens;
+
+	return $tokens->search({
 		type => $type,
 		value => $value,
-		expires => { '>' => DateTime->now },
+		expires => { '>' => $tokens->format_datetime(DateTime->now) },
 	})->single;
 }
 
