@@ -589,19 +589,17 @@ $(document).ready(function () {
 			$('.ordered .Ballot-item').each(function (i) {
 				var score = 100 * (1 - i/(n - 1));
 				this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '</span>';
+			});
 
-				console.log();
-
-				$.ajax({
-					method: 'POST',
-					url: document.location.pathname,
-					data: {
-						order: $('.ordered input[name=order]').map(function () {
-							return this.value;
-						}).get()
-					},
-				});
-			})
+			$.ajax({
+				method: 'POST',
+				url: document.location.pathname,
+				data: {
+					order: $('.ordered input[name=order]').map(function () {
+						return this.value;
+					}).get()
+				},
+			});
 		}
 	});
 
