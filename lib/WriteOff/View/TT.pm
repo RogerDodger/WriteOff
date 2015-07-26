@@ -84,12 +84,6 @@ __PACKAGE__->config->{FILTERS} = {
 			my $text = shift;
 			$text = $bb->render($text);
 
-			# Remove line breaks that immediately follow blocks
-			for my $block ( '<hr>', '</blockquote>', '</div>' ) {
-				my $e = quotemeta $block;
-				$text =~ s/$e\K\s*?<br>//g;
-			}
-
 			if ($opt->{xhtml}) {
 				$text =~ s{<hr>}{<hr/>}g;
 				$text =~ s{<br>}{<br/>}g;

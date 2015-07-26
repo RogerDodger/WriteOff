@@ -1122,17 +1122,20 @@ body.inverted {
   line-height: 1.618;
   margin-bottom: 2em;
   text-align: justify; }
+  .Story hr,
+  .Story blockquote,
+  .Story div {
+    display: inline-block;
+    width: 100%; }
   .Story hr {
     background: transparent;
     border: none;
     border-top: medium double #666;
     border-bottom: medium solid transparent;
     color: #666;
-    display: inline-block;
-    margin: 1.2em 0;
+    margin: 1.5em 0 0 0;
     padding: 0;
-    text-align: center;
-    width: 100%; }
+    text-align: center; }
     .Story hr:after {
       content: "§";
       position: relative;
@@ -1145,10 +1148,9 @@ body.inverted {
   .Story blockquote {
     padding: 1.8em;
     margin: 0;
-    border: 1px solid gainsboro;
+    border: 1px solid #cccccc;
     border-radius: 4px 0 0 0;
-    box-shadow: 2px 2px 2px grey; }
-  .Story blockquote {
+    box-shadow: 1px 1px 1px #d9d9d9;
     background: #fcfcfc; }
 
 .Ballot-part {
