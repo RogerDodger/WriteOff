@@ -631,7 +631,8 @@ $(document).ready(function () {
 				action: 'append'
 			},
 			success: function(res, status, xhr) {
-				document.location.reload(); //TEMPORARY
+				var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
+				$('.Ballot-append').before($row);
 			},
 			complete: function(xhr, status) {
 				waiting = false;
