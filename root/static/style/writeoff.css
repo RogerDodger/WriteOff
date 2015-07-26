@@ -625,50 +625,18 @@ textarea.example {
 .muted {
   color: #666; }
 
-* {
-  box-sizing: border-box; }
+.Countdown {
+  font-size: 1.2em;
+  margin: 1em 0;
+  text-align: center; }
 
-body {
-  color: #222;
-  font-size: 16px;
-  font-family: sans-serif; }
-
-/* Light selection rather than dark with inverted text */
-::-moz-selection {
-  background: #b3d4fc;
-  text-shadow: none; }
-
-::selection {
-  background: #b3d4fc;
-  text-shadow: none; }
-
-/* More sensible positioning behaviour for img elements */
-img {
-  vertical-align: middle; }
-
-/* Resizing horizontally is unncessary and can cause ugliness */
-textarea {
-  resize: vertical; }
-
-/* Link behaviour appropriate in more contexts */
-a {
-  text-decoration: none; }
-  a:hover {
-    text-decoration: underline; }
-
-/* Make placeholder text consistent across browsers */
-::-webkit-input-placeholder {
-  color: #999; }
-
-:-moz-placeholder {
-  color: #999; }
-
-:-ms-input-placeholder {
-  color: #999; }
-
-/* Until I figure out why .fa is inline-block, I'm overriding it here */
-.fa {
-  display: inline; }
+.Flash, .Global-message {
+  background: #c6dfec;
+  border: 1px solid #79b5d2;
+  color: #193b4d;
+  font-size: 0.8em;
+  padding: 1em;
+  margin-bottom: 1em; }
 
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
@@ -753,10 +721,46 @@ a {
   margin-top: 1em;
   margin-bottom: 1em; }
 
-.Countdown {
-  font-size: 1.2em;
-  margin: 1em 0;
-  text-align: center; }
+* {
+  box-sizing: border-box; }
+
+body {
+  color: #222;
+  font-size: 16px;
+  font-family: sans-serif; }
+
+/* Light selection rather than dark with inverted text */
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none; }
+
+::selection {
+  background: #b3d4fc;
+  text-shadow: none; }
+
+/* More sensible positioning behaviour for img elements */
+img {
+  vertical-align: middle; }
+
+/* Resizing horizontally is unncessary and can cause ugliness */
+textarea {
+  resize: vertical; }
+
+/* Link behaviour appropriate in more contexts */
+a {
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+
+/* Make placeholder text consistent across browsers */
+::-webkit-input-placeholder {
+  color: #999; }
+
+:-moz-placeholder {
+  color: #999; }
+
+:-ms-input-placeholder {
+  color: #999; }
 
 /*
  * Sticky footer
@@ -847,6 +851,9 @@ body.inverted {
 .Document, .Story-container {
   margin-top: 1em; }
 
+.Document > *:last-child, .Story-container > *:last-child {
+  margin-bottom: 0; }
+
 .Document-title, .Story-title {
   font-size: 1.4em;
   padding-bottom: 0.6em;
@@ -858,13 +865,7 @@ body.inverted {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  width: 98%;
-  background: #c6dfec;
-  border: 1px solid #79b5d2;
-  color: #193b4d;
-  font-size: 0.8em;
-  padding: 1em;
-  margin-bottom: 1em; }
+  width: 98%; }
 
 /*
  * Footer
@@ -890,6 +891,25 @@ body.inverted {
   font-weight: bold; }
   .Site-footer--links > a:hover {
     text-decoration: underline; }
+
+/*
+ * Absolutely positioned status messages
+ */
+.Status-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%; }
+  .Status-container .Status {
+    background-color: #fafafa;
+    border-radius: 4em 4em 0 0;
+    box-shadow: 0 0 2px #333333;
+    padding: 0.4em 1em;
+    margin: 0 auto;
+    max-width: 600px;
+    width: 100%;
+    text-align: center; }
+    .Status-container .Status div {
+      margin: 0.2em 0; }
 
 .Event-header {
   display: block;
@@ -955,14 +975,16 @@ body.inverted {
       line-height: 1;
       padding: 0.8em;
       text-decoration: none;
+      vertical-align: middle;
       background: #c7bddb;
       border-color: #8f7ab8;
-      color: #221b32; }
+      color: #251d35; }
       .Event-links.rules li a:hover {
-        background: #b9acd2;
+        cursor: pointer;
+        background: #bcafd4;
         text-decoration: none; }
       .Event-links.rules li a:active {
-        box-shadow: 0 0.5em 0.7em #ab9cc9 inset; }
+        box-shadow: 0 0.5em 0.7em #b0a2cd inset; }
 .Event-links.prompt {
   list-style-type: none;
   padding: 0; }
@@ -978,14 +1000,16 @@ body.inverted {
       line-height: 1;
       padding: 0.8em;
       text-decoration: none;
+      vertical-align: middle;
       background: #d6bddb;
       border-color: #ad7ab8;
-      color: #2e1b32; }
+      color: #311d35; }
       .Event-links.prompt li a:hover {
-        background: #ccacd2;
+        cursor: pointer;
+        background: #ceafd4;
         text-decoration: none; }
       .Event-links.prompt li a:active {
-        box-shadow: 0 0.5em 0.7em #c29cc9 inset; }
+        box-shadow: 0 0.5em 0.7em #c6a2cd inset; }
 .Event-links.fic {
   list-style-type: none;
   padding: 0; }
@@ -1001,14 +1025,16 @@ body.inverted {
       line-height: 1;
       padding: 0.8em;
       text-decoration: none;
+      vertical-align: middle;
       background: #dbbdd1;
       border-color: #b87aa3;
-      color: #321b2a; }
+      color: #351d2d; }
       .Event-links.fic li a:hover {
-        background: #d2acc6;
+        cursor: pointer;
+        background: #d4afc8;
         text-decoration: none; }
       .Event-links.fic li a:active {
-        box-shadow: 0 0.5em 0.7em #c99cba inset; }
+        box-shadow: 0 0.5em 0.7em #cda2bf inset; }
 .Event-links.art {
   list-style-type: none;
   padding: 0; }
@@ -1024,14 +1050,16 @@ body.inverted {
       line-height: 1;
       padding: 0.8em;
       text-decoration: none;
+      vertical-align: middle;
       background: #dbbdc2;
       border-color: #b87a85;
-      color: #321b1f; }
+      color: #351d21; }
       .Event-links.art li a:hover {
-        background: #d2acb3;
+        cursor: pointer;
+        background: #d4afb6;
         text-decoration: none; }
       .Event-links.art li a:active {
-        box-shadow: 0 0.5em 0.7em #c99ca3 inset; }
+        box-shadow: 0 0.5em 0.7em #cda2a9 inset; }
 
 .Event-admin {
   list-style-type: none;
@@ -1048,14 +1076,16 @@ body.inverted {
       line-height: 1;
       padding: 0.8em;
       text-decoration: none;
+      vertical-align: middle;
       background: #bdd1db;
       border-color: #7aa3b8;
-      color: #1b2a32; }
+      color: #1d2d35; }
       .Event-admin li a:hover {
-        background: #acc6d2;
+        cursor: pointer;
+        background: #afc8d4;
         text-decoration: none; }
       .Event-admin li a:active {
-        box-shadow: 0 0.5em 0.7em #9cbac9 inset; }
+        box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
 
 .Event-blurb > ul:first-child {
   list-style-type: none;
@@ -1072,14 +1102,16 @@ body.inverted {
       line-height: 1;
       padding: 0.8em;
       text-decoration: none;
+      vertical-align: middle;
       background: #bdc2db;
       border-color: #7a85b8;
-      color: #1b1f32; }
+      color: #1d2135; }
       .Event-blurb > ul:first-child li a:hover {
-        background: #acb3d2;
+        cursor: pointer;
+        background: #afb6d4;
         text-decoration: none; }
       .Event-blurb > ul:first-child li a:active {
-        box-shadow: 0 0.5em 0.7em #9ca3c9 inset; }
+        box-shadow: 0 0.5em 0.7em #a2a9cd inset; }
 
 .Archive-button--container {
   margin-top: 0.5em; }
@@ -1091,14 +1123,16 @@ body.inverted {
   line-height: 1;
   padding: 0.8em;
   text-decoration: none;
+  vertical-align: middle;
   background: #bddbdb;
   border-color: #7ab8b8;
-  color: #1b3232; }
+  color: #1d3535; }
   .Archive-button:hover {
-    background: #acd2d2;
+    cursor: pointer;
+    background: #afd4d4;
     text-decoration: none; }
   .Archive-button:active {
-    box-shadow: 0 0.5em 0.7em #9cc9c9 inset; }
+    box-shadow: 0 0.5em 0.7em #a2cdcd inset; }
 
 .New-event--button {
   border-style: solid;
@@ -1107,14 +1141,16 @@ body.inverted {
   line-height: 1;
   padding: 0.8em;
   text-decoration: none;
+  vertical-align: middle;
   background: #dbccbd;
   border-color: #b8997a;
-  color: #32261b; }
+  color: #35291d; }
   .New-event--button:hover {
-    background: #d2bfac;
+    cursor: pointer;
+    background: #d4c2af;
     text-decoration: none; }
   .New-event--button:active {
-    box-shadow: 0 0.5em 0.7em #c9b39c inset; }
+    box-shadow: 0 0.5em 0.7em #cdb8a2 inset; }
 
 .Story {
   font-family: serif;
@@ -1162,13 +1198,15 @@ body.inverted {
   .Ballot-part > tbody > tr:nth-child(even) {
     background-color: #eef4f6; }
   .Ballot-part > tbody > tr > td {
-    padding: 0.6em 0.3em; }
+    padding: 0.8em 0.3em; }
     .Ballot-part > tbody > tr > td:first-child {
-      width: 4.2em; }
-    .Ballot-part > tbody > tr > td:not(:last-child) {
+      width: 4.2em;
       text-align: center; }
     .Ballot-part > tbody > tr > td:last-child {
-      width: 100%; }
+      width: 5em;
+      text-align: center; }
+    .Ballot-part > tbody > tr > td.Ballot-abstain--cell {
+      padding: 0.2em 0.3em; }
 
 .Ballot-divider {
   background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
@@ -1176,9 +1214,33 @@ body.inverted {
   height: 1px;
   margin: 1em auto; }
 
+.Ballot-abstain {
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  line-height: 1;
+  padding: 0.8em;
+  text-decoration: none;
+  vertical-align: middle;
+  background: #f5f8fa;
+  border-color: #a5c0ce;
+  color: #233640;
+  padding: 0.4em;
+  font-size: 0.8em; }
+  .Ballot-abstain:hover {
+    cursor: pointer;
+    background: #e5edf1;
+    text-decoration: none; }
+  .Ballot-abstain:active {
+    box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
+
 .Ballot-directions,
 .Ballot-append {
   opacity: 0.6; }
   .Ballot-directions:not(:only-child),
   .Ballot-append:not(:only-child) {
     display: none; }
+
+.Ballot-append:hover {
+  cursor: pointer;
+  opacity: 1; }

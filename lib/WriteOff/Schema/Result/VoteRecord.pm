@@ -26,6 +26,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", default_value => "unknown", is_nullable => 0 },
 	"filled",
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
+	"abstains",
+	{ data_type => "integer", is_nullable => 1 },
 	"score",
 	{ data_type => "integer", is_nullable => 1 },
 	"mean",

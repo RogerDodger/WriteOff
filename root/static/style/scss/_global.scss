@@ -59,9 +59,3 @@ a {
 :-ms-input-placeholder {
 	color: #999;
 }
-
-/* Until I figure out why .fa is inline-block, I'm overriding it here */
-
-.fa {
-    display: inline;
-}

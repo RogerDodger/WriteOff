@@ -2,3 +2,5 @@ loginRequired=You must be logged in to perform this action
 noPrelim=There is no prelim round for this event
 noPrivate=There is no private judging round for this event
 votesClosed=Votes are closed
+loginRequiredVote=You must be logged in to vote
+ballotDirections=Drag candidates here to rank them

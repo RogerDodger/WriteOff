@@ -1,6 +1,7 @@
 package WriteOff::Controller::Vote;
 use Moose;
 use namespace::autoclean;
+use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -28,6 +29,7 @@ sub cast :Private {
 
 		if (!$record) {
 			$record = $c->stash->{event}->create_related('vote_records', {
+				abstains => 3,
 				user_id => $c->user->id,
 				round => $c->stash->{round},
 				type  => $c->stash->{type},
@@ -35,9 +37,10 @@ sub cast :Private {
 
 			if ($c->stash->{type} eq 'fic') {
 				my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
-				my $w = $mins / 1440 * $c->config->{work}{threshold};
+				my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
 				while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
+					next if $story->user_id == $c->user->id;
 					$w -= $story->wordcount / $c->config->{work}{rate} + $c->config->{work}{offset};
 					$story->create_related('votes', { record_id => $record->id });
 				}
@@ -49,11 +52,76 @@ sub cast :Private {
 			{ value => { '!=' => undef }},
 			{ order_by => { -desc => 'value' }}
 		);
-		$c->stash->{unordered} = $record->votes->search({ value => undef });
+		$c->stash->{unordered} = $record->votes->search({ value => undef, abstained => 0 });
+		$c->stash->{abstained} = $record->votes->search({ abstained => 1 });
 	}
 
 	push $c->stash->{title}, $c->stash->{label} || 'Vote';
 	$c->stash->{template} = 'vote/cast.tt';
+
+	$c->forward('do_cast') if $c->req->method eq 'POST';
+}
+
+sub do_cast :Private {
+	my ($self, $c) = @_;
+
+	my $record = $c->stash->{record};
+	return unless $record;
+
+	my $action = $c->req->params->{action} // 'reorder';
+	if ($action eq 'abstain') {
+		my $id = $c->req->params->{vote};
+		return unless looks_like_number $id;
+
+		my $vote = $record->votes->find($id);
+		$c->detach('/error', [ 'Vote not found' ]) unless $vote;
+
+		if (!$vote->abstained) {
+			$c->detach('/error', [ 'You have no more abstains' ])
+				if defined $record->abstains && $record->abstains <= 0;
+
+			$vote->update({ abstained => 1, value => undef });
+			if (defined $record->abstains) {
+				$record->update({ abstains => $record->abstains - 1 });
+			}
+
+			$c->res->body($record->abstains // -1);
+		}
+		else {
+			$vote->update({ abstained => 0 });
+			if (defined $record->abstains) {
+				$record->update({ abstains => $record->abstains + 1 });
+			}
+			$c->res->body($record->abstains // -1);
+		}
+	}
+	elsif ($action eq 'append') {
+		$c->detach('/error', [ 'You have candidates remaining' ]) if $c->stash->{unordered}->count;
+
+		while (my $item = $c->stash->{candidates}->next) {
+			next if $item->user_id == $c->user->id;
+			next if $item->votes->search({ record_id => $record->id })->count;
+
+			$c->stash->{vote} = $item->create_related('votes', { record_id => $record->id });
+			$c->stash->{template} = 'vote/ballot-item.tt';
+			last;
+		}
+	}
+	elsif ($action eq 'reorder') {
+		my @ids = $c->req->param("order[]");
+		my $votes = $record->votes;
+
+		my %okay = map { $_->id => 1 } $votes->search({ abstained => 0 });
+		for my $id (@ids) {
+			$c->detach('/error', [ 'Bad input' ]) unless $okay{$id};
+		}
+
+		my $score = @ids;
+		for my $id (@ids) {
+			$votes->find($id)->update({ value => $score });
+			$score--;
+		}
+	}
 }
 
 sub fic :PathPart('vote') :Chained('/event/fic') :Args(0) {

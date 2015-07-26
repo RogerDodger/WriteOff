@@ -10,10 +10,10 @@
 		<link rel="stylesheet" href="/static/style/normalize.css">
 		<link rel="stylesheet" href="/static/style/jquery-ui-1.9.2.custom.css">
 		<link rel="stylesheet" href="/static/style/font-awesome.min.css">
-		<link rel="stylesheet" href="/static/style/writeoff-0.40.css">
+		<link rel="stylesheet" href="/static/style/writeoff-0.41.css">
 
 		<script src="/static/js/modernizr-2.6.2.custom.min.js"></script>
-		<script src="/static/js/jquery-1.7.2.min.js"></script>
+		<script src="/static/js/jquery-2.1.4.min.js"></script>
 		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
 		<script src="/static/js/jquery.cookie.js"></script>
 		<script src="/static/js/Sortable.min.js"></script>
@@ -22,7 +22,7 @@
 			var timelines = [];
 			var now = new Date("{{ now.iso8601 }}Z");
 		</script>
-		<script src="/static/js/writeoff-0.28.js"></script>
+		<script src="/static/js/writeoff-0.29.js"></script>
 	</head>
 
 	<body>
@@ -82,5 +82,11 @@
 				</div>
 			</div>
 		</footer>
+
+		<div class="Status-container hidden">
+			<div class="Status">
+
+			</div>
+		</div>
 	</body>
 </html>

@@ -1,0 +1,2 @@
+ALTER TABLE vote_records ADD COLUMN abstains INTEGER;
+ALTER TABLE votes ADD COLUMN abstained BIT NOT NULL DEFAULT 0;

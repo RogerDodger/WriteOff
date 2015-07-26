@@ -8,6 +8,14 @@ function resetStoryFontSize() {
 	$('.story').css('font-size', config + 'em');
 }
 
+function removeStatus(el) {
+
+}
+
+function pushStatus () {
+
+}
+
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g, "");
 };
@@ -459,7 +467,7 @@ function DrawTimeline (e) {
 
 	svg.append('circle')
 		.attr('title', function(d, i) {
-			return new Date().toUTCString();
+			return now.toUTCString();
 		})
 		.attr('cx', scale(now))
 		.attr('cy', height / 2)
@@ -564,29 +572,118 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 	var $ballot = $('.Ballot');
-	if ($ballot.length) {
-		Sortable.create($('.ordered tbody')[0], {
-			group: "ballot",
-			filter: '.Ballot-directions',
-			onSort: function () {
-				var n = $('.ordered .Ballot-item').length;
-				$('.ordered .Ballot-item').each(function (i) {
-					var score = 100 * (1 - i/(n - 1));
-					this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '</span>';
-				})
-			}
-		});
 
-		Sortable.create($('.unordered tbody')[0], {
-			group: "ballot",
-			filter: '.Ballot-append',
-			onSort: function () {
-				$('.unordered .Ballot-item').each(function () {
-					this.cells[0].textContent = 'N/A';
-				})
+	if (!$ballot.length) {
+		return;
+	}
+
+	Sortable.create($('.ordered tbody')[0], {
+		group: {
+			name: "ballot",
+			pull: false,
+			put: true
+		},
+		filter: '.Ballot-directions',
+		onSort: function () {
+			var n = $('.ordered .Ballot-item').length;
+			$('.ordered .Ballot-item').each(function (i) {
+				var score = 100 * (1 - i/(n - 1));
+				this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '</span>';
+
+				console.log();
+
+				$.ajax({
+					method: 'POST',
+					url: document.location.pathname,
+					data: {
+						order: $('.ordered input[name=order]').map(function () {
+							return this.value;
+						}).get()
+					},
+				});
+			})
+		}
+	});
+
+	Sortable.create($('.unordered tbody')[0], {
+		group: {
+			name: "ballot",
+			pull: true,
+			put: false
+		},
+		filter: '.Ballot-append',
+	});
+
+	var waiting = false;
+	$('.Ballot-append').click(function () {
+		if (waiting) {
+			return;
+		}
+		waiting = true;
+		$('.Ballot-append--wait').removeClass('hidden');
+		$('.Ballot-append--control').addClass('hidden');
+
+		$.ajax({
+			type: 'POST',
+			url: document.location.pathname,
+			data: {
+				action: 'append'
+			},
+			success: function(res, status, xhr) {
+				document.location.reload(); //TEMPORARY
+			},
+			complete: function(xhr, status) {
+				waiting = false;
+				$('.Ballot-append--wait').addClass('hidden');
+				$('.Ballot-append--control').removeClass('hidden');
+			}
+		})
+	});
+
+	$('.Ballot-abstain').click(function () {
+		if (waiting) {
+			return;
+		}
+		waiting = true;
+
+		var $button = $(this);
+		var $row = $button.parents('.Ballot-item');
+		$.ajax({
+			type: 'POST',
+			url: document.location.pathname,
+			data: {
+				action: 'abstain',
+				vote: $row.find('input').attr('value')
+			},
+			success: function(res, status, xhr) {
+				if (!$row.parents('.Ballot-part').hasClass('abstained')) {
+					$button.text('Unabstain');
+					$row.detach();
+					$('.abstained tbody').append($row);
+					$('.abstained, .Ballot-divider--abstain').removeClass('hidden');
+
+					if (res <= 0) {
+						$('.ordered .Ballot-abstain, .unordered .Ballot-abstain').addClass('hidden');
+					}
+				}
+				else {
+					$button.text('Abstain');
+					$row.detach();
+					$('.Ballot-append').before($row);
+					if ($('.abstained .Ballot-item').length == 0) {
+						$('.abstained, .Ballot-divider--abstain').addClass('hidden');
+					}
+
+					if (res > 0) {
+						$('.Ballot-abstain').removeClass('hidden');
+					}
+				}
+			},
+			complete: function(xhr, status) {
+				waiting = false;
 			}
 		});
-	}
+	})
 })
 
 // ===========================================================================

@@ -18,46 +18,57 @@
 
 	{{ IF record }}
 	<form class="Ballot" action="{{ c.uri_for_action(c.action, [ event.id_uri ]) }}" method="post">
-		{{ BLOCK Itemcell }}
-			<input name="order" value="vote.item.id" type="hidden">
-			<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title | html }}</a>
-		{{ END }}
-
 		<table class="Ballot-part ordered">
 			<tbody>
 				{{ FOREACH vote IN ordered.all }}
-				<tr class="Ballot-item">
-					<td>{{ loop.count }}</td>
-					<td>{{ PROCESS Itemcell }}</td>
-				</tr>
+					{{ PROCESS 'vote/ballot-item.tt'  score = 100 * (1 - loop.index / loop.max) }}
 				{{ END }}
 
 				<tr class="Ballot-directions">
 					<td></td>
-					<td>Drag candidates here to rank them</td>
+					<td>{{ c.strings.ballotDirections }}</td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
 
-		<div class="Ballot-divider">
-			<input name="order" value="-1" type="hidden">
-		</div>
+		<div class="Ballot-divider"></div>
 
 		<table class="Ballot-part unordered">
 			<tbody>
 				{{ FOREACH vote IN unordered.all }}
-				<tr class="Ballot-item">
-					<td>N/A</td>
-					<td>{{ PROCESS Itemcell }}</td>
-				</tr>
+					{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
 				{{ END }}
 
 				<tr class="Ballot-append">
 					<td></td>
-					<td>Add more</td>
+					<td>
+						<span class="Ballot-append--control">Add more</span>
+						<span class="Ballot-append--wait hidden">
+							<i class="fa fa-spinner fa-spin"></i>
+							Please wait...
+						</span>
+					</td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
+
+		<div class="Ballot-divider Ballot-divider--abstain {{ 'hidden' IF !abstained.count }}"></div>
+
+		<table class="Ballot-part abstained {{ 'hidden' IF !abstained.count }}">
+			<tbody>
+				{{ FOREACH vote IN abstained.all }}
+					{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
+				{{ END }}
+			</tbody>
+		</table>
 	</form>
+	{{ END }}
+
+	{{ IF round && !c.user }}
+	<div class="Flash">
+		{{ c.strings.loginRequiredVote }}
+	</div>
 	{{ END }}
 </div>

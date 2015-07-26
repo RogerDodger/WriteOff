@@ -16,20 +16,23 @@
 		}
 
 		& > td {
-			padding: 0.6em 0.3em;
+			padding: 0.8em 0.3em;
 
 			&:first-child {
 				width: 4.2em;
-			}
-
-			&:not(:last-child) {
 				text-align: center;
 			}
 
 			&:last-child {
-				width: 100%;
+				width: 5em;
+				text-align: center;
+			}
+
+			&.Ballot-abstain--cell {
+				padding: 0.2em 0.3em;
 			}
 		}
+
 	}
 }
 
@@ -41,11 +44,24 @@
 	margin: 1em auto;
 }
 
+.Ballot-abstain {
+	@include button($hue: 200, $sat: 30%, $l: 97%);
+	padding: 0.4em;
+	font-size: 0.8em;
+}
+
 .Ballot-directions,
 .Ballot-append {
 	opacity: 0.6;
 
 	&:not(:only-child) {
 		display: none;
+	}
+}
+
+.Ballot-append {
+	&:hover {
+		cursor: pointer;
+		opacity: 1;
 	}
 }

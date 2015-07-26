@@ -112,6 +112,10 @@ body.inverted {
 	margin-top: 1em;
 }
 
+.Document > *:last-child {
+	margin-bottom: 0;
+}
+
 .Document-title {
 	font-size: 1.4em;
 	padding-bottom: 0.6em;
@@ -132,13 +136,7 @@ body.inverted {
 
 .Global-message {
 	@include container;
-
-	background: hsla(200, 50%, 85%, 1);
-	border: 1px solid hsla(200, 50%, 65%, 1);
-	color: hsla(200, 50%, 20%, 1);
-	font-size: 0.8em;
-	padding: 1em;
-	margin-bottom: 1em;
+	@extend .Flash;
 }
 
 /*
@@ -169,5 +167,30 @@ body.inverted {
 
 	&:hover {
 		text-decoration: underline;
+	}
+}
+
+/*
+ * Absolutely positioned status messages
+ */
+
+.Status-container {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+
+	.Status {
+		background-color: hsla(0, 0, 98%, 1);
+		border-radius: 4em 4em 0 0;
+		box-shadow: 0 0 2px hsla(0, 0, 20%, 1);
+		padding: 0.4em 1em;
+		margin: 0 auto;
+		max-width: 600px;
+		width: 100%;
+		text-align: center;
+
+		div {
+			margin: 0.2em 0;
+		}
 	}
 }
