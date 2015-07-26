@@ -37,6 +37,7 @@ sub cast :Private {
 
 			if ($c->stash->{type} eq 'fic') {
 				my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
+				$c->log->info($mins);
 				my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
 				while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {

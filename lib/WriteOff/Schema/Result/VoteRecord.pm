@@ -122,6 +122,8 @@ sub is_unfilled {
 }
 
 sub is_fillable {
+	return 0;
+
 	my $self = shift;
 	my $event = $self->event;
 
