@@ -2,10 +2,10 @@
 
 <tr class="Ballot-item">
 	<td>
-		{{ IF score != 'N/A' }}
+		{{ IF score.match('^[\d.]+$') }}
 		<span title="{{ score | format('%8.5f') }}">{{ score | format('%d') }}</span>
 		{{ ELSE }}
-		N/A
+		{{ score }}
 		{{ END }}
 	</td>
 	<td>
