@@ -508,12 +508,6 @@ $(document).ready(function () {
 	$('.Event-timeline').each(function () {
 		var timeline = timelines.shift();
 
-		if (!timeline) {
-			console.log(this);
-			console.log("PANIC!!!!");
-			return;
-		}
-
 		timeline.forEach(function (t) {
 			if ('start' in t) {
 				t.start = new Date(t.start + "Z");
@@ -611,7 +605,6 @@ $(document).ready(function () {
 
 			$times.each(function () {
 				var ms = (new Date($(this).attr('datetime'))).getTime() - now_;
-				console.log(ms);
 
 				if (ms < 0) {
 					ms = 0;
