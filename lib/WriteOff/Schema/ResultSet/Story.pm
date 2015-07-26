@@ -40,8 +40,6 @@ sub noncandidates {
 
 sub sample {
 	shift->search({
-		value => { '!=' => undef },
-	}, {
 		'+select', => [ \'COUNT(votes.value)' ],
 		'+as' => [ 'priority' ],
 		join => 'votes',
