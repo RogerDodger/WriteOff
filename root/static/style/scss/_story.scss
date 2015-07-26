@@ -18,14 +18,16 @@
 	text-align: justify;
 
 	hr {
-		padding: 0;
-		margin: 1.2em 0;
+		background: transparent;
 	    border: none;
 	    border-top: medium double #666;
 		border-bottom: medium solid transparent;
 	    color: #666;
-		background: transparent;
+		display: inline-block;
+		margin: 1.2em 0;
+		padding: 0;
 	    text-align: center;
+		width: 100%;
 
 		&:after {
 		    content: "§";
