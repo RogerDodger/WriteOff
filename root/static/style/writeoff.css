@@ -641,7 +641,7 @@ textarea.example {
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden {
+.hidden, .Ballot > .abstained:empty {
   display: none !important;
   visibility: hidden; }
 
@@ -928,7 +928,7 @@ body.inverted {
 .Event-details + .Event-header {
   margin-top: 1em; }
 
-.Event-details.hidden + .Event-header {
+.Event-details.hidden + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
@@ -1190,29 +1190,32 @@ body.inverted {
     box-shadow: 1px 1px 1px #d9d9d9;
     background: #fcfcfc; }
 
-.Ballot-part {
-  table-layout: fixed;
+.Ballot {
   width: 100%; }
-  .Ballot-part > tbody > tr:nth-child(odd) {
+  .Ballot > tbody > tr:nth-child(odd) > td {
     background-color: #dee8ed; }
-  .Ballot-part > tbody > tr:nth-child(even) {
+  .Ballot > tbody > tr:nth-child(even) > td {
     background-color: #eef4f6; }
-  .Ballot-part > tbody > tr > td {
-    padding: 0.8em 0.3em; }
-    .Ballot-part > tbody > tr > td:first-child {
-      width: 4.2em;
+  .Ballot > tbody > tr > td.Ballot-divider {
+    background-color: transparent; }
+    .Ballot > tbody > tr > td.Ballot-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 0.5em auto;
+      content: " "; }
+  .Ballot > tbody > tr > td {
+    padding: 0.8em; }
+    .Ballot > tbody > tr > td:first-child, .Ballot > tbody > tr > td:last-child {
       text-align: center; }
-    .Ballot-part > tbody > tr > td:last-child {
-      width: 5em;
-      text-align: center; }
-    .Ballot-part > tbody > tr > td.Ballot-abstain--cell {
-      padding: 0.2em 0.3em; }
-
-.Ballot-divider {
-  background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
-  width: 80%;
-  height: 1px;
-  margin: 1em auto; }
+    .Ballot > tbody > tr > td:nth-child(2) {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%; }
+    .Ballot > tbody > tr > td.Ballot-abstain--cell {
+      padding-top: 0;
+      padding-bottom: 0; }
 
 .Ballot-abstain {
   border-style: solid;

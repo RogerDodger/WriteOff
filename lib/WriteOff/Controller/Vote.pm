@@ -103,12 +103,14 @@ sub do_cast :Private {
 			next if $item->votes->search({ record_id => $record->id })->count;
 
 			$c->stash->{vote} = $item->create_related('votes', { record_id => $record->id });
+			$c->stash->{score} = 'N/A';
 			$c->stash->{template} = 'vote/ballot-item.tt';
 			last;
 		}
 	}
 	elsif ($action eq 'reorder') {
-		my @ids = $c->req->param("order[]");
+		my @ids = $c->req->param("order");
+		push @ids, grep defined, $c->req->param("order[]"); #temporary
 		my $votes = $record->votes;
 
 		my %okay = map { $_->id => 1 } $votes->search({ abstained => 0 });

@@ -17,53 +17,55 @@
 	</div>
 
 	{{ IF record }}
-	<form class="Ballot" action="{{ c.uri_for_action(c.action, [ event.id_uri ]) }}" method="post">
-		<table class="Ballot-part ordered">
-			<tbody>
-				{{ FOREACH vote IN ordered.all }}
-					{{ PROCESS 'vote/ballot-item.tt'  score = loop.max == 0 ? 'NaN' : 100 * (1 - loop.index / loop.max) }}
-				{{ END }}
+	<table class="Ballot">
+		<tbody class="ordered">
+			{{ FOREACH vote IN ordered.all }}
+				{{ PROCESS 'vote/ballot-item.tt'  score = loop.max == 0 ? 'NaN' : 100 * (1 - loop.index / loop.max) }}
+			{{ END }}
 
-				<tr class="Ballot-directions">
-					<td></td>
-					<td>{{ c.strings.ballotDirections }}</td>
-					<td></td>
-				</tr>
-			</tbody>
-		</table>
+			<tr class="Ballot-directions">
+				<td></td>
+				<td>{{ c.strings.ballotDirections }}</td>
+				<td></td>
+			</tr>
+		</tbody>
 
-		<div class="Ballot-divider"></div>
+		<tbody>
+			<tr>
+				<td class="Ballot-divider" colspan="3"></td>
+			</tr>
+		</tbody>
 
-		<table class="Ballot-part unordered">
-			<tbody>
-				{{ FOREACH vote IN unordered.all }}
-					{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
-				{{ END }}
+		<tbody class="unordered">
+			{{ FOREACH vote IN unordered.all }}
+				{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
+			{{ END }}
 
-				<tr class="Ballot-append">
-					<td></td>
-					<td>
-						<span class="Ballot-append--control">Add more</span>
-						<span class="Ballot-append--wait hidden">
-							<i class="fa fa-spinner fa-spin"></i>
-							Please wait...
-						</span>
-					</td>
-					<td></td>
-				</tr>
-			</tbody>
-		</table>
+			<tr class="Ballot-append">
+				<td></td>
+				<td>
+					<span class="Ballot-append--control">Add more</span>
+					<span class="Ballot-append--wait hidden">
+						<i class="fa fa-spinner fa-spin"></i>
+						Please wait...
+					</span>
+				</td>
+				<td></td>
+			</tr>
+		</tbody>
 
-		<div class="Ballot-divider Ballot-divider--abstain {{ 'hidden' IF !abstained.count }}"></div>
+		<tbody class="{{ 'hidden' IF !abstained.count }}">
+			<tr>
+				<td class="Ballot-divider" colspan="3"></td>
+			</tr>
+		</tbody>
 
-		<table class="Ballot-part abstained {{ 'hidden' IF !abstained.count }}">
-			<tbody>
-				{{ FOREACH vote IN abstained.all }}
-					{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
-				{{ END }}
-			</tbody>
-		</table>
-	</form>
+		<tbody class="abstained">
+			{{ FOREACH vote IN abstained.all }}
+				{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
+			{{ END }}
+		</tbody>
+	</table>
 	{{ END }}
 
 	{{ IF round && !c.user }}

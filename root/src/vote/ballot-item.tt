@@ -3,7 +3,7 @@
 <tr class="Ballot-item">
 	<td>
 		{{ IF score.match('^[\d.]+$') }}
-		<span title="{{ score | format('%8.5f') }}">{{ score | format('%d') }}%</span>
+		<span title="{{ score | format('%8.5f') }}">{{ score | format('%.0f') }}%</span>
 		{{ ELSE }}
 		{{ score }}
 		{{ END }}

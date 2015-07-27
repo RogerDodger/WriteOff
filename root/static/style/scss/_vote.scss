@@ -2,46 +2,51 @@
 // Ballot styles
 // =============================================================================
 
-.Ballot-part {
-	table-layout: fixed;
+.Ballot {
 	width: 100%;
 
 	& > tbody > tr {
-		&:nth-child(odd) {
+		&:nth-child(odd) > td {
 			background-color: hsla(200, 30%, 90%, 1);
 		}
 
-		&:nth-child(even) {
+		&:nth-child(even) > td {
 			background-color: hsla(200, 30%, 95%, 1);
 		}
 
-		& > td {
-			padding: 0.8em 0.3em;
+		& > td.Ballot-divider {
+			background-color: transparent;
 
-			&:first-child {
-				width: 4.2em;
-				text-align: center;
-			}
-
-			&:last-child {
-				width: 5em;
-				text-align: center;
-			}
-
-			&.Ballot-abstain--cell {
-				padding: 0.2em 0.3em;
+			&:before {
+				@include divider;
+				content: " ";
 			}
 		}
 
-	}
-}
+		& > td {
+			padding: 0.8em;
 
-.Ballot-divider {
-	$bg: hsla(0, 0%, 60%, 1);
-	background: linear-gradient(to right, transparent 0%, $bg 10%, $bg 90%, transparent 100%);
-	width: 80%;
-	height: 1px;
-	margin: 1em auto;
+			&:first-child,
+			&:last-child {
+				text-align: center;
+			}
+
+			&:nth-child(2) {
+				padding-left: 0;
+				padding-right: 0;
+				width: 100%;
+			}
+
+			&.Ballot-abstain--cell {
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+		}
+	}
+
+	& > .abstained:empty {
+		@extend .hidden;
+	}
 }
 
 .Ballot-abstain {

@@ -44,6 +44,15 @@
 	}
 }
 
+@mixin divider($hue: 0, $sat: 0%, $l: 60%) {
+	$bg: hsla($hue, $sat, $l, 1);
+	display: block;
+	background: linear-gradient(to right, transparent 0%, $bg 10%, $bg 90%, transparent 100%);
+	width: 80%;
+	height: 1px;
+	margin: 0.5em auto;
+}
+
 .Countdown {
 	font-size: 1.2em;
 	margin: 1em 0;

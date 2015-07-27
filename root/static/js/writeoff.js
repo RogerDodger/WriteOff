@@ -585,7 +585,8 @@ $(document).ready(function () {
 		});
 	};
 
-	Sortable.create($('.ordered tbody')[0], {
+	var ballot;
+	ballot = Sortable.create($('.ordered')[0], {
 		group: {
 			name: "ballot",
 			pull: false,
@@ -593,20 +594,20 @@ $(document).ready(function () {
 		},
 		filter: '.Ballot-directions',
 		onSort: function () {
+			ballot.option('disabled', true);
 			resetPercentiles();
 			$.ajax({
 				method: 'POST',
 				url: document.location.pathname,
-				data: {
-					order: $('.ordered input[name=order]').map(function () {
-						return this.value;
-					}).get()
-				},
+				data: $('.ordered input[name="order"]').serialize(),
+				complete: function () {
+					ballot.option('disabled', false);
+				}
 			});
 		}
 	});
 
-	Sortable.create($('.unordered tbody')[0], {
+	Sortable.create($('.unordered')[0], {
 		group: {
 			name: "ballot",
 			pull: true,
@@ -616,6 +617,55 @@ $(document).ready(function () {
 	});
 
 	var waiting = false;
+	var abstain = function () {
+		if (waiting) {
+			return;
+		}
+		waiting = true;
+
+		var $button = $(this);
+		var $row = $button.parents('.Ballot-item');
+		$.ajax({
+			type: 'POST',
+			url: document.location.pathname,
+			data: {
+				action: 'abstain',
+				vote: $row.find('input').attr('value')
+			},
+			success: function(res, status, xhr) {
+				if (!$row.parents('tbody').hasClass('abstained')) {
+					$button.text('Unabstain');
+					$row.find('td').first().text('N/A');
+					$row.detach();
+					$('.abstained').append($row);
+					$('.abstained').prev().removeClass('hidden');
+					resetPercentiles();
+
+					if (res <= 0) {
+						$('.ordered .Ballot-abstain, .unordered .Ballot-abstain').addClass('hidden');
+					}
+				}
+				else {
+					$button.text('Abstain');
+					$row.detach();
+					$('.Ballot-append').before($row);
+					if ($('.abstained .Ballot-item').length == 0) {
+						$('.abstained').prev().addClass('hidden');
+					}
+
+					if (res > 0) {
+						$('.Ballot-abstain').removeClass('hidden');
+					}
+				}
+			},
+			complete: function(xhr, status) {
+				waiting = false;
+			}
+		});
+	};
+
+	$('.Ballot-abstain').click(abstain);
+
 	$('.Ballot-append').click(function () {
 		if (waiting) {
 			return;
@@ -632,6 +682,7 @@ $(document).ready(function () {
 			},
 			success: function(res, status, xhr) {
 				var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
+				$row.find('.Ballot-abstain').click(abstain);
 				$('.Ballot-append').before($row);
 			},
 			complete: function(xhr, status) {
@@ -642,52 +693,6 @@ $(document).ready(function () {
 		})
 	});
 
-	$('.Ballot-abstain').click(function () {
-		if (waiting) {
-			return;
-		}
-		waiting = true;
-
-		var $button = $(this);
-		var $row = $button.parents('.Ballot-item');
-		$.ajax({
-			type: 'POST',
-			url: document.location.pathname,
-			data: {
-				action: 'abstain',
-				vote: $row.find('input').attr('value')
-			},
-			success: function(res, status, xhr) {
-				if (!$row.parents('.Ballot-part').hasClass('abstained')) {
-					$button.text('Unabstain');
-					$row.find('td').first().text('N/A');
-					$row.detach();
-					$('.abstained tbody').append($row);
-					$('.abstained, .Ballot-divider--abstain').removeClass('hidden');
-					resetPercentiles();
-
-					if (res <= 0) {
-						$('.ordered .Ballot-abstain, .unordered .Ballot-abstain').addClass('hidden');
-					}
-				}
-				else {
-					$button.text('Abstain');
-					$row.detach();
-					$('.Ballot-append').before($row);
-					if ($('.abstained .Ballot-item').length == 0) {
-						$('.abstained, .Ballot-divider--abstain').addClass('hidden');
-					}
-
-					if (res > 0) {
-						$('.Ballot-abstain').removeClass('hidden');
-					}
-				}
-			},
-			complete: function(xhr, status) {
-				waiting = false;
-			}
-		});
-	})
 })
 
 // ===========================================================================
