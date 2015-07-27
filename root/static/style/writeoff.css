@@ -641,7 +641,8 @@ textarea.example {
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden, .Ballot > .abstained:empty {
+.hidden, .Ballot .ordered .Ballot-unabstain,
+.Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain, .Ballot > .abstained:empty {
   display: none !important;
   visibility: hidden; }
 
@@ -928,7 +929,8 @@ body.inverted {
 .Event-details + .Event-header {
   margin-top: 1em; }
 
-.Event-details.hidden + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header {
+.Event-details.hidden + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
+.Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
@@ -1217,7 +1219,8 @@ body.inverted {
       padding-top: 0;
       padding-bottom: 0; }
 
-.Ballot-abstain {
+.Ballot-abstain,
+.Ballot-unabstain {
   border-style: solid;
   border-width: 1px;
   display: inline-block;
@@ -1230,11 +1233,13 @@ body.inverted {
   color: #233640;
   padding: 0.4em;
   font-size: 0.8em; }
-  .Ballot-abstain:hover {
+  .Ballot-abstain:hover,
+  .Ballot-unabstain:hover {
     cursor: pointer;
     background: #e5edf1;
     text-decoration: none; }
-  .Ballot-abstain:active {
+  .Ballot-abstain:active,
+  .Ballot-unabstain:active {
     box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
 
 .Ballot-directions,

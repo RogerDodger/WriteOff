@@ -32,7 +32,6 @@
 					<img class="Site-logo" src="/static/images/logo.png">
 				</a>
 
-				<a href="/artists">Artists</a>
 				<a href="/scoreboard">Scoreboard</a>
 
 				<div class="pull-right">

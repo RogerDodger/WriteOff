@@ -13,8 +13,11 @@
 		<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title | html }}</a>
 	</td>
 	<td class="Ballot-abstain--cell">
-		<span class="Ballot-abstain {{ 'hidden' IF !vote.abstained && record.abstains.defined && record.abstains <= 0 }}">
-			{{ vote.abstained ? 'Unabstain' : 'Abstain' }}
+		<span class="Ballot-abstain {{ 'hidden' IF record.abstains.defined && record.abstains <= 0 }}">
+			{{ c.strings.abstain }}
+		</span>
+		<span class="Ballot-unabstain">
+			{{ c.strings.unabstain }}
 		</span>
 	</td>
 </tr>

@@ -44,10 +44,12 @@
 			<tr class="Ballot-append">
 				<td></td>
 				<td>
-					<span class="Ballot-append--control">Add more</span>
+					<span class="Ballot-append--control">
+						{{ c.strings.addAnother }}
+					</span>
 					<span class="Ballot-append--wait hidden">
 						<i class="fa fa-spinner fa-spin"></i>
-						Please wait...
+						{{ c.strings.pleaseWait }}...
 					</span>
 				</td>
 				<td></td>

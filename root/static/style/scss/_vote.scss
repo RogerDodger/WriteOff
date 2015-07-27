@@ -42,6 +42,20 @@
 				padding-bottom: 0;
 			}
 		}
+
+	}
+
+	.ordered,
+	.unordered {
+		.Ballot-unabstain {
+			@extend .hidden;
+		}
+	}
+
+	.abstained {
+		.Ballot-abstain {
+			@extend .hidden;
+		}
 	}
 
 	& > .abstained:empty {
@@ -49,7 +63,8 @@
 	}
 }
 
-.Ballot-abstain {
+.Ballot-abstain,
+.Ballot-unabstain {
 	@include button($hue: 200, $sat: 30%, $l: 97%);
 	padding: 0.4em;
 	font-size: 0.8em;

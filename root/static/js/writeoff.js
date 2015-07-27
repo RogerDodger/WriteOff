@@ -617,54 +617,61 @@ $(document).ready(function () {
 	});
 
 	var waiting = false;
-	var abstain = function () {
-		if (waiting) {
-			return;
-		}
-		waiting = true;
 
-		var $button = $(this);
-		var $row = $button.parents('.Ballot-item');
-		$.ajax({
-			type: 'POST',
-			url: document.location.pathname,
-			data: {
-				action: 'abstain',
-				vote: $row.find('input').attr('value')
-			},
-			success: function(res, status, xhr) {
-				if (!$row.parents('tbody').hasClass('abstained')) {
-					$button.text('Unabstain');
-					$row.find('td').first().text('N/A');
-					$row.detach();
-					$('.abstained').append($row);
-					$('.abstained').prev().removeClass('hidden');
-					resetPercentiles();
-
-					if (res <= 0) {
-						$('.ordered .Ballot-abstain, .unordered .Ballot-abstain').addClass('hidden');
-					}
-				}
-				else {
-					$button.text('Abstain');
-					$row.detach();
-					$('.Ballot-append').before($row);
-					if ($('.abstained .Ballot-item').length == 0) {
-						$('.abstained').prev().addClass('hidden');
-					}
-
-					if (res > 0) {
-						$('.Ballot-abstain').removeClass('hidden');
-					}
-				}
-			},
-			complete: function(xhr, status) {
-				waiting = false;
+	// For some things there really just isn't a good name...
+	var $row;
+	var abstainGenerator = function (success) {
+		return function () {
+			if (waiting) {
+				return;
 			}
-		});
+			waiting = true;
+
+			var $button = $(this);
+			var $row = $button.parents('.Ballot-item');
+			$.ajax({
+				type: 'POST',
+				url: document.location.pathname,
+				data: {
+					action: 'abstain',
+					vote: $row.find('input').attr('value')
+				},
+				success: function (res) {
+					success(res, $row);
+				},
+				complete: function(xhr, status) {
+					waiting = false;
+				}
+			});
+		};
 	};
 
+	var abstain = abstainGenerator(function (abstainsLeft, $row) {
+		$row.find('td').first().text('N/A');
+		$row.detach();
+		$('.abstained').append($row);
+		$('.abstained').prev().removeClass('hidden');
+		resetPercentiles();
+
+		if (abstainsLeft <= 0) {
+			$('.Ballot-abstain').addClass('hidden');
+		}
+	});
+
+	var unabstain = abstainGenerator(function (abstainsLeft, $row) {
+		$row.detach();
+		$('.Ballot-append').before($row);
+		if ($('.abstained .Ballot-item').length == 0) {
+			$('.abstained').prev().addClass('hidden');
+		}
+
+		if (abstainsLeft > 0) {
+			$('.Ballot-abstain').removeClass('hidden');
+		}
+	});
+
 	$('.Ballot-abstain').click(abstain);
+	$('.Ballot-unabstain').click(unabstain);
 
 	$('.Ballot-append').click(function () {
 		if (waiting) {
@@ -683,6 +690,7 @@ $(document).ready(function () {
 			success: function(res, status, xhr) {
 				var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
 				$row.find('.Ballot-abstain').click(abstain);
+				$row.find('.Ballot-unabstain').click(unabstain);
 				$('.Ballot-append').before($row);
 			},
 			complete: function(xhr, status) {
