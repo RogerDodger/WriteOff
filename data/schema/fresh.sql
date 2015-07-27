@@ -186,6 +186,7 @@ CREATE TABLE vote_records (
 	score     INTEGER,
 	mean      REAL,
 	stdev     REAL,
+	abstains  INTEGER,
 	created   TIMESTAMP,
 	updated   TIMESTAMP
 );
@@ -195,7 +196,8 @@ CREATE TABLE votes (
 	record_id  INTEGER REFERENCES vote_records(id) ON DELETE CASCADE NOT NULL,
 	story_id   INTEGER REFERENCES storys(id) ON DELETE CASCADE,
 	image_id   INTEGER REFERENCES images(id) ON DELETE CASCADE,
-	"value"    INTEGER
+	"value"    INTEGER,
+	abstained  BIT DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE guesses (

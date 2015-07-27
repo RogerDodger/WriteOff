@@ -594,8 +594,8 @@ $(document).ready(function () {
 		},
 		filter: '.Ballot-directions',
 		onSort: function () {
-			ballot.option('disabled', true);
 			resetPercentiles();
+			ballot.option('disabled', true);
 			$.ajax({
 				method: 'POST',
 				url: document.location.pathname,

@@ -109,6 +109,7 @@ sub do_cast :Private {
 		}
 	}
 	elsif ($action eq 'reorder') {
+		sleep 3;
 		my @ids = $c->req->param("order");
 		push @ids, grep defined, $c->req->param("order[]"); #temporary
 		my $votes = $record->votes;
