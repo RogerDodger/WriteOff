@@ -581,7 +581,7 @@ $(document).ready(function () {
 		var n = $('.ordered .Ballot-item').length;
 		$('.ordered .Ballot-item').each(function (i) {
 			var score = 100 * (1 - i/(n - 1));
-			this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '</span>';
+			this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '%</span>';
 		});
 	};
 
