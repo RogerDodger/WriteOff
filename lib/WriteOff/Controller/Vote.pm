@@ -109,19 +109,13 @@ sub do_cast :Private {
 		}
 	}
 	elsif ($action eq 'reorder') {
-		my @ids = $c->req->param("order");
-		push @ids, grep defined, $c->req->param("order[]"); #temporary
 		my $votes = $record->votes;
-
 		my %okay = map { $_->id => 1 } $votes->search({ abstained => 0 });
-		for my $id (@ids) {
-			$c->detach('/error', [ 'Bad input' ]) unless $okay{$id};
-		}
+		my @order = grep { defined && $okay{$_} } $c->req->param("order"), $c->req->param("order[]");
 
-		my $score = @ids;
-		for my $id (@ids) {
-			$votes->find($id)->update({ value => $score });
-			$score--;
+		$votes->update({ value => undef });
+		while (@order) {
+			$votes->find(shift @order)->update({ value => scalar @order });
 		}
 	}
 }
