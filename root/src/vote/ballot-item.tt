@@ -1,14 +1,18 @@
 [% TAGS {{ }} %]
 
 <tr class="Ballot-item">
-	<td>
+	<td class="Ballot-item--arrows">
+		<i class="fa fa-angle-up"></i>
+		<i class="fa fa-angle-down"></i>
+	</td>
+	<td class="Ballot-item--score">
 		{{ IF score.match('^[\d.]+$') }}
 		<span title="{{ score | format('%8.5f') }}">{{ score | format('%.0f') }}%</span>
 		{{ ELSE }}
 		{{ score }}
 		{{ END }}
 	</td>
-	<td>
+	<td class="Ballot-item--title">
 		<input name="order" value="{{ vote.id }}" type="hidden">
 		<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title | html }}</a>
 	</td>

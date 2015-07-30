@@ -577,11 +577,26 @@ $(document).ready(function () {
 		return;
 	}
 
+	var q = $.when();
+
+	$('.fa-angle-up').click(function () {
+		console.log("Clicked!");
+		q.then(
+			$.ajax({
+				method: 'POST',
+				url: '/',
+				complete: function () {
+					console.log("Done");
+				}
+			})
+		);
+	});
+
 	var resetPercentiles = function () {
 		var n = $('.ordered .Ballot-item').length;
-		$('.ordered .Ballot-item').each(function (i) {
+		$('.ordered .Ballot-item--score').each(function (i) {
 			var score = 100 * (1 - i/(n - 1));
-			this.cells[0].innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '%</span>';
+			this.innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '%</span>';
 		});
 	};
 
@@ -619,7 +634,6 @@ $(document).ready(function () {
 	var waiting = false;
 
 	// For some things there really just isn't a good name...
-	var $row;
 	var abstainGenerator = function (success) {
 		return function () {
 			if (waiting) {

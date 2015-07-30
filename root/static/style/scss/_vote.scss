@@ -14,26 +14,20 @@
 			background-color: hsla(200, 30%, 95%, 1);
 		}
 
-		& > td.Ballot-divider {
-			background-color: transparent;
-
-			&:before {
-				@include divider;
-				content: " ";
-			}
-		}
-
 		& > td {
 			padding: 0.8em;
 
-			&:first-child,
-			&:last-child {
+			& + td {
+				padding-left: 0;
+			}
+
+			&.Ballot-item--arrows,
+			&.Ballot-item--score,
+			&.Ballot-abstain--cell {
 				text-align: center;
 			}
 
-			&:nth-child(2) {
-				padding-left: 0;
-				padding-right: 0;
+			&.Ballot-item--title {
 				width: 100%;
 			}
 
@@ -43,6 +37,15 @@
 			}
 		}
 
+		& > td.Ballot-divider {
+			background-color: transparent;
+			padding: 0;
+
+			&:before {
+				@include divider;
+				content: " ";
+			}
+		}
 	}
 
 	.ordered,
@@ -60,6 +63,23 @@
 
 	& > .abstained:empty {
 		@extend .hidden;
+	}
+}
+
+.Ballot-item--arrows {
+	line-height: 0;
+
+	.fa {
+		line-height: 0;
+		position: relative;
+	}
+
+	.fa-angle-up {
+		top: -0.4em;
+	}
+
+	.fa-angle-down {
+		top: 0.4em;
 	}
 }
 

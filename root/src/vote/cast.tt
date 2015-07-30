@@ -25,6 +25,7 @@
 
 			<tr class="Ballot-directions">
 				<td></td>
+				<td></td>
 				<td>{{ c.strings.ballotDirections }}</td>
 				<td></td>
 			</tr>
@@ -43,6 +44,7 @@
 
 			<tr class="Ballot-append">
 				<td></td>
+				<td></td>
 				<td>
 					<span class="Ballot-append--control">
 						{{ c.strings.addAnother }}
@@ -58,7 +60,7 @@
 
 		<tbody class="{{ 'hidden' IF !abstained.count }}">
 			<tr>
-				<td class="Ballot-divider" colspan="3"></td>
+				<td class="Ballot-divider" colspan="4"></td>
 			</tr>
 		</tbody>
 

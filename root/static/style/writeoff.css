@@ -1198,26 +1198,37 @@ body.inverted {
     background-color: #dee8ed; }
   .Ballot > tbody > tr:nth-child(even) > td {
     background-color: #eef4f6; }
+  .Ballot > tbody > tr > td {
+    padding: 0.8em; }
+    .Ballot > tbody > tr > td + td {
+      padding-left: 0; }
+    .Ballot > tbody > tr > td.Ballot-item--arrows, .Ballot > tbody > tr > td.Ballot-item--score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
+      text-align: center; }
+    .Ballot > tbody > tr > td.Ballot-item--title {
+      width: 100%; }
+    .Ballot > tbody > tr > td.Ballot-abstain--cell {
+      padding-top: 0;
+      padding-bottom: 0; }
   .Ballot > tbody > tr > td.Ballot-divider {
-    background-color: transparent; }
+    background-color: transparent;
+    padding: 0; }
     .Ballot > tbody > tr > td.Ballot-divider:before {
       display: block;
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
-      margin: 0.5em auto;
+      margin: 1.2em auto;
       content: " "; }
-  .Ballot > tbody > tr > td {
-    padding: 0.8em; }
-    .Ballot > tbody > tr > td:first-child, .Ballot > tbody > tr > td:last-child {
-      text-align: center; }
-    .Ballot > tbody > tr > td:nth-child(2) {
-      padding-left: 0;
-      padding-right: 0;
-      width: 100%; }
-    .Ballot > tbody > tr > td.Ballot-abstain--cell {
-      padding-top: 0;
-      padding-bottom: 0; }
+
+.Ballot-item--arrows {
+  line-height: 0; }
+  .Ballot-item--arrows .fa {
+    line-height: 0;
+    position: relative; }
+  .Ballot-item--arrows .fa-angle-up {
+    top: -0.4em; }
+  .Ballot-item--arrows .fa-angle-down {
+    top: 0.4em; }
 
 .Ballot-abstain,
 .Ballot-unabstain {
