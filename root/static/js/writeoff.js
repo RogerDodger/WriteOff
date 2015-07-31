@@ -579,29 +579,25 @@ $(document).ready(function () {
 
 	var q = $.when();
 
-	$('.fa-angle-up').click(function () {
-		console.log("Clicked!");
-		q.then(
-			$.ajax({
-				method: 'POST',
-				url: '/',
-				complete: function () {
-					console.log("Done");
-				}
-			})
-		);
-	});
-
 	var resetPercentiles = function () {
-		var n = $('.ordered .Ballot-item').length;
-		$('.ordered .Ballot-item--score').each(function (i) {
+		var n = $('.Ballot .ordered .Ballot-item').length;
+		$('.Ballot .ordered .Ballot-score').each(function (i) {
 			var score = 100 * (1 - i/(n - 1));
 			this.innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '%</span>';
 		});
 	};
 
-	var ballot;
-	ballot = Sortable.create($('.ordered')[0], {
+	var sendOrder = function () {
+		q.then(
+			$.ajax({
+				method: 'POST',
+				url: document.location.pathname,
+				data: $('.Ballot .ordered input[name="order"]').serialize()
+			})
+		);
+	};
+
+	Sortable.create($('.Ballot .ordered')[0], {
 		group: {
 			name: "ballot",
 			pull: false,
@@ -610,19 +606,11 @@ $(document).ready(function () {
 		filter: '.Ballot-directions',
 		onSort: function () {
 			resetPercentiles();
-			ballot.option('disabled', true);
-			$.ajax({
-				method: 'POST',
-				url: document.location.pathname,
-				data: $('.ordered input[name="order"]').serialize(),
-				complete: function () {
-					ballot.option('disabled', false);
-				}
-			});
+			sendOrder();
 		}
 	});
 
-	Sortable.create($('.unordered')[0], {
+	Sortable.create($('.Ballot .unordered')[0], {
 		group: {
 			name: "ballot",
 			pull: true,
@@ -631,18 +619,29 @@ $(document).ready(function () {
 		filter: '.Ballot-append',
 	});
 
-	var waiting = false;
+	var moveup = function () {
+		var $row = $(this).parents('.Ballot-item');
+		var $target = $row.prev();
 
-	// For some things there really just isn't a good name...
-	var abstainGenerator = function (success) {
-		return function () {
-			if (waiting) {
-				return;
-			}
-			waiting = true;
+		if ($row.parent().hasClass('unordered')) {
+			$row.detach();
+			$('.Ballot-directions').before($row);
+		}
+		else if ($target.length) {
+			$row.detach();
+			$target.before($row);
+		}
+		else {
+			return;
+		}
 
-			var $button = $(this);
-			var $row = $button.parents('.Ballot-item');
+		resetPercentiles();
+		sendOrder();
+	};
+
+	var abstain = function () {
+		var $row = $(this).parents('.Ballot-item');
+		q.then(
 			$.ajax({
 				type: 'POST',
 				url: document.location.pathname,
@@ -650,69 +649,74 @@ $(document).ready(function () {
 					action: 'abstain',
 					vote: $row.find('input').attr('value')
 				},
-				success: function (res) {
-					success(res, $row);
-				},
-				complete: function(xhr, status) {
-					waiting = false;
+				success: function (abstainsLeft) {
+					$row.find('.Ballot-score').text('N/A');
+					$row.detach();
+					$('.Ballot .abstained').append($row);
+					$('.Ballot .abstained').prev().removeClass('hidden');
+					resetPercentiles();
+
+					if (abstainsLeft <= 0) {
+						$('.Ballot-abstain').addClass('hidden');
+					}
 				}
-			});
-		};
+			})
+		);
 	};
 
-	var abstain = abstainGenerator(function (abstainsLeft, $row) {
-		$row.find('td').first().text('N/A');
-		$row.detach();
-		$('.abstained').append($row);
-		$('.abstained').prev().removeClass('hidden');
-		resetPercentiles();
+	var unabstain = function () {
+		var $row = $(this).parents('.Ballot-item');
+		q.then(
+			$.ajax({
+				type: 'POST',
+				url: document.location.pathname,
+				data: {
+					action: 'unabstain',
+					vote: $row.find('input').attr('value')
+				},
+				success: function (abstainsLeft) {
+					$row.detach();
+					$('.Ballot-append').before($row);
+					if ($('.Ballot .abstained .Ballot-item').length == 0) {
+						$('.Ballot .abstained').prev().addClass('hidden');
+					}
 
-		if (abstainsLeft <= 0) {
-			$('.Ballot-abstain').addClass('hidden');
-		}
-	});
-
-	var unabstain = abstainGenerator(function (abstainsLeft, $row) {
-		$row.detach();
-		$('.Ballot-append').before($row);
-		if ($('.abstained .Ballot-item').length == 0) {
-			$('.abstained').prev().addClass('hidden');
-		}
-
-		if (abstainsLeft > 0) {
-			$('.Ballot-abstain').removeClass('hidden');
-		}
-	});
+					if (abstainsLeft > 0) {
+						$('.Ballot-abstain').removeClass('hidden');
+					}
+				}
+			})
+		);
+	};
 
 	$('.Ballot-abstain').click(abstain);
 	$('.Ballot-unabstain').click(unabstain);
+	$('.Ballot-up').click(moveup);
 
 	$('.Ballot-append').click(function () {
-		if (waiting) {
-			return;
-		}
-		waiting = true;
 		$('.Ballot-append--wait').removeClass('hidden');
 		$('.Ballot-append--control').addClass('hidden');
 
-		$.ajax({
-			type: 'POST',
-			url: document.location.pathname,
-			data: {
-				action: 'append'
-			},
-			success: function(res, status, xhr) {
-				var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
-				$row.find('.Ballot-abstain').click(abstain);
-				$row.find('.Ballot-unabstain').click(unabstain);
-				$('.Ballot-append').before($row);
-			},
-			complete: function(xhr, status) {
-				waiting = false;
-				$('.Ballot-append--wait').addClass('hidden');
-				$('.Ballot-append--control').removeClass('hidden');
-			}
-		})
+		q.then(
+			$.ajax({
+				type: 'POST',
+				url: document.location.pathname,
+				data: {
+					action: 'append'
+				},
+				success: function(res, status, xhr) {
+					var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
+					$row.find('.Ballot-abstain').click(abstain);
+					$row.find('.Ballot-unabstain').click(unabstain);
+					$row.find('.Ballot-up').click(moveup);
+					$('.Ballot-append').before($row);
+				},
+				complete: function(xhr, status) {
+					$('.Ballot-append--wait').addClass('hidden');
+					$('.Ballot-append--control').removeClass('hidden');
+				}
+			})
+		);
 	});
 
 })

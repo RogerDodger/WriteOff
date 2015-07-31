@@ -642,7 +642,8 @@ textarea.example {
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
 .hidden, .Ballot .ordered .Ballot-unabstain,
-.Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain, .Ballot > .abstained:empty {
+.Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
+.Ballot .abstained .Ballot-up, .Ballot > .abstained:empty {
   display: none !important;
   visibility: hidden; }
 
@@ -930,7 +931,8 @@ body.inverted {
   margin-top: 1em; }
 
 .Event-details.hidden + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
-.Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header {
+.Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
+.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
@@ -1202,9 +1204,9 @@ body.inverted {
     padding: 0.8em; }
     .Ballot > tbody > tr > td + td {
       padding-left: 0; }
-    .Ballot > tbody > tr > td.Ballot-item--arrows, .Ballot > tbody > tr > td.Ballot-item--score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
+    .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
       text-align: center; }
-    .Ballot > tbody > tr > td.Ballot-item--title {
+    .Ballot > tbody > tr > td.Ballot-title {
       width: 100%; }
     .Ballot > tbody > tr > td.Ballot-abstain--cell {
       padding-top: 0;
@@ -1220,15 +1222,8 @@ body.inverted {
       margin: 1.2em auto;
       content: " "; }
 
-.Ballot-item--arrows {
-  line-height: 0; }
-  .Ballot-item--arrows .fa {
-    line-height: 0;
-    position: relative; }
-  .Ballot-item--arrows .fa-angle-up {
-    top: -0.4em; }
-  .Ballot-item--arrows .fa-angle-down {
-    top: 0.4em; }
+.Ballot-up:hover {
+  cursor: pointer; }
 
 .Ballot-abstain,
 .Ballot-unabstain {

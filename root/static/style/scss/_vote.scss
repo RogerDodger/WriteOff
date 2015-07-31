@@ -21,13 +21,13 @@
 				padding-left: 0;
 			}
 
-			&.Ballot-item--arrows,
-			&.Ballot-item--score,
+			&.Ballot-arrows,
+			&.Ballot-score,
 			&.Ballot-abstain--cell {
 				text-align: center;
 			}
 
-			&.Ballot-item--title {
+			&.Ballot-title {
 				width: 100%;
 			}
 
@@ -56,7 +56,8 @@
 	}
 
 	.abstained {
-		.Ballot-abstain {
+		.Ballot-abstain,
+		.Ballot-up {
 			@extend .hidden;
 		}
 	}
@@ -66,20 +67,9 @@
 	}
 }
 
-.Ballot-item--arrows {
-	line-height: 0;
-
-	.fa {
-		line-height: 0;
-		position: relative;
-	}
-
-	.fa-angle-up {
-		top: -0.4em;
-	}
-
-	.fa-angle-down {
-		top: 0.4em;
+.Ballot-up {
+	&:hover {
+		cursor: pointer;
 	}
 }
 

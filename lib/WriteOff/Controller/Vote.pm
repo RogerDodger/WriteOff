@@ -69,30 +69,26 @@ sub do_cast :Private {
 	return unless $record;
 
 	my $action = $c->req->params->{action} // 'reorder';
-	if ($action eq 'abstain') {
+	if ($action eq 'abstain' || $action eq 'unabstain') {
 		my $id = $c->req->params->{vote};
 		return unless looks_like_number $id;
 
 		my $vote = $record->votes->find($id);
 		$c->detach('/error', [ 'Vote not found' ]) unless $vote;
 
-		if (!$vote->abstained) {
-			$c->detach('/error', [ 'You have no more abstains' ])
-				if defined $record->abstains && $record->abstains <= 0;
+		if ($action eq 'abstain') {
+			return if $vote->abstained || $record->abstains <= 0;
 
 			$vote->update({ abstained => 1, value => undef });
-			if (defined $record->abstains) {
-				$record->update({ abstains => $record->abstains - 1 });
-			}
-
-			$c->res->body($record->abstains // -1);
+			$record->update({ abstains => $record->abstains - 1 });
+			$c->res->body($record->abstains);
 		}
-		else {
+		elsif ($action eq 'unabstain') {
+			return if !$vote->abstained;
+
 			$vote->update({ abstained => 0 });
-			if (defined $record->abstains) {
-				$record->update({ abstains => $record->abstains + 1 });
-			}
-			$c->res->body($record->abstains // -1);
+			$record->update({ abstains => $record->abstains + 1 });
+			$c->res->body($record->abstains);
 		}
 	}
 	elsif ($action eq 'append') {
