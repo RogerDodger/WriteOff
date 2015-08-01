@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base 'Exporter';
 
-our @EXPORT_OK = qw/twipie twarity/;
+our @EXPORT_OK = qw/twipie/;
 
 sub uniq {
 	my %uniq;
