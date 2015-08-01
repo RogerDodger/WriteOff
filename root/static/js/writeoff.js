@@ -694,9 +694,11 @@ $(document).ready(function () {
 	$('.Ballot-up').click(moveup);
 
 	$('.Ballot-append').click(function () {
-		$('.Ballot-append--wait').removeClass('hidden');
-		$('.Ballot-append--control').addClass('hidden');
-
+		var $this = $(this);
+		if (!$this.hasClass('active') || $this.hasClass('waiting')) {
+			return;
+		}
+		$this.addClass('waiting');
 		q.then(
 			$.ajax({
 				type: 'POST',
@@ -705,15 +707,19 @@ $(document).ready(function () {
 					action: 'append'
 				},
 				success: function(res, status, xhr) {
-					var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
-					$row.find('.Ballot-abstain').click(abstain);
-					$row.find('.Ballot-unabstain').click(unabstain);
-					$row.find('.Ballot-up').click(moveup);
-					$('.Ballot-append').before($row);
+					if (res == 'None left') {
+						$this.removeClass('active');
+					}
+					else {
+						var $row = $(res.substring(res.indexOf('<tr'), res.indexOf('tr>') + 3));
+						$row.find('.Ballot-abstain').click(abstain);
+						$row.find('.Ballot-unabstain').click(unabstain);
+						$row.find('.Ballot-up').click(moveup);
+						$this.before($row);
+					}
 				},
 				complete: function(xhr, status) {
-					$('.Ballot-append--wait').addClass('hidden');
-					$('.Ballot-append--control').removeClass('hidden');
+					$this.removeClass('waiting');
 				}
 			})
 		);

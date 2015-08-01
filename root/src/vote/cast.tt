@@ -42,16 +42,19 @@
 				{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
 			{{ END }}
 
-			<tr class="Ballot-append">
+			<tr class="Ballot-append {{ pool.count ? 'active' : 'done' }}">
 				<td></td>
 				<td></td>
 				<td>
 					<span class="Ballot-append--control">
-						{{ c.strings.addAnother }}
+						{{ c.strings.ballotAppend }}
 					</span>
-					<span class="Ballot-append--wait hidden">
+					<span class="Ballot-append--wait">
 						<i class="fa fa-spinner fa-spin"></i>
 						{{ c.strings.pleaseWait }}...
+					</span>
+					<span class="Ballot-append--done">
+						{{ c.strings.ballotDone }}
 					</span>
 				</td>
 				<td></td>

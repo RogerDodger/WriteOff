@@ -38,7 +38,7 @@ sub cast :Private {
 		}
 
 		$c->stash->{pool} = $c->stash->{candidates}->search({
-			id => { -not_in => $record->votes->get_column('story_id')->as_query },
+			'me.id' => { -not_in => $record->votes->get_column('story_id')->as_query },
 			user_id => { '!=' => $c->user->id },
 		});
 

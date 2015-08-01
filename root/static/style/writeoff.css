@@ -643,7 +643,7 @@ textarea.example {
  */
 .hidden, .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
-.Ballot .abstained .Ballot-up, .Ballot > .abstained:empty {
+.Ballot .abstained .Ballot-up, .Ballot > .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
   visibility: hidden; }
 
@@ -932,7 +932,7 @@ body.inverted {
 
 .Event-details.hidden + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
-.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header {
+.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
@@ -1255,6 +1255,6 @@ body.inverted {
   .Ballot-append:not(:only-child) {
     display: none; }
 
-.Ballot-append:hover {
+.Ballot-append.active:hover, .Ballot-append.waiting {
   cursor: pointer;
   opacity: 1; }

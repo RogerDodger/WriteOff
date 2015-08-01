@@ -90,7 +90,21 @@
 }
 
 .Ballot-append {
-	&:hover {
+	&.waiting .Ballot-append--control,
+	&:not(.active) .Ballot-append--control {
+		@extend .hidden;
+	}
+
+	&.active .Ballot-append--done {
+		@extend .hidden;
+	}
+
+	&:not(.waiting) .Ballot-append--wait {
+		@extend .hidden;
+	}
+
+	&.active:hover,
+	&.waiting {
 		cursor: pointer;
 		opacity: 1;
 	}
