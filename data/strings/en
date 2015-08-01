@@ -6,6 +6,7 @@ loginRequiredVote=You must be logged in to vote
 ballotDirections=Drag candidates here to rank them
 ballotAppend=Add another
 ballotDone=None left
+calculatingCandidates=Candidates are being calculated
 pleaseWait=Please wait
 abstain=Abstain
 unabstain=Unabstain

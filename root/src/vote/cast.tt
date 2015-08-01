@@ -79,5 +79,9 @@
 	<div class="Flash">
 		{{ c.strings.loginRequiredVote }}
 	</div>
+	{{ ELSIF round && !record }}
+	<div class="Flash">
+		{{ c.strings.calculatingCandidates }}
+	</div>
 	{{ END }}
 </div>
