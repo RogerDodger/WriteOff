@@ -21,11 +21,12 @@ sub cast :Private {
 	my ($self, $c) = @_;
 
 	if ($c->stash->{round} && $c->stash->{candidates}->count && $c->user) {
-		my $record = $c->stash->{event}->vote_records->search({
+		my $records = $c->stash->{event}->vote_records->search({
 			user_id => $c->user->id,
-			round   => $c->stash->{round},
 			type    => $c->stash->{type},
-		})->first;
+		});
+
+		my $record = $records->search({ round => $c->stash->{round} })->first;
 
 		if (!$record) {
 			$record = $c->stash->{event}->create_related('vote_records', {
@@ -34,14 +35,34 @@ sub cast :Private {
 				round => $c->stash->{round},
 				type  => $c->stash->{type},
 			});
+		}
 
+		$c->stash->{pool} = $c->stash->{candidates}->search({
+			id => { -not_in => $record->votes->get_column('story_id')->as_query },
+			user_id => { '!=' => $c->user->id },
+		});
+
+		if (!$record->votes->count) {
+			# Copy previous votes to the ballot
+			if (my $prev = $records->search({ round => $c->stash->{prev} })->first) {
+				for my $vote ($prev->votes) {
+					if ($c->stash->{candidates}->search({ id => $vote->story_id })->count) {
+						$record->create_related('votes', {
+							story_id => $vote->story_id,
+							value => $vote->value,
+						});
+					}
+				}
+			}
+
+			# Assign some stories to the ballot
 			my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
-			while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
-				next if $story->user_id == $c->user->id;
-				$w -= $c->config->{work}{offset} + $story->wordcount / $c->config->{work}{rate};
+			for my $story ($c->stash->{pool}->all) {
 				$story->create_related('votes', { record_id => $record->id });
+				$w -= $c->config->{work}{offset} + $story->wordcount / $c->config->{work}{rate};
+				last if $w < 0;
 			}
 		}
 
@@ -89,14 +110,14 @@ sub do_cast :Private {
 	elsif ($action eq 'append') {
 		$c->detach('/error', [ 'You have candidates remaining' ]) if $c->stash->{unordered}->count;
 
-		while (my $item = $c->stash->{candidates}->next) {
-			next if $item->user_id == $c->user->id;
-			next if $item->votes->search({ record_id => $record->id })->count;
-
-			$c->stash->{vote} = $item->create_related('votes', { record_id => $record->id });
+		if (!$c->stash->{pool}->count) {
+			$c->res->body('None left');
+		}
+		else {
+			my $tail = $c->stash->{pool}->first;
+			$c->stash->{vote} = $tail->create_related('votes', { record_id => $record->id });
 			$c->stash->{score} = 'N/A';
 			$c->stash->{template} = 'vote/ballot-item.tt';
-			last;
 		}
 	}
 	elsif ($action eq 'reorder') {
@@ -125,11 +146,13 @@ sub fic :PathPart('vote') :Chained('/event/fic') :Args(0) {
 		$c->stash->{countdown} = $e->public;
 		$c->stash->{candidates} = $e->storys->eligible->sample;
 	} elsif ($e->public_votes_allowed) {
+		$c->stash->{prev} = 'prelim';
 		$c->stash->{round} = 'public';
 		$c->stash->{label} = $e->public_label;
 		$c->stash->{countdown} = $e->private || $e->end;
 		$c->stash->{candidates} = $e->storys->candidates->sample;
 	} elsif ($e->private_votes_allowed) {
+		$c->stash->{prev} = 'prelim';
 		$c->stash->{round} = 'private';
 		$c->stash->{label} = 'Finals';
 		$c->stash->{countdown} = $e->end;
