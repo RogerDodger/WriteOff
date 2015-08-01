@@ -20,7 +20,7 @@ Catalyst Controller.
 sub cast :Private {
 	my ($self, $c) = @_;
 
-	if ($c->stash->{round} && $c->user) {
+	if ($c->stash->{round} && $c->stash->{candidates}->count && $c->user) {
 		my $record = $c->stash->{event}->vote_records->search({
 			user_id => $c->user->id,
 			round   => $c->stash->{round},
@@ -35,23 +35,18 @@ sub cast :Private {
 				type  => $c->stash->{type},
 			});
 
-			if ($c->stash->{type} eq 'fic') {
-				my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
-				my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
+			my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
+			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
-				while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
-					next if $story->user_id == $c->user->id;
-					$w -= $story->wordcount / $c->config->{work}{rate} + $c->config->{work}{offset};
-					$story->create_related('votes', { record_id => $record->id });
-				}
+			while ($w > 0 && (my $story = $c->stash->{candidates}->next)) {
+				next if $story->user_id == $c->user->id;
+				$w -= $c->config->{work}{offset} + $story->wordcount / $c->config->{work}{rate};
+				$story->create_related('votes', { record_id => $record->id });
 			}
 		}
 
 		$c->stash->{record} = $record;
-		$c->stash->{ordered} = $record->votes->search(
-			{ value => { '!=' => undef }},
-			{ order_by => { -desc => 'value' }}
-		);
+		$c->stash->{ordered} = $record->votes->ordered;
 		$c->stash->{unordered} = $record->votes->search({ value => undef, abstained => 0 });
 		$c->stash->{abstained} = $record->votes->search({ abstained => 1 });
 	}

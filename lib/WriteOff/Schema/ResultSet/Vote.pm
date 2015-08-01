@@ -43,4 +43,11 @@ sub valid {
 	);
 }
 
+sub ordered {
+	return shift->search(
+		{ value => { '!=' => undef }},
+		{ order_by => { -desc => 'value' }}
+	);
+}
+
 1;

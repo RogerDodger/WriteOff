@@ -426,7 +426,7 @@ sub public_distr :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 
-	$e->storys->eligible->recalc_candidates($c->config->{work});
+	$e->public_distr($c->config->{work});
 }
 
 sub judge_distr :Private {

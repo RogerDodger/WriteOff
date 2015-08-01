@@ -75,6 +75,15 @@ sub process_guesses {
 	}
 }
 
+sub slates {
+	my $self = shift;
+	my @slates;
+	while (my $record = $self->next) {
+		push @slates, [map { $_->story_id } $record->votes->ordered->all];
+	}
+	return \@slates;
+}
+
 sub round {
 	return shift->search_rs({ round => shift });
 }

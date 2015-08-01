@@ -8,6 +8,7 @@ use base "WriteOff::Schema::Result";
 
 use JSON;
 use WriteOff::Util qw/simple_uri sorted/;
+use WriteOff::Rank qw/twipie/;
 require List::Util;
 
 __PACKAGE__->table("events");
@@ -606,6 +607,27 @@ sub prelim_distr {
 	} @system ]);
 
 	1;
+}
+
+=head2 public_distr
+
+Determine candidates for public voting.
+
+=cut
+
+sub public_distr {
+	my ($self, $work) = @_;
+
+	my ($scores,$contr) = twipie($self->vote_records->prelim->slates);
+
+	for my $story ($self->storys->eligible->all) {
+		$story->update({
+			prelim_score => $scores->{$story->id} // 0,
+			prelim_stdev => $contr->{$story->id} // 0,
+		});
+	}
+
+	$self->storys->eligible->recalc_candidates($work);
 }
 
 =head2 judge_distr
