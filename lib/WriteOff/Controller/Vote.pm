@@ -45,7 +45,7 @@ sub cast :Private {
 		if (!$record->votes->count) {
 			# Copy previous votes to the ballot
 			if (my $prev = $records->search({ round => $c->stash->{prev} })->first) {
-				for my $vote ($prev->votes) {
+				for my $vote ($prev->votes->ordered->all) {
 					if ($c->stash->{candidates}->search({ id => $vote->story_id })->count) {
 						$record->create_related('votes', {
 							story_id => $vote->story_id,
