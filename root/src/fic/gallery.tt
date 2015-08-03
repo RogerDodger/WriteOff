@@ -34,48 +34,65 @@
 			</tr>
 		{{ END }}
 		</tbody>
-	</table>
+	{{ END }}
+
+	{{ BLOCK divider }}
+		<tbody>
+			<tr>
+				<td class="Table-divider" colspan="{{ event.art ? 5 : 4 }}"></td>
+			</tr>
+		</tbody>
 	{{ END }}
 
 	{{ IF event.fic_gallery_opened }}
 		<table class="Storys">
-		{{ IF candidates.count }}
-			{{ PROCESS story_table
-				storys = candidates
-				show_author = event.ended }}
-		{{ END }}
+			<thead>
+				<tr>
+					<th>#</th>
+					{{ '<th></th>' IF event.art }}
+					<th colspan="2">Story</th>
+					<th>Words</th>
+				</tr>
+			</thead>
 
-		{{ IF noncandidates.count }}
 			{{ IF candidates.count }}
-			<tbody>
-				<tr>
-					<td class="Table-divider" colspan="3"></td>
-				</tr>
-			</tbody>
+				{{ PROCESS story_table
+					storys = candidates
+					show_author = event.ended }}
 			{{ END }}
-			{{ PROCESS story_table
-				storys = noncandidates
-				show_author = candidates.count }}
-		{{ END }}
 
-		{{ IF disqualified.count }}
+			{{ IF noncandidates.count }}
+				{{ IF candidates.count }}
+					{{ PROCESS divider }}
+				{{ END }}
+
+				{{ PROCESS story_table
+					storys = noncandidates
+					show_author = candidates.count }}
+			{{ END }}
+
+			{{ IF disqualified.count }}
+				{{ PROCESS divider }}
+				{{ PROCESS story_table
+					storys = disqualified
+					show_author = 1 }}
+			{{ END }}
+
+			{{ PROCESS divider }}
+
 			<tbody>
 				<tr>
-					<td class="Table-divider" colspan="3"></td>
+					<td class="Storys-num"></td>
+					<td class="Storys-title">Anthology</td>
+					<td class="Storys-export">
+						(<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
+					</td>
+					<td class="Storys-wordcount">
+						{{ event.storys_rs.wordcount.chunk(-3).join(',') }}
+					</td>
 				</tr>
 			</tbody>
-			{{ PROCESS story_table
-				storys = disqualified
-				show_author = 1 }}
-		{{ END }}
 		</table>
-
-		<p class="ui-state-default center" style="padding: 7px">
-			Total wordcount: {{ event.storys_rs.wordcount.chunk(-3).join(',') }}<br>
-			<a class="link" href="{{ c.uri_for(c.action, [ event.id_uri ], { 'format' => 'epub'}) }}">
-				Download all as epub
-			</a>
-		</p>
 	{{ ELSE }}
 		<p>
 			Gallery opens: <strong>{{ format_dt(event.fic_gallery_opens) }}</strong>.

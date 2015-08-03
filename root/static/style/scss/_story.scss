@@ -60,3 +60,12 @@
 .Storys {
 	@include striped-table;
 }
+
+.Storys-num,
+.Storys-wordcount {
+	text-align: center;
+}
+
+.Storys-export {
+	white-space: nowrap;
+}

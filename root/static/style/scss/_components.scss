@@ -66,6 +66,19 @@
 @mixin striped-table($hue: 200, $sat: 30%) {
 	width: 100%;
 
+	& > thead > tr {
+		& > th {
+			font-size: 1.1em;
+			font-weight: normal;
+			padding: 0.2em 0.8em;
+			text-align: center;
+
+			& + th {
+				padding-left: 0;
+			}
+		}
+	}
+
 	& > tbody > tr {
 		&:nth-child(odd) > td {
 			background-color: hsla($hue, $sat, 90%, 1);
@@ -83,7 +96,7 @@
 			padding: 0.8em;
 
 			& + td {
-				padding-left: 0.8em;
+				padding-left: 0;
 			}
 		}
 	}
