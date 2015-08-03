@@ -5,46 +5,46 @@
 		Fic Gallery
 	</div>
 
-	{{ BLOCK story_table }}
-		<tbody>
-		{{ FOREACH story IN storys.all }}
-			<tr class="{{ loop.parity }}">
-				<td class="Storys-num">{{ story.num }}</td>
-				{{ IF event.art }}
-				<td class="Storys-related">
-					<a class="dialog-fetcher" title="Show related artwork(s)"
-						href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
-						<span class="ui-icon ui-icon-image">[Related Artwork(s)]</span>
-					</a>
-				</td>
-				{{ END }}
-				<td class="Storys-title">
-					<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
-						{{ story.title | html }}
-					</a>
-					{{ IF show_author }}
-					by {{ story.artist.name | html }}
-					{{ END }}
-				</td>
-				<td class="Storys-export">
-					(<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}.txt">txt</a>,
-					<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}.epub">epub</a>)
-				</td>
-				<td class="Storys-wordcount">{{ story.wordcount.chunk(-3).join(',') }}</td>
-			</tr>
-		{{ END }}
-		</tbody>
-	{{ END }}
-
-	{{ BLOCK divider }}
-		<tbody>
-			<tr>
-				<td class="Table-divider" colspan="{{ event.art ? 5 : 4 }}"></td>
-			</tr>
-		</tbody>
-	{{ END }}
-
 	{{ IF event.fic_gallery_opened }}
+		{{ BLOCK story_table }}
+			<tbody>
+			{{ FOREACH story IN storys.all }}
+				<tr class="{{ loop.parity }}">
+					<td class="Storys-num">{{ story.num }}</td>
+					{{ IF event.art }}
+					<td class="Storys-related">
+						<a class="dialog-fetcher" title="Show related artwork(s)"
+							href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
+							<span class="ui-icon ui-icon-image">[Related Artwork(s)]</span>
+						</a>
+					</td>
+					{{ END }}
+					<td class="Storys-title">
+						<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
+							{{ story.title | html }}
+						</a>
+						{{ IF show_author }}
+						by {{ story.artist.name | html }}
+						{{ END }}
+					</td>
+					<td class="Storys-export">
+						(<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}.txt">txt</a>,
+						<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}.epub">epub</a>)
+					</td>
+					<td class="Storys-wordcount">{{ story.wordcount.chunk(-3).join(',') }}</td>
+				</tr>
+			{{ END }}
+			</tbody>
+		{{ END }}
+
+		{{ BLOCK divider }}
+			<tbody>
+				<tr>
+					<td class="Table-divider" colspan="{{ event.art ? 5 : 4 }}"></td>
+				</tr>
+			</tbody>
+		{{ END }}
+
 		<table class="Storys">
 			<thead>
 				<tr>
@@ -94,10 +94,8 @@
 			</tbody>
 		</table>
 	{{ ELSE }}
-		<p>
-			Gallery opens: <strong>{{ format_dt(event.fic_gallery_opens) }}</strong>.
-			<br />
-			Gallery is <strong class="bad">closed</strong>.
-		</p>
+		<div class="Countdown">
+			{{ event.fic_gallery_opens.delta_html }}
+		</div>
 	{{ END }}
 </div>
