@@ -1,5 +1,5 @@
 // =============================================================================
-// Story container
+// Story container and listing
 // =============================================================================
 
 .Story-container {
@@ -55,4 +55,8 @@
 		box-shadow: 1px 1px 1px hsla(0, 0%, 85%, 1);
 		background: hsla(0, 0%, 99%, 1);
 	}
+}
+
+.Storys {
+	@include striped-table;
 }

@@ -53,6 +53,42 @@
 	margin: 1.2em auto;
 }
 
+@mixin table-divider {
+	background-color: transparent;
+	padding: 0;
+
+	&:before {
+		@include divider;
+		content: " ";
+	}
+}
+
+@mixin striped-table($hue: 200, $sat: 30%) {
+	width: 100%;
+
+	& > tbody > tr {
+		&:nth-child(odd) > td {
+			background-color: hsla($hue, $sat, 90%, 1);
+		}
+
+		&:nth-child(even) > td {
+			background-color: hsla($hue, $sat, 95%, 1);
+		}
+
+		& > td.Table-divider {
+			@include table-divider;
+		}
+
+		& > td {
+			padding: 0.8em;
+
+			& + td {
+				padding-left: 0.8em;
+			}
+		}
+	}
+}
+
 .Countdown {
 	font-size: 1.2em;
 	margin: 1em 0;

@@ -3,48 +3,26 @@
 // =============================================================================
 
 .Ballot {
-	width: 100%;
+	@include striped-table;
 
-	& > tbody > tr {
-		&:nth-child(odd) > td {
-			background-color: hsla(200, 30%, 90%, 1);
+	& > tbody > tr > td {
+		&.Ballot-arrows,
+		&.Ballot-score,
+		&.Ballot-abstain--cell {
+			text-align: center;
 		}
 
-		&:nth-child(even) > td {
-			background-color: hsla(200, 30%, 95%, 1);
+		&.Ballot-title {
+			width: 100%;
 		}
 
-		& > td {
-			padding: 0.8em;
-
-			& + td {
-				padding-left: 0;
-			}
-
-			&.Ballot-arrows,
-			&.Ballot-score,
-			&.Ballot-abstain--cell {
-				text-align: center;
-			}
-
-			&.Ballot-title {
-				width: 100%;
-			}
-
-			&.Ballot-abstain--cell {
-				padding-top: 0;
-				padding-bottom: 0;
-			}
+		&.Ballot-abstain--cell {
+			padding-top: 0;
+			padding-bottom: 0;
 		}
 
-		& > td.Ballot-divider {
-			background-color: transparent;
-			padding: 0;
-
-			&:before {
-				@include divider;
-				content: " ";
-			}
+		&.Ballot-divider {
+			@include table-divider;
 		}
 	}
 
@@ -62,15 +40,13 @@
 		}
 	}
 
-	& > .abstained:empty {
+	.abstained:empty {
 		@extend .hidden;
 	}
 }
 
-.Ballot-up {
-	&:hover {
-		cursor: pointer;
-	}
+.Ballot-up:hover {
+	cursor: pointer;
 }
 
 .Ballot-abstain,

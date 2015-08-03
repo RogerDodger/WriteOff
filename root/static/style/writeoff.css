@@ -643,7 +643,7 @@ textarea.example {
  */
 .hidden, .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
-.Ballot .abstained .Ballot-up, .Ballot > .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
+.Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
   visibility: hidden; }
 
@@ -932,7 +932,7 @@ body.inverted {
 
 .Event-details.hidden + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
-.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot > .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
+.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
@@ -1194,23 +1194,54 @@ body.inverted {
     box-shadow: 1px 1px 1px #d9d9d9;
     background: #fcfcfc; }
 
+.Storys {
+  width: 100%; }
+  .Storys > tbody > tr:nth-child(odd) > td {
+    background-color: #dee8ed; }
+  .Storys > tbody > tr:nth-child(even) > td {
+    background-color: #eef4f6; }
+  .Storys > tbody > tr > td.Table-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Storys > tbody > tr > td.Table-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
+  .Storys > tbody > tr > td {
+    padding: 0.8em; }
+    .Storys > tbody > tr > td + td {
+      padding-left: 0.8em; }
+
 .Ballot {
   width: 100%; }
   .Ballot > tbody > tr:nth-child(odd) > td {
     background-color: #dee8ed; }
   .Ballot > tbody > tr:nth-child(even) > td {
     background-color: #eef4f6; }
+  .Ballot > tbody > tr > td.Table-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Ballot > tbody > tr > td.Table-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
   .Ballot > tbody > tr > td {
     padding: 0.8em; }
     .Ballot > tbody > tr > td + td {
-      padding-left: 0; }
-    .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
-      text-align: center; }
-    .Ballot > tbody > tr > td.Ballot-title {
-      width: 100%; }
-    .Ballot > tbody > tr > td.Ballot-abstain--cell {
-      padding-top: 0;
-      padding-bottom: 0; }
+      padding-left: 0.8em; }
+  .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
+    text-align: center; }
+  .Ballot > tbody > tr > td.Ballot-title {
+    width: 100%; }
+  .Ballot > tbody > tr > td.Ballot-abstain--cell {
+    padding-top: 0;
+    padding-bottom: 0; }
   .Ballot > tbody > tr > td.Ballot-divider {
     background-color: transparent;
     padding: 0; }
