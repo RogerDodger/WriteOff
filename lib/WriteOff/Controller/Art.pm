@@ -237,6 +237,14 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->stash->{template} = 'item/list.tt';
 }
 
+sub results :Chained('/event/art') :PathPart('results') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{items} = $c->stash->{event}->images->eligible;
+	$c->stash->{type} = 'art';
+
+	$c->forward('/event/results');
+}
 
 =head1 AUTHOR
 

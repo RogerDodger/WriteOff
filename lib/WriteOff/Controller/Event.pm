@@ -162,57 +162,16 @@ sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 	push $c->stash->{title}, 'Rules';
 }
 
-sub results :Chained('fetch') :PathPart('results') :Args(0) {
+sub results :Private {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/error', ['There are no results for this event.'])
-		unless $c->stash->{event}->has_results;
-
-	my $event = $c->stash->{event};
-
-	my @lcond = (undef, {
+	$c->stash->{items} = $c->stash->{items}->search({}, {
+		prefetch => [ qw/artist artist_awards/ ],
 		order_by => [
 			{ -asc => 'rank' },
 			{ -asc => 'title' },
 		],
 	});
-
-	my $ccond = sub { ({
-		public_stdev => { '!=' => undef }
-	}, {
-		rows => 5,
-		order_by => [
-			{ -desc => shift },
-			{ -asc  => 'title' },
-		],
-	}) };
-
-	my @gcond = ({
-		round => 'guess',
-	}, {
-		prefetch => 'artist',
-		rows => 5,
-		order_by => [
-			{ -desc => 'me.score' },
-			{ -asc => 'artist.name' },
-		],
-	});
-
-	$c->stash(
-		j_records => $c->stash->{event}->vote_records->filled->judge_records,
-		images => {
-			leaderboard   => $event->images->eligible->search_rs(@lcond),
-			controversial => $event->images->eligible->search_rs($ccond->('public_stdev')),
-		},
-		storys => {
-			leaderboard   => $event->storys->eligible->search_rs(@lcond),
-			controversial => $event->storys->eligible->search_rs($ccond->('controversial')),
-		},
-		guesses => {
-			fic => $event->vote_records->fic->search_rs(@gcond),
-			art => $event->vote_records->art->search_rs(@gcond),
-		},
-	);
 
 	push $c->stash->{title}, 'Results';
 	$c->stash->{template} = 'event/results.tt';

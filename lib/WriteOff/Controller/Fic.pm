@@ -283,6 +283,31 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->stash->{template} = 'item/list.tt';
 }
 
+sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{items} = $c->stash->{event}->storys->eligible;
+
+	$c->stash->{guesses} = $c->stash->{event}->vote_records->search({
+		round => 'guess',
+		type => 'fic',
+		'me.score', => { '>=' => 3 },
+	}, {
+		prefetch => [
+			'artist',
+			{ guesses => 'story' },
+		],
+		order_by => [
+			{ -desc => 'me.score' },
+			{ -asc => 'artist.name' },
+		],
+	});
+
+	$c->stash->{type} = 'fic';
+
+	$c->forward('/event/results');
+}
+
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

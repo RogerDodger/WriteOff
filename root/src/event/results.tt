@@ -1,7 +1,7 @@
-<h1>Results</h1>
+[% TAGS {{ }} %]
 
-[%- IF event.tallied -%]
-	[%-
+{{ IF event.tallied }}
+	{{
 		USE cache = Cache;
 		cache.inc(
 			'template' => 'event/results_.tt',
@@ -11,11 +11,15 @@
 				'id' => event.id,
 			},
 		);
-	-%]
-[%- ELSE %]
-<p>
-	Results open: <strong>[% format_dt( event.end ) %]</strong>.
-	<br>
-	Results are <strong class="bad">closed</strong>.
-</p>
-[%- END %]
+	}}
+{{ ELSE }}
+<div class="Document">
+	<div class="Document-title">
+		{{ type.ucfirst }} Results
+	</div>
+
+	<div class="Countdown">
+		{{ event.end.delta_html }}
+	</div>
+</div>
+{{ END }}

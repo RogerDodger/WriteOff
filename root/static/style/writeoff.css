@@ -1310,3 +1310,26 @@ body.inverted {
 .Ballot-append.active:hover, .Ballot-append.waiting {
   cursor: pointer;
   opacity: 1; }
+
+.Results {
+  width: 100%; }
+  .Results > tbody > tr.gold {
+    font-size: 1.25em; }
+  .Results > tbody > tr.silver {
+    font-size: 1.17em; }
+  .Results > tbody > tr.bronze {
+    font-size: 1.10em; }
+  .Results > tbody > tr > td {
+    padding: 0.2em 0.8em; }
+    .Results > tbody > tr > td + td {
+      padding-left: 0; }
+    .Results > tbody > tr > td.Results-rank, .Results > tbody > tr > td.Results-score {
+      text-align: center; }
+    .Results > tbody > tr > td.Results-title {
+      text-align: right; }
+    .Results > tbody > tr > td.Results-by {
+      font-size: 1rem; }
+    .Results > tbody > tr > td.Results-artist {
+      text-align: left; }
+    .Results > tbody > tr > td.Results-title, .Results > tbody > tr > td.Results-artist {
+      width: 50%; }

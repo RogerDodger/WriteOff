@@ -1,129 +1,52 @@
 [%- TAGS {{ }} -%]
 
-{{- IF event.private }}
-<h2>Judge Rankings</h2>
+<table class="Results">
+	<tbody>
+		{{ BLOCK Score }}
+		<td class="Results-score" title="{{ score | format('%.5f') }}">{{ score | format('%.2f') }}</td>
+		{{ END }}
 
-<ul>
-	{{- FOREACH record IN j_records.all }}
-	<li>
-		<a class="link" href="{{ c.uri_for_action('/voterecord/view', [ record.id ]) }}">
-			{{ record.user.username || 'Guest' }}
-		</a>
-	</li>
-	{{- END }}
-</ul>
-{{- END }}
+		{{ FOREACH item IN items.all }}
+		<tr class="Results-row{{ FOREACH award IN item.awards }} {{ award.name; END }}">
+			<td class="Results-rank">{{ item.rank + 1 }}</td>
+			<td class="Results-awards">
+				{{ FOREACH award IN item.awards; award.html; END }}
+			</td>
+			<td class="Results-title">{{ item.title | html }}</td>
+			<td class="Results-by">by</td>
+			<td class="Results-artist">{{ item.artist.name | html }}</td>
 
-<div class="results fic">
-	{{-
-		PROCESS Items
-			leaderboard   = storys.leaderboard
-			controversial = storys.controversial
-			guesses       = guesses.fic
-			view          = c.controller('Fic').action_for('view')
-			heading       = 'Stories'
-	-}}
-</div>
+			{{ IF event.private }}
+				{{ PROCESS Score  score = item.private_score }}
+			{{ END }}
 
-{{- IF event.art }}
-<div class="results art">
-	{{- PROCESS Items
-		leaderboard   = images.leaderboard
-		controversial = images.controversial
-		guesses       = guesses.art
-		view          = c.controller('Art').action_for('view')
-		heading       = 'Artworks' -}}
-</div>
-{{- END #IF }}
+			{{ IF event.public }}
+				{{ PROCESS Score  score = item.public_score }}
+				{{ PROCESS Score  score = item.public_stdev }}
+			{{ END }}
 
-{{- BLOCK Items }}
-<h2>{{ heading }}</h2>
-
-<table class="items maxwidth">
-{{- SET count = leaderboard.count }}
-{{- FOREACH item IN leaderboard.all }}
-	{{- INCLUDE Item
-		scores = item.score_totals
-		votes = item.votes_rs.public.order_by({ '-desc' => 'value' }).all -}}
-{{- END #FOREACH }}
+			{{ IF event.prelim }}
+				{{ PROCESS Score  score = item.prelim_score }}
+				{{ PROCESS Score  score = item.prelim_stdev }}
+			{{ END }}
+		</tr>
+		{{ END }}
+	</tbody>
 </table>
 
-{{- IF controversial.count }}
-<h3>Controversial {{ heading }}</h3>
-
-<table class="items">
-{{- FOREACH item IN controversial.all }}
-	{{- INCLUDE Item  scores = [ item.controversial ] -}}
-{{- END #FOREACH }}
+{{ IF guesses }}
+<table class="Guesses">
+	<tbody>
+		{{ FOREACH record IN guesses.all }}
+		<tr>
+			<td class="Guesses-guesser">{{ record.artist.name }}</td>
+			<td class="Guesses-correct">
+			{{ FOREACH guess IN record.guesses_rs.correct }}
+				{{ guess.item.title | truncate(12) | html }}{{ ',' IF !loop.last }}
+			{{ END }}
+			</td>
+		</tr>
+		{{ END }}
+	</tbody>
 </table>
-{{- END #IF }}
-
-{{ IF event.guessing }}
-<h3>Best Guessers</h3>
-
-<table class="solid">
-	<tr class="heading">
-		<td>Guesser</td>
-		<td>Guessed</td>
-	</tr>
-	{{- FOREACH record IN guesses.all }}
-	<tr class="{{ loop.parity }}">
-		<td class="nowrap">{{ record.artist.name | html }}</td>
-
-		<td>
-		{{- FOREACH guess IN record.guesses_rs.correct }}
-			<a class="link" href="{{ c.uri_for(view, [ guess.item.id_uri ]) }}">
-				<em>{{ guess.item.title | html }}</em>{{
-			}}</a>{{ ',' IF !loop.last }}
-		{{- END }}
-		</td>
-	</tr>
-	{{- END }}
-</table>
-{{- END }}
-
-{{- END #Items }}
-
-{{- BLOCK Item }}
-<tr>
-	<td class="center">
-		{{ FOREACH award IN item.awards; award.html; END }}
-	</td>
-
-	<td>
-		<a class="link" href="{{ c.uri_for( view, [ item.id_uri ]) }}">
-			<em>{{ item.title | html }}</em>
-		</a>
-
-		by
-		{{- IF item.website }}
-		<a class="author new-tab" href="{{ item.website | url }}">
-			{{ item.artist.name | html }}
-		</a>
-		{{- ELSE }}
-			{{ item.artist.name | html }}
-		{{- END }}
-
-		{{- FOREACH score IN scores }}
-		<span title="{{ score | format('(%.5f)') }}">
-			{{ score | format('(%.2f)') }}
-		</span>
-		{{- END #IF }}
-	</td>
-</tr>
-{{ IF votes }}
-<tr>
-	<td colspan="2">
-		<div class="votebar" style="width: {{ item.public_score * 10 }}%;">
-			{{- FOREACH vote IN votes }}
-			<div class="votebox" style="flex-grow: {{ vote.value }};
-				background-color: #{{ spectrum('f00', '0f0', 0.1 * vote.value) }};"
-				title="{{ vote.value }}">
-			</div>
-			{{- END }}
-		</div>
-	</td>
-</tr>
-{{- END }}
-
-{{- END #Item }}
+{{ END }}

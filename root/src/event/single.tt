@@ -102,7 +102,7 @@
 
 		{{ IF event.has_results }}
 		<li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
-		<li><a href="{{ c.uri_for_action('/event/results', id) }}">Results</a>
+		<li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
 		{{ END }}
 	</ul>
 	{{ END }}
@@ -115,7 +115,7 @@
 
 		{{ IF event.public }}
 		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
-		<li><a href="{{ c.uri_for_action('/event/results', id) }}">Results</a>
+		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
 		{{ END }}
 	</ul>
 	{{ END }}

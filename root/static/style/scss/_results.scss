@@ -1,0 +1,51 @@
+// =============================================================================
+// Results
+// =============================================================================
+
+.Results {
+	width: 100%;
+
+	& > tbody > tr {
+		&.gold {
+			font-size: 1.25em
+		}
+
+		&.silver {
+			font-size: 1.17em;
+		}
+
+		&.bronze {
+			font-size: 1.10em;
+		}
+
+		& > td {
+			padding: 0.2em 0.8em;
+
+			& + td {
+				padding-left: 0;
+			}
+
+			&.Results-rank,
+			&.Results-score {
+				text-align: center;
+			}
+
+			&.Results-title {
+				text-align: right;
+			}
+
+			&.Results-by {
+				font-size: 1rem;
+			}
+
+			&.Results-artist {
+				text-align: left;
+			}
+
+			&.Results-title,
+			&.Results-artist {
+				width: 50%;
+			}
+		}
+	}
+}
