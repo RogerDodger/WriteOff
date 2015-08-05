@@ -776,5 +776,5 @@ $(document).ready(function () {
 $(document).ready(function () {
 	$('.Results').each(function () {
 		new Tablesort(this);
-	})
-})
+	});
+});
