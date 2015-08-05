@@ -40,7 +40,15 @@
 					{{ FOREACH award IN item.awards; award.html; END }}
 				</td>
 
-				<td class="Results-artist">{{ item.artist.name | html }}</td>
+				<td class="Results-artist">
+					{{ IF item.website }}
+					<a href="{{ item.website | url }}">
+						{{ item.artist.name | html }}
+					</a>
+					{{ ELSE }}
+						{{ item.artist.name | html }}
+					{{ END }}
+				</td>
 				<td class="Results-title">
 					<a href="{{ c.uri_for(view, [ item.id_uri ]) }}">{{ item.title | html }}</a>
 				</td>

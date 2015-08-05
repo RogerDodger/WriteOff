@@ -1370,6 +1370,12 @@ body.inverted {
     .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-artist {
       white-space: nowrap; }
 
+.Results-artist a {
+  color: inherit;
+  border-bottom: 1px dotted #666; }
+  .Results-artist a:hover {
+    text-decoration: none; }
+
 .Guesses > tbody > tr > td {
   padding: 0.2em 0.8em;
   vertical-align: top; }
