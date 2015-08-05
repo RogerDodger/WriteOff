@@ -97,20 +97,6 @@ sub recalc_candidates {
 	     ->update({ candidate => 1 });
 }
 
-sub recalc_private_stats {
-	my $self = shift;
-	my $votes = $self->result_source->schema->resultset('Vote');
-
-	my $private_values = $votes->private->search(
-		{ "inn.story_id" => { '=' => { -ident => 'storys.id' } } },
-		{ alias => 'inn' }
-	)->get_column('value');
-
-	$self->update({
-		private_score => $private_values->func_rs('sum')->as_query,
-	});
-}
-
 sub wordcount {
 	my $self = shift;
 

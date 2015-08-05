@@ -609,6 +609,20 @@ sub prelim_distr {
 	1;
 }
 
+sub recalc_stats {
+	my ($self, $items, $votes) = @_;
+
+	my ($scores,$contr) = twipie($votes->slates);
+
+	my $round = $votes->first->round;
+	for my $item ($items->all) {
+		$item->update({
+			"${round}_score" => $scores->{$item->id} // 0,
+			"${round}_stdev" => $contr->{$item->id} // 0,
+		});
+	}
+}
+
 =head2 public_distr
 
 Determine candidates for public voting.
@@ -618,14 +632,10 @@ Determine candidates for public voting.
 sub public_distr {
 	my ($self, $work) = @_;
 
-	my ($scores,$contr) = twipie($self->vote_records->prelim->slates);
-
-	for my $story ($self->storys->eligible->all) {
-		$story->update({
-			prelim_score => $scores->{$story->id} // 0,
-			prelim_stdev => $contr->{$story->id} // 0,
-		});
-	}
+	$self->recalc_stats(
+		scalar $self->storys->eligible,
+		scalar $self->vote_records->prelim->fic
+	);
 
 	$self->storys->eligible->recalc_candidates($work);
 }
@@ -683,6 +693,7 @@ sub tally {
 	my $scores = $schema->resultset('Score');
 	my $storys = $self->storys->eligible;
 	my $images = $self->images->eligible;
+	my $records = $self->vote_records;
 
 	# Clean up possible old tallying
 	$self->artist_awards->delete_all;
@@ -691,26 +702,29 @@ sub tally {
 	# Apply decay to older events' scores;
 	$scores->decay;
 
+	if ($self->prelim) {
+		$self->recalc_stats($storys, scalar $records->prelim->fic);
+	}
+
 	if ($self->public) {
-		$storys->recalc_public_stats;
+		$self->recalc_stats(scalar $storys->candidates, scalar $records->public->fic);
 	}
 
 	if ($self->private) {
-		$storys->recalc_private_stats;
+		$self->recalc_stats(scalar $storys->finalists, scalar $records->private->fic);
 	}
 
-	$storys->recalc_controversial;
 	$storys->recalc_rank;
 	$artists->deal_awards_and_scores($storys);
 
 	if ($self->art) {
-		$images->recalc_public_stats;
+		$self->recalc_stats($images, scalar $records->public->art);
 		$images->recalc_rank;
 		$artists->deal_awards_and_scores($images);
 	}
 
 	if ($self->guessing) {
-		$self->vote_records->guess->fic->process_guesses;
+		$records->guess->fic->process_guesses;
 	}
 
 	$artists->recalculate_scores;
