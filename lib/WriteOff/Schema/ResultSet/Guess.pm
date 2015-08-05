@@ -10,7 +10,7 @@ sub correct {
 
 	return $self if !$join;
 
-	return $self->search({
+	return $self->search_rs({
 		"$join.artist_id" => { -ident => 'me.artist_id' },
 	}, {
 		join => $join,

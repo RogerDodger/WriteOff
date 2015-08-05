@@ -17,6 +17,8 @@
 		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
 		<script src="/static/js/jquery.cookie.js"></script>
 		<script src="/static/js/Sortable.min.js"></script>
+		<script src="/static/js/tablesort.min.js"></script>
+		<script src="/static/js/tablesort.numeric.js"></script>
 		<script src="/static/js/d3.v3.min.js"></script>
 		<script>
 			var timelines = [];

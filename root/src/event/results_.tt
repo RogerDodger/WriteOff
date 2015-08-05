@@ -8,23 +8,23 @@
 	<table class="Results">
 		<thead>
 			<tr>
-				<th>#</th>
-				<th></th>
+				<th data-sort-method="number">#</th>
+				<th class="no-sort"></th>
 				<th>Artist</th>
 				<th>Title</th>
 
 				{{ IF event.private }}
-				<th>Finals</th>
+				<th data-sort-method="number">Finals</th>
 				{{ END }}
 
 				{{ IF event.public }}
-				<th>{{ event.public_label }}</th>
-				<th>&epsilon;</th>
+				<th data-sort-method="number">{{ event.public_label }}</th>
+				<th data-sort-method="number">&epsilon;</th>
 				{{ END }}
 
 				{{ IF event.prelim }}
-				<th>Prelims</th>
-				<th>&epsilon;</th>
+				<th data-sort-method="number">Prelims</th>
+				<th data-sort-method="number">&epsilon;</th>
 				{{ END }}
 			</tr>
 		</thead>
@@ -72,11 +72,15 @@
 		<tbody>
 			{{ FOREACH record IN guesses.all }}
 			<tr>
-				<td class="Guesses-guesser">{{ record.artist.name }}</td>
+				<td class="Guesses-guesser">{{ record.artist.name | html }}</td>
 				<td class="Guesses-correct">
-				{{ FOREACH guess IN record.guesses_rs.correct }}
-					{{ guess.item.title | truncate(12) | html }}{{ ',' IF !loop.last }}
-				{{ END }}
+					<span class="Guesses-count">{{ record.guesses_rs.correct.count }} correct</span>
+					<span class="Guesses-titles">
+					{{ FOREACH guess IN record.guesses_rs.correct.all }}
+						<a href="{{ c.uri_for(view, [ guess.item.id_uri ]) }}">
+							{{ guess.item.title | html }}</a>{{ ',' IF !loop.last }}
+					{{ END }}
+					</span>
 				</td>
 			</tr>
 			{{ END }}
