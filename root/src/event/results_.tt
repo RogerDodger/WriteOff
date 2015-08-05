@@ -30,7 +30,7 @@
 		</thead>
 		<tbody>
 			{{ BLOCK Score }}
-			<td class="Results-score" title="{{ score | format('%.5f') }}">{{ score | format('%.2f') }}</td>
+			<td class="Results-score" title="{{ score | format('%.5f') }}" data-sort="{{ score }}">{{ score | format('%.2f') }}</td>
 			{{ END }}
 
 			{{ FOREACH item IN items.all }}
