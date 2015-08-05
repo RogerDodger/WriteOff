@@ -304,6 +304,7 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 	});
 
 	$c->stash->{type} = 'fic';
+	$c->stash->{view} = $self->action_for('view');
 
 	$c->forward('/event/results');
 }

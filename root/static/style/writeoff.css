@@ -857,10 +857,21 @@ body.inverted {
   margin-bottom: 0; }
 
 .Document-title, .Story-title {
+  border-bottom: 1px solid #cccccc;
   font-size: 1.4em;
-  padding-bottom: 0.6em;
   margin-bottom: 1em;
-  border-bottom: 1px solid #cccccc; }
+  padding-bottom: 0.6em; }
+
+.Document-subtitle {
+  border-bottom: 1px solid #999999;
+  color: #4d4d4d;
+  font-size: 1.2em;
+  line-height: 0;
+  margin: 2.5em 0 1.5em;
+  text-align: center; }
+  .Document-subtitle span {
+    background-color: #fafafa;
+    padding: 0 0.5em; }
 
 .Global-message {
   display: block;
@@ -1313,23 +1324,38 @@ body.inverted {
 
 .Results {
   width: 100%; }
-  .Results > tbody > tr.gold {
-    font-size: 1.25em; }
-  .Results > tbody > tr.silver {
-    font-size: 1.17em; }
-  .Results > tbody > tr.bronze {
-    font-size: 1.10em; }
-  .Results > tbody > tr > td {
-    padding: 0.2em 0.8em; }
-    .Results > tbody > tr > td + td {
-      padding-left: 0; }
-    .Results > tbody > tr > td.Results-rank, .Results > tbody > tr > td.Results-score {
+  .Results > thead > tr > th, .Results > tbody > tr > td {
+    padding: 0.5em; }
+    .Results > thead > tr > th:first-child, .Results > tbody > tr > td:first-child {
+      padding-left: 1em; }
+    .Results > thead > tr > th:last-child, .Results > tbody > tr > td:last-child {
+      padding-right: 1em; }
+  .Results > thead > tr > th {
+    font-size: 1.1em;
+    padding-bottom: 0.2em;
+    text-align: center;
+    font-weight: normal; }
+  .Results > tbody > tr {
+    background-image: repeating-linear-gradient(25deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px); }
+    .Results > tbody > tr:nth-child(odd) {
+      background-color: #e8f2f7; }
+    .Results > tbody > tr:nth-child(even) {
+      background-color: #e0eef5; }
+    .Results > tbody > tr.gold {
+      font-size: 1.25em;
+      background-color: #f5edbc; }
+    .Results > tbody > tr.silver {
+      font-size: 1.17em;
+      background-color: #d9d9d9; }
+    .Results > tbody > tr.bronze {
+      font-size: 1.10em;
+      background-color: #f5e1bc; }
+    .Results > tbody > tr > td.Results-rank, .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-score {
       text-align: center; }
-    .Results > tbody > tr > td.Results-title {
-      text-align: right; }
-    .Results > tbody > tr > td.Results-by {
-      font-size: 1rem; }
     .Results > tbody > tr > td.Results-artist {
-      text-align: left; }
-    .Results > tbody > tr > td.Results-title, .Results > tbody > tr > td.Results-artist {
-      width: 50%; }
+      text-align: right; }
+    .Results > tbody > tr > td.Results-title {
+      text-align: left;
+      width: 100%; }
+    .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-artist {
+      white-space: nowrap; }

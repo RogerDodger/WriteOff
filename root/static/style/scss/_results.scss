@@ -5,46 +5,77 @@
 .Results {
 	width: 100%;
 
+	& > thead > tr > th,
+	& > tbody > tr > td {
+		padding: 0.5em;
+
+		&:first-child {
+			padding-left: 1em;
+		}
+
+		&:last-child {
+			padding-right: 1em;
+		}
+	}
+
+	& > thead > tr {
+		& > th {
+			font-size: 1.1em;
+			padding-bottom: 0.2em;
+			text-align: center;
+			font-weight: normal;
+		}
+	}
+
 	& > tbody > tr {
+		$stripe: 20px;
+		background-image: repeating-linear-gradient(25deg, transparent,
+			transparent $stripe,
+			rgba(255,255,255,.1) $stripe,
+			rgba(255,255,255,.1) $stripe * 2);
+
+		&:nth-child(odd) {
+			background-color: hsla(200, 50%, 94% ,1);
+		}
+
+		&:nth-child(even) {
+			background-color: hsla(200, 50%, 92% ,1);
+		}
+
 		&.gold {
-			font-size: 1.25em
+			font-size: 1.25em;
+			background-color: hsla(51, 75%, 85% ,1);
 		}
 
 		&.silver {
 			font-size: 1.17em;
+			background-color: hsla(0, 0%, 85% ,1);
 		}
 
 		&.bronze {
 			font-size: 1.10em;
+			background-color: hsla(39, 75%, 85% ,1);
 		}
 
 		& > td {
-			padding: 0.2em 0.8em;
-
-			& + td {
-				padding-left: 0;
-			}
-
 			&.Results-rank,
+			&.Results-awards,
 			&.Results-score {
 				text-align: center;
 			}
 
-			&.Results-title {
+			&.Results-artist {
 				text-align: right;
 			}
 
-			&.Results-by {
-				font-size: 1rem;
-			}
-
-			&.Results-artist {
+			&.Results-title {
 				text-align: left;
+				width: 100%;
 			}
 
-			&.Results-title,
+			&.Results-awards,
 			&.Results-artist {
-				width: 50%;
+				white-space: nowrap;
 			}
 		}
 	}

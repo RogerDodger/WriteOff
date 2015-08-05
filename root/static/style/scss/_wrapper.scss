@@ -117,10 +117,24 @@ body.inverted {
 }
 
 .Document-title {
-	font-size: 1.4em;
-	padding-bottom: 0.6em;
-	margin-bottom: 1em;
 	border-bottom: 1px solid hsla(0, 0%, 80%, 1);
+	font-size: 1.4em;
+	margin-bottom: 1em;
+	padding-bottom: 0.6em;
+}
+
+.Document-subtitle {
+	border-bottom: 1px solid hsla(0, 0%, 60%, 1);
+	color: hsla(0, 0%, 30%, 1);
+	font-size: 1.2em;
+	line-height: 0;
+	margin: 2.5em 0 1.5em;
+	text-align: center;
+
+	span {
+		background-color: hsla(0, 0%, 98%, 1);
+		padding: 0 0.5em;
+	}
 }
 
 @mixin header-boxed($hue, $sat: 30%) {

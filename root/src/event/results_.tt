@@ -1,52 +1,86 @@
 [%- TAGS {{ }} -%]
 
-<table class="Results">
-	<tbody>
-		{{ BLOCK Score }}
-		<td class="Results-score" title="{{ score | format('%.5f') }}">{{ score | format('%.2f') }}</td>
-		{{ END }}
+<div class="Document">
+	<div class="Document-title">
+		{{ type.ucfirst }} Results
+	</div>
 
-		{{ FOREACH item IN items.all }}
-		<tr class="Results-row{{ FOREACH award IN item.awards }} {{ award.name; END }}">
-			<td class="Results-rank">{{ item.rank + 1 }}</td>
-			<td class="Results-awards">
-				{{ FOREACH award IN item.awards; award.html; END }}
-			</td>
-			<td class="Results-title">{{ item.title | html }}</td>
-			<td class="Results-by">by</td>
-			<td class="Results-artist">{{ item.artist.name | html }}</td>
+	<table class="Results">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th></th>
+				<th>Artist</th>
+				<th>Title</th>
 
-			{{ IF event.private }}
-				{{ PROCESS Score  score = item.private_score }}
+				{{ IF event.private }}
+				<th>Finals</th>
+				{{ END }}
+
+				{{ IF event.public }}
+				<th>{{ event.public_label }}</th>
+				<th>&epsilon;</th>
+				{{ END }}
+
+				{{ IF event.prelim }}
+				<th>Prelims</th>
+				<th>&epsilon;</th>
+				{{ END }}
+			</tr>
+		</thead>
+		<tbody>
+			{{ BLOCK Score }}
+			<td class="Results-score" title="{{ score | format('%.5f') }}">{{ score | format('%.2f') }}</td>
 			{{ END }}
 
-			{{ IF event.public }}
-				{{ PROCESS Score  score = item.public_score }}
-				{{ PROCESS Score  score = item.public_stdev }}
-			{{ END }}
+			{{ FOREACH item IN items.all }}
+			<tr class="Results-row{{ FOREACH award IN item.awards }} {{ award.name; END }}">
+				<td class="Results-rank">{{ item.rank + 1 }}</td>
+				<td class="Results-awards">
+					{{ FOREACH award IN item.awards; award.html; END }}
+				</td>
 
-			{{ IF event.prelim }}
-				{{ PROCESS Score  score = item.prelim_score }}
-				{{ PROCESS Score  score = item.prelim_stdev }}
-			{{ END }}
-		</tr>
-		{{ END }}
-	</tbody>
-</table>
+				<td class="Results-artist">{{ item.artist.name | html }}</td>
+				<td class="Results-title">
+					<a href="{{ c.uri_for(view, [ item.id_uri ]) }}">{{ item.title | html }}</a>
+				</td>
 
-{{ IF guesses }}
-<table class="Guesses">
-	<tbody>
-		{{ FOREACH record IN guesses.all }}
-		<tr>
-			<td class="Guesses-guesser">{{ record.artist.name }}</td>
-			<td class="Guesses-correct">
-			{{ FOREACH guess IN record.guesses_rs.correct }}
-				{{ guess.item.title | truncate(12) | html }}{{ ',' IF !loop.last }}
+				{{ IF event.private }}
+					{{ PROCESS Score  score = item.private_score }}
+				{{ END }}
+
+				{{ IF event.public }}
+					{{ PROCESS Score  score = item.public_score }}
+					{{ PROCESS Score  score = item.public_stdev }}
+				{{ END }}
+
+				{{ IF event.prelim }}
+					{{ PROCESS Score  score = item.prelim_score }}
+					{{ PROCESS Score  score = item.prelim_stdev }}
+				{{ END }}
+			</tr>
 			{{ END }}
-			</td>
-		</tr>
-		{{ END }}
-	</tbody>
-</table>
-{{ END }}
+		</tbody>
+	</table>
+
+	{{ IF guesses.count }}
+	<div class="Document-subtitle">
+		<span>Guesses</span>
+	</div>
+
+	<table class="Guesses">
+		<tbody>
+			{{ FOREACH record IN guesses.all }}
+			<tr>
+				<td class="Guesses-guesser">{{ record.artist.name }}</td>
+				<td class="Guesses-correct">
+				{{ FOREACH guess IN record.guesses_rs.correct }}
+					{{ guess.item.title | truncate(12) | html }}{{ ',' IF !loop.last }}
+				{{ END }}
+				</td>
+			</tr>
+			{{ END }}
+		</tbody>
+	</table>
+	{{ END }}
+</div>
