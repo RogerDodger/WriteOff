@@ -11,7 +11,7 @@
 	[%- FOREACH score IN scores.all %]
 	<tr>
 		<td class="start">
-			<a href="[% c.uri_for( c.controller('Event').action_for('results'),
+			<a href="[% c.uri_for( c.controller( score.item.type.ucfirst ).action_for('results'),
 				[ score.event.id_uri ]) %]" class="link">
 				[% score.event.prompt | html %]
 			</a>
