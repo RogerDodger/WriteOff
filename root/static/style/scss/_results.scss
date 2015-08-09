@@ -118,3 +118,7 @@
 .Guesses-count {
 	border-bottom: 1px dotted #444;
 }
+
+.Slates {
+	@include button-group($hue: 200);
+}

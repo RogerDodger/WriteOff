@@ -95,4 +95,24 @@
 		</tbody>
 	</table>
 	{{ END }}
+
+	{{ IF event.id >= 38 || event.prelim }}
+	<div class="Document-subtitle">
+		<span>Slates</span>
+	</div>
+
+	<ul class="Slates">
+		{{ IF event.prelim }}
+		<li><a href="{{ c.uri_for_action('/event/slates', [ event.id_uri, 'prelim' ]) }}">Prelims</a>
+		{{ END }}
+
+		{{ IF event.public && event.id >= 38 }}
+		<li><a href="{{ c.uri_for_action('/event/slates', [ event.id_uri, 'public' ]) }}">{{ event.public_label }}</a>
+		{{ END }}
+
+		{{ IF event.private }}
+		<li><a href="{{ c.uri_for_action('/event/slates', [ event.id_uri, 'private' ]) }}">Finals</a>
+		{{ END }}
+	</ul>
+	{{ END }}
 </div>

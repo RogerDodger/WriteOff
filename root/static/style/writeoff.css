@@ -1385,3 +1385,29 @@ body.inverted {
 
 .Guesses-count {
   border-bottom: 1px dotted #444; }
+
+.Slates {
+  list-style-type: none;
+  padding: 0; }
+  .Slates li {
+    display: inline-block; }
+    .Slates li:not(:last-child) {
+      margin-right: -1px;
+      margin-bottom: -1px; }
+    .Slates li a {
+      border-style: solid;
+      border-width: 1px;
+      display: inline-block;
+      line-height: 1;
+      padding: 0.8em;
+      text-decoration: none;
+      vertical-align: middle;
+      background: #bdd1db;
+      border-color: #7aa3b8;
+      color: #1d2d35; }
+      .Slates li a:hover {
+        cursor: pointer;
+        background: #afc8d4;
+        text-decoration: none; }
+      .Slates li a:active {
+        box-shadow: 0 0.5em 0.7em #a2bfcd inset; }

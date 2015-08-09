@@ -177,6 +177,22 @@ sub results :Private {
 	$c->stash->{template} = 'event/results.tt';
 }
 
+sub slates :Chained('fetch') :PathPart('slates') :Args(1) {
+	my ($self, $c, $round) = @_;
+
+	$c->detach('/default') unless grep { $round eq $_ } qw/prelim public private/;
+
+	my $body = '';
+	my $slates = $c->stash->{event}->vote_records->round($round)->slates;
+	for my $slate (reverse sort { $#$a <=> $#$b } grep { $#$_ } @$slates) {
+		$body .= join ' ', @$slate;
+		$body .= "\n";
+	}
+
+	$c->res->content_type('text/plain; charset=utf-8');
+	$c->res->body($body);
+}
+
 sub view :Chained('fetch') :PathPart('submissions') :Args(0) {
 	my ( $self, $c ) = @_;
 
