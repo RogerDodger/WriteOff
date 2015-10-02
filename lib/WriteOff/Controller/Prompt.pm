@@ -24,7 +24,7 @@ sub fetch :Chained('/') :PathPart('prompt') :CaptureArgs(1) :ActionClass('~Fetch
 sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{prompts} = $c->stash->{event}->prompts;
+	$c->stash->{prompts} = $c->stash->{event}->prompts->ballot($c->user->offset);
 
 	if ($c->stash->{event}->prompt_type eq 'approval') {
 		$c->stash->{show_results} = $c->stash->{event}->has_started
@@ -78,7 +78,7 @@ sub do_vote_approval :Private {
 
 	return if !$c->user || $c->stash->{user_has_voted};
 
-	my $prompts = $c->stash->{event}->prompts;
+	my $prompts = $c->stash->{prompts};
 
 	for my $vote (uniq $c->req->param('vote')) {
 		if (my $prompt = $prompts->find($vote)) {
