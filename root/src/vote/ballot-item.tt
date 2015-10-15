@@ -17,10 +17,10 @@
 	</td>
 	<td class="Ballot-abstain--cell">
 		<span class="Ballot-abstain {{ 'hidden' IF record.abstains.defined && record.abstains <= 0 }}">
-			{{ c.strings.abstain }}
+			{{ c.string('abstain') }}
 		</span>
 		<span class="Ballot-unabstain">
-			{{ c.strings.unabstain }}
+			{{ c.string('unabstain') }}
 		</span>
 	</td>
 </tr>

@@ -12,7 +12,7 @@
 		{{ IF countdown }}
 			{{ countdown.delta_html }}
 		{{ ELSE }}
-			{{ c.strings.votesClosed }}
+			{{ c.string('votesClosed') }}
 		{{ END }}
 	</div>
 
@@ -26,7 +26,7 @@
 			<tr class="Ballot-directions">
 				<td></td>
 				<td></td>
-				<td>{{ c.strings.ballotDirections }}</td>
+				<td>{{ c.string('ballotDirections') }}</td>
 				<td></td>
 			</tr>
 		</tbody>
@@ -47,14 +47,14 @@
 				<td></td>
 				<td>
 					<span class="Ballot-append--control">
-						{{ c.strings.ballotAppend }}
+						{{ c.string('ballotAppend') }}
 					</span>
 					<span class="Ballot-append--wait">
 						<i class="fa fa-spinner fa-spin"></i>
-						{{ c.strings.pleaseWait }}...
+						{{ c.string('pleaseWait') }}...
 					</span>
 					<span class="Ballot-append--done">
-						{{ c.strings.ballotDone }}
+						{{ c.string('ballotDone') }}
 					</span>
 				</td>
 				<td></td>
@@ -77,11 +77,11 @@
 
 	{{ IF round && !c.user }}
 	<div class="Flash">
-		{{ c.strings.loginRequiredVote }}
+		{{ c.string('loginRequiredVote') }}
 	</div>
 	{{ ELSIF round && !record }}
 	<div class="Flash">
-		{{ c.strings.calculatingCandidates }}
+		{{ c.string('calculatingCandidates') }}
 	</div>
 	{{ END }}
 </div>

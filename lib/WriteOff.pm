@@ -210,6 +210,12 @@ __PACKAGE__->schedule(
 	event => '/cron/check_schedule',
 );
 
+sub lang {
+	my ($self, $lang) = @_;
+
+	return $self->user->lang || 'en';
+}
+
 sub mailfrom {
 	my ($self, $name, $user) = @_;
 

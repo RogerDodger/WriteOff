@@ -152,6 +152,10 @@ sub check_password {
 	}
 }
 
+sub lang {
+	'en';
+}
+
 sub name {
 	return shift->username;
 }

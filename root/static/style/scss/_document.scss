@@ -1,0 +1,80 @@
+.Document {
+	@extend .Canvas;
+
+	margin-top: 1em;
+
+	&.framed {
+		max-width: 1040px;
+	}
+}
+
+.Document > *:last-child {
+	margin-bottom: 0;
+}
+
+.Document-title {
+	border-bottom: 1px solid hsla(0, 0%, 80%, 1);
+	font-size: 1.4em;
+	margin-bottom: 1em;
+	padding-bottom: 0.6em;
+}
+
+.Document-subtitle {
+	border-bottom: 1px solid hsla(0, 0%, 60%, 1);
+	color: hsla(0, 0%, 30%, 1);
+	font-size: 1.2em;
+	line-height: 0;
+	margin: 2.5em 0 1.5em;
+	text-align: center;
+
+	span {
+		background-color: hsla(0, 0%, 98%, 1);
+		padding: 0 0.5em;
+	}
+}
+
+.Document-subtitle2 {
+	color: hsla(0, 0%, 25%, 1);
+	font-size: 1.25em;
+	margin-top: 2em;
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	// &:after {
+	// 	$bg: hsla(0, 0%, 60%, 1);
+	// 	display: block;
+	// 	height: 1px;
+	// 	content: " ";
+	// 	background: linear-gradient(to right, $bg 0%, $bg 40%, transparent 60%, transparent 100%);
+	// 	margin-top: 0.2em;
+	// }
+
+	& + p {
+		margin-top: 0.5em;
+	}
+}
+
+.Document-index {
+	position: sticky;
+	top: 0;
+	float: right;
+	font-size: 0.8em;
+	margin-left: (2em / 0.8);
+	width: 25%;
+}
+
+.Document-index--topic {
+	padding-left: 1em;
+}
+
+.Document-index--section,
+.Document-index--topic {
+	margin-top: 0.15em;
+}
+
+.Document-body {
+	float: right;
+	width: calc(75% - 2em);
+}

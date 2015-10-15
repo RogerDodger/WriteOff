@@ -858,29 +858,6 @@ body.inverted {
   box-shadow: 0 0 3px #b6b6b6;
   padding: 2em; }
 
-.Document, .Story-container {
-  margin-top: 1em; }
-
-.Document > *:last-child, .Story-container > *:last-child {
-  margin-bottom: 0; }
-
-.Document-title, .Story-title {
-  border-bottom: 1px solid #cccccc;
-  font-size: 1.4em;
-  margin-bottom: 1em;
-  padding-bottom: 0.6em; }
-
-.Document-subtitle {
-  border-bottom: 1px solid #999999;
-  color: #4d4d4d;
-  font-size: 1.2em;
-  line-height: 0;
-  margin: 2.5em 0 1.5em;
-  text-align: center; }
-  .Document-subtitle span {
-    background-color: #fafafa;
-    padding: 0 0.5em; }
-
 .Global-message {
   display: block;
   max-width: 900px;
@@ -931,6 +908,59 @@ body.inverted {
     text-align: center; }
     .Status-container .Status div {
       margin: 0.2em 0; }
+
+.Document, .Story-container {
+  margin-top: 1em; }
+  .Document.framed, .framed.Story-container {
+    max-width: 1040px; }
+
+.Document > *:last-child, .Story-container > *:last-child {
+  margin-bottom: 0; }
+
+.Document-title, .Story-title {
+  border-bottom: 1px solid #cccccc;
+  font-size: 1.4em;
+  margin-bottom: 1em;
+  padding-bottom: 0.6em; }
+
+.Document-subtitle {
+  border-bottom: 1px solid #999999;
+  color: #4d4d4d;
+  font-size: 1.2em;
+  line-height: 0;
+  margin: 2.5em 0 1.5em;
+  text-align: center; }
+  .Document-subtitle span {
+    background-color: #fafafa;
+    padding: 0 0.5em; }
+
+.Document-subtitle2 {
+  color: #404040;
+  font-size: 1.25em;
+  margin-top: 2em; }
+  .Document-subtitle2:first-child {
+    margin-top: 0; }
+  .Document-subtitle2 + p {
+    margin-top: 0.5em; }
+
+.Document-index {
+  position: sticky;
+  top: 0;
+  float: right;
+  font-size: 0.8em;
+  margin-left: 2.5em;
+  width: 25%; }
+
+.Document-index--topic {
+  padding-left: 1em; }
+
+.Document-index--section,
+.Document-index--topic {
+  margin-top: 0.15em; }
+
+.Document-body {
+  float: right;
+  width: calc(75% - 2em); }
 
 .Event-header {
   display: block;

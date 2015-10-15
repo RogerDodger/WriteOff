@@ -108,10 +108,10 @@ Frequently Asked Questions page
 sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{headers} = [];
+	$c->stash->{document} = $c->document('faq');
 
 	push $c->stash->{title}, 'FAQ';
-	$c->stash->{template} = 'root/faq.tt';
+	$c->stash->{template} = 'root/document.tt';
 }
 
 =head2 default
@@ -174,8 +174,10 @@ Terms of Service page
 sub tos :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	push $c->stash->{title}, 'Terms of Service';
-	$c->stash->{template} = 'root/tos.tt';
+	$c->stash->{document} = $c->document('tos');
+
+	push $c->stash->{title}, $c->stash->{document}{title};
+	$c->stash->{template} = 'root/document.tt';
 }
 
 =head2 contact
