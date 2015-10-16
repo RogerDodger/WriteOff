@@ -1,26 +1,18 @@
  [% TAGS {{ }} %]
- <div class="Document framed clearfix">
+ <div class="Document wide clearfix">
 	<div class="Document-title">
 		{{ document.title | html }}
 	</div>
 
 	<div class="Document-index">
 		{{ FOREACH section IN document.sections }}
-		<div class="Document-index--section">{{ section.title }}</div>
-			{{ FOREACH topic IN section.topics }}
-			<div class="Document-index--topic">
-				<a href="#{{ topic.title | simple_uri }}">{{ topic.title }}</a>
-			</div>
-			{{ END }}
+		<div class="Document-index--{{ section.class }}">
+			<a href="#{{ section.id }}">{{ section.title }}</a>
+		</div>
 		{{ END }}
 	</div>
 
 	<div class="Document-body">
-	{{ FOREACH section IN document.sections }}
-		{{ FOREACH topic IN section.topics }}
-		<div id="{{ topic.title | simple_uri }}" class="Document-subtitle2">{{ topic.title }}</div>
-		{{ topic.contents }}
-		{{ END }}
-	{{ END }}
+		{{ document.contents }}
 	</div>
 </div>

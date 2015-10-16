@@ -16,10 +16,9 @@ The art scores are augmented by how many stories were written to each artwork.
 The writeoff is split into a series of rounds, all of which are optional: some events will have no prompt round; some events will have no fic round; and some events will have no voting at all, making the event unranked.
 The most common operating procedure is to have a prompt round, a fic round, a prelim voting round, and a public voting round.
 
-### Prompt round
-
+__Prompt round.__
 Before the start of the event, users submit prompts.
-48 hours before the start of the event, users vote on the prompts to
+24 hours before the start of the event, users vote on the prompts to
 indicate which they like the most.
 
 At its onset, the event is named after the winning prompt.

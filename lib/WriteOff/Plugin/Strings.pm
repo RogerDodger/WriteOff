@@ -4,6 +4,7 @@ use 5.014;
 use Carp;
 use File::Find ();
 use Text::Markdown;
+use WriteOff::Util;
 
 my %docs;
 my %strings;
@@ -41,18 +42,21 @@ sub setup {
 			my $text = do { local $/ = <$fh> };
 			close $fh;
 
-			my $html = Text::Markdown->new->markdown($text);
-
-			$html =~ s{ <h1> (.+?) </h1> }{}x;
+			$doc->{contents} = Text::Markdown->new->markdown($text);
+			$doc->{contents} =~ s{ <h1> (.+?) </h1> }{}x;
 			$doc->{title} = $1;
 			$doc->{sections} = [];
-			while ($html =~ m{ <h2>(.*?)</h2> (.*?) (?=<h2>|$) }xsg) {
-				my $contents = $2;
-				push $doc->{sections}, { title => $1, topics => [] };
-				while ($contents =~ m{ <h3>(.*?)</h3> (.*?) (?=<h3>|$) }xsg) {
-					push $doc->{sections}->[-1]->{topics}, { title => $1, contents => $2 };
+			1 while $doc->{contents} =~ s{
+				<(h[23])> (.*?) </\g1>
+			}{
+				my $class = { h2 => 'section', h3 => 'topic' }->{$1};
+				my $title = $2;
+				my $id = WriteOff::Util::simple_uri $title;
+				push $doc->{sections}, { class => $class, id => $id, title => $title };
+				qq{
+					<div id="$id" class="Document-$class--title">$title</div>
 				}
-			}
+			}xsge;
 		}
 	}, $app->path_to('lang');
 

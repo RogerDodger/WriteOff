@@ -911,7 +911,7 @@ body.inverted {
 
 .Document, .Story-container {
   margin-top: 1em; }
-  .Document.framed, .framed.Story-container {
+  .Document.wide, .wide.Story-container {
     max-width: 1040px; }
 
 .Document > *:last-child, .Story-container > *:last-child {
@@ -919,7 +919,7 @@ body.inverted {
 
 .Document-title, .Story-title {
   border-bottom: 1px solid #cccccc;
-  font-size: 1.4em;
+  font-size: 1.5em;
   margin-bottom: 1em;
   padding-bottom: 0.6em; }
 
@@ -934,14 +934,27 @@ body.inverted {
     background-color: #fafafa;
     padding: 0 0.5em; }
 
-.Document-subtitle2 {
-  color: #404040;
-  font-size: 1.25em;
-  margin-top: 2em; }
-  .Document-subtitle2:first-child {
-    margin-top: 0; }
-  .Document-subtitle2 + p {
-    margin-top: 0.5em; }
+.Document-topic--title {
+  color: #3b3b3b;
+  font-size: 1.2em; }
+  .Document-topic--title:not(:first-child) {
+    margin-top: 1.5em; }
+  .Document-topic--title:after {
+    display: block;
+    height: 1px;
+    content: " ";
+    background: linear-gradient(to right, #bfbfbf 0%, #bfbfbf 40%, transparent 60%, transparent 100%);
+    margin-top: 0.2em; }
+
+.Document-section--title {
+  color: #474747;
+  font-size: 1.3em; }
+  .Document-section--title:not(:first-child) {
+    margin-top: 1.7em; }
+
+.Document-section--title + p,
+.Document-topic--title + p {
+  margin-top: 0.3em; }
 
 .Document-index {
   position: sticky;
@@ -956,11 +969,13 @@ body.inverted {
 
 .Document-index--section,
 .Document-index--topic {
-  margin-top: 0.15em; }
+  margin-top: 0.2em; }
 
 .Document-body {
   float: right;
   width: calc(75% - 2em); }
+  .Document-body > *:first-child {
+    margin-top: 0; }
 
 .Event-header {
   display: block;
