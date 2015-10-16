@@ -1393,18 +1393,18 @@ body.inverted {
   .Results > tbody > tr {
     background-image: repeating-linear-gradient(25deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px); }
     .Results > tbody > tr:nth-child(odd) {
-      background-color: #e8f2f7; }
+      background-color: #f1f6f9; }
     .Results > tbody > tr:nth-child(even) {
-      background-color: #e0eef5; }
+      background-color: #eaf2f6; }
     .Results > tbody > tr.gold {
       font-size: 1.25em;
-      background-color: #f5edbc; }
+      background-color: #f6f1d5; }
     .Results > tbody > tr.silver {
       font-size: 1.17em;
-      background-color: #d9d9d9; }
+      background-color: #e6e6e6; }
     .Results > tbody > tr.bronze {
       font-size: 1.10em;
-      background-color: #f5e1bc; }
+      background-color: #f6ead5; }
     .Results > tbody > tr > td.Results-rank, .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-score {
       text-align: center; }
     .Results > tbody > tr > td.Results-artist {

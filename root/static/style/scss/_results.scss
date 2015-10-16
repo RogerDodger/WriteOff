@@ -41,26 +41,26 @@
 			rgba(255,255,255,.1) $stripe * 2);
 
 		&:nth-child(odd) {
-			background-color: hsla(200, 50%, 94% ,1);
+			background-color: hsla(200, 40%, 96% ,1);
 		}
 
 		&:nth-child(even) {
-			background-color: hsla(200, 50%, 92% ,1);
+			background-color: hsla(200, 40%, 94% ,1);
 		}
 
 		&.gold {
 			font-size: 1.25em;
-			background-color: hsla(51, 75%, 85% ,1);
+			background-color: hsla(51, 65%, 90% ,1);
 		}
 
 		&.silver {
 			font-size: 1.17em;
-			background-color: hsla(0, 0%, 85% ,1);
+			background-color: hsla(0, 0%, 90% ,1);
 		}
 
 		&.bronze {
 			font-size: 1.10em;
-			background-color: hsla(39, 75%, 85% ,1);
+			background-color: hsla(39, 65%, 90% ,1);
 		}
 
 		& > td {
