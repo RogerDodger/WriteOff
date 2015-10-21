@@ -11,6 +11,7 @@
 
 # Schema changes
 
+- Voting rounds should be a separate table, *..1 with events
 - Role and UserRole should be removed. Add "admin" col to User.
 - Remove Heat/Ban since they aren't used.
 - Change most User relationships to being on Artist instead. The idea
