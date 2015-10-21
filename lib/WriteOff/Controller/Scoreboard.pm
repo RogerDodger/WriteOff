@@ -13,8 +13,8 @@ sub index :Path('/scoreboard') {
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
-	my $genre = $c->stash->{genre} = $c->stash->{genres}->find($gid =~ /^(\d+)/ && $1);
-	my $format = $c->stash->{format} = $c->stash->{formats}->find($fid =~ /^(\d+)/ && $1);
+	my $genre = $c->stash->{genre} = $c->stash->{genres}->find(($gid // 0) =~ /^(\d+)/ && $1);
+	my $format = $c->stash->{format} = $c->stash->{formats}->find(($fid // 0) =~ /^(\d+)/ && $1);
 
 	if ($genre) {
 		$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';

@@ -5,8 +5,8 @@
 		'ttl' => c.debug || 360,
 		'keys' => {
 			'type' => 'scoreboard',
-			'order' => c.req.uri,
-			'scores' => artists.get_column('score').all.join(';'),
+			'genre' => genre && genre.id,
+			'format' => format && format.id
 		},
 	);
 -%]
