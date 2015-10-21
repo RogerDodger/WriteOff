@@ -1,7 +1,7 @@
 package WriteOff::Command::deploy;
 
 use WriteOff::Command;
-use SQL::Script;
+use WriteOff::Schema;
 use File::Spec;
 use File::Copy qw/copy/;
 
@@ -32,9 +32,7 @@ sub run {
 
 	my $write_db = sub {
 		say "+ create $dbfn";
-		my $script = SQL::Script->new;
-		$script->read('data/schema/fresh.sql');
-		$script->run($self->dbh);
+		WriteOff::Schema->connect("dbi:SQLite:$dbfn")->deploy;
 	};
 
 	if (-e $dbfn) {

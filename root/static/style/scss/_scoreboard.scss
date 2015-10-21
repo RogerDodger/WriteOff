@@ -1,0 +1,46 @@
+// =============================================================================
+// Scoreboard style
+// =============================================================================
+
+.Scoreboard {
+	@include striped-table;
+
+	& > tbody > tr > td {
+		text-align: center;
+	}
+}
+
+.Scoreboard-awards {
+	line-height: 0;
+
+	.Award {
+		margin-right: -14px;
+	}
+}
+
+
+.Scoreboard-filter {
+	display: table;
+	font-size: 0.9em;
+	margin: 1em auto;
+}
+
+.Scoreboard-filter--genre,
+.Scoreboard-filter--format {
+	display: table-row;
+}
+
+.Scoreboard-filter--label,
+.Scoreboard-filter--options {
+	display: table-cell;
+}
+
+.Scoreboard-filter--label {
+	font-weight: bold;
+	padding-right: 1.2em;
+	text-align: right;
+}
+
+.Scoreboard-filter--link {
+	padding: 0 0.2em;
+}

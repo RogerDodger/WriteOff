@@ -731,6 +731,12 @@ textarea.example {
   margin-top: 1em;
   margin-bottom: 1em; }
 
+/*
+ * Line-height as class name
+ */
+.flat {
+  line-height: 0; }
+
 * {
   box-sizing: border-box; }
 
@@ -1001,6 +1007,9 @@ body.inverted {
 
 .Event-header.active {
   cursor: pointer; }
+
+.Event-genre[title] {
+  border-bottom: 1px dotted #15260d; }
 
 .Event-permalink {
   font-size: 0.8em;
@@ -1456,3 +1465,59 @@ body.inverted {
         text-decoration: none; }
       .Slates li a:active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
+
+.Scoreboard {
+  width: 100%; }
+  .Scoreboard > thead > tr > th {
+    font-size: 1.1em;
+    font-weight: normal;
+    padding: 0.3em 0.8em;
+    text-align: center; }
+    .Scoreboard > thead > tr > th + th {
+      padding-left: 0; }
+  .Scoreboard > tbody > tr:nth-child(odd) > td {
+    background-color: #dee8ed; }
+  .Scoreboard > tbody > tr:nth-child(even) > td {
+    background-color: #eef4f6; }
+  .Scoreboard > tbody > tr > td.Table-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Scoreboard > tbody > tr > td.Table-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
+  .Scoreboard > tbody > tr > td {
+    padding: 0.8em; }
+    .Scoreboard > tbody > tr > td + td {
+      padding-left: 0; }
+  .Scoreboard > tbody > tr > td {
+    text-align: center; }
+
+.Scoreboard-awards {
+  line-height: 0; }
+  .Scoreboard-awards .Award {
+    margin-right: -14px; }
+
+.Scoreboard-filter {
+  display: table;
+  font-size: 0.9em;
+  margin: 1em auto; }
+
+.Scoreboard-filter--genre,
+.Scoreboard-filter--format {
+  display: table-row; }
+
+.Scoreboard-filter--label,
+.Scoreboard-filter--options {
+  display: table-cell; }
+
+.Scoreboard-filter--label {
+  font-weight: bold;
+  padding-right: 1.2em;
+  text-align: right; }
+
+.Scoreboard-filter--link {
+  padding: 0 0.2em; }

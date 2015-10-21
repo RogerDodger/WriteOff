@@ -276,7 +276,7 @@ $(document).ready(function() {
 		.click(function() {
 			var $icon = $(this).find('span');
 			var $row = $(this).parent().parent();
-			var $next = $row.next();
+			var $next = $row.next().next();
 
 			// Expand
 			if ($icon.hasClass('ui-icon-plus')) {
@@ -289,13 +289,11 @@ $(document).ready(function() {
 				}
 				else {
 					var $expand_row = $('<tr class="' + er_class + '"></tr>');
-					var $expand_cell = $('<td colspan="5"></td>');
+					var $expand_cell = $('<td colspan="12"></td>');
 
-					$expand_row.addClass(
-						$row.hasClass('odd') ? 'odd' : 'even'
-					);
 					$expand_row.html($expand_cell);
-					$expand_row.insertAfter($row);
+					$row.after($expand_row);
+					$row.after('<tr class="hidden"/>');
 
 					$expand_cell.load(
 						$(this).data('target'),
@@ -727,12 +725,14 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
-// Countdowns
+// <time> prettifiers
 // ===========================================================================
 
 $(document).ready(function () {
-	var $times = $('.Countdown time');
-	if ($times.length) {
+	var $countdowns = $('.Countdown time');
+	var $dates = $('time.date');
+
+	if ($countdowns.length) {
 		var elapsed = 0;
 		var tick = function () {
 			// `now` is defined in the global scope as the server's current time
@@ -740,7 +740,7 @@ $(document).ready(function () {
 			// based off the server's clock rather than the client's
 			var now_ = now.getTime() + elapsed;
 
-			$times.each(function () {
+			$countdowns.each(function () {
 				var ms = (new Date($(this).attr('datetime'))).getTime() - now_;
 
 				if (ms < 0) {
@@ -767,6 +767,11 @@ $(document).ready(function () {
 		setInterval(tick, 1000);
 		tick();
 	}
+
+	$dates.each(function () {
+		var date = new Date($(this).attr('datetime'));
+		this.textContent = date.getDate() + " " + date.getShortMonth() + " " + date.getFullYear();
+	});
 });
 
 // ===========================================================================
@@ -774,7 +779,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Results').each(function () {
+	$('.Results, .Scoreboard').each(function () {
 		new Tablesort(this);
 	});
 });

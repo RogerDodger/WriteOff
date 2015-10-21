@@ -11,10 +11,14 @@ sub fetch :Chained('/') :PathPart('artist') :CaptureArgs(1) :ActionClass('~Fetch
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{scores} = $c->stash->{artist}->scores->search(undef, {
+	my $s = {};
+	$s->{genre_id} = $1 if $c->req->param('genre') =~ /^(\d+)/;
+	$s->{format_id} = $1 if $c->req->param('format') =~ /^(\d+)/;
+
+	$c->stash->{scores} = $c->stash->{artist}->scores->search($s, {
 		prefetch => 'event',
 		order_by => [
-			{ -asc  => 'event.end' },
+			{ -desc  => 'event.end' },
 			{ -desc => 'value' },
 		]
 	});

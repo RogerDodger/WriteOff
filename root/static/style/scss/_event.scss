@@ -19,6 +19,10 @@
 	cursor: pointer;
 }
 
+.Event-genre[title] {
+	border-bottom: 1px dotted hsla(100, 50%, 10%, 1);
+}
+
 .Event-permalink {
 	font-size: 0.8em;
 	position: absolute;

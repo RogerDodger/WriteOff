@@ -20,10 +20,12 @@ sub add :Local :Args(0) {
 
 	$c->forward('/assert_admin');
 
+	$c->stash->{genres} = $c->model('DB::Genre');
+	$c->stash->{formats} = $c->model('DB::Format');
+
 	$c->stash->{template} = 'event/add.tt';
 
 	if ($c->req->method eq 'POST') {
-
 		$c->forward('/check_csrf_token');
 
 		my $p = $c->req->params;
@@ -35,6 +37,14 @@ sub add :Local :Args(0) {
 			organiser => [
 				'NOT_BLANK',
 				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
+			],
+			format => [
+				'NOT_BLANK',
+				[ 'NOT_DBIC_UNIQUE', $c->model('DB::Format'), 'id' ],
+			],
+			genre => [
+				'NOT_BLANK',
+				[ 'NOT_DBIC_UNIQUE', $c->model('DB::Genre'), 'id' ],
 			],
 			wc_min => [ $p->{has_fic} ? qw/NOT_BLANK UINT/ : () ],
 			wc_max => [ $p->{has_fic} ? qw/NOT_BLANK UINT/ : () ],
@@ -98,6 +108,8 @@ sub do_add :Private {
 
 	$row{end} = $dt->clone;
 	$row{prompt} = $c->form->valid('prompt') || 'TBD';
+	$row{genre_id} = $c->form->valid('genre');
+	$row{format_id} = $c->form->valid('format');
 
 	$c->stash->{event} = $c->model('DB::Event')->create(\%row);
 	$c->stash->{event}->set_content_level( $c->form->valid('content_level') );

@@ -32,6 +32,15 @@ sub DateTime::delta_html {
 		$self->delta;
 }
 
+sub DateTime::date_html {
+	my $self = shift;
+
+	return sprintf '<time class="date" title="%s" datetime="%sZ">%s</time>',
+		$self->rfc2822,
+		$self->iso8601,
+		$self->strftime('%d %b %Y');
+}
+
 sub now {
 	if (defined(my $t = $ENV{WRITEOFF_DATETIME})) {
 		return DateTime::Format::RFC3339->parse_datetime($t);

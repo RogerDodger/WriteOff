@@ -1,11 +1,13 @@
+[% TAGS {{ }} %]
+
 <h1>Add Event</h1>
-<form class="light" method="post" action="[% c.req.uri %]">
-	<input type="hidden" name="csrf_token" value="[% csrf_token %]">
-[%- IF c.form.has_error %]
-	[%- FOREACH message IN c.form.messages('event') %]
-		[% INCLUDE fragment/error_msg.tt %]
-	[%- END %]
-[%- END %]
+<form class="light" method="post" action="{{ c.req.uri }}">
+	<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+{{- IF c.form.has_error }}
+	{{- FOREACH message IN c.form.messages('event') }}
+		{{ INCLUDE fragment/error_msg.tt }}
+	{{- END }}
+{{- END }}
 	<p>
 		<label>Starting Date<span class="required">*</span></label>
 		<input type="datetime" name="start" size="32"
@@ -14,7 +16,25 @@
 	<p class="inline">
 		<label>Organiser<span class="required">*</span></label>
 		<input type="text" name="organiser" class="autocomplete-user"
-			maxlength="[% c.config.len.max.user %]" required>
+			maxlength="{{ c.config.len.max.user }}" required>
+	</p>
+
+	<p class="inline">
+		<label>Genre</label>
+		<select name="genre">
+			{{ FOREACH genre IN genres.all }}
+			<option value="{{ genre.id }}">{{ genre.name | html }}</option>
+			{{ END }}
+		</select>
+	</p>
+
+	<p class="inline">
+		<label>Format</label>
+		<select name="format">
+			{{ FOREACH format IN formats.all }}
+			<option value="{{ format.id }}">{{ format.name | html }}</option>
+			{{ END }}
+		</select>
 	</p>
 
 	<p class="inline">
@@ -27,7 +47,7 @@
 	</p>
 	<p class="inline">
 		<label>Initial prompt</label>
-		<input type="text" name="prompt" placeholder="TBD" maxlength="[% c.config.len.max.prompt %]">
+		<input type="text" name="prompt" placeholder="TBD" maxlength="{{ c.config.len.max.prompt }}">
 	</p>
 	<p class="inline">
 		<label>Content level</label>
@@ -53,7 +73,7 @@
 			size="6" max="999999" min="0" step="50" value="2000" required>
 		&ndash;
 		<input type="number" name="wc_max"
-			size="6" max="999999" min="0" step="50" value="25000" required>
+			size="6" max="999999" min="0" step="50" value="8000" required>
 	</p>
 	<p class="inline">
 		<label>Public Duration</label>
@@ -61,7 +81,7 @@
 		Has public
 		<br>
 		<input type="number" name="public_dur"
-			size="4" max="9999" min="1" value="7" required>
+			size="4" max="9999" min="1" value="4" required>
 		Days
 	</p>
 
@@ -76,11 +96,11 @@
 	</p>
 	<p class="inline">
 		<label>Prelim Duration</label>
-		<input type="checkbox" name="has_prelim" class="toggler">
+		<input type="checkbox" name="has_prelim" class="toggler" checked="checked">
 		Has prelim
 		<br />
-		<input type="number" name="prelim_dur" disabled="disabled"
-			size="4" max="9999" min="1" value="7" required>
+		<input type="number" name="prelim_dur"
+			size="4" max="9999" min="1" value="6" required>
 		Days
 	</p>
 	<p class="inline">
@@ -98,7 +118,7 @@
 	</p>
 	<p>
 		<button type="submit">Add Event</button>
-		<a class="ui-button" href="[% c.uri_for( c.controller('Event').action_for('add') ) %]">
+		<a class="ui-button" href="{{ c.uri_for( c.controller('Event').action_for('add') ) }}">
 			Reset
 		</a>
 	</p>

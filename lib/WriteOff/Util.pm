@@ -6,8 +6,12 @@ use warnings;
 use base 'Exporter';
 use Digest;
 
-our @EXPORT_OK = qw/simple_uri sorted token wordcount uniq/;
+our @EXPORT_OK = qw/maybe simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
+
+sub maybe ($$) {
+	return $_[1] ? @_ : ();
+}
 
 sub simple_uri {
 	local $_ = join "-", @_;

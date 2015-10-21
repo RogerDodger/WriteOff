@@ -1,17 +1,42 @@
 package WriteOff::Controller::Scoreboard;
 use Moose;
-use WriteOff::Award qw/:all/;
+use Scalar::Util qw/looks_like_number/;
+use WriteOff::Award qw/all_awards/;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-sub index :Path('') :Args(0) {
-	my ( $self, $c ) = @_;
+sub index :Path('/scoreboard') {
+	my ( $self, $c, $gid, $fid) = @_;
 
-	$c->stash->{artists} = [ $c->model('DB::Artist')->tallied ];
-	$c->stash->{gold_medal} = GOLD();
+	$c->stash->{awards} = [ all_awards ];
+	$c->stash->{genres} = $c->model('DB::Genre');
+	$c->stash->{formats} = $c->model('DB::Format');
 
-	push $c->stash->{title}, 'Scoreboard';
+	my $genre = $c->stash->{genre} = $c->stash->{genres}->find($gid =~ /^(\d+)/ && $1);
+	my $format = $c->stash->{format} = $c->stash->{formats}->find($fid =~ /^(\d+)/ && $1);
+
+	if ($genre) {
+		$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';
+	}
+	else {
+		# Don't allow filtering by format only
+		undef $format;
+	}
+
+	$c->stash->{gUrl} = '/scoreboard/%s';
+	$c->stash->{gUrl} .= '/' . $format->id_uri if $format;
+
+	$c->stash->{aUrl} = '/artist/%s/scores';
+	$c->stash->{aUrl} .= '?genre=' . $genre->id_uri if $genre;
+	$c->stash->{aUrl} .= '&format=' . $format->id_uri if $format;
+
+	$c->stash->{artists} = $c->model('DB::Scoreboard')->search({
+		format_id => $format ? $format->id : undef,
+		genre_id => $genre ? $genre->id : undef,
+	});
+
+	push $c->stash->{title}, join ' ', (map $_->name, grep defined, $genre, $format), 'Scoreboard';
 	$c->stash->{template} = 'scoreboard/index.tt';
 }
 

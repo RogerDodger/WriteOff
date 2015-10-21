@@ -18,4 +18,4 @@
   This means that users should either have a way to mark an arist as
   their "primary" artist, or every resource needs an added artist field.
   For most things, the former seems more appropriate.
-- Add Scoreboard table, 1..* with awards/scores and events.
+- Handle canonicalisation of user.name, user.email, and artist.name
