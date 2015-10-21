@@ -1,5 +1,6 @@
 - [high] Decay only scores of shared genre
 - [high] New scheduler
+- [med] Get a position: sticky polyfill
 - [med] Story body editor buttons
 - [med] Add controller to disqualify entries
 - [med] Notifications
