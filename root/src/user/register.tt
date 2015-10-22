@@ -59,7 +59,7 @@
 	<p class="confirm">
 		By registering you acknowledge that you have read and agreed to
 		the site's <a class="link new-tab" href="[% c.uri_for('/tos') %]">
-		Terms of Service</a>.
+		Terms of service</a>.
 	</p>
 
 	<p>

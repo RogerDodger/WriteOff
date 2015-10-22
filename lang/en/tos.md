@@ -1,4 +1,4 @@
-# Terms of Service
+# Terms of service
 
 These writeoff Terms of Service (this "Agreement") are entered into by writeoff.me (this "Website") and the natural person executing this Agreement ("You").
 By creating an Account for this Website, You acknowledge that You have reviewed and accept this agreement and are authorised to act on behalf of, and bind to this Agreement, the owner of said Account.
