@@ -30,7 +30,7 @@ extends 'Catalyst';
 our $VERSION = 'v0.50.0';
 
 __PACKAGE__->config(
-	name => 'Write-off',
+	name => 'Writeoff',
 	encoding => 'UTF-8',
 
 	DevEmail => 'cthor@cpan.org',

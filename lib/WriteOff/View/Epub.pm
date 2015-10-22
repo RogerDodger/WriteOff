@@ -190,7 +190,7 @@ sub process {
 	# multi story ebook
 	elsif (defined(my $event = $c->stash->{event})) {
 		$self->add_title($event->prompt);
-		$self->add_author('Write-off Participants');
+		$self->add_author('Writeoff Participants');
 
 		if ($event->art) {
 			my $images = $event->images;
