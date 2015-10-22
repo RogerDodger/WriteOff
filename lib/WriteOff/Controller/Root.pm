@@ -180,6 +180,21 @@ sub tos :Local :Args(0) {
 	$c->stash->{template} = 'root/document.tt';
 }
 
+=head2 rights
+
+Content rights page
+
+=cut
+
+sub rights :Local :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{document} = $c->document('rights');
+
+	push $c->stash->{title}, $c->stash->{document}{title};
+	$c->stash->{template} = 'root/document.tt';
+}
+
 =head2 contact
 
 Allow users to contact the admin or developer.
