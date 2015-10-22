@@ -9,8 +9,6 @@ use Catalyst qw/
 	ConfigLoader
 	Static::Simple
 
-	Scheduler
-
 	+WriteOff::Plugin::Auth
 	+WriteOff::Plugin::Strings
 
@@ -52,13 +50,6 @@ __PACKAGE__->config(
 	'View::Epub' => {
 		language => 'en',
 	},
-	'Plugin::Authentication' => {
-		default => {
-			class         => 'SimpleDB',
-			user_model    => 'DB::User',
-			password_type => 'self_check',
-		},
-	},
 	'Plugin::Session' => {
 		flash_to_stash => 1,
 		expires => 365 * (60 * 60 * 24),
@@ -66,7 +57,6 @@ __PACKAGE__->config(
 	'Plugin::ConfigLoader' => {
 		file => 'config.yml',
 	},
-
     'Plugin::Cache' => {
         backend => {
             namespace => 'WriteOff',
@@ -76,7 +66,6 @@ __PACKAGE__->config(
     },
 
 	timezone => 'UTC',
-	scheduler => { time_zone => 'floating' },
 	validator => {
 		plugins => [ 'DBIC::Unique', 'Trim' ],
 		messages => {
@@ -199,16 +188,6 @@ $ENV{TZ} = __PACKAGE__->config->{timezone};
 if (defined __PACKAGE__->config->{now}) {
 	$ENV{WRITEOFF_DATETIME} = __PACKAGE__->config->{now};
 }
-
-__PACKAGE__->schedule(
-	at    => '0 * * * *',
-	event => '/cron/cleanup',
-) unless __PACKAGE__->config->{no_cleanup};
-
-__PACKAGE__->schedule(
-	at    => '* * * * *',
-	event => '/cron/check_schedule',
-);
 
 sub lang {
 	my ($self, $lang) = @_;

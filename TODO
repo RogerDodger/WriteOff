@@ -1,4 +1,5 @@
 - [high] Decay only scores of shared genre
+- [high] Fix scoreboard sorting after an expand
 - [high] New scheduler
 - [med] Get a position: sticky polyfill
 - [med] Story body editor buttons

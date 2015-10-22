@@ -25,19 +25,26 @@ Cleans old data from the database.
 
 =cut
 
-sub check_schedule :Private {
+sub auto :Private {
+	my ($self, $c) = @_;
+
+	$c->req->address eq '127.0.0.1';
+}
+
+sub schedule :Local {
 	my ( $self, $c ) = @_;
 
 	my $rs = $c->model('DB::Schedule')->active_schedules;
 
 	# Extract and delete schedules *before* executing them, lest long-running
 	# tasks execute twice.
-	my @schedules = $rs->all; $rs->delete;
+	my @schedules = $rs->all;
+	$rs->delete;
 
 	$c->forward($_->action, $_->args) for @schedules;
 }
 
-sub cleanup :Private {
+sub cleanup :Local {
 	my ( $self, $c ) = @_;
 
 	$c->model('DB::Heat')->clean_old_entries;
@@ -45,6 +52,11 @@ sub cleanup :Private {
 	$c->model('DB::Token')->clean_expired;
 }
 
+sub end :Private {
+	my ($self, $c) = @_;
+
+	$c->res->body('Task complete');
+}
 
 =head1 AUTHOR
 
