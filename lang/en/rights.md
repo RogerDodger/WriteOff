@@ -1,4 +1,4 @@
-# Content rights
+# Content Rights
 
 Disclaimer: This page does not constitute legal advice.
 
@@ -10,7 +10,7 @@ The following is an attempt to expain the consequence of submitting work to this
 The [terms of service](/tos) say you grant us a license to publish any submitted work,
 because publishing the submitted work is the point of this website, and we need a license to do that.
 It also says you can't submit any work you don't have rights to, which should be fairly obvious.
-To be clear, you retain all rights to your submitted work.
+To be clear, you still own your submitted work.
 We just have a license to publish it.
 
 ## First publishing rights
