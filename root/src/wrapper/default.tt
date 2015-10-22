@@ -6,7 +6,7 @@
 
 		<title>{{ title_html }}</title>
 
-		<link rel="icon" href="/favicon.ico">
+		<link rel="icon" href="/favicon.ico?v=6">
 		<link rel="stylesheet" href="/static/style/normalize.css">
 		<link rel="stylesheet" href="/static/style/jquery-ui-1.9.2.custom.css">
 		<link rel="stylesheet" href="/static/style/font-awesome.min.css">
