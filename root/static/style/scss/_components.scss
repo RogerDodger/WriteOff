@@ -125,3 +125,56 @@
 	-ms-user-select: none;
 	user-select: none;
 }
+
+.Form {
+	label {
+		color: #666;
+		display: block;
+		font-weight: bold;
+		font-size: 0.85em;
+		font-variant: small-caps;
+		text-shadow: 0 1px 1px #fff;
+	}
+
+	input[type="text"],
+	input[type="password"],
+	input[type="email"],
+	input[type="url"],
+	input[type="number"],
+	input[type="search"],
+	input[type="datetime"],
+	textarea {
+		border: 1px solid #aaa;
+		padding: 4px;
+		border-radius: 4px;
+		width: 100%;
+	}
+
+	textarea {
+		font-size: 0.8em;
+		margin-bottom: 0;
+	}
+}
+
+.Form-group {
+	p {
+		float: left;
+	}
+
+	p:not(:first-child) {
+		padding-left: 0.5em;
+	}
+
+	p:not(:last-child) {
+		padding-right: 0.5em;
+	}
+
+	&.two p {
+		width: 50%;
+	}
+}
+
+.Form-submit {
+	@include button($hue: 120, $sat: 50%);
+	font-size: 1.05em;
+}

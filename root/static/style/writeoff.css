@@ -646,6 +646,57 @@ textarea.example {
   -ms-user-select: none;
   user-select: none; }
 
+.Form label {
+  color: #666;
+  display: block;
+  font-weight: bold;
+  font-size: 0.85em;
+  font-variant: small-caps;
+  text-shadow: 0 1px 1px #fff; }
+.Form input[type="text"],
+.Form input[type="password"],
+.Form input[type="email"],
+.Form input[type="url"],
+.Form input[type="number"],
+.Form input[type="search"],
+.Form input[type="datetime"],
+.Form textarea {
+  border: 1px solid #aaa;
+  padding: 4px;
+  border-radius: 4px;
+  width: 100%; }
+.Form textarea {
+  font-size: 0.8em;
+  margin-bottom: 0; }
+
+.Form-group p {
+  float: left; }
+.Form-group p:not(:first-child) {
+  padding-left: 0.5em; }
+.Form-group p:not(:last-child) {
+  padding-right: 0.5em; }
+.Form-group.two p {
+  width: 50%; }
+
+.Form-submit {
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  line-height: 1;
+  padding: 0.8em;
+  text-decoration: none;
+  vertical-align: middle;
+  background: #b3e6b3;
+  border-color: #66cc66;
+  color: #143d14;
+  font-size: 1.05em; }
+  .Form-submit:hover {
+    cursor: pointer;
+    background: #a3e0a3;
+    text-decoration: none; }
+  .Form-submit:active {
+    box-shadow: 0 0.5em 0.7em #94db94 inset; }
+
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */

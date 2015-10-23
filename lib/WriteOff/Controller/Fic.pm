@@ -168,7 +168,7 @@ sub do_submit :Private {
 		}
 
 		$c->flash->{status_msg} = 'Submission successful';
-		$c->res->redirect( $c->req->referer || $c->uri_for('/') );
+		$c->res->redirect( $c->uri_for_action('/fic/view', [ $story->id_uri ]) );
 	}
 }
 

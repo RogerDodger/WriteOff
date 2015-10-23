@@ -1,24 +1,25 @@
-<h1>Fic Submission</h1>
+[% TAGS {{ }} %]
 
-<p>
-	Submissions open: <strong>[% format_dt(event.fic) %]</strong>.
-	<br />
-	Submissions close: <strong>[% format_dt(event.fic_end) %]</strong>.
-	<br />
-	Submissions received: <strong>[% event.storys_rs.count %]</strong>.
-	<br />
-[%- IF event.fic_subs_allowed %]
-	Submissions are <strong class="good">open</strong>.
-[%- ELSE %]
-	Submissions are <strong class="bad">closed</strong>.
-[%- END %]
-</p>
+<div class="Document">
+	<div class="Document-title">
+		Fic Submission
+	</div>
 
-[%- IF event.fic_subs_allowed && c.user %]
-	[%- INCLUDE fic/form.tt %]
-[%- END %]
+	<div class="Countdown">
+		{{ IF event.fic > now }}
+			{{ event.fic.delta_html }}
+		{{ ELSIF event.fic_end > now }}
+			{{ event.fic_end.delta_html }}
+		{{ ELSE }}
+			{{ c.string('subsClosed') }}
+		{{ END }}
+	</div>
 
-[%- IF !c.user %]
-	[%- INCLUDE fragment/status_msg.tt
-		message = 'Guests cannot submit fics' %]
-[%- END %]
+	{{ IF event.fic_subs_allowed }}
+		{{ IF c.user }}
+			{{ INCLUDE fic/form.tt }}
+		{{ ELSE }}
+		<div class="Flash">{{ c.string('loginRequiredFic') }}</div>
+		{{ END }}
+	{{ END }}
+</div>

@@ -52,45 +52,6 @@ Number.prototype.ordinal = function () {
 };
 
 jQuery(document).ready(function($) {
-	$('a.ui-button, input[type=submit], button').button();
-	$('.fake-ui-button').button({ disabled: true });
-
-	//Story font-size togglers
-	resetStoryFontSize();
-	$('aside.font-size-chooser a').on('click', function() {
-		var a = $(this);
-		if( a.hasClass('default') ) {
-			$.removeCookie('story-font-size');
-		}
-		else {
-			config = $.cookie('story-font-size') * 1 || 1;
-
-			if( a.hasClass('bigger') )
-				config += 0.05;
-				if( config >= 1.4 ) config = 1.4;
-			if( a.hasClass('smaller') ) {
-				config -= 0.05;
-				if( config < 0.6 ) config = 0.6;
-			}
-
-			$.cookie('story-font-size', config, { expires: 365 });
-		}
-
-		resetStoryFontSize();
-	});
-
-	//Event accordion
-	var defaultEventIndex = $('.events h1.prompt').index(
-		$( '.events h1 a' + (window.location.hash || '#null') ).parent()
-	);
-	$('.events').accordion({
-		active: defaultEventIndex >= 0 ? defaultEventIndex : false,
-		collapsible: true,
-		change: function(event, ui) {
-			window.location.hash = ui.newHeader.children('a').attr('href') || '';
-		}
-	});
-
 	$('input[type="checkbox"].toggler')
 		.on('change', function() {
 			var caller = this;
@@ -106,11 +67,6 @@ jQuery(document).ready(function($) {
 			}
 		})
 		.trigger('change');
-
-	$('a.new-window, a.new-tab').attr('target', '_blank');
-	$('a.new-window, a.new-tab').attr('title', function(i, title) {
-		return title || 'Open link in new tab';
-	});
 
 	$('input.autocomplete-user').autocomplete({
 		source: '/user/list?format=json&q=username',
