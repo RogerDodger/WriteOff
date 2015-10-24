@@ -34,6 +34,7 @@ sub auto :Private {
 sub schedule :Local {
 	my ( $self, $c ) = @_;
 
+	$c->log->abort(1);
 	my $rs = $c->model('DB::Schedule')->active_schedules;
 
 	# Extract and delete schedules *before* executing them, lest long-running
