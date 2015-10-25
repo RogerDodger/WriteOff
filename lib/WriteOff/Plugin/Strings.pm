@@ -3,6 +3,7 @@ package WriteOff::Plugin::Strings;
 use 5.014;
 use Carp;
 use File::Find ();
+use HTML::Entities;
 use Text::Markdown;
 use WriteOff::Util;
 
@@ -44,7 +45,7 @@ sub setup {
 
 			$doc->{contents} = Text::Markdown->new->markdown($text);
 			$doc->{contents} =~ s{ <h1> (.+?) </h1> }{}x;
-			$doc->{title} = $1;
+			$doc->{title} = HTML::Entities::decode_entities $1;
 			$doc->{sections} = [];
 			1 while $doc->{contents} =~ s{
 				<(h[23])> (.*?) </\g1>
@@ -71,7 +72,6 @@ sub _fetch {
 }
 
 sub document {
-	dd %docs;
 	_fetch(@_, \%docs);
 }
 

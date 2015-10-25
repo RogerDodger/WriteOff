@@ -30,16 +30,6 @@ ul ul {
 ol ol {
   list-style-type: lower-alpha; }
 
-code, tt, var {
-  margin: 0 2px;
-  padding: 0px 5px;
-  white-space: nowrap;
-  border: 1px solid #EAEAEA;
-  font-style: normal;
-  font-family: monospace;
-  background-color: #F8F8F8;
-  border-radius: 3px; }
-
 a.link,
 a.link:visited,
 a.link:link,
@@ -662,12 +652,14 @@ textarea.example {
 .Form input[type="datetime"],
 .Form textarea {
   border: 1px solid #aaa;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 0.25em;
+  border-radius: 0.25em;
   width: 100%; }
 .Form textarea {
   font-size: 0.8em;
   margin-bottom: 0; }
+.Form *[disabled] {
+  background-color: #e6e6e6; }
 
 .Form-group p {
   float: left; }
@@ -677,6 +669,9 @@ textarea.example {
   padding-right: 0.5em; }
 .Form-group.two p {
   width: 50%; }
+
+.Form-note {
+  font-size: 0.9em; }
 
 .Form-submit {
   border-style: solid;
@@ -970,9 +965,20 @@ body.inverted {
   margin-top: 1em; }
   .Document.wide, .wide.Story-container {
     max-width: 1040px; }
+  .Document > *:last-child, .Story-container > *:last-child {
+    margin-bottom: 0; }
+  .Document pre, .Story-container pre {
+    background: #ededed;
+    border: 1px solid #cccccc;
+    border-radius: 0.25em;
+    font-size: 0.85em;
+    padding: 0.4em; }
 
-.Document > *:last-child, .Story-container > *:last-child {
+.Last {
   margin-bottom: 0; }
+
+.First {
+  margin-top: 0; }
 
 .Document-title, .Story-title {
   border-bottom: 1px solid #cccccc;

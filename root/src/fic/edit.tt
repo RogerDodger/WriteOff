@@ -1,4 +1,17 @@
-<h1>[% story.event.prompt | html %]</h1>
+[% TAGS {{ }} %]
 
-<h2>Fic Editing</h2>
-[% INCLUDE fic/form.tt %]
+<div class="Document">
+	<div class="Document-title">
+		Fic Editing
+	</div>
+
+	<div class="Countdown">
+		{{ IF story.event.fic_end > now }}
+			{{ event.fic_end.delta_html }}
+		{{ ELSE }}
+			{{ c.string('subsClosed') }}
+		{{ END }}
+	</div>
+
+	{{ INCLUDE fic/form.tt }}
+</div>

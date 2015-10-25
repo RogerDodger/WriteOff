@@ -1,57 +1,57 @@
-<form class="Form" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
-	[%- IF c.form.has_error %]
-		[%- FOREACH message IN c.form.messages('submit') %]
-		<div class="Flash">[% message | html %]</div>
-		[%- END %]
-	[%- END %]
+[% TAGS {{ }} %]
+
+<form class="Form" action="{{ c.req.uri }}" method="post" >
+	<input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+	{{- IF c.form.has_error }}
+		{{- FOREACH message IN c.form.messages('submit') }}
+		<div class="Flash">{{ message | html }}</div>
+		{{- END }}
+	{{- END }}
 	<div class="Form-group two">
-		<p>
+		<p class="First">
 			<label>Title<span class="required">*</span></label>
-			<input name="title" type="text" size="30" maxlength="[% c.config.len.max.title %]" required>
+			<input name="title" type="text" size="30" maxlength="{{ c.config.len.max.title }}" required>
 		</p>
-		<p>
+		<p class="First">
 			<label>Author</label>
-			<input name="author" type="text" size="30" maxlength="[% c.config.len.max.user %]"
+			<input name="author" type="text" size="30" maxlength="{{ c.config.len.max.user }}"
 				placeholder="Anonymous">
 		</p>
 	</div>
-	[%- IF (images = event.images_rs.metadata.seed_order.all) %]
+	{{- IF (images = event.images_rs.metadata.seed_order.all) }}
 	<p>
 		<label>Art Title(s)<span class="required">*</span></label>
-		<select name="image_id" size="[% event.images_rs.count + 1 %]"
+		<select name="image_id" size="{{ event.images_rs.count + 1 }}"
 			title="Artwork(s) related to the story."
 			multiple required >
 			<optgroup label="Submitted Artworks">
-			[%- FOREACH image IN images %]
-				<option value="[% image.id %]">[% image.title | html %]</option>
-			[%- END %]
+			{{- FOREACH image IN images }}
+				<option value="{{ image.id }}">{{ image.title | html }}</option>
+			{{- END }}
 			</optgroup>
 		</select>
 	</p>
-	[%- END %]
+	{{- END }}
 	<p>
 		<label>Website</label>
-		<input name="website" type="url" size="72" maxlength="[% c.config.len.max.url %]"
+		<input name="website" type="url" size="72" maxlength="{{ c.config.len.max.url }}"
 			title="Optional link to your online galleries"
 			placeholder="http://" />
 	</p>
 	<p>
 		<label>Story<span class="required">*</span></label>
-		<textarea name="story" id="story-field" rows="18" cols="32" required
-			title="Word limit: [% event.wc_min _ '–' _ event.wc_max %]"
-			data-max="[% event.wc_max %]" data-min="[% event.wc_min %]"></textarea>
-		<span class="ps">
-			Make sure you use
-			<a class="link" href="[% c.uri_for( c.controller('Event')
-				.action_for('rules'), [ event.id_uri ]) %]#Formatting">the correct formatting</a>.
+		<textarea name="story" id="story-field" rows="16" cols="32" required
+			title="Word limit: {{ event.wc_min _ '–' _ event.wc_max }}"
+			data-max="{{ event.wc_max }}" data-min="{{ event.wc_min }}"></textarea>
+		<span class="Form-note">
+			<a href="/style">{{ c.document('style').title | html }}</a>
 		</span>
 	</p>
 	<p>
 		<label>Wordcount</label>
 		<input type="text" id="wordcount" size="72" disabled>
 	</p>
-	<p>
+	<p class="Last">
 		<input class="Form-submit" type="submit" value="Submit">
 	</p>
 </form>

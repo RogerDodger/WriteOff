@@ -195,6 +195,21 @@ sub rights :Local :Args(0) {
 	$c->stash->{template} = 'root/document.tt';
 }
 
+=head2 style
+
+Formatting and style guide
+
+=cut
+
+sub style :Local :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{document} = $c->document('style');
+
+	push $c->stash->{title}, $c->stash->{document}{title};
+	$c->stash->{template} = 'root/document.tt';
+}
+
 =head2 contact
 
 Allow users to contact the admin or developer.

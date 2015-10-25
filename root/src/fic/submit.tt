@@ -19,7 +19,7 @@
 		{{ IF c.user }}
 			{{ INCLUDE fic/form.tt }}
 		{{ ELSE }}
-		<div class="Flash">{{ c.string('loginRequiredFic') }}</div>
+			<div class="Flash">{{ c.string('loginRequiredFic') }}</div>
 		{{ END }}
 	{{ END }}
 </div>

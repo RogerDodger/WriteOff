@@ -6,10 +6,26 @@
 	&.wide {
 		max-width: 1040px;
 	}
+
+	& > *:last-child {
+		margin-bottom: 0;
+	}
+
+	pre {
+		background: hsla(0, 0%, 93%, 1);
+		border: 1px solid hsla(0, 0%, 80%, 1);
+		border-radius: 0.25em;
+		font-size: 0.85em;
+		padding: 0.4em;
+	}
 }
 
-.Document > *:last-child {
+.Last {
 	margin-bottom: 0;
+}
+
+.First {
+	margin-top: 0;
 }
 
 .Document-title {

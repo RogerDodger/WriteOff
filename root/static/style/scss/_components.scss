@@ -145,14 +145,18 @@
 	input[type="datetime"],
 	textarea {
 		border: 1px solid #aaa;
-		padding: 4px;
-		border-radius: 4px;
+		padding: 0.25em;
+		border-radius: 0.25em;
 		width: 100%;
 	}
 
 	textarea {
 		font-size: 0.8em;
 		margin-bottom: 0;
+	}
+
+	*[disabled] {
+		background-color: hsla(0, 0%, 90%, 1);
 	}
 }
 
@@ -172,6 +176,10 @@
 	&.two p {
 		width: 50%;
 	}
+}
+
+.Form-note {
+	font-size: 0.9em;
 }
 
 .Form-submit {

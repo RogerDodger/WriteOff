@@ -90,21 +90,4 @@ other rules is allowed.
 
 [%- END %]
 
-<h2 id="Formatting">Story Formatting</h2>
-
-To aid with author anonymity, the following formatting rules must be applied
-to all submitted stories.
-
-1. Paragraphs should be separated by a single blank line.
-2. Scene breaks should be indicated by an [hr] in its own paragraph.
-3. Weak scene breaks should be indicated by a blank paragraph, i.e, three blank lines.
-4. Sentences should be separated by a single space.
-
-### Example ###
-
-<div><textarea class="example" rows="12" cols="48" disabled="disabled">[% INCLUDE fic/formatting.tt %]</textarea></div>
-
-__Participants should not put their name or other metadata inside of the
-story field.__ The *story* field should only have the *story* in it.
-
 [% END %]
