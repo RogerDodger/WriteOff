@@ -127,6 +127,14 @@
 }
 
 .Form {
+	& > div {
+		margin: 1em 0;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
 	label {
 		color: #666;
 		display: block;
@@ -143,16 +151,31 @@
 	input[type="number"],
 	input[type="search"],
 	input[type="datetime"],
-	textarea {
+	textarea,
+	select {
+		background: hsla(0, 0%, 99%, 1);
 		border: 1px solid #aaa;
 		padding: 0.25em;
 		border-radius: 0.25em;
 		width: 100%;
 	}
 
+	input[type="checkbox"] {
+		vertical-align: middle;
+
+		& + label {
+			display: inline;
+		}
+	}
+
 	textarea {
 		font-size: 0.8em;
 		margin-bottom: 0;
+	}
+
+	input[type="submit"] {
+		@include button($hue: 120, $sat: 50%);
+		font-size: 1.03em;
 	}
 
 	*[disabled] {
@@ -161,28 +184,28 @@
 }
 
 .Form-group {
-	p {
+	@extend .clearfix;
+
+	& > div {
 		float: left;
+		margin-top: 0;
+
+		&:not(:first-child) {
+			padding-left: 0.5em;
+		}
+
+		&:not(:last-child) {
+			padding-right: 0.5em;
+		}
 	}
 
-	p:not(:first-child) {
-		padding-left: 0.5em;
-	}
-
-	p:not(:last-child) {
-		padding-right: 0.5em;
-	}
-
-	&.two p {
+	&.two > div {
 		width: 50%;
 	}
 }
 
 .Form-note {
-	font-size: 0.9em;
-}
-
-.Form-submit {
-	@include button($hue: 120, $sat: 50%);
-	font-size: 1.05em;
+	color: #666;
+	font-size: 0.85em;
+	margin-top: 0.1em;
 }

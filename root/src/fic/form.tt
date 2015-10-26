@@ -8,18 +8,18 @@
 		{{- END }}
 	{{- END }}
 	<div class="Form-group two">
-		<p class="First">
+		<div>
 			<label>Title<span class="required">*</span></label>
 			<input name="title" type="text" size="30" maxlength="{{ c.config.len.max.title }}" required>
-		</p>
-		<p class="First">
+		</div>
+		<div>
 			<label>Author</label>
 			<input name="author" type="text" size="30" maxlength="{{ c.config.len.max.user }}"
 				placeholder="Anonymous">
-		</p>
+		</div>
 	</div>
 	{{- IF (images = event.images_rs.metadata.seed_order.all) }}
-	<p>
+	<div>
 		<label>Art Title(s)<span class="required">*</span></label>
 		<select name="image_id" size="{{ event.images_rs.count + 1 }}"
 			title="Artwork(s) related to the story."
@@ -30,15 +30,15 @@
 			{{- END }}
 			</optgroup>
 		</select>
-	</p>
+	</div>
 	{{- END }}
-	<p>
+	<div>
 		<label>Website</label>
 		<input name="website" type="url" size="72" maxlength="{{ c.config.len.max.url }}"
 			title="Optional link to your online galleries"
 			placeholder="http://" />
-	</p>
-	<p>
+	</div>
+	<div>
 		<label>Story<span class="required">*</span></label>
 		<textarea name="story" id="story-field" rows="16" cols="32" required
 			title="Word limit: {{ event.wc_min _ '–' _ event.wc_max }}"
@@ -46,12 +46,12 @@
 		<span class="Form-note">
 			<a href="/style">{{ c.document('style').title | html }}</a>
 		</span>
-	</p>
-	<p>
+	</div>
+	<div>
 		<label>Wordcount</label>
 		<input type="text" id="wordcount" size="72" disabled>
-	</p>
-	<p class="Last">
+	</div>
+	<div>
 		<input class="Form-submit" type="submit" value="Submit">
-	</p>
+	</div>
 </form>

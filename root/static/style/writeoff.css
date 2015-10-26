@@ -636,6 +636,10 @@ textarea.example {
   -ms-user-select: none;
   user-select: none; }
 
+.Form > div {
+  margin: 1em 0; }
+  .Form > div:last-child {
+    margin-bottom: 0; }
 .Form label {
   color: #666;
   display: block;
@@ -650,30 +654,21 @@ textarea.example {
 .Form input[type="number"],
 .Form input[type="search"],
 .Form input[type="datetime"],
-.Form textarea {
+.Form textarea,
+.Form select {
+  background: #fcfcfc;
   border: 1px solid #aaa;
   padding: 0.25em;
   border-radius: 0.25em;
   width: 100%; }
+.Form input[type="checkbox"] {
+  vertical-align: middle; }
+  .Form input[type="checkbox"] + label {
+    display: inline; }
 .Form textarea {
   font-size: 0.8em;
   margin-bottom: 0; }
-.Form *[disabled] {
-  background-color: #e6e6e6; }
-
-.Form-group p {
-  float: left; }
-.Form-group p:not(:first-child) {
-  padding-left: 0.5em; }
-.Form-group p:not(:last-child) {
-  padding-right: 0.5em; }
-.Form-group.two p {
-  width: 50%; }
-
-.Form-note {
-  font-size: 0.9em; }
-
-.Form-submit {
+.Form input[type="submit"] {
   border-style: solid;
   border-width: 1px;
   display: inline-block;
@@ -684,13 +679,30 @@ textarea.example {
   background: #b3e6b3;
   border-color: #66cc66;
   color: #143d14;
-  font-size: 1.05em; }
-  .Form-submit:hover {
+  font-size: 1.03em; }
+  .Form input[type="submit"]:hover {
     cursor: pointer;
     background: #a3e0a3;
     text-decoration: none; }
-  .Form-submit:active {
+  .Form input[type="submit"]:active {
     box-shadow: 0 0.5em 0.7em #94db94 inset; }
+.Form *[disabled] {
+  background-color: #e6e6e6; }
+
+.Form-group > div {
+  float: left;
+  margin-top: 0; }
+  .Form-group > div:not(:first-child) {
+    padding-left: 0.5em; }
+  .Form-group > div:not(:last-child) {
+    padding-right: 0.5em; }
+.Form-group.two > div {
+  width: 50%; }
+
+.Form-note {
+  color: #666;
+  font-size: 0.85em;
+  margin-top: 0.1em; }
 
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
@@ -744,21 +756,22 @@ textarea.example {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before,
-.clearfix:after {
+.clearfix:before, .Form-group:before,
+.clearfix:after,
+.Form-group:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after {
+.clearfix:after, .Form-group:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix {
+.clearfix, .Form-group {
   *zoom: 1; }
 
 /*

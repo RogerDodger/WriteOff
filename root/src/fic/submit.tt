@@ -8,7 +8,7 @@
 	<div class="Countdown">
 		{{ IF event.fic > now }}
 			{{ event.fic.delta_html }}
-		{{ ELSIF event.fic_end > now }}
+		{{ ELSIF event.fic_subs_allowed }}
 			{{ event.fic_end.delta_html }}
 		{{ ELSE }}
 			{{ c.string('subsClosed') }}

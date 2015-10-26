@@ -1,7 +1,6 @@
 - [high] Decay only scores of shared genre
 - [high] Add means for users to delete and noindex their submissions
 - [high] Fix scoreboard sorting after an expand
-- [high] New scheduler
 - [med] Get a position: sticky polyfill
 - [med] Story body editor buttons
 - [med] Add controller to disqualify entries

@@ -6,7 +6,7 @@
 	</div>
 
 	<div class="Countdown">
-		{{ IF story.event.fic_end > now }}
+		{{ IF story.event.fic_subs_allowed }}
 			{{ event.fic_end.delta_html }}
 		{{ ELSE }}
 			{{ c.string('subsClosed') }}
