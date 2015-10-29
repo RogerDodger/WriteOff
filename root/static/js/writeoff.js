@@ -739,3 +739,25 @@ $(document).ready(function () {
 		new Tablesort(this);
 	});
 });
+
+// ===========================================================================
+// Story access flipper autoupdate
+// ===========================================================================
+
+$(document).ready(function () {
+	$('.Storys-access').each(function () {
+		var $form = $(this);
+		$form.find('.Storys-access--update').remove();
+
+		var q = $.when();
+		$form.find('input[type="checkbox"]').on('change', function () {
+			q.then(
+				$.ajax({
+					type: $form.attr('method'),
+					url: $form.attr('action'),
+					data: $form.serialize(),
+				})
+			);
+		});
+	});
+})

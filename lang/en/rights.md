@@ -23,13 +23,14 @@ Given that you've granted us a license to publish your work, and it's already be
 
 ## Deleting your work from this website
 
-You can revoke the license granted to us by deleting your work. To do this, go to the [My Submissions](/user/me).
-(Not currently possible. ETA: 25 Oc 2015.)
+You can revoke the license granted to us by unpublishing your story.
+This can be done after the event is concluded and will result in the story's contents no longer being displayed on the website.
 
-However, deleting the story outright may not be required.
+However, this is the most extreme solution and may not be required (nor in some cases sufficient).
 
-The concern most publishers have is that their customers can obtain the work elsewhere.
+The concern most publishers have is that their customers can find the story elsewhere.
 The way most customers will go about doing this is searching the story's name on Google.
 Fortunately, Google (and other well-behaved web crawlers) can be told that certain pages are not to be indexed.
-So if you want to instead only make your work disappear from search engines, you can simply mark it as not to be indexed in the [My Submissions](/user/me) page.
-(Not currently possible. ETA: 25 Oct 2015.)
+So if you want to instead make your story disappear only from search engines, you can simply mark it as not to be indexed.
+
+Both of these flags can be set from the story submission page.

@@ -44,8 +44,11 @@ sub setup {
 			close $fh;
 
 			$doc->{contents} = Text::Markdown->new->markdown($text);
-			$doc->{contents} =~ s{ <h1> (.+?) </h1> }{}x;
-			$doc->{title} = HTML::Entities::decode_entities $1;
+
+			if ($doc->{contents} =~ s{ <h1> (.+?) </h1> }{}x) {
+				$doc->{title} = HTML::Entities::decode_entities $1;
+			}
+
 			$doc->{sections} = [];
 			1 while $doc->{contents} =~ s{
 				<(h[23])> (.*?) </\g1>
@@ -63,8 +66,6 @@ sub setup {
 
 	$app->next::method(@_);
 }
-
-use Data::Dump;
 
 sub _fetch {
 	my ($app, $key, $maps) = @_;

@@ -17,7 +17,7 @@ __PACKAGE__->config(
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
 	TIMER              => 1,
-	expose_methods     => [ qw/format_dt title_html spectrum/ ],
+	expose_methods     => [ qw/csrf_field format_dt title_html spectrum/ ],
 	render_die         => 1,
 );
 
@@ -130,6 +130,12 @@ $Template::Stash::LIST_OPS = {
 		return [ map { $_->username } @{ $_[0] } ];
 	},
 };
+
+sub csrf_field {
+	my ($self, $c) = @_;
+
+	return sprintf qq{<input type="hidden" name="csrf_token" value="%s">}, $c->stash->{csrf_token};
+}
 
 sub format_dt {
 	my ($self, $c, $dt, $fmt) = @_;

@@ -59,6 +59,7 @@ sub auto :Private {
 	}
 
 	if ($c->req->header('x-requested-with') eq 'XMLHttpRequest') {
+		$c->stash->{ajax} = 1;
 		$c->stash->{wrapper} = 'wrapper/bare.tt';
 	}
 
@@ -276,6 +277,29 @@ sub send_contact_email :Private {
 	}
 
 	$c->stash->{status_msg} = 'Email sent successfully';
+}
+
+=head2 robots
+
+Dynamically generated robots.txt
+
+=cut
+
+sub robots :Path('/robots.txt') :Args(0) {
+	my ($self, $c) = @_;
+
+	my $storys = $c->model('DB::Story')->search(
+		{ indexed => { "!=" => 1 } },
+		{ columns => [ qw/id title/ ] },
+	);
+
+	my $body = "User-agent: *\n";
+	while (my $story = $storys->next) {
+		$body .= "Disallow: /fic/" . $story->id_uri . "\n";
+	}
+
+	$c->res->body($body);
+	$c->res->content_type('text/plain; charset=utf-8');
 }
 
 =head2 assert_admin

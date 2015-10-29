@@ -2,10 +2,16 @@
 <div class="Story-container">
 	<div class="Story-title">{{ story.title | html }}</div>
 
+	{{ IF story.published }}
 	<div class="Story">
 		{{ story.contents | bbcode }}
 		<!-- {{ story.wordcount }} words -->
 	</div>
+	{{ ELSE }}
+	<div class="Story-redacted">
+		{{ c.string('storyRedacted') }}
+	</div>
+	{{ END }}
 
 	{{- IF story.event.fic_gallery_opened }}
 	<p class="center">

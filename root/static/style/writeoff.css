@@ -615,6 +615,18 @@ textarea.example {
 .muted {
   color: #666; }
 
+.Divider {
+  display: block;
+  background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+  width: 80%;
+  height: 1px;
+  margin: 1.2em auto; }
+
+.Clarify {
+  position: relative;
+  bottom: 0.5em;
+  font-size: 0.8em; }
+
 .Countdown {
   font-size: 1.2em;
   margin: 1em 0;
@@ -1000,7 +1012,8 @@ body.inverted {
   padding-bottom: 0.6em; }
 
 .Document-subtitle {
-  border-bottom: 1px solid #999999;
+  background: linear-gradient(to right, transparent 10%, #b3b3b3 25%, #b3b3b3 75%, transparent 90%);
+  height: 1px;
   color: #4d4d4d;
   font-size: 1.2em;
   line-height: 0;
@@ -1337,15 +1350,23 @@ body.inverted {
     box-shadow: 1px 1px 1px #d9d9d9;
     background: #fcfcfc; }
 
+.Story-redacted {
+  text-align: center; }
+
 .Storys {
   width: 100%; }
+  .Storys > thead > tr > th, .Storys > tbody > tr > td {
+    padding: 0.8em 0.4em; }
+    .Storys > thead > tr > th:first-child, .Storys > tbody > tr > td:first-child {
+      padding-left: 0.8em; }
+    .Storys > thead > tr > th:last-child, .Storys > tbody > tr > td:last-child {
+      padding-right: 0.8em; }
   .Storys > thead > tr > th {
     font-size: 1.1em;
     font-weight: normal;
-    padding: 0.3em 0.8em;
-    text-align: center; }
-    .Storys > thead > tr > th + th {
-      padding-left: 0; }
+    text-align: center;
+    padding-bottom: 0.3em;
+    padding-top: 0.3em; }
   .Storys > tbody > tr:nth-child(odd) > td {
     background-color: #dee8ed; }
   .Storys > tbody > tr:nth-child(even) > td {
@@ -1360,27 +1381,59 @@ body.inverted {
       height: 1px;
       margin: 1.2em auto;
       content: " "; }
-  .Storys > tbody > tr > td {
-    padding: 0.8em; }
-    .Storys > tbody > tr > td + td {
-      padding-left: 0; }
+
+.Storys-edit {
+  font-size: 0.9em; }
 
 .Storys-num,
-.Storys-wordcount {
+.Storys-edit,
+.Storys-title,
+.Storys-author,
+.Storys-wordcount,
+.Storys-index,
+.Storys-publish,
+.Storys-created,
+.Storys-updated {
   text-align: center; }
 
 .Storys-export {
   white-space: nowrap; }
 
+.Storys-access--update {
+  text-align: center;
+  margin-top: 1em; }
+  .Storys-access--update input {
+    border-style: solid;
+    border-width: 1px;
+    display: inline-block;
+    line-height: 1;
+    padding: 0.8em;
+    text-decoration: none;
+    vertical-align: middle;
+    background: #bdd1db;
+    border-color: #7aa3b8;
+    color: #1d2d35; }
+    .Storys-access--update input:hover {
+      cursor: pointer;
+      background: #afc8d4;
+      text-decoration: none; }
+    .Storys-access--update input:active {
+      box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
+
 .Ballot {
   width: 100%; }
+  .Ballot > thead > tr > th, .Ballot > tbody > tr > td {
+    padding: 0.8em 0.4em; }
+    .Ballot > thead > tr > th:first-child, .Ballot > tbody > tr > td:first-child {
+      padding-left: 0.8em; }
+    .Ballot > thead > tr > th:last-child, .Ballot > tbody > tr > td:last-child {
+      padding-right: 0.8em; }
   .Ballot > thead > tr > th {
     font-size: 1.1em;
     font-weight: normal;
-    padding: 0.3em 0.8em;
-    text-align: center; }
-    .Ballot > thead > tr > th + th {
-      padding-left: 0; }
+    text-align: center;
+    padding-bottom: 0.3em;
+    padding-top: 0.3em; }
   .Ballot > tbody > tr:nth-child(odd) > td {
     background-color: #dee8ed; }
   .Ballot > tbody > tr:nth-child(even) > td {
@@ -1395,10 +1448,6 @@ body.inverted {
       height: 1px;
       margin: 1.2em auto;
       content: " "; }
-  .Ballot > tbody > tr > td {
-    padding: 0.8em; }
-    .Ballot > tbody > tr > td + td {
-      padding-left: 0; }
   .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
     text-align: center; }
   .Ballot > tbody > tr > td.Ballot-title {
@@ -1538,13 +1587,18 @@ body.inverted {
 
 .Scoreboard {
   width: 100%; }
+  .Scoreboard > thead > tr > th, .Scoreboard > tbody > tr > td {
+    padding: 0.8em 0.4em; }
+    .Scoreboard > thead > tr > th:first-child, .Scoreboard > tbody > tr > td:first-child {
+      padding-left: 0.8em; }
+    .Scoreboard > thead > tr > th:last-child, .Scoreboard > tbody > tr > td:last-child {
+      padding-right: 0.8em; }
   .Scoreboard > thead > tr > th {
     font-size: 1.1em;
     font-weight: normal;
-    padding: 0.3em 0.8em;
-    text-align: center; }
-    .Scoreboard > thead > tr > th + th {
-      padding-left: 0; }
+    text-align: center;
+    padding-bottom: 0.3em;
+    padding-top: 0.3em; }
   .Scoreboard > tbody > tr:nth-child(odd) > td {
     background-color: #dee8ed; }
   .Scoreboard > tbody > tr:nth-child(even) > td {
@@ -1559,10 +1613,6 @@ body.inverted {
       height: 1px;
       margin: 1.2em auto;
       content: " "; }
-  .Scoreboard > tbody > tr > td {
-    padding: 0.8em; }
-    .Scoreboard > tbody > tr > td + td {
-      padding-left: 0; }
   .Scoreboard > tbody > tr > td {
     text-align: center; }
 

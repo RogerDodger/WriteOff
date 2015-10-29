@@ -17,20 +17,34 @@ sub _log {
 	$message .= "\n" unless $message =~ /\n$/;
 	my $timestamp = POSIX::strftime($self->timeformat, localtime);
 
-	my $body = $self->_body // {};
-	$body->{$level} //= "";
-	$body->{$level} .= sprintf "%s %s", $timestamp, $message;
-	$self->_body($body);
+	if ($self->path) {
+		my $body = $self->_body // {};
+		$body->{$level} //= "";
+		$body->{$level} .= sprintf "%s %s", $timestamp, $message;
+		$self->_body($body);
+	}
+	else {
+		my $body = $self->_body // "";
+		$body .= sprintf "[%s] %s %s", $level, $timestamp, $message;
+		$self->_body($body);
+	}
 }
 
 sub _send_to_log {
 	my ($self, $body) = @_;
 
-	for my $level (keys %$body) {
-		open LOG, ">>:encoding(UTF-8)", File::Spec->catfile($self->path, "$level.log");
-		print LOG $body->{$level};
-		close LOG;
+	if ($self->path) {
+		for my $level (keys %$body) {
+			open LOG, ">>:encoding(UTF-8)", File::Spec->catfile($self->path, "$level.log");
+			print LOG $body->{$level};
+			close LOG;
+		}
 	}
+	else {
+		binmode STDERR, ":utf8";
+		print STDERR $body;
+	}
+
 }
 
 no Moose;

@@ -53,6 +53,10 @@
 	margin: 1.2em auto;
 }
 
+.Divider {
+	@include divider;
+}
+
 @mixin table-divider {
 	background-color: transparent;
 	padding: 0;
@@ -66,16 +70,26 @@
 @mixin striped-table($hue: 200, $sat: 30%) {
 	width: 100%;
 
+	& > thead > tr > th,
+	& > tbody > tr > td {
+		padding: 0.8em 0.4em;
+
+		&:first-child {
+			padding-left: 0.8em;
+		}
+
+		&:last-child {
+			padding-right: 0.8em;
+		}
+	}
+
 	& > thead > tr {
 		& > th {
 			font-size: 1.1em;
 			font-weight: normal;
-			padding: 0.3em 0.8em;
 			text-align: center;
-
-			& + th {
-				padding-left: 0;
-			}
+			padding-bottom: 0.3em;
+			padding-top: 0.3em;
 		}
 	}
 
@@ -91,15 +105,19 @@
 		& > td.Table-divider {
 			@include table-divider;
 		}
-
-		& > td {
-			padding: 0.8em;
-
-			& + td {
-				padding-left: 0;
-			}
-		}
 	}
+}
+
+@mixin table-button($hue: 200, $sat: 30%, $l: 97%) {
+	@include button($hue, $sat, $l);
+	padding: 0.4em;
+	font-size: 0.8em;
+}
+
+.Clarify {
+	position: relative;
+	bottom: 0.5em;
+	font-size: 0.8em;
 }
 
 .Countdown {

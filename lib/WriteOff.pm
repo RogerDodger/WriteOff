@@ -27,7 +27,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
-our $VERSION = 'v0.50.0';
+our $VERSION = 'v0.51.0';
 
 __PACKAGE__->config(
 	name => 'Writeoff',
@@ -172,14 +172,10 @@ __PACKAGE__->config(
 	enable_catalyst_header => 1,
 );
 
-if (!$ENV{CATALYST_DEBUG}) {
-	require WriteOff::Log;
-
-    my $logger = WriteOff::Log->new;
-    $logger->path(__PACKAGE__->path_to('log'));
-
-    __PACKAGE__->log($logger);
-}
+require WriteOff::Log;
+my $logger = WriteOff::Log->new;
+$logger->path(__PACKAGE__->path_to('log')) unless $ENV{CATALYST_DEBUG};
+__PACKAGE__->log($logger);
 
 __PACKAGE__->setup;
 

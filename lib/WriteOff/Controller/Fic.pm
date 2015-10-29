@@ -22,7 +22,11 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 
 	if ($c->stash->{format} eq 'txt') {
 		$c->res->content_type('text/plain; charset=utf-8');
-		$c->res->body( $c->stash->{story}->contents );
+		$c->res->body(
+			$c->stash->{story}->published
+				? $c->stash->{story}->contents
+				: $c->string('storyRedacted')
+		);
 	}
 	elsif ($c->stash->{format} eq 'epub') {
 		$c->forward('View::Epub');
@@ -114,17 +118,24 @@ sub form :Private {
 sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 	my ( $self, $c ) = @_;
 
+	if ($c->user) {
+		$c->stash->{storys} = $c->stash->{event}->storys->search({ user_id => $c->user->id });
+		$c->stash->{fillform}{author} = $c->user->last_author ||
+		                                $c->user->last_artist ||
+		                                $c->user->name;
+
+		if ($c->req->method eq 'POST') {
+			if ($c->req->param('flip')) {
+				$c->forward('flip');
+			}
+			elsif ($c->stash->{event}->fic_subs_allowed) {
+				$c->forward('do_submit');
+			}
+		}
+	}
+
 	push $c->stash->{title}, 'Submit';
 	$c->stash->{template} = 'fic/submit.tt';
-
-	$c->stash->{fillform}{author} = eval { $c->user->last_author
-	                                    || $c->user->last_artist
-	                                    || $c->user->name };
-
-	$c->forward('do_submit')
-		if $c->req->method eq 'POST'
-		&& $c->user
-		&& $c->stash->{event}->fic_subs_allowed;
 }
 
 sub do_submit :Private {
@@ -153,10 +164,9 @@ sub do_submit :Private {
 		});
 
 		# Choose a random ID until it works (i.e., until it's unique)
+		my $maxid = 2 * ($c->model('DB::Story')->count + 1_000);
 		while (!$story->in_storage) {
-			# TODO
-			# make max value determined by story count on event's creation
-			$story->id(int rand 10_000);
+			$story->id(int rand $maxid);
 			eval { $story->insert };
 		}
 
@@ -168,8 +178,36 @@ sub do_submit :Private {
 		}
 
 		$c->flash->{status_msg} = 'Submission successful';
-		$c->res->redirect( $c->uri_for_action('/fic/view', [ $story->id_uri ]) );
+		$c->res->redirect($c->req->uri);
 	}
+}
+
+sub flip :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('/check_csrf_token');
+
+	my $allowUnpub = $c->stash->{event}->ended;
+
+	while (my $story = $c->stash->{storys}->next) {
+		my $id = $story->id;
+
+		if ($allowUnpub) {
+			my $val = !!$c->req->param("publish-$id");
+			if ($story->published != $val) {
+				$c->log->info("Story %d %s SET published=%d", $story->id, $story->title, $val);
+				$story->update({ published => int $val });
+			}
+		}
+
+		my $val = !!$c->req->param("index-$id");
+		if ($story->indexed != $val) {
+			$c->log->info("Story %d %s SET indexed=%d", $story->id, $story->title, $val);
+			$story->update({ indexed => int $val });
+		}
+	}
+
+	$c->res->redirect($c->req->uri) unless $c->stash->{ajax};
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {

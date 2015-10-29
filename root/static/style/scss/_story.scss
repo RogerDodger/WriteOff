@@ -57,15 +57,39 @@
 	}
 }
 
+.Story-redacted {
+	text-align: center;
+}
+
 .Storys {
 	@include striped-table;
 }
 
+.Storys-edit {
+	font-size: 0.9em;
+}
+
 .Storys-num,
-.Storys-wordcount {
+.Storys-edit,
+.Storys-title,
+.Storys-author,
+.Storys-wordcount,
+.Storys-index,
+.Storys-publish,
+.Storys-created,
+.Storys-updated {
 	text-align: center;
 }
 
 .Storys-export {
 	white-space: nowrap;
+}
+
+.Storys-access--update {
+	text-align: center;
+	margin-top: 1em;
+
+	input {
+		@include button($hue: 200);
+	}
 }

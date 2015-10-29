@@ -21,8 +21,14 @@
 			[%- END %]
 		</div>
 		[%- END %]
+		[%- IF story.published %]
 		<div class="story">
 			[% story.contents | bbcode('xhtml' => 1) %]
 		</div>
+		[%- ELSE %]
+		<div class="redacted">
+			[% c.string('storyRedacted') %]
+		</div>
+		[%- END %]
 	</body>
 </html>
