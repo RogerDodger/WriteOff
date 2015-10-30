@@ -615,6 +615,47 @@ textarea.example {
 .muted {
   color: #666; }
 
+* {
+  box-sizing: border-box; }
+
+body {
+  color: #222;
+  font-size: 16px;
+  font-family: sans-serif; }
+
+/* Light selection rather than dark with inverted text */
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none; }
+
+::selection {
+  background: #b3d4fc;
+  text-shadow: none; }
+
+/* More sensible positioning behaviour for img elements */
+img {
+  vertical-align: middle; }
+
+/* Resizing horizontally is unncessary and can cause ugliness */
+textarea {
+  resize: vertical; }
+
+/* Link behaviour appropriate in more contexts */
+a {
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+
+/* Make placeholder text consistent across browsers */
+::-webkit-input-placeholder {
+  color: #999; }
+
+:-moz-placeholder {
+  color: #999; }
+
+:-ms-input-placeholder {
+  color: #999; }
+
 .Divider {
   display: block;
   background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
@@ -808,47 +849,6 @@ textarea.example {
 .flat {
   line-height: 0; }
 
-* {
-  box-sizing: border-box; }
-
-body {
-  color: #222;
-  font-size: 16px;
-  font-family: sans-serif; }
-
-/* Light selection rather than dark with inverted text */
-::-moz-selection {
-  background: #b3d4fc;
-  text-shadow: none; }
-
-::selection {
-  background: #b3d4fc;
-  text-shadow: none; }
-
-/* More sensible positioning behaviour for img elements */
-img {
-  vertical-align: middle; }
-
-/* Resizing horizontally is unncessary and can cause ugliness */
-textarea {
-  resize: vertical; }
-
-/* Link behaviour appropriate in more contexts */
-a {
-  text-decoration: none; }
-  a:hover {
-    text-decoration: underline; }
-
-/* Make placeholder text consistent across browsers */
-::-webkit-input-placeholder {
-  color: #999; }
-
-:-moz-placeholder {
-  color: #999; }
-
-:-ms-input-placeholder {
-  color: #999; }
-
 /*
  * Sticky footer
  */
@@ -934,6 +934,10 @@ body.inverted {
   background-color: #fafafa;
   box-shadow: 0 0 3px #b6b6b6;
   padding: 2em; }
+  @media (max-width: 480px) {
+    .Canvas, .Document, .Story-container, .Event-details {
+      padding: 2em 0.5em;
+      width: auto; } }
 
 .Global-message {
   display: block;
@@ -1073,12 +1077,18 @@ body.inverted {
   margin-right: auto;
   width: 98%;
   background-color: #b9d2ac;
-  border-size: 3px;
+  border-size: 0.2em;
   border-style: double;
   border-color: #2e4224;
   font-size: 1.1em;
   padding: 1em;
   position: relative; }
+  @media (max-width: 480px) {
+    .Event-header {
+      padding: 1em 0.5em;
+      border-right-width: 0;
+      border-left-width: 0;
+      width: 100%; } }
 
 .Event-details + .Event-header {
   margin-top: 1em; }
@@ -1381,9 +1391,18 @@ body.inverted {
       height: 1px;
       margin: 1.2em auto;
       content: " "; }
+  @media (max-width: 480px) {
+    .Storys > thead {
+      display: none; } }
 
 .Storys-edit {
   font-size: 0.9em; }
+
+@media (max-width: 480px) {
+  .Storys-num,
+  .Storys-wordcount,
+  .Storys-related {
+    display: none; } }
 
 .Storys-num,
 .Storys-edit,
@@ -1398,6 +1417,9 @@ body.inverted {
 
 .Storys-export {
   white-space: nowrap; }
+  @media (max-width: 480px) {
+    .Storys-export {
+      white-space: normal; } }
 
 .Storys-access--update {
   text-align: center;

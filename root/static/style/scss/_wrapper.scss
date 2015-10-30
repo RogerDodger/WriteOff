@@ -104,17 +104,30 @@ body.inverted {
 	background-color: hsla(0, 0%, 98%, 1);
 	box-shadow: 0 0 3px #b6b6b6;
 	padding: 2em;
+
+	@media #{$mobile} {
+		padding: 2em 0.5em;
+		width: auto;
+	}
 }
+
 
 @mixin header-boxed($hue, $sat: 30%) {
 	@include container;
 
 	background-color: hsla($hue, $sat, 75%, 1);
-	border-size: 3px;
+	border-size: 0.2em;
 	border-style: double;
 	border-color: hsla($hue, $sat, 20%, 1);
 	font-size: 1.1em;
 	padding: 1em;
+
+	@media #{$mobile} {
+		padding: 1em 0.5em;
+		border-right-width: 0;
+		border-left-width: 0;
+		width: 100%;
+	}
 }
 
 .Global-message {

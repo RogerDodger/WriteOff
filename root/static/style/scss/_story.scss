@@ -63,10 +63,24 @@
 
 .Storys {
 	@include striped-table;
+
+	@media #{$mobile} {
+		& > thead {
+			display: none;
+		}
+	}
 }
 
 .Storys-edit {
 	font-size: 0.9em;
+}
+
+.Storys-num,
+.Storys-wordcount,
+.Storys-related {
+	@media #{$mobile} {
+		display: none;
+	}
 }
 
 .Storys-num,
@@ -83,6 +97,9 @@
 
 .Storys-export {
 	white-space: nowrap;
+	@media #{$mobile} {
+		white-space: normal;
+	}
 }
 
 .Storys-access--update {

@@ -48,10 +48,12 @@
 		<table class="Storys">
 			<thead>
 				<tr>
-					<th>#</th>
-					{{ '<th></th>' IF event.art }}
+					<th class="Storys-num">#</th>
+					{{ IF event.art }}
+					<th></th>
+					{{ END }}
 					<th colspan="2">Story</th>
-					<th>Words</th>
+					<th class="Storys-wordcount">Words</th>
 				</tr>
 			</thead>
 
@@ -83,7 +85,11 @@
 			<tbody>
 				<tr>
 					<td class="Storys-num"></td>
-					<td class="Storys-title">Anthology</td>
+					{{ IF event.art }}
+					<td class="Storys-related">
+					</td>
+					{{ END }}
+					<td class="Storys-listing">Anthology</td>
 					<td class="Storys-export">
 						(<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
 					</td>
