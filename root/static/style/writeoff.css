@@ -934,7 +934,7 @@ body.inverted {
   background-color: #fafafa;
   box-shadow: 0 0 3px #b6b6b6;
   padding: 2em; }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .Canvas, .Document, .Story-container, .Event-details {
       padding: 2em 0.5em;
       width: auto; } }
@@ -1083,7 +1083,7 @@ body.inverted {
   font-size: 1.1em;
   padding: 1em;
   position: relative; }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .Event-header {
       padding: 1em 0.5em;
       border-right-width: 0;
@@ -1391,14 +1391,14 @@ body.inverted {
       height: 1px;
       margin: 1.2em auto;
       content: " "; }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .Storys > thead {
       display: none; } }
 
 .Storys-edit {
   font-size: 0.9em; }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .Storys-num,
   .Storys-wordcount,
   .Storys-related {
@@ -1417,7 +1417,7 @@ body.inverted {
 
 .Storys-export {
   white-space: nowrap; }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .Storys-export {
       white-space: normal; } }
 
