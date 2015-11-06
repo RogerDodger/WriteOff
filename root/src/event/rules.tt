@@ -1,4 +1,6 @@
-[% FILTER markdown %]
+<div class="Document">
+
+{{ FILTER markdown }}
 
 Rules
 =====
@@ -13,54 +15,43 @@ Contest
 1. Submitted works may not be submitted elsewhere until the event's conclusion.
 2. Submitted written works&mdash;
 	1. must be written primarily in English; and
-	[%- IF event.art %]
+	{{- IF event.art }}
 	2. must be based on at least one of the submitted artworks to a reasonable
 	and discernible degree, with each related artwork&mdash;and only the
 	related artwork(s)&mdash;indicated on submission.
-	[%- ELSIF event.has_prompt %]
+	{{- ELSIF event.has_prompt }}
 	3. must be based on the prompt to a reasonable and discernible degree.
-	[%- END %]
-[%- IF event.art && event.has_prompt %]
+	{{- END }}
+{{- IF event.art && event.has_prompt }}
 3. Submitted artworks must be based on the prompt to a reasonable and discernible degree.
-[%- END %]
+{{- END }}
 4. Participants&mdash;
-	[%- IF event.art %]
-	1. may start drawing only after [% start %];
+	{{- IF event.art }}
+	1. may start drawing only after {{ start }};
 	2. may start writing only after the artworks are released;
-	[%- ELSE %]
-	1. may start writing only after [% start %];
-	[%- END %]
+	{{- ELSE }}
+	1. may start writing only after {{ start }};
+	{{- END }}
 	2. may not disclose their authorship explicitly or implicitly until this website has done so;
 	3. may not submit works explicitly connected to another work of theirs; and
 	4. may not attempt to doctor the votes in any way that may give them or
 	another person an unfair advantage.
 
-[%- IF event.custom_rules %]
+{{- IF event.custom_rules }}
 
 Custom
 ------
 
-[% event.custom_rules | html %]
+{{ event.custom_rules | html }}
 
-[%- END %]
-
-Legal
------
-
-1. Submitted works&mdash;
-	1. must be the work of the submitter;
-	2. may not include the likeness of any living persons without express
-	prior written consent, with exception to cases of parody and/or satire,
-	i.e., if the persons presented in the work are distinctly caricatures;
-	3. may not be spiteful and/or hateful in nature; and
-	4. may not depict any sexual abuse of minors (See [18 USC § 1466A](http://www.law.cornell.edu/uscode/text/18/1466A) for specifics).
+{{- END }}
 
 Content
 -------
 
-[%- SWITCH event.content_level -%]
+{{- SWITCH event.content_level -}}
 
-[%- CASE 'E' %]
+{{- CASE 'E' }}
 
 This event's content level is **E** for Everybody. This is loosely defined
 as material suitable for all ages.
@@ -74,7 +65,7 @@ as material suitable for all ages.
 	* depictions of sexual acts; or
 	* grotesque content.
 
-[%- CASE 'T' %]
+{{- CASE 'T' }}
 
 This event's content level is **T** for Teen. This is loosely defined as
 material suitable for teenagers.
@@ -83,11 +74,13 @@ material suitable for teenagers.
 	* depictions of sexual acts; or
 	* grotesque content.
 
-[%- CASE 'M' %]
+{{- CASE 'M' }}
 
 This event's content level is **M** for Mature. Anything not prohibited by
 other rules is allowed.
 
-[%- END %]
+{{- END }}
 
-[% END %]
+{{ END }}
+
+</document>
