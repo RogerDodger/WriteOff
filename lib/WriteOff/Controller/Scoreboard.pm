@@ -36,6 +36,8 @@ sub index :Path('/scoreboard') {
 		genre_id => $genre ? $genre->id : undef,
 	});
 
+	$c->stash->{cacheKey} = join "~", 'scoreboard', ($genre ? $genre->id : 0), ($format ? $format->id : 0);
+
 	push $c->stash->{title}, join ' ', (map $_->name, grep defined, $genre, $format), 'Scoreboard';
 	$c->stash->{template} = 'scoreboard/index.tt';
 }

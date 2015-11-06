@@ -1,12 +1,8 @@
-[% USE cache = Cache -%]
-[%
+{{ USE cache = Cache -}}
+{{
 	cache.inc(
 		'template' => 'scoreboard/index_.tt',
-		'ttl' => c.debug || 360,
-		'keys' => {
-			'type' => 'scoreboard',
-			'genre' => genre && genre.id,
-			'format' => format && format.id
-		},
+		'ttl' => 360,
+		'key' => cacheKey,
 	);
--%]
+-}}
