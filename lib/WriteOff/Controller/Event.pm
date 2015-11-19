@@ -23,6 +23,11 @@ sub add :Local :Args(0) {
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
+	# These options probably aren't necessary anymore
+	$c->req->params->{prompt_type} = 'approval';
+	$c->req->params->{prompt} = 'TBD';
+
+	push $c->stash->{title}, 'Add Event';
 	$c->stash->{template} = 'event/add.tt';
 
 	if ($c->req->method eq 'POST') {

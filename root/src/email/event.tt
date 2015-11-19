@@ -1,36 +1,16 @@
-<p>New event and shizz. Here's the gist:</p>
-<ul>
-	<li>
-		<strong>Name:</strong>
-		[% event.prompt | html_entity %]
-	</li>
-	<li>
-		<strong>Organiser:</strong>
-		[% event.organisers.map_username.join_serial %]
-	</li>
-	<li>
-		<strong>Starting time:</strong>
-		[% event.start.set_time_zone( email.timezone ).strftime('%a, %d %b %Y %H:%M %Z') %]
-	</li>
-	<li>
-		<strong>Wordcount:</strong>
-		[% event.wc_min %]&ndash;[% event.wc_max %]
-	</li>
-	<li>
-		<strong>Has art:</strong>
-		[% event.art ? 'Yes' : 'No' %]
-	</li>
-	<li>
-		<strong>Has prelim:</strong>
-		[% event.prelim ? 'Yes' : 'No' %]
-	</li>
-	<li>
-		<strong>Has judges:</strong>
-		[% event.private ? 'Yes' : 'No' %]
-	</li>
-	<li>
-		<strong>Content level:</strong>
-		[% event.content_level %]
-	</li>
-</ul>
-<p>Check out <a href="[% c.uri_for('/') %]">the site</a> for more details.</p>
+{{ WRAPPER wrapper/email.tt }}
+
+New event and shizz. Here's the gist:
+
+- __Name:__ {{ event.prompt }}
+- __Organiser:__ {{ event.organisers.map_username.join_serial }}
+- __Starting time:__ {{ format_dt(event.start, '%a, %d %b %Y %H:%M %Z', email.timezone) | none }}
+- __Wordcount:__ {{ event.wc_min }}&ndash;{{ event.wc_max }}
+- __Has art:__ {{ event.art ? 'Yes' : 'No' }}
+- __Has prelim:__ {{ event.prelim ? 'Yes' : 'No' }}
+- __Has judges:__ {{ event.private ? 'Yes' : 'No' }}
+- __Content level:__ {{ event.content_level }}
+
+Check out [the site]({{ c.uri_for('/') }}) for more details.
+
+{{ END }}

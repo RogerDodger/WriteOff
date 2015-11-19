@@ -1,5 +1,3 @@
-[% TAGS {{ }} %]
-
 <tr class="Ballot-item">
 	<td class="Ballot-arrows">
 		<i class="Ballot-up fa fa-caret-up"></i>

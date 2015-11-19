@@ -1,4 +1,4 @@
-<h1>[% title.list.join(' ') %]</h1>
+<h1>{{ title.list.join(' ') }}</h1>
 
 <table class="plain t-center">
 	<tr>
@@ -8,34 +8,34 @@
 		<th colspan="2">Score</th>
 		<th>Awards</th>
 	</tr>
-	[%- FOREACH score IN scores.all %]
+	{{- FOREACH score IN scores.all }}
 	<tr>
 		<td class="start">
-			<a href="[% c.uri_for( c.controller( score.item.type.ucfirst ).action_for('results'),
-				[ score.event.id_uri ]) %]" class="link">
-				[% score.event.prompt | html %]
+			<a href="{{ c.uri_for( c.controller( score.item.type.ucfirst ).action_for('results'),
+				[ score.event.id_uri ]) }}" class="link">
+				{{ score.event.prompt | html }}
 			</a>
 		</td>
 		<td class="start">
-			<a href="[% c.uri_for( c.controller( score.item.type.ucfirst )
-				.action_for('view'), [ score.item.id_uri ]) %]" class="link em">
-				[% score.item.title | html %]
+			<a href="{{ c.uri_for( c.controller( score.item.type.ucfirst )
+				.action_for('view'), [ score.item.id_uri ]) }}" class="link em">
+				{{ score.item.title | html }}
 			</a>
 		</td>
-		<td class="center">[% score.type.ucfirst %]</td>
+		<td class="center">{{ score.type.ucfirst }}</td>
 		<td class="center">
-			<span title="[% score.orig | format('%.5f') %]">
-				[% score.orig | format('%d') %]
+			<span title="{{ score.orig | format('%.5f') }}">
+				{{ score.orig | format('%d') }}
 			</span>
 		</td>
 		<td class="center">
-			<span title="[% score.value | format('%.5f') %]">
-				([% score.value | format('%d') %])
+			<span title="{{ score.value | format('%.5f') }}">
+				({{ score.value | format('%d') }})
 			</span>
 		</td>
 		<td class="center">
-			[% FOREACH award IN score.item.awards; award.html; END %]
+			{{ FOREACH award IN score.item.awards; award.html | none; END }}
 		</td>
 	</tr>
-	[%- END %]
+	{{- END }}
 </table>

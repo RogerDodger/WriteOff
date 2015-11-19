@@ -1,0 +1,77 @@
+lang: English
+pleaseWait: Please wait
+abstain: Abstain
+unabstain: Unabstain
+mySubs: My submissions
+title: Title
+artist: Artist
+author: Author
+website: Website
+relatedArt: Related Artwork(s)
+story: Story
+words: Words
+wordcount: Wordcount
+caption: Caption
+image: Image
+prompt: Prompt
+login: Login
+username: Username
+password: Password
+timezone: Timezone
+allowedTypes: Allowed types: %s
+maxSize: Max filesize: %dKB
+wordLimit: Word limit: %d-%d
+created: Created
+submitted: Submitted
+index: Index
+publish: Publish
+update: Update
+edit: Edit
+submit: Submit
+castVote: Cast vote
+
+404: File Not Found
+403: Forbidden
+400: Error
+artGallery: Art Gallery
+ficGallery: Fic Gallery
+artSubmission: Art Submission
+ficSubmission: Fic Submission
+promptSubmission: Prompt Submission
+artVoting: Art Voting
+ficVoting: Fic Voting
+promptVoting: Prompt Voting
+confirmDeletion: Confirm Deletion
+passwordRecovery: Password Recovery
+preferences: Preferences
+
+forgotPassword: Forgot password?
+loginRequired: You must be logged in to perform this action
+noPrelim: There is no prelim round for this event
+noPrivate: There is no private judging round for this event
+votesClosed: Votes are closed
+guessesClosed: Guesses are closed
+subsClosed: Submissions are closed
+loginRequiredArt: You must be logged in to submit art
+loginRequiredFic: You must be logged in to submit fics
+loginRequiredPrompt: You must be logged in to submit prompts
+loginRequiredVote: You must be logged in to vote
+ballotDirections: Drag candidates here to rank them
+ballotAppend: Add another
+ballotDone: None left
+calculatingCandidates: Candidates are being calculated
+storyRedacted: The contents of this story have been removed by the author
+mailme: Receive event notifications by email
+promptGuide: |
+    - Prompts should&mdash;
+        - be a short phrase or figure of speech;
+        - not lock participants into certain characters, settings, or plots; and
+        - be suitable for use as a title for the event; and therefore
+        - be in [title case](http://en.wikipedia.org/wiki/Title_case)
+unkonwnError: Something went wrong
+errorsPersist: |
+    If errors persist, please contact [the admin](mailto:cthor@cpan.org)
+newPassword: |
+    Your account's password has been set to the string below.
+    You should login and change it to something more suitable.
+confirmDeletionPrompt: Enter the %s of the selected item to confirm deletion

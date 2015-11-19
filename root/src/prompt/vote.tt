@@ -1,22 +1,60 @@
-<h1>Prompt Voting</h1>
+<div class="Document">
+	<div class="Document-title">
+		{{ c.string('promptVoting') }}
+	</div>
 
-<p>
-	Votes open: <strong>[% format_dt(event.prompt_voting) %]</strong>.
-	<br>
-	Votes close: <strong>[% format_dt(event.art || event.fic) %]</strong>.
-	<br>
-[%- IF event.prompt_type == 'approval' %]
-	Votes received: <strong>[% votes_received %]</strong>
-	<br>
-[%- END %]
-[%- IF event.prompt_votes_allowed %]
-	Votes are <strong class="good">open</strong>.
-[%- ELSE %]
-	Votes are <strong class="bad">closed</strong>.
-[%- END %]
-</p>
+	<div class="Countdown">
+		{{ IF event.prompt_subs_allowed }}
+			{{ event.prompt_voting.delta_html | none }}
+		{{ ELSIF event.prompt_votes_allowed }}
+			{{ SET close = event.art || event.fic }}
+			{{ close.delta_html | none }}
+		{{ ELSE }}
+			{{ c.string('votesClosed') }}
+		{{ END }}
+	</div>
 
-[%- SWITCH event.prompt_type %]
-	[%- CASE 'faceoff'; INCLUDE prompt/vote/faceoff.tt %]
-	[%- CASE 'approval'; INCLUDE prompt/vote/approval.tt %]
-[%- END %]
+	{{ IF !c.user && event.prompt_votes_allowed }}
+	<div class="Flash">
+		{{ c.string('loginRequiredVote') }}
+	</div>
+	{{ END }}
+
+	<form method="post" class="Form">
+		<table class="Prompts">
+			{{ votes_allowed = c.user && event.prompt_votes_allowed && !user_has_voted }}
+			{{ scoreKey = event.prompt_type == 'approval' ? 'approvals' : 'rating' }}
+
+			{{ IF show_results }}
+			<thead>
+				<tr>
+					<th>Prompt</th>
+					<th>Score</th>
+				</tr>
+			</thead>
+			{{ END }}
+
+			<tbody>
+				{{ FOREACH prompt IN prompts.all }}
+				<tr>
+					{{ IF votes_allowed }}
+					<td class="Prompts-vote">
+						<input type="checkbox" name="vote" value="{{ prompt.id }}">
+					</td>
+					{{ END }}
+					<td class="Prompts-name">{{ prompt.contents }}</td>
+					{{ IF show_results }}
+					<td class="Prompts-score">{{ prompt.${scoreKey} }}</td>
+					{{ END }}
+				</tr>
+				{{ END }}
+			</tbody>
+		</table>
+
+		{{ IF votes_allowed }}
+		<div class="Form-item">
+			<input type="submit" value="{{ c.string('castVote') }}">
+		</div>
+		{{ END }}
+	</form>
+</div>

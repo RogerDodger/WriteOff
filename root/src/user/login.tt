@@ -1,21 +1,22 @@
-<h1>[% title.list.join(' ') %]</h1>
+<div class="Document">
+	<div class="Document-title">{{ c.string('login') }}</div>
 
-<form class="light" method="post"
-	action="[% c.uri_for( c.controller('User').action_for('login') ) %]">
-	<p>
-		<label>Username</label>
-		<input type="text" name="Username" size="32" class="maxwidth"
-			placeholder="JoeBlow" required autofocus />
-	</p>
-	<p>
-		<label>Password</label>
-		<input type="password" name="Password" size="32" class="maxwidth"
-			placeholder="hunter2" required />
-		<span class="ps"><a class="link" href="[% c.uri_for( c.controller('User')
-			.action_for('recover') ) %]">Forgot Password?</a></span>
-	</p>
-		<p>
-			<button type="submit">Login</button>
-		</p>
-	</div>
-</form>
+	<form class="Form" method="post" action="/user/login">
+		<div class="Form-item">
+			<label>{{ c.string('username') }}</label>
+			<input type="text" name="Username" size="32" placeholder="JoeBlow" required autofocus>
+		</div>
+
+		<div class="Form-item">
+			<label>{{ c.string('password') }}</label>
+			<input type="password" name="Password" size="32" placeholder="hunter2" required>
+			<span class="Form-note">
+				<a href="/user/recover">{{ c.string('forgotPassword') }}</a>
+			</span>
+		</div>
+
+		<div class="Form-item">
+			<input type="submit" value="{{ c.string('login') }}">
+		</div>
+	</form>
+</div>

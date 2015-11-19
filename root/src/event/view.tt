@@ -1,2 +1,1 @@
-[% TAGS {{ }} %]
 {{#Empty template -- the event is rendered by the wrapper already.}}

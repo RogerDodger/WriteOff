@@ -1,9 +1,12 @@
-<h1>Error</h1>
-<p>[% error %]</p>
+<div class="Document">
+	<div class="Document-title">{{ c.string('400') }}</div>
 
-[%- IF c.res.status.match('^5') %]
-<p>
-	If issues persist, please contact <a href=
-	"mailto:[% c.config.AdminEmail %]">the admin</a>.
-</p>
-[%- END %]
+	<div class="Flash">
+		<span class="fa fa-warning"></span>
+		{{ error }}
+	</div>
+
+	{{ IF c.res.status.match('^5') }}
+		{{ c.string('errorsPersist') | markdown }}
+	{{ END }}
+</div>

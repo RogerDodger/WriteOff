@@ -1,46 +1,47 @@
-<h2>[% title.join(' ') %]</h2>
+<div class="Document">
+	<div class="Document-title">{{ title.join(' ') }}</div>
 
-[%- IF mailsent -%]
+	{{- IF mailsent -}}
 
-<p>
-	A [% mailtype.noun %] email has been sent to [% c.req.param('email') %].
-	If you can't find any such email, please send a message to <a class="link"
-	href="mailto:[% c.config.AdminEmail %]">the admin</a> (after having
-	checked your spam folder of course) to receive assistance.
-</p>
-
-[%- ELSIF verified %]
-
-<p>
-	The account linked with that email address is already verified.
-</p>
-
-[%- ELSIF unverified %]
-
-<p>
-	The account linked with that email address is not yet verified. Please verify it first before trying to recover the password.
-</p>
-
-[%- ELSE %]
-	[%- IF c.req.method == 'POST' %]
-		[%- INCLUDE fragment/status_msg.tt
-			message = 'Email address not found in database' %]
-	[%- END %]
-
-<p>
-	To [% mailtype.verb %] your account, please enter the email address linked
-	with it below.
-</p>
-
-<form class="light" method="post" action="[% c.uri_for( c.action ) %]">
 	<p>
-		<label>Email</label>
-		<input type="email" name="email" class="max-width" required>
+		A {{ mailtype.noun }} email has been sent to {{ c.req.param('email') }}.
+		If you can't find any such email, please send a message to <a
+		href="mailto:cthor@cpan.org">the admin</a> (after having
+		checked your spam folder of course) to receive assistance.
 	</p>
+
+	{{- ELSIF verified }}
+
 	<p>
-		<input type="submit" value="Send email">
+		The account linked with that email address is already verified.
 	</p>
-</form>
 
+	{{- ELSIF unverified }}
 
-[% END %]
+	<p>
+		The account linked with that email address is not yet verified. Please verify it first before trying to recover the password.
+	</p>
+
+	{{- ELSE }}
+		{{- IF c.req.method == 'POST' }}
+			{{- INCLUDE fragment/status_msg.tt
+				message = 'Email address not found in database' }}
+		{{- END }}
+
+	<p>
+		To {{ mailtype.verb }} your account, please enter the email address linked
+		with it below.
+	</p>
+
+	<form class="Form" method="post">
+		<div class="Form-item">
+			<label>Email</label>
+			<input type="email" name="email" required>
+		</div>
+
+		<div class="Form-item">
+			<input type="submit" value="Send email">
+		</div>
+	</form>
+	{{ END }}
+</div>

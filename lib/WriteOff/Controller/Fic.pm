@@ -32,9 +32,15 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 		$c->forward('View::Epub');
 	}
 	else {
-		$c->stash->{gallery} = [
-			$c->stash->{event}->storys->gallery($c->user->offset)->all
-		];
+		my @gallery = $c->stash->{event}->storys->gallery($c->user->offset)->all;
+		for my $i (0..$#gallery) {
+			if ($gallery[$i]->id == $c->stash->{story}->id) {
+				$c->stash->{num} = $gallery[$i]->num;
+				$c->stash->{prev} = $gallery[$i-1];
+				$c->stash->{next} = $gallery[$i-$#gallery];
+				last;
+			}
+		}
 		$c->stash->{template} = 'fic/view.tt';
 	}
 }

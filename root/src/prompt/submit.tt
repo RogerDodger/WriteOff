@@ -1,51 +1,41 @@
-<h1>Prompt Submission</h1>
-
-<p>
-	Submissions close: <strong>[% format_dt(event.prompt_voting) %]</strong>.
-	<br />
-	Submissions received: <strong>[% event.prompts_rs.count %]</strong>.
-	<br />
-[%- IF event.prompt_subs_allowed %]
-	Submissions are <strong class="good">open</strong>.
-	<br />
-	You may submit <strong>[% subs_left %]</strong> more prompt(s).
-[%- ELSE %]
-	Submissions are <strong class="bad">closed</strong>.
-[%- END %]
-</p>
-
-[%- IF event.prompt_subs_allowed && subs_left > 0 %]
-<p class="list-heading">
-	Prompts should&mdash;
-</p>
-<ul>
-	<li>be a short phrase or figure of speech;
-	<li>not lock participants into certain characters, settings, or plots; and
-	<li>be suitable for use as a title of the event; and therefore
-	<li>be in <a class="link new-tab" href="http://en.wikipedia.org/wiki/Title_case">title case</a>.
-</ul>
-
-<form class="light" method="post" action="[% c.uri_for( c.req.uri.path ) %]">
-	[%- IF c.form.has_error %]
-	<div>
-		[%- FOREACH message IN c.form.messages('submit') %]
-			[%- INCLUDE fragment/error_msg.tt %]
-		[%- END %]
+<div class="Document">
+	<div class="Document-title">
+		{{ c.string('promptSubmission') }}
 	</div>
-	[%- END %]
-	<p>
-		<label>Prompt</label>
-		<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
-		<input type="text" name="prompt" size="24" class="maxwidth"
-			maxlength="[% c.config.len.max.prompt %]" required />
-	</p>
-	<p>
-		<input type="submit" value="Submit" />
-	</p>
-</form>
-[%- END %]
 
-[%- IF !c.user %]
-	[%- INCLUDE fragment/status_msg.tt
-			message = "Guests cannot submit prompts" %]
-[%- END %]
+	<div class="Countdown">
+		{{ IF event.prompt_subs_allowed }}
+			{{ event.prompt_voting.delta_html | none}}
+		{{ ELSE }}
+			{{ c.string('subsClosed') }}
+		{{ END }}
+	</div>
+
+	{{ IF event.prompt_subs_allowed }}
+		{{ IF !c.user }}
+		<div class="Flash">
+			{{ c.string('loginRequiredPrompt') }}
+		</div>
+		{{ ELSIF && subs_left > 0 }}
+
+		{{ c.string('promptGuide') | markdown }}
+
+		<form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
+			<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+			{{- IF c.form.has_error }}
+				{{- FOREACH message IN c.form.messages('submit') }}
+					{{- INCLUDE fragment/error_msg.tt }}
+				{{- END }}
+			{{- END }}
+
+			<div class="Form-item">
+				<label>{{ c.string('prompt') }}</label>
+				<input type="text" name="prompt" size="24" maxlength="{{ c.config.len.max.prompt }}" required>
+			</div>
+			<div class="Form-item">
+				<input type="submit" value="{{ c.string('submit') }}">
+			</div>
+		</form>
+		{{ END }}
+	{{ END }}
+</div>

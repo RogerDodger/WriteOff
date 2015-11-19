@@ -1,11 +1,12 @@
 package WriteOff::Plugin::Strings;
 
 use 5.014;
-use Carp;
+use Carp ();
 use File::Find ();
 use HTML::Entities;
 use Text::Markdown;
 use WriteOff::Util;
+use YAML::Loader;
 
 my %docs;
 my %strings;
@@ -14,26 +15,14 @@ sub setup {
 	my $app = shift;
 
 	File::Find::find sub {
-		if ($File::Find::name =~ m{/(\w+)/strings$}) {
-			my $map = $strings{$1} = {};
+		if ($File::Find::name =~ m{/(\w+)/strings.yml$}) {
+			my $lang = $1;
 
 			open my $fh, '<:utf8', $_;
-			my $lineNo = 0;
-			while (my $line = readline $fh) {
-				$lineNo++;
-				chomp $line;
-				next if $line =~ /^;/ || !length $line;
-
-				my ($key, $value) = split /=/, $line, 2;
-
-				if ($key =~ /\s/ || !defined $value) {
-					$app->log->warn("Format error in strings/$_ on line $lineNo");
-				}
-				else {
-					$map->{$key} = $value;
-				}
-			}
+			my $yaml = do { local $/ = <$fh> };
 			close $fh;
+
+			$strings{$lang} = YAML::Loader->new->load($yaml);
 		}
 		elsif ($File::Find::name =~ m{/(\w+)/(\w+)\.md$}) {
 			$docs{$1} //= {};
@@ -64,12 +53,17 @@ sub setup {
 		}
 	}, $app->path_to('lang');
 
+	$app->log->debug('Loaded Strings');
+
 	$app->next::method(@_);
 }
 
 sub _fetch {
 	my ($app, $key, $maps) = @_;
-	($maps->{$app->lang} // $maps->{en})->{$key} // $maps->{en}{$key};
+	($maps->{$app->lang} // $maps->{en})
+		->{$key}
+			// $maps->{en}{$key}
+				// Carp::croak "No string for `$key`";
 }
 
 sub document {
@@ -77,7 +71,8 @@ sub document {
 }
 
 sub string {
-	_fetch(@_, \%strings);
+	my ($app, $key, @p) = @_;
+	sprintf _fetch($app, $key, \%strings), @p;
 }
 
 1;

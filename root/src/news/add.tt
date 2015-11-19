@@ -1,2 +1,0 @@
-<h1>New news article</h1>
-[% INCLUDE news/form.tt %]

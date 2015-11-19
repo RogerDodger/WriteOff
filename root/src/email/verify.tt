@@ -1,14 +1,13 @@
-[% WRAPPER wrapper/email.tt %]
+{{ WRAPPER wrapper/email.tt }}
 
-You have been signed up to <a href="[% c.uri_for('/') %]">[% name %]</a> with the following details:
+You have been signed up to [{{ name }}]({{ c.uri_for('/') }}) with the following details:
 
-* __Username:__ [% user.username %]
+* __Username:__ {{ user.username }}
 * __Password:__ *&lt;encrypted&gt;*
-* __Email:__ [% user.email %]
+* __Email:__ {{ user.email }}
 
-Go ahead and [verify this account]([% c.uri_for_action('/user/do_verify', [ user.id, token.value ]) %]).
+Go ahead and [verify this account]({{ c.uri_for_action('/user/do_verify', [ user.id, token.value ]) }}).
 
-If you don't have any idea what this is, please ignore it. Unverified accounts
-are periodically purged from our system.
+If you don't have any idea what this is, please ignore it.
 
-[%- END %]
+{{ END }}

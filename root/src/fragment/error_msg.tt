@@ -1,4 +1,4 @@
-<p class="error-msg ui-widget ui-state-error ui-corner-all">
-	<span class="ui-icon ui-icon-alert"></span>
-	<strong>Error: </strong>[% message %]
-</p>
+<div class="Flash error">
+	<i class="fa fa-warning"></i>
+	{{ message }}
+</div>

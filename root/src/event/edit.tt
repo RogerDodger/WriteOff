@@ -1,78 +1,38 @@
-<form class="light" action="[% c.req.uri %]" method="post" >
-	<input type="hidden" name="csrf_token" value="[% csrf_token %]" />
-[%- IF c.form.has_error %]
-	[%- FOREACH message IN c.form.messages('submit') %]
-		[% INCLUDE fragment/error_msg.tt %]
-	[%- END %]
-[%- END %]
+<div class="Document">
+	<div class="Document-title">
+		Edit Event
+	</div>
 
-	<h1>Details</h1>
-	<p>
-		<label>Blurb</label>
-		<textarea name="blurb" rows="8" cols="32"></textarea>
-	</p>
-	<p>
-		<label>Custom rules</label>
-		<textarea name="rules" rows="8" cols="32"></textarea>
-	</p>
-	<p>
-		<label>Content level</label>
-		<select name="content_level">
-			<option value="E">Everyone</option>
-			<option value="T">Teen</option>
-			<option value="M">Mature</option>
-		</select>
-	</p>
-	<p>
-		<input type="submit" name="submit" value="Edit details" />
-	</p>
+	<form class="Form" method="post">
+		{{ csrf_field | none }}
 
-	<h1>Staff</h1>
-	<table class="solid">
-		<tr class="heading">
-			<th>Username</th>
-			<th>Role</th>
-			<th> </th>
-		</tr>
-	[%- FOREACH user IN staff %]
-		<tr class="[% loop.parity %]">
-			<td>[% user.username %]</td>
-			<td>[% user.role.ucfirst %]</td>
-			<td>
-				[%- IF user.role == 'organiser' && c.user.admin
-				    || user.role == 'judge' %]
-				<a href="[% c.uri_for( c.controller('Event')
-					.action_for('remove_' _ user.role), [ event.id_uri, user.id ]) %]">
-					<span class="ui-icon ui-icon-closethick" title="Remove [% user.role %]">[x]</span>
-				</a>
-				[%- ELSE %]
-				<span class="ui-icon ui-icon-locked" title="You cannot remove organisers"></span>
-				[%- END %]
-			</td>
-		</tr>
-	[%- END %]
-	[%- FOREACH user IN event.judges %]
-		<!--<tr class="[% loop.parity %]">
-			<td>[% user.username %]</td>
-			<td>Judge</td>
-			<td>
-				<a href="[% c.uri_for( c.controller('Event')
-					.action_for('remove_judge'), [ event.id_uri, user.id ]) %]">
-					<span class="ui-icon ui-icon-closethick" title="Remove judge"></span>
-				</a>
-			</td>
-		</tr>-->
-	[%- END %]
-	</table>
+		{{- IF c.form.has_error }}
+			{{- FOREACH message IN c.form.messages('submit') }}
+				{{ INCLUDE fragment/error_msg.tt }}
+			{{- END }}
+		{{- END }}
 
-	<p>
-		<input class="autocomplete-user maxwidth" type="text" name="user" />
-	</p>
+		<div class="Form-item">
+			<label>Blurb</label>
+			<textarea name="blurb" rows="8" cols="32"></textarea>
+		</div>
 
-	<p>
-		[%- IF c.user.admin %]
-		<input type="submit" name="submit" value="Add organiser" />
-		[%- END %]
-		<input type="submit" name="submit" value="Add judge" />
-	</p>
-</form>
+		<div class="Form-item">
+			<label>Custom rules</label>
+			<textarea name="rules" rows="8" cols="32"></textarea>
+		</div>
+
+		<div class="Form-item">
+			<label>Content level</label>
+			<select name="content_level">
+				<option value="E">Everyone</option>
+				<option value="T">Teen</option>
+				<option value="M">Mature</option>
+			</select>
+		</div>
+
+		<div class="Form-item">
+			<input type="submit" name="submit" value="Edit details">
+		</div>
+	</form>
+</div>

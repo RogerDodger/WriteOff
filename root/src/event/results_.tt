@@ -1,5 +1,3 @@
-[%- TAGS {{ }} -%]
-
 <div class="Document">
 	<div class="Document-title">
 		{{ type.ucfirst }} Results
@@ -37,20 +35,20 @@
 			<tr class="Results-row{{ FOREACH award IN item.awards }} {{ award.name; END }}">
 				<td class="Results-rank">{{ item.rank + 1 }}</td>
 				<td class="Results-awards">
-					{{ FOREACH award IN item.awards; award.html; END }}
+					{{ FOREACH award IN item.awards; award.html | none; END }}
 				</td>
 
 				<td class="Results-artist">
 					{{ IF item.website }}
 					<a href="{{ item.website | url }}">
-						{{ item.artist.name | html }}
+						{{ item.artist.name }}
 					</a>
 					{{ ELSE }}
-						{{ item.artist.name | html }}
+						{{ item.artist.name }}
 					{{ END }}
 				</td>
 				<td class="Results-title">
-					<a href="{{ c.uri_for(view, [ item.id_uri ]) }}">{{ item.title | html }}</a>
+					<a href="{{ c.uri_for(view, [ item.id_uri ]) }}">{{ item.title }}</a>
 				</td>
 
 				{{ IF event.private }}
@@ -80,13 +78,13 @@
 		<tbody>
 			{{ FOREACH record IN guesses.all }}
 			<tr>
-				<td class="Guesses-guesser">{{ record.artist.name | html }}</td>
+				<td class="Guesses-guesser">{{ record.artist.name }}</td>
 				<td class="Guesses-correct">
 					<span class="Guesses-count">{{ record.guesses_rs.correct.count }} correct</span>
 					<span class="Guesses-titles">
 					{{ FOREACH guess IN record.guesses_rs.correct.all }}
 						<a href="{{ c.uri_for(view, [ guess.item.id_uri ]) }}">
-							{{ guess.item.title | html }}</a>{{ ',' IF !loop.last }}
+							{{ guess.item.title }}</a>{{ ',' IF !loop.last }}
 					{{ END }}
 					</span>
 				</td>

@@ -1,42 +1,42 @@
 <h1>Vote Record</h1>
 
-[% INCLUDE voterecord/list.tt
+{{ INCLUDE voterecord/list.tt
 	single = 1
-	records = [ record ] %]
-	
+	records = [ record ] }}
+
 <table class="solid votes maxwidth">
 	<tr class="heading">
 		<th>Title</th>
-		[%- FOREACH n IN record.range %]
-		<th>[% n %]</th>
-		[%- END %]
+		{{- FOREACH n IN record.range }}
+		<th>{{ n }}</th>
+		{{- END }}
 	</tr>
-	[%- FOREACH vote IN record.votes %]
-	<tr class="[% loop.parity %]">
-		<td>[% vote.item.title | html %]</td>
-		[%- FOREACH n IN record.range %]
-		<th>[% '&#x2717;' IF n == vote.value %]</th>
-		[%- END %]
+	{{- FOREACH vote IN record.votes }}
+	<tr class="{{ loop.parity }}">
+		<td>{{ vote.item.title | html }}</td>
+		{{- FOREACH n IN record.range }}
+		<th>{{ '&#x2717;' IF n == vote.value }}</th>
+		{{- END }}
 	</tr>
-	[%- END %]
+	{{- END }}
 </table>
 
 <p class="center">
-	<a class="link" href="[% c.uri_for( c.action, [ prev.id ]) %]">« Prev</a>
+	<a class="link" href="{{ c.uri_for( c.action, [ prev.id ]) }}">« Prev</a>
 	&nbsp;
-	<strong>[% i %]</strong>
+	<strong>{{ i }}</strong>
 	&nbsp;
-	<a class="link" href="[% c.uri_for( c.action, [ next.id ]) %]">Next »</a>
+	<a class="link" href="{{ c.uri_for( c.action, [ next.id ]) }}">Next »</a>
 </p>
 
-[%- IF c.session.vote_record_view_state == 'all' %]
+{{- IF c.session.vote_record_view_state == 'all' }}
 <p class="center">
-	<a class="ui-button" href="[% c.uri_for( c.controller('Event')
-		.action_for('view'), [ record.event.id_uri ]) %]">Back to submissions</a>
+	<a class="ui-button" href="{{ c.uri_for( c.controller('Event')
+		.action_for('view'), [ record.event.id_uri ]) }}">Back to submissions</a>
 </p>
-[%- ELSE %]
+{{- ELSE }}
 <p class="center">
-	<a class="ui-button" href="[% c.uri_for( c.controller('Event')
-		.action_for('results'), [ record.event.id_uri ]) %]">Back to results</a>
+	<a class="ui-button" href="{{ c.uri_for( c.controller('Event')
+		.action_for('results'), [ record.event.id_uri ]) }}">Back to results</a>
 </p>
-[%- END %]
+{{- END }}

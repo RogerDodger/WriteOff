@@ -1,23 +1,23 @@
-<h1>Art Submission</h1>
+<div class="Document">
+	<div class="Document-title">
+		{{ c.string('artSubmission') }}
+	</div>
 
-<p>
-	Submissions open: <strong>[% format_dt(event.art) %]</strong>.
-	<br />
-	Submissions close: <strong>[% format_dt(event.art_end) %]</strong>.
-	<br />
-	Submissions received: <strong>[% event.images_rs.count %]</strong>.
-	<br />
-[%- IF event.art_subs_allowed %]
-	Submissions are <strong class="good">open</strong>.
-[%- ELSE %]
-	Submissions are <strong class="bad">closed</strong>.
-[%- END %]
-</p>
+	<div class="Countdown">
+		{{ IF event.art > now }}
+			{{ event.art.delta_html | none }}
+		{{ ELSIF event.art_subs_allowed }}
+			{{ event.art_end.delta_html | none }}
+		{{ ELSE }}
+			{{ c.string('subsClosed') }}
+		{{ END }}
+	</div>
 
-[%- IF event.art_subs_allowed && c.user %]
-	[% INCLUDE art/form.tt  image_required = 1 %]
-[%- END %]
-
-[%- IF !c.user %]
-	[% INCLUDE fragment/status_msg.tt  message = 'Guests cannot submit art' %]
-[%- END %]
+	{{ IF event.art_subs_allowed }}
+		{{ IF c.user }}
+			{{ INCLUDE art/form.tt  image_required = 1 }}
+		{{ ELSE }}
+			<div class="Flash">{{ c.string('loginRequiredArt') }}</div>
+		{{ END }}
+	{{ END }}
+</div>

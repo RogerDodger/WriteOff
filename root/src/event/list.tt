@@ -1,4 +1,3 @@
-[% TAGS {{ }} %]
 {{ USE cache = Cache }}
 
 {{- WHILE (event = events.next) }}
@@ -10,7 +9,6 @@
 			'type' => 'event-listing',
 			'id' => event.id,
 			'organiser' => event.is_organised_by(c.user),
-			'timezone' => c.user.timezone,
 		},
 	)
 }}

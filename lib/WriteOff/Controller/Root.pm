@@ -124,7 +124,7 @@ Standard 404 error page
 sub default :Path {
 	my ( $self, $c ) = @_;
 
-	push $c->stash->{title}, 'File Not Found' ;
+	push $c->stash->{title}, $c->string('404');
 	$c->stash->{template} = 'root/404.tt';
 	$c->res->status(404);
 }
@@ -138,9 +138,9 @@ Standard 403 page
 sub forbidden :Private {
 	my ( $self, $c, $msg ) = @_;
 
-	$c->stash->{forbidden_msg} = $msg // 'Access denied';
+	$c->stash->{forbidden_msg} = $msg if $msg;
 
-	push $c->stash->{title}, 'Forbidden';
+	push $c->stash->{title}, $c->string('403');
 	$c->stash->{template} = 'root/403.tt';
 	$c->res->status(403);
 }
@@ -155,14 +155,14 @@ sub error :Private {
 	my ( $self, $c, $msg ) = @_;
 
 	if (!defined $c->stash->{error}) {
-		$c->stash->{error} = $msg // 'Something went wrong';
+		$c->stash->{error} = $msg // $c->string('unknownError');
 	}
 
 	if ($c->res->status == 200) {
 		$c->res->status(400);
 	}
 
-	push $c->stash->{title}, 'Error';
+	push $c->stash->{title}, $c->string('400');
 	$c->stash->{template} = 'root/error.tt';
 }
 

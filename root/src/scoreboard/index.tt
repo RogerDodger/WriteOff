@@ -2,7 +2,7 @@
 {{
 	cache.inc(
 		'template' => 'scoreboard/index_.tt',
-		'ttl' => 360,
+		'ttl' => c.debug || 360,
 		'key' => cacheKey,
 	);
 -}}

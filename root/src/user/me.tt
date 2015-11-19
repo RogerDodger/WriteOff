@@ -1,167 +1,185 @@
-<h1>[% title.-1 %]</h1>
+<div class="Document">
+	<div class="Document-title">
+		{{ title.-1 }}
+	</div>
 
-[%- IF storys.count %]
-<h2>Fic</h2>
-<table class="solid maxwidth no-overflow">
-	<tr class="heading">
-		<th>Event</th>
-		<th>Title</th>
-		<th>Author</th>
-		<th>Words</th>
-		<th>Last Updated</th>
-		<th> </th>
-		<th> </th>
-	</tr>
-	[%- FOREACH story IN storys.all %]
-	<tr class="[% loop.parity %]">
-		<td class="max-75" title="[% story.event.prompt | html %]">
-			[% story.event.prompt | html %]
-		</td>
-		<td class="max-200" title="[% story.title | html %]">
-			<a class="link" href="[% c.uri_for(	c.controller('Fic')
-				.action_for('view'), [ story.id_uri ]) %]">
-				[% story.title | html %]
-			</a>
-		</td>
-		<td class="max-150" title="[% story.artist.name | html %]">
-			[%- IF story.website %]
-			<a class="link new-tab" href="[% story.website | url %]">
-				[% story.artist.name | html %]
-			</a>
-			[%- ELSE %]
-			[% story.artist.name | html %]
-			[%- END %]
-		</td>
-		<td class="center">[% story.wordcount %]</td>
-		<td class="right">[% format_dt( story.updated, '%d %b %H:%M') %]</td>
-		[%- IF story.is_manipulable_by(c.user) %]
-		<td>
-			<a href="[% c.uri_for( c.controller('Fic').action_for('edit'), [ story.id_uri ]) %]">
-				<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
-			</a>
-		</td>
-		<td>
-			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Fic')
-				.action_for('delete'), [ story.id_uri ]) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
-			</a>
-		</td>
-		[%- ELSE %]
-		<td>
-			<span class="ui-icon ui-icon-locked" title="Edit disabled">[]</span>
-		</td>
-		<td>
-			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
-		</td>
-		[%- END %]
-	</tr>
-	[%- END %]
-</table>
-[%- END %]
+	<div class="Flash">This page is deprecated. Use the submission page to edit your entry.</div>
 
-[%- IF images.count %]
-<h2>Art</h2>
-<table class="solid maxwidth no-overflow">
-	<tr class="heading">
-		<th>Event</th>
-		<th>Title</th>
-		<th>Artist</th>
-		<th>Filesize</th>
-		<th>Updated</th>
-		<th> </th>
-		<th> </th>
-	</tr>
-	[%- FOREACH image IN images.all %]
-	<tr class="[% loop.parity %]">
-		<td class="max-75" title="[% image.event.prompt | html %]">
-			[% image.event.prompt | html %]
-		</td>
-		<td class="max-200" title="[% image.title | html %]">
-			<a class="link" href="[% c.uri_for_action(
-				'/art/view',
-				[ image.id_uri ],
-				{ v => image.version }
-			) %]">
-				[% image.title | html %]
-			</a>
-		</td>
-		<td class="max-150" title="[% image.artist.name | html %]">
-			[%- IF image.website %]
-			<a class="link new-window" href="[% image.website | url %]">
-				[% image.artist.name | html %]
-			</a>
-			[%- ELSE %]
-			[% image.artist.name | html %]
-			[%- END %]
-		</td>
-		<td class="right">[% image.filesize / 1024 | format('%.2f') %] KB</td>
-		<td class="right">[% format_dt( image.updated, '%d %b %H:%M') %]</td>
+	{{- IF storys.count }}
+	<div class="Document-subtitle">
+		<span>Fic</span>
+	</div>
 
-		[%- IF image.is_manipulable_by(c.user) %]
-		<td>
-			<a href="[% c.uri_for( c.controller('Art').action_for('edit'), [ image.id_uri ]) %]">
-				<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
-			</a>
-		</td>
-		<td>
-			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Art')
-				.action_for('delete'), [ image.id_uri ]) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
-			</a>
-		</td>
-		[%- ELSE %]
-		<td>
-			<span class="ui-icon ui-icon-locked" title="Edit disabled">[]</span>
-		</td>
-		<td>
-			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
-		</td>
-		[%- END %]
-	</tr>
-	[%- END %]
-</table>
-[%- END %]
+	<table class="solid maxwidth no-overflow">
+		<tr class="heading">
+			<th>Event</th>
+			<th>Title</th>
+			<th>Author</th>
+			<th>Words</th>
+			<th>Last Updated</th>
+			<th> </th>
+			<th> </th>
+		</tr>
+		{{- FOREACH story IN storys.all }}
+		<tr class="{{ loop.parity }}">
+			<td class="max-75" title="{{ story.event.prompt | html }}">
+				{{ story.event.prompt | html }}
+			</td>
+			<td class="max-200" title="{{ story.title | html }}">
+				<a class="link" href="{{ c.uri_for(	c.controller('Fic')
+					.action_for('view'), [ story.id_uri ]) }}">
+					{{ story.title | html }}
+				</a>
+			</td>
+			<td class="max-150" title="{{ story.artist.name | html }}">
+				{{- IF story.website }}
+				<a class="link new-tab" href="{{ story.website | url }}">
+					{{ story.artist.name | html }}
+				</a>
+				{{- ELSE }}
+				{{ story.artist.name | html }}
+				{{- END }}
+			</td>
+			<td class="center">{{ story.wordcount }}</td>
+			<td class="center">{{ story.updated.date_html | none }}</td>
+			{{- IF story.is_manipulable_by(c.user) }}
+			<td>
+				<a href="{{ c.uri_for( c.controller('Fic').action_for('edit'), [ story.id_uri ]) }}">
+					<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
+				</a>
+			</td>
+			<td>
+				<a class="dialog-fetcher" href="{{ c.uri_for( c.controller('Fic')
+					.action_for('delete'), [ story.id_uri ]) }}">
+					<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
+				</a>
+			</td>
+			{{- ELSE }}
+			<td>
+				<span class="ui-icon ui-icon-locked" title="Edit disabled">[]</span>
+			</td>
+			<td>
+				<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
+			</td>
+			{{- END }}
+		</tr>
+		{{- END }}
+	</table>
+	{{- END }}
 
-[% IF prompts.count %]
-<h2>Prompt</h2>
-<table class="solid maxwidth no-overflow">
-	<tr class="heading">
-		<th>Event</th>
-		<th>Prompt</th>
-		<th>Rating</th>
-		<th> </th>
-	</tr>
-	[%- FOREACH prompt IN prompts.all %]
-	<tr class="[% loop.parity %]">
-		<td class="max-75" title="[% prompt.event.prompt | html %]">
-			[% prompt.event.prompt | html %]
-		</td>
-		<td class="maxwidth">[% prompt.contents | html %]</td>
-		<td class="center" title="[% prompt.rating |format('%.2f') %]">
-			[% prompt.rating | format('%d') %]
-		</td>
-		<td>
-		[%- IF prompt.is_manipulable_by( c.user ) %]
-			<a class="dialog-fetcher" href="[% c.uri_for( c.controller('Prompt')
-				.action_for('delete'), [ prompt.id_uri ]) %]">
-				<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
-			</a>
-		[%- ELSE %]
-			<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
-		[%- END %]
-		</td>
-	</tr>
-	[%- END %]
-</table>
-[%- END %]
+	{{- IF images.count }}
+	<div class="Document-subtitle">
+		<span>Art</span>
+	</div>
 
-[%- IF records.count %]
-<h2>Vote Records</h2>
-[% INCLUDE voterecord/list.tt
-	single = 0
-	records = records.all %]
-[%- END %]
+	<table class="solid maxwidth no-overflow">
+		<tr class="heading">
+			<th>Event</th>
+			<th>Title</th>
+			<th>Artist</th>
+			<th>Filesize</th>
+			<th>Updated</th>
+			<th> </th>
+			<th> </th>
+		</tr>
+		{{- FOREACH image IN images.all }}
+		<tr class="{{ loop.parity }}">
+			<td class="max-75" title="{{ image.event.prompt | html }}">
+				{{ image.event.prompt | html }}
+			</td>
+			<td class="max-200" title="{{ image.title | html }}">
+				<a class="link" href="{{ c.uri_for_action(
+					'/art/view',
+					[ image.id_uri ],
+					{ v => image.version }
+				) }}">
+					{{ image.title | html }}
+				</a>
+			</td>
+			<td class="max-150" title="{{ image.artist.name | html }}">
+				{{- IF image.website }}
+				<a class="link new-window" href="{{ image.website | url }}">
+					{{ image.artist.name | html }}
+				</a>
+				{{- ELSE }}
+				{{ image.artist.name | html }}
+				{{- END }}
+			</td>
+			<td class="right">{{ image.filesize / 1024 | format('%.2f') }} KB</td>
+			<td class="center">{{ image.updated.date_html | none }}</td>
 
-[%- IF !images.count && !storys.count && !prompts.count && !records.count %]
-<p>No submissions found.</p>
-[%- END %]
+			{{- IF image.is_manipulable_by(c.user) }}
+			<td>
+				<a href="{{ c.uri_for( c.controller('Art').action_for('edit'), [ image.id_uri ]) }}">
+					<span class="ui-icon ui-icon-pencil" title="Edit item">[Edit]</span>
+				</a>
+			</td>
+			<td>
+				<a class="dialog-fetcher" href="{{ c.uri_for( c.controller('Art')
+					.action_for('delete'), [ image.id_uri ]) }}">
+					<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
+				</a>
+			</td>
+			{{- ELSE }}
+			<td>
+				<span class="ui-icon ui-icon-locked" title="Edit disabled">[]</span>
+			</td>
+			<td>
+				<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
+			</td>
+			{{- END }}
+		</tr>
+		{{- END }}
+	</table>
+	{{- END }}
+
+	{{ IF prompts.count }}
+	<div class="Document-subtitle">
+		<span>Prompt</span>
+	</div>
+
+	<table class="solid maxwidth no-overflow">
+		<tr class="heading">
+			<th>Event</th>
+			<th>Prompt</th>
+			<th>Rating</th>
+			<th> </th>
+		</tr>
+		{{- FOREACH prompt IN prompts.all }}
+		<tr class="{{ loop.parity }}">
+			<td class="max-75" title="{{ prompt.event.prompt | html }}">
+				{{ prompt.event.prompt | html }}
+			</td>
+			<td class="maxwidth">{{ prompt.contents | html }}</td>
+			<td class="center" title="{{ prompt.rating |format('%.2f') }}">
+				{{ prompt.rating | format('%d') }}
+			</td>
+			<td>
+			{{- IF prompt.is_manipulable_by( c.user ) }}
+				<a class="dialog-fetcher" href="{{ c.uri_for( c.controller('Prompt')
+					.action_for('delete'), [ prompt.id_uri ]) }}">
+					<span class="ui-icon ui-icon-closethick" title="Delete item">[Delete]</span>
+				</a>
+			{{- ELSE }}
+				<span class="ui-icon ui-icon-locked" title="Delete disabled">[]</span>
+			{{- END }}
+			</td>
+		</tr>
+		{{- END }}
+	</table>
+	{{- END }}
+
+	{{- IF records.count }}
+	<div class="Document-subtitle">
+		<span>Vote Records</span>
+	</div>
+
+	{{ INCLUDE voterecord/list.tt
+		single = 0
+		records = records.all }}
+	{{- END }}
+
+	{{- IF !images.count && !storys.count && !prompts.count && !records.count }}
+	<p>No submissions found.</p>
+	{{- END }}
+</div>

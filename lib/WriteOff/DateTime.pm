@@ -41,6 +41,15 @@ sub DateTime::date_html {
 		$self->strftime('%d %b %Y');
 }
 
+sub DateTime::datetime_html {
+	my $self = shift;
+
+	return sprintf '<time class="datetime" title="%s" datetime="%sZ">%s</time>',
+		$self->rfc2822,
+		$self->iso8601,
+		$self->strftime('%d %b %Y %T %z');
+}
+
 sub now {
 	if (defined(my $t = $ENV{WRITEOFF_DATETIME})) {
 		return DateTime::Format::RFC3339->parse_datetime($t);

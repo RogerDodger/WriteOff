@@ -1,34 +1,37 @@
 <?xml version='1.0' encoding='utf-8'?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>[% story.title | xml %]</title>
+		<title>{{ story.title | xml }}</title>
 		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
 		<link href="story.css" type="text/css" rel="stylesheet"/>
 	</head>
 	<body>
-		<h1>[% story.title | xml %]</h1>
-		[%- IF event.is_ended %]
-		<h2>by [% story.artist.name | xml %] </h2>
-		[%- END %]
-		[%- IF event.art %]
+		<h1>{{ story.title | xml }}</h1>
+
+		{{ IF event.is_ended }}
+		<h2>by {{ story.artist.name | xml }}</h2>
+		{{ END }}
+
+		{{ IF event.art }}
 		<div class="art">
-			[%- FOREACH art IN story.images %]
-				<img src="images/[% art.filename %]"/>
-				<h5>[% art.title | xml %]</h5>
-				[%- IF event.is_ended %]
-				<h6> by [% art.artist.name | xml %]</h6>
-				[%- END %]
-			[%- END %]
+			{{ FOREACH art IN story.images }}
+				<img src="images/{{ art.filename | xml }}"/>
+				<h5>{{ art.title | xml }}</h5>
+				{{ IF event.is_ended }}
+				<h6> by {{ art.artist.name | xml }}</h6>
+				{{ END }}
+			{{ END }}
 		</div>
-		[%- END %]
-		[%- IF story.published %]
+		{{ END }}
+
+		{{ IF story.published }}
 		<div class="story">
-			[% story.contents | bbcode('xhtml' => 1) %]
+			{{ story.contents | bbcode('xhtml' => 1) }}
 		</div>
-		[%- ELSE %]
+		{{ ELSE }}
 		<div class="redacted">
-			[% c.string('storyRedacted') %]
+			{{ c.string('storyRedacted') | xml }}
 		</div>
-		[%- END %]
+		{{ END }}
 	</body>
 </html>

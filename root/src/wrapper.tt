@@ -1,5 +1,7 @@
-[%
+{{
 	DEFAULT wrapper = 'wrapper/default.tt';
 	CALL (wrapper = 'wrapper/bare.tt') IF template.name.match('^email/');
-	WRAPPER $wrapper; GET content; END;
--%]
+}}
+{{ WRAPPER $wrapper }}
+	{{ content | none }}
+{{ END }}

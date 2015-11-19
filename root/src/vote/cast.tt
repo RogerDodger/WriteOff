@@ -1,5 +1,3 @@
-[% TAGS {{ }} %]
-
 <div class="Document">
 	<div class="Document-title">
 		{{ type.ucfirst }} Voting
@@ -10,7 +8,7 @@
 
 	<div class="Countdown">
 		{{ IF countdown }}
-			{{ countdown.delta_html }}
+			{{ countdown.delta_html | none }}
 		{{ ELSE }}
 			{{ c.string('votesClosed') }}
 		{{ END }}

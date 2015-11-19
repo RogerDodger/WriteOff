@@ -1,4 +1,1 @@
-<p class="status-msg ui-widget ui-state-highlight ui-corner-all">
-	<span class="ui-icon ui-icon-alert"></span>
-	[% message %]
-</p>
+<div class="Flash">{{ message }}</div>

@@ -1,13 +1,11 @@
-[% TAGS {{ }} %]
-
 <div class="Document">
 	<div class="Document-title">
-		Fic Editing
+		{{ story.title }}
 	</div>
 
 	<div class="Countdown">
-		{{ IF story.event.fic_subs_allowed }}
-			{{ event.fic_end.delta_html }}
+		{{ IF event.fic_subs_allowed }}
+			{{ event.fic_end.delta_html | none }}
 		{{ ELSE }}
 			{{ c.string('subsClosed') }}
 		{{ END }}

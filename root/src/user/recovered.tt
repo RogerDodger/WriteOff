@@ -1,6 +1,9 @@
-<h2>Password Recovery</h2>
+<div class="Document">
+	<div class="Document-title">{{ c.string('passwordRecovery') }}</div>
 
-<p>
-	Your account's password has been set to <code>[% pass %]</code>. You
-	should login and change it to something more suitable.
-</p>
+	{{ c.string('newPassword') | markdown }}
+
+	<div class="Password-new">
+		{{ pass }}
+	</div>
+</div>

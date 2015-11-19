@@ -1,10 +1,9 @@
-[%- TAGS {{ }} -%]
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 	<head>
 		<meta charset="utf-8">
 
-		<title>{{ title_html }}</title>
+		<title>{{ title_html | none }}</title>
 
 		<link rel="icon" href="/favicon.ico?v=6">
 		<link rel="stylesheet" href="/static/style/normalize.css">
@@ -38,7 +37,7 @@
 
 				<div class="pull-right">
 					{{ IF c.user }}
-					<a href="/user/me">~{{ c.user.username | html }}</a>
+					<a href="/user/me">~{{ c.user.username }}</a>
 					<a href="/user/credentials?key=password">Change password</a>
 					<a href="/user/credentials?key=email">Change email</a>
 					<a href="/user/prefs">Preferences</a>
@@ -66,20 +65,20 @@
 				{{ INCLUDE event/single.tt }}
 			{{ END }}
 
-			{{ content }}
+			{{ content | none }}
 		</main>
 
 		<footer class="Site-footer">
 			<div class="Site-footer--container">
 				<div class="Site-footer--links">
-					<a href="/tos">{{ c.document('tos').title | html }}</a>
-					<a href="/rights">{{ c.document('rights').title | html }}</a>
+					<a href="/tos">{{ c.document('tos').title }}</a>
+					<a href="/rights">{{ c.document('rights').title }}</a>
 					<a href="/faq">FAQ</a>
 					<a href="//github.com/RogerDodger/WriteOff">Source code</a>
 					<a href="mailto:cthor@cpan.org">Email me</a>
 				</div>
 				<div>
-					{{ format_dt( now, '%a, %d %b %Y %T %z (%Z)' ) }}
+					{{ now.datetime_html | none }}
 				</div>
 			</div>
 		</footer>

@@ -51,6 +51,14 @@ Number.prototype.ordinal = function () {
 	return this + (i == 0 || i >= 4 || ii >= 11 && ii <= 13 ? "th" : ["st", "nd", "rd"][i-1]);
 };
 
+Number.prototype.zeropad = function (n) {
+	var s = this + "";
+	while (s.length < n) {
+		s = "0" + s;
+	}
+	return s;
+}
+
 jQuery(document).ready(function($) {
 	$('input[type="checkbox"].toggler')
 		.on('change', function() {
@@ -118,11 +126,9 @@ jQuery(document).ready(function($) {
 			div.load(
 				$(this).data('target'),
 				function(res, status, xhr) {
-					if( status != 'error' ) {
-						div.find('a.ui-button, input[type=submit], button').button();
-
+					if (status != 'error') {
 						//Order here is important
-						div.dialog('option', 'title', div.find('h1').html() );
+						div.dialog('option', 'title', div.find('h1').html());
 						div.find('h1').remove();
 						div.dialog('option', 'position', pos);
 
@@ -687,6 +693,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	var $countdowns = $('.Countdown time');
 	var $dates = $('time.date');
+	var $datetimes = $('time.datetime');
 
 	if ($countdowns.length) {
 		var elapsed = 0;
@@ -714,9 +721,9 @@ $(document).ready(function () {
 				d = Math.floor(d);
 
 				this.textContent = d + "d " +
-					(h < 10 ? "0" + h : h) + "h " +
-					(m < 10 ? "0" + m : m) + "m " +
-					(s < 10 ? "0" + s : s) + "s";
+					h.zeropad(2) + "h " +
+					m.zeropad(2) + "m " +
+					s.zeropad(2) + "s";
 			});
 			elapsed += 1000;
 		};
@@ -728,6 +735,19 @@ $(document).ready(function () {
 		var date = new Date($(this).attr('datetime'));
 		this.textContent = date.getDate() + " " + date.getShortMonth() + " " + date.getFullYear();
 	});
+
+	$datetimes.each(function () {
+		var date = new Date($(this).attr('datetime')),
+		    z = date.getTimezoneOffset();
+
+		this.textContent =
+			date.getDate() + " " + date.getShortMonth() + " " + date.getFullYear() + " " +
+			date.getHours().zeropad(2) + ":" +
+			date.getMinutes().zeropad(2) + ":" +
+			date.getSeconds().zeropad(2) + " " +
+			(z > 0 ? "-" : "+") +
+			Math.floor(Math.abs(z) / 60).zeropad(2) + (Math.abs(z) % 60).zeropad(2);
+	})
 });
 
 // ===========================================================================
@@ -735,7 +755,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Results, .Scoreboard').each(function () {
+	$('.Results, .Scoreboard, .Prompts').each(function () {
 		new Tablesort(this);
 	});
 });

@@ -1,47 +1,44 @@
-<h1>Art Gallery</h1>
+<div class="Document">
+	<div class="Document-title">
+		{{ c.string('artGallery') }}
+	</div>
 
-[%- IF event.art_gallery_opened %]
+	{{- IF event.art_gallery_opened }}
+	<div class="artworks">
+		{{- FOREACH image IN images.all }}
+		<figure>
+			<img src="{{ image.path('thumb') }}"
+				alt="{{ image.title | html }}"
+				title="{{ image.hovertext | html }}">
 
-<div class="artworks">
-	[%- FOREACH image IN images.all %]
-	<figure>
-		<img src="[% image.path('thumb') %]"
-			alt="[% image.title | html %]"
-			title="[% image.hovertext | html %]">
+			<figcaption>
+				<a href="{{ c.uri_for_action('/art/view', [ image.id_uri ]) }}">
+					{{ image.title | html }}
+				</a>
 
-		<figcaption>
-			<a class="link em" href="[% c.uri_for_action('/art/view', [ image.id_uri ]) %]">
-				[% image.title | html %]
-			</a>
+			{{- IF show_artists }}
+				by
+				{{- IF image.website }}
+				<a class="author new-tab" href="{{ image.website | url }}">
+					{{ image.artist.name | html }}</a>
+				{{- ELSE }}
+					{{ image.artist.name | html }}
+				{{- END }}
+			{{- END -}}
 
-		[%- IF show_artists %]
-			by
-			[%- IF image.website %]
-			<a class="author new-tab" href="[% image.website | url %]">
-				[% image.artist.name | html %]</a>
-			[%- ELSE %]
-				[% image.artist.name | html %]
-			[%- END %]
-		[%- END -%]
+			{{- IF show_storys && image.stories_rs.count }}
+				<a class="dialog-fetcher" href="{{ c.uri_for_action('/art/rels', [ image.id_uri ]) }}">
+					<span class="fa fa-picture-o"></span>
+				</a>
+			{{- END -}}
+			</figcaption>
 
-		[%- IF show_storys && image.stories_rs.count %]
-			<a class="dialog-fetcher inline-block" title="Show related story(s)"
-				href="[% c.uri_for( c.controller('Art').action_for('rels'), [ image.id_uri ]) %]"
-				style="position: relative; top: 1px;">
-				<span class="ui-icon ui-icon-script">[Related Story(s)]</span>
-			</a>
-		[%- END -%]
-
-		</figcaption>
-
-	</figure>
-	[%- END %]
+		</figure>
+		{{- END }}
+	</div>
+	{{- ELSE }}
+	<div class="Countdown">
+		{{ event.art_gallery_opens.delta_html }}
+	</div>
+	{{- END }}
 </div>
-
-[%- ELSE %]
-<p>
-	Gallery opens: <strong>[% format_dt(event.art_gallery_opens) %]</strong>.
-	<br />
-	Gallery is <strong class="bad">closed</strong>.
-</p>
-[%- END %]

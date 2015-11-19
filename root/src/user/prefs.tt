@@ -1,23 +1,27 @@
-<h1>User Preferences</h1>
+<div class="Document">
+	<div class="Document-title">
+		{{ c.string('preferences') }}
+	</div>
 
-<form class="light" method="post" action="[% c.req.uri %]">
-	<input type="hidden" name="csrf_token" value="[% csrf_token %]">
+	<form class="Form" method="post">
+		<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-	<p>
-		<label>Timezone</label>
-		<select name="timezone">
-		[%- FOREACH timezone IN timezones %]
-			<option value="[% timezone %]">[% timezone.replace('_', ' ') %]</option>
-		[%- END %]
-		</select>
-	</p>
+		<div class="Form-item">
+			<label>{{ c.string('timezone') }}</label>
+			<select name="timezone">
+				{{- FOREACH timezone IN timezones }}
+				<option value="{{ timezone }}">{{ timezone.replace('_', ' ') }}</option>
+				{{- END }}
+			</select>
+		</p>
 
-	<p class="nowrap">
-		<label>Notifications</label>
-		<input name="mailme" type="checkbox">
-		Send me email notifications when new events are announced.
-	</p>
-	<p>
-		<input type="submit" name="submit" value="Update preferences">
-	</p>
-</form>
+		<div class="Form-item">
+			<input name="mailme" type="checkbox">
+			<label>{{ c.string('mailme') }}</label>
+		</div>
+
+		<div class="Form-item">
+			<input type="submit" value="{{ c.string('update') }}">
+		</div>
+	</form>
+</div>

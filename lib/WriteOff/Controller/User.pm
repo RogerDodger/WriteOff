@@ -382,41 +382,6 @@ EOF
 	}
 }
 
-sub list :Local :Args(0) {
-	my ( $self, $c ) = @_;
-	state $allowed = {
-		map { $_ => $_ } qw/username hugbox_score prompt_skill created/,
-	};
-
-	if (defined $c->req->param('term') && $c->req->param('term') eq '') {
-		return $c->res->redirect( $c->uri_for( $c->action ) );
-	}
-
-	$c->stash->{users} = $c->model('DB::User')->search(
-	{
-		'me.username' => { like => '%' . $c->req->param('term') . '%' },
-		'me.verified' => 1,
-	},
-	{
-		order_by => {
-			$c->req->param('o') eq 'desc' ? '-desc' : '-asc',
-			$allowed->{$c->req->param('q')},
-		}
-	}
-	)->with_stats;
-
-	if ($c->stash->{format} eq 'json') {
-		$c->stash->{json} = [
-			$c->stash->{users}->get_column('username')->all
-		];
-
-		$c->detach('View::JSON');
-	}
-
-	push $c->stash->{title}, 'Users';
-	$c->stash->{template} = 'user/list.tt';
-}
-
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

@@ -15,14 +15,22 @@
 	border-color: hsla($hue, $sat, $l * .75, 1);
 	color: hsla($hue, $sat, $l * .2, 1);
 
-	&:hover {
-		cursor: pointer;
-		background: hsla($hue, $sat, $l * .95, 1);
-		text-decoration: none;
+	&:not(:disabled) {
+		&:hover {
+			cursor: pointer;
+			background: hsla($hue, $sat, $l * .95, 1);
+			text-decoration: none;
+		}
+
+		&:active {
+			box-shadow: 0 0.5em 0.7em hsla($hue, $sat, $l * .9, 1) inset;
+		}
 	}
 
-	&:active {
-		box-shadow: 0 0.5em 0.7em hsla($hue, $sat, $l * .9, 1) inset;
+	&:disabled {
+		background: hsla($hue, $sat * .35, $l, 1);
+		border-color: hsla($hue, $sat * .35, $l * .75, 1);
+		color: hsla($hue, $sat * .35, $l * .2, 1);
 	}
 }
 
@@ -88,6 +96,7 @@
 			font-size: 1.1em;
 			font-weight: normal;
 			text-align: center;
+			letter-spacing: 0.05em;
 			padding-bottom: 0.3em;
 			padding-top: 0.3em;
 		}
@@ -108,10 +117,18 @@
 	}
 }
 
+.Table {
+	@include striped-table;
+}
+
 @mixin table-button($hue: 200, $sat: 30%, $l: 97%) {
 	@include button($hue, $sat, $l);
 	padding: 0.4em;
 	font-size: 0.8em;
+}
+
+.Table-button {
+	@include table-button;
 }
 
 .Clarify {
@@ -126,13 +143,21 @@
 	text-align: center;
 }
 
+@mixin tint($hue: 200, $sat: 50%, $l: 85%) {
+	background: hsla($hue, $sat, $l, 1);
+	border: 0.1em solid hsla($hue, $sat, $l * 0.8, 1);
+	color: hsla($hue, $sat, $l * 0.25, 1);
+}
+
 .Flash {
-	background: hsla(200, 50%, 85%, 1);
-	border: 1px solid hsla(200, 50%, 65%, 1);
-	color: hsla(200, 50%, 20%, 1);
 	font-size: 0.8em;
 	padding: 1em;
 	margin-bottom: 1em;
+
+	@include tint;
+	&.error {
+		@include tint($hue: 0);
+	}
 }
 
 .noselect {
@@ -145,14 +170,6 @@
 }
 
 .Form {
-	& > div {
-		margin: 1em 0;
-
-		&:last-child {
-			margin-bottom: 0;
-		}
-	}
-
 	label {
 		color: #666;
 		display: block;
@@ -201,12 +218,20 @@
 	}
 }
 
+.Form-item {
+	margin-top: 1em;
+}
+
 .Form-group {
 	@extend .clearfix;
 
+	&:first-of-type > .Form-item {
+		margin-top: 0;
+	}
+
 	& > div {
 		float: left;
-		margin-top: 0;
+		width: 100%;
 
 		&:not(:first-child) {
 			padding-left: 0.5em;
@@ -215,10 +240,25 @@
 		&:not(:last-child) {
 			padding-right: 0.5em;
 		}
+
+		@media #{$mobile} {
+			padding: 0 !important;
+		}
 	}
 
 	&.two > div {
 		width: 50%;
+	}
+
+	&.three > div {
+		width: 33.33%;
+	}
+
+	@media #{$mobile} {
+		& > div {
+			width: 100% !important;
+			padding: 0 !important;
+		}
 	}
 }
 
@@ -226,4 +266,16 @@
 	color: #666;
 	font-size: 0.85em;
 	margin-top: 0.1em;
+}
+
+.Form-caption--container {
+	position: relative;
+}
+
+.Form-caption {
+	font-size: 0.9em;
+	color: hsla(0, 0%, 50%, 1);
+	position: absolute;
+	right: 1.5em;
+	top: 0.23em;
 }

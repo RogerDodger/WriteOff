@@ -1,12 +1,12 @@
-[% FILTER markdown %]
+{{ FILTER markdown }}
 
-* __To:__ [% c.form.valid('to') | html %]
-* __From:__ [% c.user.username_and_email | html %]
-* __Subject:__ [% c.form.valid('subject') | html %]
+* __To:__ {{ c.form.valid('to') }}
+* __From:__ {{ c.user.username_and_email }}
+* __Subject:__ {{ c.form.valid('subject') }}
 
-[% c.form.valid('message') | html %]</p>
+{{ c.form.valid('message') }}
 
-[%- IF recipient == c.user.username_and_email %]
+{{- IF recipient == c.user.username_and_email }}
 
 ---
 
@@ -14,6 +14,6 @@ This is a duplicate of the email sent to your recipient.
 It was sent to you automatically for your convenience.
 Please do not respond to this email.
 
-[%- END %]
+{{- END }}
 
-[%- END %]
+{{- END }}

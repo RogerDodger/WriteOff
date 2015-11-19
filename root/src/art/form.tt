@@ -1,60 +1,58 @@
-<form class="light" action="[% c.req.uri %]" method="post" enctype="multipart/form-data">
-	[%- IF c.form.has_error %]
+<form class="Form" method="post" enctype="multipart/form-data">
+	{{ IF c.form.has_error }}
 	<div>
-		[%- FOREACH message IN c.form.messages('submit') %]
-			[%- INCLUDE fragment/error_msg.tt %]
-		[%- END %]
+		{{ FOREACH message IN c.form.messages('submit') }}
+			{{ INCLUDE fragment/error_msg.tt }}
+		{{ END }}
 	</div>
-	[%- END %]
-	
-	<div class="para">
-		<p class="col">
-			<label>Title<span class="required">*</span></label>
-			<input name="title" type="text" size="30" class="halfwidth"
-				maxlength="[% c.config.len.max.title %]" required />
-		</p>
-		<p class="col final">
-			<label>Artist</label>
-			<input name="artist" type="text" size="30" class="maxwidth"
-				maxlength="[% c.config.len.max.user %]"
-				placeholder="Anonymous" />
-		</p>
+	{{ END }}
+
+	<div class="Form-group two">
+		<div class="Form-item">
+			<label>{{ c.string('title') }}<span class="required">*</span></label>
+			<input name="title" type="text" size="30"
+				maxlength="{{ c.config.len.max.title }}" required>
+		</div>
+		<div class="Form-item">
+			<label>{{ c.string('artist') }}</label>
+			<input name="artist" type="text" size="30"
+				maxlength="{{ c.config.len.max.user }}"
+				placeholder="Anonymous">
+		</div>
 	</div>
 
-	<p>
-		<label>Hover text</label>
-		<input name="hovertext" type="text" size="72" class="maxwidth"
-			maxlength="[% c.config.len.max.alt %]"
-			title="Text that will appear when your artwork is hovered over (like this)"
-			onchange="$('#preview img').attr('title', this.value)"/>
-	</p>
-	
-	<p>
-		<label>Website</label>
-		<input name="website" type="url" size="72" class="maxwidth"
-			maxlength="[% c.config.len.max.url %]"
-			title="Optional link to your online galleries"
-			placeholder="http://" />
-	</p>
+	<div class="Form-item">
+		<label>{{ c.string('caption') }}</label>
+		<input name="hovertext" type="text" size="72"
+			maxlength="{{ c.config.len.max.alt }}"
+			onchange="$('#preview img').attr('title', this.value)">
+	</div>
 
-	<p>
-		<label>Image[% '<span class="required">*</span>' IF image_required %]</label>
+	<div class="Form-item">
+		<label>{{ c.string('website') }}</label>
+		<input name="website" type="url" size="72"
+			maxlength="{{ c.config.len.max.url }}"
+			placeholder="http://">
+	</div>
+
+	<div class="Form-item">
+		<label>{{ c.string('image') }}{{ '<span class="required">*</span>' IF image_required }}</label>
 		<input name="image" type="file"
-			title="Allowed types: [% c.config.biz.img.types.join_serial %]"
-			accept="[% c.config.biz.img.types.join(',') %]"
+			title="{{ c.string('allowedTypes', c.config.biz.img.types.join_serial) }}"
+			accept="{{ c.config.biz.img.types.join(',') }}"
 			onchange="this.setCustomValidity(
-				this.files[0].size > [% c.config.biz.img.size %] ?
-				'Max filesize: [% c.config.biz.img.size / 1024 | format('%dKB') %]' : ''
-			)" [% 'required="required"' IF image_required %] />
-	</p>
+				this.files[0].size > {{ c.config.biz.img.size }} ?
+				'{{ c.string('maxSize', c.config.biz.img.size / 1024) }}' : ''
+			)" {{ 'required' IF image_required }}>
 
-	<figure id="preview">
-		<img alt="Image preview"
-			src="[% preview || c.uri_for('/static/images/transparent-230x230.png') %]"
-			title="[% image && image.hovertext %]">
-	</figure>
+		<figure id="preview">
+			<img alt="{{ c.string('preview') }}"
+				src="{{ preview || c.uri_for('/static/images/transparent-230x230.png') }}"
+				title="{{ image && image.hovertext }}">
+		</figure>
+	</div>
 
-	<p>
-		<input type="submit" value="Submit" id="submit"/>
-	</p>
+	<div class="Form-item">
+		<input type="submit" value="Submit" id="submit">
+	</div>
 </form>

@@ -663,6 +663,60 @@ a {
   height: 1px;
   margin: 1.2em auto; }
 
+.Table {
+  width: 100%; }
+  .Table > thead > tr > th, .Table > tbody > tr > td {
+    padding: 0.8em 0.4em; }
+    .Table > thead > tr > th:first-child, .Table > tbody > tr > td:first-child {
+      padding-left: 0.8em; }
+    .Table > thead > tr > th:last-child, .Table > tbody > tr > td:last-child {
+      padding-right: 0.8em; }
+  .Table > thead > tr > th {
+    font-size: 1.1em;
+    font-weight: normal;
+    text-align: center;
+    letter-spacing: 0.05em;
+    padding-bottom: 0.3em;
+    padding-top: 0.3em; }
+  .Table > tbody > tr:nth-child(odd) > td {
+    background-color: #dee8ed; }
+  .Table > tbody > tr:nth-child(even) > td {
+    background-color: #eef4f6; }
+  .Table > tbody > tr > td.Table-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Table > tbody > tr > td.Table-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
+
+.Table-button {
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  line-height: 1;
+  padding: 0.8em;
+  text-decoration: none;
+  vertical-align: middle;
+  background: #f5f8fa;
+  border-color: #a5c0ce;
+  color: #233640;
+  padding: 0.4em;
+  font-size: 0.8em; }
+  .Table-button:not(:disabled):hover {
+    cursor: pointer;
+    background: #e5edf1;
+    text-decoration: none; }
+  .Table-button:not(:disabled):active {
+    box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
+  .Table-button:disabled {
+    background: #f7f8f8;
+    border-color: #b2bcc1;
+    color: #2c3337; }
+
 .Clarify {
   position: relative;
   bottom: 0.5em;
@@ -674,12 +728,16 @@ a {
   text-align: center; }
 
 .Flash, .Global-message {
-  background: #c6dfec;
-  border: 1px solid #79b5d2;
-  color: #193b4d;
   font-size: 0.8em;
   padding: 1em;
-  margin-bottom: 1em; }
+  margin-bottom: 1em;
+  background: #c6dfec;
+  border: 0.1em solid #85bbd6;
+  color: #1b3f51; }
+  .Flash.error, .error.Global-message {
+    background: #ecc6c6;
+    border: 0.1em solid #d68585;
+    color: #511b1b; }
 
 .noselect, .Results > thead > tr > th {
   -webkit-touch-callout: none;
@@ -689,10 +747,6 @@ a {
   -ms-user-select: none;
   user-select: none; }
 
-.Form > div {
-  margin: 1em 0; }
-  .Form > div:last-child {
-    margin-bottom: 0; }
 .Form label {
   color: #666;
   display: block;
@@ -733,29 +787,57 @@ a {
   border-color: #66cc66;
   color: #143d14;
   font-size: 1.03em; }
-  .Form input[type="submit"]:hover {
+  .Form input[type="submit"]:not(:disabled):hover {
     cursor: pointer;
     background: #a3e0a3;
     text-decoration: none; }
-  .Form input[type="submit"]:active {
+  .Form input[type="submit"]:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #94db94 inset; }
+  .Form input[type="submit"]:disabled {
+    background: #c3d5c3;
+    border-color: #87ab87;
+    color: #223022; }
 .Form *[disabled] {
   background-color: #e6e6e6; }
 
+.Form-item {
+  margin-top: 1em; }
+
+.Form-group:first-of-type > .Form-item {
+  margin-top: 0; }
 .Form-group > div {
   float: left;
-  margin-top: 0; }
+  width: 100%; }
   .Form-group > div:not(:first-child) {
     padding-left: 0.5em; }
   .Form-group > div:not(:last-child) {
     padding-right: 0.5em; }
+  @media (max-width: 640px) {
+    .Form-group > div {
+      padding: 0 !important; } }
 .Form-group.two > div {
   width: 50%; }
+.Form-group.three > div {
+  width: 33.33%; }
+@media (max-width: 640px) {
+  .Form-group > div {
+    width: 100% !important;
+    padding: 0 !important; } }
 
 .Form-note {
   color: #666;
   font-size: 0.85em;
   margin-top: 0.1em; }
+
+.Form-caption--container {
+  position: relative; }
+
+.Form-caption {
+  font-size: 0.9em;
+  color: gray;
+  position: absolute;
+  right: 1.5em;
+  top: 0.23em; }
 
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
@@ -1149,12 +1231,16 @@ body.inverted {
       background: #c7bddb;
       border-color: #8f7ab8;
       color: #251d35; }
-      .Event-links.rules li a:hover {
+      .Event-links.rules li a:not(:disabled):hover {
         cursor: pointer;
         background: #bcafd4;
         text-decoration: none; }
-      .Event-links.rules li a:active {
+      .Event-links.rules li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #b0a2cd inset; }
+      .Event-links.rules li a:disabled {
+        background: #cac7d1;
+        border-color: #958ea4;
+        color: #27252d; }
 .Event-links.prompt {
   list-style-type: none;
   padding: 0; }
@@ -1174,12 +1260,16 @@ body.inverted {
       background: #d6bddb;
       border-color: #ad7ab8;
       color: #311d35; }
-      .Event-links.prompt li a:hover {
+      .Event-links.prompt li a:not(:disabled):hover {
         cursor: pointer;
         background: #ceafd4;
         text-decoration: none; }
-      .Event-links.prompt li a:active {
+      .Event-links.prompt li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #c6a2cd inset; }
+      .Event-links.prompt li a:disabled {
+        background: #d0c7d1;
+        border-color: #a08ea4;
+        color: #2c252d; }
 .Event-links.fic {
   list-style-type: none;
   padding: 0; }
@@ -1199,12 +1289,16 @@ body.inverted {
       background: #dbbdd1;
       border-color: #b87aa3;
       color: #351d2d; }
-      .Event-links.fic li a:hover {
+      .Event-links.fic li a:not(:disabled):hover {
         cursor: pointer;
         background: #d4afc8;
         text-decoration: none; }
-      .Event-links.fic li a:active {
+      .Event-links.fic li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #cda2bf inset; }
+      .Event-links.fic li a:disabled {
+        background: #d1c7ce;
+        border-color: #a48e9d;
+        color: #2d252a; }
 .Event-links.art {
   list-style-type: none;
   padding: 0; }
@@ -1224,12 +1318,16 @@ body.inverted {
       background: #dbbdc2;
       border-color: #b87a85;
       color: #351d21; }
-      .Event-links.art li a:hover {
+      .Event-links.art li a:not(:disabled):hover {
         cursor: pointer;
         background: #d4afb6;
         text-decoration: none; }
-      .Event-links.art li a:active {
+      .Event-links.art li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #cda2a9 inset; }
+      .Event-links.art li a:disabled {
+        background: #d1c7c8;
+        border-color: #a48e92;
+        color: #2d2526; }
 
 .Event-admin {
   list-style-type: none;
@@ -1250,12 +1348,16 @@ body.inverted {
       background: #bdd1db;
       border-color: #7aa3b8;
       color: #1d2d35; }
-      .Event-admin li a:hover {
+      .Event-admin li a:not(:disabled):hover {
         cursor: pointer;
         background: #afc8d4;
         text-decoration: none; }
-      .Event-admin li a:active {
+      .Event-admin li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
+      .Event-admin li a:disabled {
+        background: #c7ced1;
+        border-color: #8e9da4;
+        color: #252a2d; }
 
 .Event-blurb > ul:first-child {
   list-style-type: none;
@@ -1276,12 +1378,16 @@ body.inverted {
       background: #bdc2db;
       border-color: #7a85b8;
       color: #1d2135; }
-      .Event-blurb > ul:first-child li a:hover {
+      .Event-blurb > ul:first-child li a:not(:disabled):hover {
         cursor: pointer;
         background: #afb6d4;
         text-decoration: none; }
-      .Event-blurb > ul:first-child li a:active {
+      .Event-blurb > ul:first-child li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #a2a9cd inset; }
+      .Event-blurb > ul:first-child li a:disabled {
+        background: #c7c8d1;
+        border-color: #8e92a4;
+        color: #25262d; }
 
 .Archive-button--container {
   margin-top: 0.5em; }
@@ -1297,12 +1403,16 @@ body.inverted {
   background: #bddbdb;
   border-color: #7ab8b8;
   color: #1d3535; }
-  .Archive-button:hover {
+  .Archive-button:not(:disabled):hover {
     cursor: pointer;
     background: #afd4d4;
     text-decoration: none; }
-  .Archive-button:active {
+  .Archive-button:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #a2cdcd inset; }
+  .Archive-button:disabled {
+    background: #c7d1d1;
+    border-color: #8ea4a4;
+    color: #252d2d; }
 
 .New-event--button {
   border-style: solid;
@@ -1315,12 +1425,53 @@ body.inverted {
   background: #dbccbd;
   border-color: #b8997a;
   color: #35291d; }
-  .New-event--button:hover {
+  .New-event--button:not(:disabled):hover {
     cursor: pointer;
     background: #d4c2af;
     text-decoration: none; }
-  .New-event--button:active {
+  .New-event--button:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #cdb8a2 inset; }
+  .New-event--button:disabled {
+    background: #d1ccc7;
+    border-color: #a4998e;
+    color: #2d2925; }
+
+.Prompts {
+  width: 100%; }
+  .Prompts > thead > tr > th, .Prompts > tbody > tr > td {
+    padding: 0.8em 0.4em; }
+    .Prompts > thead > tr > th:first-child, .Prompts > tbody > tr > td:first-child {
+      padding-left: 0.8em; }
+    .Prompts > thead > tr > th:last-child, .Prompts > tbody > tr > td:last-child {
+      padding-right: 0.8em; }
+  .Prompts > thead > tr > th {
+    font-size: 1.1em;
+    font-weight: normal;
+    text-align: center;
+    letter-spacing: 0.05em;
+    padding-bottom: 0.3em;
+    padding-top: 0.3em; }
+  .Prompts > tbody > tr:nth-child(odd) > td {
+    background-color: #dee8ed; }
+  .Prompts > tbody > tr:nth-child(even) > td {
+    background-color: #eef4f6; }
+  .Prompts > tbody > tr > td.Table-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Prompts > tbody > tr > td.Table-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
+
+.Prompts-vote,
+.Prompts-score {
+  text-align: center; }
+
+.Prompts-name {
+  width: 100%; }
 
 .Story {
   font-family: serif;
@@ -1360,7 +1511,8 @@ body.inverted {
     box-shadow: 1px 1px 1px #d9d9d9;
     background: #fcfcfc; }
 
-.Story-redacted {
+.Story-redacted,
+.Story-nav {
   text-align: center; }
 
 .Storys {
@@ -1375,6 +1527,7 @@ body.inverted {
     font-size: 1.1em;
     font-weight: normal;
     text-align: center;
+    letter-spacing: 0.05em;
     padding-bottom: 0.3em;
     padding-top: 0.3em; }
   .Storys > tbody > tr:nth-child(odd) > td {
@@ -1435,12 +1588,16 @@ body.inverted {
     background: #bdd1db;
     border-color: #7aa3b8;
     color: #1d2d35; }
-    .Storys-access--update input:hover {
+    .Storys-access--update input:not(:disabled):hover {
       cursor: pointer;
       background: #afc8d4;
       text-decoration: none; }
-    .Storys-access--update input:active {
+    .Storys-access--update input:not(:disabled):active {
       box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
+    .Storys-access--update input:disabled {
+      background: #c7ced1;
+      border-color: #8e9da4;
+      color: #252a2d; }
 
 .Ballot {
   width: 100%; }
@@ -1454,6 +1611,7 @@ body.inverted {
     font-size: 1.1em;
     font-weight: normal;
     text-align: center;
+    letter-spacing: 0.05em;
     padding-bottom: 0.3em;
     padding-top: 0.3em; }
   .Ballot > tbody > tr:nth-child(odd) > td {
@@ -1505,14 +1663,19 @@ body.inverted {
   color: #233640;
   padding: 0.4em;
   font-size: 0.8em; }
-  .Ballot-abstain:hover,
-  .Ballot-unabstain:hover {
+  .Ballot-abstain:not(:disabled):hover,
+  .Ballot-unabstain:not(:disabled):hover {
     cursor: pointer;
     background: #e5edf1;
     text-decoration: none; }
-  .Ballot-abstain:active,
-  .Ballot-unabstain:active {
+  .Ballot-abstain:not(:disabled):active,
+  .Ballot-unabstain:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
+  .Ballot-abstain:disabled,
+  .Ballot-unabstain:disabled {
+    background: #f7f8f8;
+    border-color: #b2bcc1;
+    color: #2c3337; }
 
 .Ballot-directions,
 .Ballot-append {
@@ -1600,12 +1763,16 @@ body.inverted {
       background: #bdd1db;
       border-color: #7aa3b8;
       color: #1d2d35; }
-      .Slates li a:hover {
+      .Slates li a:not(:disabled):hover {
         cursor: pointer;
         background: #afc8d4;
         text-decoration: none; }
-      .Slates li a:active {
+      .Slates li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
+      .Slates li a:disabled {
+        background: #c7ced1;
+        border-color: #8e9da4;
+        color: #252a2d; }
 
 .Scoreboard {
   width: 100%; }
@@ -1619,6 +1786,7 @@ body.inverted {
     font-size: 1.1em;
     font-weight: normal;
     text-align: center;
+    letter-spacing: 0.05em;
     padding-bottom: 0.3em;
     padding-top: 0.3em; }
   .Scoreboard > tbody > tr:nth-child(odd) > td {
@@ -1663,3 +1831,8 @@ body.inverted {
 
 .Scoreboard-filter--link {
   padding: 0 0.2em; }
+
+.Password-new {
+  text-align: center;
+  font-size: 1.3em;
+  font-family: monospace; }

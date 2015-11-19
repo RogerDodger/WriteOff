@@ -1,8 +1,8 @@
-[% FILTER markdown -%]
+{{ FILTER markdown -}}
 Hi there,
 
-[% content %]
+{{ content | none }}
 
-[% c.config.AdminName %]<br>
-[% name %] admin
-[%- END %]
+{{ c.config.AdminName }}<br>
+{{ name }} admin
+{{- END }}

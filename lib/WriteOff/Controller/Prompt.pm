@@ -27,19 +27,13 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	$c->stash->{prompts} = $c->stash->{event}->prompts->ballot($c->user->offset);
 
 	if ($c->stash->{event}->prompt_type eq 'approval') {
-		$c->stash->{show_results} = $c->stash->{event}->has_started
-		                         || $c->stash->{event}->is_organised_by($c->user);
+		$c->stash->{show_results} = $c->stash->{event}->has_started;
 
 		$c->stash->{user_has_voted} = $c->model("DB::UserEvent")->find(
 			$c->user_id,
 			$c->stash->{event}->id,
 			'prompt-voter',
 		);
-
-		$c->stash->{votes_received} = $c->model("DB::UserEvent")->search({
-			event_id => $c->stash->{event}->id,
-			role => 'prompt-voter'
-		})->count;
 	}
 
 	if ($c->stash->{event}->prompt_votes_allowed) {
@@ -91,8 +85,8 @@ sub do_vote_approval :Private {
 		event_id => $c->stash->{event}->id,
 		role     => 'prompt-voter',
 	});
-	$c->stash->{status_msg} = 'Thank you for voting!';
-	$c->stash->{user_just_voted} = 1;
+	$c->flash->{status_msg} = 'Vote successful';
+	$c->res->redirect($c->req->uri);
 }
 
 sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {

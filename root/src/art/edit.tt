@@ -1,4 +1,15 @@
-<h1>[% image.event.prompt | html %]</h1>
+<div class="Document">
+	<div class="Document-title">
+		{{ image.title }}
+	</div>
 
-<h2>Art Editing</h2>
-[% INCLUDE art/form.tt %]
+	<div class="Countdown">
+		{{ IF event.art_subs_allowed }}
+			{{ event.art_end.delta_html | none }}
+		{{ ELSE }}
+			{{ c.string('subsClosed') }}
+		{{ END }}
+	</div>
+
+	{{ INCLUDE art/form.tt }}
+</div>

@@ -1,7 +1,6 @@
- [% TAGS {{ }} %]
- <div class="Document wide clearfix">
+<div class="Document wide clearfix">
 	<div class="Document-title">
-		{{ document.title | html }}
+		{{ document.title }}
 	</div>
 
 	<div class="Document-index">
@@ -13,6 +12,6 @@
 	</div>
 
 	<div class="Document-body">
-		{{ document.contents }}
+		{{ document.contents | none }}
 	</div>
 </div>

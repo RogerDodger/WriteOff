@@ -1,0 +1,16 @@
+// =============================================================================
+// Prompt container and listing
+// =============================================================================
+
+.Prompts {
+	@include striped-table;
+}
+
+.Prompts-vote,
+.Prompts-score {
+	text-align: center;
+}
+
+.Prompts-name {
+	width: 100%;
+}

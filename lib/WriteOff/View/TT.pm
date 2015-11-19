@@ -5,6 +5,7 @@ use Moose;
 use namespace::autoclean;
 use Template::Stash;
 use Template::Filters;
+use Template::AutoFilter::Parser;
 use Parse::BBCode;
 use Text::Markdown;
 use WriteOff::Util;
@@ -16,6 +17,8 @@ __PACKAGE__->config(
 	WRAPPER            => 'wrapper.tt',
 	ENCODING           => 'utf-8',
 	TEMPLATE_EXTENSION => '.tt',
+	START_TAG          => quotemeta('{{'),
+	END_TAG            => quotemeta('}}'),
 	TIMER              => 1,
 	expose_methods     => [ qw/csrf_field format_dt title_html spectrum/ ],
 	render_die         => 1,
@@ -94,7 +97,10 @@ __PACKAGE__->config->{FILTERS} = {
 	}, 1],
 
 	simple_uri => \&WriteOff::Util::simple_uri,
+	none => sub { $_[0] },
 };
+
+__PACKAGE__->config->{PARSER} = Template::AutoFilter::Parser->new(__PACKAGE__->config);
 
 $Template::Stash::SCALAR_OPS = {
 	%$Template::Stash::SCALAR_OPS,
@@ -138,11 +144,11 @@ sub csrf_field {
 }
 
 sub format_dt {
-	my ($self, $c, $dt, $fmt) = @_;
+	my ($self, $c, $dt, $fmt, $tz) = @_;
 
 	return '' unless eval { $dt->set_time_zone('UTC')->isa('DateTime') };
 
-	my $tz = $c->user->timezone || 'UTC';
+	$tz //= $c->user->timezone || 'UTC';
 
 	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
 		$dt->rfc2822,

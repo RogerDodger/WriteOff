@@ -1,15 +1,13 @@
-[%- TAGS {{ }} %]
-{{- DEFAULT fmt = '%a, %d %b %Y %H:%M %Z' }}
 {{- SET id = [ event.id_uri ] }}
 
 <div class="Event-header" data-autoexpand="{{ event.autoexpand }}">
 	<div class="Event-overview">
-		<span class="Event-prompt">{{ event.prompt | html }}</span>
+		<span class="Event-prompt">{{ event.prompt }}</span>
 		&middot;
 		<span class="Event-genre" title="{{ event.genre.descr }}">{{ event.genre.name }}</span>
 		<span class="Event-format">{{ event.format.name }}</span>
 		&middot;
-		<span class="Event-start">{{ event.start.date_html }}</span>
+		<span class="Event-start">{{ event.start.date_html | none }}</span>
 	</div>
 	<div class="Event-permalink">
 		<a href="{{ c.uri_for_action('/event/permalink', id) }}">Permalink</a>
@@ -42,49 +40,8 @@
 
 	<div class="Event-timeline hidden"></div>
 	<script type="text/javascript">
-		timelines.push({{ event.timeline_json }});
+		timelines.push({{ event.timeline_json | none }});
 	</script>
-
-	<noscript>
-		<table>
-			<tr>
-				<th> </th>
-				<th class="center">Begins</th>
-				<th class="center">Ends</th>
-			</tr>
-			{{- IF event.art }}
-			<tr>
-				<th>Drawing</th>
-				<td>{{ format_dt(event.art, fmt) }}</td>
-				<td>{{ format_dt(event.art_end, fmt) }}</td>
-			</tr>
-			{{- END; IF event.fic }}
-			<tr>
-				<th>Writing</th>
-				<td>{{ format_dt(event.fic, fmt) }}</td>
-				<td>{{ format_dt(event.fic_end, fmt) }}</td>
-			</tr>
-			{{- END; IF event.prelim }}
-			<tr>
-				<th>Prelims</th>
-				<td>{{ format_dt(event.prelim, fmt) }}</td>
-				<td>{{ format_dt(event.public, fmt) }}</td>
-			</tr>
-			{{- END; IF event.public }}
-			<tr>
-				<th>{{ event.private ? 'Main' : 'Finals' }}</th>
-				<td>{{ format_dt(event.public, fmt) }}</td>
-				<td>{{ format_dt(event.private || event.end, fmt) }}</td>
-			</tr>
-			{{- END; IF event.private }}
-			<tr>
-				<th>Finals</th>
-				<td>{{ format_dt(event.private, fmt) }}</td>
-				<td>{{ format_dt(event.end, fmt) }}</td>
-			</tr>
-			{{- END }}
-		</table>
-	</noscript>
 
 	<ul class="Event-links rules">
 		<li><a href="{{ c.uri_for_action('/event/rules', id) }}">Rules</a>
@@ -97,6 +54,18 @@
 	</ul>
 	{{- END }}
 
+	{{ IF event.art }}
+	<ul class="Event-links art">
+		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
+		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
+
+		{{ IF event.public }}
+		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
+		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
+		{{ END }}
+	</ul>
+	{{ END }}
+
 	{{ IF event.fic }}
 	<ul class="Event-links fic">
 		<li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
@@ -106,19 +75,6 @@
 		{{ IF event.has_results }}
 		<li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
-		{{ END }}
-	</ul>
-	{{ END }}
-
-
-	{{ IF event.art }}
-	<ul class="Event-links art">
-		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
-		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
-
-		{{ IF event.public }}
-		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
-		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
 		{{ END }}
 	</ul>
 	{{ END }}

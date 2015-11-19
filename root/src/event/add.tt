@@ -1,125 +1,139 @@
-[% TAGS {{ }} %]
+<div class="Document">
+	<div class="Document-title">
+		Add Event
+	</div>
 
-<h1>Add Event</h1>
-<form class="light" method="post" action="{{ c.req.uri }}">
-	<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-{{- IF c.form.has_error }}
-	{{- FOREACH message IN c.form.messages('event') }}
-		{{ INCLUDE fragment/error_msg.tt }}
+	{{- IF c.form.has_error }}
+		{{- FOREACH message IN c.form.messages('event') }}
+			{{ INCLUDE fragment/error_msg.tt }}
+		{{- END }}
 	{{- END }}
-{{- END }}
-	<p>
-		<label>Starting Date<span class="required">*</span></label>
-		<input type="datetime" name="start" size="32"
-			placeholder="1970-01-01T00:00:00Z" required autofocus>
-	</p>
-	<p class="inline">
-		<label>Organiser<span class="required">*</span></label>
-		<input type="text" name="organiser" class="autocomplete-user"
-			maxlength="{{ c.config.len.max.user }}" required>
-	</p>
 
-	<p class="inline">
-		<label>Genre</label>
-		<select name="genre">
-			{{ FOREACH genre IN genres.all }}
-			<option value="{{ genre.id }}">{{ genre.name | html }}</option>
-			{{ END }}
-		</select>
-	</p>
+	<form class="Form" method="post">
+		<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-	<p class="inline">
-		<label>Format</label>
-		<select name="format">
-			{{ FOREACH format IN formats.all }}
-			<option value="{{ format.id }}">{{ format.name | html }}</option>
-			{{ END }}
-		</select>
-	</p>
+		<div class="Form-group two">
+			<div class="Form-item">
+				<label>Start<span class="required">*</span></label>
+				<input type="datetime" name="start" size="32"
+					placeholder="1970-01-01T00:00:00Z" required autofocus>
+			</div>
+			<div class="Form-item">
+				<label>Organiser<span class="required">*</span></label>
+				<input type="text" name="organiser" class="autocomplete-user"
+					maxlength="{{ c.config.len.max.user }}" required>
+			</div>
+		</div>
 
-	<p class="inline">
-		<label>Prompt type</label>
-		<select name="prompt_type">
-			<option value="" selected="selected">No prompt</option>
-			<option value="faceoff">Face-off</option>
-			<option value="approval">Approval</option>
-		</select>
-	</p>
-	<p class="inline">
-		<label>Initial prompt</label>
-		<input type="text" name="prompt" placeholder="TBD" maxlength="{{ c.config.len.max.prompt }}">
-	</p>
-	<p class="inline">
-		<label>Content level</label>
-		<select name="content_level">
-			<option value="E">Everyone</option>
-			<option value="T" selected="selected">Teen</option>
-			<option value="M">Mature</option>
-		</select>
-	</p>
+		<div class="Form-group three">
+			<div class="Form-item">
+				<label>Genre</label>
+				<select name="genre">
+					{{ FOREACH genre IN genres.all }}
+					<option value="{{ genre.id }}">{{ genre.name }}</option>
+					{{ END }}
+				</select>
+			</div>
 
-	<p class="inline">
-		<label>Fic Duration</label>
-		<input type="checkbox" name="has_fic" class="toggler" checked="checked">
-		Has fic
-		<br>
-		<input type="number" name="fic_dur"
-			size="4" max="9999" min="1" value="72" required>
-		Hours
-	</p>
-	<p class="inline">
-		<label>Wordcount</label>
-		<input type="number" name="wc_min"
-			size="6" max="999999" min="0" step="50" value="2000" required>
-		&ndash;
-		<input type="number" name="wc_max"
-			size="6" max="999999" min="0" step="50" value="8000" required>
-	</p>
-	<p class="inline">
-		<label>Public Duration</label>
-		<input type="checkbox" name="has_public" class="toggler" checked="checked">
-		Has public
-		<br>
-		<input type="number" name="public_dur"
-			size="4" max="9999" min="1" value="4" required>
-		Days
-	</p>
+			<div class="Form-item">
+				<label>Format</label>
+				<select name="format">
+					{{ FOREACH format IN formats.all }}
+					<option value="{{ format.id }}">{{ format.name }}</option>
+					{{ END }}
+				</select>
+			</div>
 
-	<p class="inline">
-		<label>Art Duration</label>
-		<input type="checkbox" name="has_art" class="toggler">
-		Has art
-		<br>
-		<input type="number" name="art_dur" disabled="disabled"
-			size="4" max="9999" min="1" value="72" required>
-		Hours
-	</p>
-	<p class="inline">
-		<label>Prelim Duration</label>
-		<input type="checkbox" name="has_prelim" class="toggler" checked="checked">
-		Has prelim
-		<br />
-		<input type="number" name="prelim_dur"
-			size="4" max="9999" min="1" value="6" required>
-		Days
-	</p>
-	<p class="inline">
-		<label>Private Duration</label>
-		<input type="checkbox" name="has_judges" class="toggler">
-		Has judges
-		<br />
-		<input type="number" name="private_dur" disabled="disabled"
-			size="4" max="9999" min="1" value="7" required>
-		Days
-	</p>
-	<p>
-		<input type="checkbox" name="notify_mailing_list">
-		Notify mailing list of event
-	</p>
-	<p>
-		<button type="submit">Add Event</button>
-		<a class="ui-button" href="{{ c.uri_for( c.controller('Event').action_for('add') ) }}">
-			Reset
-		</a>
-	</p>
-</form>
+			<div class="Form-item">
+				<label>Content level</label>
+				<select name="content_level">
+					<option value="E">Everyone</option>
+					<option value="T" selected="selected">Teen</option>
+					<option value="M">Mature</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="Form-group three">
+			<div class="Form-item">
+				<label>Fic Duration</label>
+				<div class="Form-caption--container">
+					<input type="number" name="fic_dur"
+						size="4" max="9999" min="1" value="72" required>
+					<span class="Form-caption">Hours</span>
+				</div>
+				<input type="checkbox" name="has_fic" class="toggler" checked="checked">
+				<label>Has fic</label>
+			</div>
+
+			<div class="Form-item">
+				<label>Wordcount</label>
+				<div class="Form-group two">
+					<div>
+						<input type="number" name="wc_min"
+							size="6" max="999999" min="0" step="50" value="2000" required>
+					</div>
+					<div>
+						<input type="number" name="wc_max"
+							size="6" max="999999" min="0" step="50" value="8000" required>
+					</div>
+				</div>
+			</div>
+
+			<div class="Form-item">
+				<label>Art Duration</label>
+				<div class="Form-caption--container">
+					<input type="number" name="art_dur" disabled="disabled"
+						size="4" max="9999" min="1" value="72" required>
+					<span class="Form-caption">Hours</span>
+				</div>
+				<input type="checkbox" name="has_art" class="toggler">
+				<label>Has art</label>
+			</div>
+		</div>
+
+		<div class="Form-group three">
+			<div class="Form-item">
+				<label>Prelim Duration</label>
+				<div class="Form-caption--container">
+					<input type="number" name="prelim_dur"
+						size="4" max="9999" min="1" value="6" required>
+					<span class="Form-caption">Days</span>
+				</div>
+				<input type="checkbox" name="has_prelim" class="toggler" checked="checked">
+				<label>Has prelim</label>
+			</div>
+
+			<div class="Form-item">
+				<label>Public Duration</label>
+				<div class="Form-caption--container">
+					<input type="number" name="public_dur"
+						size="4" max="9999" min="1" value="4" required>
+					<span class="Form-caption">Days</span>
+				</div>
+				<input type="checkbox" name="has_public" class="toggler" checked="checked">
+				<label>Has public</label>
+			</div>
+
+			<div class="Form-item">
+				<label>Private Duration</label>
+				<div class="Form-caption--container">
+					<input type="number" name="private_dur" disabled="disabled"
+						size="4" max="9999" min="1" value="7" required>
+					<span class="Form-caption">Days</span>
+				</div>
+				<input type="checkbox" name="has_judges" class="toggler">
+				<label>Has judges</label>
+			</div>
+		</div>
+
+		<div class="Form-item">
+			<input type="checkbox" name="notify_mailing_list">
+			<label>Notify mailing list of event</label>
+		</div>
+
+		<div class="Form-item">
+			<input type="submit" value="Add event">
+		</div>
+	</form>
+</div>

@@ -1,6 +1,5 @@
-[% TAGS {{ }} %]
 <div class="Story-container">
-	<div class="Story-title">{{ story.title | html }}</div>
+	<div class="Story-title">{{ story.title }}</div>
 
 	{{ IF story.published }}
 	<div class="Story">
@@ -13,21 +12,14 @@
 	</div>
 	{{ END }}
 
-	{{- IF story.event.fic_gallery_opened }}
-	<p class="center">
-		{{- FOREACH s IN gallery }}
-			{{- NEXT IF story.id != s.id }}
-
-			{{- prev = loop.prev || gallery.-1 }}
-		<a class="link" href="{{ c.uri_for( c.action, [ prev.id_uri ]) }}">« Prev</a>
+	{{- IF event.fic_gallery_opened }}
+	<div class="Story-nav">
+		<a href="{{ c.uri_for( c.action, [ prev.id_uri ]) }}">« Prev</a>
 		&nbsp;
-		<strong>{{ s.num }}</strong>
+		<strong>{{ num }}</strong>
 		&nbsp;
-			{{- next = loop.next || gallery.0 }}
-		<a class="link" href="{{ c.uri_for( c.action, [ next.id_uri ]) }}">Next »</a>
-
-		{{- END }}
-	</p>
+		<a href="{{ c.uri_for( c.action, [ next.id_uri ]) }}">Next »</a>
+	</div>
 	{{- END }}
 
 </div>

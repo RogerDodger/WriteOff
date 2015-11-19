@@ -1,5 +1,3 @@
-[% TAGS {{ }} %]
-
 <div class="Document">
 	<div class="Document-title">
 		Fic Submission
@@ -7,9 +5,9 @@
 
 	<div class="Countdown">
 		{{ IF event.fic > now }}
-			{{ event.fic.delta_html }}
+			{{ event.fic.delta_html | none }}
 		{{ ELSIF event.fic_subs_allowed }}
-			{{ event.fic_end.delta_html }}
+			{{ event.fic_end.delta_html | none }}
 		{{ ELSE }}
 			{{ c.string('subsClosed') }}
 		{{ END }}
@@ -29,7 +27,7 @@
 	</div>
 
 	<form class="Storys-access" method="post">
-		{{ csrf_field }}
+		{{ csrf_field | none }}
 		<input type="hidden" name="flip" value="1">
 
 		<table class="Storys">
@@ -65,12 +63,12 @@
 					{{ END }}
 					<td class="Storys-title">
 						<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
-							{{ story.title | html }}
+							{{ story.title }}
 						</a>
 					</td>
-					<td class="Storys-author">{{ story.artist.name | html }}</td>
-					<td class="Storys-wordcount">{{ story.wordcount | html }}</td>
-					<td class="Storys-created">{{ story.created.date_html }}</td>
+					<td class="Storys-author">{{ story.artist.name }}</td>
+					<td class="Storys-wordcount">{{ story.wordcount }}</td>
+					<td class="Storys-created">{{ story.created.date_html | none }}</td>
 					<td class="Storys-index">
 						<input type="checkbox" name="index-{{ story.id }}"
 							{{ 'checked' IF story.indexed }}>
