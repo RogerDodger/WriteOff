@@ -13,13 +13,13 @@
 		<td class="start">
 			<a href="{{ c.uri_for( c.controller( score.item.type.ucfirst ).action_for('results'),
 				[ score.event.id_uri ]) }}" class="link">
-				{{ score.event.prompt | html }}
+				{{ score.event.prompt }}
 			</a>
 		</td>
 		<td class="start">
 			<a href="{{ c.uri_for( c.controller( score.item.type.ucfirst )
 				.action_for('view'), [ score.item.id_uri ]) }}" class="link em">
-				{{ score.item.title | html }}
+				{{ score.item.title }}
 			</a>
 		</td>
 		<td class="center">{{ score.type.ucfirst }}</td>
