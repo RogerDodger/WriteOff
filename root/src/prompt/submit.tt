@@ -16,7 +16,7 @@
 		<div class="Flash">
 			{{ c.string('loginRequiredPrompt') }}
 		</div>
-		{{ ELSIF && subs_left > 0 }}
+		{{ ELSIF c.user && subs_left > 0 }}
 
 		{{ c.string('promptGuide') | markdown }}
 
