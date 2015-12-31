@@ -14,8 +14,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"user_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"ip",
-	{ data_type => "text", is_nullable => 1 },
 	"contents",
 	{ data_type => "text", is_nullable => 0 },
 	"rating",
@@ -28,38 +26,8 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to(
-	"event",
-	"WriteOff::Schema::Result::Event",
-	{ id => "event_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->has_many(
-	"heats_lefts",
-	"WriteOff::Schema::Result::Heat",
-	{ "foreign.left" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"heats_right",
-	"WriteOff::Schema::Result::Heat",
-	{ "foreign.right" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->belongs_to(
-	"user",
-	"WriteOff::Schema::Result::User",
-	{ id => "user_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "CASCADE",
-		on_update     => "CASCADE",
-	},
-);
+__PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
+__PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 sub title {
 	return shift->contents;

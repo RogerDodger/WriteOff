@@ -62,6 +62,10 @@
 	text-align: center;
 }
 
+.Story-redacted {
+	margin: 1em 0;
+}
+
 .Storys {
 	@include striped-table;
 

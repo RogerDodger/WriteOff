@@ -48,7 +48,6 @@ sub schedule :Local {
 sub cleanup :Local {
 	my ( $self, $c ) = @_;
 
-	$c->model('DB::Heat')->clean_old_entries;
 	$c->model('DB::User')->clean_unverified;
 	$c->model('DB::Token')->clean_expired;
 }

@@ -18,15 +18,17 @@ __PACKAGE__->table("users");
 __PACKAGE__->add_columns(
 	"id",
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-	"username",
+	"active_artist_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+	"name",
+	{ data_type => "text", is_nullable => 0 },
+	"name_canonical",
 	{ data_type => "text", is_nullable => 0 },
 	"password",
 	{ data_type => "text", is_nullable => 0 },
 	"email",
 	{ data_type => "text", is_nullable => 1 },
-	"timezone",
-	{ data_type => "text", default_value => "UTC", is_nullable => 1 },
-	"ip",
+	"email_canonical",
 	{ data_type => "text", is_nullable => 1 },
 	"verified",
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
@@ -40,74 +42,15 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->add_unique_constraint("email_unique", ["email"]);
+__PACKAGE__->add_unique_constraint("email_unique", ["email_canonical"]);
+__PACKAGE__->add_unique_constraint("name_unique", ["name_canonical"]);
 
-__PACKAGE__->add_unique_constraint("username_unique", ["username"]);
-
-__PACKAGE__->has_many(
-	"artists",
-	"WriteOff::Schema::Result::Artist",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"images",
-	"WriteOff::Schema::Result::Image",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"news",
-	"WriteOff::Schema::Result::News",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"prompts",
-	"WriteOff::Schema::Result::Prompt",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"storys",
-	"WriteOff::Schema::Result::Story",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"tokens",
-	"WriteOff::Schema::Result::Token",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"user_events",
-	"WriteOff::Schema::Result::UserEvent",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"user_roles",
-	"WriteOff::Schema::Result::UserRole",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"vote_records",
-	"WriteOff::Schema::Result::VoteRecord",
-	{ "foreign.user_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->many_to_many("roles", "user_roles", "role");
+__PACKAGE__->has_many("artists", "WriteOff::Schema::Result::Artist", "user_id");
+__PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "user_id");
+__PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "user_id");
+__PACKAGE__->has_many("tokens", "WriteOff::Schema::Result::Token", "user_id");
+__PACKAGE__->belongs_to("active_artist", "WriteOff::Schema::Result::Artist", "active_artist_id");
+__PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "user_id");
 
 __PACKAGE__->mk_group_accessors(
 	column => 'role',
@@ -156,8 +99,8 @@ sub lang {
 	'en';
 }
 
-sub name {
-	return shift->username;
+sub username {
+	return shift->name;
 }
 
 sub username_and_email {

@@ -18,18 +18,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("user_id", "event_id", "role");
 
-__PACKAGE__->belongs_to(
-	"event",
-	"WriteOff::Schema::Result::Event",
-	{ id => "event_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->belongs_to(
-	"user",
-	"WriteOff::Schema::Result::User",
-	{ id => "user_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
+__PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 1;

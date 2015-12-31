@@ -39,6 +39,7 @@ my %attr = (
 );
 
 my @order = sort { $attr{$a}->[0] <=> $attr{$b}->[0] } keys %attr;
+our @ORDERED = map { __PACKAGE__->new($_) } @order;
 
 sub new {
 	my ($class, $id) = @_;
@@ -85,10 +86,6 @@ sub title {
 }
 
 *type = \&name;
-
-sub all_awards {
-	map { __PACKAGE__->new($_) } @order;
-}
 
 sub sort_awards {
 	my %bin;

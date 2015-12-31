@@ -1,4 +1,4 @@
-package WriteOff::Schema::ResultSet::VoteRecord;
+package WriteOff::Schema::ResultSet::Ballot;
 
 use strict;
 use base 'WriteOff::Schema::ResultSet';

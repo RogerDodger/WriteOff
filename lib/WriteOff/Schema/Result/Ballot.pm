@@ -1,11 +1,11 @@
 use utf8;
-package WriteOff::Schema::Result::VoteRecord;
+package WriteOff::Schema::Result::Ballot;
 
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-__PACKAGE__->table("vote_records");
+__PACKAGE__->table("ballots");
 
 __PACKAGE__->add_columns(
 	"id",
@@ -14,25 +14,11 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"user_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"artist_id",
+	"round_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"story_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"ip",
-	{ data_type => "text", is_nullable => 1 },
-	"round",
-	{ data_type => "text", is_nullable => 0 },
 	"type",
 	{ data_type => "text", default_value => "unknown", is_nullable => 0 },
-	"filled",
-	{ data_type => "bit", default_value => 0, is_nullable => 0 },
-	"abstains",
-	{ data_type => "integer", is_nullable => 1 },
-	"score",
-	{ data_type => "integer", is_nullable => 1 },
-	"mean",
-	{ data_type => "real", is_nullable => 1 },
-	"stdev",
+	"deviance",
 	{ data_type => "real", is_nullable => 1 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
@@ -42,66 +28,16 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to(
-	"artist",
-	"WriteOff::Schema::Result::Artist",
-	{ id => "artist_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "SET NULL",
-		on_update     => "CASCADE",
-	},
-);
-
-__PACKAGE__->belongs_to(
-	"event",
-	"WriteOff::Schema::Result::Event",
-	{ id => "event_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->has_many(
-	"guesses",
-	"WriteOff::Schema::Result::Guess",
-	{ "foreign.record_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->belongs_to(
-	"story",
-	"WriteOff::Schema::Result::Story",
-	{ id => "story_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "CASCADE",
-		on_update     => "CASCADE",
-	},
-);
-
-__PACKAGE__->belongs_to(
-	"user",
-	"WriteOff::Schema::Result::User",
-	{ id => "user_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "CASCADE",
-		on_update     => "CASCADE",
-	},
-);
-
-__PACKAGE__->has_many(
-	"votes",
-	"WriteOff::Schema::Result::Vote",
-	{ "foreign.record_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
+__PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
+__PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id");
+__PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
+__PACKAGE__->has_many("votes", "WriteOff::Schema::Result::Vote", "ballot_id");
 
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
+
+# TODO: delete all this
 
 sub is_filled {
 	my $self = shift;

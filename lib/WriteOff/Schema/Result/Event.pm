@@ -22,106 +22,34 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"prompt",
 	{ data_type => "text", default_value => "TBD", is_nullable => 0 },
-	"prompt_type",
-	{ data_type => "text", default_value => "faceoff", is_nullable => 1 },
 	"blurb",
 	{ data_type => "text", is_nullable => 1 },
 	"wc_min",
-	{ data_type => "integer", is_nullable => 0 },
+	{ data_type => "integer", is_nullable => 1 },
 	"wc_max",
-	{ data_type => "integer", is_nullable => 0 },
+	{ data_type => "integer", is_nullable => 1 },
 	"rule_set",
 	{ data_type => "integer", default_value => 1, is_nullable => 0 },
 	"custom_rules",
 	{ data_type => "text", is_nullable => 1 },
 	"guessing",
 	{ data_type => "bit", default_value => 1, is_nullable => 0 },
-	"art",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"art_end",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"fic",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"fic_end",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"prelim",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"public",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"private",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"end",
-	{ data_type => "timestamp", is_nullable => 0 },
 	"tallied",
 	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 	"created",
+	{ data_type => "timestamp", is_nullable => 1 },
+	"updated",
 	{ data_type => "timestamp", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to(
-	"format",
-	"WriteOff::Schema::Result::Format",
-	{ id => "format_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->belongs_to(
-	"genre",
-	"WriteOff::Schema::Result::Genre",
-	{ id => "genre_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->has_many(
-	"artist_awards",
-	"WriteOff::Schema::Result::ArtistAward",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"images",
-	"WriteOff::Schema::Result::Image",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"prompts",
-	"WriteOff::Schema::Result::Prompt",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"scores",
-	"WriteOff::Schema::Result::Score",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"storys",
-	"WriteOff::Schema::Result::Story",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"user_events",
-	"WriteOff::Schema::Result::UserEvent",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
-
-__PACKAGE__->has_many(
-	"vote_records",
-	"WriteOff::Schema::Result::VoteRecord",
-	{ "foreign.event_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
+__PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "event_id");
+__PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
+__PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
+__PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "event_id");
+__PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::Round", "event_id");
+__PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "event_id");
 
 __PACKAGE__->many_to_many(users => 'user_events', 'user');
 
@@ -708,7 +636,7 @@ sub tally {
 	my $self = shift;
 	my $schema = $self->result_source->schema;
 	my $artists = $schema->resultset('Artist');
-	my $scores = $schema->resultset('Score');
+	my $scores = $schema->resultset('Score'); #TODO
 	my $storys = $self->storys->eligible;
 	my $images = $self->images->eligible;
 	my $records = $self->vote_records;

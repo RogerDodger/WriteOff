@@ -72,12 +72,9 @@
 				</td>
 
 
-				{{ tally = artist.tally_awards }}
-				{{ FOREACH award IN awards }}
-					<td class="Scoreboard-awards" data-sort="{{ tally.item(award.id) || 0 }}">
-						{{ FILTER repeat(tally.item(award.id) || 0) }}
-							{{ award.html | none }}
-						{{ END }}
+				{{ FOREACH tally IN artist.tally_awards(awards) }}
+					<td class="Scoreboard-awards" data-sort="{{ tally.count }}">
+						{{ tally.award.html | repeat(tally.count) }}
 					</td>
 				{{ END }}
 

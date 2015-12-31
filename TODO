@@ -1,3 +1,4 @@
+- [high] Fix countdowns from becoming out of sync
 - [high] Decay only scores of shared genre
 - [high] Add event scheduling
 - [high] Fix scoreboard sorting after an expand

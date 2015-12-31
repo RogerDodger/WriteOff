@@ -10,11 +10,9 @@ __PACKAGE__->table("guesses");
 __PACKAGE__->add_columns(
 	"id",
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-	"record_id",
+	"theory_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"story_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"image_id",
+	"entry_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"artist_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -22,55 +20,8 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to(
-	"artist",
-	"WriteOff::Schema::Result::Artist",
-	{ id => "artist_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "CASCADE",
-		on_update     => "CASCADE",
-	},
-);
-
-__PACKAGE__->belongs_to(
-	"image",
-	"WriteOff::Schema::Result::Image",
-	{ id => "image_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "CASCADE",
-		on_update     => "CASCADE",
-	},
-);
-
-__PACKAGE__->belongs_to(
-	"record",
-	"WriteOff::Schema::Result::VoteRecord",
-	{ id => "record_id" },
-	{ is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-__PACKAGE__->belongs_to(
-	"story",
-	"WriteOff::Schema::Result::Story",
-	{ id => "story_id" },
-	{
-		is_deferrable => 1,
-		join_type     => "LEFT",
-		on_delete     => "CASCADE",
-		on_update     => "CASCADE",
-	},
-);
-
-sub item {
-	my $self = shift;
-
-	return $self->story if $self->story_id;
-	return $self->image if $self->image_id;
-	return undef;
-}
+__PACKAGE__->belongs_to("artist", "WriteOff::Schema::Result::Artist", "artist_id");
+__PACKAGE__->belongs_to("theory", "WriteOff::Schema::Result::Theory", "theory_id");
+__PACKAGE__->belongs_to("entry", "WriteOff::Schema::Result::Entry", "entry_id");
 
 1;

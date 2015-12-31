@@ -19,12 +19,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->has_many(
-	"events",
-	"WriteOff::Schema::Result::Event",
-	{ "foreign.genre_id" => "self.id" },
-	{ cascade_copy => 0, cascade_delete => 0 },
-);
+__PACKAGE__->has_many("events", "WriteOff::Schema::Result::Event", "format_id");
 
 sub id_uri {
 	my $self = shift;

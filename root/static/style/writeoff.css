@@ -1515,6 +1515,9 @@ body.inverted {
 .Story-nav {
   text-align: center; }
 
+.Story-redacted {
+  margin: 1em 0; }
+
 .Storys {
   width: 100%; }
   .Storys > thead > tr > th, .Storys > tbody > tr > td {
