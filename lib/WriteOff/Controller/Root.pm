@@ -35,7 +35,6 @@ sub auto :Private {
 
 	$c->stash(
 		now        => WriteOff::DateTime->now,
-		news       => $c->model('DB::News')->order_by({ -desc => 'created' }),
 		title      => [],
 		editor     => $c->user->admin,
 		format     => scalar($c->req->param('format')) || 'html',

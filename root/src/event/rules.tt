@@ -19,18 +19,18 @@ Contest
 	2. must be based on at least one of the submitted artworks to a reasonable
 	and discernible degree, with each related artwork&mdash;and only the
 	related artwork(s)&mdash;indicated on submission.
-	{{- ELSIF event.has_prompt }}
-	3. must be based on the prompt to a reasonable and discernible degree.
+	{{- ELSE }}
+	2. must be based on the prompt to a reasonable and discernible degree.
 	{{- END }}
-{{- IF event.art && event.has_prompt }}
+{{- IF event.art }}
 3. Submitted artworks must be based on the prompt to a reasonable and discernible degree.
 {{- END }}
 4. Participants&mdash;
 	{{- IF event.art }}
-	1. may start drawing only after {{ start }};
+	1. may start drawing only after the prompt is released;
 	2. may start writing only after the artworks are released;
 	{{- ELSE }}
-	1. may start writing only after {{ start }};
+	1. may start writing only after the prompt is released;
 	{{- END }}
 	2. may not disclose their authorship explicitly or implicitly until this website has done so;
 	3. may not submit works explicitly connected to another work of theirs; and

@@ -23,10 +23,6 @@ sub add :Local :Args(0) {
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
-	# These options probably aren't necessary anymore
-	$c->req->params->{prompt_type} = 'approval';
-	$c->req->params->{prompt} = 'TBD';
-
 	push $c->stash->{title}, 'Add Event';
 	$c->stash->{template} = 'event/add.tt';
 
@@ -36,9 +32,7 @@ sub add :Local :Args(0) {
 		my $p = $c->req->params;
 		$c->form(
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
-			prompt => [ [ 'LENGTH', 1, $c->config->{len}{max}{prompt} ] ],
 			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
-			prompt_type => [ [ 'IN_ARRAY', qw/faceoff approval/ ] ],
 			organiser => [
 				'NOT_BLANK',
 				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
@@ -73,9 +67,6 @@ sub do_add :Private {
 	my $leeway = $c->model('DB::Event')->result_class->LEEWAY;
 
 	my %row;
-	if (exists $p->{prompt_type}) {
-		$row{prompt_type} = $p->{prompt_type};
-	}
 
 	if ($p->{has_art}) {
 		$row{art}     = $dt->clone;
@@ -112,7 +103,7 @@ sub do_add :Private {
 	}
 
 	$row{end} = $dt->clone;
-	$row{prompt} = $c->form->valid('prompt') || 'TBD';
+	$row{prompt} = 'TBD';
 	$row{genre_id} = $c->form->valid('genre');
 	$row{format_id} = $c->form->valid('format');
 
@@ -153,9 +144,6 @@ sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
 sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/error', ['There is no prompt for this event.'])
-		unless $c->stash->{event}->has_prompt;
-
 	push $c->stash->{title}, 'Prompt';
 }
 
@@ -170,10 +158,6 @@ sub vote :Chained('fetch') :PathPart('vote') :CaptureArgs(0) {
 
 sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 	my ( $self, $c ) = @_;
-
-	$c->stash->{start} = $c->stash->{event}->has_prompt
-		? 'the prompt is released'
-		: 'the event starts';
 
 	$c->stash->{template} = 'event/rules.tt';
 	push $c->stash->{title}, 'Rules';
@@ -385,20 +369,12 @@ sub set_prompt :Private {
 
 	my $e = $c->model('DB::Event')->find($id) or return 0;
 
+	# In case of tie, we take one at random
 	my @p = shuffle $e->prompts->all;
 	my $best = $p[0];
-	if ($e->prompt_type eq 'approval') {
-		for my $p (@p) {
-			if ($p->approvals > $best->approvals) {
-				$best = $p;
-			}
-		}
-	}
-	elsif ($e->prompt_type eq 'faceoff') {
-		for my $p (@p) {
-			if ($p->rating > $best->rating) {
-				$best = $p;
-			}
+	for my $p (@p) {
+		if ($p->approvals > $best->approvals) {
+			$best = $p;
 		}
 	}
 

@@ -47,12 +47,10 @@
 		<li><a href="{{ c.uri_for_action('/event/rules', id) }}">Rules</a>
 	</ul>
 
-	{{- IF event.has_prompt }}
 	<ul class="Event-links prompt">
 		<li><a href="{{ c.uri_for_action('/prompt/submit', id) }}">Prompt Submission</a>
 		<li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a></li>
 	</ul>
-	{{- END }}
 
 	{{ IF event.art }}
 	<ul class="Event-links art">

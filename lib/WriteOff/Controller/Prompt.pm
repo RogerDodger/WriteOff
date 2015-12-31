@@ -25,49 +25,21 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{prompts} = $c->stash->{event}->prompts->ballot($c->user->offset);
-
-	if ($c->stash->{event}->prompt_type eq 'approval') {
-		$c->stash->{show_results} = $c->stash->{event}->has_started;
-
-		$c->stash->{user_has_voted} = $c->model("DB::UserEvent")->find(
-			$c->user_id,
-			$c->stash->{event}->id,
-			'prompt-voter',
-		);
-	}
+	$c->stash->{show_results} = $c->stash->{event}->has_started;
+	$c->stash->{user_has_voted} = $c->model("DB::UserEvent")->find(
+		$c->user_id,
+		$c->stash->{event}->id,
+		'prompt-voter',
+	);
 
 	if ($c->stash->{event}->prompt_votes_allowed) {
-		if ($c->stash->{event}->prompt_type eq 'faceoff') {
-			$c->forward('do_vote_faceoff') if $c->req->method eq 'POST';
-
-			$c->stash->{heat} = $c->model('DB::Heat')->get_or_new_heat(
-				$c->stash->{event},
-				$c->req->address,
-			);
-		}
-		elsif ($c->stash->{event}->prompt_type eq 'approval') {
-			$c->forward('do_vote_approval') if $c->req->method eq 'POST';
-		}
+		$c->forward('do_vote') if $c->req->method eq 'POST';
 	}
 
 	$c->stash->{template} = 'prompt/vote.tt';
 }
 
-sub do_vote_faceoff :Private {
-	my ( $self, $c ) = @_;
-
-	my $heat = $c->model('DB::Heat')->find( $c->req->params->{heat} ) or
-		return 0;
-
-	my $result;
-	$result //= 1   if $c->req->params->{left};
-	$result //= 0.5 if $c->req->params->{tie};
-	$result //= 0   if $c->req->params->{right};
-
-	$heat->do_heat( $c->stash->{event}, $c->req->address, $result );
-}
-
-sub do_vote_approval :Private {
+sub do_vote :Private {
 	my ( $self, $c ) = @_;
 
 	return if !$c->user || $c->stash->{user_has_voted};
@@ -76,7 +48,7 @@ sub do_vote_approval :Private {
 
 	for my $vote (uniq $c->req->param('vote')) {
 		if (my $prompt = $prompts->find($vote)) {
-			$prompt->update({ approvals => $prompt->approvals + 1 });
+			$prompt->update({ score => $prompt->score + 1 });
 		}
 	}
 
@@ -86,6 +58,7 @@ sub do_vote_approval :Private {
 		role     => 'prompt-voter',
 	});
 	$c->flash->{status_msg} = 'Vote successful';
+
 	$c->res->redirect($c->req->uri);
 }
 
@@ -127,25 +100,11 @@ sub do_submit :Private {
 	);
 
 	if (!$c->form->has_error) {
-		my %row = (
+		$c->stash->{event}->create_related('prompts', {
 			user_id  => $c->user->id,
 			ip       => $c->req->address,
 			contents => $c->form->valid('prompt'),
-		);
-
-		if ($c->stash->{event}->prompt_type eq 'faceoff') {
-			$row{rating} = $c->config->{elo_base};
-		} elsif ($c->stash->{event}->prompt_type eq 'approval') {
-			$row{approvals} = 0;
-		} else {
-			$c->log->warn(sprintf "Event %d has unknown prompt type %s",
-				$c->stash->{event}->id,
-				$c->stash->{event}->prompt_type,
-			);
-			return $c->stash->{error_msg} = 'Something went wrong...';
-		}
-
-		$c->stash->{event}->create_related('prompts', \%row);
+		});
 		$c->stash->{status_msg} = 'Submission successful';
 	}
 }

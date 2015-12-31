@@ -391,7 +391,7 @@ function DrawTimeline (e) {
 	}
 
 	var scale = d3.time.scale()
-		.domain([data[1].start, data[data.length-1].end])
+		.domain([data[0].start, data[data.length-1].end])
 		.range([0 + xpad, width - xpad]);
 
 	// Clear previous draw
@@ -409,8 +409,21 @@ function DrawTimeline (e) {
 		.attr('x2', width)
 		.attr('y2', height / 2);
 
-	svg.selectAll('circle.boundary')
+	svg.selectAll('circle.boundary.start')
 		.data(data)
+		.enter()
+		.append('circle')
+		.attr('title', function(d, i) {
+			return d.start.toUTCString();
+		})
+		.attr('cx', function(d, i) {
+			return scale(d.start);
+		});
+
+	svg.selectAll('circle.boundary.end')
+		.data(data.filter(function (e, i) {
+			return i == data.length-1 || data[i+1].start - e.end > 10 * 60 * 1000;
+		}))
 		.enter()
 		.append('circle')
 		.attr('title', function(d, i) {
@@ -418,7 +431,9 @@ function DrawTimeline (e) {
 		})
 		.attr('cx', function(d, i) {
 			return scale(d.end);
-		})
+		});
+
+	svg.selectAll('circle')
 		.attr('cy', height / 2)
 		.attr('r', 5)
 		.attr('fill', 'grey')
@@ -436,8 +451,24 @@ function DrawTimeline (e) {
 		.attr('stroke', 'black')
 		.attr('stroke-width', 1);
 
-	svg.selectAll('text.dates')
+	svg.selectAll('text.dates.start')
 		.data(data)
+		.enter()
+		.append('text')
+		.text(function(d, i) {
+			return d.start.getDate() + " " + d.start.getShortMonth();
+		})
+		.attr('title', function(d, i) {
+			return d.start.toUTCString();
+		})
+		.attr('x', function(d, i) {
+			return scale(d.start);
+		});
+
+	svg.selectAll('text.dates.end')
+		.data(data.filter(function (e, i) {
+			return i == data.length-1 || data[i+1].start - e.end > 12 * 60 * 60 * 1000;
+		}))
 		.enter()
 		.append('text')
 		.text(function(d, i) {
@@ -446,21 +477,23 @@ function DrawTimeline (e) {
 		.attr('title', function(d, i) {
 			return d.end.toUTCString();
 		})
-		.attr('text-anchor', 'middle')
-		.attr('y', height / 2 + fontsize * 1.5)
 		.attr('x', function(d, i) {
 			return scale(d.end);
-		})
+		});
+
+	svg.selectAll('text')
+		.attr('text-anchor', 'middle')
+		.attr('y', height / 2 + fontsize * 1.5)
 		.attr('fill', 'black')
 		.attr('font-size', fontsize * 0.9)
 		.attr('font-family', 'sans-serif');
 
-	svg.selectAll('text.rounds')
-		.data(data.slice(1))
+	svg.selectAll('text.labels')
+		.data(data)
 		.enter()
 		.append('text')
 		.text(function(d, i) {
-			return d.round;
+			return d.round.ucfirst();
 		})
 		.attr('text-anchor', 'middle')
 		.attr('x', function(d, i) {

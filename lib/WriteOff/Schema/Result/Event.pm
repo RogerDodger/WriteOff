@@ -58,8 +58,13 @@ sub title {
 }
 
 sub start {
-	my $self = shift;
-	return (sort grep defined, $self->fic, $self->art)[0];
+	shift->rounds->search(
+		{ -or => [
+			{ name => 'writing' },
+			{ name => 'drawing' },
+		]},
+		{ order_by => { -asc => 'start' } },
+	)->first->start;
 }
 
 sub has_prompt {
@@ -72,19 +77,7 @@ sub has_started {
 }
 
 sub prompt_voting {
-	my $self = shift;
-
-	state $durations = {
-		faceoff  => 1,
-		approval => 24,
-	};
-
-	if (exists $durations->{$self->prompt_type}) {
-		return $self->start->clone->subtract(
-			hours => $durations->{$self->prompt_type}
-		);
-	}
-	return undef;
+	shift->start->clone->subtract(hours => 1);
 }
 
 sub has_results {
@@ -258,43 +251,14 @@ sub public_label {
 
 sub timeline_json {
 	my $self = shift;
-	my @data;
 
-	push @data, {
-		end => ($self->art || $self->fic)->iso8601,
-	};
-
-	push @data, {
-		round => "Drawing",
-		start => $self->art->iso8601,
-		end => $self->art_end->iso8601,
-	} if $self->art;
-
-	push @data, {
-		round => "Writing",
-		start => $self->fic->iso8601,
-		end => $self->fic_end->iso8601,
-	};
-
-	push @data, {
-		round => "Prelims",
-		start => $self->prelim->iso8601,
-		end => $self->public->iso8601,
-	} if $self->prelim;
-
-	push @data, {
-		round => $self->public_label,
-		start => $self->public->iso8601,
-		end => ($self->private || $self->end)->iso8601,
-	};
-
-	push @data, {
-		round => "Finals",
-		start => $self->private->iso8601,
-		end => $self->end->iso8601,
-	} if $self->private;
-
-	return encode_json \@data;
+	return encode_json [ map {
+		{
+			round => $_->name,
+			start => $_->start->iso8601,
+			end => $_->end->iso8601,
+		}
+	} $self->rounds->search({}, { order_by => 'start' }) ];
 }
 
 sub reset_schedules {
@@ -305,16 +269,25 @@ sub reset_schedules {
 	# Remove old schedules
 	$rs->search({
 		action => { like => '/event/%' },
-		args   => '[' . $self->id . ']',
+		-or => [
+			{ args => '[' . $self->id . ']' },
+			{ args => { like => '[' . $self->id . ',%' } }
+		],
 	})->delete;
 
-	my @schedules =
-		map {{ action => $_->[0], at => $_->[1], args => [ $self->id ] }}
-		  (['/event/set_prompt',    $self->start]) x!! $self->has_prompt,
-		  (['/event/prelim_distr', $self->prelim]) x!! $self->prelim,
-		  (['/event/public_distr', $self->public]) x!! $self->public,
-		  (['/event/judge_distr', $self->private]) x!! $self->private,
-		  (['/event/tally_results',   $self->end]) x!! $self->has_results;
+	my @schedules = ({
+		action => '/event/set_prompt',
+		at => $self->start,
+		args => [ $self->id ],
+	});
+
+	for my $round ($self->rounds) {
+		push @schedules, {
+			action => '/event/tally_round',
+			at => $round->end,
+			args => [ $self->id, $round->id ],
+		};
+	}
 
 	for my $schedule (@schedules) {
 		next if $schedule->{at} < $self->now_dt;
