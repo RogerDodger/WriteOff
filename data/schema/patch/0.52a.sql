@@ -32,7 +32,7 @@ SELECT id, (
 	ORDER BY COUNT(artist_id)
 	LIMIT 1),
 	username, lower(username), password, email, lower(email),
-	verified, mailme, created, updated
+	username='RogerDodger', verified, mailme, created, updated
 FROM users;
 
 .mode insert tokens
@@ -47,7 +47,7 @@ SELECT id, format_id, genre_id, prompt, blurb, wc_min, wc_max, rule_set,
 FROM events;
 
 .mode insert prompts
-SELECT id, event_id, user_id, contents, IFNULL(rating, approvals), created FROM prompts;
+SELECT id, event_id, user_id, contents, IFNULL(CAST (rating AS INTEGER), approvals), created FROM prompts;
 
 .mode insert rounds
 SELECT NULL, id, 'writing', 'fic', fic, fic_end FROM events WHERE fic IS NOT NULL;

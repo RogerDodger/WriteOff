@@ -5,7 +5,7 @@ use Class::Null;
 sub authenticate {
 	my ($c, $username, $password) = @_;
 
-	my $user = $c->model('DB::User')->find({ username => $username });
+	my $user = $c->model('DB::User')->find({ name_canonical => lc $username });
 
 	if ($user && $user->check_password($password)) {
 		$c->session->{__user_id} = $user->id;

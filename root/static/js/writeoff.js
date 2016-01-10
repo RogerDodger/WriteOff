@@ -236,14 +236,14 @@ $(document).ready(function() {
 
 	$('.artist-breakdown')
 		.click(function() {
-			var $icon = $(this).find('span');
+			var $icon = $(this).find('i');
 			var $row = $(this).parent().parent();
 			var $next = $row.next().next();
 
 			// Expand
-			if ($icon.hasClass('ui-icon-plus')) {
-				$icon.removeClass('ui-icon-plus');
-				$icon.addClass('ui-icon-minus');
+			if ($icon.hasClass('fa-plus')) {
+				$icon.removeClass('fa-plus');
+				$icon.addClass('fa-minus');
 				$(this).attr('title', 'Hide breakdown');
 
 				if ($next.hasClass(er_class)) {
@@ -272,8 +272,8 @@ $(document).ready(function() {
 			}
 			else {
 				// Collapse
-				$icon.removeClass('ui-icon-minus');
-				$icon.addClass('ui-icon-plus');
+				$icon.removeClass('fa-minus');
+				$icon.addClass('fa-plus');
 				$(this).attr('title', 'Show breakdown');
 
 				if ($next.hasClass(er_class)) {

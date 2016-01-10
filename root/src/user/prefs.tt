@@ -7,15 +7,6 @@
 		<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
 		<div class="Form-item">
-			<label>{{ c.string('timezone') }}</label>
-			<select name="timezone">
-				{{- FOREACH timezone IN timezones }}
-				<option value="{{ timezone }}">{{ timezone.replace('_', ' ') }}</option>
-				{{- END }}
-			</select>
-		</p>
-
-		<div class="Form-item">
 			<input name="mailme" type="checkbox">
 			<label>{{ c.string('mailme') }}</label>
 		</div>

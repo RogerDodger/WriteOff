@@ -50,7 +50,7 @@ __PACKAGE__->result_source_instance->view_definition(q{
 	CROSS JOIN
 		events ON entrys.event_id=events.id
 	GROUP BY
-		artists.id
+		artists.id, genre_id, format_id
 
 	ORDER BY score DESC
 });
@@ -64,16 +64,16 @@ __PACKAGE__->result_source_instance->deploy_depends_on([
 sub tally_awards {
 	my ($self, $awards) = @_;
 
-	$awards = $awards->search(
+	my $myawards = $awards->search(
 		{ "entry.artist_id" => $self->id },
 		{ join => 'entry' },
 	);
 
 	my @tally;
-	for my $award (@WriteOff::Award::ORDERED) {
-		push $tally, {
+	for my $award ($awards->unique) {
+		push @tally, {
 			award => $award,
-			count => $awards->search({ award_id => $award->id })->count,
+			count => $myawards->search({ award_id => $award->award_id })->count,
 		};
 	}
 

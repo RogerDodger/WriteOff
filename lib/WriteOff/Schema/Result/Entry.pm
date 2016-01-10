@@ -66,6 +66,16 @@ sub type {
 	$self->image_id && 'art';
 }
 
+sub item {
+	my $self = shift;
+	$self->story || $self->image;
+}
+
+sub item_id {
+	my $self = shift;
+	$self->story_id || $self->image_id;
+}
+
 sub pos {
 	return shift->rank;
 }

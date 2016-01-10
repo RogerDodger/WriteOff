@@ -731,13 +731,13 @@ a {
   font-size: 0.8em;
   padding: 1em;
   margin-bottom: 1em;
-  background: #c6dfec;
-  border: 0.1em solid #85bbd6;
-  color: #1b3f51; }
+  background: #d1e5f0;
+  border: 0.1em solid #8ec0d9;
+  color: #1c4154; }
   .Flash.error, .error.Global-message {
-    background: #ecc6c6;
-    border: 0.1em solid #d68585;
-    color: #511b1b; }
+    background: #f0d1d1;
+    border: 0.1em solid #d98e8e;
+    color: #541c1c; }
 
 .noselect, .Results > thead > tr > th {
   -webkit-touch-callout: none;
@@ -1812,7 +1812,7 @@ body.inverted {
 .Scoreboard-awards {
   line-height: 0; }
   .Scoreboard-awards .Award {
-    margin-right: -14px; }
+    margin-right: -9px; }
 
 .Scoreboard-filter {
   display: table;
@@ -1834,6 +1834,9 @@ body.inverted {
 
 .Scoreboard-filter--link {
   padding: 0 0.2em; }
+
+.Scoreboard-breakdown {
+  font-size: 0.8em; }
 
 .Password-new {
   text-align: center;

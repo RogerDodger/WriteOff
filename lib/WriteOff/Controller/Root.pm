@@ -362,6 +362,14 @@ sub render : ActionClass('RenderView') {}
 
 sub end :Private {
 	my ( $self, $c ) = @_;
+
+	if (!$c->debug && $c->has_errors) {
+		my $msg = join "\n", @{ $c->error };
+		$c->log->error($_) for @{ $c->error };
+		$c->error(0);
+		$c->forward('error', [ $msg ]);
+	}
+
 	$c->forward('render');
 	$c->forward('strum') if $c->config->{strum_ok} && rand > 0.5;
 	$c->fillform( $c->stash->{fillform} ) if defined $c->stash->{fillform};

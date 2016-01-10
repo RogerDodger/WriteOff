@@ -68,9 +68,9 @@ promptGuide: |
         - not lock participants into certain characters, settings, or plots; and
         - be suitable for use as a title for the event; and therefore
         - be in [title case](http://en.wikipedia.org/wiki/Title_case)
-unkonwnError: Something went wrong
+unknownError: Something went wrong
 errorsPersist: |
-    If errors persist, please contact [the admin](mailto:cthor@cpan.org)
+    If errors persist, please contact [the admin](mailto:cthor@cpan.org).
 newPassword: |
     Your account's password has been set to the string below.
     You should login and change it to something more suitable.

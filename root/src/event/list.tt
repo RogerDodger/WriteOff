@@ -8,7 +8,7 @@
 		'keys' => {
 			'type' => 'event-listing',
 			'id' => event.id,
-			'organiser' => event.is_organised_by(c.user),
+			'organiser' => c.user.organises(event),
 		},
 	)
 }}

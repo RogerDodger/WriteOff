@@ -22,7 +22,7 @@
 		</span>
 	</div>
 
-	{{ IF event.private }}
+	{{ IF event.judges.size }}
 	<div class="Event-staff--container">
 		Judged by
 		<span class="Event-staff">
@@ -49,35 +49,35 @@
 
 	<ul class="Event-links prompt">
 		<li><a href="{{ c.uri_for_action('/prompt/submit', id) }}">Prompt Submission</a>
-		<li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a></li>
+		<li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a>
 	</ul>
 
-	{{ IF event.art }}
+	{{ IF event.has('art') }}
 	<ul class="Event-links art">
 		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
 		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
 
-		{{ IF event.public }}
+		{{ IF event.has('vote') }}
 		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
 		{{ END }}
 	</ul>
 	{{ END }}
 
-	{{ IF event.fic }}
+	{{ IF event.has('fic') }}
 	<ul class="Event-links fic">
 		<li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
 		<li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
 		<li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
 
-		{{ IF event.has_results }}
+		{{ IF event.has('vote') }}
 		<li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
 		{{ END }}
 	</ul>
 	{{ END }}
 
-	{{ IF event.is_organised_by( c.user ) }}
+	{{ IF c.user.organises(event) }}
 	<ul class="Event-admin">
 		<li><a href="{{ c.uri_for_action('/event/view', id) }}">View submissions</a>
 		<li><a href="{{ c.uri_for_action('/event/edit', id) }}">Edit event</a>
@@ -87,5 +87,4 @@
 	<div class="Event-blurb">
 	{{ event.blurb | html | markdown | externallinks }}
 	</div>
-
 </div>

@@ -67,6 +67,31 @@ sub start {
 	)->first->start;
 }
 
+sub fic {
+	warn "Deprecated round time `fic` called";
+	shift->rounds->search({ name => 'writing' })->first->start;
+}
+
+sub fic_end {
+	warn "Deprecated round time `fic_end` called";
+	shift->rounds->search({ name => 'writing' })->first->end;
+}
+
+sub art {
+	warn "Deprecated round time `art` called";
+	shift->rounds->search({ name => 'drawing' })->first->start;
+}
+
+sub art_end {
+	warn "Deprecated round time `art_end` called";
+	shift->rounds->search({ name => 'drawing' })->first->end;
+}
+
+sub has {
+	my $self = shift;
+	return $self->rounds->search({ type => shift })->count;
+}
+
 sub has_prompt {
 	return shift->prompt_type;
 }
@@ -77,7 +102,7 @@ sub has_started {
 }
 
 sub prompt_voting {
-	shift->start->clone->subtract(hours => 1);
+	shift->start->clone->subtract(days => 1);
 }
 
 sub has_results {
@@ -160,7 +185,7 @@ sub prompt_subs_allowed {
 sub prompt_votes_allowed {
 	my $row = shift;
 
-	return sorted $row->prompt_voting, $row->now_dt, $row->art || $row->fic;
+	return sorted $row->prompt_voting, $row->now_dt, $row->start;
 }
 
 sub art_gallery_opens {

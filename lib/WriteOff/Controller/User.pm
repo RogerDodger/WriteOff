@@ -18,9 +18,9 @@ sub me :Local :Args(0) {
 
 	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
 
-	$c->stash->{images}  = $c->user->images->order_by('created');
-	$c->stash->{storys}  = $c->user->storys->order_by('created');
-	$c->stash->{prompts} = $c->user->prompts->order_by('created');
+	$c->stash->{images}  = $c->user->images;
+	$c->stash->{storys}  = $c->user->storys;
+	$c->stash->{prompts} = $c->user->prompts;
 
 	push $c->stash->{title}, 'My Submissions';
 	$c->stash->{template} = 'user/me.tt';
@@ -149,12 +149,9 @@ sub prefs :Local :Args(0) {
 
 	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
 
-	$c->stash->{timezones} = [ WriteOff::DateTime->timezones ];
-
 	$c->forward('do_prefs') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
-		timezone => $c->user->timezone,
 		mailme   => $c->user->mailme ? 'on' : '',
 	};
 
@@ -167,15 +164,10 @@ sub do_prefs :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my $tz = $c->req->param('timezone');
-
-	if (grep { $_ eq $tz } WriteOff::DateTime->timezones) {
-		$c->user->update({
-			timezone => $tz,
-			mailme   => $c->req->param('mailme') ? 1 : 0,
-		});
-		$c->flash->{status_msg} = 'Preferences changed successfully';
-	}
+	$c->user->update({
+		mailme   => $c->req->param('mailme') ? 1 : 0,
+	});
+	$c->flash->{status_msg} = 'Preferences changed successfully';
 
 	$c->res->redirect($c->req->referer || $c->uri_for($c->action));
 }

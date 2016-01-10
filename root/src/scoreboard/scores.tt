@@ -4,37 +4,34 @@
 	<tr>
 		<th>Event</th>
 		<th>Entry</th>
-		<th>Type</th>
 		<th colspan="2">Score</th>
 		<th>Awards</th>
 	</tr>
-	{{- FOREACH score IN scores.all }}
+	{{- FOREACH entry IN scores.all }}
 	<tr>
 		<td class="start">
-			<a href="{{ c.uri_for( c.controller( score.item.type.ucfirst ).action_for('results'),
-				[ score.event.id_uri ]) }}" class="link">
-				{{ score.event.prompt }}
+			<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('results'),
+				[ entry.event.id_uri ]) }}">
+				{{ entry.event.prompt }}
 			</a>
 		</td>
 		<td class="start">
-			<a href="{{ c.uri_for( c.controller( score.item.type.ucfirst )
-				.action_for('view'), [ score.item.id_uri ]) }}" class="link em">
-				{{ score.item.title }}
+			<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('view'), [ entry.item_id ]) }}">
+				{{ entry.title }}
 			</a>
 		</td>
-		<td class="center">{{ score.type.ucfirst }}</td>
 		<td class="center">
-			<span title="{{ score.orig | format('%.5f') }}">
-				{{ score.orig | format('%d') }}
+			<span title="{{ entry.score | format('%.5f') }}">
+				{{ entry.score | format('%d') }}
 			</span>
 		</td>
 		<td class="center">
-			<span title="{{ score.value | format('%.5f') }}">
-				({{ score.value | format('%d') }})
+			<span title="{{ entry.${scoreKey} | format('%.5f') }}">
+				({{ entry.${scoreKey} | format('%d') }})
 			</span>
 		</td>
 		<td class="center">
-			{{ FOREACH award IN score.item.awards; award.html | none; END }}
+			{{ FOREACH award IN entry.awards; award.html | none; END }}
 		</td>
 	</tr>
 	{{- END }}

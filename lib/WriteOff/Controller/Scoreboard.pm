@@ -12,28 +12,27 @@ sub index :Path('/scoreboard') {
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
-	my $genre = $c->stash->{genre} = $c->stash->{genres}->find(($gid // 0) =~ /^(\d+)/ && $1);
-	my $format = $c->stash->{format} = $c->stash->{formats}->find(($fid // 0) =~ /^(\d+)/ && $1);
+	my $genre = $c->stash->{genre} =
+		$c->stash->{genres}->find(($gid // 0) =~ /^(\d+)/ && $1)
+			// $c->stash->{genres}->first;
+
+	my $format = $c->stash->{format} =
+		$c->stash->{formats}->find(($fid // 0) =~ /^(\d+)/ && $1);
 
 	$c->stash->{cacheKey} = 'scoreboard';
 	$c->stash->{gUrl} = '/scoreboard/%s';
 	$c->stash->{aUrl} = '/artist/%s/scores';
 
-	if ($genre) {
-		$c->stash->{awards} = $c->stash->{awards}->search({ "event.genre_id" => $genre->id });
-		$c->stash->{cacheKey} .= "~" . $genre->id;
-		$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';
-		$c->stash->{aUrl} .= '?genre=' . $genre->id_uri;
+	$c->stash->{awards} = $c->stash->{awards}->search({ "event.genre_id" => $genre->id });
+	$c->stash->{cacheKey} .= "~" . $genre->id;
+	$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';
+	$c->stash->{aUrl} .= '?genre=' . $genre->id_uri;
 
-		if ($format) {
-			$c->stash->{awards} = $c->stash->{awards}->search({ "event.format_id" => $format->id });
-			$c->stash->{cacheKey} .= "~" . $format->id;
-			$c->stash->{gUrl} .= '/' . $format->id_uri;
-			$c->stash->{aUrl} .= '&format=' . $format->id_uri;
-		}
-	}
-	else {
-		undef $format;
+	if ($format) {
+		$c->stash->{awards} = $c->stash->{awards}->search({ "event.format_id" => $format->id });
+		$c->stash->{cacheKey} .= "~" . $format->id;
+		$c->stash->{gUrl} .= '/' . $format->id_uri;
+		$c->stash->{aUrl} .= '&format=' . $format->id_uri;
 	}
 
 	$c->stash->{artists} = $c->model('DB::Scoreboard')->search({

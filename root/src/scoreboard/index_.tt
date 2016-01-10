@@ -7,11 +7,6 @@
 		<div class="Scoreboard-filter--genre">
 			<div class="Scoreboard-filter--label">Genre</div>
 			<div class="Scoreboard-filter--options">
-			{{ IF !genre }}
-				<span class="Scoreboard-filter--link selected">All</span>
-			{{ ELSE }}
-				<a class="Scoreboard-filter--link" href="{{ '/scoreboard' }}">All</a>
-			{{ END }}
 			{{ FOREACH thing IN genres.all }}
 				{{ IF genre && thing.id == genre.id }}
 				<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
@@ -50,7 +45,7 @@
 				<th data-sort-method="number">#</th>
 				<th>Competitor</th>
 				<th data-sort-method="number">Score</th>
-				{{ FOREACH award IN awards }}
+				{{ FOREACH award IN awards.unique }}
 				<th class="Scoreboard-awards" data-sort-method="number">{{ award.html | none }}</th>
 				{{ END }}
 				<th class="no-sort"></th>
@@ -80,7 +75,7 @@
 
 				<td class="Scoreboard-breakdown">
 					<a title="Show breakdown" class="artist-breakdown" href="{{ artist.id | format(aUrl) }}">
-						<span class="ui-icon ui-icon-plus"></span>
+						<i class="fa fa-plus"></i>
 					</a>
 				</td>
 			</tr>

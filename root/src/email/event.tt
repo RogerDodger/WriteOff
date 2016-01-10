@@ -2,14 +2,10 @@
 
 New event and shizz. Here's the gist:
 
-- __Name:__ {{ event.prompt }}
 - __Organiser:__ {{ event.organisers.map_username.join_serial }}
-- __Starting time:__ {{ format_dt(event.start, '%a, %d %b %Y %H:%M %Z', email.timezone) | none }}
-- __Wordcount:__ {{ event.wc_min }}&ndash;{{ event.wc_max }}
-- __Has art:__ {{ event.art ? 'Yes' : 'No' }}
-- __Has prelim:__ {{ event.prelim ? 'Yes' : 'No' }}
-- __Has judges:__ {{ event.private ? 'Yes' : 'No' }}
-- __Content level:__ {{ event.content_level }}
+- __Genre:__ {{ event.genre.name }}
+- __Format:__ {{ event.format.name }}
+- __Starting time:__ {{ event.start.datetime_html | none }}
 
 Check out [the site]({{ c.uri_for('/') }}) for more details.
 

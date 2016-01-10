@@ -23,7 +23,6 @@
 	<form method="post" class="Form">
 		<table class="Prompts">
 			{{ votes_allowed = c.user && event.prompt_votes_allowed && !user_has_voted }}
-			{{ scoreKey = event.prompt_type == 'approval' ? 'approvals' : 'rating' }}
 
 			{{ IF show_results }}
 			<thead>
@@ -44,7 +43,7 @@
 					{{ END }}
 					<td class="Prompts-name">{{ prompt.contents }}</td>
 					{{ IF show_results }}
-					<td class="Prompts-score">{{ prompt.${scoreKey} }}</td>
+					<td class="Prompts-score">{{ prompt.score }}</td>
 					{{ END }}
 				</tr>
 				{{ END }}

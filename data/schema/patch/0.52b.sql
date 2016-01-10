@@ -80,7 +80,7 @@ WHERE award_id = 7;
 INSERT INTO awards
 SELECT NULL, id, 7
 FROM entrys
-WHERE (story_id AND image_id) IS NULL;
+WHERE (story_id OR image_id) IS NULL;
 
 UPDATE ballots SET round_id = (SELECT id FROM rounds r WHERE r.event_id=ballots.event_id AND r.name=ballots.round_id);
 

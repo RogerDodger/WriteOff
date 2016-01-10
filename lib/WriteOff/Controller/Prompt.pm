@@ -44,10 +44,8 @@ sub do_vote :Private {
 
 	return if !$c->user || $c->stash->{user_has_voted};
 
-	my $prompts = $c->stash->{prompts};
-
 	for my $vote (uniq $c->req->param('vote')) {
-		if (my $prompt = $prompts->find($vote)) {
+		if (my $prompt = $c->stash->{prompts}->find($vote)) {
 			$prompt->update({ score => $prompt->score + 1 });
 		}
 	}
@@ -104,6 +102,7 @@ sub do_submit :Private {
 			user_id  => $c->user->id,
 			ip       => $c->req->address,
 			contents => $c->form->valid('prompt'),
+			score    => 0,
 		});
 		$c->stash->{status_msg} = 'Submission successful';
 	}

@@ -30,6 +30,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 1 },
 	"email_canonical",
 	{ data_type => "text", is_nullable => 1 },
+	"admin",
+	{ data_type => "bit", is_nullable => 0, default_value => 0 },
 	"verified",
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
 	"mailme",
@@ -150,13 +152,7 @@ sub primary_artist {
 	}
 }
 
-sub is_admin {
-	my $self = shift;
-
-	return $self->roles->search({ role => 'admin' })->count;
-}
-
-BEGIN { *admin = \&is_admin; }
+BEGIN { *is_admin = \&admin; }
 
 sub find_token {
 	my ($self, $type, $value) = @_;
@@ -200,6 +196,26 @@ sub new_password {
 
 sub offset {
 	(hex substr md5_hex(shift->id), 0, 8) / (1 << 32);
+}
+
+sub organises {
+	my ($self, $event) = @_;
+
+	return $event->is_organised_by($self);
+}
+
+sub entrys {
+	my $self = shift;
+
+	$self->result_source->schema->resultset('Entry')->search({ user_id => $self->id }, { join => 'artist' });
+}
+
+sub storys {
+	shift->entrys->search({ story_id => { "!=" => undef } });
+}
+
+sub images {
+	shift->entrys->search({ image_id => { "!=" => undef } });
 }
 
 1;
