@@ -2,15 +2,17 @@
 
 <div class="Event-header" data-autoexpand="{{ event.autoexpand }}">
 	<div class="Event-overview">
-		<span class="Event-prompt">{{ event.prompt }}</span>
+		<a class="Event-prompt" href="{{ c.uri_for_action('/event/permalink', id) }}">{{ event.prompt }}</a>
 		&middot;
 		<span class="Event-genre" title="{{ event.genre.descr }}">{{ event.genre.name }}</span>
 		<span class="Event-format">{{ event.format.name }}</span>
 		&middot;
 		<span class="Event-start">{{ event.start.date_html | none }}</span>
-	</div>
-	<div class="Event-permalink">
-		<a href="{{ c.uri_for_action('/event/permalink', id) }}">Permalink</a>
+
+		<div class="Event-toggle">
+			<i class="Event-toggle--down fa fa-angle-double-down"></i>
+			<i class="Event-toggle--up fa fa-angle-double-up"></i>
+		</div>
 	</div>
 </div>
 

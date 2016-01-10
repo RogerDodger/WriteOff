@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="/static/style/normalize.css">
 		<link rel="stylesheet" href="/static/style/jquery-ui-1.9.2.custom.css">
 		<link rel="stylesheet" href="/static/style/font-awesome.min.css">
-		<link rel="stylesheet" href="/static/style/writeoff-0.52.css">
+		<link rel="stylesheet" href="/static/style/writeoff-0.53.css">
 
 		<script src="/static/js/modernizr-2.6.2.custom.min.js"></script>
 		<script src="/static/js/jquery-2.1.4.min.js"></script>
@@ -23,7 +23,7 @@
 			var timelines = [];
 			var now = new Date("{{ now.iso8601 }}Z");
 		</script>
-		<script src="/static/js/writeoff-0.38.js"></script>
+		<script src="/static/js/writeoff-0.39.js"></script>
 	</head>
 
 	<body>

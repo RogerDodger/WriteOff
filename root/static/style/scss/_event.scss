@@ -19,19 +19,35 @@
 	cursor: pointer;
 }
 
+.Event-prompt {
+	color: inherit;
+	border-bottom: 1px solid hsla(100, 50%, 10%, 1);
+
+	&:hover {
+		border-bottom-color: transparent;
+		text-decoration: none;
+	}
+}
+
 .Event-genre[title] {
 	border-bottom: 1px dotted hsla(100, 50%, 10%, 1);
 }
 
-.Event-permalink {
-	font-size: 0.8em;
-	position: absolute;
+.Event-toggle {
+	float: right;
 	right: 0.4em;
-	top: 0.4em;
+}
 
-	a {
-		color: inherit;
-	}
+.Event-header:not(.active) .Event-toggle {
+	display: none;
+}
+
+.Event-header.expanded .Event-toggle--down {
+	display: none;
+}
+
+.Event-header:not(.expanded) .Event-toggle--up {
+	display: none;
 }
 
 .Event-details {
