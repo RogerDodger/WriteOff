@@ -550,6 +550,7 @@ $(document).ready(function () {
 					return;
 				}
 
+				$btn.toggleClass('expanded');
 				$target.toggleClass('hidden');
 				if (!$target.hasClass('hidden')) {
 					DrawTimeline($target.find('.Event-timeline').get(0));
