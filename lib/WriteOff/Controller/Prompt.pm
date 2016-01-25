@@ -50,10 +50,11 @@ sub do_vote :Private {
 
 	return if !$c->user;
 
-	my $id = $c->req->param('prompt');
-	my $toggle = $c->req->param('toggle');
+	my $id = $c->req->param('prompt') or return;
+	my $toggle = $c->req->param('toggle') or return;
 
-	return unless $id =~ /^\d+$/a and $toggle =~ /^-?1$/;
+	# Vote values other than 1 can be allowed by changing the $toggle regex
+	return unless $id =~ /^\d+$/a and $toggle =~ /^1$/;
 
 	if (my $prompt = $c->stash->{prompts}->find($id)) {
 		my $vote = $c->model('DB::PromptVote')->find_or_create({ user_id => $c->user->id, prompt_id => $id });

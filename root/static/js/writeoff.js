@@ -824,18 +824,21 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 	var q = $.when();
-	$('.Prompts-vote .fa.active').click(function () {
+	$('.Prompts-vote--button').on('click', function (e) {
+		e.preventDefault();
 		var $btn = $(this);
+		var $form = $btn.closest('form');
+
 		q.then(
 			$.ajax({
 				type: 'POST',
-				url: document.location,
-				data: {
-					prompt: $btn.parent().attr('data-id'),
-					toggle: $btn.hasClass('fa-thumbs-up') ? 1 : -1
-				},
+				url: $form.attr('action'),
+				data: $form.serializeArray().concat({
+					name: $btn.attr('name'),
+					value: $btn.attr('value')
+				}),
 				success: function(res, status, xhr) {
-					$btn.parent().attr('data-vote', res);
+					$form.parent().attr('data-vote', res);
 				},
 			})
 		);

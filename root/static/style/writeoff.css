@@ -932,6 +932,14 @@ a {
   line-height: 0; }
 
 /*
+ * Clear the default style of <button> elements, to contain .fa icons that submit forms
+ */
+.button-reset, .Prompts-vote .Prompts-vote--button {
+  background: none;
+  padding: 0;
+  border: none; }
+
+/*
  * Sticky footer
  */
 body {
@@ -1483,21 +1491,19 @@ body.inverted {
   text-align: center; }
 
 .Prompts-vote {
-  white-space: nowrap;
-  color: #aaa; }
-  .Prompts-vote .fa:hover {
-    cursor: default; }
-  .Prompts-vote .fa.active:hover {
-    cursor: pointer;
-    color: #555; }
-  .Prompts-vote[data-vote="1"] .fa-thumbs-up {
-    color: #66cc66; }
-    .Prompts-vote[data-vote="1"] .fa-thumbs-up.active:hover {
-      color: #339933; }
-  .Prompts-vote[data-vote="-1"] .fa-thumbs-down {
-    color: #cc6666; }
-    .Prompts-vote[data-vote="-1"] .fa-thumbs-down.active:hover {
-      color: #993333; }
+  white-space: nowrap; }
+  .Prompts-vote .Prompts-vote--button {
+    color: #aaa; }
+    .Prompts-vote .Prompts-vote--button:not([disabled]):hover {
+      color: #666; }
+  .Prompts-vote[data-vote="1"] .Prompts-vote--button[value="1"] {
+    color: #5cd65c; }
+    .Prompts-vote[data-vote="1"] .Prompts-vote--button[value="1"]:not([disabled]):hover {
+      color: #29a329; }
+  .Prompts-vote[data-vote="-1"] .Prompts-vote--button[value="-1"] {
+    color: #d65c5c; }
+    .Prompts-vote[data-vote="-1"] .Prompts-vote--button[value="-1"]:not([disabled]):hover {
+      color: #a32929; }
 
 .Prompts-name {
   width: 100%; }

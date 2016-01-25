@@ -108,3 +108,13 @@
 .flat {
     line-height: 0;
 }
+
+/*
+ * Clear the default style of <button> elements, to contain .fa icons that submit forms
+ */
+
+.button-reset {
+    background: none;
+    padding: 0;
+    border: none;
+}
