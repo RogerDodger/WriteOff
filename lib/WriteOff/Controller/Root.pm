@@ -27,6 +27,14 @@ Detaches to index if the request is POST with a differing origin.
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
+	if ($c->debug) {
+		if ($c->req->param('login')) {
+			$c->user(
+				$c->model('DB::User')->find({ name_canonical => lc $c->req->params->{login} })
+			);
+		}
+	}
+
 	if ($c->req->uri->path =~ m{^/static/(style|js)/writeoff-.+(css|js)$}) {
 		$c->serve_static_file("root/static/$1/writeoff.$2");
 		$c->log->abort(1);

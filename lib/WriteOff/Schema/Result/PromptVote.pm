@@ -18,7 +18,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("user_id", "prompt_id");
 
-__PACKAGE__->belongs_to("entry", "WriteOff::Schema::Result::User", "user_id");
-__PACKAGE__->belongs_to("ballot", "WriteOff::Schema::Result::Prompt", "prompt_id");
+__PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
+__PACKAGE__->belongs_to("prompt", "WriteOff::Schema::Result::Prompt", "prompt_id");
 
 1;

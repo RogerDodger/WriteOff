@@ -29,12 +29,6 @@ sub me :Local :Args(0) {
 sub login :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	if ($c->user->admin && exists $c->req->params->{as}) {
-		$c->user(
-			$c->model('DB::User')->find({ username => $c->req->params->{as} })
-		);
-	}
-
 	$c->detach('/error', [ 'You are already logged in.' ]) if $c->user;
 
 	push $c->stash->{title}, 'Login';

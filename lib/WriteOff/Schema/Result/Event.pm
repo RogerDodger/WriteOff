@@ -28,8 +28,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_nullable => 1 },
 	"wc_max",
 	{ data_type => "integer", is_nullable => 1 },
-	"rule_set",
-	{ data_type => "integer", default_value => 1, is_nullable => 0 },
+	"content_level",
+	{ data_type => "text", default_value => "T", is_nullable => 0 },
 	"custom_rules",
 	{ data_type => "text", is_nullable => 1 },
 	"guessing",
@@ -58,33 +58,31 @@ sub title {
 }
 
 sub start {
-	shift->rounds->search(
+	my $round = shift->rounds->search(
 		{ -or => [
 			{ name => 'writing' },
 			{ name => 'drawing' },
 		]},
 		{ order_by => { -asc => 'start' } },
-	)->first->start;
+	)->first;
+
+	$round && $round->start;
 }
 
 sub fic {
-	warn "Deprecated round time `fic` called";
-	shift->rounds->search({ name => 'writing' })->first->start;
+	Carp::croak "Deprecated round time `fic` called";
 }
 
 sub fic_end {
-	warn "Deprecated round time `fic_end` called";
-	shift->rounds->search({ name => 'writing' })->first->end;
+	Carp::croak "Deprecated round time `fic_end` called";
 }
 
 sub art {
-	warn "Deprecated round time `art` called";
-	shift->rounds->search({ name => 'drawing' })->first->start;
+	Carp::croak "Deprecated round time `art` called";
 }
 
 sub art_end {
-	warn "Deprecated round time `art_end` called";
-	shift->rounds->search({ name => 'drawing' })->first->end;
+	Carp::croak "Deprecated round time `art_end` called";
 }
 
 sub has {
@@ -118,29 +116,8 @@ sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
 
-my %levels = (
-	E => 0,
-	T => 1,
-	M => 2,
-);
-
-sub content_level {
-	my $self = shift;
-
-	$self->set_content_level(@_) if @_;
-
-	return 'M' if $self->rule_set & 2;
-	return 'T' if $self->rule_set & 1;
-	return 'E';
-}
-
 sub set_content_level {
-	my ( $self, $rating ) = @_;
-
-	$self->update({ rule_set =>
-		( ($self->rule_set // 0) & ~3) +
-		$levels{$rating} // 0
-	});
+	Carp::croak 'Deprecated function `set_content_level` called';
 }
 
 sub id_uri {

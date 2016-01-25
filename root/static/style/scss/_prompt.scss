@@ -11,6 +11,36 @@
 	text-align: center;
 }
 
+.Prompts-vote {
+	white-space: nowrap;
+	color: #aaa;
+
+	.fa:hover {
+		cursor: default;
+	}
+
+	.fa.active:hover {
+		cursor: pointer;
+		color: #555;
+	}
+
+	&[data-vote="1"] .fa-thumbs-up {
+		color: hsla(120, 50%, 60%, 1);
+
+		&.active:hover {
+			color: hsla(120, 50%, 40%, 1);
+		}
+	}
+
+	&[data-vote="-1"] .fa-thumbs-down {
+		color: hsla(0, 50%, 60%, 1);
+
+		&.active:hover {
+			color: hsla(0, 50%, 40%, 1);
+		}
+	}
+}
+
 .Prompts-name {
 	width: 100%;
 }

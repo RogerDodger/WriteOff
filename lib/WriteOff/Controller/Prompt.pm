@@ -25,12 +25,18 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{prompts} = $c->stash->{event}->prompts->ballot($c->user->offset);
+
+	if ($c->user) {
+		$c->stash->{votes} = {
+			map { $_->prompt_id => $_->value }
+				$c->user->prompt_votes->search(
+					{ event_id => $c->stash->{event}->id },
+					{ join => 'prompt' }
+				)
+		};
+	}
+
 	$c->stash->{show_results} = $c->stash->{event}->has_started;
-	$c->stash->{user_has_voted} = $c->model("DB::UserEvent")->find(
-		$c->user_id,
-		$c->stash->{event}->id,
-		'prompt-voter',
-	);
 
 	if ($c->stash->{event}->prompt_votes_allowed) {
 		$c->forward('do_vote') if $c->req->method eq 'POST';
@@ -42,22 +48,23 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 sub do_vote :Private {
 	my ( $self, $c ) = @_;
 
-	return if !$c->user || $c->stash->{user_has_voted};
+	return if !$c->user;
 
-	for my $vote (uniq $c->req->param('vote')) {
-		if (my $prompt = $c->stash->{prompts}->find($vote)) {
-			$prompt->update({ score => $prompt->score + 1 });
-		}
+	my $id = $c->req->param('prompt');
+	my $toggle = $c->req->param('toggle');
+
+	return unless $id =~ /^\d+$/a and $toggle =~ /^-?1$/;
+
+	if (my $prompt = $c->stash->{prompts}->find($id)) {
+		my $vote = $c->model('DB::PromptVote')->find_or_create({ user_id => $c->user->id, prompt_id => $id });
+		$vote->update({ value => ($vote->value // 0) == $toggle ? 0 : $toggle });
+		$prompt->update({ score => $prompt->votes->get_column('value')->sum });
+		$c->res->body($vote->value);
 	}
 
-	$c->model("DB::UserEvent")->create({
-		user_id  => $c->user_id,
-		event_id => $c->stash->{event}->id,
-		role     => 'prompt-voter',
-	});
-	$c->flash->{status_msg} = 'Vote successful';
-
-	$c->res->redirect($c->req->uri);
+	if (!$c->stash->{ajax}) {
+		$c->res->redirect($c->req->uri);
+	}
 }
 
 sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {
@@ -98,12 +105,18 @@ sub do_submit :Private {
 	);
 
 	if (!$c->form->has_error) {
-		$c->stash->{event}->create_related('prompts', {
+		my $prompt = $c->stash->{event}->create_related('prompts', {
 			user_id  => $c->user->id,
-			ip       => $c->req->address,
 			contents => $c->form->valid('prompt'),
-			score    => 0,
+			score    => 1,
 		});
+
+		$c->model("DB::PromptVote")->create({
+			user_id => $c->user->id,
+			prompt_id => $prompt->id,
+			value => 1,
+		});
+
 		$c->stash->{status_msg} = 'Submission successful';
 	}
 }
@@ -130,11 +143,10 @@ sub do_delete :Private {
 
 	$c->forward('/check_csrf_token');
 
-	$c->log->info( sprintf "Prompt deleted by %s: %s (%s - %s)",
+	$c->log->info( sprintf "Prompt deleted by %s: %s by %s",
 		$c->user->name,
 		$c->stash->{prompt}->contents,
-		$c->stash->{prompt}->ip,
-		$c->stash->{prompt}->user->username,
+		$c->stash->{prompt}->user->name,
 	);
 
 	$c->stash->{prompt}->delete;

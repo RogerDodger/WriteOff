@@ -84,6 +84,10 @@ WHERE (story_id OR image_id) IS NULL;
 
 UPDATE ballots SET round_id = (SELECT id FROM rounds r WHERE r.event_id=ballots.event_id AND r.name=ballots.round_id);
 
+UPDATE events SET content_level='E' WHERE content_level=0;
+UPDATE events SET content_level='T' WHERE content_level=1;
+UPDATE events SET content_level='M' WHERE content_level=2;
+
 DROP TABLE ratings_tmp;
 DROP TABLE votes_tmp;
 DROP TABLE guesses_tmp;

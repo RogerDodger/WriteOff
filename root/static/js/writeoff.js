@@ -790,7 +790,9 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 	$('.Results, .Scoreboard, .Prompts').each(function () {
-		new Tablesort(this);
+		if ($(this).find('thead').size()) {
+			new Tablesort(this);
+		}
 	});
 });
 
@@ -813,5 +815,29 @@ $(document).ready(function () {
 				})
 			);
 		});
+	});
+})
+
+// ===========================================================================
+// Prompt vote buttons
+// ===========================================================================
+
+$(document).ready(function () {
+	var q = $.when();
+	$('.Prompts-vote .fa.active').click(function () {
+		var $btn = $(this);
+		q.then(
+			$.ajax({
+				type: 'POST',
+				url: document.location,
+				data: {
+					prompt: $btn.parent().attr('data-id'),
+					toggle: $btn.hasClass('fa-thumbs-up') ? 1 : -1
+				},
+				success: function(res, status, xhr) {
+					$btn.parent().attr('data-vote', res);
+				},
+			})
+		);
 	});
 })

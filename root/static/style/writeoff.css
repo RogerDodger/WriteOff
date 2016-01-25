@@ -1482,6 +1482,23 @@ body.inverted {
 .Prompts-score {
   text-align: center; }
 
+.Prompts-vote {
+  white-space: nowrap;
+  color: #aaa; }
+  .Prompts-vote .fa:hover {
+    cursor: default; }
+  .Prompts-vote .fa.active:hover {
+    cursor: pointer;
+    color: #555; }
+  .Prompts-vote[data-vote="1"] .fa-thumbs-up {
+    color: #66cc66; }
+    .Prompts-vote[data-vote="1"] .fa-thumbs-up.active:hover {
+      color: #339933; }
+  .Prompts-vote[data-vote="-1"] .fa-thumbs-down {
+    color: #cc6666; }
+    .Prompts-vote[data-vote="-1"] .fa-thumbs-down.active:hover {
+      color: #993333; }
+
 .Prompts-name {
   width: 100%; }
 

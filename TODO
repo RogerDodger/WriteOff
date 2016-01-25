@@ -2,6 +2,7 @@
 - [high] Decay only scores of shared genre
 - [high] Add event scheduling
 - [high] Fix scoreboard sorting after an expand
+- [med] Viewable old ballots
 - [med] Get a position: sticky polyfill
 - [med] Story body editor buttons
 - [med] Add controller to disqualify entries

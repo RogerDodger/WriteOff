@@ -26,6 +26,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
+__PACKAGE__->has_many("votes", "WriteOff::Schema::Result::PromptVote", "prompt_id");
 
 sub title {
 	return shift->contents;
