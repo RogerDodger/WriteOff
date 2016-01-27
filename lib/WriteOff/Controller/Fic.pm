@@ -110,7 +110,7 @@ sub form :Private {
 			'TRIM_COLLAPSE',
 			[ 'DBIC_UNIQUE', $artist_rs, 'name' ],
 		],
-		image_id => [ $c->stash->{event}->art ? 'NOT_BLANK' : () ],
+		image_id => [ $c->stash->{event}->has('art') ? 'NOT_BLANK' : () ],
 		website => [ 'HTTP_URL' ],
 		story => [ 'NOT_BLANK' ],
 		wordcount => [

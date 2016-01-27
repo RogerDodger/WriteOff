@@ -57,22 +57,114 @@ body.inverted {
 }
 
 .Site-header {
+	color: #bdc3cf;
 	background: hsla(0, 0%, 21%, 1) linear-gradient(hsla(0, 0%, 23%, 1), hsla(0, 0%, 18%, 1));
 	line-height: 42px;
 	margin-bottom: 1em;
 
 	a {
-		display: inline-block;
-		color: #bdc3cf;
-		height: 42px;
-		padding: 0 8px;
+		color: inherit;
 		font-size: 0.9em;
+		text-shadow: 1px 0 0 hsla(0, 0, 35%, 1);
 		text-decoration: none;
+		display: block;
+		padding: 0;
+	}
 
-		&:hover {
-			background-color: hsla(0, 0%, 10%, 1);
+	ul {
+		display: inline;
+		list-style: none;
+		margin: 0;
+		padding: 0.01em;
+
+		li {
+			display: inline-block;
+			margin: 0;
+			position: relative;
+			padding: 0 0.75em;
+		}
+
+		li ul {
+			padding: 0;
+			position: absolute;
+			top: 42px;
+			right: 0;
+			text-align: left;
+			min-width: 10em;
+			display: none;
+			opacity: 0;
+			visibility: hidden;
+			border: 0.1em solid hsla(0, 0%, 30%, 1);
+			border-top: none;
+		}
+
+		li ul li {
+			display: block;
+			padding: 0;
+			white-space: nowrap;
+
+			& > * {
+				font-size: 0.9em;
+				display: inline-block;
+				padding: 0.25em 1em;
+			}
+
+			.icon {
+				line-height: inherit;
+				background: hsla(0, 0%, 95%, 1);
+
+				button {
+					cursor: pointer;
+					text-shadow: none;
+
+					&:not(.active) {
+						color: hsla(0, 0%, 70%, 1);
+
+						&:hover {
+							color: hsla(0, 0%, 50%, 1);
+						}
+					}
+				}
+			}
+		}
+
+		li:hover ul {
+			display: block;
+			opacity: 1;
+			visibility: visible;
+			z-index: 5;
 		}
 	}
+
+	div > ul > li:hover {
+		background-color: hsla(0, 0%, 8%, 1);
+	}
+
+	ul > li > ul > li {
+		background-color: hsla(0, 0%, 98%, 1);
+		color: invert(#bdc3cf);
+
+		a {
+			text-shadow: hsla(0, 0%, 80%, 1);
+		}
+
+		// FIXME this should be a:hover but a should fill remaining space
+		&:hover {
+			background-color: hsla(60, 70%, 90%, 1);
+		}
+	}
+}
+
+.Artist-swap {
+	@extend .button-reset;
+}
+
+.Site-header--global {
+	float: left;
+}
+
+.Site-header--user {
+	float: right;
 }
 
 .Site-logo {

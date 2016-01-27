@@ -838,9 +838,38 @@ $(document).ready(function () {
 					value: $btn.attr('value')
 				}),
 				success: function(res, status, xhr) {
-					$form.parent().attr('data-vote', res);
-				},
+					$form.closest('.Prompts-vote').attr('data-vote', res);
+				}
 			})
 		);
 	});
-})
+});
+
+// ===========================================================================
+// Artist swap buttons
+// ===========================================================================
+
+$(document).ready(function () {
+	var q = $.when();
+	var $btns = $('.Artist-swap');
+	$btns.on('click', function (e) {
+		e.preventDefault();
+		var $btn = $(this)
+		var $form = $btn.closest('form');
+
+		q.then(
+			$.ajax({
+				type: 'POST',
+				url: $form.attr('action'),
+				data: $form.serializeArray(),
+				success: function(res, status, xhr) {
+					$btns.removeClass('active');
+					$btn.addClass('active');
+					$('.Artist-swap--selected').text(
+						$btn.closest('li').find('.Artist-swap--option').text()
+					);
+				}
+			})
+		);
+	});
+});

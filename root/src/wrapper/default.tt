@@ -29,28 +29,70 @@
 	<body>
 		<nav class="Site-header">
 			<div class="Site-header--container">
-				<a href="/">
-					<img class="Site-logo" src="/static/images/logo.png">
-				</a>
-
-				<a href="/scoreboard">Scoreboard</a>
-
-				<div class="pull-right">
-					{{ IF c.user }}
-					<a href="/user/me">~{{ c.user.username }}</a>
-					<a href="/user/credentials?key=password">Change password</a>
-					<a href="/user/credentials?key=email">Change email</a>
-					<a href="/user/prefs">Preferences</a>
-					<a href="/user/logout">Logout</a>
-					{{ ELSE }}
-					<a href="/user/login">Login</a>
-					<a href="/user/register">Register</a>
-					<a href="/user/recover">Recover lost password</a>
-					<a href="/user/verify">Resend verification email</a>
-					{{ END }}
+				<div class="Site-header--global">
+					<ul>
+						<li>
+							<a href="/">
+								<img class="Site-logo" src="/static/images/logo.png">
+							</a>
+						</li>
+						<li><a href="/scoreboard">Scoreboard</a></li>
+					</ul>
 				</div>
 
-				<div class="clearfix"></div>
+				<div class="Site-header--user">
+					<ul>
+						{{ IF c.user }}
+						<li>
+							<a href="#">
+								@<span class="Artist-swap--selected">{{ c.user.active_artist.name }}</span>
+								<i class="fa fa-caret-down"></i>
+							</a>
+							<ul>
+								{{ FOREACH artist IN c.user.artists }}
+								<li>
+									<div class="icon">
+										<form method="post" action="/artist/swap">
+											{{ csrf_field | none }}
+											<input type="hidden" name="artist" value="{{ artist.id }}">
+											<button class="Artist-swap {{ 'active' IF artist.id == c.user.active_artist_id }}">
+												<i class="fa fa-star"></i>
+											</button>
+										</form>
+									</div>
+									{{- }}<a class="Artist-swap--option" href="#">{{ artist.name }}</a>
+								</li>
+								{{ END }}
+							</ul>
+						</li>
+						<li>
+							<a href="/user/me">
+								~{{ c.user.username }}
+								<i class="fa fa-caret-down"></i>
+							</a>
+							<ul>
+								<li><a href="/artist/add">New alias</a></li>
+								<li><a href="/user/credentials?key=password">Change password</a></li>
+								<li><a href="/user/credentials?key=email">Change email</a></li>
+								<li><a href="/user/prefs">Preferences</a></li>
+							</ul>
+						</li>
+						<li><a href="/user/logout">Logout</a></li>
+						{{ ELSE }}
+						<li><a href="/user/login">Login</a></li>
+						<li>
+							<a href="/user/register">
+								Register
+								<i class="fa fa-caret-down"></i>
+							</a>
+							<ul>
+								<li><a href="/user/recover">Recover lost password</a>
+								<li><a href="/user/verify">Resend verification email</a>
+							</ul>
+						</li>
+						{{ END }}
+					</ul>
+				</div>
 			</div>
 		</nav>
 

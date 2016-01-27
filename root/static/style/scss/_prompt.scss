@@ -18,6 +18,10 @@
 		@extend .button-reset;
 		color: #aaa;
 
+		&:disabled {
+			color: #ccc;
+		}
+
 		&:not([disabled]):hover {
 			color: #666;
 		}

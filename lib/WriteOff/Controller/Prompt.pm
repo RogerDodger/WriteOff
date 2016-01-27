@@ -48,6 +48,7 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 sub do_vote :Private {
 	my ( $self, $c ) = @_;
 
+	$c->forward('/check_csrf_token');
 	return if !$c->user;
 
 	my $id = $c->req->param('prompt') or return;
@@ -60,11 +61,16 @@ sub do_vote :Private {
 		my $vote = $c->model('DB::PromptVote')->find_or_create({ user_id => $c->user->id, prompt_id => $id });
 		$vote->update({ value => ($vote->value // 0) == $toggle ? 0 : $toggle });
 		$prompt->update({ score => $prompt->votes->get_column('value')->sum });
-		$c->res->body($vote->value);
-	}
 
-	if (!$c->stash->{ajax}) {
-		$c->res->redirect($c->req->uri);
+		if ($c->stash->{ajax}) {
+			$c->res->body($vote->value);
+		}
+		else {
+			$c->res->redirect($c->req->uri);
+		}
+	}
+	else {
+		$c->detach('/error');
 	}
 }
 

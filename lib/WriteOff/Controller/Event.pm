@@ -127,7 +127,7 @@ sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no fic component to this event.'])
-		unless $c->stash->{event}->fic;
+		unless $c->stash->{event}->has('fic');
 
 	push $c->stash->{title}, 'Fic';
 }
@@ -136,7 +136,7 @@ sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no art component to this event.'])
-		unless $c->stash->{event}->art;
+	unless $c->stash->{event}->has('art');
 
 	push $c->stash->{title}, 'Art';
 }
@@ -151,7 +151,7 @@ sub vote :Chained('fetch') :PathPart('vote') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no voting component to this event.'])
-		unless $c->stash->{event}->has_results;
+		unless $c->stash->{event}->has('voting');
 
 	push $c->stash->{title}, 'Vote';
 }
@@ -373,7 +373,8 @@ sub set_prompt :Private {
 	my @p = shuffle $e->prompts->all;
 	my $best = $p[0];
 	for my $p (@p) {
-		if ($p->approvals > $best->approvals) {
+		$p->update({ score => $p->votes->get_column('value')->sum // 0 });
+		if ($p->score > $best->score) {
 			$best = $p;
 		}
 	}

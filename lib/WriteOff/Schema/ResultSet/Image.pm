@@ -1,22 +1,11 @@
 package WriteOff::Schema::ResultSet::Image;
 
 use strict;
-use base 'WriteOff::Schema::Item';
+use base 'WriteOff::Schema';
 
 sub difficulty { 50 }
 
-sub metadata {
-	return shift->search_rs(undef, {
-		columns => [
-			'id', 'user_id', 'event_id', 'ip',
-			'title', 'artist_id', 'website', 'hovertext',
-			'filesize', 'mimetype', 'version',
-			'public_score', 'public_stdev',
-			'rank', 'rank_low',
-			'seed', 'created', 'updated'
-		]
-	});
-}
+sub metadata { Carp::croak "deprecated function metadata called" }
 
 sub order_by_score {
 	return shift->order_by({ -desc => 'public_score' });

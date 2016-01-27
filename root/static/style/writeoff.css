@@ -934,7 +934,7 @@ a {
 /*
  * Clear the default style of <button> elements, to contain .fa icons that submit forms
  */
-.button-reset, .Prompts-vote .Prompts-vote--button {
+.button-reset, .Artist-swap, .Prompts-vote .Prompts-vote--button {
   background: none;
   padding: 0;
   border: none; }
@@ -986,18 +986,77 @@ body.inverted {
   margin: 0 auto; }
 
 .Site-header {
+  color: #bdc3cf;
   background: #363636 linear-gradient(#3b3b3b, #2e2e2e);
   line-height: 42px;
   margin-bottom: 1em; }
   .Site-header a {
-    display: inline-block;
-    color: #bdc3cf;
-    height: 42px;
-    padding: 0 8px;
+    color: inherit;
     font-size: 0.9em;
-    text-decoration: none; }
-    .Site-header a:hover {
-      background-color: #1a1a1a; }
+    text-shadow: 1px 0 0 #595959;
+    text-decoration: none;
+    display: block;
+    padding: 0; }
+  .Site-header ul {
+    display: inline;
+    list-style: none;
+    margin: 0;
+    padding: 0.01em; }
+    .Site-header ul li {
+      display: inline-block;
+      margin: 0;
+      position: relative;
+      padding: 0 0.75em; }
+    .Site-header ul li ul {
+      padding: 0;
+      position: absolute;
+      top: 42px;
+      right: 0;
+      text-align: left;
+      min-width: 10em;
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      border: 0.1em solid #4d4d4d;
+      border-top: none; }
+    .Site-header ul li ul li {
+      display: block;
+      padding: 0;
+      white-space: nowrap; }
+      .Site-header ul li ul li > * {
+        font-size: 0.9em;
+        display: inline-block;
+        padding: 0.25em 1em; }
+      .Site-header ul li ul li .icon {
+        line-height: inherit;
+        background: #f2f2f2; }
+        .Site-header ul li ul li .icon button {
+          cursor: pointer;
+          text-shadow: none; }
+          .Site-header ul li ul li .icon button:not(.active) {
+            color: #b3b3b3; }
+            .Site-header ul li ul li .icon button:not(.active):hover {
+              color: gray; }
+    .Site-header ul li:hover ul {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      z-index: 5; }
+  .Site-header div > ul > li:hover {
+    background-color: #141414; }
+  .Site-header ul > li > ul > li {
+    background-color: #fafafa;
+    color: #423c30; }
+    .Site-header ul > li > ul > li a {
+      text-shadow: #cccccc; }
+    .Site-header ul > li > ul > li:hover {
+      background-color: #f7f7d4; }
+
+.Site-header--global {
+  float: left; }
+
+.Site-header--user {
+  float: right; }
 
 .Site-logo {
   margin: 5px 0 4px 0;
@@ -1494,6 +1553,8 @@ body.inverted {
   white-space: nowrap; }
   .Prompts-vote .Prompts-vote--button {
     color: #aaa; }
+    .Prompts-vote .Prompts-vote--button:disabled {
+      color: #ccc; }
     .Prompts-vote .Prompts-vote--button:not([disabled]):hover {
       color: #666; }
   .Prompts-vote[data-vote="1"] .Prompts-vote--button[value="1"] {

@@ -19,39 +19,37 @@
 	</div>
 	{{ END }}
 
-	<form method="post" class="Form">
-		<table class="Prompts">
-			{{ votes_allowed = c.user && event.prompt_votes_allowed }}
+	<table class="Prompts">
+		{{ votes_allowed = c.user && event.prompt_votes_allowed }}
 
-			{{ IF show_results }}
-			<thead>
-				<tr>
-					<th></th>
-					<th>Prompt</th>
-					<th>Score</th>
-				</tr>
-			</thead>
-			{{ END }}
+		{{ IF show_results }}
+		<thead>
+			<tr>
+				<th></th>
+				<th>Prompt</th>
+				<th>Score</th>
+			</tr>
+		</thead>
+		{{ END }}
 
-			<tbody>
-				{{ FOREACH prompt IN prompts.all }}
-				<tr>
-					<td class="Prompts-vote" data-vote="{{ votes.${prompt.id} IF votes }}">
-						<form method="post" action="{{ c.req.uri }}">
-							{{ csrf_field | none }}
-							<input type="hidden" name="prompt" value="{{ prompt.id }}">
-							<button class="Prompts-vote--button" name="toggle" value="1" {{ 'disabled' IF !votes_allowed }}>
-								<i class="fa fa-thumbs-up"></i>
-							</button>
-						</form>
-					</td>
-					<td class="Prompts-name">{{ prompt.contents }}</td>
-					{{ IF show_results }}
-					<td class="Prompts-score">{{ prompt.score }}</td>
-					{{ END }}
-				</tr>
+		<tbody>
+			{{ FOREACH prompt IN prompts.all }}
+			<tr>
+				<td class="Prompts-vote" data-vote="{{ votes.${prompt.id} IF votes }}">
+					<form method="post" action="{{ c.req.uri }}">
+						{{ csrf_field | none }}
+						<input type="hidden" name="prompt" value="{{ prompt.id }}">
+						<button class="Prompts-vote--button" name="toggle" value="1" {{ 'disabled' IF !votes_allowed }}>
+							<i class="fa fa-thumbs-up"></i>
+						</button>
+					</form>
+				</td>
+				<td class="Prompts-name">{{ prompt.contents }}</td>
+				{{ IF show_results }}
+				<td class="Prompts-score">{{ prompt.score }}</td>
 				{{ END }}
-			</tbody>
-		</table>
-	</form>
+			</tr>
+			{{ END }}
+		</tbody>
+	</table>
 </div>
