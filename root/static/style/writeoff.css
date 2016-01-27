@@ -880,6 +880,9 @@ a {
 .invisible {
   visibility: hidden; }
 
+.transparent {
+  color: transparent; }
+
 /*
  * Clearfix: contain floats
  *
@@ -1005,8 +1008,10 @@ body.inverted {
     .Site-header ul li {
       display: inline-block;
       margin: 0;
-      position: relative;
-      padding: 0 0.75em; }
+      padding: 0;
+      position: relative; }
+      .Site-header ul li > * {
+        padding: 0 0.75em; }
     .Site-header ul li ul {
       padding: 0;
       position: absolute;
@@ -1028,15 +1033,17 @@ body.inverted {
         display: inline-block;
         padding: 0.25em 1em; }
       .Site-header ul li ul li .icon {
+        background: #f2f2f2;
         line-height: inherit;
-        background: #f2f2f2; }
+        text-shadow: none; }
         .Site-header ul li ul li .icon button {
-          cursor: pointer;
-          text-shadow: none; }
+          cursor: pointer; }
           .Site-header ul li ul li .icon button:not(.active) {
             color: #b3b3b3; }
             .Site-header ul li ul li .icon button:not(.active):hover {
               color: gray; }
+        .Site-header ul li ul li .icon > .fa {
+          cursor: default; }
     .Site-header ul li:hover ul {
       display: block;
       opacity: 1;

@@ -341,23 +341,15 @@ Mogrify certain words in the response body.
 
 =cut
 
-my %strum_list = (
-	Sturm => 'Strum',
-	PavFeira => 'PavFiera',
-	PresentPerfect => 'PresentPrefect',
-);
-
 sub strum :Private {
 	my ( $self, $c ) = @_;
 
-	while( my($key, $strum) = each %strum_list )
-	{
-		while( (my $index = CORE::index $c->res->{body}, $key ) >= 0 )
-		{
-			substr( $c->res->{body}, $index, length $key ) = $strum;
+	my %map = %{ $c->config('strum') };
+	while (my($key, $strum) = each %map) {
+		while((my $index = CORE::index $c->res->{body}, $key) >= 0) {
+			substr($c->res->{body}, $index, length $key) = $strum;
 		}
 	}
-
 }
 
 =head2 render

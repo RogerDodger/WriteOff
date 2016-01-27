@@ -62,8 +62,7 @@ __PACKAGE__->mk_group_accessors(column => 'num');
 sub type {
 	my $self = shift;
 
-	$self->story_id && 'fic' ||
-	$self->image_id && 'art';
+	$self->image_id && 'art' || 'fic';
 }
 
 sub item {

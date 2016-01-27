@@ -80,8 +80,12 @@ body.inverted {
 		li {
 			display: inline-block;
 			margin: 0;
+			padding: 0;
 			position: relative;
-			padding: 0 0.75em;
+
+			& > * {
+				padding: 0 0.75em;
+			}
 		}
 
 		li ul {
@@ -110,12 +114,12 @@ body.inverted {
 			}
 
 			.icon {
-				line-height: inherit;
 				background: hsla(0, 0%, 95%, 1);
+				line-height: inherit;
+				text-shadow: none;
 
 				button {
 					cursor: pointer;
-					text-shadow: none;
 
 					&:not(.active) {
 						color: hsla(0, 0%, 70%, 1);
@@ -124,6 +128,10 @@ body.inverted {
 							color: hsla(0, 0%, 50%, 1);
 						}
 					}
+				}
+
+				& > .fa {
+					cursor: default;
 				}
 			}
 		}

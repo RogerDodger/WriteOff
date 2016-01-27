@@ -1,7 +1,7 @@
 package WriteOff::Schema::ResultSet::Story;
 
 use strict;
-use base 'WriteOff::Schema';
+use base 'WriteOff::Schema::ResultSet';
 use Scalar::Util qw/looks_like_number/;
 
 sub difficulty {

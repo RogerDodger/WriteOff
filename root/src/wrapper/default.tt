@@ -63,6 +63,12 @@
 									{{- }}<a class="Artist-swap--option" href="#">{{ artist.name }}</a>
 								</li>
 								{{ END }}
+								<li>
+									<div class="icon">
+										<i class="fa fa-star transparent"></i>
+									</div>
+									{{- }}<a href="/artist/add">New alias</a>
+								</li>
 							</ul>
 						</li>
 						<li>
@@ -71,13 +77,12 @@
 								<i class="fa fa-caret-down"></i>
 							</a>
 							<ul>
-								<li><a href="/artist/add">New alias</a></li>
+								<li><a href="/user/prefs">Preferences</a></li>
 								<li><a href="/user/credentials?key=password">Change password</a></li>
 								<li><a href="/user/credentials?key=email">Change email</a></li>
-								<li><a href="/user/prefs">Preferences</a></li>
+								<li><a href="/user/logout">Logout</a></li>
 							</ul>
 						</li>
-						<li><a href="/user/logout">Logout</a></li>
 						{{ ELSE }}
 						<li><a href="/user/login">Login</a></li>
 						<li>
@@ -86,7 +91,6 @@
 								<i class="fa fa-caret-down"></i>
 							</a>
 							<ul>
-								<li><a href="/user/recover">Recover lost password</a>
 								<li><a href="/user/verify">Resend verification email</a>
 							</ul>
 						</li>

@@ -1,7 +1,7 @@
 package WriteOff::Schema::ResultSet::Image;
 
 use strict;
-use base 'WriteOff::Schema';
+use base 'WriteOff::Schema::ResultSet';
 
 sub difficulty { 50 }
 

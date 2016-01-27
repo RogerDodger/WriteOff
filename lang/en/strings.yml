@@ -67,7 +67,10 @@ promptGuide: |
         - be a short phrase or figure of speech;
         - not lock participants into certain characters, settings, or plots; and
         - be suitable for use as a title for the event; and therefore
-        - be in [title case](http://en.wikipedia.org/wiki/Title_case)
+        - be in title case, using the following rules:
+            1. the first and last words are capitalised;
+            2. articles, coordinating conjunctions, and prepositions shorter than 5 characters are not capitalised;
+            3. everything else is capitalised.
 unknownError: Something went wrong
 errorsPersist: |
     If errors persist, please contact [the admin](mailto:cthor@cpan.org).

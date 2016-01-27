@@ -16,19 +16,27 @@
 			</a>
 		</td>
 		<td class="start">
+			{{ IF entry.item }}
 			<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('view'), [ entry.item_id ]) }}">
 				{{ entry.title }}
 			</a>
+			{{ ELSE }}
+			{{ entry.title }}
+			{{ END }}
 		</td>
 		<td class="center">
+			{{ IF entry.score }}
 			<span title="{{ entry.score | format('%.5f') }}">
 				{{ entry.score | format('%d') }}
 			</span>
+			{{ END }}
 		</td>
 		<td class="center">
+			{{ IF entry.score }}
 			<span title="{{ entry.${scoreKey} | format('%.5f') }}">
 				({{ entry.${scoreKey} | format('%d') }})
 			</span>
+			{{ END }}
 		</td>
 		<td class="center">
 			{{ FOREACH award IN entry.awards; award.html | none; END }}
