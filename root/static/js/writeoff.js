@@ -533,7 +533,8 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Event-header').each(function (i) {
+	var $events = $('.Event-header');
+	$events.each(function () {
 		if (this.dataset.autoexpand) {
 			return;
 		}
@@ -544,11 +545,22 @@ $(document).ready(function () {
 		if ($target && $target.hasClass('Event-details')) {
 			$btn.addClass('active');
 
-			if (i) {
-				$target.addClass('hidden');
+			// Highlight events that are within 12 hours of having an active round
+			var interesting = 0;
+			if ($events.size() > 1) {
+				var hype = 1000 * 60 * 60 * 12;
+				$target.find('.Event-timeline').data('timeline').forEach(function (e) {
+					if (e.start.getTime() - hype < now.getTime() && now.getTime() < e.end.getTime() + hype) {
+						interesting = 1;
+					}
+				});
+			}
+
+			if (interesting) {
+				$btn.addClass('expanded');
 			}
 			else {
-				$btn.addClass('expanded');
+				$target.addClass('hidden');
 			}
 
 			$btn.click(function (e) {
