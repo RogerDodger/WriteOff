@@ -533,7 +533,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Event-header').each(function () {
+	$('.Event-header').each(function (i) {
 		if (this.dataset.autoexpand) {
 			return;
 		}
@@ -543,7 +543,14 @@ $(document).ready(function () {
 
 		if ($target && $target.hasClass('Event-details')) {
 			$btn.addClass('active');
-			$target.addClass('hidden');
+
+			if (i) {
+				$target.addClass('hidden');
+			}
+			else {
+				$btn.addClass('expanded');
+			}
+
 			$btn.click(function (e) {
 				if (e.target.localName == 'a') {
 					// Disable expand if the "permalink" is clicked

@@ -1,6 +1,6 @@
 {{ USE cache = Cache }}
 
-{{- WHILE (event = events.next) }}
+{{- FOREACH event IN events.all }}
 {{
 	cache.inc(
 		'template' => 'event/single.tt',
