@@ -21,7 +21,7 @@
 		{{ c.string('promptGuide') | markdown }}
 
 		<form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
-			<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+			{{ csrf_field | none }}
 			{{- IF c.form.has_error }}
 				{{- FOREACH message IN c.form.messages('submit') }}
 					{{- INCLUDE fragment/error_msg.tt }}

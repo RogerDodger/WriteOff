@@ -85,3 +85,5 @@ loginLimited: |
     reasons have been temporarily blocked from making any more. Please try again
     in around %d minutes.
 confirmDeletionPrompt: Enter the %s of the selected item to confirm deletion
+csrfDetected: Bad session
+notAdmin: You are not an admin

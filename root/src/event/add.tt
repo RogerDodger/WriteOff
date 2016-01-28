@@ -10,7 +10,7 @@
 	{{- END }}
 
 	<form class="Form" method="post">
-		<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+		{{ csrf_field | none }}
 
 		<div class="Form-group two">
 			<div class="Form-item">

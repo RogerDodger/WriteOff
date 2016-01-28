@@ -1,6 +1,7 @@
 package WriteOff::Plugin::Auth;
 
 use Class::Null;
+use WriteOff::Util;
 
 sub authenticate {
 	my ($c, $username, $password) = @_;
@@ -13,6 +14,19 @@ sub authenticate {
 	}
 
 	0;
+}
+
+sub csrf_token {
+	my $c = shift;
+
+	return $c->session->{__csrf_token} //= WriteOff::Util::token();
+}
+
+sub logout {
+	my $c = shift;
+
+	delete $c->stash->{__user};
+	delete $c->session->{__user_id};
 }
 
 sub user {
@@ -38,13 +52,6 @@ sub user_id {
 	my $self = shift;
 
 	return $self->user->id || -1;
-}
-
-sub logout {
-	my $c = shift;
-
-	delete $c->stash->{__user};
-	delete $c->session->{__user_id};
 }
 
 1;

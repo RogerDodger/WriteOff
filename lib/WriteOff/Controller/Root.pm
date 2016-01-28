@@ -46,7 +46,7 @@ sub auto :Private {
 		title      => [],
 		editor     => $c->user->admin,
 		format     => scalar($c->req->param('format')) || 'html',
-		csrf_token => Digest->new('Whirlpool')->add($c->sessionid)->b64digest,
+		csrf_token => $c->csrf_token,
 		messages   => [],
 	);
 
@@ -218,74 +218,6 @@ sub style :Local :Args(0) {
 	$c->stash->{template} = 'root/document.tt';
 }
 
-=head2 contact
-
-Allow users to contact the admin or developer.
-
-=cut
-
-sub contact :Local :Args(0) {
-	my ( $self, $c ) = @_;
-
-	if( $c->user ) {
-
-		$c->stash->{fillform}{from} = $c->user->username_and_email;
-
-		my $staff = $c->stash->{staff} = [
-			sprintf( "%s <%s>", 'Admin', $c->config->{AdminEmail} ),
-			sprintf( "%s <%s>", 'Developer', $c->config->{DevEmail} ),
-		];
-
-		my $subjects = $c->stash->{subjects} = [
-			'Event Idea',
-			'Feature Request',
-			'Bug Report',
-			'Rule Breakers',
-			'Other',
-		];
-
-		if( $c->req->method eq 'POST' ) {
-
-			$c->form(
-				to => [ 'NOT_BLANK', [ 'IN_ARRAY', @$staff ] ],
-				subject => [ 'NOT_BLANK', [ 'IN_ARRAY', @$subjects ] ],
-				message => [ 'NOT_BLANK' ],
-			);
-
-			$c->forward('send_contact_email') if !$c->form->has_error;
-		}
-	}
-
-	push $c->stash->{title}, 'Contact Us';
-	$c->stash->{template} = 'root/contact.tt';
-}
-
-sub send_contact_email :Private {
-	my ( $self, $c ) = @_;
-
-	for my $recipient ($c->form->valid('to'), $c->user->username_and_email) {
-		$c->stash->{email} = {
-			to           => $recipient,
-			from         => $c->mailfrom,
-			subject      => $c->config->{name} . " - Contact Us - " . $c->form->valid('subject'),
-			template     => 'email/contact.tt',
-			content_type => 'text/html',
-		};
-		$c->stash->{recipient} = $c->stash->{email}{to};
-
-		$c->log->info( "Contact email sent to $recipient" );
-
-		$c->forward( $c->view('Email::Template') );
-
-		if (scalar @{ $c->error }) {
-			$c->log->error($_) for @{ $c->error };
-			$c->error(0);
-		}
-	}
-
-	$c->stash->{status_msg} = 'Email sent successfully';
-}
-
 =head2 robots
 
 Dynamically generated robots.txt
@@ -318,8 +250,7 @@ Check that the user is the admin, detaching to a 403 if they aren't.
 sub assert_admin :Private {
 	my ( $self, $c, $msg ) = @_;
 
-	$msg //= 'You are not the admin.';
-	$c->detach('/forbidden', [ $msg ]) unless $c->user->admin;
+	$c->user->admin or $c->detach('/forbidden', [ $c->string('notAdmin') ]);
 }
 
 =head2 check_csrf_token
@@ -329,10 +260,10 @@ Check that the user provided their csrf token in the request parameters.
 =cut
 
 sub check_csrf_token :Private {
-	my ( $self, $c, $msg ) = @_;
+	my ($self, $c) = @_;
 
-	$c->detach('/error', [ $msg // 'Bad session id.' ])
-		if $c->req->param('csrf_token') ne $c->stash->{csrf_token};
+	$c->req->param('csrf_token') == $c->csrf_token
+		or $c->detach('/error', [ $c->string('csrfDetected') ]);
 }
 
 =head2 strum

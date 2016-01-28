@@ -4,8 +4,8 @@
 	<p>{{ c.string('confirmDeletionPrompt', key.name) }}</p>
 
 	<form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
-		<input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-		<input type="hidden" name="referer" value="{{ c.req.referer | url }}" />
+		{{ csrf_field | none }}
+		<input type="hidden" name="referer" value="{{ c.req.referer | url }}">
 
 		<div class="Form-item">
 			<input type="text" size="30" autofocus data-key="{{ key.value | html }}"

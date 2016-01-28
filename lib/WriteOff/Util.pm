@@ -4,7 +4,7 @@ use utf8;
 use strict;
 use warnings;
 use base 'Exporter';
-use Digest;
+use Bytes::Random::Secure ();
 
 our @EXPORT_OK = qw/maybe simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
@@ -16,11 +16,11 @@ sub maybe ($$) {
 sub simple_uri {
 	local $_ = join "-", @_;
 
-	s/[\\\/—–]/ /g; #Turn punctuation that commonly divide words into spaces
+	s/[\\\/—–]/ /g; # Turn punctuation that commonly divide words into spaces
 	s/[^a-zA-Z0-9\-\x20]//g; # Remove all except English letters,
 	                         # Arabic numerals, hyphens, and spaces.
-	s/^\s+|\s+$//g; #Trim
-	s/[\s\-]+/-/g; #Collate spaces and hyphens into a single hyphen
+	s/^\s+|\s+$//g; # Trim
+	s/[\s\-]+/-/g; # Collate spaces and hyphens into a single hyphen
 
 	return $_;
 }
@@ -37,10 +37,7 @@ sub sorted {
 }
 
 sub token {
-	my $salt = shift // '';
-	return Digest->new(shift // 'MD5')
-	             ->add($salt . $$ . time . rand)
-	             ->hexdigest;
+	return Bytes::Random::Secure::random_bytes_hex(16, "");
 }
 
 sub wordcount ($) {

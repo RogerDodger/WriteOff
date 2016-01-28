@@ -4,7 +4,7 @@
 	</div>
 
 	<form class="Form" method="post">
-		<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+		{{ csrf_field | none }}
 
 		<div class="Form-item">
 			<input name="mailme" type="checkbox">

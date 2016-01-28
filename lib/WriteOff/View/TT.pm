@@ -140,7 +140,7 @@ $Template::Stash::LIST_OPS = {
 sub csrf_field {
 	my ($self, $c) = @_;
 
-	return sprintf qq{<input type="hidden" name="csrf_token" value="%s">}, $c->stash->{csrf_token};
+	return sprintf qq{<input type="hidden" name="csrf_token" value="%s">}, $c->csrf_token;
 }
 
 sub format_dt {
