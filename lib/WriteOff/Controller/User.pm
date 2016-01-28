@@ -46,11 +46,7 @@ sub do_login :Private {
 
 	if (++$attempts > $c->config->{login}{limit}) {
 		$c->res->status(429);
-		$c->stash->{error} = <<"EOF";
-You have recently made a number of failed login attempts and for security
-reasons have been temporarily blocked from making any more. Please try again
-in around ${ \$c->config->{login}{timer} }.
-EOF
+		$c->stash->{error} = $c->string('loginLimited', $c->config->{login}{timer});
 		$c->detach('/error');
 	}
 

@@ -54,7 +54,7 @@
 									<div class="icon">
 										<form method="post" action="/artist/swap">
 											{{ csrf_field | none }}
-											<input type="hidden" name="artist" value="{{ artist.id }}">
+											<input type="hidden" name="artist-swap" value="{{ artist.id }}">
 											<button class="Artist-swap {{ 'active' IF artist.id == c.user.active_artist_id }}">
 												<i class="fa fa-star"></i>
 											</button>

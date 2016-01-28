@@ -3,13 +3,5 @@
 		{{ story.title }}
 	</div>
 
-	<div class="Countdown">
-		{{ IF event.fic_subs_allowed }}
-			{{ event.fic_end.delta_html | none }}
-		{{ ELSE }}
-			{{ c.string('subsClosed') }}
-		{{ END }}
-	</div>
-
 	{{ INCLUDE fic/form.tt }}
 </div>

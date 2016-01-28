@@ -205,6 +205,12 @@ sub organises {
 	return $event->is_organised_by($self);
 }
 
+sub can_edit {
+	my ($self, $entry) = @_;
+
+	return $entry->is_manipulable_by($self);
+}
+
 sub entrys {
 	my $self = shift;
 

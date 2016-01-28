@@ -46,16 +46,13 @@ sub clean {
 	}
 }
 
-sub is_manipulable_by {
+sub extension {
+	return shift->mimetype =~ s{^image/}{}r =~ s{jpeg}{jpg}r;
+}
+
+sub filename {
 	my $self = shift;
-	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
-		or return 0;
-
-	return 1 if $user->is_admin;
-	return 1 if $self->event->is_organised_by( $user );
-	return 1 if $self->user_id == $user->id && $self->event->art_subs_allowed;
-
-	0;
+	return $self->id . '-' . $self->version . '.' .$self->extension;
 }
 
 sub id_uri {
@@ -64,13 +61,14 @@ sub id_uri {
 	return simple_uri $self->id, $self->title;
 }
 
-sub extension {
-	return shift->mimetype =~ s{^image/}{}r =~ s{jpeg}{jpg}r;
-}
-
-sub filename {
+sub is_manipulable_by {
 	my $self = shift;
-	return $self->id . '-' . $self->version . '.' .$self->extension;
+	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
+		or return 0;
+
+	return $user->is_admin
+	    || $self->entry->event->is_organised_by($user)
+	    || $self->entry->user_id == $user->id && $self->event->art_subs_allowed;
 }
 
 sub path {

@@ -27,6 +27,7 @@ index: Index
 publish: Publish
 update: Update
 edit: Edit
+delete: Delete
 submit: Submit
 castVote: Cast vote
 
@@ -60,7 +61,7 @@ ballotDirections: Drag candidates here to rank them
 ballotAppend: Add another
 ballotDone: None left
 calculatingCandidates: Candidates are being calculated
-storyRedacted: The contents of this story have been removed by the author
+storyRedacted: The contents of this story are no longer available
 mailme: Receive event notifications by email
 promptGuide: |
     - Prompts should&mdash;
@@ -77,4 +78,8 @@ errorsPersist: |
 newPassword: |
     Your account's password has been set to the string below.
     You should login and change it to something more suitable.
+loginLimited: |
+    You have recently made a number of failed login attempts and for security
+    reasons have been temporarily blocked from making any more. Please try again
+    in around %d minutes.
 confirmDeletionPrompt: Enter the %s of the selected item to confirm deletion

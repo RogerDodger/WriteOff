@@ -8,11 +8,16 @@ require WriteOff::Util;
 
 __PACKAGE__->table("entrys");
 
+# The entry table has to have a copy of artist.user_id to account for when
+# artist.name = "Anonymous". Otherwise, it isn't possible to determine the owner.
+
 __PACKAGE__->add_columns(
 	"id",
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
 	"event_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+	"user_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"artist_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"story_id",
@@ -56,6 +61,7 @@ __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "entry_id")
 __PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id");
 __PACKAGE__->belongs_to("story", "WriteOff::Schema::Result::Story", "story_id");
 __PACKAGE__->has_many("votes", "WriteOff::Schema::Result::Vote", "entry_id");
+__PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 __PACKAGE__->mk_group_accessors(column => 'num');
 

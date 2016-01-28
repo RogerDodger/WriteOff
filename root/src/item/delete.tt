@@ -1,17 +1,19 @@
-<h1>{{ c.string('confirmDeletion') }}</h1>
+<div class="Document">
+	<div class="Document-title">{{ c.string('confirmDeletion') }}</div>
 
-<p>{{ c.string('confirmDeletionPrompt', key.name) }}</p>
+	<p>{{ c.string('confirmDeletionPrompt', key.name) }}</p>
 
-<form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
-	<input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-	<input type="hidden" name="referer" value="{{ c.req.referer | url }}" />
+	<form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
+		<input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+		<input type="hidden" name="referer" value="{{ c.req.referer | url }}" />
 
-	<div class="Form-item">
-		<input type="text" size="30" autofocus data-key="{{ key.value | html }}"
-			oninput="if (this.value == $(this).attr('data-key')) $('#delete').attr('disabled', false)">
-	</div>
+		<div class="Form-item">
+			<input type="text" size="30" autofocus data-key="{{ key.value | html }}"
+				oninput="if (this.value == $(this).attr('data-key')) $('#delete').attr('disabled', false)">
+		</div>
 
-	<div class="Form-item">
-		<input type="submit" value="Delete" disabled="disabled" id="delete">
-	</div>
-</form>
+		<div class="Form-item">
+			<input type="submit" value="Delete" disabled="disabled" id="delete">
+		</div>
+	</form>
+</div>

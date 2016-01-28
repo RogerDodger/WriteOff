@@ -13,7 +13,8 @@ sub _fetch :ActionClass('~Fetch') {}
 sub fetch :Chained('/') :PathPart('fic') :CaptureArgs(1) {
 	my ($self, $c) = @_;
 	$c->forward('_fetch');
-	$c->stash->{event} = $c->stash->{story}->event;
+	$c->stash->{entry} = $c->stash->{story}->entry;
+	$c->stash->{event} = $c->stash->{entry}->event;
 	unshift $c->stash->{title}, $c->stash->{event}->title;
 }
 
@@ -32,9 +33,9 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 		$c->forward('View::Epub');
 	}
 	else {
-		my @gallery = $c->stash->{event}->storys->gallery($c->user->offset)->all;
+		my @gallery = $c->stash->{event}->storys->gallery->all;
 		for my $i (0..$#gallery) {
-			if ($gallery[$i]->id == $c->stash->{story}->id) {
+			if ($gallery[$i]->id == $c->stash->{story}->entry->id) {
 				$c->stash->{num} = $gallery[$i]->num;
 				$c->stash->{prev} = $gallery[$i-1];
 				$c->stash->{next} = $gallery[$i-$#gallery];
@@ -64,32 +65,26 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 }
 
 sub form :Private {
+	my ($self, $c) = @_;
+
+	$c->stash->{rounds} = $c->stash->{event}->rounds->writing;
+	$c->forward('/entry/form');
+}
+
+sub do_form :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward('/check_csrf_token');
+	$c->forward('/entry/do_form');
 
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 
-	# When editing, must allow for the title to be itself
-	my $title_rs = $c->stash->{event}->storys->search({
-		title => {
-			'!=' => eval { $c->stash->{story}->title } || undef
-		}
-	});
-
-	my $artist_rs = $c->model('DB::Artist')->search({
-		name    => { '!=' => 'Anonymous' },
-		# Must allow organisers to edit properly
-		user_id => { '!=' => eval { $c->stash->{story}->user_id } || $c->user_id }
-	});
-
-	if ($c->stash->{event}->art) {
+	if ($c->stash->{event}->has('art')) {
 		my @ids = $c->stash->{event}->images->get_column('id')->all;
 		my @params = $c->req->param('image_id') or return 0;
 
 		my %uniq;
 		for my $id (@params) {
-			# Param must be in the set ot valid image_ids
+			# Param must be in the set of valid image_ids
 			return 0 unless looks_like_number($id) && grep { $id == $_ } @ids;
 
 			# Param must be unique
@@ -99,19 +94,7 @@ sub form :Private {
 	}
 
 	$c->form(
-		title => [
-			[ 'LENGTH', 1, $c->config->{len}{max}{title} ],
-			'TRIM_COLLAPSE',
-			'NOT_BLANK',
-			[ 'DBIC_UNIQUE', $title_rs, 'title' ],
-		],
-		author => [
-			[ 'LENGTH', 1, $c->config->{len}{max}{user} ],
-			'TRIM_COLLAPSE',
-			[ 'DBIC_UNIQUE', $artist_rs, 'name' ],
-		],
 		image_id => [ $c->stash->{event}->has('art') ? 'NOT_BLANK' : () ],
-		website => [ 'HTTP_URL' ],
 		story => [ 'NOT_BLANK' ],
 		wordcount => [
 			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ]
@@ -124,11 +107,10 @@ sub form :Private {
 sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 	my ( $self, $c ) = @_;
 
+	$c->forward('form');
+
 	if ($c->user) {
-		$c->stash->{storys} = $c->stash->{event}->storys->search({ user_id => $c->user->id });
-		$c->stash->{fillform}{author} = $c->user->last_author ||
-		                                $c->user->last_artist ||
-		                                $c->user->name;
+		$c->stash->{entrys} = $c->stash->{event}->storys->search({ user_id => $c->user->id });
 
 		if ($c->req->method eq 'POST') {
 			if ($c->req->param('flip')) {
@@ -147,26 +129,13 @@ sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward('form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('/entry/do_submit');
 
 	if (!$c->form->has_error) {
-		my $author = length $c->form->valid('author')
-			? $c->form->valid('author')
-			: 'Anonymous';
-
-		my $artist = $c->model('DB::Artist')->find({ name => $author })
-			// $c->user->create_related(artists => { name => $author });
-
 		my $story = $c->model('DB::Story')->new_result({
-			event_id  => $c->stash->{event}->id,
-			user_id   => $c->user->id,
-			artist_id => $artist->id,
-			ip        => $c->req->address,
-			title     => $c->form->valid('title'),
-			website   => $c->form->valid('website') || undef,
 			contents  => $c->form->valid('story'),
 			wordcount => $c->form->valid('wordcount'),
-			seed      => rand,
 		});
 
 		# Choose a random ID until it works (i.e., until it's unique)
@@ -176,15 +145,26 @@ sub do_submit :Private {
 			eval { $story->insert };
 		}
 
-		if ($c->stash->{event}->art) {
+		$c->stash->{entry}->story_id($story->id);
+		$c->stash->{entry}->insert;
+
+		if ($c->stash->{event}->has('art')) {
+			my $imgstry = $c->model('DB::ImageStory');
 			for my $id ($c->req->param('image_id')) {
-				my $image = $c->model('DB::Image')->find($id);
-				$story->add_to_images($image);
+				$imgstry->create({
+					story_id => $story->id,
+					image_id => int $id,
+				});
 			}
 		}
 
-		$c->flash->{status_msg} = 'Submission successful';
-		$c->res->redirect($c->req->uri);
+		$c->log->info("Fic %d submitted by %s: %s by %s (%d words)",
+			$story->id,
+			$c->user->name,
+			$c->form->valid('title'),
+			$c->model('DB::Artist')->find($c->form->valid('artist'))->name,
+			$c->form->valid('wordcount'),
+		);
 	}
 }
 
@@ -195,20 +175,21 @@ sub flip :Private {
 
 	my $allowUnpub = $c->stash->{event}->ended;
 
-	while (my $story = $c->stash->{storys}->next) {
+	while (my $entry = $c->stash->{entrys}->next) {
+		my $story = $entry->story;
 		my $id = $story->id;
 
 		if ($allowUnpub) {
 			my $val = !!$c->req->param("publish-$id");
 			if ($story->published != $val) {
-				$c->log->info("Story %d %s SET published=%d", $story->id, $story->title, $val);
+				$c->log->info("Fic %d %s SET published=%d", $story->id, $entry->title, $val);
 				$story->update({ published => int $val });
 			}
 		}
 
 		my $val = !!$c->req->param("index-$id");
 		if ($story->indexed != $val) {
-			$c->log->info("Story %d %s SET indexed=%d", $story->id, $story->title, $val);
+			$c->log->info("Fic %d %s SET indexed=%d", $story->id, $entry->title, $val);
 			$story->update({ indexed => int $val });
 		}
 	}
@@ -220,15 +201,17 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
-		unless $c->stash->{story}->is_manipulable_by( $c->user );
+		if !$c->user->can_edit($c->stash->{story});
 
-	$c->forward('do_edit') if $c->req->method eq 'POST';
+	$c->forward('form');
+	if ($c->req->method eq 'POST' && $c->stash->{event}->fic_subs_allowed) {
+		$c->forward('do_edit');
+	}
 
 	$c->stash->{fillform} = {
-		author   => $c->stash->{story}->artist->name,
-		title    => $c->stash->{story}->title,
+		artist   => $c->stash->{story}->entry->artist_id,
+		title    => $c->stash->{story}->entry->title,
 		image_id => [ $c->stash->{story}->images->get_column('id')->all ],
-		website  => $c->stash->{story}->website,
 		story    => $c->stash->{story}->contents,
 	};
 
@@ -239,46 +222,32 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward( $self->action_for('form') ) or return 0;
+	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('/entry/do_edit');
 
 	if (!$c->form->has_error) {
-		my $story = $c->stash->{story};
-
-		$c->log->info( sprintf "Fic %d edited by %s, to %s by %s (%d words)",
-			$story->id,
+		$c->log->info("Fic %d edited by %s to %s by %s (%d words)",
+			$c->stash->{story}->id,
 			$c->user->name,
 			$c->form->valid('title'),
-			$c->form->valid('author'),
+			$c->model('DB::Artist')->find($c->form->valid('artist'))->name,
 			$c->form->valid('wordcount'),
 		);
 
-		my $author = length $c->form->valid('author')
-			? $c->form->valid('author')
-			: 'Anonymous';
-
-		my $artist = $c->model('DB::Artist')->find({ name => $author })
-			// $story->user->create_related(artists => { name => $author });
-
 		$c->stash->{story}->update({
-			title     => $c->form->valid('title'),
-			artist_id => $artist->id,
-			website   => $c->form->valid('website') || undef,
 			contents  => $c->form->valid('story'),
 			wordcount => $c->form->valid('wordcount'),
 		});
 
-		if ($c->stash->{event}->art) {
+		if ($c->stash->{event}->has('art')) {
 			$c->stash->{story}->image_stories->delete;
+			my $imgstry = $c->model('DB::ImageStory');
 			for my $id ($c->req->param('image_id')) {
 				my $image = $c->model('DB::Image')->find($id);
 				$c->stash->{story}->add_to_images($image);
 			}
 		}
-
-
-		$c->stash->{status_msg} = 'Edit successful';
 	}
-
 }
 
 sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
@@ -289,7 +258,7 @@ sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 
 	$c->stash->{key} = {
 		name  => 'title',
-		value => $c->stash->{story}->title,
+		value => $c->stash->{entry}->title,
 	};
 
 	$c->forward('do_delete') if $c->req->method eq 'POST';
@@ -303,13 +272,13 @@ sub do_delete :Private {
 
 	$c->forward('/check_csrf_token');
 
-	$c->log->info( sprintf "Fic deleted by %s: %s (%s - %s)",
+	$c->log->info("Fic deleted by %s: %s by %s",
 		$c->user->name,
-		$c->stash->{story}->title,
-		$c->stash->{story}->ip,
-		$c->stash->{story}->user->username,
+		$c->stash->{entry}->title,
+		$c->stash->{entry}->artist->name,
 	);
 
+	$c->stash->{entry}->delete;
 	$c->stash->{story}->delete;
 
 	$c->flash->{status_msg} = 'Deletion successful';

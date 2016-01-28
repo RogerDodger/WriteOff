@@ -1,27 +1,11 @@
 <div class="Document">
 	<div class="Document-title">
-		Fic Submission
+		{{ c.string('ficSubmission') }}
 	</div>
 
-	<div class="Countdown">
-		{{ IF event.fic > now }}
-			{{ event.fic.delta_html | none }}
-		{{ ELSIF event.fic_subs_allowed }}
-			{{ event.fic_end.delta_html | none }}
-		{{ ELSE }}
-			{{ c.string('subsClosed') }}
-		{{ END }}
-	</div>
+	{{ INCLUDE fic/form.tt }}
 
-	{{ IF event.fic_subs_allowed }}
-		{{ IF c.user }}
-			{{ INCLUDE fic/form.tt }}
-		{{ ELSE }}
-			<div class="Flash">{{ c.string('loginRequiredFic') }}</div>
-		{{ END }}
-	{{ END }}
-
-	{{ IF c.user && storys.count }}
+	{{ IF c.user && entrys.count }}
 	<div class="Document-subtitle">
 		<span>{{ c.string('mySubs') }}</span>
 	</div>
@@ -54,29 +38,30 @@
 					</th>
 				</tr>
 			<tbody>
-			{{ FOREACH story IN storys.all }}
+			{{ FOREACH entry IN entrys.all }}
 				<tr>
 					{{ IF event.fic_subs_allowed }}
 					<td class="Storys-edit">
-						[<a href="{{ c.uri_for_action('/fic/edit', [ story.id_uri ]) }}">{{ c.string('edit') }}</a>]
+						[<a href="{{ c.uri_for_action('/fic/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
+						[<a href="{{ c.uri_for_action('/fic/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
 					</td>
 					{{ END }}
 					<td class="Storys-title">
-						<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
-							{{ story.title }}
+						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">
+							{{ entry.title }}
 						</a>
 					</td>
-					<td class="Storys-author">{{ story.artist.name }}</td>
-					<td class="Storys-wordcount">{{ story.wordcount }}</td>
-					<td class="Storys-created">{{ story.created.date_html | none }}</td>
+					<td class="Storys-author">{{ entry.artist.name }}</td>
+					<td class="Storys-wordcount">{{ entry.story.wordcount }}</td>
+					<td class="Storys-created">{{ entry.created.date_html | none }}</td>
 					<td class="Storys-index">
-						<input type="checkbox" name="index-{{ story.id }}"
-							{{ 'checked' IF story.indexed }}>
+						<input type="checkbox" name="index-{{ entry.story_id }}"
+							{{ 'checked' IF entry.story.indexed }}>
 					</td>
 					<td class="Storys-publish">
-						<input type="checkbox" name="publish-{{ story.id }}"
+						<input type="checkbox" name="publish-{{ entry.story_id }}"
 							{{ 'disabled' IF !event.ended }}
-							{{ 'checked' IF story.published }}>
+							{{ 'checked' IF entry.story.published }}>
 					</td>
 				</tr>
 			{{ END }}

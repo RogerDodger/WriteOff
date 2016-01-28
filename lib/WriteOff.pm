@@ -151,7 +151,7 @@ __PACKAGE__->config(
 	},
 	login => {
 		limit => 10,
-		timer => '10 minutes', #default cache expiration time
+		timer => 10, # minutes; cache expiration time
 	},
 	elo_base => 1500,
 	prompts_per_user => 5,

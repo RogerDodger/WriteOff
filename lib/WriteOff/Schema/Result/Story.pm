@@ -36,8 +36,8 @@ sub is_manipulable_by {
 		or return 0;
 
 	return $user->is_admin
-	    || $self->event->is_organised_by($user)
-	    || $self->user_id == $user->id && $self->event->fic_subs_allowed;
+	    || $self->entry->event->is_organised_by($user)
+	    || $self->entry->user_id == $user->id && $self->entry->event->fic_subs_allowed;
 }
 
 1;

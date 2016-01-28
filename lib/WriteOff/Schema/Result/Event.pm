@@ -53,6 +53,14 @@ __PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "eve
 
 __PACKAGE__->many_to_many(users => 'user_events', 'user');
 
+sub storys {
+	return shift->entrys->search({ story_id => { '!=' => undef }});
+}
+
+sub images {
+	return shift->entrys->search({ image_id => { '!=' => undef }});
+}
+
 sub title {
 	return shift->prompt;
 }
@@ -180,9 +188,7 @@ sub art_subs_allowed {
 }
 
 sub fic_subs_allowed {
-	my $row = shift;
-
-	return sorted $row->fic, $row->now_dt, $row->fic_gallery_opens;
+	shift->rounds->writing->active->count;
 }
 
 sub art_gallery_opened {
@@ -234,9 +240,9 @@ sub artist_guessing_allowed {
 }
 
 sub ended {
-	my $row = shift;
+	my $self = shift;
 
-	return $row->end <= $row->now_dt;
+	$self->rounds->upcoming->count == 0 && $self->rounds->active == 0;
 }
 
 BEGIN { *is_ended = \&ended; }

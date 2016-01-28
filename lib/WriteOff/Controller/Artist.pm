@@ -33,11 +33,11 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 sub swap :Local {
 	my ($self, $c) = @_;
 
-	return unless $c->req->method eq 'POST';
+	$c->detach('/404') unless $c->req->method eq 'POST';
 
 	$c->forward('/check_csrf_token');
 
-	my $id = $c->req->param('artist');
+	my $id = $c->req->param('artist-swap');
 	return unless looks_like_number $id;
 
 	if (my $artist = $c->user->artists->find($id)) {
