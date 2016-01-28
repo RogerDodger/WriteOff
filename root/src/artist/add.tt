@@ -1,0 +1,17 @@
+<div class="Document">
+	<div class="Document-title">{{ c.string('newArtistTitle') }}</div>
+
+	<form class="Form" method="post">
+		{{ csrf_field | none }}
+		<input type="hidden" name="referer" value="{{ c.req.param('referer') || c.req.referer }}">
+
+		<div class="Form-item">
+			<label>{{ c.string('name') }}</label>
+			<input type="text" name="artist" maxlength="{{ c.config.len.max.user }}">
+		</div>
+
+		<div class="Form-item">
+			<input type="submit" value="{{ c.string('create') }}">
+		</div>
+	</form>
+</div>

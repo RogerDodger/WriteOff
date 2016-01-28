@@ -15,6 +15,7 @@ caption: Caption
 image: Image
 prompt: Prompt
 login: Login
+name: Name
 username: Username
 password: Password
 timezone: Timezone
@@ -27,10 +28,13 @@ index: Index
 publish: Publish
 update: Update
 edit: Edit
+create: Create
 delete: Delete
 submit: Submit
 castVote: Cast vote
+newArtist: New alias
 
+newArtistTitle: New Alias
 404: File Not Found
 403: Forbidden
 400: Error

@@ -67,7 +67,7 @@
 									<div class="icon">
 										<i class="fa fa-star transparent"></i>
 									</div>
-									{{- }}<a href="/artist/add">New alias</a>
+									{{- }}<a href="/artist/add">{{ c.string('newArtist') }}</a>
 								</li>
 							</ul>
 						</li>
