@@ -200,7 +200,7 @@ sub flip :Private {
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/forbidden', [ 'You cannot edit this item.' ])
+	$c->detach('/forbidden', [ $c->string('cantEdit') ])
 		if !$c->user->can_edit($c->stash->{story});
 
 	$c->forward('form');
@@ -253,36 +253,13 @@ sub do_edit :Private {
 sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/forbidden', ['You cannot delete this item.']) unless
-		$c->stash->{story}->is_manipulable_by( $c->user );
-
-	$c->stash->{key} = {
-		name  => 'title',
-		value => $c->stash->{entry}->title,
-	};
-
-	$c->forward('do_delete') if $c->req->method eq 'POST';
-
-	push $c->stash->{title}, 'Delete';
-	$c->stash->{template} = 'item/delete.tt';
+	$c->forward('/entry/delete');
 }
 
 sub do_delete :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward('/check_csrf_token');
-
-	$c->log->info("Fic deleted by %s: %s by %s",
-		$c->user->name,
-		$c->stash->{entry}->title,
-		$c->stash->{entry}->artist->name,
-	);
-
-	$c->stash->{entry}->delete;
-	$c->stash->{story}->delete;
-
-	$c->flash->{status_msg} = 'Deletion successful';
-	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
+	$c->forward('/entry/do_delete');
 }
 
 sub rels :Chained('fetch') :PathPart('rels') :Args(0) {

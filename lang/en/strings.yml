@@ -53,6 +53,8 @@ noPrivate: There is no private judging round for this event
 votesClosed: Votes are closed
 guessesClosed: Guesses are closed
 subsClosed: Submissions are closed
+cantEdit: You cannot edit this item
+cantDelete: You cannot delete this item
 loginRequiredArt: You must be logged in to submit art
 loginRequiredFic: You must be logged in to submit fics
 loginRequiredPrompt: You must be logged in to submit prompts

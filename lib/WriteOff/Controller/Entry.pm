@@ -87,6 +87,41 @@ sub do_edit :Private {
 	}
 }
 
+sub delete :Private {
+	my ($self, $c) = @_;
+
+	$c->detach('/forbidden', [ $c->string('cantDelete') ])
+		if !$c->user->can_edit($c->stash->{entry}->item);
+
+	$c->stash->{key} = {
+		name  => 'title',
+		value => $c->stash->{entry}->title,
+	};
+
+	$c->forward('do_delete') if $c->req->method eq 'POST';
+
+	push $c->stash->{title}, 'Delete';
+	$c->stash->{template} = 'item/delete.tt';
+}
+
+sub do_delete :Private {
+	my ($self, $c) = @_;
+	$c->forward('/check_csrf_token');
+
+	$c->log->info("%s deleted by %s: %s by %s",
+		ucfirst $c->stash->{entry}->type,
+		$c->user->name,
+		$c->stash->{entry}->title,
+		$c->stash->{entry}->artist->name,
+	);
+
+	$c->stash->{entry}->item->delete;
+	$c->stash->{entry}->delete;
+
+	$c->flash->{status_msg} = 'Deletion successful';
+	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
