@@ -22,6 +22,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "artist_id");
+__PACKAGE__->has_many("theorys", "WriteOff::Schema::Result::Theory", "artist_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 1;

@@ -9,6 +9,10 @@ sub index :Path('/scoreboard') {
 	my ( $self, $c, $gid, $fid) = @_;
 
 	$c->stash->{awards} = $c->model('DB::Award')->search({}, { join => { entry => "event" } });
+	$c->stash->{theorys} = $c->model('DB::Theory')->search(
+		{ award_id => { "!=" => undef } },
+		{ join => 'event' }
+	);
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
@@ -23,13 +27,13 @@ sub index :Path('/scoreboard') {
 	$c->stash->{gUrl} = '/scoreboard/%s';
 	$c->stash->{aUrl} = '/artist/%s/scores';
 
-	$c->stash->{awards} = $c->stash->{awards}->search({ "event.genre_id" => $genre->id });
+	$c->stash->{$_} = $c->stash->{$_}->search({ "event.genre_id" => $genre->id }) for qw/awards theorys/;
 	$c->stash->{cacheKey} .= "~" . $genre->id;
 	$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';
 	$c->stash->{aUrl} .= '?genre=' . $genre->id_uri;
 
 	if ($format) {
-		$c->stash->{awards} = $c->stash->{awards}->search({ "event.format_id" => $format->id });
+		$c->stash->{$_} = $c->stash->{$_}->search({ "event.format_id" => $format->id }) for qw/awards theorys/;
 		$c->stash->{cacheKey} .= "~" . $format->id;
 		$c->stash->{gUrl} .= '/' . $format->id_uri;
 		$c->stash->{aUrl} .= '&format=' . $format->id_uri;

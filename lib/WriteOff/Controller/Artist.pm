@@ -24,6 +24,17 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 		]
 	});
 
+	$c->stash->{theorys} = $c->stash->{artist}->theorys->search(
+		{
+			%$s,
+			award_id => { "!=" => undef },
+		},
+		{
+			prefetch => 'event',
+			order_by => { -desc => 'event.created' },
+		}
+	);
+
 	$c->stash->{scoreKey} = $s->{format_id} ? 'score_format' : 'score_genre';
 
 	$c->stash->{title} = 'Score Breakdown for ' . $c->stash->{artist}->name;

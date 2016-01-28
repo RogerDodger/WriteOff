@@ -140,7 +140,16 @@ FROM vote_records WHERE round = 'public' AND event_id NOT IN (3,7,8,9);
 SELECT id, record_id, story_id, image_id, value, abstained FROM votes;
 
 .mode insert theorys
-SELECT id, event_id, user_id, artist_id, NULL, created, updated FROM vote_records WHERE round = 'guess';
+SELECT id, event_id, user_id, artist_id, (
+	SELECT award_id
+	FROM artist_award a
+	LEFT JOIN vote_records ir
+		ON ir.event_id=a.event_id
+		AND ir.artist_id=a.artist_id
+	WHERE ir.event_id=r.event_id
+	AND ir.artist_id=r.artist_id
+	AND award_id=7),
+	NULL, created, updated FROM vote_records r WHERE round = 'guess';
 
 .mode insert guesses_tmp
 SELECT id, record_id, story_id, image_id, artist_id FROM guesses;

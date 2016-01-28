@@ -48,6 +48,9 @@
 				{{ FOREACH award IN awards.unique }}
 				<th class="Scoreboard-awards" data-sort-method="number">{{ award.html | none }}</th>
 				{{ END }}
+				{{ IF theorys.count }}
+				<th class="Scoreboard-awards" data-sort-method="number">{{ theorys.first.award.html | none }}</th>
+				{{ END }}
 				<th class="no-sort"></th>
 			</tr>
 		</thead>
@@ -70,6 +73,14 @@
 				{{ FOREACH tally IN artist.tally_awards(awards) }}
 					<td class="Scoreboard-awards" data-sort="{{ tally.count }}">
 						{{ tally.award.html | repeat(tally.count) }}
+					</td>
+				{{ END }}
+
+				{{ IF theorys.count }}
+					<td class="Scoreboard-awards" data-sort="{{ theorys.by_rs(artist.id).count }}">
+						{{ FOREACH theory IN theorys.by(artist.id) }}
+							{{ theory.award.html | none }}
+						{{ END }}
 					</td>
 				{{ END }}
 

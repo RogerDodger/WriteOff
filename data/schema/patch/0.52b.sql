@@ -72,16 +72,6 @@ UPDATE entrys SET
 		AND genre_id = (SELECT e.genre_id FROM events e WHERE e.id=entrys.event_id)
 		AND format_id = (SELECT e.format_id FROM events e WHERE e.id=entrys.event_id)));
 
-INSERT INTO entrys (title, artist_id, event_id, seed)
-SELECT "Author guessing", artist_id, event_id, 0.0001
-FROM awards_tmp tmp
-WHERE award_id = 7;
-
-INSERT INTO awards
-SELECT NULL, id, 7
-FROM entrys
-WHERE (story_id OR image_id) IS NULL;
-
 UPDATE ballots SET round_id = (SELECT id FROM rounds r WHERE r.event_id=ballots.event_id AND r.name=ballots.round_id);
 
 UPDATE events SET content_level='E' WHERE content_level=0;
