@@ -66,6 +66,32 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	$c->stash->{template} = 'scoreboard/scores.tt';
 }
 
+sub swap :Local {
+	my ($self, $c) = @_;
+
+	$c->detach('/404') unless $c->req->method eq 'POST';
+
+	$c->forward('/check_csrf_token');
+
+	my $id = $c->req->param('artist-swap');
+	return unless looks_like_number $id;
+
+	if (my $artist = $c->user->artists->find($id)) {
+		$c->user->update({ active_artist_id => $artist->id });
+		if ($c->stash->{ajax}) {
+				$c->res->body('Okay');
+		}
+		else {
+			$c->res->redirect($c->req->referer);
+		}
+	}
+	else {
+		$c->detach('/error');
+	}
+}
+
+
+
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>
