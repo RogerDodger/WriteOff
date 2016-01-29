@@ -62,14 +62,17 @@ SELECT * FROM user_event;
 
 -- round_id must be determined later
 .mode insert entrys
-SELECT NULL, event_id, user_id, artist_id, id, NULL, NULL, title, seed, disqualified,
-	(SELECT orig FROM scores WHERE storys.id=scores.story_id),
-	(SELECT orig FROM scores WHERE storys.id=scores.story_id),
-	(SELECT orig FROM scores WHERE storys.id=scores.story_id),
-	rank, rank_low, 0, created, updated
-FROM storys;
+SELECT NULL, s.event_id, user_id, artist_id, s.id, NULL, NULL, title, seed,
+	e.tallied OR s.disqualified OR e.public < datetime('now') AND NOT s.candidate,
+	s.disqualified,
+	(SELECT orig FROM scores WHERE s.id=scores.story_id),
+	(SELECT orig FROM scores WHERE s.id=scores.story_id),
+	(SELECT orig FROM scores WHERE s.id=scores.story_id),
+	rank, rank_low, 0, s.created, s.updated
+FROM storys s
+LEFT JOIN events e ON s.event_id=e.id;
 
-SELECT NULL, event_id, user_id, artist_id, NULL, id, NULL, title, seed, 0,
+SELECT NULL, event_id, user_id, artist_id, NULL, id, NULL, title, seed, 1, 0,
 	(SELECT orig FROM scores WHERE images.id=scores.image_id),
 	(SELECT orig FROM scores WHERE images.id=scores.image_id),
 	(SELECT orig FROM scores WHERE images.id=scores.image_id),

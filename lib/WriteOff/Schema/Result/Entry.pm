@@ -30,6 +30,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 0 },
 	"seed",
 	{ data_type => "real", is_nullable => 0, dynamic_default_on_create => sub { rand() } },
+	"artist_public",
+	{ data_type => "bit", default_value => 0, is_nullable => 0 },
 	"disqualified",
 	{ data_type => 'bit', default_value => 0, is_nullable => 0 },
 	"score",
@@ -58,7 +60,7 @@ __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->has_many("guesses", "WriteOff::Schema::Result::Guess", "entry_id");
 __PACKAGE__->belongs_to("image", "WriteOff::Schema::Result::Image", "image_id");
 __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "entry_id");
-__PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id");
+__PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id", { join_type => 'left' });
 __PACKAGE__->belongs_to("story", "WriteOff::Schema::Result::Story", "story_id");
 __PACKAGE__->has_many("votes", "WriteOff::Schema::Result::Vote", "entry_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");

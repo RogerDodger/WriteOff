@@ -29,9 +29,10 @@ sub gallery {
 	$self->search({}, {
 		'+select' => [ $num_rs->as_query ],
 		'+as' => [ 'num' ],
+		join => 'round',
 		order_by => [
 			{ -asc => 'disqualified' },
-			{ -desc => 'candidate' },
+			{ -asc => 'round.end' },
 			{ -desc => 'seed' },
 		],
 	});

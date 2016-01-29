@@ -53,11 +53,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 		$c->forward('View::Epub');
 	}
 	else {
-		my $storys = $c->stash->{event}->storys->gallery($c->user->offset);
-
-		$c->stash->{candidates} = $storys->eligible->candidates;
-		$c->stash->{noncandidates} = $storys->eligible->noncandidates;
-		$c->stash->{disqualified} = $storys->disqualified;
+		$c->stash->{gallery} = $c->stash->{event}->storys->gallery;
 
 		push $c->stash->{title}, 'Gallery';
 		$c->stash->{template} = 'fic/gallery.tt';

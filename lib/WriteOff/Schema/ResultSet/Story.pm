@@ -10,16 +10,7 @@ sub difficulty {
 }
 
 sub metadata {
-	return shift->search_rs(undef, {
-		columns => [
-			'id', 'user_id', 'event_id', 'ip',
-			'title', 'artist_id', 'website', 'wordcount',
-			'prelim_score', 'prelim_stdev',
-			'candidate', 'public_score', 'public_stdev',
-			'finalist', 'private_score', 'rank', 'rank_low',
-			'controversial', 'seed', 'disqualified', 'created', 'updated',
-		]
-	});
+	Carp::croak "Deprecated method 'metadata' called";
 }
 
 sub finalists {

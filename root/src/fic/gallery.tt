@@ -1,53 +1,22 @@
+{{ BLOCK divider }}
+<tbody>
+	<tr>
+		<td class="Table-divider" colspan="{{ event.has('art') ? 5 : 4 }}"></td>
+	</tr>
+</tbody>
+{{ END }}
+
 <div class="Document">
 	<div class="Document-title">
 		Fic Gallery
 	</div>
 
 	{{ IF event.fic_gallery_opened }}
-		{{ BLOCK story_table }}
-			<tbody>
-			{{ FOREACH story IN storys.all }}
-				<tr class="{{ loop.parity }}">
-					<td class="Storys-num">{{ story.num }}</td>
-					{{ IF event.art }}
-					<td class="Storys-related">
-						<a class="dialog-fetcher" title="Show related artwork(s)"
-							href="{{ c.uri_for_action('/fic/rels', [ story.id_uri ]) }}">
-							<span class="ui-icon ui-icon-image">[Related Artwork(s)]</span>
-						</a>
-					</td>
-					{{ END }}
-					<td class="Storys-listing">
-						<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}">
-							{{ story.title }}
-						</a>
-						{{ IF show_author }}
-						by {{ story.artist.name }}
-						{{ END }}
-					</td>
-					<td class="Storys-export">
-						(<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}.txt">txt</a>,
-						<a href="{{ c.uri_for_action('/fic/view', [ story.id_uri ]) }}.epub">epub</a>)
-					</td>
-					<td class="Storys-wordcount">{{ story.wordcount.chunk(-3).join(',') }}</td>
-				</tr>
-			{{ END }}
-			</tbody>
-		{{ END }}
-
-		{{ BLOCK divider }}
-			<tbody>
-				<tr>
-					<td class="Table-divider" colspan="{{ event.art ? 5 : 4 }}"></td>
-				</tr>
-			</tbody>
-		{{ END }}
-
 		<table class="Storys">
 			<thead>
 				<tr>
 					<th class="Storys-num">#</th>
-					{{ IF event.art }}
+					{{ IF event.has('art') }}
 					<th></th>
 					{{ END }}
 					<th colspan="2">Story</th>
@@ -55,35 +24,49 @@
 				</tr>
 			</thead>
 
-			{{ IF candidates.count }}
-				{{ PROCESS story_table
-					storys = candidates
-					show_author = event.ended }}
-			{{ END }}
-
-			{{ IF noncandidates.count }}
-				{{ IF candidates.count }}
+			<tbody>
+			{{ FOREACH entry IN gallery.all }}
+				{{ IF loop.count != 1
+					&& (loop.prev.disqualified != entry.disqualified
+						|| loop.prev.round_id != entry.round_id) }}
+					</tbody>
 					{{ PROCESS divider }}
+					<tbody>
 				{{ END }}
 
-				{{ PROCESS story_table
-					storys = noncandidates
-					show_author = candidates.count }}
+				<tr class="{{ loop.parity }}">
+					<td class="Storys-num">{{ entry.num }}</td>
+					{{ IF event.has('art') }}
+					<td class="Storys-related">
+						<a class="dialog-fetcher" title="Show related artwork(s)"
+							href="{{ c.uri_for_action('/fic/rels', [ entry.id_uri ]) }}">
+							<span class="ui-icon ui-icon-image">[Related Artwork(s)]</span>
+						</a>
+					</td>
+					{{ END }}
+					<td class="Storys-listing">
+						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">
+							{{ entry.title }}
+						</a>
+						{{ IF entry.artist_public }}
+						by {{ entry.artist.name }}
+						{{ END }}
+					</td>
+					<td class="Storys-export">
+						(<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.txt">txt</a>,
+						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.epub">epub</a>)
+					</td>
+					<td class="Storys-wordcount">{{ entry.story.wordcount.chunk(-3).join(',') }}</td>
+				</tr>
 			{{ END }}
-
-			{{ IF disqualified.count }}
-				{{ PROCESS divider }}
-				{{ PROCESS story_table
-					storys = disqualified
-					show_author = 1 }}
-			{{ END }}
+			</tbody>
 
 			{{ PROCESS divider }}
 
 			<tbody>
 				<tr>
 					<td class="Storys-num"></td>
-					{{ IF event.art }}
+					{{ IF event.has('art') }}
 					<td class="Storys-related">
 					</td>
 					{{ END }}
