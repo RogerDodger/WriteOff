@@ -11,10 +11,10 @@
 		<link rel="stylesheet" href="/static/style/font-awesome.min.css">
 		<link rel="stylesheet" href="/static/style/writeoff-0.53.css">
 
+		<script src="/static/js/html5shiv.js"></script>
 		<script src="/static/js/modernizr-2.6.2.custom.min.js"></script>
 		<script src="/static/js/jquery-2.1.4.min.js"></script>
 		<script src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
-		<script src="/static/js/jquery.cookie.js"></script>
 		<script src="/static/js/Sortable.min.js"></script>
 		<script src="/static/js/tablesort.min.js"></script>
 		<script src="/static/js/tablesort.numeric.js"></script>

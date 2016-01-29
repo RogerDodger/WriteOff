@@ -1,27 +1,20 @@
-function resetStoryFontSize() {
-	var config = $.cookie('story-font-size') * 1 || 1;
-
-	//min of 0.6em and max of 1.4em
-	if(config < 0.6) config = 0.6;
-	if(config > 1.4) config = 1.4;
-
-	$('.story').css('font-size', config + 'em');
-}
-
-function removeStatus(el) {
-
-}
-
-function pushStatus () {
-
-}
+/*
+ * Dynamic web page behaviour for WriteOff
+ *
+ * Copyright (c) 2016 Cameron Thornton <cthor@cpan.org>
+ *
+ * This library is free software. You can redistribute it and/or modify
+ * it under the same terms as Perl version 5.
+ */
 
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g, "");
 };
+
 String.prototype.collapse = function() {
 	return this.replace(/\s+/g, " ");
 };
+
 String.prototype.collate = function() {
 	return this
 		.toLowerCase()
@@ -29,10 +22,12 @@ String.prototype.collate = function() {
 		.collapse()
 		.replace(/[^\x20-\x7E]/g, "");
 };
+
 String.prototype.regex = function() {
 	//http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 	return this.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 };
+
 String.prototype.ucfirst = function() {
 	return this.substring(0, 1).toUpperCase() + this.substring(1, this.length);
 };
@@ -59,7 +54,7 @@ Number.prototype.zeropad = function (n) {
 	return s;
 }
 
-jQuery(document).ready(function($) {
+$(document).ready(function ($) {
 	$('input[type="checkbox"].toggler')
 		.on('change', function() {
 			var caller = this;
@@ -81,7 +76,6 @@ jQuery(document).ready(function($) {
 		minLength: 1,
 	});
 
-	// Image upload preview
 	$('#preview img').each( function() {
 		$(this).data('default', $(this).attr('src'));
 	});
@@ -102,7 +96,6 @@ jQuery(document).ready(function($) {
 		}
 	});
 
-	//Dialogs
 	$('.dialog-fetcher')
 		.click( function(e) {
 			var div = $(
