@@ -1475,9 +1475,6 @@ body.inverted {
         border-color: #8e92a4;
         color: #25262d; }
 
-.Archive-button--container {
-  margin-top: 0.5em; }
-
 .Archive-button {
   border-style: solid;
   border-width: 1px;
@@ -1521,6 +1518,12 @@ body.inverted {
     background: #d1ccc7;
     border-color: #a4998e;
     color: #2d2925; }
+
+.Archive-button,
+.New-event--button {
+  display: block;
+  text-align: center;
+  margin-top: 0.5em; }
 
 .Prompts {
   width: 100%; }

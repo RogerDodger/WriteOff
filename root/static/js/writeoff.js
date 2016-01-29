@@ -547,7 +547,7 @@ $(document).ready(function () {
 
 			// Highlight events that are within 12 hours of having an active round
 			var interesting = 0;
-			if ($events.size() > 1) {
+			if ($events.size() > 1 && 8 > $events.size()) {
 				var hype = 1000 * 60 * 60 * 12;
 				$target.find('.Event-timeline').data('timeline').forEach(function (e) {
 					if (e.start.getTime() - hype < now.getTime() && now.getTime() < e.end.getTime() + hype) {
