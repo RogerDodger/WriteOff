@@ -13,8 +13,8 @@
 .Scoreboard-awards {
 	line-height: 0;
 
-	.Award {
-		margin-right: -9px;
+	.Award + .Award {
+		margin-left: -10px;
 	}
 }
 

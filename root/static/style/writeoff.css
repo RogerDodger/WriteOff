@@ -1914,8 +1914,8 @@ body.inverted {
 
 .Scoreboard-awards {
   line-height: 0; }
-  .Scoreboard-awards .Award {
-    margin-right: -9px; }
+  .Scoreboard-awards .Award + .Award {
+    margin-left: -10px; }
 
 .Scoreboard-filter {
   display: table;

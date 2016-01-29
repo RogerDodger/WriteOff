@@ -37,17 +37,30 @@ sub do_add :Private {
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	my $s = {};
-	$s->{genre_id} = $1 if $c->req->param('genre') =~ /^(\d+)/;
-	$s->{format_id} = $1 if $c->req->param('format') =~ /^(\d+)/;
+	my %s;
+	$s{genre_id} = $1 if $c->req->param('genre') =~ /^(\d+)/;
+	$s{format_id} = $1 if $c->req->param('format') =~ /^(\d+)/;
 
-	$c->stash->{scores} = $c->stash->{artist}->scores->search($s, {
+	$c->stash->{scoreKey} = $s{format_id} ? 'score_format' : 'score_genre';
+
+	$c->stash->{scores} = $c->stash->{artist}->entrys->search(\%s, {
 		prefetch => 'event',
 		order_by => [
-			{ -desc  => 'event.end' },
-			{ -desc => 'value' },
+			{ -desc  => 'event.created' },
+			{ -desc => 'score' },
 		]
 	});
+
+	$c->stash->{theorys} = $c->stash->{artist}->theorys->search(
+		{
+			%s,
+			award_id => { "!=" => undef },
+		},
+		{
+			prefetch => 'event',
+			order_by => { -desc => 'event.created' },
+		}
+	);
 
 	$c->stash->{title} = 'Score Breakdown for ' . $c->stash->{artist}->name;
 	$c->stash->{template} = 'scoreboard/scores.tt';
