@@ -3,48 +3,47 @@ package WriteOff::Schema::ResultSet;
 use strict;
 use base 'DBIx::Class::ResultSet';
 require WriteOff::DateTime;
+require WriteOff::Util;
 
 sub datetime_parser {
-	return shift->result_source->schema->storage->datetime_parser;
+	shift->result_source->schema->storage->datetime_parser;
 }
 
 sub format_datetime {
-	return shift->datetime_parser->format_datetime(shift);
+	shift->datetime_parser->format_datetime(shift);
 }
 
 sub parse_datetime {
-	return shift->datetime_parser->parse_datetime(shift);
+	shift->datetime_parser->parse_datetime(shift);
 }
 
 sub now {
 	my $self = shift;
-	return $self->format_datetime($self->now_dt);
+	$self->format_datetime($self->now_dt);
 }
 
 sub now_dt {
-	return WriteOff::DateTime->now;
+	WriteOff::DateTime->now;
+}
+
+sub now_leeway {
+	my $self = shift;
+	$self->format_datetime($self->now_dt->clone->subtract(minutes => WriteOff::Util::LEEWAY));
 }
 
 sub created_before {
 	my ($self, $datetime) = @_;
-
-	my $date_str = $self->format_datetime($datetime);
-
-	return $self->search_rs({ created => { '<' => $date_str } });
+	$self->search_rs({ created => { '<' => $self->format_datetime($datetime) } });
 }
 
 sub created_after {
 	my ($self, $datetime) = @_;
-
-	my $date_str = $self->format_datetime($datetime);
-
-	return $self->search_rs({ created => { '>' => $date_str } });
+	$self->search_rs({ created => { '>' => $self->format_datetime($datetime) } });
 }
 
 sub order_by {
 	my $self = shift;
-
-	return $self->search_rs(undef, { order_by => shift });
+	$self->search_rs(undef, { order_by => shift });
 }
 
 1;

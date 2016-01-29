@@ -403,7 +403,9 @@ function DrawTimeline (e) {
 		.attr('y2', height / 2);
 
 	svg.selectAll('circle.boundary.start')
-		.data(data)
+		.data(data.filter(function (e, i) {
+			return i == 0 || e.start - data[i-1].end > 10 * 60 * 1000;
+		}))
 		.enter()
 		.append('circle')
 		.attr('title', function(d, i) {
@@ -414,9 +416,7 @@ function DrawTimeline (e) {
 		});
 
 	svg.selectAll('circle.boundary.end')
-		.data(data.filter(function (e, i) {
-			return i == data.length-1 || data[i+1].start - e.end > 10 * 60 * 1000;
-		}))
+		.data(data)
 		.enter()
 		.append('circle')
 		.attr('title', function(d, i) {
@@ -445,7 +445,9 @@ function DrawTimeline (e) {
 		.attr('stroke-width', 1);
 
 	svg.selectAll('text.dates.start')
-		.data(data)
+		.data(data.filter(function (e, i) {
+			return i == 0 || e.start - data[i-1].end > 12 * 60 * 60 * 1000;
+		}))
 		.enter()
 		.append('text')
 		.text(function(d, i) {
@@ -459,9 +461,7 @@ function DrawTimeline (e) {
 		});
 
 	svg.selectAll('text.dates.end')
-		.data(data.filter(function (e, i) {
-			return i == data.length-1 || data[i+1].start - e.end > 12 * 60 * 60 * 1000;
-		}))
+		.data(data)
 		.enter()
 		.append('text')
 		.text(function(d, i) {

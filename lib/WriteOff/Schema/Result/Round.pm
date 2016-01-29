@@ -5,6 +5,7 @@ use 5.01;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
+require WriteOff::Util;
 
 __PACKAGE__->table("rounds");
 
@@ -28,5 +29,9 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "round_id");
 __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "round_id");
+
+sub end_leeway {
+	shift->end->clone->add(minutes => WriteOff::Util::LEEWAY);
+}
 
 1;

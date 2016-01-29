@@ -9,8 +9,8 @@ sub form :Private {
 
 	$c->stash->{fillform}{artist} = $c->user->active_artist_id;
 
-	if ($c->stash->{rounds}->active->count) {
-		$c->stash->{countdown} = $c->stash->{rounds}->active->first->end;
+	if ($c->stash->{rounds}->active(leeway => 1)->count) {
+		$c->stash->{countdown} = $c->stash->{rounds}->active(leeway => 1)->first->end;
 	}
 	elsif ($c->stash->{rounds}->upcoming->count) {
 		$c->stash->{countdown} = $c->stash->{rounds}->upcoming->first->start;

@@ -11,11 +11,11 @@ for my $meth (qw/active fic finished upcoming writing/) {
 }
 
 sub active {
-	my $self = shift;
+	my ($self, %opt) = @_;
 
 	$self->search({
 		start => { '<' => $self->now },
-		end => { '>' => $self->now },
+		end => { '>' => $opt{leeway} ? $self->now_leeway : $self->now },
 	});
 }
 

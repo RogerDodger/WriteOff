@@ -6,8 +6,10 @@ use warnings;
 use base 'Exporter';
 use Bytes::Random::Secure ();
 
-our @EXPORT_OK = qw/maybe simple_uri sorted token wordcount uniq/;
+our @EXPORT_OK = qw/LEEWAY maybe simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
+
+sub LEEWAY () { 5 } # minutes
 
 sub maybe ($$) {
 	return $_[1] ? @_ : ();

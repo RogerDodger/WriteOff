@@ -116,10 +116,6 @@ sub has_results {
 	return $self->prelim || $self->public || $self->private;
 }
 
-sub LEEWAY () {
-	return 5; #minutes
-}
-
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
@@ -174,21 +170,21 @@ sub prompt_votes_allowed {
 }
 
 sub art_gallery_opens {
-	return shift->art_end->clone->add(minutes => LEEWAY);
+	my $self = shift;
+	$self->has('art') && $self->rounds->drawing->first->end_leeway;
 }
 
 sub fic_gallery_opens {
-	return shift->fic_end->clone->add(minutes => LEEWAY);
+	my $self = shift;
+	$self->has('fic') && $self->rounds->writing->first->end_leeway;
 }
 
 sub art_subs_allowed {
-	my $row = shift;
-
-	return sorted $row->art, $row->now_dt, $row->art_gallery_opens;
+	shift->rounds->drawing->active(leeway => 1)->count;
 }
 
 sub fic_subs_allowed {
-	shift->rounds->writing->active->count;
+	shift->rounds->writing->active(leeway => 1)->count;
 }
 
 sub art_gallery_opened {
