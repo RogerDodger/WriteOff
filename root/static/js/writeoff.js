@@ -535,7 +535,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	var $events = $('.Event-header');
 	$events.each(function () {
-		if (this.dataset.autoexpand) {
+		if (this.dataset.nocollapse) {
 			return;
 		}
 

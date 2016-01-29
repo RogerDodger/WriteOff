@@ -15,9 +15,8 @@
 {{ END }}
 
 {{ IF c.action.name == 'index' }}
-<div class="Archive-button--container">
+<div class="Event-list--buttons">
 	<a class="Archive-button" href="/archive">View all</a>
-
 	{{ IF c.user.admin }}
 	<a class="New-event--button" href="/event/add">New event</a>
 	{{ END }}

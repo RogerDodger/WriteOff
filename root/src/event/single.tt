@@ -1,6 +1,6 @@
 {{- SET id = [ event.id_uri ] }}
 
-<div class="Event-header" data-autoexpand="{{ event.autoexpand }}">
+<div class="Event-header" data-nocollapse="{{ event.nocollapse }}">
 	<div class="Event-overview">
 		<a class="Event-prompt" href="{{ c.uri_for_action('/event/permalink', id) }}">{{ event.prompt }}</a>
 		&middot;

@@ -1483,19 +1483,19 @@ body.inverted {
   padding: 0.8em;
   text-decoration: none;
   vertical-align: middle;
-  background: #bddbdb;
-  border-color: #7ab8b8;
-  color: #1d3535; }
+  background: #c7d1d1;
+  border-color: #8fa3a3;
+  color: #252d2d; }
   .Archive-button:not(:disabled):hover {
     cursor: pointer;
-    background: #afd4d4;
+    background: #bcc8c8;
     text-decoration: none; }
   .Archive-button:not(:disabled):active {
-    box-shadow: 0 0.5em 0.7em #a2cdcd inset; }
+    box-shadow: 0 0.5em 0.7em #b0bfbf inset; }
   .Archive-button:disabled {
-    background: #c7d1d1;
-    border-color: #8ea4a4;
-    color: #252d2d; }
+    background: #cacece;
+    border-color: #959d9d;
+    color: #272a2a; }
 
 .New-event--button {
   border-style: solid;

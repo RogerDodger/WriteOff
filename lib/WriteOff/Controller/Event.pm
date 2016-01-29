@@ -11,7 +11,7 @@ sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch'
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{event}{autoexpand} = 1;
+	$c->stash->{event}{nocollapse} = 1;
 	$c->stash->{template} = 'event/view.tt';
 }
 
