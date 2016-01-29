@@ -76,6 +76,8 @@ sub path {
 	'/static/art/' . ('thumb/' x!! $thumb) . $self->filename;
 }
 
+sub title { shift->entry->title }
+
 sub write {
 	my ($self, $img) = @_;
 	$self->version(substr Digest::MD5->md5_hex(time . rand() . $$), -6);

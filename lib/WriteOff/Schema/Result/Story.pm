@@ -26,7 +26,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to("entry", "WriteOff::Schema::Result::Entry", { story_id => "id" });
+__PACKAGE__->has_one("entry", "WriteOff::Schema::Result::Entry", { "foreign.story_id" => "self.id" });
 __PACKAGE__->has_many("image_stories", "WriteOff::Schema::Result::ImageStory", "story_id");
 __PACKAGE__->many_to_many("images", "image_stories", "image");
 
@@ -39,5 +39,7 @@ sub is_manipulable_by {
 	    || $self->entry->event->is_organised_by($user)
 	    || $self->entry->user_id == $user->id && $self->entry->event->fic_subs_allowed;
 }
+
+sub title { shift->entry->title }
 
 1;
