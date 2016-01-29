@@ -1,6 +1,7 @@
 package WriteOff::Controller::Artist;
 use Moose;
 use namespace::autoclean;
+use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
