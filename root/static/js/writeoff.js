@@ -741,13 +741,19 @@ $(document).ready(function () {
 	var $dates = $('time.date');
 	var $datetimes = $('time.datetime');
 
-	if ($countdowns.length) {
-		var elapsed = 0;
+	if ($countdowns.size()) {
+		var t, t0;
 		var tick = function () {
+			t = new Date();
 			// `now` is defined in the global scope as the server's current time
 			// this is used so that it's spoofable, and so that ountdowns are
 			// based off the server's clock rather than the client's
-			var now_ = now.getTime() + elapsed;
+
+			// 50ms is added for rounding purposes. The 1000ms interval can
+			// end up being 998-1002ms. This can have the countdown seem to
+			// skip a second as it goes from, for example, 4000ms to 2999ms to
+			// 2000ms remaining.
+			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
 
 			$countdowns.each(function () {
 				var ms = (new Date($(this).attr('datetime'))).getTime() - now_;
@@ -771,8 +777,8 @@ $(document).ready(function () {
 					m.zeropad(2) + "m " +
 					s.zeropad(2) + "s";
 			});
-			elapsed += 1000;
 		};
+		t0 = new Date();
 		setInterval(tick, 1000);
 		tick();
 	}
