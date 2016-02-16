@@ -95,7 +95,7 @@ sub art_end {
 
 sub has {
 	my $self = shift;
-	return $self->rounds->search({ type => shift })->count;
+	return $self->rounds->search({ mode => shift })->count;
 }
 
 sub has_prompt {

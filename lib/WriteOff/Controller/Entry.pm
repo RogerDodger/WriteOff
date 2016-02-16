@@ -109,7 +109,7 @@ sub do_delete :Private {
 	$c->forward('/check_csrf_token');
 
 	$c->log->info("%s deleted by %s: %s by %s",
-		ucfirst $c->stash->{entry}->type,
+		ucfirst $c->stash->{entry}->mode,
 		$c->user->name,
 		$c->stash->{entry}->title,
 		$c->stash->{entry}->artist->name,

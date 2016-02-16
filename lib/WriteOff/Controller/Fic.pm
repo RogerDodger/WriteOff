@@ -274,22 +274,23 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 
 	$c->stash->{items} = $c->stash->{event}->storys->eligible;
 
-	$c->stash->{guesses} = $c->stash->{event}->vote_records->search({
-		round => 'guess',
-		type => 'fic',
-		'me.score', => { '>=' => 3 },
-	}, {
-		prefetch => [
-			'artist',
-			{ guesses => 'story' },
-		],
-		order_by => [
-			{ -desc => 'me.score' },
-			{ -asc => 'artist.name' },
-		],
-	});
+	$c->stash->{guesses} = $c->stash->{event}->theorys->search(
+		{
+			accuracy => { '>=' => 3 },
+		},
+		{
+			prefetch => [
+				'artist',
+				{ guesses => 'entry' },
+			],
+			order_by => [
+				{ -desc => 'me.accuracy' },
+				{ -asc => 'artist.name' },
+			],
+		}
+	);
 
-	$c->stash->{type} = 'fic';
+	$c->stash->{mode} = 'fic';
 	$c->stash->{view} = $self->action_for('view');
 
 	$c->forward('/event/results');

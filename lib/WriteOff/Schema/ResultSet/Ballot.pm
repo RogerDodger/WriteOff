@@ -85,35 +85,19 @@ sub slates {
 }
 
 sub round {
-	return shift->search_rs({ round => shift });
+	Carp::croak "Deprecated method 'round' called";
 }
 
-sub guess {
-	return shift->round('guess');
-}
-
-sub prelim {
-	return shift->round('prelim');
-}
-
-sub public {
-	return shift->round('public');
-}
-
-sub private {
-	return shift->round('private');
-}
-
-sub type {
-	return shift->search_rs({ type => shift })
+sub mode {
+	return shift->search_rs({ mode => shift }, { join => 'round' });
 }
 
 sub fic {
-	return shift->type('fic');
+	return shift->mode('fic');
 }
 
 sub art {
-	return shift->type('art');
+	return shift->mode('art');
 }
 
 1;

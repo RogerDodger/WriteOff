@@ -103,7 +103,7 @@
 }
 
 .Archive-button {
-	@include button($hue: 180, $sat: 10%);
+	@include button($sat: 0%, $l: 90%);
 }
 
 .New-event--button {

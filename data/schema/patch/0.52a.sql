@@ -50,12 +50,13 @@ FROM events;
 SELECT id, event_id, user_id, contents, IFNULL(CAST (rating AS INTEGER), approvals), created FROM prompts;
 
 .mode insert rounds
-SELECT NULL, id, 'writing', 'fic', fic, fic_end FROM events WHERE fic IS NOT NULL;
-SELECT NULL, id, 'drawing', 'art', art, art_end FROM events WHERE art IS NOT NULL;
-SELECT NULL, id, 'prelim', 'vote', prelim, public FROM events WHERE prelim IS NOT NULL;
-SELECT NULL, id, 'prelim', 'vote', public, private FROM events WHERE private IS NOT NULL;
-SELECT NULL, id, 'final', 'vote', private, end FROM events WHERE private IS NOT NULL;
-SELECT NULL, id, 'final', 'vote', public, end FROM events WHERE private IS NULL;
+SELECT NULL, id, 'writing', 'fic', 'submit', fic, fic_end FROM events WHERE fic IS NOT NULL;
+SELECT NULL, id, 'prelim', 'fic', 'vote', prelim, public FROM events WHERE prelim IS NOT NULL;
+SELECT NULL, id, 'prelim', 'fic', 'vote', public, private FROM events WHERE private IS NOT NULL;
+SELECT NULL, id, 'final', 'fic', 'vote', private, end FROM events WHERE private IS NOT NULL;
+SELECT NULL, id, 'final', 'fic', 'vote', public, end FROM events WHERE private IS NULL;
+SELECT NULL, id, 'drawing', 'art', 'submit', art, art_end FROM events WHERE art IS NOT NULL;
+SELECT NULL, id, 'final', 'art', 'vote', art_end, end FROM events WHERE art IS NOT NULL;
 
 .mode insert user_event
 SELECT * FROM user_event;
@@ -102,42 +103,36 @@ UPDATE storys
 	WHERE event_id IN (35, 36, 37);
 
 .mode insert ratings_tmp
-SELECT NULL, NULL, id, event_id, 'final', public_score, public_stdev
+SELECT NULL, NULL, id, event_id, 'final', 'art', public_score, public_stdev
 FROM images;
 
-SELECT NULL, id, NULL, event_id, 'prelim', prelim_score, prelim_stdev
+SELECT NULL, id, NULL, event_id, 'prelim', 'fic', prelim_score, prelim_stdev
 FROM storys WHERE prelim_score IS NOT NULL;
 
-SELECT NULL, id, NULL, event_id, 'prelim', public_score, public_stdev
+SELECT NULL, id, NULL, event_id, 'prelim', 'fic', public_score, public_stdev
 FROM storys WHERE public_score IS NOT NULL AND event_id IN (3,7,8,9);
 
-SELECT NULL, id, NULL, event_id, 'final', public_score, NULLIF(public_stdev, 0)
+SELECT NULL, id, NULL, event_id, 'final', 'fic', public_score, NULLIF(public_stdev, 0)
 FROM storys WHERE public_score IS NOT NULL AND event_id NOT IN (3,7,8,9);
 
-SELECT NULL, id, NULL, event_id, 'final', private_score, NULL
+SELECT NULL, id, NULL, event_id, 'final', 'fic', private_score, NULL
 FROM storys WHERE private_score IS NOT NULL;
-
--- award
--- ballot
--- vote
--- theory
--- guess
 
 .mode insert awards_tmp
 SELECT id, story_id, image_id, event_id, artist_id, award_id FROM artist_award;
 
-.mode insert ballots
-SELECT id, event_id, user_id, 'prelim', type, NULL, created, updated
+.mode insert ballots_tmp
+SELECT id, event_id, user_id, 'prelim', type, created, updated
 FROM vote_records WHERE round = 'prelim';
 
-SELECT id, event_id, user_id, 'final', type, NULL, created, updated
+SELECT id, event_id, user_id, 'final', type, created, updated
 FROM vote_records WHERE round = 'private';
 
-SELECT id, event_id, user_id, 'final', type, NULL, created, updated
-FROM vote_records WHERE round = 'public' AND event_id IN (3,7,8,9);
-
-SELECT id, event_id, user_id, 'prelim', type, NULL, created, updated
+SELECT id, event_id, user_id, 'final', type, created, updated
 FROM vote_records WHERE round = 'public' AND event_id NOT IN (3,7,8,9);
+
+SELECT id, event_id, user_id, 'prelim', type, created, updated
+FROM vote_records WHERE round = 'public' AND event_id IN (3,7,8,9);
 
 .mode insert votes_tmp
 SELECT id, record_id, story_id, image_id, value, abstained FROM votes;

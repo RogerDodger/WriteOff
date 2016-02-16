@@ -37,7 +37,7 @@ Date.prototype.getShortMonth = function () {
 };
 
 Date.prototype.getDateSuffixed = function () {
-	this.getDate().ordinal();
+	return this.getDate().ordinal();
 };
 
 Number.prototype.ordinal = function () {

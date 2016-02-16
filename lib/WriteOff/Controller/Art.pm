@@ -241,7 +241,7 @@ sub results :Chained('/event/art') :PathPart('results') :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{items} = $c->stash->{event}->images->eligible;
-	$c->stash->{type} = 'art';
+	$c->stash->{mode} = 'art';
 	$c->stash->{view} = $self->action_for('view');
 
 	$c->forward('/event/results');

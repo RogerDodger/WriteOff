@@ -67,11 +67,13 @@ __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 __PACKAGE__->mk_group_accessors(column => 'num');
 
-sub type {
+sub mode {
 	my $self = shift;
 
 	$self->image_id && 'art' || 'fic';
 }
+
+BEGIN { *type = \&mode }
 
 sub item {
 	my $self = shift;

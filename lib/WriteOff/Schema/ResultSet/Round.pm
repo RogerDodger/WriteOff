@@ -18,8 +18,12 @@ sub active {
 	});
 }
 
+sub art {
+	shift->search({ mode => 'art' });
+}
+
 sub fic {
-	shift->search({ type => 'fic' });
+	shift->search({ mode => 'fic' });
 }
 
 sub finished {
@@ -29,6 +33,10 @@ sub finished {
 
 sub ordered {
 	shift->order_by('start');
+}
+
+sub submit {
+	shift->search({ action => 'submit' });
 }
 
 sub started {
@@ -42,11 +50,11 @@ sub upcoming {
 }
 
 sub vote {
-	shift->search({ type => 'vote' });
+	shift->search({ action => 'vote' });
 }
 
 sub writing {
-	shift->search({ name => 'writing' });
+	Carp::croak "Deprecated method 'writing' called";
 }
 
 1;
