@@ -59,7 +59,7 @@
 		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
 		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
 
-		{{ IF event.has('vote') }}
+		{{ IF event.has('art', 'vote') }}
 		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
 		{{ END }}
@@ -72,7 +72,7 @@
 		<li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
 		<li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
 
-		{{ IF event.has('vote') }}
+		{{ IF event.has('fic', 'vote') }}
 		<li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
 		{{ END }}

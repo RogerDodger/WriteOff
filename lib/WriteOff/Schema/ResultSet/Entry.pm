@@ -32,7 +32,7 @@ sub gallery {
 		join => 'round',
 		order_by => [
 			{ -asc => 'disqualified' },
-			{ -asc => 'round.end' },
+			{ -desc => 'round.end' },
 			{ -desc => 'seed' },
 		],
 	});

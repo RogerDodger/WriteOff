@@ -76,7 +76,7 @@ UPDATE entrys SET
 		AND (ro.mode = 'fic' AND entrys.story_id IS NOT NULL
 			OR ro.mode = 'art' AND entrys.image_id IS NOT NULL)
 		AND ro.action = 'vote'
-		ORDER BY ra.id IS NOT NULL DESC, ro.end ASC
+		ORDER BY ra.id IS NOT NULL DESC, ro.end DESC
 		LIMIT 1),
 	score_genre = score * power(0.9, (
 		SELECT COUNT(*) FROM events

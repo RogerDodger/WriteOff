@@ -7,7 +7,7 @@ use warnings;
 use base "WriteOff::Schema::Result";
 
 use JSON;
-use WriteOff::Util qw/simple_uri sorted/;
+use WriteOff::Util qw/maybe simple_uri sorted/;
 use WriteOff::Rank qw/twipie/;
 require List::Util;
 
@@ -95,7 +95,7 @@ sub art_end {
 
 sub has {
 	my $self = shift;
-	return $self->rounds->search({ mode => shift })->count;
+	return $self->rounds->search({ mode => shift, maybe action => shift })->count;
 }
 
 sub has_prompt {
@@ -171,12 +171,12 @@ sub prompt_votes_allowed {
 
 sub art_gallery_opens {
 	my $self = shift;
-	$self->has('art') && $self->rounds->drawing->first->end_leeway;
+	$self->has('art') && $self->rounds->art->submit->first->end_leeway;
 }
 
 sub fic_gallery_opens {
 	my $self = shift;
-	$self->has('fic') && $self->rounds->writing->first->end_leeway;
+	$self->has('fic') && $self->rounds->fic->submit->first->end_leeway;
 }
 
 sub art_subs_allowed {
