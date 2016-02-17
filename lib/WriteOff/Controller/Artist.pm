@@ -39,8 +39,8 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	my %s;
-	$s{genre_id} = $1 if $c->req->param('genre') =~ /^(\d+)/;
-	$s{format_id} = $1 if $c->req->param('format') =~ /^(\d+)/;
+	$s{genre_id} = $1 if ($c->req->param('genre') // '') =~ /^(\d+)/;
+	$s{format_id} = $1 if ($c->req->param('format') // '') =~ /^(\d+)/;
 
 	$c->stash->{scoreKey} = $s{format_id} ? 'score_format' : 'score_genre';
 

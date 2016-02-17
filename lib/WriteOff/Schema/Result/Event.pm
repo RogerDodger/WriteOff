@@ -77,6 +77,12 @@ sub start {
 	$round && $round->start;
 }
 
+sub end {
+	my $self = shift;
+
+	$self->rounds->search({}, { order_by => { -desc => 'end' } })->first->end;
+}
+
 sub fic {
 	Carp::croak "Deprecated round time `fic` called";
 }
@@ -180,11 +186,11 @@ sub fic_gallery_opens {
 }
 
 sub art_subs_allowed {
-	shift->rounds->drawing->active(leeway => 1)->count;
+	shift->rounds->art->submit->active(leeway => 1)->count;
 }
 
 sub fic_subs_allowed {
-	shift->rounds->writing->active(leeway => 1)->count;
+	shift->rounds->fic->submit->active(leeway => 1)->count;
 }
 
 sub art_gallery_opened {
@@ -206,21 +212,15 @@ sub art_votes_allowed {
 }
 
 sub prelim_votes_allowed {
-	my $row = shift;
-
-	return $row->prelim && sorted $row->prelim, $row->now_dt, $row->public;
+	Carp::croak "Deprecated method 'prelim_votes_allowed' called";
 }
 
 sub public_votes_allowed {
-	my $row = shift;
-
-	return sorted $row->public, $row->now_dt, $row->private || $row->end;
+	Carp::croak "Deprecated method 'public_votes_allowed' called";
 }
 
 sub private_votes_allowed {
-	my $row = shift;
-
-	return $row->private && sorted $row->private, $row->now_dt, $row->end;
+	Carp::croak "Deprecated method 'private_votes_allowed' called";
 }
 
 sub author_guessing_allowed {
@@ -256,13 +256,16 @@ sub public_label {
 sub timeline_json {
 	my $self = shift;
 
-	return encode_json [ map {
-		{
+	return encode_json [
+		map {{
 			round => $_->name,
 			start => $_->start->iso8601,
 			end => $_->end->iso8601,
-		}
-	} $self->rounds->search({}, { order_by => 'start' }) ];
+		}}
+		# dont show art vote round in timeline for now
+		grep { $_->mode ne 'art' or $_->action ne 'vote' }
+		$self->rounds->search({ }, { order_by => 'start' })
+	];
 }
 
 sub reset_schedules {

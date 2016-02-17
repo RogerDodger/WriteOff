@@ -1,5 +1,5 @@
 <div class="Document">
-	<div class="Document-title">{{ heading }}</div>
+	<div class="Document-title">{{ c.string('authorGuessing') }}</div>
 
 	<div class="Countdown">
 		{{ IF open > now }}
@@ -11,18 +11,18 @@
 		{{ END }}
 	</div>
 
-	{{- IF votes_allowed }}
+	{{- IF event.author_guessing_allowed }}
 		{{- IF !c.user }}
 		<div class="Flash">
 			{{ c.string('loginRequiredVote') }}
 		</div>
 		{{ ELSE }}
-		<form id="auto-update" class="Form" method="post">
+		<form class="Form auto" method="post" action="{{ c.req.uri }}">
 			<table class="Storys">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>{{ c.string('title') }}</th>
+						<th></th>
+						<th>{{ c.string('story') }}</th>
 						<th>{{ c.string('author') }}</th>
 					</tr>
 				</thead>

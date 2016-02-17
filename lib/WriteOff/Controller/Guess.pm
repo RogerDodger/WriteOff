@@ -9,14 +9,13 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 	my ($self, $c) = @_;
 	my $e = $c->stash->{event};
 
+	$c->stash(
+		open => $e->rounds->fic->submit->first->end_leeway,
+		close => $e->end,
+	);
+
 	if ($e->author_guessing_allowed) {
-		my $artists_rs = $c->model('DB::Artist');
-
-		$c->stash->{candidates} =
-			$e->prelim_votes_allowed
-				? $e->storys->gallery($c->user->offset)->eligible
-				: $e->storys->gallery($c->user->offset)->eligible->candidates;
-
+		$c->stash->{candidates} = $e->storys->search({ artist_public => 1 })->gallery;
 		$c->stash->{artists} = [
 			map { $_->artist }
 				$c->stash->{candidates}->search({}, {
@@ -26,54 +25,38 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 				})
 		];
 
-		$c->forward('do_guess') if $c->req->method eq 'POST';
+		if ($c->user) {
+			$c->stash->{theory} = $c->model("DB::Theory")->find_or_create({
+				event_id => $e->id,
+				user_id => $c->user->id
+			});
+
+			$c->stash->{fillform} = {
+				map { $_->entry_id => $_->artist_id } $c->stash->{theory}->guesses->all,
+			};
+
+			$c->forward('do_guess') if $c->req->method eq 'POST';
+		}
 	}
 
-	$c->stash(
-		open  => $e->fic_end,
-		close => $e->end,
-		heading => 'Author Guessing',
-		votes_allowed  => $e->author_guessing_allowed,
-		votes_received => $e->vote_records->guess->fic->count,
-	);
-
-	$c->forward('fillform');
-
-	push $c->stash->{title}, 'Author Guessing';
+	push $c->stash->{title}, $c->string('authorGuessing');
 	$c->stash->{template} = 'vote/guess.tt';
 }
 
 sub do_guess :Private {
 	my ($self, $c) = @_;
-	return unless $c->user;
-
-	# 'fic', 'art', ...
-	my $type = $c->action->name;
-
-	my $record = $c->model('DB::VoteRecord')->find_or_create({
-		event_id => $c->stash->{event}->id,
-		user_id  => $c->user_id,
-		round    => 'guess',
-		type     => $type,
-	});
-
-	my $item_id_col = { art => 'image_id', fic => 'story_id' }->{$type};
-	if (!defined $item_id_col) {
-		$c->log->warn("Unrecognised vote type: $type");
-		return;
-	}
 
 	my @artists = @{ $c->stash->{artists} };
-	for my $item ($c->stash->{candidates}->all) {
+	for my $entry ($c->stash->{candidates}->all) {
 		# Users cannot vote on their own entries
-		next if $item->user_id == $c->user_id;
+		next if $entry->user_id == $c->user_id;
 
-		my $aid = $c->req->param($item->id);
+		my $aid = $c->req->param($entry->id);
 		next unless defined $aid;
 
 		my $guess = $c->model('DB::Guess')->find_or_new({
-			$item_id_col => $item->id,
-			record_id    => $record->id,
+			entry_id  => $entry->id,
+			theory_id => $c->stash->{theory}->id,
 		});
 
 		if (looks_like_number($aid) && grep { $aid == $_->id } @artists) {
@@ -85,22 +68,6 @@ sub do_guess :Private {
 	}
 
 	$c->stash->{status_msg} = 'Vote updated';
-}
-
-sub fillform :Private {
-	my ($self, $c) = @_;
-	return unless $c->user;
-
-	my $record = $c->stash->{event}->vote_records->guess->find({
-		user_id => $c->user_id,
-		type    => $c->action->name,
-	});
-
-	if (defined $record) {
-		$c->stash->{fillform} = {
-			map { $_->item->id => $_->artist_id } $record->guesses->all,
-		};
-	}
 }
 
 __PACKAGE__->meta->make_immutable;

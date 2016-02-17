@@ -53,7 +53,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 		$c->forward('View::Epub');
 	}
 	else {
-		$c->stash->{gallery} = $c->stash->{event}->storys->gallery;
+		$c->stash->{gallery} = $c->stash->{event}->storys->gallery->search({}, { prefetch => 'story' });
 
 		push $c->stash->{title}, 'Gallery';
 		$c->stash->{template} = 'fic/gallery.tt';
@@ -63,7 +63,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 sub form :Private {
 	my ($self, $c) = @_;
 
-	$c->stash->{rounds} = $c->stash->{event}->rounds->writing;
+	$c->stash->{rounds} = $c->stash->{event}->rounds->fic->submit;
 	$c->forward('/entry/form');
 }
 
