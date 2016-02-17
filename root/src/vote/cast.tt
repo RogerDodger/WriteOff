@@ -1,6 +1,6 @@
 <div class="Document">
 	<div class="Document-title">
-		{{ type.ucfirst }} Voting
+		{{ mode.ucfirst }} Voting
 		{{ IF label }}
 			&#8250; {{ label }}
 		{{ END }}
@@ -14,7 +14,7 @@
 		{{ END }}
 	</div>
 
-	{{ IF record }}
+	{{ IF ballot }}
 	<table class="Ballot">
 		<tbody class="ordered">
 			{{ FOREACH vote IN ordered.all }}
@@ -77,7 +77,7 @@
 	<div class="Flash">
 		{{ c.string('loginRequiredVote') }}
 	</div>
-	{{ ELSIF round && !record }}
+	{{ ELSIF round && !ballot }}
 	<div class="Flash">
 		{{ c.string('calculatingCandidates') }}
 	</div>

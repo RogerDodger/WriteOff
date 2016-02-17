@@ -11,10 +11,10 @@
 	</td>
 	<td class="Ballot-title">
 		<input name="order" value="{{ vote.id }}" type="hidden">
-		<a href="{{ c.uri_for(view, [ vote.item.id_uri ]) }}">{{ vote.item.title | html }}</a>
+		<a href="{{ c.uri_for(view, [ vote.entry.id_uri ]) }}">{{ vote.entry.title | html }}</a>
 	</td>
 	<td class="Ballot-abstain--cell">
-		<span class="Ballot-abstain {{ 'hidden' IF record.abstains.defined && record.abstains <= 0 }}">
+		<span class="Ballot-abstain {{ 'hidden' IF ballot.abstains <= 0 }}">
 			{{ c.string('abstain') }}
 		</span>
 		<span class="Ballot-unabstain">

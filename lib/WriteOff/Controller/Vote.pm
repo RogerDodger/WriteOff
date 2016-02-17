@@ -20,35 +20,39 @@ Catalyst Controller.
 sub cast :Private {
 	my ($self, $c) = @_;
 
-	if ($c->stash->{round} && $c->stash->{candidates}->count && $c->user) {
-		my $records = $c->stash->{event}->vote_records->search({
+	my $rounds = $c->stash->{event}->rounds->search({
+		mode => $c->stash->{mode},
+		action => 'vote',
+	});
+
+	$c->stash->{round} = $rounds->active->first;
+
+	if ($c->stash->{round} && $c->stash->{round}->entrys->count && $c->user) {
+		my $ballot = $c->stash->{event}->ballots->find_or_create({
 			user_id => $c->user->id,
-			type    => $c->stash->{type},
+			round_id => $c->stash->{round}->id,
 		});
 
-		my $record = $records->search({ round => $c->stash->{round} })->first;
-
-		if (!$record) {
-			$record = $c->stash->{event}->create_related('vote_records', {
-				abstains => 3,
-				user_id => $c->user->id,
-				round => $c->stash->{round},
-				type  => $c->stash->{type},
-			});
-		}
-
-		$c->stash->{pool} = $c->stash->{candidates}->search({
-			'me.id' => { -not_in => $record->votes->get_column('story_id')->as_query },
+		$c->stash->{pool} = $c->stash->{round}->entrys->search({
+			'me.id' => { -not_in => $ballot->votes->get_column('entry_id')->as_query },
 			user_id => { '!=' => $c->user->id },
 		});
 
-		if (!$record->votes->count) {
+		if (!$ballot->votes->count) {
 			# Copy previous votes to the ballot
-			if (my $prev = $records->search({ round => $c->stash->{prev} })->first) {
-				for my $vote ($prev->votes->ordered->all) {
-					if ($c->stash->{candidates}->search({ id => $vote->story_id })->count) {
-						$record->create_related('votes', {
-							story_id => $vote->story_id,
+			my $prev = $c->user->ballots->search(
+				{ event_id => $c->stash->{event}->id },
+				{
+					order_by => { -desc => 'round.end' },
+					join => 'round',
+				}
+			)->first;
+
+			if ($prev) {
+				for my $vote ($prev->votes->join('entry')->all) {
+					if ($vote->entry->round_id == $c->stash->{round}->id) {
+						$ballot->create_related('votes', {
+							entry_id => $vote->entry_id,
 							value => $vote->value,
 						});
 					}
@@ -60,19 +64,25 @@ sub cast :Private {
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
 			for my $story ($c->stash->{pool}->all) {
-				$story->create_related('votes', { record_id => $record->id });
+				$story->create_related('votes', { ballot_id => $ballot->id });
 				$w -= $c->config->{work}{offset} + $story->wordcount / $c->config->{work}{rate};
 				last if $w < 0;
 			}
 		}
 
-		$c->stash->{record} = $record;
-		$c->stash->{ordered} = $record->votes->ordered;
-		$c->stash->{unordered} = $record->votes->search({ value => undef, abstained => 0 });
-		$c->stash->{abstained} = $record->votes->search({ abstained => 1 });
+		$c->stash->{countdown} = $c->stash->{round}->end;
+		$c->stash->{label} = $c->string($c->stash->{round}->name);
+		$c->stash->{ballot} = $ballot;
+		$c->stash->{ordered} = $ballot->votes->ordered;
+		$c->stash->{unordered} = $ballot->votes->search({ value => undef, abstained => 0 });
+		$c->stash->{abstained} = $ballot->votes->search({ abstained => 1 });
 	}
 
-	push $c->stash->{title}, $c->stash->{label} || 'Vote';
+	if (!$c->stash->{countdown} && $rounds->upcoming->count) {
+		$c->stash->{countdown} = $rounds->upcoming->ordered->first->start;
+	}
+
+	push $c->stash->{title}, $c->stash->{label} || $c->string('vote');
 	$c->stash->{template} = 'vote/cast.tt';
 
 	$c->forward('do_cast') if $c->req->method eq 'POST';
@@ -81,30 +91,24 @@ sub cast :Private {
 sub do_cast :Private {
 	my ($self, $c) = @_;
 
-	my $record = $c->stash->{record};
-	return unless $record;
+	my $ballot = $c->stash->{ballot} or return;
 
 	my $action = $c->req->params->{action} // 'reorder';
 	if ($action eq 'abstain' || $action eq 'unabstain') {
 		my $id = $c->req->params->{vote};
 		return unless looks_like_number $id;
 
-		my $vote = $record->votes->find($id);
+		my $vote = $ballot->votes->find($id);
 		$c->detach('/error', [ 'Vote not found' ]) unless $vote;
 
 		if ($action eq 'abstain') {
-			return if $vote->abstained || $record->abstains <= 0;
-
+			return if $ballot->abstains <= 0;
 			$vote->update({ abstained => 1, value => undef });
-			$record->update({ abstains => $record->abstains - 1 });
-			$c->res->body($record->abstains);
+			$c->res->body($ballot->abstains);
 		}
 		elsif ($action eq 'unabstain') {
-			return if !$vote->abstained;
-
 			$vote->update({ abstained => 0 });
-			$record->update({ abstains => $record->abstains + 1 });
-			$c->res->body($record->abstains);
+			$c->res->body($ballot->abstains);
 		}
 	}
 	elsif ($action eq 'append') {
@@ -115,13 +119,13 @@ sub do_cast :Private {
 		}
 		else {
 			my $tail = $c->stash->{pool}->first;
-			$c->stash->{vote} = $tail->create_related('votes', { record_id => $record->id });
+			$c->stash->{vote} = $tail->create_related('votes', { ballot_id => $ballot->id });
 			$c->stash->{score} = 'N/A';
 			$c->stash->{template} = 'vote/ballot-item.tt';
 		}
 	}
 	elsif ($action eq 'reorder') {
-		my $votes = $record->votes;
+		my $votes = $ballot->votes;
 		my %okay = map { $_->id => 1 } $votes->search({ abstained => 0 });
 		my @order = grep { defined && $okay{$_} } $c->req->param("order"), $c->req->param("order[]");
 
@@ -135,31 +139,8 @@ sub do_cast :Private {
 sub fic :PathPart('vote') :Chained('/event/fic') :Args(0) {
 	my ($self, $c) = @_;
 
-	my $e = $c->stash->{event};
-
-	$c->stash->{type} = 'fic';
+	$c->stash->{mode} = 'fic';
 	$c->stash->{view} = $c->controller('Fic')->action_for('view');
-
-	if ($e->prelim_votes_allowed) {
-		$c->stash->{round} = 'prelim';
-		$c->stash->{label} = 'Prelims';
-		$c->stash->{countdown} = $e->public;
-		$c->stash->{candidates} = $e->storys->eligible->sample;
-	} elsif ($e->public_votes_allowed) {
-		$c->stash->{prev} = 'prelim';
-		$c->stash->{round} = 'public';
-		$c->stash->{label} = $e->public_label;
-		$c->stash->{countdown} = $e->private || $e->end;
-		$c->stash->{candidates} = $e->storys->candidates->sample;
-	} elsif ($e->private_votes_allowed) {
-		$c->stash->{prev} = 'prelim';
-		$c->stash->{round} = 'private';
-		$c->stash->{label} = 'Finals';
-		$c->stash->{countdown} = $e->end;
-		$c->stash->{candidates} = $e->storys->finalists->sample;
-	} elsif (!$e->ended) {
-		$c->stash->{countdown} = $e->prelim || $e->public || $e->private;
-	}
 
 	$c->forward('cast');
 }

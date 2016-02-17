@@ -46,4 +46,9 @@ sub order_by {
 	$self->search_rs(undef, { order_by => shift });
 }
 
+sub join {
+	my $self = shift;
+	$self->search_rs(undef, { join => shift });
+}
+
 1;

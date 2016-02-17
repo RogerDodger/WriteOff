@@ -44,6 +44,8 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+
+__PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "event_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "event_id");
 __PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
 __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");

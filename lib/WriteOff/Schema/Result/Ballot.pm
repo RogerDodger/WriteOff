@@ -31,6 +31,11 @@ __PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 __PACKAGE__->has_many("votes", "WriteOff::Schema::Result::Vote", "ballot_id");
 
+sub abstains {
+	my $self = shift;
+	return 1 + int($self->votes->count / 10) - $self->votes->search({ abstained => 1 })->count;
+}
+
 sub now_dt {
 	return shift->result_source->resultset->now_dt;
 }
