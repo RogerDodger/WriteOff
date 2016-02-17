@@ -15,7 +15,7 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 	);
 
 	if ($e->author_guessing_allowed) {
-		$c->stash->{candidates} = $e->storys->search({ artist_public => 1 })->gallery;
+		$c->stash->{candidates} = $e->storys->search({ artist_public => 0 })->gallery;
 		$c->stash->{artists} = [
 			map { $_->artist }
 				$c->stash->{candidates}->search({}, {
