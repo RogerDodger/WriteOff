@@ -1,23 +1,35 @@
-<form class="Form" method="post" enctype="multipart/form-data">
-	{{ IF c.form.has_error }}
-	<div>
-		{{ FOREACH message IN c.form.messages('submit') }}
-			{{ INCLUDE fragment/error_msg.tt }}
-		{{ END }}
-	</div>
+<div class="Countdown">
+	{{ IF countdown }}
+		{{ countdown.delta_html | none }}
+	{{ ELSE }}
+		{{ c.string('subsClosed') }}
 	{{ END }}
+</div>
+
+
+{{ IF !c.user }}
+<div class="Flash">{{ c.string('loginRequiredArt') }}</div>
+{{ ELSIF event.art_subs_allowed }}
+<form class="Form" method="post">
+	{{ csrf_field | none }}
+	{{- IF c.form.has_error }}
+		{{- FOREACH message IN c.form.messages('submit') }}
+			{{ INCLUDE fragment/error_msg.tt }}
+		{{- END }}
+	{{- END }}
 
 	<div class="Form-group two">
 		<div class="Form-item">
 			<label>{{ c.string('title') }}<span class="required">*</span></label>
-			<input name="title" type="text" size="30"
-				maxlength="{{ c.config.len.max.title }}" required>
+			<input name="title" type="text" size="30" maxlength="{{ c.config.len.max.title }}" required>
 		</div>
 		<div class="Form-item">
-			<label>{{ c.string('artist') }}</label>
-			<input name="artist" type="text" size="30"
-				maxlength="{{ c.config.len.max.user }}"
-				placeholder="Anonymous">
+			<label>{{ c.string('artist') }}<span class="required">*</span></label>
+			<select name="artist">
+				{{ FOREACH artist IN artists.all }}
+				<option value="{{ artist.id }}">{{ artist.name }}</option>
+				{{ END }}
+			</select>
 		</div>
 	</div>
 
@@ -26,13 +38,6 @@
 		<input name="hovertext" type="text" size="72"
 			maxlength="{{ c.config.len.max.alt }}"
 			onchange="$('#preview img').attr('title', this.value)">
-	</div>
-
-	<div class="Form-item">
-		<label>{{ c.string('website') }}</label>
-		<input name="website" type="url" size="72"
-			maxlength="{{ c.config.len.max.url }}"
-			placeholder="http://">
 	</div>
 
 	<div class="Form-item">
@@ -56,3 +61,4 @@
 		<input type="submit" value="Submit" id="submit">
 	</div>
 </form>
+{{ END }}

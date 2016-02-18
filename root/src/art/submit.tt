@@ -3,21 +3,5 @@
 		{{ c.string('artSubmission') }}
 	</div>
 
-	<div class="Countdown">
-		{{ IF event.art > now }}
-			{{ event.art.delta_html | none }}
-		{{ ELSIF event.art_subs_allowed }}
-			{{ event.art_end.delta_html | none }}
-		{{ ELSE }}
-			{{ c.string('subsClosed') }}
-		{{ END }}
-	</div>
-
-	{{ IF event.art_subs_allowed }}
-		{{ IF c.user }}
-			{{ INCLUDE art/form.tt  image_required = 1 }}
-		{{ ELSE }}
-			<div class="Flash">{{ c.string('loginRequiredArt') }}</div>
-		{{ END }}
-	{{ END }}
+	{{ INCLUDE art/form.tt }}
 </div>

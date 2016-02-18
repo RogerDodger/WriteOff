@@ -44,6 +44,8 @@ sub clean {
 			$img =~ qr{$fn$} or unlink $img;
 		}
 	}
+
+	$self;
 }
 
 sub extension {
@@ -86,14 +88,20 @@ sub write {
 	$magick->Read($img);
 	$magick->Resize(geometry => '225x225');
 
-	my $e = $magick->Write(File::Spec->catfile('root', $self->path('thumb')));
+	my $thumbpath = File::Spec->catfile('root', $self->path('thumb'));
+
+	my $e = $magick->Write($thumbpath);
 	return $e if $e;
 
-	copy($img, File::Spec->catfile('root', $self->path)) or return $!;
-
-	$self->update;
-	$self->clean;
-	0;
+	if (!copy($img, File::Spec->catfile('root', $self->path))) {
+		my $e = $!;
+		unlink $thumbpath;
+		return $e;
+	}
+	else {
+		$self->clean;
+		return 0;
+	}
 }
 
 1;
