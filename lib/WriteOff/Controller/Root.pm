@@ -262,7 +262,7 @@ Check that the user provided their csrf token in the request parameters.
 sub check_csrf_token :Private {
 	my ($self, $c) = @_;
 
-	$c->req->param('csrf_token') == $c->csrf_token
+	$c->req->param('csrf_token') eq $c->csrf_token
 		or $c->detach('/error', [ $c->string('csrfDetected') ]);
 }
 
