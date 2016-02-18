@@ -229,7 +229,7 @@ sub robots :Path('/robots.txt') :Args(0) {
 
 	my $storys = $c->model('DB::Story')->search(
 		{ indexed => { "!=" => 1 } },
-		{ columns => [ qw/id title/ ] },
+		{ columns => [ qw/me.id entry.title/ ], prefetch => 'entry' },
 	);
 
 	my $body = "User-agent: *\n";
