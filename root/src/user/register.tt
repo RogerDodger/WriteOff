@@ -48,15 +48,6 @@
 		</div>
 
 		<div class="Form-item">
-			<label>Timezone</label>
-			<select name="timezone">
-			{{- FOREACH timezone IN timezones }}
-				<option value="{{ timezone }}">{{ timezone | replace('_', ' ') }}</option>
-			{{- END }}
-			</select>
-		</div>
-
-		<div class="Form-item">
 			<label>Prove You Are Human<span class="required">*</span></label>
 			{{ recaptcha.remove(' frameborder="0"') | none }}
 		</div>

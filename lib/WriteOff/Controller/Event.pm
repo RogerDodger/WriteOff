@@ -341,7 +341,6 @@ sub _notify_mailing_list :Private {
 			subject      => $c->config->{name} . " - New Event",
 			template     => 'email/event.tt',
 			content_type => 'text/html',
-			timezone     => $user->timezone,
 		};
 
 		$c->forward( $c->view('Email::Template') );

@@ -62,7 +62,6 @@ sub register :Local :Args(0) {
 
 	$c->res->redirect( $c->uri_for('/') ) if $c->user;
 
-	$c->stash->{timezones} = [ WriteOff::DateTime->timezones ];
 	$c->forward('/captcha_get');
 
 	push $c->stash->{title}, 'Register';
@@ -79,7 +78,6 @@ sub do_register :Private {
 	$c->form(
 		username => [
 			'NOT_BLANK',
-			[ 'DBIC_UNIQUE', $c->model('DB::Virtual::Artist'), 'name' ],
 			[ 'LENGTH', 2, $c->config->{len}{max}{user} ],
 			[ 'REGEX', $c->config->{biz}{user}{regex} ]
 		],
@@ -93,25 +91,27 @@ sub do_register :Private {
 			'EMAIL_MX',
 			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'email' ]
 		],
-		timezone => [ 'NOT_BLANK', [ 'IN_ARRAY', WriteOff::DateTime->timezones ] ],
 		captcha  => [ [ 'EQUAL_TO', 1 ] ],
 	);
 
 	if (!$c->form->has_error) {
 		$c->stash->{user} = $c->model('DB::User')->create({
-			username => $c->form->valid('username'),
-			password => $c->form->valid('password'),
-			email    => $c->form->valid('email'),
-			timezone => $c->form->valid('timezone'),
-			ip       => $c->req->address,
-			mailme   => $c->req->params->{mailme} ? 1 : 0,
+			name            => $c->form->valid('username'),
+			name_canonical  => lc $c->form->valid('username'),
+			password        => $c->form->valid('password'),
+			email           => $c->form->valid('email'),
+			email_canonical => lc $c->form->valid('email_canonical'),
+			mailme          => $c->req->params->{mailme} ? 1 : 0,
 		});
 
-		my $role = $c->model('DB::Role')->find({ role => 'user' });
-		$c->stash->{user}->add_to_roles( $role );
+		$c->stash->{user}->update({
+			active_artist_id =>
+				$c->stash->{user}->create_related('artists', {
+					name => $c->stash->{user}->name })->id
+		});
 
 		$c->log->info( sprintf 'User created: %s (%s)',
-			$c->stash->{user}->username,
+			$c->stash->{user}->name,
 			$c->stash->{user}->email,
 		);
 
