@@ -275,6 +275,8 @@ Mogrify certain words in the response body.
 sub strum :Private {
 	my ( $self, $c ) = @_;
 
+	return;
+
 	my %map = %{ $c->config('strum') };
 	while (my($key, $strum) = each %map) {
 		while((my $index = CORE::index $c->res->{body}, $key) >= 0) {
