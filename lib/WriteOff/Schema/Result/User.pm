@@ -175,7 +175,7 @@ sub new_token {
 		value   => WriteOff::Util::token(),
 	);
 
-	if (my $row = $self->tokens->find($self->id, $type)) {
+	if (my $row = $self->tokens->find_token($self->id, $type)) {
 		$row->update(\%token);
 		return $row;
 	}

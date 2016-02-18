@@ -4,6 +4,7 @@ use utf8;
 use strict;
 use warnings;
 use base 'Exporter';
+use Digest;
 use Time::HiRes qw/gettimeofday/;
 
 our @EXPORT_OK = qw/LEEWAY maybe simple_uri sorted token wordcount uniq/;
