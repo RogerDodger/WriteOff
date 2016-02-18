@@ -199,9 +199,10 @@ sub do_delete :Private {
 sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/default') if !$c->stash->{image}->event->fic_gallery_opened;
+	$c->detach('/default') if !$c->stash->{entry}->event->fic_gallery_opened;
 
-	$c->stash->{items} = $c->stash->{image}->storys->metadata;
+	$c->stash->{items} = $c->stash->{image}->storys;
+	$c->stash->{view} = $c->controller('Fic')->action_for('view');
 
 	push $c->stash->{title}, 'Related Story(s)';
 	$c->stash->{template} = 'item/list.tt';

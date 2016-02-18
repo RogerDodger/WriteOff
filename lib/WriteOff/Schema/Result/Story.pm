@@ -4,6 +4,7 @@ package WriteOff::Schema::Result::Story;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
+use WriteOff::Util;
 
 __PACKAGE__->table("storys");
 
@@ -29,6 +30,12 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_one("entry", "WriteOff::Schema::Result::Entry", { "foreign.story_id" => "self.id" });
 __PACKAGE__->has_many("image_stories", "WriteOff::Schema::Result::ImageStory", "story_id");
 __PACKAGE__->many_to_many("images", "image_stories", "image");
+
+sub id_uri {
+	my $self = shift;
+
+	WriteOff::Util::simple_uri $self->id, $self->title;
+}
 
 sub is_manipulable_by {
 	my $self = shift;
