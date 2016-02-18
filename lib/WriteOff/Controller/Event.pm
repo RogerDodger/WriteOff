@@ -56,55 +56,42 @@ sub do_add :Private {
 	my ( $self, $c ) = @_;
 
 	my $p  = $c->req->params;
-	my $dt = $c->form->valid('start');
+	my $start = $c->form->valid('start');
 
-	my $leeway = $c->model('DB::Event')->result_class->LEEWAY;
-
-	my %row;
-
-	if ($p->{has_art}) {
-		$row{art}     = $dt->clone;
-		$row{art_end} = $dt->add( hours => $c->form->valid('art_dur') )->clone;
-	}
-
-	if ($p->{has_fic}) {
-		$row{wc_min}  = $c->form->valid('wc_min');
-		$row{wc_max}  = $c->form->valid('wc_max');
-		if ($row{wc_min} > $row{wc_max}) {
-			($row{wc_min}, $row{wc_max}) = ($row{wc_max}, $row{wc_min});
-		}
-
-		$row{fic}     = $dt->clone;
-		$row{fic_end} = $dt->add(hours => $c->form->valid('fic_dur'))->clone;
-	}
-
-	if ($p->{has_prelim}) {
-		$row{prelim} = $dt->clone;
-		$row{prelim}->add(minutes => $leeway);
-		$dt->add(days => $c->form->valid('prelim_dur'));
-	}
-
-	if ($p->{has_public}) {
-		$row{public} = $dt->clone;
-		$row{public}->add(minutes => $leeway) if !$p->{has_prelim};
-		$dt->add(days => $c->form->valid('public_dur'));
-	}
-
-	if ($p->{has_judges}) {
-		$row{private} = $dt->clone;
-		$row{private}->add(minutes => $leeway) if !$p->{has_prelim} && !$p->{has_public};
-		$dt->add(days => $c->form->valid('private_dur'));
-	}
-
-	$row{end} = $dt->clone;
-	$row{prompt} = 'TBD';
-	$row{genre_id} = $c->form->valid('genre');
-	$row{format_id} = $c->form->valid('format');
-
-	$c->stash->{event} = $c->model('DB::Event')->create(\%row);
-	$c->stash->{event}->set_content_level( $c->form->valid('content_level') );
+	$c->stash->{event} = $c->model('DB::Event')->create({
+		prompt        => 'TBD',
+		genre_id      => $c->form->valid('genre'),
+		format_id     => $c->form->valid('format'),
+		content_level => $c->form->valid('content_level'),
+		wc_min        => $c->form->valid('wc_min'),
+		wc_max        => $c->form->valid('wc_max'),
+	});
 
 	$c->stash->{event}->add_to_users($c->user, { role => 'organiser' });
+
+	my $writing = $c->stash->{event}->create_related('rounds', {
+		name => 'writing',
+		mode => 'fic',
+		action => 'submit',
+		start => $start,
+		end => $start->clone->add(hours => $c->form->valid('fic_dur')),
+	});
+
+	my $prelim = $c->stash->{event}->create_related('rounds', {
+		name => 'prelim',
+		mode => 'fic',
+		action => 'vote',
+		start => $writing->end_leeway,
+		end => $writing->end->clone->add(days => $c->form->valid('prelim_dur')),
+	});
+
+	my $final = $c->stash->{event}->create_related('rounds', {
+		name => 'final',
+		mode => 'fic',
+		action => 'vote',
+		start => $prelim->end,
+		end => $prelim->end->clone->add(days => $c->form->valid('final_dur')),
+	});
 
 	$c->stash->{event}->reset_schedules;
 

@@ -284,11 +284,18 @@ sub reset_schedules {
 		],
 	})->delete;
 
-	my @schedules = ({
-		action => '/event/set_prompt',
-		at => $self->start,
-		args => [ $self->id ],
-	});
+	my @schedules = (
+		{
+			action => '/event/set_prompt',
+			at => $self->start,
+			args => [ $self->id ],
+		},
+		{
+			action => '/event/check_rounds',
+			at => $self->rounds->fic->submit->first->end_leeway,
+			args => [ $self->id ],
+		}
+	);
 
 	for my $round ($self->rounds) {
 		push @schedules, {
