@@ -218,15 +218,7 @@ sub view :Chained('fetch') :PathPart('submissions') :Args(0) {
 
 	$c->forward( $self->action_for('assert_organiser') );
 
-	my $e = $c->stash->{event};
-
-	$c->stash->{storys}  = $e->storys->metadata->order_by('created');
-	$c->stash->{images}  = $e->images->metadata->order_by('created');
-	$c->stash->{prompts} = $e->prompts->order_by('created');
-	$c->stash->{records} = $e->vote_records->filled->ordered;
-
-	push $c->stash->{title}, 'Submissions';
-	$c->stash->{template} = 'user/me.tt';
+	$c->detach('/default', [ 'Page under development...' ]);
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {

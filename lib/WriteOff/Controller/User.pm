@@ -13,19 +13,6 @@ sub fetch :Chained('/') :PathPart('user') :CaptureArgs(1) :ActionClass('~Fetch')
 		or $c->detach('/default');
 }
 
-sub me :Local :Args(0) {
-	my ( $self, $c ) = @_;
-
-	$c->detach('/forbidden', ['You are not logged in.']) unless $c->user;
-
-	$c->stash->{images}  = $c->user->images;
-	$c->stash->{storys}  = $c->user->storys;
-	$c->stash->{prompts} = $c->user->prompts;
-
-	push $c->stash->{title}, 'My Submissions';
-	$c->stash->{template} = 'user/me.tt';
-}
-
 sub login :Local :Args(0) {
 	my ( $self, $c ) = @_;
 

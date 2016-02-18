@@ -6,9 +6,15 @@
 	@include striped-table;
 }
 
+.Prompts-edit,
 .Prompts-vote,
 .Prompts-score {
 	text-align: center;
+}
+
+.Prompts-contents {
+	width: 100%;
+	text-align: start;
 }
 
 .Prompts-vote {

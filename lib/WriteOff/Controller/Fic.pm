@@ -158,7 +158,7 @@ sub do_submit :Private {
 			$story->id,
 			$c->user->name,
 			$c->form->valid('title'),
-			$c->model('DB::Artist')->find($c->form->valid('artist'))->name,
+			$c->stash->{entry}->artist->name,
 			$c->form->valid('wordcount'),
 		);
 	}
@@ -226,7 +226,7 @@ sub do_edit :Private {
 			$c->stash->{story}->id,
 			$c->user->name,
 			$c->form->valid('title'),
-			$c->model('DB::Artist')->find($c->form->valid('artist'))->name,
+			$c->stash->{entry}->artist->name,
 			$c->form->valid('wordcount'),
 		);
 

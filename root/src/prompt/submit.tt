@@ -5,7 +5,7 @@
 
 	<div class="Countdown">
 		{{ IF event.prompt_subs_allowed }}
-			{{ event.prompt_voting.delta_html | none}}
+			{{ event.prompt_voting.delta_html | none }}
 		{{ ELSE }}
 			{{ c.string('subsClosed') }}
 		{{ END }}
@@ -16,7 +16,7 @@
 		<div class="Flash">
 			{{ c.string('loginRequiredPrompt') }}
 		</div>
-		{{ ELSIF c.user && subs_left > 0 }}
+		{{ ELSIF subs_left > 0 }}
 
 		{{ c.string('promptGuide') | markdown }}
 
@@ -36,6 +36,43 @@
 				<input type="submit" value="{{ c.string('submit') }}">
 			</div>
 		</form>
+		{{ ELSE }}
+		<div class="Flash">
+			{{ c.string('promptLimitReached') }}
+		</div>
 		{{ END }}
+	{{ END }}
+
+
+	{{ IF c.user && prompts.count }}
+	<div class="Document-subtitle">
+		<span>{{ c.string('mySubs') }}</span>
+	</div>
+
+	<table class="Prompts">
+		<thead>
+			<tr>
+				{{ IF event.prompt_subs_allowed }}
+				<th></th>
+				{{ END }}
+				<th>{{ c.string('prompt') }}</th>
+				<th>{{ c.string('score') }}</th>
+			</tr>
+		<tbody>
+		{{ FOREACH prompt IN prompts.all }}
+			<tr>
+				{{ IF event.prompt_subs_allowed }}
+				<td class="Prompts-edit">
+					[<a href="{{ c.uri_for_action('/prompt/delete', [ prompt.id_uri ]) }}">{{ c.string('delete') }}</a>]
+				</td>
+				{{ END }}
+				<td class="Prompts-contents">
+					{{ prompt.contents }}
+				</td>
+				<td class="Prompts-score">{{ prompt.score }}</td>
+			</tr>
+		{{ END }}
+		</tbody>
+	</table>
 	{{ END }}
 </div>

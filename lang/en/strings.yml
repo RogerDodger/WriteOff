@@ -19,6 +19,7 @@ name: Name
 username: Username
 password: Password
 timezone: Timezone
+score: Score
 allowedTypes: Allowed types: %s
 maxSize: Max filesize: %dKB
 wordLimit: Word limit: %d-%d
@@ -79,6 +80,7 @@ ballotDone: None left
 calculatingCandidates: Candidates are being calculated
 storyRedacted: The contents of this story are no longer available
 mailme: Receive event notifications by email
+promptLimitReached: You have reached the prompt limit
 promptGuide: |
     - Prompts should&mdash;
         - be a short phrase or figure of speech;

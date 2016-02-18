@@ -77,10 +77,11 @@ sub do_vote :Private {
 sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {
 	my ( $self, $c ) = @_;
 
+	$c->stash->{prompts} = $c->stash->{event}->prompts->search({ user_id => $c->user_id });
+
 	my $subs_left = sub {
 		return 0 unless $c->user;
-		return $c->config->{prompts_per_user} -
-		$c->stash->{event}->prompts->search({ user_id => $c->user_id })->count;
+		return $c->config->{prompts_per_user} - $c->stash->{prompts}->count;
 	};
 
 	$c->req->params->{subs_left} = $subs_left->();
@@ -135,7 +136,7 @@ sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 		$c->stash->{prompt}->is_manipulable_by( $c->user );
 
 	$c->stash->{key} = {
-		name  => 'prompt',
+		name  => 'contents',
 		value => $c->stash->{prompt}->contents,
 	};
 

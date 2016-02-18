@@ -1558,9 +1558,14 @@ body.inverted {
       margin: 1.2em auto;
       content: " "; }
 
+.Prompts-edit,
 .Prompts-vote,
 .Prompts-score {
   text-align: center; }
+
+.Prompts-contents {
+  width: 100%;
+  text-align: start; }
 
 .Prompts-vote {
   white-space: nowrap; }
