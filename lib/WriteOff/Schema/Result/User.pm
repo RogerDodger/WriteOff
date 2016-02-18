@@ -68,7 +68,7 @@ __PACKAGE__->filter_column('password', {
 		my ($obj, $plain) = @_;
 
 		my $cost = '10';
-		my $salt = $rng->bytes_base64(16, '');
+		my $salt = en_base64 $rng->bytes(16, '');
 		my $settings = join '$', '$2', $cost, $salt;
 
 		bcrypt($plain, $settings);
