@@ -50,7 +50,6 @@ They rank the stories in a manner similar to the prelminary round.
 ### Can I submit more than one entry per event?
 
 Yes.
-Note that for events with a preliminary round, you are assigned a ballot *for each story you’ve submitted*.
 
 ### How do I format my story?
 
@@ -58,8 +57,7 @@ Click the buttons on the story editor. (TBD)
 
 ### How do I delete/edit a submission?
 
-You may delete/edit a submission by logging in and going to the “My Submissions” page.
-You can only do this while submissions are open.
+You may delete/edit a submission by going to the submission page and following the appropriate links.
 
 If you want a submission deleted or edited after submissions are closed, you’ll have to take it up with the event’s organiser.
 

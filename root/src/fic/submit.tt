@@ -17,13 +17,10 @@
 		<table class="Storys">
 			<thead>
 				<tr>
-					{{ IF event.fic_subs_allowed }}
 					<th></th>
-					{{ END }}
 					<th>{{ c.string('title') }}</th>
 					<th>{{ c.string('author') }}</th>
 					<th>{{ c.string('words') }}</th>
-					<th>{{ c.string('submitted') }}</th>
 					<th>
 						{{ c.string('index') }}
 						<span class="Clarify">
@@ -40,12 +37,12 @@
 			<tbody>
 			{{ FOREACH entry IN entrys.all }}
 				<tr>
-					{{ IF event.fic_subs_allowed }}
 					<td class="Storys-edit">
+						{{ IF c.user.can_edit(entry.story) }}
 						[<a href="{{ c.uri_for_action('/fic/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
 						[<a href="{{ c.uri_for_action('/fic/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
+						{{ END }}
 					</td>
-					{{ END }}
 					<td class="Storys-title">
 						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">
 							{{ entry.title }}
@@ -53,7 +50,6 @@
 					</td>
 					<td class="Storys-author">{{ entry.artist.name }}</td>
 					<td class="Storys-wordcount">{{ entry.story.wordcount }}</td>
-					<td class="Storys-created">{{ entry.created.date_html | none }}</td>
 					<td class="Storys-index">
 						<input type="checkbox" name="index-{{ entry.story_id }}"
 							{{ 'checked' IF entry.story.indexed }}>

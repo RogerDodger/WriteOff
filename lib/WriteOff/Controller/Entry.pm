@@ -19,7 +19,7 @@ sub form :Private {
 	if ($c->user) {
 		$c->stash->{artists} = $c->model('DB::Artist')->search({
 			-or => [
-				{ user_id => $c->user->id },
+				{ user_id => eval { $c->stash->{entry}->user_id } || $c->user->id },
 				{ name => 'Anonymous' },
 			],
 		}, {

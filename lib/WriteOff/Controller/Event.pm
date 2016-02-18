@@ -33,10 +33,6 @@ sub add :Local :Args(0) {
 		$c->form(
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
 			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
-			organiser => [
-				'NOT_BLANK',
-				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
-			],
 			format => [
 				'NOT_BLANK',
 				[ 'NOT_DBIC_UNIQUE', $c->model('DB::Format'), 'id' ],
@@ -45,13 +41,11 @@ sub add :Local :Args(0) {
 				'NOT_BLANK',
 				[ 'NOT_DBIC_UNIQUE', $c->model('DB::Genre'), 'id' ],
 			],
-			wc_min => [ $p->{has_fic} ? qw/NOT_BLANK UINT/ : () ],
-			wc_max => [ $p->{has_fic} ? qw/NOT_BLANK UINT/ : () ],
-			fic_dur     => [ $p->{has_fic}    ? qw/NOT_BLANK UINT/ : () ],
-			public_dur  => [ $p->{has_public} ? qw/NOT_BLANK UINT/ : () ],
-			art_dur     => [ $p->{has_art}    ? qw/NOT_BLANK UINT/ : () ],
-			prelim_dur  => [ $p->{has_prelim} ? qw/NOT_BLANK UINT/ : () ],
-			private_dur => [ $p->{has_judges} ? qw/NOT_BLANK UINT/ : () ],
+			wc_min => [ qw/NOT_BLANK UINT/ ],
+			wc_max => [ qw/NOT_BLANK UINT/ ],
+			fic_dur    => [ qw/NOT_BLANK UINT/ ],
+			prelim_dur => [ qw/NOT_BLANK UINT/ ],
+			final_dur => [ qw/NOT_BLANK UINT/ ],
 		);
 
 		$c->forward('do_add') if !$c->form->has_error;
@@ -110,8 +104,7 @@ sub do_add :Private {
 	$c->stash->{event} = $c->model('DB::Event')->create(\%row);
 	$c->stash->{event}->set_content_level( $c->form->valid('content_level') );
 
-	my $user = $c->model('DB::User')->find({ username => $c->form->valid('organiser') });
-	$c->stash->{event}->add_to_users($user, { role => 'organiser' });
+	$c->stash->{event}->add_to_users($c->user, { role => 'organiser' });
 
 	$c->stash->{event}->reset_schedules;
 

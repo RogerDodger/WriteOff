@@ -106,7 +106,9 @@ sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 	$c->forward('form');
 
 	if ($c->user) {
-		$c->stash->{entrys} = $c->stash->{event}->storys->search({ user_id => $c->user->id });
+		$c->stash->{entrys} = $c->user->organises($c->stash->{event})
+			? $c->stash->{event}->storys
+			: $c->stash->{event}->storys->search({ user_id => $c->user->id });
 
 		if ($c->req->method eq 'POST') {
 			if ($c->req->param('flip')) {
@@ -200,9 +202,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		if !$c->user->can_edit($c->stash->{story});
 
 	$c->forward('form');
-	if ($c->req->method eq 'POST' && $c->stash->{event}->fic_subs_allowed) {
-		$c->forward('do_edit');
-	}
+	$c->forward('do_edit') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
 		artist   => $c->stash->{story}->entry->artist_id,

@@ -8,7 +8,7 @@
 
 {{ IF !c.user }}
 <div class="Flash">{{ c.string('loginRequiredFic') }}</div>
-{{ ELSIF event.fic_subs_allowed }}
+{{ ELSIF event.fic_subs_allowed || story && c.user.can_edit(story) }}
 <form class="Form" method="post">
 	{{ csrf_field | none }}
 	{{- IF c.form.has_error }}

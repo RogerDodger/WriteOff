@@ -18,11 +18,6 @@
 				<input type="datetime" name="start" size="32"
 					placeholder="1970-01-01T00:00:00Z" required autofocus>
 			</div>
-			<div class="Form-item">
-				<label>Organiser<span class="required">*</span></label>
-				<input type="text" name="organiser" class="autocomplete-user"
-					maxlength="{{ c.config.len.max.user }}" required>
-			</div>
 		</div>
 
 		<div class="Form-group three">
@@ -62,8 +57,6 @@
 						size="4" max="9999" min="1" value="72" required>
 					<span class="Form-caption">Hours</span>
 				</div>
-				<input type="checkbox" name="has_fic" class="toggler" checked="checked">
-				<label>Has fic</label>
 			</div>
 
 			<div class="Form-item">
@@ -79,17 +72,6 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="Form-item">
-				<label>Art Duration</label>
-				<div class="Form-caption--container">
-					<input type="number" name="art_dur" disabled="disabled"
-						size="4" max="9999" min="1" value="72" required>
-					<span class="Form-caption">Hours</span>
-				</div>
-				<input type="checkbox" name="has_art" class="toggler">
-				<label>Has art</label>
-			</div>
 		</div>
 
 		<div class="Form-group three">
@@ -100,30 +82,15 @@
 						size="4" max="9999" min="1" value="6" required>
 					<span class="Form-caption">Days</span>
 				</div>
-				<input type="checkbox" name="has_prelim" class="toggler" checked="checked">
-				<label>Has prelim</label>
 			</div>
 
 			<div class="Form-item">
-				<label>Public Duration</label>
+				<label>Final Duration</label>
 				<div class="Form-caption--container">
-					<input type="number" name="public_dur"
+					<input type="number" name="final_dur"
 						size="4" max="9999" min="1" value="4" required>
 					<span class="Form-caption">Days</span>
 				</div>
-				<input type="checkbox" name="has_public" class="toggler" checked="checked">
-				<label>Has public</label>
-			</div>
-
-			<div class="Form-item">
-				<label>Private Duration</label>
-				<div class="Form-caption--container">
-					<input type="number" name="private_dur" disabled="disabled"
-						size="4" max="9999" min="1" value="7" required>
-					<span class="Form-caption">Days</span>
-				</div>
-				<input type="checkbox" name="has_judges" class="toggler">
-				<label>Has judges</label>
 			</div>
 		</div>
 
