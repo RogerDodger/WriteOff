@@ -5,11 +5,13 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use Bytes::Random::Secure qw/random_bytes/;
+use Bytes::Random::Secure;
 use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 use Digest::MD5 qw/md5_hex/;
 use MIME::Base64 2.21 qw/decode_base64/;
 use WriteOff::Util;
+
+my $rng = Bytes::Random::Secure->new(NonBlocking => 1);
 
 __PACKAGE__->load_components(qw/FilterColumn/);
 
@@ -66,7 +68,7 @@ __PACKAGE__->filter_column('password', {
 		my ($obj, $plain) = @_;
 
 		my $cost = '10';
-		my $salt = en_base64 random_bytes 16;
+		my $salt = $rng->bytes_base64(16, '');
 		my $settings = join '$', '$2', $cost, $salt;
 
 		bcrypt($plain, $settings);
