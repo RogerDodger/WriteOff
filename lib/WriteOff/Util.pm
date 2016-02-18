@@ -9,6 +9,8 @@ use Bytes::Random::Secure ();
 our @EXPORT_OK = qw/LEEWAY maybe simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
+my $rng = Bytes::Random::Secure->new(NonBlocking => 1);
+
 sub LEEWAY () { 5 } # minutes
 
 sub maybe ($$) {
@@ -39,7 +41,7 @@ sub sorted {
 }
 
 sub token {
-	return Bytes::Random::Secure::random_bytes_hex(16, "");
+	return $rng->bytes_hex(16, "");
 }
 
 sub wordcount ($) {
