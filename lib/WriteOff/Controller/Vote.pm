@@ -136,6 +136,15 @@ sub do_cast :Private {
 	}
 }
 
+sub art :PathPart('vote') :Chained('/event/art') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{mode} = 'art';
+	$c->stash->{view} = $c->controller('Art')->action_for('view');
+
+	$c->forward('cast');
+}
+
 sub fic :PathPart('vote') :Chained('/event/fic') :Args(0) {
 	my ($self, $c) = @_;
 

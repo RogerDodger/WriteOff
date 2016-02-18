@@ -43,14 +43,18 @@ ficGallery: Fic Gallery
 artSubmission: Art Submission
 ficSubmission: Fic Submission
 promptSubmission: Prompt Submission
+promptVoting: Prompt Voting
 artVoting: Art Voting
 ficVoting: Fic Voting
-prelim: Prelim
-quarterfinal: Quarterfinal
-semifinal: Semifinal
-final: Final
 authorGuessing: Author Guessing
-promptVoting: Prompt Voting
+artResults: Art Results
+ficResults: Fic Results
+prelim: Prelims
+quarterfinal: Quarterfinals
+semifinal: Semifinals
+final: Finals
+writing: Writing
+drawing: Drawing
 confirmDeletion: Confirm Deletion
 passwordRecovery: Password Recovery
 preferences: Preferences

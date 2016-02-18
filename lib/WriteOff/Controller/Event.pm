@@ -166,15 +166,34 @@ sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 sub results :Private {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{items} = $c->stash->{items}->search({}, {
-		prefetch => [ qw/artist artist_awards/ ],
+	$c->stash->{entrys} = $c->stash->{entrys}->search({}, {
+		prefetch => [ qw/artist awards ratings/ ],
 		order_by => [
 			{ -asc => 'rank' },
 			{ -asc => 'title' },
 		],
 	});
 
-	push $c->stash->{title}, 'Results';
+	$c->stash->{rounds} = [
+		grep { $_->ratings->count }
+			$c->stash->{event}->rounds->search(
+				{
+					mode => $c->stash->{mode},
+					action => 'vote',
+				},
+				{
+					order_by => { -desc => 'end' },
+				}
+			)
+	];
+
+	for my $round (@{ $c->stash->{rounds} }) {
+		$round->{has_error} = $round->ratings->search({ error => { "!=" => undef }})->count;
+	}
+
+	$c->stash->{ratings} = $c->model('DB::Rating');
+
+	push $c->stash->{title}, $c->string($c->stash->{mode} . 'Results');
 	$c->stash->{template} = 'event/results.tt';
 }
 

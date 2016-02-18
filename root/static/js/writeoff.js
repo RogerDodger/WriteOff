@@ -438,7 +438,7 @@ function DrawTimeline (e) {
 		.enter()
 		.append('text')
 		.text(function(d, i) {
-			return d.round.ucfirst();
+			return d.name;
 		})
 		.attr('text-anchor', 'middle')
 		.attr('x', function(d, i) {

@@ -41,8 +41,11 @@
 	</div>
 
 	<div class="Event-timeline hidden"></div>
+
+	{{ SET timeline = event.timeline }}
+	{{ FOREACH round IN timeline; SET round.name = c.string(round.name); END }}
 	<script type="text/javascript">
-		timelines.push({{ event.timeline_json | none }});
+		timelines.push({{ timeline.json | none }});
 	</script>
 
 	<ul class="Event-links rules">
@@ -60,7 +63,7 @@
 		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
 
 		{{ IF event.has('art', 'vote') }}
-		<li><a href="{{ c.uri_for_action('/vote/public/art', id) }}">Voting</a>
+		<li><a href="{{ c.uri_for_action('/vote/art', id) }}">Voting</a>
 		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
 		{{ END }}
 	</ul>

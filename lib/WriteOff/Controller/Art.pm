@@ -240,7 +240,7 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 sub results :Chained('/event/art') :PathPart('results') :Args(0) {
 	my ($self, $c) = @_;
 
-	$c->stash->{items} = $c->stash->{event}->images->eligible;
+	$c->stash->{entrys} = $c->stash->{event}->images->eligible;
 	$c->stash->{mode} = 'art';
 	$c->stash->{view} = $self->action_for('view');
 

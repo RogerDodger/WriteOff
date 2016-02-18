@@ -6,7 +6,6 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-use JSON;
 use WriteOff::Util qw/maybe simple_uri sorted/;
 use WriteOff::Rank qw/twipie/;
 require List::Util;
@@ -51,6 +50,7 @@ __PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id
 __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
 __PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "event_id");
 __PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::Round", "event_id");
+__PACKAGE__->has_many("theorys", "WriteOff::Schema::Result::Theory", "event_id");
 __PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "event_id");
 
 __PACKAGE__->many_to_many(users => 'user_events', 'user');
@@ -255,18 +255,18 @@ sub public_label {
 		: "Finals";
 }
 
-sub timeline_json {
-	my $self = shift;
-
-	return encode_json [
+sub timeline {
+	[
 		map {{
-			round => $_->name,
+			name => $_->name,
 			start => $_->start->iso8601,
 			end => $_->end->iso8601,
 		}}
-		# dont show art vote round in timeline for now
-		grep { $_->mode ne 'art' or $_->action ne 'vote' }
-		$self->rounds->search({ }, { order_by => 'start' })
+		grep {
+			# dont show art vote round in timeline for now
+			$_->mode ne 'art' or $_->action ne 'vote'
+		}
+		shift->rounds->search({ }, { order_by => 'start' })
 	];
 }
 

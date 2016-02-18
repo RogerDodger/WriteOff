@@ -272,7 +272,7 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 	my ($self, $c) = @_;
 
-	$c->stash->{items} = $c->stash->{event}->storys->eligible;
+	$c->stash->{entrys} = $c->stash->{event}->storys->eligible;
 
 	$c->stash->{guesses} = $c->stash->{event}->theorys->search(
 		{

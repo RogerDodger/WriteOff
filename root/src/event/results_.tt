@@ -1,6 +1,6 @@
 <div class="Document">
 	<div class="Document-title">
-		{{ type.ucfirst }} Results
+		{{ title.-1 }}
 	</div>
 
 	<table class="Results">
@@ -8,21 +8,14 @@
 			<tr>
 				<th data-sort-method="number">#</th>
 				<th class="no-sort"></th>
-				<th>Artist</th>
-				<th>Title</th>
+				<th>{{ c.string(c.mode == "fic" ? 'author' : 'artist') }}</th>
+				<th>{{ c.string('title') }}</th>
 
-				{{ IF event.private }}
-				<th data-sort-method="number">Finals</th>
-				{{ END }}
-
-				{{ IF event.public }}
-				<th data-sort-method="number">{{ event.public_label }}</th>
-				<th data-sort-method="number">&epsilon;</th>
-				{{ END }}
-
-				{{ IF event.prelim }}
-				<th data-sort-method="number">Prelims</th>
-				<th data-sort-method="number">&epsilon;</th>
+				{{ FOREACH round IN rounds }}
+				<th data-sort-method="number">{{ c.string(round.name) }}</th>
+					{{ IF round.has_error }}
+					<th data-sort-method="number">&epsilon;</th>
+					{{ END }}
 				{{ END }}
 			</tr>
 		</thead>
@@ -31,60 +24,49 @@
 			<td class="Results-score" title="{{ score | format('%.5f') }}" data-sort="{{ score }}">{{ score | format('%.2f') }}</td>
 			{{ END }}
 
-			{{ FOREACH item IN items.all }}
-			<tr class="Results-row{{ FOREACH award IN item.awards }} {{ award.name; END }}">
-				<td class="Results-rank">{{ item.rank + 1 }}</td>
+			{{ FOREACH entry IN entrys.all }}
+			<tr class="Results-row{{ FOREACH award IN entry.awards }} {{ award.name; END }}">
+				<td class="Results-rank">{{ entry.rank + 1 }}</td>
 				<td class="Results-awards">
-					{{ FOREACH award IN item.awards; award.html | none; END }}
+					{{ FOREACH award IN entry.awards; award.html | none; END }}
 				</td>
 
 				<td class="Results-artist">
-					{{ IF item.website }}
-					<a href="{{ item.website | url }}">
-						{{ item.artist.name }}
-					</a>
-					{{ ELSE }}
-						{{ item.artist.name }}
-					{{ END }}
+					{{ entry.artist.name }}
 				</td>
 				<td class="Results-title">
-					<a href="{{ c.uri_for(view, [ item.id_uri ]) }}">{{ item.title }}</a>
+					<a href="{{ c.uri_for(view, [ entry.id_uri ]) }}">{{ entry.title }}</a>
 				</td>
 
-				{{ IF event.private }}
-					{{ PROCESS Score  score = item.private_score }}
-				{{ END }}
+				{{ FOREACH round IN rounds }}
+					{{ rating = ratings.find({ round_id => round.id, entry_id => entry.id }) }}
 
-				{{ IF event.public }}
-					{{ PROCESS Score  score = item.public_score }}
-					{{ PROCESS Score  score = item.public_stdev }}
-				{{ END }}
-
-				{{ IF event.prelim }}
-					{{ PROCESS Score  score = item.prelim_score }}
-					{{ PROCESS Score  score = item.prelim_stdev }}
+					{{ PROCESS Score  score = rating.value }}
+					{{ IF round.has_error }}
+						{{ PROCESS Score  score = rating.error }}
+					{{ END }}
 				{{ END }}
 			</tr>
 			{{ END }}
 		</tbody>
 	</table>
 
-	{{ IF guesses.count }}
+	{{ IF theorys.count }}
 	<div class="Document-subtitle">
 		<span>Guesses</span>
 	</div>
 
 	<table class="Guesses">
 		<tbody>
-			{{ FOREACH record IN guesses.all }}
+			{{ FOREACH theory IN theorys.all }}
 			<tr>
-				<td class="Guesses-guesser">{{ record.artist.name }}</td>
+				<td class="Guesses-guesser">{{ theory.artist.name }}</td>
 				<td class="Guesses-correct">
-					<span class="Guesses-count">{{ record.guesses_rs.correct.count }} correct</span>
+					<span class="Guesses-count">{{ theory.accuracy }} correct</span>
 					<span class="Guesses-titles">
-					{{ FOREACH guess IN record.guesses_rs.correct.all }}
-						<a href="{{ c.uri_for(view, [ guess.item.id_uri ]) }}">
-							{{ guess.item.title }}</a>{{ ',' IF !loop.last }}
+					{{ FOREACH guess IN theory.guesses_rs.correct.all }}
+						<a href="{{ c.uri_for(view, [ guess.entry.id_uri ]) }}">
+							{{ guess.entry.title }}</a>{{ ',' IF !loop.last }}
 					{{ END }}
 					</span>
 				</td>
@@ -92,25 +74,5 @@
 			{{ END }}
 		</tbody>
 	</table>
-	{{ END }}
-
-	{{ IF event.id >= 38 || event.prelim }}
-	<div class="Document-subtitle">
-		<span>Slates</span>
-	</div>
-
-	<ul class="Slates">
-		{{ IF event.prelim }}
-		<li><a href="{{ c.uri_for_action('/event/slates', [ event.id_uri, 'prelim' ]) }}">Prelims</a>
-		{{ END }}
-
-		{{ IF event.public && event.id >= 38 }}
-		<li><a href="{{ c.uri_for_action('/event/slates', [ event.id_uri, 'public' ]) }}">{{ event.public_label }}</a>
-		{{ END }}
-
-		{{ IF event.private }}
-		<li><a href="{{ c.uri_for_action('/event/slates', [ event.id_uri, 'private' ]) }}">Finals</a>
-		{{ END }}
-	</ul>
 	{{ END }}
 </div>

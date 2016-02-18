@@ -48,6 +48,13 @@ CREATE TABLE ballots_tmp (
 
 .read 'data/writeoff.sql'
 
+UPDATE theorys SET accuracy = (
+	SELECT COUNT(*)
+	FROM guesses g
+	LEFT JOIN entrys e ON e.id=g.entry_id
+	WHERE g.theory_id=theorys.id
+	AND e.artist_id=g.artist_id);
+
 INSERT INTO ratings (round_id, entry_id, value, error)
 SELECT
 	(SELECT id FROM rounds r WHERE r.event_id=tmp.event_id AND r.name=tmp.round AND r.mode=tmp.mode),
