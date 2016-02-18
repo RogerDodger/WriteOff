@@ -164,7 +164,7 @@ sub find_token {
 		type => $type,
 		value => $value,
 		expires => { '>' => $tokens->format_datetime(DateTime->now) },
-	})->single;
+	})->first;
 }
 
 sub new_token {
@@ -175,7 +175,7 @@ sub new_token {
 		value   => WriteOff::Util::token(),
 	);
 
-	if (my $row = $self->tokens->find_token($self->id, $type)) {
+	if (my $row = $self->find_token($self->id, $type)) {
 		$row->update(\%token);
 		return $row;
 	}
