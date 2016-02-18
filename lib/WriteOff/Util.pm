@@ -4,12 +4,10 @@ use utf8;
 use strict;
 use warnings;
 use base 'Exporter';
-use Bytes::Random::Secure ();
+use Time::HiRes qw/gettimeofday/;
 
 our @EXPORT_OK = qw/LEEWAY maybe simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
-
-my $rng = Bytes::Random::Secure->new(NonBlocking => 1);
 
 sub LEEWAY () { 5 } # minutes
 
@@ -41,7 +39,11 @@ sub sorted {
 }
 
 sub token {
-	return $rng->bytes_hex(16, "");
+	my $salt = shift // '';
+	Digest->new(shift // 'MD5')
+		->add($salt)
+		->add((gettimeofday)[1])
+		->add(rand)->hexdigest;
 }
 
 sub wordcount ($) {
