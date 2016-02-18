@@ -100,7 +100,7 @@ sub do_register :Private {
 			name_canonical  => lc $c->form->valid('username'),
 			password        => $c->form->valid('password'),
 			email           => $c->form->valid('email'),
-			email_canonical => lc $c->form->valid('email_canonical'),
+			email_canonical => lc $c->form->valid('email'),
 			mailme          => $c->req->params->{mailme} ? 1 : 0,
 		});
 
