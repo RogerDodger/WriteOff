@@ -6,7 +6,6 @@
 	{{ END }}
 </div>
 
-
 {{ IF !c.user }}
 <div class="Flash">{{ c.string('loginRequiredArt') }}</div>
 {{ ELSIF event.art_subs_allowed }}

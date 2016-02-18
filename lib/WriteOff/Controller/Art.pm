@@ -30,10 +30,8 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{show_artists} = $c->stash->{event}->is_ended;
 	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
-
-	$c->stash->{images} = $c->stash->{event}->images->seed_order;
+	$c->stash->{gallery} = $c->stash->{event}->images->gallery->search({}, { prefetch => 'image' });
 
 	push $c->stash->{title}, 'Gallery';
 	$c->stash->{template} = 'art/gallery.tt';

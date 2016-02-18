@@ -5,29 +5,23 @@
 
 	{{- IF event.art_gallery_opened }}
 	<div class="artworks">
-		{{- FOREACH image IN images.all }}
+		{{- FOREACH entry IN gallery.all }}
 		<figure>
-			<img src="{{ image.path('thumb') }}"
-				alt="{{ image.title | html }}"
-				title="{{ image.hovertext | html }}">
+			<img src="{{ entry.image.path('thumb') }}"
+				alt="{{ entry.title }}"
+				title="{{ entry.image.hovertext }}">
 
 			<figcaption>
-				<a href="{{ c.uri_for_action('/art/view', [ image.id_uri ]) }}">
-					{{ image.title | html }}
+				<a href="{{ c.uri_for_action('/art/view', [ entry.id_uri ]) }}">
+					{{ entry.title | html }}
 				</a>
 
-			{{- IF show_artists }}
-				by
-				{{- IF image.website }}
-				<a class="author new-tab" href="{{ image.website | url }}">
-					{{ image.artist.name | html }}</a>
-				{{- ELSE }}
-					{{ image.artist.name | html }}
-				{{- END }}
+			{{- IF entry.artist_public }}
+				by {{ entry.artist.name }}
 			{{- END -}}
 
-			{{- IF show_storys && image.stories_rs.count }}
-				<a class="dialog-fetcher" href="{{ c.uri_for_action('/art/rels', [ image.id_uri ]) }}">
+			{{- IF show_storys && entry.image.storys_rs.count }}
+				<a class="dialog-fetcher" href="{{ c.uri_for_action('/art/rels', [ entry.id_uri ]) }}">
 					<span class="fa fa-picture-o"></span>
 				</a>
 			{{- END -}}
