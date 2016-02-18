@@ -42,13 +42,12 @@ sub do_login :Private {
 			$c->flash->{error_msg} = 'Your account is not verified';
 			$c->logout;
 		}
+		$c->res->redirect($c->req->param('referer') // $c->uri_for('/'));
 	}
 	else {
 		$cache->set($key, $attempts);
-		$c->flash->{error_msg} = 'Bad username or password';
+		$c->stash->{error_msg} = 'Bad username or password';
 	}
-
-	$c->res->redirect( $c->uri_for('/') );
 }
 
 sub logout :Local :Args(0) {

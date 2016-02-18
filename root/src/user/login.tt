@@ -2,6 +2,8 @@
 	<div class="Document-title">{{ c.string('login') }}</div>
 
 	<form class="Form" method="post" action="/user/login">
+		<input type="hidden" name="referer" value="{{ c.req.param('referer') || c.req.referer }}">
+
 		<div class="Form-item">
 			<label>{{ c.string('username') }}</label>
 			<input type="text" name="Username" size="32" placeholder="JoeBlow" required autofocus>
