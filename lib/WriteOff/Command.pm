@@ -42,6 +42,9 @@ available commands:
         Uploads the stories in the event with id EVENT to the Fimfiction story
         with id STORY belonging to user USERNAME.
 
+    event reset EVENT
+        Resets schedules for event with id EVENT.
+
     user add USERNAME ROLE
         Creates user USERNAME with role ROLE.
 

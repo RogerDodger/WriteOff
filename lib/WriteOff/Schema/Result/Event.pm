@@ -297,7 +297,7 @@ sub reset_schedules {
 		}
 	);
 
-	for my $round ($self->rounds) {
+	for my $round ($self->rounds->vote->all) {
 		push @schedules, {
 			action => '/event/tally_round',
 			at => $round->end,

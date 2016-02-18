@@ -29,7 +29,6 @@ sub add :Local :Args(0) {
 	if ($c->req->method eq 'POST') {
 		$c->forward('/check_csrf_token');
 
-		my $p = $c->req->params;
 		$c->form(
 			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
 			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
@@ -55,7 +54,6 @@ sub add :Local :Args(0) {
 sub do_add :Private {
 	my ( $self, $c ) = @_;
 
-	my $p  = $c->req->params;
 	my $start = $c->form->valid('start');
 
 	$c->stash->{event} = $c->model('DB::Event')->create({

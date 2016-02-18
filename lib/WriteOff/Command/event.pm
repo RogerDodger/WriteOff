@@ -9,7 +9,7 @@ use HTML::Entities qw/decode_entities/;
 sub run {
 	my ($self, $command, @args) = @_;
 
-	if (defined $command && $command =~ /^(?:export|tally)$/) {
+	if (defined $command && $command =~ /^(?:export|reset)$/) {
 		$self->$command(@args);
 	}
 	else {
@@ -94,7 +94,7 @@ sub export {
 	};
 }
 
-sub tally {
+sub reset {
 	my $self = shift;
 	if (@_ < 1) {
 		$self->help;
@@ -106,9 +106,7 @@ sub tally {
 		exit(1);
 	}
 
-	$e->storys->recalc_prelim_stats;
-
-	$e->tally;
+	$e->reset_schedules;
 }
 
 1;
