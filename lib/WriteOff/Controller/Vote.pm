@@ -70,19 +70,23 @@ sub cast :Private {
 			}
 		}
 
-		$c->stash->{countdown} = $c->stash->{round}->end;
-		$c->stash->{label} = $c->string($c->stash->{round}->name);
 		$c->stash->{ballot} = $ballot;
 		$c->stash->{ordered} = $ballot->votes->ordered;
 		$c->stash->{unordered} = $ballot->votes->search({ value => undef, abstained => 0 });
 		$c->stash->{abstained} = $ballot->votes->search({ abstained => 1 });
 	}
 
-	if (!$c->stash->{countdown} && $rounds->upcoming->count) {
-		$c->stash->{countdown} = $rounds->upcoming->ordered->first->start;
+	if ($c->stash->{round}) {
+		$c->stash->{countdown} = $c->stash->{round}->end;
+		push $c->stash->{title}, $c->stash->{label} = $c->string($c->stash->{round}->name);
+	}
+	else {
+		if ($rounds->upcoming->count) {
+			$c->stash->{countdown} = $rounds->upcoming->ordered->first->start;
+		}
 	}
 
-	push $c->stash->{title}, $c->stash->{label} || $c->string('vote');
+	push $c->stash->{title}, $c->string('vote');
 	$c->stash->{template} = 'vote/cast.tt';
 
 	$c->forward('do_cast') if $c->req->method eq 'POST';

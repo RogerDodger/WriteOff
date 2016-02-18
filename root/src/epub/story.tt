@@ -1,26 +1,27 @@
 <?xml version='1.0' encoding='utf-8'?>
 <html xmlns="http://www.w3.org/1999/xhtml">
+	{{- SET entry = story.entry -}}
 	<head>
-		<title>{{ story.title | xml }}</title>
+		<title>{{ entry.title | xml }}</title>
 		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
 		<link href="story.css" type="text/css" rel="stylesheet"/>
 	</head>
 	<body>
-		<h1>{{ story.title | xml }}</h1>
+		<h1>{{ entry.title | xml }}</h1>
 
-		{{ IF event.is_ended }}
-		<h2>by {{ story.artist.name | xml }}</h2>
+		{{ IF entry.artist_public }}
+		<h2>by {{ entry.artist.name | xml }}</h2>
 		{{ END }}
 
 		{{ IF event.art }}
 		<div class="art">
-			{{ FOREACH art IN story.images }}
-				<img src="images/{{ art.filename | xml }}"/>
-				<h5>{{ art.title | xml }}</h5>
-				{{ IF event.is_ended }}
-				<h6> by {{ art.artist.name | xml }}</h6>
-				{{ END }}
+		{{ FOREACH image IN story.images }}
+			<img src="images/{{ image.filename | xml }}"/>
+			<h5>{{ image.entry.title | xml }}</h5>
+			{{ IF image.entry.artist_public }}
+			<h6> by {{ image.entry.artist.name | xml }}</h6>
 			{{ END }}
+		{{ END }}
 		</div>
 		{{ END }}
 

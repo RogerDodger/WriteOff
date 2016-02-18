@@ -1,6 +1,6 @@
 <div class="Document">
 	<div class="Document-title">
-		{{ mode.ucfirst }} Voting
+		{{ c.string(mode _ 'Voting') }}
 		{{ IF label }}
 			&#8250; {{ label }}
 		{{ END }}
