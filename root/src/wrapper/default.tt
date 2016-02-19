@@ -77,6 +77,9 @@
 								<i class="fa fa-caret-down"></i>
 							</a>
 							<ul>
+								{{ IF c.user.admin }}
+								<li><a href="/event/add">New event</a></li>
+								{{ END }}
 								<li><a href="/user/prefs">Preferences</a></li>
 								<li><a href="/user/credentials?key=password">Change password</a></li>
 								<li><a href="/user/credentials?key=email">Change email</a></li>
