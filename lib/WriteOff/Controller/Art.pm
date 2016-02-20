@@ -40,7 +40,7 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 sub form :Private {
 	my ($self, $c) = @_;
 
-	$c->stash->{rounds} = $c->stash->{event}->rounds->art->submit;
+	$c->stash->{mode} = 'art';
 	$c->forward('/entry/form');
 }
 

@@ -31,6 +31,10 @@ sub finished {
 	$self->search({ end => { '<' => $self->now }});
 }
 
+sub mode {
+	shift->search({ mode => shift });
+}
+
 sub ordered {
 	shift->order_by('start');
 }

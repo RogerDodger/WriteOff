@@ -361,7 +361,6 @@ sub set_prompt :Private {
 	my @p = shuffle $e->prompts->all;
 	my $best = $p[0];
 	for my $p (@p) {
-		$p->update({ score => $p->votes->get_column('value')->sum // 0 });
 		if ($p->score > $best->score) {
 			$best = $p;
 		}

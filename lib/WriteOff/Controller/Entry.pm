@@ -9,6 +9,11 @@ sub form :Private {
 
 	$c->stash->{fillform}{artist} = $c->user->active_artist_id;
 
+	$c->stash->{rounds} = $c->stash->{event}->rounds->search({
+		mode => $c->stash->{mode},
+		action => 'submit',
+	});
+
 	if ($c->stash->{rounds}->active(leeway => 1)->count) {
 		$c->stash->{countdown} = $c->stash->{rounds}->active(leeway => 1)->first->end;
 	}
@@ -67,6 +72,15 @@ sub do_submit :Private {
 			artist_id => $c->form->valid('artist'),
 			title     => $c->form->valid('title'),
 		});
+
+		my $voteRounds = $c->stash->{event}->rounds->search({
+			mode => $c->stash->{mode},
+			action => 'vote',
+		});
+
+		if ($voteRounds->count) {
+			$c->stash->{entry}->round_id($voteRounds->ordered->first->id);
+		}
 
 		$c->flash->{status_msg} = 'Submission successful';
 		$c->res->redirect($c->req->uri);
