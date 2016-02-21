@@ -8,6 +8,8 @@ BEGIN { extends 'Catalyst::Controller'; }
 sub index :Path('/scoreboard') {
 	my ( $self, $c, $gid, $fid) = @_;
 
+	$c->detach('/error', [ 'The scoreboard has been temporarily disabled.' ]);
+
 	$c->stash->{awards} = $c->model('DB::Award')->search({}, { join => { entry => "event" } });
 	$c->stash->{theorys} = $c->model('DB::Theory')->search(
 		{ award_id => { "!=" => undef } },
