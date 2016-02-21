@@ -102,6 +102,19 @@ sub recalc_rank {
 	}
 }
 
+sub sample {
+	shift->search({}, {
+		'+select', => [ \'COUNT(votes.value)' ],
+		'+as' => [ 'priority' ],
+		join => 'votes',
+		group_by => 'me.id',
+		order_by => [
+			{ -asc => \'count(votes.value)' },
+			{ -desc => \'RANDOM()' },
+		],
+	});
+}
+
 sub seed_order {
 	return shift->order_by({ -desc => 'seed' });
 }
