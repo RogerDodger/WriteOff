@@ -63,7 +63,7 @@ sub cast :Private {
 			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{now})->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
-			for my $entry ($c->stash->{pool}->all) {
+			for my $entry ($c->stash->{pool}->sample->all) {
 				$entry->create_related('votes', { ballot_id => $ballot->id });
 				$w -= $c->config->{work}{offset} + $entry->story->wordcount / $c->config->{work}{rate};
 				last if $w < 0;
@@ -122,7 +122,7 @@ sub do_cast :Private {
 			$c->res->body('None left');
 		}
 		else {
-			my $tail = $c->stash->{pool}->first;
+			my $tail = $c->stash->{pool}->sample->first;
 			$c->stash->{vote} = $tail->create_related('votes', { ballot_id => $ballot->id });
 			$c->stash->{score} = 'N/A';
 			$c->stash->{template} = 'vote/ballot-item.tt';
