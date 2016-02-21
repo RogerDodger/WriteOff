@@ -31,7 +31,7 @@ __PACKAGE__->result_source_instance->view_definition(q{
 	CROSS JOIN
 		entrys ON artists.id=entrys.artist_id
 	CROSS JOIN
-		events ON entrys.event_id=events.id
+		events ON entrys.event_id=events.id AND events.tallied=1
 	GROUP BY
 		artists.id, genre_id
 
@@ -48,7 +48,7 @@ __PACKAGE__->result_source_instance->view_definition(q{
 	CROSS JOIN
 		entrys ON artists.id=entrys.artist_id
 	CROSS JOIN
-		events ON entrys.event_id=events.id
+		events ON entrys.event_id=events.id AND events.tallied=1
 	GROUP BY
 		artists.id, genre_id, format_id
 

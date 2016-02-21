@@ -38,7 +38,7 @@ sub do_add :Private {
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	my %s;
+	my %s = (tallied => 1);
 	$s{genre_id} = $1 if ($c->req->param('genre') // '') =~ /^(\d+)/;
 	$s{format_id} = $1 if ($c->req->param('format') // '') =~ /^(\d+)/;
 
@@ -90,8 +90,6 @@ sub swap :Local {
 		$c->detach('/error');
 	}
 }
-
-
 
 =head1 AUTHOR
 
