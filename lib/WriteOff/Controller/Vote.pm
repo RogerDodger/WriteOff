@@ -41,7 +41,7 @@ sub cast :Private {
 		if (!$ballot->votes->count) {
 			# Copy previous votes to the ballot
 			my $prev = $c->user->ballots->search(
-				{ event_id => $c->stash->{event}->id },
+				{ "me.event_id" => $c->stash->{event}->id },
 				{
 					order_by => { -desc => 'round.end' },
 					join => 'round',
