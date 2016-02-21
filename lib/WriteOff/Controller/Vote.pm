@@ -40,13 +40,14 @@ sub cast :Private {
 
 		if (!$ballot->votes->count) {
 			# Copy previous votes to the ballot
-			my $prev = $c->user->ballots->search(
-				{ "me.event_id" => $c->stash->{event}->id },
-				{
-					order_by => { -desc => 'round.end' },
-					join => 'round',
-				}
-			)->first;
+			my $prev = undef;
+			# $c->user->ballots->search(
+			# 	{ "ballots.event_id" => $c->stash->{event}->id },
+			# 	{
+			# 		order_by => { -desc => 'round.end' },
+			# 		join => 'round',
+			# 	}
+			# )->first;
 
 			if ($prev) {
 				for my $vote ($prev->votes->join('entry')->all) {
@@ -60,7 +61,7 @@ sub cast :Private {
 			}
 
 			# Assign some stories to the ballot
-			my $mins = $c->stash->{countdown}->delta_ms($c->stash->{now})->in_units('minutes');
+			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{now})->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
 			for my $story ($c->stash->{pool}->all) {
