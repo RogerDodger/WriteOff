@@ -64,9 +64,9 @@ sub cast :Private {
 			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{now})->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
-			for my $story ($c->stash->{pool}->all) {
-				$story->create_related('votes', { ballot_id => $ballot->id });
-				$w -= $c->config->{work}{offset} + $story->wordcount / $c->config->{work}{rate};
+			for my $entry ($c->stash->{pool}->all) {
+				$entry->create_related('votes', { ballot_id => $ballot->id });
+				$w -= $c->config->{work}{offset} + $entry->story->wordcount / $c->config->{work}{rate};
 				last if $w < 0;
 			}
 		}
