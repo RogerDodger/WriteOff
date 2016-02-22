@@ -89,6 +89,12 @@
 	</ul>
 	{{- END }}
 
+	{{ IF event.commenting }}
+	<ul class="Event-links commenting">
+		<li><a href="{{ c.uri_for_action('/event/permalink', id) }}">Discussion thread</a>
+	</ul>
+	{{ END }}
+
 	<div class="Event-blurb">
 	{{ event.blurb | html | markdown | externallinks }}
 	</div>

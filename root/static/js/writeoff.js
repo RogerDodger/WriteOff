@@ -843,3 +843,69 @@ $(document).ready(function () {
 		);
 	});
 });
+
+// ===========================================================================
+// Post reply buttons
+// ===========================================================================
+
+function replaceSelection(e, newSelection) {
+	if ('selectionStart' in e) {
+		e.focus();
+		e.value = e.value.substr(0, e.selectionStart)
+		        + newSelection.text
+		        + e.value.substr(e.selectionEnd, e.value.length);
+
+		e.selectionStart = newSelection.start;
+		e.selectionEnd = newSelection.end;
+	}
+	// MSIE
+	else if (document.selection) {
+		e.focus();
+		document.selection.createRange().text = newSelection.text;
+	}
+	// Unknown
+	else {
+		e.value += newSelection.text;
+	}
+};
+
+function pushReply(reply) {
+	var $textarea = $('.Post-submit textarea');
+
+	if ($textarea.size()) {
+		var selection = $textarea.getSelection();
+		selection.text = ">>" + reply + "\n";
+		selection.end = selection.start += selection.text.length;
+		$textarea.focus();
+		replaceSelection($textarea.get(0), selection);
+		return 1;
+	}
+	else {
+		return 0;
+	}
+};
+
+$(document).ready(function () {
+	var reply = localStorage.getItem('reply')
+	if (reply && pushReply(reply)) {
+		localStorage.removeItem('reply');
+	}
+
+	$('.Post-reply')
+		.each(function() {
+			$(this).data('redirect', $(this).attr('href') );
+		})
+		.removeAttr('href')
+		.click(function () {
+			var $btn = $(this);
+			var reply = $btn.attr('data-target');
+
+			if ($btn.data('redirect')) {
+				localStorage.setItem('reply', reply)
+				document.location = $btn.data('redirect');
+			}
+			else {
+				pushReply(reply);
+			}
+		});
+});

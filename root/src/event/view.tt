@@ -1,1 +1,3 @@
-{{#Empty template -- the event is rendered by the wrapper already.}}
+{{ IF event.commenting }}
+	{{ INCLUDE post/list.tt  posts = event.posts_rs }}
+{{ END }}

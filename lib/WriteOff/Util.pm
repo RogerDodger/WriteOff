@@ -5,12 +5,58 @@ use strict;
 use warnings;
 use base 'Exporter';
 use Digest;
+use Parse::BBCode;
 use Time::HiRes qw/gettimeofday/;
 
 our @EXPORT_OK = qw/LEEWAY maybe simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 sub LEEWAY () { 5 } # minutes
+
+my $bb = Parse::BBCode->new({
+	tags => {
+		b => '<strong>%{parse}s</strong>',
+		i => '<em>%{parse}s</em>',
+		u => '<span style="text-decoration: underline">%{parse}s</span>',
+		s => '<del>%{parse}s</del>',
+		url => '<a class="link new-tab" href="%{link}a">%{parse}s</a>',
+		size => '<span style="font-size: %{size}aem;">%{parse}s</span>',
+		color => '<span style="color: %{color}a;">%{parse}s</span>',
+		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
+		center => {
+			class => 'block',
+			output => '<div style="text-align: center">%{parse}s</div>',
+		},
+		right => {
+			class => 'block',
+			output => '<div style="text-align: right">%{parse}s</div>',
+		},
+		quote => {
+			class => 'block',
+			output => '<blockquote>%{parse}s</blockquote>',
+		},
+		hr => {
+			class => 'block',
+			output => '<hr>',
+			single => 1,
+		},
+	},
+	escapes => {
+		Parse::BBCode::HTML->default_escapes,
+		size => sub {
+			$_[2] !~ /\D/ &&
+			8 <= $_[2] && $_[2] <= 72 ?
+			$_[2] / 16 : 1;
+		},
+		color => sub {
+			$_[2] =~ /\A#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
+		},
+	},
+});
+
+sub bbcode {
+	return $bb->render($_[0]);
+}
 
 sub maybe ($$) {
 	return $_[1] ? @_ : ();

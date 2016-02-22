@@ -11,18 +11,13 @@
 }
 
 .Story {
+	@include bbcode;
+
 	font-family: serif;
 	font-size: 1.1em;
 	line-height: 1.618;
 	margin-bottom: 2em;
 	text-align: justify;
-
-	hr,
-	blockquote,
-	div {
-		display: inline-block;
-		width: 100%;
-	}
 
 	hr {
 		background: transparent;

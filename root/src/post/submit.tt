@@ -1,0 +1,20 @@
+<div class="Post-submit">
+	<form class="Form" method="post" action="/post/add">
+		{{ csrf_field | none }}
+		<input type="hidden" name="event" value="{{ event.id }}">
+		{{ IF entry }}
+		<input type="hidden" name="entry" value="{{ entry.id }}">
+		{{ END }}
+
+		<div class="Post-submit--body">
+			<textarea rows="1" cols="1" name="body" required="required" maxlength="65535"></textarea>
+		</div>
+
+		<div class="Post-submit--senders">
+			<button type="submit">
+				<i class="fa fa-comment"></i>
+				Post comment
+			</button>
+		</div>
+	</form>
+</div>

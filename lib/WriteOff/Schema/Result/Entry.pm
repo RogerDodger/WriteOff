@@ -59,6 +59,7 @@ __PACKAGE__->has_many("awards", "WriteOff::Schema::Result::Award", "entry_id");
 __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->has_many("guesses", "WriteOff::Schema::Result::Guess", "entry_id");
 __PACKAGE__->belongs_to("image", "WriteOff::Schema::Result::Image", "image_id");
+__PACKAGE__->has_many("posts", "WriteOff::Schema::Result::Post", "entry_id");
 __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "entry_id");
 __PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id", { join_type => 'left' });
 __PACKAGE__->belongs_to("story", "WriteOff::Schema::Result::Story", "story_id");
@@ -71,6 +72,10 @@ sub mode {
 	my $self = shift;
 
 	$self->image_id && 'art' || 'fic';
+}
+
+sub view {
+	"/" . shift->mode . "/view";
 }
 
 BEGIN { *type = \&mode }

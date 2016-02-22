@@ -369,28 +369,8 @@ sub set_prompt :Private {
 	$e->update({ prompt => $best->contents });
 }
 
-sub prelim_distr :Private {
-	my ( $self, $c, $id ) = @_;
-
-	my $e = $c->model('DB::Event')->find($id) or return 0;
-
-	$e->prelim_distr($c->config->{work});
-}
-
-sub public_distr :Private {
-	my ($self, $c, $id) = @_;
-
-	my $e = $c->model('DB::Event')->find($id) or return 0;
-
-	$e->public_distr($c->config->{work});
-}
-
-sub judge_distr :Private {
-	my ( $self, $c, $id ) = @_;
-
-	my $e = $c->model('DB::Event')->find($id) or return 0;
-
-	$e->judge_distr( $c->config->{judge_distr_size} );
+sub check_rounds :Private {
+	my ($self, $c) = @_;
 }
 
 sub tally_results :Private {

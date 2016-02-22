@@ -92,6 +92,10 @@
 	&.art {
 		@include button-group($hue: 350);
 	}
+
+	&.commenting {
+		@include button-group($hue: 230);
+	}
 }
 
 .Event-admin {

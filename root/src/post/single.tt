@@ -1,0 +1,48 @@
+<div class="Post" id="{{ post.id }}">
+	<div class="Post-author">
+		<div class="Post-author--name {{ 'admin' IF post.artist.user.admin }}">
+			{{ post.artist.name }}
+		</div>
+
+		<div class="Post-author--avatar">
+			<img src="/static/images/avatar.jpg">
+		</div>
+	</div>
+
+	<div class="Post-contents">
+		<div class="Post-contents--header">
+			<span class="Post-id">
+				<a href="/post/{{ post.id }}">#{{ post.id }}</a>
+			</span>
+
+			&middot;
+
+			<span class="Post-created">
+				{{ post.created.delta_html | none }}
+			</span>
+
+			{{ IF !entry && post.entry }}
+			<span class="Post-entry">
+				on
+				<a href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}">
+					{{ post.entry.title }}
+				</a>
+			</span>
+			{{ END }}
+		</div>
+
+		<div class="Post-contents--body">
+			{{ post.body_render | none }}
+		</div>
+
+		{{ IF c.user.active_artist }}
+		<div class="Post-contents--footer">
+			<a class="Post-reply" data-target="{{ post.id }}" {{ IF !entry && post.entry }}
+				href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"{{ END }}>
+				<i class="fa fa-reply"></i>
+				Reply
+			</a>
+		</div>
+		{{ END }}
+	</div>
+</div>

@@ -25,47 +25,6 @@ __PACKAGE__->config(
 	render_die         => 1,
 );
 
-our $BBCODE_CONFIG = {
-	tags => {
-		b => '<strong>%{parse}s</strong>',
-		i => '<em>%{parse}s</em>',
-		u => '<span style="text-decoration: underline">%{parse}s</span>',
-		s => '<del>%{parse}s</del>',
-		url => '<a class="link new-tab" href="%{link}a">%{parse}s</a>',
-		size => '<span style="font-size: %{size}aem;">%{parse}s</span>',
-		color => '<span style="color: %{color}a;">%{parse}s</span>',
-		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
-		center => {
-			class => 'block',
-			output => '<div style="text-align: center">%{parse}s</div>',
-		},
-		right => {
-			class => 'block',
-			output => '<div style="text-align: right">%{parse}s</div>',
-		},
-		quote => {
-			class => 'block',
-			output => '<blockquote>%{parse}s</blockquote>',
-		},
-		hr => {
-			class => 'block',
-			output => '<hr>',
-			single => 1,
-		},
-	},
-	escapes => {
-		Parse::BBCode::HTML->default_escapes,
-		size => sub {
-			$_[2] !~ /\D/ &&
-			8 <= $_[2] && $_[2] <= 72 ?
-			$_[2] / 16 : 1;
-		},
-		color => sub {
-			$_[2] =~ /\A#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';
-		},
-	},
-};
-
 __PACKAGE__->config->{FILTERS} = {
 	markdown => sub {
 		my $text = shift;
@@ -82,11 +41,9 @@ __PACKAGE__->config->{FILTERS} = {
 		my $c = shift;
 		my $opt = shift // {};
 
-		my $bb = Parse::BBCode->new($BBCODE_CONFIG);
-
 		return sub {
 			my $text = shift;
-			$text = $bb->render($text);
+			$text = WriteOff::Util::bbcode($text);
 
 			if ($opt->{xhtml}) {
 				$text =~ s{<hr>}{<hr/>}g;

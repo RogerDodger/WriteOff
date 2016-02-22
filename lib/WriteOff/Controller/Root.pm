@@ -44,7 +44,6 @@ sub auto :Private {
 	$c->stash(
 		now        => WriteOff::DateTime->now,
 		title      => [],
-		editor     => $c->user->admin,
 		format     => scalar($c->req->param('format')) || 'html',
 		csrf_token => $c->csrf_token,
 		messages   => [],

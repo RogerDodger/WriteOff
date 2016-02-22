@@ -1,0 +1,151 @@
+.Post {
+	@extend .clearfix;
+	@include container;
+
+	margin-top: 1.5em;
+	word-wrap: break-word;
+
+	@media #{$mobile} {
+		box-shadow: 0 0 3px #b6b6b6;
+	}
+}
+
+.Post-author {
+	float: left;
+	width: 9em;
+
+	@media #{$mobile} {
+		float: none;
+		width: 100%;
+	}
+}
+
+.Post-author--name {
+	@include button($hue: 90, $sat: 65%, $l: 70%);
+	&.admin {
+		@include button-color($hue: 0, $sat: 65%, $l: 70%);
+	}
+
+	border-radius: 0.2em;
+	display: block;
+	font-size: 0.95em;
+	padding: 0.5em;
+	text-align: center;
+
+	@media #{$mobile} {
+		border-radius: 0;
+	}
+}
+
+.Post-author--avatar {
+	background-color: hsla(0, 0%, 98%, 1);
+	box-shadow: 0 0 3px #b6b6b6;
+	border-radius: 0.1em;
+	float: right;
+	padding: 0.25em;
+	margin-top: 0.5em;
+
+	img {
+		width: 4em;
+		height: 4em;
+	}
+
+	@media #{$mobile} {
+		display: none;
+	}
+}
+
+.Post-contents {
+	background-color: hsla(0, 0%, 98%, 1);
+	box-shadow: 0 0 3px #b6b6b6;
+	border-radius: 0.2em;
+	padding: 1em;
+	margin-left: 9.7em;
+
+	@media #{$mobile} {
+		margin-left: 0;
+		box-shadow: none;
+	}
+}
+
+.Post-contents:hover a {
+	color: #666;
+}
+
+.Post-contents--header,
+.Post-contents--footer {
+	a {
+		cursor: pointer;
+		color: #999;
+	}
+
+	a:hover {
+		color: #222;
+		text-decoration: none;
+	}
+}
+
+.Post-contents--header {
+	a:hover {
+		text-decoration: underline;
+	}
+
+	color: #999;
+	font-size: 0.8em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #ddd;
+}
+
+.Post-contents--body {
+	@include bbcode;
+	margin: 1em 0;
+
+	hr {
+		background: transparent;
+		border: none;
+		border-bottom: 1px solid #bbb;
+	}
+
+	blockquote {
+		padding: 0.2em 0.5em;
+		border-left: 0.3em solid hsla(240, 30%, 80%, 1);
+		color: #666;
+		margin: 0;
+	}
+}
+
+.Post-contents--footer {
+	font-size: 0.8em;
+	text-align: right;
+}
+
+.Post-submit {
+	@include container;
+
+	box-shadow: 0 0 3px #b6b6b6;
+	margin-top: 1em;
+	font-size: 1.1em;
+}
+
+.Post-submit--body {
+	textarea {
+		border: 0;
+		box-shadow: none;
+		color: #444;
+		min-height: 12em;
+		font-size: 0.9em;
+		padding: 0.75em;
+		width: 100%;
+	}
+}
+
+.Post-submit--senders {
+	background-color: #f7f7f7;
+	border-top: 1px solid #e5e5e5;
+	padding: 1em;
+
+	button {
+		font-size: 0.9em;
+		@include button($hue: 120);
+	}
+}

@@ -31,6 +31,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", default_value => "T", is_nullable => 0 },
 	"custom_rules",
 	{ data_type => "text", is_nullable => 1 },
+	"commenting",
+	{ data_type => "bit", default_value => 1, is_nullable => 0 },
 	"guessing",
 	{ data_type => "bit", default_value => 1, is_nullable => 0 },
 	"tallied",
@@ -48,6 +50,7 @@ __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "event_id")
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "event_id");
 __PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
 __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
+__PACKAGE__->has_many("posts", "WriteOff::Schema::Result::Post", "event_id");
 __PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "event_id");
 __PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::Round", "event_id");
 __PACKAGE__->has_many("theorys", "WriteOff::Schema::Result::Theory", "event_id");

@@ -2,7 +2,7 @@
 // Context-independent components, mostly mixins
 // =============================================================================
 
-@mixin button($hue: 200, $sat: 30%, $l: 80%) {
+@mixin button-base {
 	border-style: solid;
 	border-width: 1px;
 	display: inline-block;
@@ -11,15 +11,20 @@
 	text-decoration: none;
 	vertical-align: middle;
 
+	&:not(:disabled):hover {
+		cursor: pointer;
+		text-decoration: none;
+	}
+}
+
+@mixin button-color($hue: 200, $sat: 30%, $l: 80%) {
 	background: hsla($hue, $sat, $l, 1);
 	border-color: hsla($hue, $sat, $l * .75, 1);
 	color: hsla($hue, $sat, $l * .2, 1);
 
 	&:not(:disabled) {
 		&:hover {
-			cursor: pointer;
 			background: hsla($hue, $sat, $l * .95, 1);
-			text-decoration: none;
 		}
 
 		&:active {
@@ -32,6 +37,11 @@
 		border-color: hsla($hue, $sat * .35, $l * .75, 1);
 		color: hsla($hue, $sat * .35, $l * .2, 1);
 	}
+}
+
+@mixin button($hue: 200, $sat: 30%, $l: 80%) {
+	@include button-base;
+	@include button-color($hue, $sat, $l);
 }
 
 @mixin button-group($hue: 200, $sat: 30%, $l: 80%) {
@@ -282,4 +292,13 @@
 
 .Form-error {
 	box-shadow: 0 0 0.25em red;
+}
+
+@mixin bbcode {
+	hr,
+	blockquote,
+	div {
+		display: inline-block;
+		width: 100%;
+	}
 }

@@ -19,9 +19,10 @@ $mobile: "(max-width: 640px)";
 @import "document";
 
 @import "event";
+@import "post";
 @import "prompt";
 @import "story";
-@import "vote";
 @import "results";
 @import "scoreboard";
 @import "user";
+@import "vote";

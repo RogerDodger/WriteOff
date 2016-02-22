@@ -708,8 +708,9 @@ a {
   font-size: 0.8em; }
   .Table-button:not(:disabled):hover {
     cursor: pointer;
-    background: #e5edf1;
     text-decoration: none; }
+  .Table-button:not(:disabled):hover {
+    background: #e5edf1; }
   .Table-button:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
   .Table-button:disabled {
@@ -789,8 +790,9 @@ a {
   font-size: 1.03em; }
   .Form input[type="submit"]:not(:disabled):hover {
     cursor: pointer;
-    background: #a3e0a3;
     text-decoration: none; }
+  .Form input[type="submit"]:not(:disabled):hover {
+    background: #a3e0a3; }
   .Form input[type="submit"]:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #94db94 inset; }
   .Form input[type="submit"]:disabled {
@@ -845,9 +847,9 @@ a {
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden, .Ballot .ordered .Ballot-unabstain,
+.hidden, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles, .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
-.Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles {
+.Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
   visibility: hidden; }
 
@@ -897,22 +899,23 @@ a {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before, .Form-group:before,
+.clearfix:before, .Form-group:before, .Post:before,
 .clearfix:after,
-.Form-group:after {
+.Form-group:after,
+.Post:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after, .Form-group:after {
+.clearfix:after, .Form-group:after, .Post:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix, .Form-group {
+.clearfix, .Form-group, .Post {
   *zoom: 1; }
 
 /*
@@ -1252,9 +1255,9 @@ body.inverted {
 .Event-details + .Event-header {
   margin-top: 1em; }
 
-.Event-details.hidden + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
+.Event-details.hidden + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
-.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header {
+.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
@@ -1322,8 +1325,9 @@ body.inverted {
       color: #251d35; }
       .Event-links.rules li a:not(:disabled):hover {
         cursor: pointer;
-        background: #bcafd4;
         text-decoration: none; }
+      .Event-links.rules li a:not(:disabled):hover {
+        background: #bcafd4; }
       .Event-links.rules li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #b0a2cd inset; }
       .Event-links.rules li a:disabled {
@@ -1351,8 +1355,9 @@ body.inverted {
       color: #311d35; }
       .Event-links.prompt li a:not(:disabled):hover {
         cursor: pointer;
-        background: #ceafd4;
         text-decoration: none; }
+      .Event-links.prompt li a:not(:disabled):hover {
+        background: #ceafd4; }
       .Event-links.prompt li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #c6a2cd inset; }
       .Event-links.prompt li a:disabled {
@@ -1380,8 +1385,9 @@ body.inverted {
       color: #351d2d; }
       .Event-links.fic li a:not(:disabled):hover {
         cursor: pointer;
-        background: #d4afc8;
         text-decoration: none; }
+      .Event-links.fic li a:not(:disabled):hover {
+        background: #d4afc8; }
       .Event-links.fic li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #cda2bf inset; }
       .Event-links.fic li a:disabled {
@@ -1409,14 +1415,45 @@ body.inverted {
       color: #351d21; }
       .Event-links.art li a:not(:disabled):hover {
         cursor: pointer;
-        background: #d4afb6;
         text-decoration: none; }
+      .Event-links.art li a:not(:disabled):hover {
+        background: #d4afb6; }
       .Event-links.art li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #cda2a9 inset; }
       .Event-links.art li a:disabled {
         background: #d1c7c8;
         border-color: #a48e92;
         color: #2d2526; }
+.Event-links.commenting {
+  list-style-type: none;
+  padding: 0; }
+  .Event-links.commenting li {
+    display: inline-block; }
+    .Event-links.commenting li:not(:last-child) {
+      margin-right: -1px;
+      margin-bottom: -1px; }
+    .Event-links.commenting li a {
+      border-style: solid;
+      border-width: 1px;
+      display: inline-block;
+      line-height: 1;
+      padding: 0.8em;
+      text-decoration: none;
+      vertical-align: middle;
+      background: #bdc2db;
+      border-color: #7a85b8;
+      color: #1d2135; }
+      .Event-links.commenting li a:not(:disabled):hover {
+        cursor: pointer;
+        text-decoration: none; }
+      .Event-links.commenting li a:not(:disabled):hover {
+        background: #afb6d4; }
+      .Event-links.commenting li a:not(:disabled):active {
+        box-shadow: 0 0.5em 0.7em #a2a9cd inset; }
+      .Event-links.commenting li a:disabled {
+        background: #c7c8d1;
+        border-color: #8e92a4;
+        color: #25262d; }
 
 .Event-admin {
   list-style-type: none;
@@ -1439,8 +1476,9 @@ body.inverted {
       color: #1d2d35; }
       .Event-admin li a:not(:disabled):hover {
         cursor: pointer;
-        background: #afc8d4;
         text-decoration: none; }
+      .Event-admin li a:not(:disabled):hover {
+        background: #afc8d4; }
       .Event-admin li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
       .Event-admin li a:disabled {
@@ -1469,8 +1507,9 @@ body.inverted {
       color: #1d2135; }
       .Event-blurb > ul:first-child li a:not(:disabled):hover {
         cursor: pointer;
-        background: #afb6d4;
         text-decoration: none; }
+      .Event-blurb > ul:first-child li a:not(:disabled):hover {
+        background: #afb6d4; }
       .Event-blurb > ul:first-child li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #a2a9cd inset; }
       .Event-blurb > ul:first-child li a:disabled {
@@ -1491,8 +1530,9 @@ body.inverted {
   color: #2e2e2e; }
   .Archive-button:not(:disabled):hover {
     cursor: pointer;
-    background: #dadada;
     text-decoration: none; }
+  .Archive-button:not(:disabled):hover {
+    background: #dadada; }
   .Archive-button:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #cfcfcf inset; }
   .Archive-button:disabled {
@@ -1513,8 +1553,9 @@ body.inverted {
   color: #35291d; }
   .New-event--button:not(:disabled):hover {
     cursor: pointer;
-    background: #d4c2af;
     text-decoration: none; }
+  .New-event--button:not(:disabled):hover {
+    background: #d4c2af; }
   .New-event--button:not(:disabled):active {
     box-shadow: 0 0.5em 0.7em #cdb8a2 inset; }
   .New-event--button:disabled {
@@ -1527,6 +1568,182 @@ body.inverted {
   display: block;
   text-align: center;
   margin-top: 0.5em; }
+
+.Post {
+  display: block;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+  margin-top: 1.5em;
+  word-wrap: break-word; }
+  @media (max-width: 640px) {
+    .Post {
+      box-shadow: 0 0 3px #b6b6b6; } }
+
+.Post-author {
+  float: left;
+  width: 9em; }
+  @media (max-width: 640px) {
+    .Post-author {
+      float: none;
+      width: 100%; } }
+
+.Post-author--name {
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  line-height: 1;
+  padding: 0.8em;
+  text-decoration: none;
+  vertical-align: middle;
+  background: #b3e481;
+  border-color: #86d537;
+  color: #243b0c;
+  border-radius: 0.2em;
+  display: block;
+  font-size: 0.95em;
+  padding: 0.5em;
+  text-align: center; }
+  .Post-author--name:not(:disabled):hover {
+    cursor: pointer;
+    text-decoration: none; }
+  .Post-author--name:not(:disabled):hover {
+    background: #aae172; }
+  .Post-author--name:not(:disabled):active {
+    box-shadow: 0 0.5em 0.7em #a1de63 inset; }
+  .Post-author--name:disabled {
+    background: #b3c4a1;
+    border-color: #86a16a;
+    color: #242c1c; }
+  .Post-author--name.admin {
+    background: #e48181;
+    border-color: #d53737;
+    color: #3b0c0c; }
+    .Post-author--name.admin:not(:disabled):hover {
+      background: #e17272; }
+    .Post-author--name.admin:not(:disabled):active {
+      box-shadow: 0 0.5em 0.7em #de6363 inset; }
+    .Post-author--name.admin:disabled {
+      background: #c4a1a1;
+      border-color: #a16a6a;
+      color: #2c1c1c; }
+  @media (max-width: 640px) {
+    .Post-author--name {
+      border-radius: 0; } }
+
+.Post-author--avatar {
+  background-color: #fafafa;
+  box-shadow: 0 0 3px #b6b6b6;
+  border-radius: 0.1em;
+  float: right;
+  padding: 0.25em;
+  margin-top: 0.5em; }
+  .Post-author--avatar img {
+    width: 4em;
+    height: 4em; }
+  @media (max-width: 640px) {
+    .Post-author--avatar {
+      display: none; } }
+
+.Post-contents {
+  background-color: #fafafa;
+  box-shadow: 0 0 3px #b6b6b6;
+  border-radius: 0.2em;
+  padding: 1em;
+  margin-left: 9.7em; }
+  @media (max-width: 640px) {
+    .Post-contents {
+      margin-left: 0;
+      box-shadow: none; } }
+
+.Post-contents:hover a {
+  color: #666; }
+
+.Post-contents--header a,
+.Post-contents--footer a {
+  cursor: pointer;
+  color: #999; }
+.Post-contents--header a:hover,
+.Post-contents--footer a:hover {
+  color: #222;
+  text-decoration: none; }
+
+.Post-contents--header {
+  color: #999;
+  font-size: 0.8em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #ddd; }
+  .Post-contents--header a:hover {
+    text-decoration: underline; }
+
+.Post-contents--body {
+  margin: 1em 0; }
+  .Post-contents--body hr,
+  .Post-contents--body blockquote,
+  .Post-contents--body div {
+    display: inline-block;
+    width: 100%; }
+  .Post-contents--body hr {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #bbb; }
+  .Post-contents--body blockquote {
+    padding: 0.2em 0.5em;
+    border-left: 0.3em solid #bdbddb;
+    color: #666;
+    margin: 0; }
+
+.Post-contents--footer {
+  font-size: 0.8em;
+  text-align: right; }
+
+.Post-submit {
+  display: block;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+  box-shadow: 0 0 3px #b6b6b6;
+  margin-top: 1em;
+  font-size: 1.1em; }
+
+.Post-submit--body textarea {
+  border: 0;
+  box-shadow: none;
+  color: #444;
+  min-height: 12em;
+  font-size: 0.9em;
+  padding: 0.75em;
+  width: 100%; }
+
+.Post-submit--senders {
+  background-color: #f7f7f7;
+  border-top: 1px solid #e5e5e5;
+  padding: 1em; }
+  .Post-submit--senders button {
+    font-size: 0.9em;
+    border-style: solid;
+    border-width: 1px;
+    display: inline-block;
+    line-height: 1;
+    padding: 0.8em;
+    text-decoration: none;
+    vertical-align: middle;
+    background: #bddbbd;
+    border-color: #7ab87a;
+    color: #1d351d; }
+    .Post-submit--senders button:not(:disabled):hover {
+      cursor: pointer;
+      text-decoration: none; }
+    .Post-submit--senders button:not(:disabled):hover {
+      background: #afd4af; }
+    .Post-submit--senders button:not(:disabled):active {
+      box-shadow: 0 0.5em 0.7em #a2cda2 inset; }
+    .Post-submit--senders button:disabled {
+      background: #c7d1c7;
+      border-color: #8ea48e;
+      color: #252d25; }
 
 .Prompts {
   width: 100%; }
@@ -1707,103 +1924,15 @@ body.inverted {
     color: #1d2d35; }
     .Storys-access--update input:not(:disabled):hover {
       cursor: pointer;
-      background: #afc8d4;
       text-decoration: none; }
+    .Storys-access--update input:not(:disabled):hover {
+      background: #afc8d4; }
     .Storys-access--update input:not(:disabled):active {
       box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
     .Storys-access--update input:disabled {
       background: #c7ced1;
       border-color: #8e9da4;
       color: #252a2d; }
-
-.Ballot {
-  width: 100%; }
-  .Ballot > thead > tr > th, .Ballot > tbody > tr > td {
-    padding: 0.8em 0.4em; }
-    .Ballot > thead > tr > th:first-child, .Ballot > tbody > tr > td:first-child {
-      padding-left: 0.8em; }
-    .Ballot > thead > tr > th:last-child, .Ballot > tbody > tr > td:last-child {
-      padding-right: 0.8em; }
-  .Ballot > thead > tr > th {
-    font-size: 1.1em;
-    font-weight: normal;
-    text-align: center;
-    letter-spacing: 0.05em;
-    padding-bottom: 0.3em;
-    padding-top: 0.3em; }
-  .Ballot > tbody > tr:nth-child(odd) > td {
-    background-color: #dee8ed; }
-  .Ballot > tbody > tr:nth-child(even) > td {
-    background-color: #eef4f6; }
-  .Ballot > tbody > tr > td.Table-divider {
-    background-color: transparent;
-    padding: 0; }
-    .Ballot > tbody > tr > td.Table-divider:before {
-      display: block;
-      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
-      width: 80%;
-      height: 1px;
-      margin: 1.2em auto;
-      content: " "; }
-  .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
-    text-align: center; }
-  .Ballot > tbody > tr > td.Ballot-title {
-    width: 100%; }
-  .Ballot > tbody > tr > td.Ballot-abstain--cell {
-    padding-top: 0;
-    padding-bottom: 0; }
-  .Ballot > tbody > tr > td.Ballot-divider {
-    background-color: transparent;
-    padding: 0; }
-    .Ballot > tbody > tr > td.Ballot-divider:before {
-      display: block;
-      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
-      width: 80%;
-      height: 1px;
-      margin: 1.2em auto;
-      content: " "; }
-
-.Ballot-up:hover {
-  cursor: pointer; }
-
-.Ballot-abstain,
-.Ballot-unabstain {
-  border-style: solid;
-  border-width: 1px;
-  display: inline-block;
-  line-height: 1;
-  padding: 0.8em;
-  text-decoration: none;
-  vertical-align: middle;
-  background: #f5f8fa;
-  border-color: #a5c0ce;
-  color: #233640;
-  padding: 0.4em;
-  font-size: 0.8em; }
-  .Ballot-abstain:not(:disabled):hover,
-  .Ballot-unabstain:not(:disabled):hover {
-    cursor: pointer;
-    background: #e5edf1;
-    text-decoration: none; }
-  .Ballot-abstain:not(:disabled):active,
-  .Ballot-unabstain:not(:disabled):active {
-    box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
-  .Ballot-abstain:disabled,
-  .Ballot-unabstain:disabled {
-    background: #f7f8f8;
-    border-color: #b2bcc1;
-    color: #2c3337; }
-
-.Ballot-directions,
-.Ballot-append {
-  opacity: 0.6; }
-  .Ballot-directions:not(:only-child),
-  .Ballot-append:not(:only-child) {
-    display: none; }
-
-.Ballot-append.active:hover, .Ballot-append.waiting {
-  cursor: pointer;
-  opacity: 1; }
 
 .Results {
   width: 100%; }
@@ -1882,8 +2011,9 @@ body.inverted {
       color: #1d2d35; }
       .Slates li a:not(:disabled):hover {
         cursor: pointer;
-        background: #afc8d4;
         text-decoration: none; }
+      .Slates li a:not(:disabled):hover {
+        background: #afc8d4; }
       .Slates li a:not(:disabled):active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
       .Slates li a:disabled {
@@ -1956,3 +2086,94 @@ body.inverted {
   text-align: center;
   font-size: 1.3em;
   font-family: monospace; }
+
+.Ballot {
+  width: 100%; }
+  .Ballot > thead > tr > th, .Ballot > tbody > tr > td {
+    padding: 0.8em 0.4em; }
+    .Ballot > thead > tr > th:first-child, .Ballot > tbody > tr > td:first-child {
+      padding-left: 0.8em; }
+    .Ballot > thead > tr > th:last-child, .Ballot > tbody > tr > td:last-child {
+      padding-right: 0.8em; }
+  .Ballot > thead > tr > th {
+    font-size: 1.1em;
+    font-weight: normal;
+    text-align: center;
+    letter-spacing: 0.05em;
+    padding-bottom: 0.3em;
+    padding-top: 0.3em; }
+  .Ballot > tbody > tr:nth-child(odd) > td {
+    background-color: #dee8ed; }
+  .Ballot > tbody > tr:nth-child(even) > td {
+    background-color: #eef4f6; }
+  .Ballot > tbody > tr > td.Table-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Ballot > tbody > tr > td.Table-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
+  .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
+    text-align: center; }
+  .Ballot > tbody > tr > td.Ballot-title {
+    width: 100%; }
+  .Ballot > tbody > tr > td.Ballot-abstain--cell {
+    padding-top: 0;
+    padding-bottom: 0; }
+  .Ballot > tbody > tr > td.Ballot-divider {
+    background-color: transparent;
+    padding: 0; }
+    .Ballot > tbody > tr > td.Ballot-divider:before {
+      display: block;
+      background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
+      width: 80%;
+      height: 1px;
+      margin: 1.2em auto;
+      content: " "; }
+
+.Ballot-up:hover {
+  cursor: pointer; }
+
+.Ballot-abstain,
+.Ballot-unabstain {
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  line-height: 1;
+  padding: 0.8em;
+  text-decoration: none;
+  vertical-align: middle;
+  background: #f5f8fa;
+  border-color: #a5c0ce;
+  color: #233640;
+  padding: 0.4em;
+  font-size: 0.8em; }
+  .Ballot-abstain:not(:disabled):hover,
+  .Ballot-unabstain:not(:disabled):hover {
+    cursor: pointer;
+    text-decoration: none; }
+  .Ballot-abstain:not(:disabled):hover,
+  .Ballot-unabstain:not(:disabled):hover {
+    background: #e5edf1; }
+  .Ballot-abstain:not(:disabled):active,
+  .Ballot-unabstain:not(:disabled):active {
+    box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
+  .Ballot-abstain:disabled,
+  .Ballot-unabstain:disabled {
+    background: #f7f8f8;
+    border-color: #b2bcc1;
+    color: #2c3337; }
+
+.Ballot-directions,
+.Ballot-append {
+  opacity: 0.6; }
+  .Ballot-directions:not(:only-child),
+  .Ballot-append:not(:only-child) {
+    display: none; }
+
+.Ballot-append.active:hover, .Ballot-append.waiting {
+  cursor: pointer;
+  opacity: 1; }

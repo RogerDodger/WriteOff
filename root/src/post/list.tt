@@ -1,0 +1,7 @@
+{{ FOREACH post IN posts.thread(c.req.params.page).all }}
+	{{ INCLUDE post/single.tt }}
+{{ END }}
+
+{{ IF c.user.active_artist }}
+	{{ INCLUDE post/submit.tt }}
+{{ END }}

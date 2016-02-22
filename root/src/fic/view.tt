@@ -21,5 +21,8 @@
 		<a href="{{ c.uri_for( c.action, [ next.id_uri ]) }}">Next »</a>
 	</div>
 	{{- END }}
-
 </div>
+
+{{ IF event.commenting && event.fic_gallery_opened }}
+	{{ INCLUDE post/list.tt  posts = entry.posts_rs }}
+{{ END }}
