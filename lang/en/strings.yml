@@ -7,6 +7,7 @@ title: Title
 artist: Artist
 author: Author
 website: Website
+contents: Contents
 relatedArt: Related Artwork(s)
 story: Story
 words: Words
@@ -31,6 +32,7 @@ update: Update
 edit: Edit
 create: Create
 delete: Delete
+dq: Disqualify
 submit: Submit
 vote: Vote
 castVote: Cast vote
@@ -58,6 +60,7 @@ final: Finals
 writing: Writing
 drawing: Drawing
 confirmDeletion: Confirm Deletion
+confirmDQ: Confirm DQ
 passwordRecovery: Password Recovery
 preferences: Preferences
 
@@ -100,6 +103,7 @@ loginLimited: |
     You have recently made a number of failed login attempts and for security
     reasons have been temporarily blocked from making any more. Please try again
     in around %d minutes.
-confirmDeletionPrompt: Enter the %s of the selected item to confirm deletion
+confirmPrompt: Enter the %s of the selected item to continue
 csrfDetected: Bad session
 notAdmin: You are not an admin
+notOrganiser: You are not an event organiser for this event

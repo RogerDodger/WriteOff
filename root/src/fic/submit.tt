@@ -42,6 +42,9 @@
 						[<a href="{{ c.uri_for_action('/fic/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
 						[<a href="{{ c.uri_for_action('/fic/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
 						{{ END }}
+						{{ IF c.user.organises(event) && !entry.disqualified }}
+						[<a href="{{ c.uri_for_action('/fic/dq', [ entry.id_uri ]) }}">{{ c.string('dq') }}</a>]
+						{{ END }}
 					</td>
 					<td class="Storys-title">
 						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">
@@ -56,7 +59,7 @@
 					</td>
 					<td class="Storys-publish">
 						<input type="checkbox" name="publish-{{ entry.story_id }}"
-							{{ 'disabled' IF !event.ended }}
+							{{ 'disabled' IF !c.user.publishes(entry) }}
 							{{ 'checked' IF entry.story.published }}>
 					</td>
 				</tr>

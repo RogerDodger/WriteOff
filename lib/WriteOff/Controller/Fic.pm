@@ -171,13 +171,11 @@ sub flip :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my $allowUnpub = $c->stash->{event}->ended;
-
 	while (my $entry = $c->stash->{entrys}->next) {
 		my $story = $entry->story;
 		my $id = $story->id;
 
-		if ($allowUnpub) {
+		if ($c->user->publishes($entry)) {
 			my $val = !!$c->req->param("publish-$id");
 			if ($story->published != $val) {
 				$c->log->info("Fic %d %s SET published=%d", $story->id, $entry->title, $val);
@@ -252,10 +250,10 @@ sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 	$c->forward('/entry/delete');
 }
 
-sub do_delete :Private {
-	my ( $self, $c ) = @_;
+sub dq :Chained('fetch') :PathPart('dq') {
+	my ($self, $c) = @_;
 
-	$c->forward('/entry/do_delete');
+	$c->forward('/entry/dq');
 }
 
 sub rels :Chained('fetch') :PathPart('rels') :Args(0) {

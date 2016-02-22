@@ -107,15 +107,16 @@ sub delete :Private {
 	$c->detach('/forbidden', [ $c->string('cantDelete') ])
 		if !$c->user->can_edit($c->stash->{entry}->item);
 
-	$c->stash->{key} = {
-		name  => 'title',
-		value => $c->stash->{entry}->title,
-	};
+	$c->stash(
+		key => $c->stash->{entry}->title,
+		header => $c->string('confirmDeletion'),
+		prompt => $c->string('confirmPrompt', $c->string('title')),
+	);
 
 	$c->forward('do_delete') if $c->req->method eq 'POST';
 
-	push $c->stash->{title}, 'Delete';
-	$c->stash->{template} = 'item/delete.tt';
+	push $c->stash->{title}, $c->string('delete');
+	$c->stash->{template} = 'root/confirm.tt';
 }
 
 sub do_delete :Private {
@@ -133,7 +134,47 @@ sub do_delete :Private {
 	$c->stash->{entry}->delete;
 
 	$c->flash->{status_msg} = 'Deletion successful';
-	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
+	$c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
+}
+
+sub dq :Private {
+	my ($self, $c) = @_;
+
+	$c->detach('/forbidden', [ $c->string('notOrganiser') ])
+		if !$c->user->organises($c->stash->{event});
+
+	$c->stash(
+		key => $c->stash->{entry}->title,
+		header => $c->string('confirmDQ'),
+		confirmPrompt => $c->string('confirmPrompt', $c->string('title')),
+	);
+
+	$c->forward('do_dq') if $c->req->method eq 'POST';
+
+	push $c->stash->{title}, $c->string('dq');
+	$c->stash->{template} = 'root/confirm.tt';
+}
+
+sub do_dq :Private {
+	my ($self, $c) = @_;
+	$c->forward('/check_csrf_token');
+
+	$c->log->info("%s disqualified by %s: %s by %s",
+		ucfirst $c->stash->{entry}->mode,
+		$c->user->name,
+		$c->stash->{entry}->title,
+		$c->stash->{entry}->artist->name,
+	);
+
+	$c->stash->{entry}->votes->delete;
+	$c->stash->{entry}->update({
+		artist_public => 1,
+		disqualified => 1,
+		round_id => undef,
+	});
+
+	$c->flash->{status_msg} = 'Entry disqualified';
+	$c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
 }
 
 __PACKAGE__->meta->make_immutable;

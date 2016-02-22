@@ -132,18 +132,19 @@ sub do_submit :Private {
 sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/forbidden', ['You cannot delete this item.']) unless
+	$c->detach('/forbidden', [ $c->string('cantDelete') ]) unless
 		$c->stash->{prompt}->is_manipulable_by( $c->user );
 
-	$c->stash->{key} = {
-		name  => 'contents',
-		value => $c->stash->{prompt}->contents,
-	};
+	$c->stash(
+		key => $c->stash->{prompt}->contents,
+		header => $c->string('confirmDeletion'),
+		confirmPrompt => $c->string('confirmPrompt', $c->string('contents')),
+	);
 
 	$c->forward('do_delete') if $c->req->method eq 'POST';
 
-	push $c->stash->{title}, 'Delete';
-	$c->stash->{template} = 'item/delete.tt';
+	push $c->stash->{title}, $c->string('delete');
+	$c->stash->{template} = 'root/confirm.tt';
 }
 
 sub do_delete :Private {
@@ -160,7 +161,7 @@ sub do_delete :Private {
 	$c->stash->{prompt}->delete;
 
 	$c->flash->{status_msg} = 'Deletion successful';
-	$c->res->redirect( $c->req->param('referer') || $c->uri_for('/') );
+	$c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
 }
 
 =head1 AUTHOR

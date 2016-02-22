@@ -51,6 +51,7 @@ __PACKAGE__->add_unique_constraint("name_unique", ["name_canonical"]);
 
 __PACKAGE__->has_many("artists", "WriteOff::Schema::Result::Artist", "user_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "user_id");
+__PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "user_id");
 __PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "user_id");
 __PACKAGE__->has_many("tokens", "WriteOff::Schema::Result::Token", "user_id");
 __PACKAGE__->has_many("prompt_votes", "WriteOff::Schema::Result::PromptVote", "user_id");
@@ -207,16 +208,18 @@ sub organises {
 	return $event->is_organised_by($self);
 }
 
+sub publishes {
+	my ($self, $entry) = @_;
+
+	return $self->admin
+		|| $self->organises($entry->event)
+		|| $entry->user_id == $self->id && $entry->artist_public && !$entry->disqualified;
+}
+
 sub can_edit {
 	my ($self, $entry) = @_;
 
 	return $entry->is_manipulable_by($self);
-}
-
-sub entrys {
-	my $self = shift;
-
-	$self->result_source->schema->resultset('Entry')->search({ user_id => $self->id }, { join => 'artist' });
 }
 
 sub storys {
