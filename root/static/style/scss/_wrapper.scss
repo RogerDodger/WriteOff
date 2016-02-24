@@ -161,6 +161,10 @@ body.inverted {
 			background-color: hsla(60, 70%, 90%, 1);
 		}
 	}
+
+	.fa {
+		vertical-align: middle;
+	}
 }
 
 .Artist-swap {
@@ -169,6 +173,10 @@ body.inverted {
 
 .Site-header--global {
 	float: left;
+
+	.fa-external-link {
+		font-size: 0.9em;
+	}
 }
 
 .Site-header--user {

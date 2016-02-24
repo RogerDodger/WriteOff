@@ -1083,9 +1083,13 @@ body.inverted {
       text-shadow: #cccccc; }
     .Site-header ul > li > ul > li:hover {
       background-color: #f7f7d4; }
+  .Site-header .fa {
+    vertical-align: middle; }
 
 .Site-header--global {
   float: left; }
+  .Site-header--global .fa-external-link {
+    font-size: 0.9em; }
 
 .Site-header--user {
   float: right; }
