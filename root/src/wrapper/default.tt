@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="/static/style/normalize.css">
 		<link rel="stylesheet" href="/static/style/jquery-ui-1.9.2.custom.css">
 		<link rel="stylesheet" href="/static/style/font-awesome.min.css">
-		<link rel="stylesheet" href="/static/style/writeoff-0.55.css">
+		<link rel="stylesheet" href="/static/style/writeoff-0.56.css">
 
 		<script src="/static/js/html5shiv.js"></script>
 		<script src="/static/js/modernizr-2.6.2.custom.min.js"></script>
