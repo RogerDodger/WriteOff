@@ -38,6 +38,9 @@
 							</a>
 						</li>
 						<li><a href="/scoreboard">Scoreboard</a></li>
+						{{ IF c.config.chat }}
+						<li><a href="{{ c.config.chat }}"><i class="fa fa-external-link"></i> Chat</a>
+						{{ END }}
 					</ul>
 				</div>
 
