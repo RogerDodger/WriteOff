@@ -157,6 +157,9 @@ form.light p .ps {
   display: none; }
 
 .votebar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   height: 0.6em; }
 
@@ -454,8 +457,6 @@ figure img {
   max-height: 225px;
   border: 1px solid black;
   background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
-  -webkit-box-shadow: 2px 2px 2px black;
-  -moz-box-shadow: 2px 2px 2px black;
   box-shadow: 2px 2px 2px black; }
 
 /*
@@ -658,6 +659,7 @@ a {
 
 .Divider {
   display: block;
+  background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
   background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
   width: 80%;
   height: 1px;
@@ -687,6 +689,7 @@ a {
     padding: 0; }
     .Table > tbody > tr > td.Table-divider:before {
       display: block;
+      background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
@@ -746,7 +749,8 @@ a {
   khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; }
+  -webkit-user-select: none;
+          user-select: none; }
 
 .Form label {
   color: #666;
@@ -952,8 +956,15 @@ a {
  * Sticky footer
  */
 body {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
   height: 100%;
   /* IE */
   height: 100vh;
@@ -962,10 +973,16 @@ body {
 
 .Site-header,
 .Site-footer {
-  flex: none; }
+  -webkit-box-flex: 0;
+  -webkit-flex: none;
+      -ms-flex: none;
+          flex: none; }
 
 .Site-content {
-  flex: 1 0 auto;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 auto;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
   width: 100%; }
 
 .Site-content::after {
@@ -984,7 +1001,8 @@ body {
 
 body.inverted {
   background: #101018;
-  filter: invert(100%); }
+  -webkit-filter: invert(100%);
+          filter: invert(100%); }
 
 /*
  * Header
@@ -996,6 +1014,7 @@ body.inverted {
 
 .Site-header {
   color: #bdc3cf;
+  background: #363636 -webkit-linear-gradient(#3b3b3b, #2e2e2e);
   background: #363636 linear-gradient(#3b3b3b, #2e2e2e);
   line-height: 42px;
   margin-bottom: 1em; }
@@ -1178,6 +1197,7 @@ body.inverted {
   padding-bottom: 0.6em; }
 
 .Document-subtitle {
+  background: -webkit-linear-gradient(left, transparent 10%, #b3b3b3 25%, #b3b3b3 75%, transparent 90%);
   background: linear-gradient(to right, transparent 10%, #b3b3b3 25%, #b3b3b3 75%, transparent 90%);
   height: 1px;
   color: #4d4d4d;
@@ -1198,6 +1218,7 @@ body.inverted {
     display: block;
     height: 1px;
     content: " ";
+    background: -webkit-linear-gradient(left, #bfbfbf 0%, #bfbfbf 40%, transparent 60%, transparent 100%);
     background: linear-gradient(to right, #bfbfbf 0%, #bfbfbf 40%, transparent 60%, transparent 100%);
     margin-top: 0.2em; }
 
@@ -1212,6 +1233,7 @@ body.inverted {
   margin-top: 0.3em; }
 
 .Document-index {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   float: right;
@@ -1769,6 +1791,7 @@ body.inverted {
     padding: 0; }
     .Prompts > tbody > tr > td.Table-divider:before {
       display: block;
+      background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
@@ -1873,6 +1896,7 @@ body.inverted {
     padding: 0; }
     .Storys > tbody > tr > td.Table-divider:before {
       display: block;
+      background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
@@ -1950,6 +1974,7 @@ body.inverted {
     .Results > thead > tr > th:not(:empty):hover {
       cursor: pointer; }
   .Results > tbody > tr {
+    background-image: -webkit-repeating-linear-gradient(65deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px);
     background-image: repeating-linear-gradient(25deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px); }
     .Results > tbody > tr:nth-child(odd) {
       background-color: #f1f6f9; }
@@ -2045,6 +2070,7 @@ body.inverted {
     padding: 0; }
     .Scoreboard > tbody > tr > td.Table-divider:before {
       display: block;
+      background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
@@ -2111,6 +2137,7 @@ body.inverted {
     padding: 0; }
     .Ballot > tbody > tr > td.Table-divider:before {
       display: block;
+      background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
@@ -2128,6 +2155,7 @@ body.inverted {
     padding: 0; }
     .Ballot > tbody > tr > td.Ballot-divider:before {
       display: block;
+      background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       background: linear-gradient(to right, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
       width: 80%;
       height: 1px;
