@@ -35,7 +35,7 @@ sub auto :Private {
 		}
 	}
 
-	if ($c->req->uri->path =~ m{^/static/(style|js)/writeoff-.+(css|js)$}) {
+	if ($c->req->uri->path =~ m{^/static/(style|js)/writeoff-[a-f0-9]+\.(css|js)$}) {
 		$c->serve_static_file("root/static/$1/writeoff.$2");
 		$c->log->abort(1);
 		return 0;

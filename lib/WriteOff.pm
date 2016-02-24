@@ -27,6 +27,9 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
+require WriteOff::Log;
+require WriteOff::Util;
+
 our $VERSION = 'v0.55.0';
 
 __PACKAGE__->config(
@@ -159,6 +162,7 @@ __PACKAGE__->config(
 	interim => 60, #minutes
 	use_google_analytics => 1,
 	read_only => 0,
+	pid => WriteOff::Util::token(),
 
 	# See FAQ for explanation of these constants
 	work => {
@@ -172,7 +176,6 @@ __PACKAGE__->config(
 	enable_catalyst_header => 1,
 );
 
-require WriteOff::Log;
 my $logger = WriteOff::Log->new;
 $logger->path(__PACKAGE__->path_to('log')) unless $ENV{CATALYST_DEBUG};
 __PACKAGE__->log($logger);
