@@ -20,7 +20,6 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->result_source_instance->view_definition(q{
-	CREATE VIEW scores AS
 	SELECT
 	  artists.id AS id,
 	  artists.name AS name,
