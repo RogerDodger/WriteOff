@@ -38,27 +38,23 @@ sub cast :Private {
 			user_id => { '!=' => $c->user->id },
 		});
 
-		if (!$ballot->votes->count) {
-			# Copy previous votes to the ballot
-			my $prev = $c->user->ballots->search(
-				{ "me.event_id" => $c->stash->{event}->id },
-				{
-					order_by => { -desc => 'round.end' },
-					join => 'round',
-				}
-			)->first;
+		# Copy previous votes to the ballot
+		my $prevRound = $rounds->before($c->stash->{round});
+		my $prevBallot = $prevRound && $prevRound->ballots->search({ user_id => $c->user->id })->first;
 
-			if ($prev) {
-				for my $vote ($prev->votes->join('entry')->all) {
-					if ($vote->entry->round_id == $c->stash->{round}->id) {
-						$ballot->create_related('votes', {
-							entry_id => $vote->entry_id,
-							value => $vote->value,
-						});
-					}
-				}
+		if ($prevBallot) {
+			for my $vote ($prevBallot->votes->join('entry')->all) {
+				next if $vote->entry->round_id != $c->stash->{round}->id;
+				next if $ballot->search_related('votes', { entry_id => $vote->entry_id })->count;
+
+				$ballot->create_related('votes', {
+					entry_id => $vote->entry_id,
+					value => $vote->value,
+				});
 			}
+		}
 
+		if (!$ballot->votes->count) {
 			# Assign some stories to the ballot
 			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{now})->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
