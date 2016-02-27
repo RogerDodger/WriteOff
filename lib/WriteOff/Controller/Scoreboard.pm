@@ -21,7 +21,7 @@ sub index :Path('/scoreboard') {
 			})->first;
 
 		push $c->stash->{title}, join ' ',
-			(map $_->name, grep defined, $format, $genre),
+			(map $_->name, grep defined, $genre, $format),
 			$c->string('scoreboard');
 
 		$c->stash->{template} = 'scoreboard/index.tt';

@@ -56,7 +56,15 @@ sub scoreboard :Local {
 
 	for my $genre ($c->model('DB::Genre')->all) {
 		for my $format (undef, $c->model('DB::Format')->all) {
-			$c->forward('/scoreboard/calculate', [ 'en', $genre, $format ]);
+			my $scoreboard = $c->model('DB::Scoreboard')->search({
+					lang => 'en',
+					genre_id => $genre->id,
+					format_id => $format && $format->id,
+				})->first;
+
+			if (!$scoreboard || $c->req->param('purge')) {
+				$c->forward('/scoreboard/calculate', [ 'en', $genre, $format ]);
+			}
 		}
 	}
 }
