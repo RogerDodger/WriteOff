@@ -82,4 +82,4 @@ Most people will probably use the same name for both, but the option is nice for
 
 ### Can I host an event?
 
-Sure! [mailto:cthor@cpan.org](Send me an email) outlining what you’d like to do.
+Sure! [Send me an email](mailto:cthor@cpan.org) outlining what you’d like to do.
