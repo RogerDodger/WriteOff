@@ -373,14 +373,14 @@ sub check_rounds :Private {
 	my ($self, $c) = @_;
 }
 
-sub tally_results :Private {
-	my ( $self, $c, $id ) = @_;
+sub tally_round :Private {
+	my ( $self, $c, $eid, $rid ) = @_;
 
-	my $e = $c->model('DB::Event')->find($id) or return 0;
+	my $e = $c->model('DB::Event')->find($eid) or return;
+	my $r = $c->model('DB::Round')->find($rid) or return;
 
-	$c->log->info(sprintf "Tallying results for: Event %d - %s", $e->id, $e->prompt);
-
-	$e->tally;
+	$c->log->info("Tallying %s %s round for %s", $r->mode, $r->name, $e->prompt);
+	$r->tally;
 }
 
 =head1 AUTHOR

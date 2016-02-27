@@ -44,13 +44,20 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 
 	$c->stash->{scoreKey} = $s{format_id} ? 'score_format' : 'score_genre';
 
-	$c->stash->{scores} = $c->stash->{artist}->entrys->search(\%s, {
-		prefetch => 'event',
-		order_by => [
-			{ -desc  => 'event.created' },
-			{ -desc => 'score' },
-		]
-	});
+	$c->stash->{scores} = $c->stash->{artist}->entrys->search(
+		{
+			%s,
+			disqualified => 0,
+			artist_public => 1,
+		},
+		{
+			prefetch => 'event',
+			order_by => [
+				{ -desc  => 'event.created' },
+				{ -desc => 'score' },
+			]
+		}
+	);
 
 	$c->stash->{theorys} = $c->stash->{artist}->theorys->search(
 		{
