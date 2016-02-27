@@ -1,3 +1,4 @@
+DROP TABLE scoreboards;
 CREATE TABLE scoreboards (
   id INTEGER PRIMARY KEY NOT NULL,
   genre_id integer NOT NULL,
