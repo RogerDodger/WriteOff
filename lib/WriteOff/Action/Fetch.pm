@@ -28,6 +28,7 @@ sub execute {
 		$c->res->redirect(
 			$c->uri_for($c->action, $c->req->args, $c->req->params)
 		);
+		$c->detach;
 	}
 
 	if ($item->can('title')) {

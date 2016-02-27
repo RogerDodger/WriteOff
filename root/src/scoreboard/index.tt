@@ -1,8 +1,13 @@
-{{ USE cache = Cache -}}
-{{
-	cache.inc(
-		'template' => 'scoreboard/index_.tt',
-		'ttl' => c.debug || 360,
-		'key' => cacheKey,
-	);
--}}
+<div class="Document wide">
+	<div class="Document-title">
+		{{ title.-1 }}
+	</div>
+
+	{{ IF scoreboard }}
+		{{ scoreboard.body | none }}
+	{{ ELSE }}
+	<div class="Flash">
+		{{ c.string('calculatingScoreboard') }}
+	</div>
+	{{ END }}
+</div>

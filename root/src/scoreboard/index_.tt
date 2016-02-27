@@ -1,96 +1,89 @@
-<div class="Document wide">
-	<div class="Document-title">
-		{{ title.-1 }}
-	</div>
-
-	<div class="Scoreboard-filter">
-		<div class="Scoreboard-filter--genre">
-			<div class="Scoreboard-filter--label">Genre</div>
-			<div class="Scoreboard-filter--options">
-			{{ FOREACH thing IN genres.all }}
-				{{ IF genre && thing.id == genre.id }}
-				<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
-				{{ ELSE }}
-				<a class="Scoreboard-filter--link" href="{{ thing.id_uri | format(gUrl) }}">{{ thing.name }}</a>
-				{{ END }}
-			{{ END }}
-			</div>
-		</div>
-
-		{{ IF fUrl }}
-		<div class="Scoreboard-filter--format">
-			<div class="Scoreboard-filter--label">Format</div>
-			<div class="Scoreboard-filter--options">
-			{{ IF !format }}
-				<span class="Scoreboard-filter--link selected">All</span>
+<div class="Scoreboard-filter">
+	<div class="Scoreboard-filter--genre">
+		<div class="Scoreboard-filter--label">Genre</div>
+		<div class="Scoreboard-filter--options">
+		{{ FOREACH thing IN genres.all }}
+			{{ IF genre && thing.id == genre.id }}
+			<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
 			{{ ELSE }}
-				<a class="Scoreboard-filter--link" href="{{ fUrl.substr(0, -3) }}">All</a>
+			<a class="Scoreboard-filter--link" href="{{ thing.id_uri | format(gUrl) }}">{{ thing.name }}</a>
 			{{ END }}
-			{{ FOREACH thing IN formats.all }}
-				{{ IF format && thing.id == format.id }}
-				<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
-				{{ ELSE }}
-				<a class="Scoreboard-filter--link" href="{{ thing.id_uri | format(fUrl) }}">{{ thing.name }}</a>
-				{{ END }}
-			{{ END }}
-			</div>
-		</div>
 		{{ END }}
+		</div>
 	</div>
 
-
-	<table class="Scoreboard">
-		<thead>
-			<tr>
-				<th data-sort-method="number">#</th>
-				<th>Competitor</th>
-				<th data-sort-method="number">Score</th>
-				{{ FOREACH award IN awards.unique }}
-				<th class="Scoreboard-awards" data-sort-method="number">{{ award.html | none }}</th>
-				{{ END }}
-				{{ IF theorys.count }}
-				<th class="Scoreboard-awards" data-sort-method="number">{{ theorys.first.award.html | none }}</th>
-				{{ END }}
-				<th class="no-sort"></th>
-			</tr>
-		</thead>
-		<tbody>
-			{{- FOREACH artist IN artists.all }}
-			<tr>
-				<td class="Scoreboard-rank" data-sort="{{ loop.count }}">
-					{{ loop.count IF !loop.prev || artist.score != loop.prev.score }}
-				</td>
-				<td class="Scoreboard-name">
-					{{ artist.name }}
-				</td>
-				<td class="Scoreboard-score" data-sort="{{ artist.score }}">
-					<span title="{{ artist.score | format('%.5f') }}">
-						{{ artist.score | format('%d') }}
-					</span>
-				</td>
-
-
-				{{ FOREACH tally IN artist.tally_awards(awards) }}
-					<td class="Scoreboard-awards" data-sort="{{ tally.count }}">
-						{{ tally.award.html | repeat(tally.count) }}
-					</td>
-				{{ END }}
-
-				{{ IF theorys.count }}
-					<td class="Scoreboard-awards" data-sort="{{ theorys.by_rs(artist.id).count }}">
-						{{ FOREACH theory IN theorys.by(artist.id) }}
-							{{ theory.award.html | none }}
-						{{ END }}
-					</td>
-				{{ END }}
-
-				<td class="Scoreboard-breakdown">
-					<a title="Show breakdown" class="artist-breakdown" href="{{ artist.id | format(aUrl) }}">
-						<i class="fa fa-plus"></i>
-					</a>
-				</td>
-			</tr>
-			{{- END }}
-		</tbody>
-	</table>
+	{{ IF fUrl }}
+	<div class="Scoreboard-filter--format">
+		<div class="Scoreboard-filter--label">Format</div>
+		<div class="Scoreboard-filter--options">
+		{{ IF !format }}
+			<span class="Scoreboard-filter--link selected">All</span>
+		{{ ELSE }}
+			<a class="Scoreboard-filter--link" href="{{ fUrl.substr(0, -3) }}">All</a>
+		{{ END }}
+		{{ FOREACH thing IN formats.all }}
+			{{ IF format && thing.id == format.id }}
+			<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
+			{{ ELSE }}
+			<a class="Scoreboard-filter--link" href="{{ thing.id_uri | format(fUrl) }}">{{ thing.name }}</a>
+			{{ END }}
+		{{ END }}
+		</div>
+	</div>
+	{{ END }}
 </div>
+
+<table class="Scoreboard">
+	<thead>
+		<tr>
+			<th data-sort-method="number">#</th>
+			<th>Competitor</th>
+			<th data-sort-method="number">Score</th>
+			{{ FOREACH award IN awards.unique }}
+			<th class="Scoreboard-awards" data-sort-method="number">{{ award.html | none }}</th>
+			{{ END }}
+			{{ IF theorys.count }}
+			<th class="Scoreboard-awards" data-sort-method="number">{{ theorys.first.award.html | none }}</th>
+			{{ END }}
+			<th class="no-sort"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{- FOREACH artist IN artists.all }}
+		<tr>
+			<td class="Scoreboard-rank" data-sort="{{ loop.count }}">
+				{{ loop.count IF !loop.prev || artist.score != loop.prev.score }}
+			</td>
+			<td class="Scoreboard-name">
+				{{ artist.name }}
+			</td>
+			<td class="Scoreboard-score" data-sort="{{ artist.score }}">
+				<span title="{{ artist.score | format('%.5f') }}">
+					{{ artist.score | format('%d') }}
+				</span>
+			</td>
+
+
+			{{ FOREACH tally IN artist.tally_awards(awards) }}
+				<td class="Scoreboard-awards" data-sort="{{ tally.count }}">
+					{{ tally.award.html | repeat(tally.count) }}
+				</td>
+			{{ END }}
+
+			{{ IF theorys.count }}
+				<td class="Scoreboard-awards" data-sort="{{ theorys.by_rs(artist.id).count }}">
+					{{ FOREACH theory IN theorys.by(artist.id) }}
+						{{ theory.award.html | none }}
+					{{ END }}
+				</td>
+			{{ END }}
+
+			<td class="Scoreboard-breakdown">
+				<a title="Show breakdown" class="artist-breakdown" href="{{ artist.id | format(aUrl) }}">
+					<i class="fa fa-plus"></i>
+				</a>
+			</td>
+		</tr>
+		{{- END }}
+	</tbody>
+</table>

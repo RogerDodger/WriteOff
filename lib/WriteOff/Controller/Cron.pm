@@ -31,10 +31,16 @@ sub auto :Private {
 	$c->req->address eq '127.0.0.1';
 }
 
+sub cleanup :Local {
+	my ( $self, $c ) = @_;
+
+	$c->model('DB::User')->clean_unverified;
+	$c->model('DB::Token')->clean_expired;
+}
+
 sub schedule :Local {
 	my ( $self, $c ) = @_;
 
-	$c->log->abort(1);
 	my $rs = $c->model('DB::Schedule')->active_schedules;
 
 	# Extract and delete schedules *before* executing them, lest long-running
@@ -45,11 +51,14 @@ sub schedule :Local {
 	$c->forward($_->action, $_->args) for @schedules;
 }
 
-sub cleanup :Local {
-	my ( $self, $c ) = @_;
+sub scoreboard :Local {
+	my ($self, $c) = @_;
 
-	$c->model('DB::User')->clean_unverified;
-	$c->model('DB::Token')->clean_expired;
+	for my $genre ($c->model('DB::Genre')->all) {
+		for my $format (undef, $c->model('DB::Format')->all) {
+			$c->forward('/scoreboard/calculate', [ 'en', $genre, $format ]);
+		}
+	}
 }
 
 sub end :Private {

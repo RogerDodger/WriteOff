@@ -42,6 +42,7 @@ newArtistTitle: New Alias
 404: File Not Found
 403: Forbidden
 400: Error
+scoreboard: Scoreboard
 artGallery: Art Gallery
 ficGallery: Fic Gallery
 artSubmission: Art Submission
@@ -81,6 +82,7 @@ ballotDirections: Drag candidates here to rank them
 ballotAppend: Add another
 ballotDone: None left
 calculatingCandidates: Candidates are being calculated
+calculatingScoreboard: Scoreboard is being calculated
 storyRedacted: The contents of this story are no longer available
 mailme: Receive event notifications by email
 promptLimitReached: You have reached the prompt limit
