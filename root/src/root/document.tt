@@ -1,8 +1,10 @@
-<div class="Document wide clearfix">
+{{ SET sidebar = document.sections.size }}
+<div class="Document {{ IF sidebar }}wide{{ ELSE }}narrow{{ END }} clearfix">
 	<div class="Document-title">
 		{{ document.title }}
 	</div>
 
+	{{ IF sidebar }}
 	<div class="Document-index">
 		{{ FOREACH section IN document.sections }}
 		<div class="Document-index--{{ section.class }}">
@@ -10,6 +12,7 @@
 		</div>
 		{{ END }}
 	</div>
+	{{ END }}
 
 	<div class="Document-body">
 		{{ document.contents | none }}

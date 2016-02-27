@@ -161,12 +161,25 @@
 
 .Flash {
 	font-size: 0.8em;
+
+	&.big {
+		font-size: 0.9em;
+	}
+
 	padding: 1em;
 	margin-bottom: 1em;
 
 	@include tint;
 	&.error {
 		@include tint($hue: 0);
+	}
+
+	p {
+		margin: 0;
+	}
+
+	p:not(:first-child) {
+		margin-top: 1em;
 	}
 }
 

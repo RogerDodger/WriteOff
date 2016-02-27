@@ -74,6 +74,10 @@ sub auto :Private {
 		push $c->stash->{messages}, 'The site is currently in read-only mode.';
 	}
 
+	if (!$c->session->{introduced}) {
+		$c->session->{introduced} = 1 if $c->user;
+	}
+
 	1;
 }
 
@@ -198,6 +202,22 @@ sub rights :Local :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{document} = $c->document('rights');
+
+	push $c->stash->{title}, $c->stash->{document}{title};
+	$c->stash->{template} = 'root/document.tt';
+}
+
+=head2 intro
+
+Introduction page
+
+=cut
+
+sub intro :Local :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{document} = $c->document('intro');
+	$c->session->{introduced} = 1;
 
 	push $c->stash->{title}, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';

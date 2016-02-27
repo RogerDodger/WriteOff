@@ -114,6 +114,10 @@
 				<div class="Global-message">{{ msg }}</div>
 			{{ END }}
 
+			{{ IF !c.session.introduced }}
+			<div class="Flash big">{{ c.string('introSplash') | markdown }}</div>
+			{{ END }}
+
 			{{ IF event }}
 				{{ INCLUDE event/single.tt }}
 			{{ END }}
@@ -126,6 +130,7 @@
 				<div class="Site-footer--links">
 					<a href="/tos">{{ c.document('tos').title }}</a>
 					<a href="/rights">{{ c.document('rights').title }}</a>
+					<a href="/intro">{{ c.document('intro').title }}</a>
 					<a href="/faq">FAQ</a>
 					<a href="//github.com/RogerDodger/WriteOff">Source code</a>
 					<a href="mailto:cthor@cpan.org">Email me</a>

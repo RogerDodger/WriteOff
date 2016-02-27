@@ -1,50 +1,5 @@
 # Frequently Asked Questions
 
-## Events
-
-### What the hay is this?
-
-The writeoff is a timed challenge where writers and artists create stories and images to a given prompt.
-The works are then released anonymously for all to see, followed by judging rounds to allow readers to determine the winners.
-The event is concluded with the results posted and the authors and artists revealed.
-
-If the events has both an art and a fic round, artists draw to the prompt,	and writers then write to the art.
-The art scores are augmented by how many stories were written to each artwork.
-
-### How does it work?
-
-The writeoff is split into a series of rounds, all of which are optional: some events will have no prompt round; some events will have no fic round; and some events will have no voting at all, making the event unranked.
-The most common operating procedure is to have a prompt round, a fic round, a prelim voting round, and a public voting round.
-
-__Prompt round.__
-Before the start of the event, users submit prompts.
-24 hours before the start of the event, users vote on the prompts to
-indicate which they like the most.
-
-At its onset, the event is named after the winning prompt.
-This prompt sets the general theme for the event, and it is expected (though not strictly enforced) that entries will bear some resemblance to it.
-
-__Submission rounds.__
-The submission rounds constitute the main part of the event where participants actually create something.
-If there is both an art and fic round, the art round will precede the fic round.
-Artists submit artworks that mean to act as prompts for stories.
-
-__Preliminary voting round.__
-Before the main voting begins, it’s sometimes necessary to pare the list of entries down to a digestable amount.
-
-Each participant is assigned a ballot of entries to read and rate.
-Participants must fill this ballot or abstain for their entry to qualify.
-The scores from these ballots determine which entries go through to the next voting round.
-
-__Public voting round.__
-A public poll is released where anyone may give the stories and/or artworks a ranking from 0&ndash;10.
-Entries are scored by their average ranking.
-Voters must vote on at least half of the candidates, and participants may not vote on their own entries.
-
-__Private voting round.__
-A number of finalists are given to a panel of judges.
-They rank the stories in a manner similar to the prelminary round.
-
 ## Submissions
 
 ### Can I submit more than one entry per event?
@@ -53,7 +8,7 @@ Yes.
 
 ### How do I format my story?
 
-Click the buttons on the story editor. (TBD)
+See [Formatting](/formatting).
 
 ### How do I delete/edit a submission?
 
@@ -63,13 +18,35 @@ If you want a submission deleted or edited after submissions are closed, you’l
 
 ## Voting
 
-### How many stories pass through the prelim round?
+### Can I vote on my own entry?
 
-Approximately 15 and 35 stories for short story and minific contests respectively.
+No. It will not appear in your ballot.
 
-### How many stories do I get in my assigned prelim ballot?
+### How many entries pass through the prelim round?
+
+Approximately 15 and 35 entries for short story and minific contests respectively.
+
+### How many entries do I get in my ballot?
 
 You're assigned an amount that approximates 35 minutes of reading/reviewing per day.
+
+## How many entries can I abstain?
+
+You get 1 abstain, plus 1 for every 10 entries.
+
+## How does the voting algorithm work?
+
+The votes are modelled as stories playing a series of head-to-head matches against each other.
+For each ballot, the top ranking story beats every other story; the second ranking story beats every other story except the first, etc.
+This model is then resolved using [maximum likelihood estimation](https://en.wikipedia.org/wiki/Maximum_likelihood) to find a unified ranking that has the highest probability of being correct.
+
+The result of this system is that votes are considered in the context of the other stories the voter voted for, and voters who are too harsh or too nice do not disproportionately skew results.
+
+The scores each story gets in this system have the following interpretation:
+
+Let the score of story x be S<sub>x</sub>.
+The probability that story A will beat story B in a match is equal to S<sub>A</sub> / (S<sub>A</sub> + S<sub>B</sub>).
+In the context of the model, this is the probability that a random voter will prefer story A to story B.
 
 ## Scoreboard
 
@@ -98,21 +75,11 @@ This is to encourage consistent performance and to enable newcomers to overtake 
 
 Accolades are tied to author/artist names, *not* login names.
 Login names are used to identify users with the site.
-The author/artist fields are for what shows up next to each submission.
+The aliases are for what shows up next to each submission and in comments.
 Most people will probably use the same name for both, but the option is nice for those who like to use pseudonyms.
-
-This also means that if you one day call yourself “Joe Blow”, then the next day call yourself “Joe__Blow”, those two names will get a different entry on the scoreboard.
-(I can merge them for you if you <del>beg</del> ask nicely.)
-
-### How are the scores calculated?
-
-The controversy rating of a story is the standard deviation of the votes it received.
-Prelim and and private votes are normalised linearly over the range 0&ndash;10.
 
 ## Miscellaneous
 
 ### Can I host an event?
 
-Sure! Send me an email outlining what you’d like to do.
-
-I’m currently working on expanding the scoreboard to allow for different communities to host writeoffs without “disturbing” the main events.
+Sure! [mailto:cthor@cpan.org](Send me an email) outlining what you’d like to do.

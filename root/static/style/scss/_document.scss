@@ -7,6 +7,10 @@
 		max-width: 1040px;
 	}
 
+	&.narrow {
+		max-width: 760px;
+	}
+
 	& > *:last-child {
 		margin-bottom: 0;
 	}
@@ -103,11 +107,14 @@
 	margin-top: 0.2em;
 }
 
-.Document-body {
-	float: right;
-	width: calc(75% - 2em);
+.Document.wide {
+	.Document-body {
+		float: right;
+		width: calc(75% - 2em);
 
-	& > *:first-child {
-		margin-top: 0;
+		& > *:first-child {
+			margin-top: 0;
+		}
 	}
 }
+
