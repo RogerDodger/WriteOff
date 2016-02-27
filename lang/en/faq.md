@@ -8,7 +8,7 @@ Yes.
 
 ### How do I format my story?
 
-See [Formatting](/formatting).
+See [this page](/style).
 
 ### How do I delete/edit a submission?
 
