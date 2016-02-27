@@ -31,6 +31,9 @@ sub index :Path('/scoreboard') {
 sub calculate :Private {
 	my ($self, $c, $lang, $genre, $format) = @_;
 
+	$c->stash->{genre} = $genre;
+	$c->stash->{format} = $format;
+
 	$c->stash->{awards} = $c->model('DB::Award')->search({}, { join => { entry => "event" } });
 	$c->stash->{theorys} = $c->model('DB::Theory')->search(
 		{ award_id => { "!=" => undef } },
