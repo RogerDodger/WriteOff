@@ -79,7 +79,7 @@ sub slates {
 	my $self = shift;
 	my @slates;
 	while (my $record = $self->next) {
-		push @slates, [map { $_->story_id } $record->votes->ordered->all];
+		push @slates, [map { $_->entry_id } $record->votes->ordered->all];
 	}
 	return \@slates;
 }

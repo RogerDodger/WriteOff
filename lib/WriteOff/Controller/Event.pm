@@ -380,7 +380,7 @@ sub tally_round :Private {
 	my $r = $c->model('DB::Round')->find($rid) or return;
 
 	$c->log->info("Tallying %s %s round for %s", $r->mode, $r->name, $e->prompt);
-	$r->tally;
+	$r->tally($c->config->{work});
 }
 
 =head1 AUTHOR

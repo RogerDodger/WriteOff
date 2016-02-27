@@ -6,6 +6,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 require WriteOff::Util;
+require WriteOff::Rank;
 
 __PACKAGE__->table("rounds");
 
@@ -35,6 +36,68 @@ __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "round_id")
 
 sub end_leeway {
 	shift->end->clone->add(minutes => WriteOff::Util::LEEWAY);
+}
+
+sub tally {
+	my ($self, $work) = @_;
+
+	my ($scores,$errors) = WriteOff::Rank::twipie($self->ballots->slates);
+
+	if ($self->ratings->count) {
+		$self->ratings->delete;
+	}
+
+	for my $entry (keys $scores) {
+		$self->create_related('ratings', {
+			entry_id => $entry,
+			value => $scores->{$entry},
+			error => $errors->{$entry},
+		});
+	}
+
+	my @ranking = reverse sort { $scores->{$a} <=> $scores->{$b} } keys %$scores;
+	my @ranks = [ shift @ranking ];
+	for my $entry (@ranking) {
+		if ($scores->{$entry} == $scores->{$ranks[-1][0]}) {
+			push @{ $ranks[-1] }, $entry;
+		}
+		else {
+			push @ranks, [ $entry ];
+		}
+	}
+
+	my $i = 0;
+	my $entrys = $self->entrys;
+
+	for my $rank (@ranks) {
+		for my $entry (@$rank) {
+			$entrys->find($entry)->update({
+				rank     => $i,
+				rank_low => $i + $#$rank,
+			});
+		}
+		$i += @$rank;
+	}
+
+	# FIXME
+	my $nextRound = $self->event->rounds->search({ name => 'final' })->first;
+
+	my $w = $work->{threshold} * 5;
+	my @cut;
+	for my $entry ($entrys->order_by({ -asc => 'rank' })->all) {
+		if ($w <= 0) {
+			last if $cut[-1]->rank != $entry->rank;
+		}
+
+		$w -= $work->{offset} + $entry->story->wordcount / $work->{rate};
+		push @cut, $entry;
+	}
+
+	$entrys->search({ id => { -in => [ map { $_->id } @cut ] } })
+	       ->update({ round_id => $nextRound->id });
+
+	$entrys->search({ id => { -not_in => [ map { $_->id } @cut ] } })
+	       ->update({ artist_public => 1 });
 }
 
 1;
