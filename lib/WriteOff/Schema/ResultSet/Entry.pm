@@ -38,6 +38,16 @@ sub gallery {
 	});
 }
 
+sub mode {
+	my ($self, $mode) = @_;
+
+	$self->search({
+		$mode eq 'art' ? (image_id => { '!=' => undef }) :
+		$mode eq 'fic' ? (story_id => { '!=' => undef }) :
+		()
+	});
+}
+
 sub rank_order {
 	return shift->order_by({ -asc => [qw/rank title/] });
 }

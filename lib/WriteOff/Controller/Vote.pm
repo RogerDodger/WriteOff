@@ -40,7 +40,7 @@ sub cast :Private {
 
 		if (!$ballot->votes->count) {
 			# Copy previous votes to the ballot
-			my $prevRound = $rounds->before($c->stash->{round});
+			my $prevRound = $rounds->before($c->stash->{round})->first;
 			my $prevBallot = $prevRound && $prevRound->ballots->search({ user_id => $c->user->id })->first;
 
 			if ($prevBallot) {
@@ -56,12 +56,12 @@ sub cast :Private {
 			}
 
 			# Assign some stories to the ballot
-			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{now})->in_units('minutes');
+			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{round}->start)->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
 			for my $entry ($c->stash->{pool}->sample->all) {
 				$entry->create_related('votes', { ballot_id => $ballot->id });
-				$w -= $c->config->{work}{offset} + $entry->story->wordcount / $c->config->{work}{rate};
+				$w -= $entry->work($c->config->{work});
 				last if $w < 0;
 			}
 		}

@@ -78,6 +78,14 @@ sub view {
 	"/" . shift->mode . "/view";
 }
 
+sub work {
+	my ($self, $work) = @_;
+
+	$self->story
+		? $work->{offset} + $self->story->wordcount / $work->{rate}
+		: 500;
+}
+
 BEGIN { *type = \&mode }
 
 sub item {

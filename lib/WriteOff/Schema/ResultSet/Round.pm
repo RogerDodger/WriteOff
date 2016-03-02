@@ -23,7 +23,7 @@ sub after {
 	$self->search(
 			{ start => { '>' => $self->format_datetime($round->start) } },
 			{ order_by => { -asc => 'start' } }
-		)->first;
+		);
 }
 
 sub art {
@@ -35,7 +35,7 @@ sub before {
 	$self->search(
 			{ start => { '<' => $self->format_datetime($round->start) } },
 			{ order_by => { -desc => 'start' } },
-		)->first;
+		);
 }
 
 sub fic {
