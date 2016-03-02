@@ -381,6 +381,14 @@ sub tally_round :Private {
 
 	$c->log->info("Tallying %s %s round for %s", $r->mode, $r->name, $e->prompt);
 	$r->tally($c->config->{work});
+
+	if ($r->mode eq 'fic' && !$e->rounds->after($r)->count) {
+		$c->log->info("Tallying results for %s", $e->prompt);
+		$e->tally;
+
+		$c->forward('/scoreboard/calculate', [ 'en', $e->genre ]);
+		$c->forward('/scoreboard/calculate', [ 'en', $e->genre, $e->format ]);
+	}
 }
 
 =head1 AUTHOR

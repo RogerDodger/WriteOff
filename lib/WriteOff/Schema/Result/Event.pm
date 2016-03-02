@@ -302,45 +302,18 @@ sub reset_schedules {
 sub tally {
 	my $self = shift;
 	my $schema = $self->result_source->schema;
-	my $artists = $schema->resultset('Artist');
-	my $scores = $schema->resultset('Score'); #TODO
+	my $entrys = $schema->resultset('Entry');
 	my $storys = $self->storys->eligible;
 	my $images = $self->images->eligible;
-	my $records = $self->vote_records;
-
-	# Clean up possible old tallying
-	$self->artist_awards->delete_all;
-	$self->scores->delete_all;
+	my $rounds = $self->rounds->search({ action => 'vote' });
 
 	# Apply decay to older events' scores;
-	$scores->decay;
+	$entrys->decay($self->genre, $self->format);
 
-	if ($self->prelim) {
-		$self->recalc_stats($storys, scalar $records->prelim->fic);
-	}
+	$storys->tally($rounds->search_rs({ mode => 'fic' }));
+	$images->tally($rounds->search_rs({ mode => 'art' })) if $self->has('art');
 
-	if ($self->public) {
-		$self->recalc_stats(scalar $storys->candidates, scalar $records->public->fic);
-	}
-
-	if ($self->private) {
-		$self->recalc_stats(scalar $storys->finalists, scalar $records->private->fic);
-	}
-
-	$storys->recalc_rank;
-	$artists->deal_awards_and_scores($storys);
-
-	if ($self->art) {
-		$self->recalc_stats($images, scalar $records->public->art);
-		$images->recalc_rank;
-		$artists->deal_awards_and_scores($images);
-	}
-
-	if ($self->guessing) {
-		$records->guess->fic->process_guesses;
-	}
-
-	$artists->recalculate_scores;
+	$self->theorys->process if $self->guessing;
 
 	$self->update({ tallied => 1 });
 }

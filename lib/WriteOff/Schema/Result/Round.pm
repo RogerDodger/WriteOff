@@ -112,7 +112,7 @@ sub tally {
 		       ->update({ artist_public => 1 });
 	}
 	else {
-
+		$entrys->update({ artist_public => 1 });
 	}
 }
 

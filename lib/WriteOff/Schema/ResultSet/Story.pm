@@ -4,11 +4,6 @@ use strict;
 use base 'WriteOff::Schema::ResultSet';
 use Scalar::Util qw/looks_like_number/;
 
-sub difficulty {
-	shift->get_column('wordcount')->func_rs('sqrt')
-	     ->get_column('wordcount')->func('avg');
-}
-
 sub metadata {
 	Carp::croak "Deprecated method 'metadata' called";
 }
@@ -36,7 +31,7 @@ sub sample {
 		join => 'votes',
 		group_by => 'me.id',
 		order_by => [
-			{ -asc => \'count(votes.value)' },
+			{ -asc => \'COUNT(votes.value)' },
 			{ -desc => \'RANDOM()' },
 		],
 	});

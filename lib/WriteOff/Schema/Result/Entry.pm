@@ -68,6 +68,14 @@ __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 __PACKAGE__->mk_group_accessors(column => 'num');
 
+sub difficulty {
+	my $self = shift;
+
+	$self->story
+		? $self->story->wordcount
+		: 2500;
+}
+
 sub mode {
 	my $self = shift;
 

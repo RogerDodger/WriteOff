@@ -43,38 +43,6 @@ sub judge_records {
 	});
 }
 
-sub process_guesses {
-	my $self = shift;
-	my $best = 0;
-
-	while (my $row = $self->next) {
-		my $correct = 0;
-		for my $guess ($row->guesses) {
-			$correct += $guess->artist_id == $guess->item->artist_id;
-		}
-
-		$row->update({
-			artist_id => $row->user->primary_artist->id,
-			score     => $correct,
-		});
-
-		$best = $correct if $correct > $best;
-	}
-
-	my $row = $self->first;
-	my %aa_row = (
-		event_id => $row->event_id,
-		type     => $row->type,
-		award_id => SLEUTH()->id,
-	);
-
-	while (my $row = $self->next) {
-		next unless $row->score == $best;
-
-		$row->artist->create_related('artist_awards', \%aa_row);
-	}
-}
-
 sub slates {
 	my $self = shift;
 	my @slates;

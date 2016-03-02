@@ -46,8 +46,7 @@
 	{{ FOREACH theory IN theorys.all }}
 	<tr>
 		<td class="start">
-			<a href="{{ c.uri_for('/fic/results',
-				[ theory.event.id_uri ]) }}">
+			<a href="{{ c.uri_for_action('/fic/results', [ theory.event.id_uri ]) }}">
 				{{ theory.event.prompt }}
 			</a>
 		</td>

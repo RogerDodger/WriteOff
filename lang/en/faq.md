@@ -30,11 +30,11 @@ Approximately 15 and 35 entries for short story and minific contests respectivel
 
 You're assigned an amount that approximates 35 minutes of reading/reviewing per day.
 
-## How many entries can I abstain?
+### How many entries can I abstain?
 
 You get 1 abstain, plus 1 for every 10 entries.
 
-## How does the voting algorithm work?
+### How does the voting algorithm work?
 
 The votes are modelled as stories playing a series of head-to-head matches against each other.
 For each ballot, the top ranking story beats every other story; the second ranking story beats every other story except the first, etc.

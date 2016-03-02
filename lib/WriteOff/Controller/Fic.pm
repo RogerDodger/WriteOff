@@ -273,9 +273,9 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 
 	$c->stash->{entrys} = $c->stash->{event}->storys->eligible;
 
-	$c->stash->{guesses} = $c->stash->{event}->theorys->search(
+	$c->stash->{theorys} = $c->stash->{event}->theorys->search(
 		{
-			accuracy => { '>=' => 3 },
+			accuracy => { '>' => 1 },
 		},
 		{
 			prefetch => [

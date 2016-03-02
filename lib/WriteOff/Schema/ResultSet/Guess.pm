@@ -4,18 +4,12 @@ use strict;
 use base 'WriteOff::Schema::ResultSet';
 
 sub correct {
-	my $self = shift;
-	my $first = $self->first or return $self;
-	my $join = (grep { my $meth = "$_\_id"; $first->$meth } qw/image story/)[0];
-
-	return $self if !$join;
-
-	return $self->search_rs({
-		"$join.artist_id" => { -ident => 'me.artist_id' },
+	shift->search_rs({
+		"entry.artist_id" => { -ident => 'me.artist_id' },
 	}, {
-		join => $join,
+		join => 'entry',
 		order_by => 'title',
-	})
+	});
 }
 
 sub tally {

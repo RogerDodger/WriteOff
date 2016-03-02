@@ -67,6 +67,8 @@ sub do_guess :Private {
 		}
 	}
 
+	$c->stash->{theory}->update({ artist_id => $c->user->active_artist_id });
+
 	$c->stash->{status_msg} = 'Vote updated';
 }
 
