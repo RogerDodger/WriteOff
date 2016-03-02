@@ -1,4 +1,4 @@
-<div class="Document">
+<div class="Document wide">
 	<div class="Document-title">
 		{{ title.-1 }}
 	</div>

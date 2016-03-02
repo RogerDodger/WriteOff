@@ -1,7 +1,7 @@
 {{ BLOCK divider }}
-<tbody>
+<tbody class="Table-divider">
 	<tr>
-		<td class="Table-divider" colspan="{{ event.has('art') ? 5 : 4 }}"></td>
+		<td colspan="{{ event.has('art') ? 5 : 4 }}"></td>
 	</tr>
 </tbody>
 {{ END }}

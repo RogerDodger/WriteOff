@@ -75,55 +75,95 @@
 	@include divider;
 }
 
+@mixin box {
+	box-shadow: 0 0 3px #b6b6b6;
+}
+
 @mixin table-divider {
 	background-color: transparent;
-	padding: 0;
+	border: none;
 
-	&:before {
-		@include divider;
-		content: " ";
+	& > tr {
+		background-color: transparent !important;
+
+		& > td {
+			padding: 0;
+			width: 100%;
+
+			&:before {
+				@include divider;
+				content: " ";
+			}
+		}
+	}
+}
+
+@mixin cell-padding($padding: 0.8em) {
+	padding: $padding ($padding / 2);
+
+	&:first-child {
+		padding-left: $padding;
+	}
+
+	&:last-child {
+		padding-right: $padding;
+	}
+}
+
+@mixin striped($hue, $sat, $reverse: 0) {
+	&:nth-child(odd) {
+		background-color: hsla($hue, $sat + (100% - $sat) * .14, 96% - (2% * $reverse), 1);
+	}
+
+	&:nth-child(even) {
+		background-color: hsla($hue, $sat + (100% - $sat) * .14, 94% + (2% * $reverse), 1);
 	}
 }
 
 @mixin striped-table($hue: 200, $sat: 30%) {
 	width: 100%;
 
-	& > thead > tr > th,
 	& > tbody > tr > td {
-		padding: 0.8em 0.4em;
+		@include cell-padding(0.8em);
+	}
 
-		&:first-child {
-			padding-left: 0.8em;
-		}
+	& > thead,
+	& > tbody {
+		border: 1px solid hsla($hue, $sat * .8, 85%, 1);
+	}
 
-		&:last-child {
-			padding-right: 0.8em;
+	&.sortable > thead > tr > th {
+		@extend .noselect;
+
+		&:not(:empty):hover {
+			cursor: pointer;
 		}
 	}
 
-	& > thead > tr {
-		& > th {
-			font-size: 1.1em;
+	& > thead {
+		background-color: hsla($hue, $sat, 93%, 1);
+		border-bottom: 1px solid hsla($hue, $sat, 70%, 1);
+		font-size: 1.07em;
+
+		& > tr > th {
+			@include cell-padding(0.6em);
 			font-weight: normal;
+			letter-spacing: 0.04em;
 			text-align: center;
-			letter-spacing: 0.05em;
-			padding-bottom: 0.3em;
-			padding-top: 0.3em;
+			text-shadow: 1px 0 1px hsla(0, 0%, 80%, 1);
 		}
+	}
+
+	& > thead + tbody > tr {
+		@include striped($hue, $sat);
 	}
 
 	& > tbody > tr {
-		&:nth-child(odd) > td {
-			background-color: hsla($hue, $sat, 90%, 1);
-		}
+		@include striped($hue, $sat, 1);
+	}
 
-		&:nth-child(even) > td {
-			background-color: hsla($hue, $sat, 95%, 1);
-		}
-
-		& > td.Table-divider {
-			@include table-divider;
-		}
+	& > .Table-divider {
+		@include table-divider;
 	}
 }
 

@@ -5,6 +5,11 @@
 .Ballot {
 	@include striped-table;
 
+	& > tbody,
+	& > thead {
+		border: none;
+	}
+
 	& > tbody > tr > td {
 		&.Ballot-arrows,
 		&.Ballot-score,
@@ -19,10 +24,6 @@
 		&.Ballot-abstain--cell {
 			padding-top: 0;
 			padding-bottom: 0;
-		}
-
-		&.Ballot-divider {
-			@include table-divider;
 		}
 	}
 

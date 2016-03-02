@@ -12,7 +12,7 @@ sub by {
 }
 
 sub by_rs {
-	shift->by(@_);
+	scalar shift->by(@_);
 }
 
 sub process {

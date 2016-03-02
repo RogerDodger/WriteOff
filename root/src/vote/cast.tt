@@ -29,9 +29,9 @@
 			</tr>
 		</tbody>
 
-		<tbody>
+		<tbody class="Table-divider">
 			<tr>
-				<td class="Ballot-divider" colspan="4"></td>
+				<td colspan="4"></td>
 			</tr>
 		</tbody>
 
@@ -59,9 +59,9 @@
 			</tr>
 		</tbody>
 
-		<tbody class="{{ 'hidden' IF !abstained.count }}">
+		<tbody class="Table-divider {{ 'hidden' IF !abstained.count }}">
 			<tr>
-				<td class="Ballot-divider" colspan="4"></td>
+				<td colspan="4"></td>
 			</tr>
 		</tbody>
 

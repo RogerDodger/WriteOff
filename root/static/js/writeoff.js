@@ -585,7 +585,7 @@ $(document).ready(function () {
 			$row.detach();
 			$('.Ballot-directions').before($row);
 		}
-		else if ($target.length) {
+		else if ($target.length && $target.hasClass('Ballot-item')) {
 			$row.detach();
 			$target.before($row);
 		}
@@ -761,6 +761,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	$('.Results, .Scoreboard, .Prompts').each(function () {
 		if ($(this).find('thead').size()) {
+			$(this).addClass('sortable');
 			new Tablesort(this);
 		}
 	});
