@@ -170,13 +170,11 @@ sub is_organised_by {
 
 sub prompt_subs_allowed {
 	my $row = shift;
-
 	return sorted $row->now_dt, $row->prompt_voting;
 }
 
 sub prompt_votes_allowed {
 	my $row = shift;
-
 	return sorted $row->prompt_voting, $row->now_dt, $row->start;
 }
 
@@ -200,19 +198,16 @@ sub fic_subs_allowed {
 
 sub art_gallery_opened {
 	my $row = shift;
-
 	return $row->art_gallery_opens <= $row->now_dt;
 }
 
 sub fic_gallery_opened {
 	my $row = shift;
-
 	return $row->fic_gallery_opens <= $row->now_dt;
 }
 
 sub art_votes_allowed {
 	my $row = shift;
-
 	return sorted $row->art_end, $row->now_dt, $row->end;
 }
 
@@ -247,16 +242,6 @@ sub ended {
 }
 
 BEGIN { *is_ended = \&ended; }
-
-sub public_label {
-	my $self = shift;
-
-	$self->private
-		? $self->prelim
-			? "Semifinals"
-			: "Prelims"
-		: "Finals";
-}
 
 sub timeline {
 	[
@@ -311,316 +296,6 @@ sub reset_schedules {
 	for my $schedule (@schedules) {
 		next if $schedule->{at} < $self->now_dt;
 		$rs->create($schedule);
-	}
-}
-
-sub _prelim_params {
-	my ($self, $work) = @_;
-
-	# Order by user_id so that initial seeding is faster
-	my @storys = $self->storys->search(undef, {
-		select       => [ 'id', 'wordcount', 'user_id' ],
-		order_by     => 'user_id',
-		result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-	})->all;
-
-	my $w = 0;
-	for my $story (@storys) {
-		$w += $work->{offset} + $story->{wordcount} / $work->{rate};
-	}
-
-	my $x_len = int(0.5 +
-		($work->{threshold} * $work->{prelim}) /
-		($w / @storys)
-	);
-
-	return ($w, $x_len, @storys);
-}
-
-sub new_prelim_record_for {
-	my ($self, $user, $work) = @_;
-	my $schema = $self->result_source->schema;
-	$user = $schema->resultset('User')->resolve($user) or return 0;
-
-	my (undef, $size) = $self->_prelim_params($work);
-
-	my $voted_storys = $schema->resultset('Vote')->search({
-		"record.user_id"  => $user->id,
-		"record.event_id" => $self->id,
-		"record.round"    => 'prelim',
-		"record.type"     => 'fic',
-	}, { join => 'record' })->get_column('me.story_id');
-
-	my $candidates = $self->storys->eligible->search({
-		id      => { -not_in => $voted_storys->as_query },
-		user_id => { '!=' => $user->id },
-	});
-
-	return "You've already voted on all the stories" if !$candidates->count;
-
-	my $record = $self->create_related('vote_records', {
-		user_id => $user->id,
-		round   => 'prelim',
-		type    => 'fic',
-	});
-
-	for (List::Util::shuffle $candidates->get_column('id')->all) {
-		$record->create_related('votes', { story_id => $_ });
-		last if --$size == 0;
-	}
-
-	0;
-}
-
-sub nuke_prelim_round {
-	my $self = shift;
-	return unless $self->prelim;
-
-	$self->vote_records->search({ round => 'prelim' })->delete_all;
-
-	my $public  = $self->prelim;
-	my $private = $self->private && $self->public;
-	my $end     = $self->private || $self->public;
-
-	$self->update({
-		prelim  => undef,
-		public  => $public,
-		private => $private,
-		end     => $end,
-	});
-
-	$self->reset_schedules;
-
-	$self->storys->update({ candidate => 1 });
-}
-
-=head2 prelim_distr
-
-Distributes stories for preliminary voting.
-
-Criteria: users do not get their own stories, and the standard deviation of the
-judges' wordcounts is minimalised.
-
-=cut
-
-sub prelim_distr {
-	my ($self, $work) = @_;
-
-	my ($w, $x_len, @storys) = $self->_prelim_params($work);
-	my $y_len = @storys;
-
-	my %author_count; $author_count{$_}++ for map { $_->{user_id} } @storys;
-	my $ac_mode = List::Util::max values %author_count;
-
-	# If there aren't many entries, skip the prelim round
-	if ($w < $work->{threshold} * 1.5 || $x_len >= $y_len - $ac_mode) {
-		$self->nuke_prelim_round;
-		return 0;
-	}
-
-	# System state array. First item is the judge.
-	my @system = map { [ $_ ] } @storys;
-
-	# Seed initial system.
-	for my $col (0..$x_len-1) {
-		for my $i (0..$y_len-1) {
-			# Shift up by $ac_mode so that judges are not given their
-			# own stories, and by $col so that there are no dupes in any set
-			push $system[$i], $storys[ ($i + $ac_mode + $col) % $y_len ];
-		}
-	}
-
-	my $check_system_constraints = sub {
-		for my $row ( @system ) {
-			my %uniq;
-			for my $cell (@$row[1..$x_len]) {
-				# Judges cannot have their own stories
-				if ($cell->{user_id} == $row->[0]->{user_id}) {
-					return 0;
-				}
-
-				# No dupes
-				return 0 if exists $uniq{$cell->{id}};
-				$uniq{$cell->{id}} = 1;
-			}
-		}
-		1;
-	};
-
-	my $system_work = sub {
-		my $work;
-
-		for my $row ( @system ) {
-			my $wc_total = List::Util::sum map { $_->{wordcount} } @$row[1 .. $x_len];
-			$work += $wc_total * ( 1 + $wc_total ) / 2;
-		}
-
-		return $work;
-	};
-
-	my $system_stdev = sub {
-		my @wcs = map {
-			List::Util::sum map { $_->{wordcount} } @$_[1 .. $x_len]
-		} @system;
-
-		my $mean = List::Util::sum( @wcs ) / $y_len;
-
-		my $variance;
-		$variance += ($_ - $mean) ** 2 for @wcs;
-
-		return sqrt $variance / $y_len;
-	};
-
-	my $cell_swap = sub {
-		my ($c1, $c2) = @_;
-
-		(
-			$system[ $c1->{y} ][ $c1->{x} ],
-			$system[ $c2->{y} ][ $c2->{x} ]
-		) = (
-			$system[ $c2->{y} ][ $c2->{x} ],
-			$system[ $c1->{y} ][ $c1->{x} ]
-		);
-	};
-
-	# Main algorithm. Take random cells and see if swapping them would decrease
-	# the total work in the system.
-	my $current_work = $system_work->();
-	TICK: for (my $i = 0; $i <= 1000; $i++) {
-
-		# Define two random cells to be swapped, with x in range (1..$x_len) so
-		# that judges are never moved
-		my $c1 = {
-			x => int rand($x_len) + 1,
-			y => int rand($y_len),
-		};
-		my $c2 = {
-			x => int rand($x_len) + 1,
-			y => int rand($y_len),
-		};
-
-		# No point swapping cells between the same judge
-		redo if $c1->{y} == $c2->{y};
-
-		my $item1 = $system[ $c1->{y} ][ $c1->{x} ];
-		my $item2 = $system[ $c2->{y} ][ $c2->{x} ];
-
-		# Don't give a judge their own story
-		redo if $system[ $c1->{y} ][0]->{user_id} == $item2->{user_id};
-		redo if $system[ $c2->{y} ][0]->{user_id} == $item1->{user_id};
-
-		# Don't put an item in a set if it's already there
-		for my $col (@{ $system[$c2->{y}] }) {
-			redo TICK if $col->{id} == $item1->{id};
-		}
-
-		for my $col (@{ $system[$c1->{y}] }) {
-			redo TICK if $col->{id} == $item2->{id};
-		}
-
-		# Swap cells and check if it's an improvement
-		$cell_swap->($c1, $c2);
-		my $new_work = $system_work->();
-
-		if ($new_work < $current_work) {
-			$i = 0;
-			$current_work = $new_work;
-		}
-		else {
-			$cell_swap->($c1, $c2);
-		}
-	}
-
-	$self->result_source->schema->resultset('VoteRecord')->populate([ map {
-		{
-			event_id => $self->id,
-			user_id  => $_->[0]->{user_id},
-			round    => 'prelim',
-			type     => 'fic',
-			story_id => $_->[0]->{id},
-			votes    => [ map {
-				{ story_id => $_->{id} }
-			} @$_[ 1..$x_len ] ],
-		}
-	} @system ]);
-
-	1;
-}
-
-sub recalc_stats {
-	my ($self, $items, $votes) = @_;
-
-	my ($scores,$contr) = twipie($votes->slates);
-
-	my $round = $votes->first->round;
-	for my $item ($items->all) {
-		$item->update({
-			"${round}_score" => $scores->{$item->id} // 0,
-			"${round}_stdev" => $contr->{$item->id} // 0,
-		});
-	}
-}
-
-=head2 public_distr
-
-Determine candidates for public voting.
-
-=cut
-
-sub public_distr {
-	my ($self, $work) = @_;
-
-	$self->recalc_stats(
-		scalar $self->storys->eligible,
-		scalar $self->vote_records->prelim->fic
-	);
-
-	$self->storys->eligible->recalc_candidates($work);
-}
-
-=head2 judge_distr
-
-Distributes stories for private voting.
-
-=cut
-
-sub judge_distr {
-	my $self = shift;
-	my $size = shift // 5;
-
-	# Make sure the public_score column is up-to-date
-	$self->storys->recalc_public_stats;
-
-	my @storys = $self->storys->order_by({ -desc => 'public_score' })->all;
-	my ($prev, $no_more_finalists);
-
-	for my $story (@storys) {
-		if ($no_more_finalists) {
-			$story->update({ finalist => 0 });
-			undef $story;
-		}
-		else {
-			if (--$size < 0 || $story->public_score == $prev->public_score) {
-				$story->update({ finalist => 1 });
-			}
-			else {
-				$no_more_finalists = 1;
-				redo;
-			}
-		}
-		$prev = $story;
-	}
-
-	my $finalists = [ map {{ story_id => $_->id }}
-	                    grep { defined $_ } @storys ];
-
-	for my $judge ( $self->judges->all ) {
-		my $record = $self->create_related('vote_records', {
-			user_id => $judge->id,
-			round   => 'private',
-			type    => 'fic',
-			votes   => $finalists,
-		});
 	}
 }
 
