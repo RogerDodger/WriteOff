@@ -43,13 +43,17 @@
 					{{ rating = ratings.find({ round_id => round.id, entry_id => entry.id }) }}
 
 					{{ PROCESS Score  score = rating.value }}
+
 					{{ IF round.has_error }}
 						{{ PROCESS Score  score = rating.error }}
 					{{ END }}
+
 					<td class="Results-breakdown">
+						{{ IF rating }}
 						<a class="Breakdown" href="{{ c.uri_for(breakdown, [ entry.id_uri, round.id ]) }}">
 							<i class="fa fa-plus" title="Show breakdown"></i>
 						</a>
+						{{ END }}
 					</td>
 				{{ END }}
 			</tr>
