@@ -874,6 +874,9 @@ a {
 .Form-error {
   box-shadow: 0 0 0.25em red; }
 
+.Breakdown {
+  cursor: pointer; }
+
 .Breakdown-row td {
   padding-top: 0 !important; }
 .Breakdown-row table {
