@@ -880,7 +880,7 @@ a {
 .Breakdown-row td {
   padding-top: 0 !important; }
 .Breakdown-row table {
-  font-size: 0.8em; }
+  font-size: 0.9em; }
 
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
@@ -2111,7 +2111,7 @@ body.inverted {
       white-space: nowrap; }
 
 .Results-breakdown {
-  font-size: 0.7em; }
+  font-size: 0.7rem; }
 
 .Results-artist a {
   color: inherit;
