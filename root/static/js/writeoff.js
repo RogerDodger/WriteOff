@@ -177,59 +177,51 @@ $(document).ready(function() {
 //==========================================================================
 
 $(document).ready(function() {
-	var er_class = 'artist-breakdown-row';
-
-	$('.artist-breakdown')
+	$('.Breakdown')
 		.click(function() {
+			var $link = $(this);
 			var $icon = $(this).find('i');
-			var $row = $(this).parent().parent();
-			var $next = $row.next().next();
+			var $row = $(this).parents('tr');
 
-			// Expand
-			if ($icon.hasClass('fa-plus')) {
+			while ($row.next() && $row.next().hasClass('Breakdown-row')) {
+				$row.next().remove();
+			}
+
+			var expand = $icon.hasClass('fa-plus');
+			$row.find('.Breakdown i').each(function () {
+				$(this).removeClass('fa-minus');
+				$(this).addClass('fa-plus');
+				$(this).attr('title', 'Show breakdown');
+			});
+
+			if (expand) {
 				$icon.removeClass('fa-plus');
 				$icon.addClass('fa-minus');
-				$(this).attr('title', 'Hide breakdown');
+				$icon.attr('title', 'Hide breakdown');
 
-				if ($next.hasClass(er_class)) {
-					$next.removeClass('hidden');
+				var $expand_row = $row.clone().addClass('Breakdown-row');
+				var $expand_cell = $('<td colspan="99"/>');
+				$expand_row.html($expand_cell);
+
+				$row.after($expand_row);
+				$row.after('<tr class="Breakdown-row hidden"/>');
+
+				if ($link.data('res')) {
+					$expand_cell.html($link.data('res'));
 				}
 				else {
-					var $expand_row = $('<tr class="' + er_class + '"></tr>');
-					var $expand_cell = $('<td colspan="12"></td>');
-
-					$expand_row.html($expand_cell);
-					$row.after($expand_row);
-					$row.after('<tr class="hidden"/>');
-
 					$expand_cell.load(
-						$(this).data('target'),
+						$link.data('target'),
 						function(res, status, xhr) {
 							if (status != 'error') {
 								$expand_cell.find('h1').remove();
+								$link.data('res', $expand_cell.html());
 							}
 							else {
-								$expand_cell.html(xhr.statusText);
+								$expand_cell.html(xhr.statusTxt);
 							}
 						}
 					);
-				}
-			}
-			else {
-				// Collapse
-				$icon.removeClass('fa-minus');
-				$icon.addClass('fa-plus');
-				$(this).attr('title', 'Show breakdown');
-
-				if ($next.hasClass(er_class)) {
-					// Check that the previous expand succeeded, to see
-					// if we want to save the block or not
-					if ($next.find('table')) {
-						$next.addClass('hidden');
-					}
-					else {
-						$next.remove();
-					}
 				}
 			}
 		})

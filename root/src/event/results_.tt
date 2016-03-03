@@ -13,9 +13,10 @@
 
 				{{ FOREACH round IN rounds }}
 				<th data-sort-method="number">{{ c.string(round.name) }}</th>
-					{{ IF round.has_error }}
-					<th data-sort-method="number">&epsilon;</th>
-					{{ END }}
+				{{ IF round.has_error }}
+				<th data-sort-method="number">&epsilon;</th>
+				{{ END }}
+				<th class="no-sort"></th>
 				{{ END }}
 			</tr>
 		</thead>
@@ -45,6 +46,11 @@
 					{{ IF round.has_error }}
 						{{ PROCESS Score  score = rating.error }}
 					{{ END }}
+					<td class="Results-breakdown">
+						<a class="Breakdown" href="{{ c.uri_for(breakdown, [ entry.id_uri, round.id ]) }}">
+							<i class="fa fa-plus" title="Show breakdown"></i>
+						</a>
+					</td>
 				{{ END }}
 			</tr>
 			{{ END }}

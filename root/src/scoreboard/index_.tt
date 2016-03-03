@@ -79,8 +79,8 @@
 			{{ END }}
 
 			<td class="Scoreboard-breakdown">
-				<a title="Show breakdown" class="artist-breakdown" href="{{ artist.id | format(aUrl) }}">
-					<i class="fa fa-plus"></i>
+				<a class="Breakdown" href="{{ artist.id | format(aUrl) }}">
+					<i class="fa fa-plus" title="Show breakdown"></i>
 				</a>
 			</td>
 		</tr>

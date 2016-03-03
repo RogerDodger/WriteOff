@@ -874,6 +874,11 @@ a {
 .Form-error {
   box-shadow: 0 0 0.25em red; }
 
+.Breakdown-row td {
+  padding-top: 0 !important; }
+.Breakdown-row table {
+  font-size: 0.8em; }
+
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
@@ -2081,17 +2086,17 @@ body.inverted {
           margin: 1.2em auto;
           content: " "; }
   .Results > tbody > tr {
-    background-image: -webkit-repeating-linear-gradient(65deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px);
-    background-image: repeating-linear-gradient(25deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px); }
+    background-image: -webkit-repeating-linear-gradient(65deg, transparent, transparent 20px, rgba(255, 255, 255, 0.15) 20px, rgba(255, 255, 255, 0.15) 40px);
+    background-image: repeating-linear-gradient(25deg, transparent, transparent 20px, rgba(255, 255, 255, 0.15) 20px, rgba(255, 255, 255, 0.15) 40px); }
     .Results > tbody > tr.gold {
       font-size: 1.25em;
-      background-color: #f8f4dd !important; }
+      background-color: #faf7e6 !important; }
     .Results > tbody > tr.silver {
       font-size: 1.17em;
-      background-color: #ebebeb !important; }
+      background-color: #f0f0f0 !important; }
     .Results > tbody > tr.bronze {
       font-size: 1.10em;
-      background-color: #f8efdd !important; }
+      background-color: #faf3e6 !important; }
     .Results > tbody > tr > td.Results-rank, .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-score {
       text-align: center; }
     .Results > tbody > tr > td.Results-artist {
@@ -2101,6 +2106,9 @@ body.inverted {
       width: 100%; }
     .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-artist {
       white-space: nowrap; }
+
+.Results-breakdown {
+  font-size: 0.7em; }
 
 .Results-artist a {
   color: inherit;
@@ -2339,3 +2347,16 @@ body.inverted {
 .Ballot-append.active:hover, .Ballot-append.waiting {
   cursor: pointer;
   opacity: 1; }
+
+.Votes-summary {
+  font-size: 1rem;
+  text-align: center; }
+  .Votes-summary ul {
+    display: inline-block;
+    line-height: 0.5em;
+    margin: 0;
+    padding: 0;
+    font-size: 1.4em;
+    text-align: center; }
+    .Votes-summary ul li {
+      list-style-type: none; }

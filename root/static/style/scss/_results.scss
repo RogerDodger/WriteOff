@@ -9,22 +9,22 @@
 		$stripe: 20px;
 		background-image: repeating-linear-gradient(25deg, transparent,
 			transparent $stripe,
-			rgba(255,255,255,.1) $stripe,
-			rgba(255,255,255,.1) $stripe * 2);
+			rgba(255,255,255,.15) $stripe,
+			rgba(255,255,255,.15) $stripe * 2);
 
 		&.gold {
 			font-size: 1.25em;
-			background-color: hsla(51, 65%, 92% ,1) !important;
+			background-color: hsla(51, 65%, 94% ,1) !important;
 		}
 
 		&.silver {
 			font-size: 1.17em;
-			background-color: hsla(0, 0%, 92% ,1) !important;
+			background-color: hsla(0, 0%, 94% ,1) !important;
 		}
 
 		&.bronze {
 			font-size: 1.10em;
-			background-color: hsla(39, 65%, 92% ,1) !important;
+			background-color: hsla(39, 65%, 94% ,1) !important;
 		}
 
 		& > td {
@@ -49,6 +49,10 @@
 			}
 		}
 	}
+}
+
+.Results-breakdown {
+	font-size: 0.7em;
 }
 
 .Results-artist a {

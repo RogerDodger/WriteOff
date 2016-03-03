@@ -177,6 +177,30 @@ sub do_dq :Private {
 	$c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
 }
 
+sub votes :Private {
+	my ($self, $c, $round) = @_;
+
+	my $round = $c->model('DB::Round')->find($round =~ /^(\d+)/ && $1);
+
+	if (!$round || $round->event_id != $c->stash->{entry}->event_id) {
+		$c->detach('/default');
+	}
+
+	$c->stash->{summary} = [
+		sort {
+			$a->left / ($a->left + $a->right + 1) <=>
+			$b->left / ($b->left + $b->right + 1)
+		}
+		$c->model('DB::VoteSummary')
+			->search({}, {
+				bind => [ $c->stash->{entry}->id, $round->id ]
+			})
+	];
+
+	push $c->stash->{title}, 'Vote breakdown for ' . $c->stash->{entry}->title;
+	$c->stash->{template} = 'entry/votes.tt';
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

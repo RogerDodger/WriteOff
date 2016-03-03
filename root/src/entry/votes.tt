@@ -1,0 +1,13 @@
+<h1>{{ title.-1 }}</h1>
+
+<div class="Votes-summary">
+	<ul>
+		{{ FOREACH line IN summary }}
+		<li>
+			{{- FILTER repeat(line.left) }}&middot;{{ END -}}
+			{{- }}<span style="color: red">&middot;</span>{{ -}}
+			{{- FILTER repeat(line.right) }}&middot;{{ END -}}
+		</li>
+		{{ END }}
+	</ul>
+</div>

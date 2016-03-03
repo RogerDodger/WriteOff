@@ -5,7 +5,7 @@
 			'template' => 'event/results_.tt',
 			'ttl' => c.debug || 360,
 			'keys' => {
-				'type' => 'event-results',
+				'type' => 'event/results',
 				'id' => event.id,
 			},
 		);
