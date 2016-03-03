@@ -188,8 +188,8 @@ sub votes :Private {
 
 	$c->stash->{summary} = [
 		sort {
-			$a->left / ($a->left + $a->right + 1) <=>
-			$b->left / ($b->left + $b->right + 1)
+			(1 + $a->left) / ($a->left + $a->right + 1) <=>
+			(1 + $b->left) / ($b->left + $b->right + 1)
 		}
 		$c->model('DB::VoteSummary')
 			->search({}, {
