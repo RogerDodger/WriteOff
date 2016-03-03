@@ -2085,13 +2085,13 @@ body.inverted {
     background-image: repeating-linear-gradient(25deg, transparent, transparent 20px, rgba(255, 255, 255, 0.1) 20px, rgba(255, 255, 255, 0.1) 40px); }
     .Results > tbody > tr.gold {
       font-size: 1.25em;
-      background-color: #f8f4dd; }
+      background-color: #f8f4dd !important; }
     .Results > tbody > tr.silver {
       font-size: 1.17em;
-      background-color: #ebebeb; }
+      background-color: #ebebeb !important; }
     .Results > tbody > tr.bronze {
       font-size: 1.10em;
-      background-color: #f8efdd; }
+      background-color: #f8efdd !important; }
     .Results > tbody > tr > td.Results-rank, .Results > tbody > tr > td.Results-awards, .Results > tbody > tr > td.Results-score {
       text-align: center; }
     .Results > tbody > tr > td.Results-artist {
