@@ -4,9 +4,9 @@
 	<ul>
 		{{ FOREACH line IN summary }}
 		<li>
-			{{- FILTER repeat(line.left) }}&middot;{{ END -}}
-			{{- }}<span style="color: red">&middot;</span>{{ -}}
-			{{- FILTER repeat(line.right) }}&middot;{{ END -}}
+			{{- FILTER repeat(line.left) }}&bull;{{ END -}}
+			{{- }}<span style="color: red">&bull;</span>{{ -}}
+			{{- FILTER repeat(line.right) }}&bull;{{ END -}}
 		</li>
 		{{ END }}
 	</ul>

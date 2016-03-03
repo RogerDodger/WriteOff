@@ -2160,6 +2160,19 @@ body.inverted {
         border-color: #8e9da4;
         color: #252a2d; }
 
+.Votes-summary {
+  font-size: 1rem;
+  text-align: center; }
+  .Votes-summary ul {
+    display: inline-block;
+    line-height: 0.4em;
+    margin: 0;
+    padding: 0;
+    font-size: 1.7em;
+    text-align: center; }
+    .Votes-summary ul li {
+      list-style-type: none; }
+
 .Scoreboard {
   width: 100%; }
   .Scoreboard > tbody > tr > td {
@@ -2350,16 +2363,3 @@ body.inverted {
 .Ballot-append.active:hover, .Ballot-append.waiting {
   cursor: pointer;
   opacity: 1; }
-
-.Votes-summary {
-  font-size: 1rem;
-  text-align: center; }
-  .Votes-summary ul {
-    display: inline-block;
-    line-height: 0.5em;
-    margin: 0;
-    padding: 0;
-    font-size: 1.4em;
-    text-align: center; }
-    .Votes-summary ul li {
-      list-style-type: none; }
