@@ -1,0 +1,7 @@
+<td class="Ballot-score">
+	{{ IF score.match('^[\d.]+$') }}
+	<span title="{{ score | format('%8.5f') }}">{{ score | format('%.0f') }}%</span>
+	{{ ELSE }}
+	{{ score }}
+	{{ END }}
+</td>

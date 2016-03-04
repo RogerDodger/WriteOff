@@ -82,6 +82,15 @@ sub cast :Private {
 		}
 	}
 
+	if ($c->user) {
+		$c->stash->{ballots} = $c->stash->{event}->ballots->search({
+			user_id => $c->user->id,
+			$c->stash->{round} ? (round_id => { '!=' => $c->stash->{round}->id }) : (),
+		}, {
+			join => 'round',
+		});
+	}
+
 	push $c->stash->{title}, $c->string('vote');
 	$c->stash->{template} = 'vote/cast.tt';
 

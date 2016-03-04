@@ -5,8 +5,8 @@
 .Ballot {
 	@include striped-table;
 
-	& > tbody,
-	& > thead {
+	&.cast > tbody,
+	&.cast > thead {
 		border: none;
 	}
 
@@ -17,6 +17,10 @@
 			text-align: center;
 		}
 
+		&.Ballot-score {
+			min-width: 2.5em;
+		}
+
 		&.Ballot-title {
 			width: 100%;
 		}
@@ -24,6 +28,20 @@
 		&.Ballot-abstain--cell {
 			padding-top: 0;
 			padding-bottom: 0;
+		}
+
+		&.Ballot-option--selected {
+			background-color: hsla(0, 30%, 90%, 1);
+		}
+	}
+
+	& > tbody > tr.Ballot-item {
+		&.final > td {
+			background-color: hsla(200, 30%, 94%, 1);
+		}
+
+		&.prelim > td {
+			background-color: hsla(40, 30%, 94%, 1);
 		}
 	}
 

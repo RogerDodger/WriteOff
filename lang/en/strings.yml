@@ -54,10 +54,10 @@ ficVoting: Fic Voting
 authorGuessing: Author Guessing
 artResults: Art Results
 ficResults: Fic Results
-prelim: Prelims
-quarterfinal: Quarterfinals
-semifinal: Semifinals
-final: Finals
+prelim: Prelim
+final: Final
+prelimBallot: My Prelim Ballot
+finalBallot: My Final Ballot
 writing: Writing
 drawing: Drawing
 confirmDeletion: Confirm Deletion

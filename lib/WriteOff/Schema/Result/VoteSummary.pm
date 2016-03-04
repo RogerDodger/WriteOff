@@ -25,8 +25,14 @@ my $subq = q{
 
 __PACKAGE__->result_source_instance->view_definition(qq{
 	SELECT
-		($subq AND value > me.value) AS left,
-		($subq AND value < me.value) AS right
+		CASE WHEN ballots.absolute
+			THEN 10 - value
+			ELSE ($subq AND value > me.value)
+			END AS left,
+		CASE WHEN ballots.absolute
+			THEN value
+			ELSE ($subq AND value < me.value)
+			END AS right
 	FROM votes me
 	LEFT JOIN ballots ON ballots.id=me.ballot_id
 	WHERE me.entry_id = ?

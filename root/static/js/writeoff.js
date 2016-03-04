@@ -521,7 +521,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	var $ballot = $('.Ballot');
+	var $ballot = $('.Ballot.cast');
 
 	if (!$ballot.length) {
 		return;
@@ -751,7 +751,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Results, .Scoreboard, .Prompts').each(function () {
+	$('.Results, .Scoreboard, .Prompts, .Ballot').each(function () {
 		if ($(this).find('thead').size()) {
 			$(this).addClass('sortable');
 			new Tablesort(this);

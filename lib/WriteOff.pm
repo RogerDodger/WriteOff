@@ -30,7 +30,7 @@ extends 'Catalyst';
 require WriteOff::Log;
 require WriteOff::Util;
 
-our $VERSION = 'v0.55.0';
+our $VERSION = 'v0.59.0';
 
 __PACKAGE__->config(
 	name => 'Writeoff',

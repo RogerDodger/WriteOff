@@ -691,6 +691,13 @@ a {
         padding-left: 0.6em; }
       .Table > thead > tr > th:last-child {
         padding-right: 0.6em; }
+  .Table.grid > thead > tr > th, .Table.grid > tbody > tr > td {
+    border-right: 1px solid #d0dce2;
+    border-left: 1px solid #d0dce2; }
+  .Table.grid > thead > tr > th {
+    padding: 0.6em; }
+  .Table.grid > tbody > tr > td {
+    padding: 0.8em; }
   .Table > thead + tbody > tr:nth-child(odd) {
     background-color: #f1f6f9; }
   .Table > thead + tbody > tr:nth-child(even) {
@@ -1833,6 +1840,13 @@ body.inverted {
         padding-left: 0.6em; }
       .Prompts > thead > tr > th:last-child {
         padding-right: 0.6em; }
+  .Prompts.grid > thead > tr > th, .Prompts.grid > tbody > tr > td {
+    border-right: 1px solid #d0dce2;
+    border-left: 1px solid #d0dce2; }
+  .Prompts.grid > thead > tr > th {
+    padding: 0.6em; }
+  .Prompts.grid > tbody > tr > td {
+    padding: 0.8em; }
   .Prompts > thead + tbody > tr:nth-child(odd) {
     background-color: #f1f6f9; }
   .Prompts > thead + tbody > tr:nth-child(even) {
@@ -1958,6 +1972,13 @@ body.inverted {
         padding-left: 0.6em; }
       .Storys > thead > tr > th:last-child {
         padding-right: 0.6em; }
+  .Storys.grid > thead > tr > th, .Storys.grid > tbody > tr > td {
+    border-right: 1px solid #d0dce2;
+    border-left: 1px solid #d0dce2; }
+  .Storys.grid > thead > tr > th {
+    padding: 0.6em; }
+  .Storys.grid > tbody > tr > td {
+    padding: 0.8em; }
   .Storys > thead + tbody > tr:nth-child(odd) {
     background-color: #f1f6f9; }
   .Storys > thead + tbody > tr:nth-child(even) {
@@ -2064,6 +2085,13 @@ body.inverted {
         padding-left: 0.6em; }
       .Results > thead > tr > th:last-child {
         padding-right: 0.6em; }
+  .Results.grid > thead > tr > th, .Results.grid > tbody > tr > td {
+    border-right: 1px solid #d0dce2;
+    border-left: 1px solid #d0dce2; }
+  .Results.grid > thead > tr > th {
+    padding: 0.6em; }
+  .Results.grid > tbody > tr > td {
+    padding: 0.8em; }
   .Results > thead + tbody > tr:nth-child(odd) {
     background-color: #f1f6f9; }
   .Results > thead + tbody > tr:nth-child(even) {
@@ -2199,6 +2227,13 @@ body.inverted {
         padding-left: 0.6em; }
       .Scoreboard > thead > tr > th:last-child {
         padding-right: 0.6em; }
+  .Scoreboard.grid > thead > tr > th, .Scoreboard.grid > tbody > tr > td {
+    border-right: 1px solid #d0dce2;
+    border-left: 1px solid #d0dce2; }
+  .Scoreboard.grid > thead > tr > th {
+    padding: 0.6em; }
+  .Scoreboard.grid > tbody > tr > td {
+    padding: 0.8em; }
   .Scoreboard > thead + tbody > tr:nth-child(odd) {
     background-color: #f1f6f9; }
   .Scoreboard > thead + tbody > tr:nth-child(even) {
@@ -2286,6 +2321,13 @@ body.inverted {
         padding-left: 0.6em; }
       .Ballot > thead > tr > th:last-child {
         padding-right: 0.6em; }
+  .Ballot.grid > thead > tr > th, .Ballot.grid > tbody > tr > td {
+    border-right: 1px solid #d0dce2;
+    border-left: 1px solid #d0dce2; }
+  .Ballot.grid > thead > tr > th {
+    padding: 0.6em; }
+  .Ballot.grid > tbody > tr > td {
+    padding: 0.8em; }
   .Ballot > thead + tbody > tr:nth-child(odd) {
     background-color: #f1f6f9; }
   .Ballot > thead + tbody > tr:nth-child(even) {
@@ -2310,15 +2352,23 @@ body.inverted {
           height: 1px;
           margin: 1.2em auto;
           content: " "; }
-  .Ballot > tbody, .Ballot > thead {
+  .Ballot.cast > tbody, .Ballot.cast > thead {
     border: none; }
   .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
     text-align: center; }
+  .Ballot > tbody > tr > td.Ballot-score {
+    min-width: 2.5em; }
   .Ballot > tbody > tr > td.Ballot-title {
     width: 100%; }
   .Ballot > tbody > tr > td.Ballot-abstain--cell {
     padding-top: 0;
     padding-bottom: 0; }
+  .Ballot > tbody > tr > td.Ballot-option--selected {
+    background-color: #eddede; }
+  .Ballot > tbody > tr.Ballot-item.final > td {
+    background-color: #ebf1f4; }
+  .Ballot > tbody > tr.Ballot-item.prelim > td {
+    background-color: #f4f1eb; }
 
 .Ballot-up:hover {
   cursor: pointer; }

@@ -15,7 +15,7 @@
 	</div>
 
 	{{ IF ballot }}
-	<table class="Ballot">
+	<table class="Ballot cast">
 		<tbody class="ordered">
 			{{ FOREACH vote IN ordered.all }}
 				{{ PROCESS 'vote/ballot-item.tt'  score = loop.max == 0 ? 'NaN' : 100 * (1 - loop.index / loop.max) }}
@@ -68,6 +68,26 @@
 		<tbody class="abstained">
 			{{ FOREACH vote IN abstained.all }}
 				{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
+			{{ END }}
+		</tbody>
+	</table>
+	{{ END }}
+
+	{{ IF ballots && ballots.count }}
+	<div class="Document-subtitle">
+		<span>My Votes</span>
+	</div>
+
+	<table class="Table">
+		<tbody>
+			{{ FOREACH b IN ballots.all }}
+			<tr>
+				<td>
+					<a href="{{ c.uri_for_action('/ballot/view', [ b.id ]) }}">
+						{{ c.string(b.round.name) }}
+					</a>
+				</td>
+			</tr>
 			{{ END }}
 		</tbody>
 	</table>

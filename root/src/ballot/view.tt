@@ -1,0 +1,43 @@
+<div class="Document">
+	<div class="Document-title">
+		{{ title.-1 }}
+	</div>
+
+	<table class="Ballot {{ IF ballot.absolute }}grid{{ END }}">
+		{{ IF ballot.absolute }}
+		<thead>
+			<tr>
+				<th>{{ c.string('title') }}</th>
+				{{ FOREACH i IN [0..10] }}
+				<th class="Ballot-score">{{ i }}</th>
+				{{ END }}
+			</tr>
+		</thead>
+		{{ END }}
+		<tbody>
+
+		{{ BLOCK title }}
+		<td class="Ballot-title">
+			<a href="{{ c.uri_for(c.controller(vote.entry.mode.ucfirst).action_for('view'), [ vote.entry.id_uri ]) }}">
+				{{ vote.entry.title }}
+			</a>
+		</td>
+		{{ END }}
+
+		{{ FOREACH vote IN votes.all }}
+			<tr class="Ballot-item {{ vote.entry.round.name IF ballot.round.name != 'final' }}">
+				{{ IF ballot.absolute }}
+					{{ PROCESS title }}
+					{{ FOREACH i IN [0..10] }}
+					<td class="Ballot-score" data-sort="{{ 0 + (i == vote.value) }}">{{ IF i == vote.value }}&bull;{{ END }}</td>
+					{{ END }}
+				{{ ELSE }}
+					{{ PROCESS 'vote/ballot-score.tt'
+						score = loop.max == 0 ? 'NaN' : 100 * (1 - loop.index / loop.max) }}
+					{{ PROCESS title }}
+				{{ END }}
+			</tr>
+		{{ END }}
+		</tbody>
+	</table>
+</div>

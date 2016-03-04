@@ -2,13 +2,7 @@
 	<td class="Ballot-arrows">
 		<i class="Ballot-up fa fa-caret-up"></i>
 	</td>
-	<td class="Ballot-score">
-		{{ IF score.match('^[\d.]+$') }}
-		<span title="{{ score | format('%8.5f') }}">{{ score | format('%.0f') }}%</span>
-		{{ ELSE }}
-		{{ score }}
-		{{ END }}
-	</td>
+	{{ PROCESS 'vote/ballot-score.tt' }}
 	<td class="Ballot-title">
 		<input name="order" value="{{ vote.id }}" type="hidden">
 		<a href="{{ c.uri_for(view, [ vote.entry.id_uri ]) }}">{{ vote.entry.title | html }}</a>
