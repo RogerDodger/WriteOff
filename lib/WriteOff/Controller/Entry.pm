@@ -178,9 +178,9 @@ sub do_dq :Private {
 }
 
 sub votes :Private {
-	my ($self, $c, $round) = @_;
+	my ($self, $c, $rid) = @_;
 
-	my $round = $c->model('DB::Round')->find($round =~ /^(\d+)/ && $1);
+	my $round = $c->model('DB::Round')->find($rid =~ /^(\d+)/ && $1);
 
 	if (!$round || $round->event_id != $c->stash->{entry}->event_id) {
 		$c->detach('/default');

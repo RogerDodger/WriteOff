@@ -87,7 +87,10 @@ sub cast :Private {
 			user_id => $c->user->id,
 			$c->stash->{round} ? (round_id => { '!=' => $c->stash->{round}->id }) : (),
 		}, {
-			join => 'round',
+			join => 'votes',
+			prefetch => 'round',
+			group_by => 'me.id',
+			having => \'COUNT(votes.value) > 1',
 		});
 	}
 
