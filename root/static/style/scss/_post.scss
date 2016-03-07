@@ -30,6 +30,15 @@
 		float: none;
 		width: 100%;
 	}
+
+	& + div {
+		margin-left: 9.7rem;
+
+		@media #{$mobile} {
+			margin-left: 0;
+			box-shadow: none;
+		}
+	}
 }
 
 .Post-author--name {
@@ -75,13 +84,7 @@
 	color: #444;
 	font-size: 0.95em;
 	line-height: 1.6;
-	padding: 0 1em;
-	margin-left: 9.7rem;
-
-	@media #{$mobile} {
-		margin-left: 0;
-		box-shadow: none;
-	}
+	padding: 0;
 }
 
 .Post-contents:hover {
@@ -105,8 +108,9 @@
 .Post-contents--header {
 	color: #999;
 	font-size: 0.8em;
-	padding-top: 1em;
+	margin: 0 1em;
 	padding-bottom: 0.5em;
+	padding-top: 1em;
 	border-bottom: 1px solid #ddd;
 
 	a:hover {
@@ -122,8 +126,9 @@
 
 .Post-contents--body {
 	@include bbcode;
-	padding-bottom: 1.2em;
+	margin: 0 1em;
 	padding-top: 1em;
+	padding-bottom: 1.2em;
 
 	hr {
 		background: transparent;
@@ -147,28 +152,20 @@
 	}
 }
 
-.Post-contents--edit {
-	padding-top: 1em;
-	margin: calc(-1em - 1px) -1em 0 -1em;
-}
-
 .Post-submit,
 .Post-edit {
-	@include container;
-
 	background-color: #f7f7f7;
 	box-shadow: 0 0 3px #b6b6b6;
-	margin-top: 1em;
 	font-size: 1.1em;
 }
 
 .Post-form--controls {
-	@extend .clearfix;
 	padding: 0.2em;
 }
 
 .Post-form--controls > ul {
-	float: left;
+	display: inline-block;
+	line-height: 0;
 	list-style-type: none;
 	margin: 0 0.2em;
 	padding: 0.01em;
@@ -176,7 +173,7 @@
 	position: relative;
 
 	& > li {
-		float: left;
+		display: inline-block;
 		margin: 0 0.2em;
 		padding: 0.5em;
 

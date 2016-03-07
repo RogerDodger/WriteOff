@@ -1,18 +1,22 @@
-<div class="Post-submit">
-	<form class="Form" method="post" action="/post/add">
-		{{ csrf_field | none }}
-		<input type="hidden" name="event" value="{{ event.id }}">
-		{{ IF entry }}
-		<input type="hidden" name="entry" value="{{ entry.id }}">
-		{{ END }}
+<div class="Post">
+	{{ INCLUDE 'post/author.tt'  artist = c.user.active_artist }}
 
-		{{ INCLUDE 'post/form.tt' }}
+	<div class="Post-submit">
+		<form class="Form" method="post" action="/post/add">
+			{{ csrf_field | none }}
+			<input type="hidden" name="event" value="{{ event.id }}">
+			{{ IF entry }}
+			<input type="hidden" name="entry" value="{{ entry.id }}">
+			{{ END }}
 
-		<div class="Post-form--senders">
-			<button type="submit">
-				<i class="fa fa-comment"></i>
-				Post comment
-			</button>
-		</div>
-	</form>
+			{{ INCLUDE 'post/form.tt' }}
+
+			<div class="Post-form--senders">
+				<button type="submit">
+					<i class="fa fa-comment"></i>
+					Post comment
+				</button>
+			</div>
+		</form>
+	</div>
 </div>

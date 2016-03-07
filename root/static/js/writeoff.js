@@ -826,11 +826,15 @@ $(document).ready(function () {
 				url: $form.attr('action'),
 				data: $form.serializeArray(),
 				success: function(res, status, xhr) {
+					res = $.parseJSON(res);
 					$btns.removeClass('active');
 					$btn.addClass('active');
-					$('.Artist-swap--selected').text(
-						$btn.closest('li').find('.Artist-swap--option').text()
-					);
+					$('.Artist-swap--selected').text(res.name);
+					$('.Post-submit').each(function () {
+						var $post = $(this).closest('.Post');
+						$post.find('.Post-author--name').text(res.name);
+						$post.find('.POst-author--avatar img').attr('src', res.avatar);
+					});
 				}
 			})
 		);

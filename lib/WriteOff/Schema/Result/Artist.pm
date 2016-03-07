@@ -26,4 +26,8 @@ __PACKAGE__->has_many("posts", "WriteOff::Schema::Result::Post", "artist_id");
 __PACKAGE__->has_many("theorys", "WriteOff::Schema::Result::Theory", "artist_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
+sub avatar {
+	'/static/images/avatar.jpg';
+}
+
 1;

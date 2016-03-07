@@ -1,14 +1,18 @@
-<div class="Post-edit">
-	<form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
-		{{ csrf_field | none }}
+<div>
+	{{ INCLUDE 'post/author.tt'  artist = post.artist}}
 
-		{{ INCLUDE 'post/form.tt' }}
+	<div class="Post-edit">
+		<form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
+			{{ csrf_field | none }}
 
-		<div class="Post-form--senders">
-			<button type="submit">
-				<i class="fa fa-check"></i>
-				Save
-			</button>
-		</div>
-	</form>
+			{{ INCLUDE 'post/form.tt' }}
+
+			<div class="Post-form--senders">
+				<button type="submit">
+					<i class="fa fa-check"></i>
+					Save
+				</button>
+			</div>
+		</form>
+	</div>
 </div>

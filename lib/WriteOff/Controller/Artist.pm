@@ -1,6 +1,7 @@
 package WriteOff::Controller::Artist;
 use Moose;
 use namespace::autoclean;
+use JSON;
 use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -87,7 +88,10 @@ sub swap :Local {
 	if (my $artist = $c->user->artists->find($id)) {
 		$c->user->update({ active_artist_id => $artist->id });
 		if ($c->stash->{ajax}) {
-				$c->res->body('Okay');
+			$c->res->body(encode_json {
+				name => $artist->name,
+				avatar => $artist->avatar,
+			});
 		}
 		else {
 			$c->res->redirect($c->req->referer);

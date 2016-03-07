@@ -1,0 +1,9 @@
+<div class="Post-author">
+	<div class="Post-author--name {{ 'admin' IF post.artist.user.admin }}">
+		{{ artist.name }}
+	</div>
+
+	<div class="Post-author--avatar">
+		<img src="{{ artist.avatar }}">
+	</div>
+</div>

@@ -923,24 +923,23 @@ a {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before, .Form-group:before, .Post:before, .Post-form--controls:before,
+.clearfix:before, .Form-group:before, .Post:before,
 .clearfix:after,
 .Form-group:after,
-.Post:after,
-.Post-form--controls:after {
+.Post:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after, .Form-group:after, .Post:after, .Post-form--controls:after {
+.clearfix:after, .Form-group:after, .Post:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix, .Form-group, .Post, .Post-form--controls {
+.clearfix, .Form-group, .Post {
   *zoom: 1; }
 
 /*
@@ -1637,6 +1636,12 @@ body.inverted {
     .Post-author {
       float: none;
       width: 100%; } }
+  .Post-author + div {
+    margin-left: 9.7rem; }
+    @media (max-width: 640px) {
+      .Post-author + div {
+        margin-left: 0;
+        box-shadow: none; } }
 
 .Post-author--name {
   border-style: solid;
@@ -1705,12 +1710,7 @@ body.inverted {
   color: #444;
   font-size: 0.95em;
   line-height: 1.6;
-  padding: 0 1em;
-  margin-left: 9.7rem; }
-  @media (max-width: 640px) {
-    .Post-contents {
-      margin-left: 0;
-      box-shadow: none; } }
+  padding: 0; }
 
 .Post-contents:hover .Post-contents--header a {
   color: #666; }
@@ -1725,8 +1725,9 @@ body.inverted {
 .Post-contents--header {
   color: #999;
   font-size: 0.8em;
-  padding-top: 1em;
+  margin: 0 1em;
   padding-bottom: 0.5em;
+  padding-top: 1em;
   border-bottom: 1px solid #ddd; }
   .Post-contents--header a:hover {
     text-decoration: underline; }
@@ -1737,8 +1738,9 @@ body.inverted {
   margin-left: 0.6em; }
 
 .Post-contents--body {
-  padding-bottom: 1.2em;
-  padding-top: 1em; }
+  margin: 0 1em;
+  padding-top: 1em;
+  padding-bottom: 1.2em; }
   .Post-contents--body hr,
   .Post-contents--body blockquote,
   .Post-contents--body div {
@@ -1758,34 +1760,25 @@ body.inverted {
     .Post-contents--body a:hover {
       text-decoration: underline; }
 
-.Post-contents--edit {
-  padding-top: 1em;
-  margin: calc(-1em - 1px) -1em 0 -1em; }
-
 .Post-submit,
 .Post-edit {
-  display: block;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 98%;
   background-color: #f7f7f7;
   box-shadow: 0 0 3px #b6b6b6;
-  margin-top: 1em;
   font-size: 1.1em; }
 
 .Post-form--controls {
   padding: 0.2em; }
 
 .Post-form--controls > ul {
-  float: left;
+  display: inline-block;
+  line-height: 0;
   list-style-type: none;
   margin: 0 0.2em;
   padding: 0.01em;
   font-size: 0.9em;
   position: relative; }
   .Post-form--controls > ul > li {
-    float: left;
+    display: inline-block;
     margin: 0 0.2em;
     padding: 0.5em; }
     .Post-form--controls > ul > li:hover {
