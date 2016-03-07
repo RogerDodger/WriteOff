@@ -755,7 +755,7 @@ a {
   .Flash p:not(:first-child), .Global-message p:not(:first-child) {
     margin-top: 1em; }
 
-.noselect, .Table.sortable > thead > tr > th, .Post-controls--set + .Post-controls--set:before, .Prompts.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Scoreboard.sortable > thead > tr > th, .Ballot.sortable > thead > tr > th {
+.noselect, .Table.sortable > thead > tr > th, .Post-form--controls > ul + ul:before, .Prompts.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Scoreboard.sortable > thead > tr > th, .Ballot.sortable > thead > tr > th {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   khtml-user-select: none;
@@ -871,7 +871,7 @@ a {
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles, .Ballot .ordered .Ballot-unabstain,
+.hidden, .Post.edit .Post-contents--body, .Post:not(.edit) .Post-contents--edit, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles, .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
 .Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
@@ -923,24 +923,24 @@ a {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before, .Form-group:before, .Post:before, .Post-submit--controls:before,
+.clearfix:before, .Form-group:before, .Post:before, .Post-form--controls:before,
 .clearfix:after,
 .Form-group:after,
 .Post:after,
-.Post-submit--controls:after {
+.Post-form--controls:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after, .Form-group:after, .Post:after, .Post-submit--controls:after {
+.clearfix:after, .Form-group:after, .Post:after, .Post-form--controls:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix, .Form-group, .Post, .Post-submit--controls {
+.clearfix, .Form-group, .Post, .Post-form--controls {
   *zoom: 1; }
 
 /*
@@ -1304,7 +1304,7 @@ body.inverted {
 .Event-details + .Event-header {
   margin-top: 1em; }
 
-.Event-details.hidden + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
+.Event-details.hidden + .Event-header, .Post.edit .Event-details.Post-contents--body + .Event-header, .Post:not(.edit) .Event-details.Post-contents--edit + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
 .Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
@@ -1648,8 +1648,8 @@ body.inverted {
   vertical-align: middle;
   background: #4747d1;
   border-color: #2a2aa8;
-  color: #d2d2f4;
-  text-shadow: -0.07em -0.07em #1c1c70;
+  color: #e9e9f9;
+  text-shadow: -0.05em -0.05em #1c1c70;
   border-radius: 0.2em;
   display: block;
   font-size: 0.9em;
@@ -1670,8 +1670,8 @@ body.inverted {
   .Post-author--name.admin {
     background: #d14747;
     border-color: #a82a2a;
-    color: #f4d2d2;
-    text-shadow: -0.07em -0.07em #701c1c; }
+    color: #f9e9e9;
+    text-shadow: -0.05em -0.05em #701c1c; }
     .Post-author--name.admin:not(:disabled):hover {
       background: #ce3c3c; }
     .Post-author--name.admin:not(:disabled):active {
@@ -1704,35 +1704,40 @@ body.inverted {
   border-radius: 0.2em;
   color: #444;
   font-size: 0.95em;
-  padding: 1em;
+  line-height: 1.6;
+  padding: 0 1em;
   margin-left: 9.7rem; }
   @media (max-width: 640px) {
     .Post-contents {
       margin-left: 0;
       box-shadow: none; } }
 
-.Post-contents:hover .Post-contents--header a,
-.Post-contents:hover .Post-contents--footer a {
+.Post-contents:hover .Post-contents--header a {
   color: #666; }
 
-.Post-contents--header a,
-.Post-contents--footer a {
+.Post-contents--header a {
   cursor: pointer;
   color: #999; }
-.Post-contents--header a:hover,
-.Post-contents--footer a:hover {
+.Post-contents--header a:hover {
   color: #222;
   text-decoration: none; }
 
 .Post-contents--header {
   color: #999;
   font-size: 0.8em;
+  padding-top: 1em;
   padding-bottom: 0.5em;
   border-bottom: 1px solid #ddd; }
   .Post-contents--header a:hover {
     text-decoration: underline; }
 
+.Post-control--reply,
+.Post-control--edit {
+  float: right;
+  margin-left: 0.6em; }
+
 .Post-contents--body {
+  padding-bottom: 1.2em;
   padding-top: 1em; }
   .Post-contents--body hr,
   .Post-contents--body blockquote,
@@ -1744,7 +1749,7 @@ body.inverted {
     border: none;
     border-bottom: 1px solid #bbb; }
   .Post-contents--body blockquote {
-    padding: 0.2em 0.5em;
+    padding: 0.1em 0.5em;
     border-left: 0.3em solid #bdbddb;
     color: #888;
     margin: 0; }
@@ -1753,11 +1758,12 @@ body.inverted {
     .Post-contents--body a:hover {
       text-decoration: underline; }
 
-.Post-contents--footer {
-  font-size: 0.8em;
-  text-align: right; }
+.Post-contents--edit {
+  padding-top: 1em;
+  margin: calc(-1em - 1px) -1em 0 -1em; }
 
-.Post-submit {
+.Post-submit,
+.Post-edit {
   display: block;
   max-width: 900px;
   margin-left: auto;
@@ -1768,28 +1774,28 @@ body.inverted {
   margin-top: 1em;
   font-size: 1.1em; }
 
-.Post-submit--controls {
+.Post-form--controls {
   padding: 0.2em; }
 
-.Post-controls--set {
+.Post-form--controls > ul {
   float: left;
   list-style-type: none;
   margin: 0 0.2em;
   padding: 0.01em;
   font-size: 0.9em;
   position: relative; }
-  .Post-controls--set li {
+  .Post-form--controls > ul > li {
     float: left;
     margin: 0 0.2em;
     padding: 0.5em; }
-    .Post-controls--set li:hover {
+    .Post-form--controls > ul > li:hover {
       background-color: white;
       border-radius: 0.25em;
       box-shadow: 0 0 0.15em #b6b6b6 inset;
       cursor: pointer; }
-    .Post-controls--set li:active {
+    .Post-form--controls > ul > li:active {
       box-shadow: 0 0 0.23em #b6b6b6 inset; }
-  .Post-controls--set + .Post-controls--set:before {
+  .Post-form--controls > ul + ul:before {
     background-color: #e5e5e5;
     box-shadow: 0 0 2px white;
     content: " ";
@@ -1798,25 +1804,28 @@ body.inverted {
     left: -0.21em;
     top: 10%;
     width: 1px; }
-  .Post-controls--set .fa-font {
+  .Post-form--controls > ul .fa-font {
     color: #4040bf; }
 
-.Post-submit--body {
+.Post-form--body {
   border: solid #e5e5e5;
   border-width: 1px 0; }
-  .Post-submit--body textarea {
+  .Post-form--body textarea {
     border: 0;
     box-shadow: none;
     color: #444;
     min-height: 12em;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     padding: 0.75em;
     width: 100%; }
 
-.Post-submit--senders {
+.Post-form--senders {
   padding: 1em; }
-  .Post-submit--senders button {
-    font-size: 0.9em;
+  .Post-form--senders button,
+  .Post-form--senders div {
+    font-size: 0.9em; }
+  .Post-form--senders button[type="submit"],
+  .Post-form--senders .Post-edit--save {
     border-style: solid;
     border-width: 1px;
     display: inline-block;
@@ -1827,17 +1836,43 @@ body.inverted {
     background: #bddbbd;
     border-color: #7ab87a;
     color: #1d351d; }
-    .Post-submit--senders button:not(:disabled):hover {
+    .Post-form--senders button[type="submit"]:not(:disabled):hover,
+    .Post-form--senders .Post-edit--save:not(:disabled):hover {
       cursor: pointer;
       text-decoration: none; }
-    .Post-submit--senders button:not(:disabled):hover {
+    .Post-form--senders button[type="submit"]:not(:disabled):hover,
+    .Post-form--senders .Post-edit--save:not(:disabled):hover {
       background: #afd4af; }
-    .Post-submit--senders button:not(:disabled):active {
+    .Post-form--senders button[type="submit"]:not(:disabled):active,
+    .Post-form--senders .Post-edit--save:not(:disabled):active {
       box-shadow: 0 0.5em 0.7em #a2cda2 inset; }
-    .Post-submit--senders button:disabled {
+    .Post-form--senders button[type="submit"]:disabled,
+    .Post-form--senders .Post-edit--save:disabled {
       background: #c7d1c7;
       border-color: #8ea48e;
       color: #252d25; }
+  .Post-form--senders .Post-edit--cancel {
+    border-style: solid;
+    border-width: 1px;
+    display: inline-block;
+    line-height: 1;
+    padding: 0.8em;
+    text-decoration: none;
+    vertical-align: middle;
+    background: #d6c2c2;
+    border-color: #ad8585;
+    color: #312121; }
+    .Post-form--senders .Post-edit--cancel:not(:disabled):hover {
+      cursor: pointer;
+      text-decoration: none; }
+    .Post-form--senders .Post-edit--cancel:not(:disabled):hover {
+      background: #ceb6b6; }
+    .Post-form--senders .Post-edit--cancel:not(:disabled):active {
+      box-shadow: 0 0.5em 0.7em #c6a9a9 inset; }
+    .Post-form--senders .Post-edit--cancel:disabled {
+      background: #d0c8c8;
+      border-color: #a09292;
+      color: #2c2626; }
 
 .Prompts {
   width: 100%; }

@@ -1,5 +1,5 @@
-{{ FOREACH post IN posts.thread(c.req.params.page).all }}
-	{{ INCLUDE post/single.tt }}
+{{ FOREACH p IN posts.thread(c.req.params.page).all }}
+	{{ INCLUDE post/single.tt  post = p }}
 {{ END }}
 
 {{ IF c.user.active_artist }}

@@ -6,42 +6,9 @@
 		<input type="hidden" name="entry" value="{{ entry.id }}">
 		{{ END }}
 
-		<div class="Post-submit--controls">
-			<ul class="Post-controls--set">
-				<li title="{{ c.string('bold') }}">
-					<i class="fa fa-fw fa-bold"></i>
-				<li title="{{ c.string('italic') }}">
-					<i class="fa fa-fw fa-italic"></i>
-				<li title="{{ c.string('underline') }}">
-					<i class="fa fa-fw fa-underline"></i>
-				<li title="{{ c.string('strikethrough') }}">
-					<i class="fa fa-fw fa-strikethrough"></i>
-			</ul>
+		{{ INCLUDE 'post/form.tt' }}
 
-			<ul class="Post-controls--set">
-				<li title="{{ c.string('hyperlink') }}">
-					<i class="fa fa-fw fa-link"></i>
-				<li title="{{ c.string('size') }}">
-					<i class="fa fa-fw fa-text-height"></i>
-				<li title="{{ c.string('color') }}">
-					<i class="fa fa-fw fa-font"></i>
-			</ul>
-
-			<ul class="Post-controls--set">
-				<li title="{{ c.string('quote') }}">
-					<i class="fa fa-fw fa-quote-right"></i>
-				<li title="{{ c.string('centerAlign') }}">
-					<i class="fa fa-fw fa-align-center"></i>
-				<li title="{{ c.string('rightAlign') }}">
-					<i class="fa fa-fw fa-align-right"></i>
-			</ul>
-		</div>
-
-		<div class="Post-submit--body">
-			<textarea rows="1" cols="1" name="body" required="required" maxlength="65535"></textarea>
-		</div>
-
-		<div class="Post-submit--senders">
+		<div class="Post-form--senders">
 			<button type="submit">
 				<i class="fa fa-comment"></i>
 				Post comment

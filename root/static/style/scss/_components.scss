@@ -22,8 +22,8 @@
 	border-color: hsla($hue, $sat, $l * .75, 1);
 
 	@if $invert == 1 {
-		color: hsla($hue, $sat, 100% - ($l * .2), 1);
-		text-shadow: -0.07em -0.07em hsla($hue, $sat, $l * .5, 1);
+		color: hsla($hue, $sat, 100% - ($l * .1), 1);
+		text-shadow: -0.05em -0.05em hsla($hue, $sat, $l * .5, 1);
 	} @else {
 		color: hsla($hue, $sat, $l * .2, 1);
 	}

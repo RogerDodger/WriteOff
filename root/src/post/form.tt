@@ -1,0 +1,34 @@
+<div class="Post-form--controls">
+	<ul>
+		<li title="{{ c.string('bold') }}">
+			<i class="fa fa-fw fa-bold"></i>
+		<li title="{{ c.string('italic') }}">
+			<i class="fa fa-fw fa-italic"></i>
+		<li title="{{ c.string('underline') }}">
+			<i class="fa fa-fw fa-underline"></i>
+		<li title="{{ c.string('strikethrough') }}">
+			<i class="fa fa-fw fa-strikethrough"></i>
+	</ul>
+
+	<ul>
+		<li title="{{ c.string('hyperlink') }}">
+			<i class="fa fa-fw fa-link"></i>
+		<li title="{{ c.string('size') }}">
+			<i class="fa fa-fw fa-text-height"></i>
+		<li title="{{ c.string('color') }}">
+			<i class="fa fa-fw fa-font"></i>
+	</ul>
+
+	<ul>
+		<li title="{{ c.string('quote') }}">
+			<i class="fa fa-fw fa-quote-right"></i>
+		<li title="{{ c.string('centerAlign') }}">
+			<i class="fa fa-fw fa-align-center"></i>
+		<li title="{{ c.string('rightAlign') }}">
+			<i class="fa fa-fw fa-align-right"></i>
+	</ul>
+</div>
+
+<div class="Post-form--body">
+	<textarea rows="1" cols="1" name="body" required="required" maxlength="65535">{{ post.body IF post }}</textarea>
+</div>

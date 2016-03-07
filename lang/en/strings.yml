@@ -30,6 +30,7 @@ index: Index
 publish: Publish
 update: Update
 edit: Edit
+reply: Reply
 create: Create
 delete: Delete
 dq: Disqualify
@@ -64,6 +65,7 @@ confirmDeletion: Confirm Deletion
 confirmDQ: Confirm DQ
 passwordRecovery: Password Recovery
 preferences: Preferences
+editPost: Edit Post
 
 bold: Bold
 italic: Italic
@@ -71,9 +73,9 @@ underline: Underline
 strikethrough: Strikethrough
 hyperlink: Hyperlink
 size: Size
-color: Colour
+color: Color
 quote: Quote
-centerAlign: Centre-align
+centerAlign: Center-align
 rightAlign: Right-align
 
 forgotPassword: Forgot password?

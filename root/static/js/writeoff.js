@@ -884,9 +884,9 @@ $(document).ready(function () {
 		localStorage.removeItem('reply');
 	}
 
-	$('.Post-reply')
+	$('.Post-control--reply')
 		.each(function() {
-			$(this).data('redirect', $(this).attr('href') );
+			$(this).data('redirect', $(this).attr('href'));
 		})
 		.removeAttr('href')
 		.click(function () {
@@ -904,9 +904,45 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-	var $controls = $('.Post-submit--controls');
+	$('.Post-control--edit')
+		.removeAttr('href')
+		.click(function () {
+			$(this).parents('.Post').addClass('edit');
+		});
+
+	$('.Post-edit--cancel').click(function () {
+		$(this).parents('.Post').removeClass('edit');
+	});
+
+	var q = $.when();
+	$('.Post-edit--save').click(function () {
+		var $btn = $(this);
+		var $form = $btn.parents('form');
+		var $post = $form.parents('.Post');
+
+		q.then(
+			$.ajax({
+				method: 'POST',
+				url: $form.attr('action'),
+				data: $form.serializeArray(),
+				success: function(res, status, xhr) {
+					$post.find('.Post-contents--body').html(res);
+				},
+				error: function(xhr, status, error) {
+					alert('Error: ' + error);
+				},
+				complete: function() {
+					$post.removeClass('edit');
+				}
+			})
+		);
+	});
+});
+
+$(document).ready(function () {
+	var $controls = $('.Post-form--controls');
 	if ($controls.size()) {
-		var $textarea = $('.Post-submit textarea');
+		var $textarea = $controls.parents('form').find('textarea');
 
 		var subs = [
 			[ 'fa-bold',          'b', false ],

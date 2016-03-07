@@ -10,6 +10,18 @@
 	}
 }
 
+.Post.edit {
+	.Post-contents--body {
+		@extend .hidden;
+	}
+}
+
+.Post:not(.edit) {
+	.Post-contents--edit {
+		@extend .hidden;
+	}
+}
+
 .Post-author {
 	float: left;
 	width: 9em;
@@ -62,7 +74,8 @@
 	border-radius: 0.2em;
 	color: #444;
 	font-size: 0.95em;
-	padding: 1em;
+	line-height: 1.6;
+	padding: 0 1em;
 	margin-left: 9.7rem;
 
 	@media #{$mobile} {
@@ -72,14 +85,12 @@
 }
 
 .Post-contents:hover {
-	.Post-contents--header a,
-	.Post-contents--footer a {
+	.Post-contents--header a {
 		color: #666;
 	}
 }
 
-.Post-contents--header,
-.Post-contents--footer {
+.Post-contents--header {
 	a {
 		cursor: pointer;
 		color: #999;
@@ -92,18 +103,26 @@
 }
 
 .Post-contents--header {
+	color: #999;
+	font-size: 0.8em;
+	padding-top: 1em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #ddd;
+
 	a:hover {
 		text-decoration: underline;
 	}
+}
 
-	color: #999;
-	font-size: 0.8em;
-	padding-bottom: 0.5em;
-	border-bottom: 1px solid #ddd;
+.Post-control--reply,
+.Post-control--edit {
+	float: right;
+	margin-left: 0.6em;
 }
 
 .Post-contents--body {
 	@include bbcode;
+	padding-bottom: 1.2em;
 	padding-top: 1em;
 
 	hr {
@@ -113,7 +132,7 @@
 	}
 
 	blockquote {
-		padding: 0.2em 0.5em;
+		padding: 0.1em 0.5em;
 		border-left: 0.3em solid hsla(240, 30%, 80%, 1);
 		color: #888;
 		margin: 0;
@@ -128,12 +147,13 @@
 	}
 }
 
-.Post-contents--footer {
-	font-size: 0.8em;
-	text-align: right;
+.Post-contents--edit {
+	padding-top: 1em;
+	margin: calc(-1em - 1px) -1em 0 -1em;
 }
 
-.Post-submit {
+.Post-submit,
+.Post-edit {
 	@include container;
 
 	background-color: #f7f7f7;
@@ -142,12 +162,12 @@
 	font-size: 1.1em;
 }
 
-.Post-submit--controls {
+.Post-form--controls {
 	@extend .clearfix;
 	padding: 0.2em;
 }
 
-.Post-controls--set {
+.Post-form--controls > ul {
 	float: left;
 	list-style-type: none;
 	margin: 0 0.2em;
@@ -155,7 +175,7 @@
 	font-size: 0.9em;
 	position: relative;
 
-	li {
+	& > li {
 		float: left;
 		margin: 0 0.2em;
 		padding: 0.5em;
@@ -172,7 +192,7 @@
 		}
 	}
 
-	& + .Post-controls--set:before {
+	& + ul:before {
 		@extend .noselect;
 		background-color: #e5e5e5;
 		box-shadow: 0 0 2px white;
@@ -189,7 +209,7 @@
 	}
 }
 
-.Post-submit--body {
+.Post-form--body {
 	border: solid #e5e5e5;
 	border-width: 1px 0;
 
@@ -198,17 +218,26 @@
 		box-shadow: none;
 		color: #444;
 		min-height: 12em;
-		font-size: 0.9em;
+		font-size: 0.9rem;
 		padding: 0.75em;
 		width: 100%;
 	}
 }
 
-.Post-submit--senders {
+.Post-form--senders {
 	padding: 1em;
 
-	button {
+	button,
+	div {
 		font-size: 0.9em;
+	}
+
+	button[type="submit"],
+	.Post-edit--save {
 		@include button($hue: 120);
+	}
+
+	.Post-edit--cancel {
+		@include button($hue: 0, $sat: 20%);
 	}
 }

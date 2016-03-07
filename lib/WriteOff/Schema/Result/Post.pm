@@ -39,4 +39,10 @@ sub render {
 	$self->body_render(WriteOff::Util::bbcode($self->body));
 }
 
+sub is_manipulable_by {
+	my ($self, $user) = @_;
+
+	$self->artist->user_id == $user->id;
+}
+
 1;

@@ -50,6 +50,38 @@ sub add :Local {
 	$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 }
 
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
+	my ($self, $c) = @_;
+
+	if ($c->user->can_edit($c->stash->{post})) {
+		$c->forward('do_edit') if $c->req->method eq 'POST';
+	}
+	else {
+		$c->detach('/forbidden');
+	}
+
+	$c->stash->{template} = 'post/edit.tt';
+	push $c->stash->{title}, $c->string('editPost');
+}
+
+sub do_edit :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('/check_csrf_token');
+
+	my $post = $c->stash->{post};
+	$post->body($c->req->param('body'));
+	$post->render;
+	$post->update;
+
+	if ($c->stash->{ajax}) {
+		$c->res->body($post->body_render);
+	}
+	else {
+		$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
+	}
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
