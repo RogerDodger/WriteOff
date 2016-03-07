@@ -838,7 +838,7 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
-// Post reply buttons
+// Post editor functions
 // ===========================================================================
 
 function replaceSelection(e, newSelection) {
@@ -862,7 +862,7 @@ function replaceSelection(e, newSelection) {
 	}
 };
 
-function pushReply(reply) {
+function pushReply (reply) {
 	var $textarea = $('.Post-submit textarea');
 
 	if ($textarea.size()) {
@@ -901,4 +901,52 @@ $(document).ready(function () {
 				pushReply(reply);
 			}
 		});
+});
+
+$(document).ready(function () {
+	var $controls = $('.Post-submit--controls');
+	if ($controls.size()) {
+		var $textarea = $('.Post-submit textarea');
+
+		var subs = [
+			[ 'fa-bold',          'b', false ],
+			[ 'fa-italic',        'i', false ],
+			[ 'fa-underline',     'u', false ],
+			[ 'fa-strikethrough', 's', false ],
+
+			[ 'fa-link',        'url', true ],
+			[ 'fa-text-height', 'size', true ],
+			[ 'fa-font',        'color', true ],
+
+			[ 'fa-quote-right',  'quote', false ],
+			[ 'fa-align-center', 'center', false ],
+			[ 'fa-align-right',  'right', false ],
+		];
+
+		$controls.find('li').click(function () {
+			var selection = $textarea.getSelection();
+			var $icon = $(this).find('i');
+
+			subs.forEach(function (e) {
+				var key = e[0],
+				    code = e[1],
+				    hasArg = e[2];
+
+				if ($icon.hasClass(key)) {
+					if (hasArg) {
+						selection.text = '[' + code + '=""]' + selection.text + '[/' + code + ']';
+						selection.end = selection.start += 3 + code.length;
+					}
+					else {
+						selection.text = '[' + code + ']' + selection.text + '[/' + code + ']';
+						selection.start += 2 + code.length;
+						selection.end += 2 + code.length;
+					}
+				}
+			});
+
+			$textarea.focus();
+			replaceSelection($textarea.get(0), selection);
+		});
+	}
 });

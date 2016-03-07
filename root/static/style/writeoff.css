@@ -30,27 +30,6 @@ ul ul {
 ol ol {
   list-style-type: lower-alpha; }
 
-a.link,
-a.link:visited,
-a.link:link,
-a.link:link:visited,
-.expander.active {
-  color: brown;
-  transition: .05s all linear;
-  -moz-transition: .05s all linear;
-  -webkit-transition: .05s all linear; }
-
-a.link:hover,
-a.link:link:hover,
-.expander.active:hover {
-  color: coral;
-  cursor: pointer; }
-
-a.author, a.author:visited,
-a.artist, a.artist:visited {
-  color: inherit;
-  border-bottom: 1px dotted silver; }
-
 /*
  * Forms
  */
@@ -776,7 +755,7 @@ a {
   .Flash p:not(:first-child), .Global-message p:not(:first-child) {
     margin-top: 1em; }
 
-.noselect, .Table.sortable > thead > tr > th, .Prompts.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Scoreboard.sortable > thead > tr > th, .Ballot.sortable > thead > tr > th {
+.noselect, .Table.sortable > thead > tr > th, .Post-controls--set + .Post-controls--set:before, .Prompts.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Scoreboard.sortable > thead > tr > th, .Ballot.sortable > thead > tr > th {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   khtml-user-select: none;
@@ -944,23 +923,24 @@ a {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before, .Form-group:before, .Post:before,
+.clearfix:before, .Form-group:before, .Post:before, .Post-submit--controls:before,
 .clearfix:after,
 .Form-group:after,
-.Post:after {
+.Post:after,
+.Post-submit--controls:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after, .Form-group:after, .Post:after {
+.clearfix:after, .Form-group:after, .Post:after, .Post-submit--controls:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix, .Form-group, .Post {
+.clearfix, .Form-group, .Post, .Post-submit--controls {
   *zoom: 1; }
 
 /*
@@ -1666,37 +1646,40 @@ body.inverted {
   padding: 0.8em;
   text-decoration: none;
   vertical-align: middle;
-  background: #b3e481;
-  border-color: #86d537;
-  color: #243b0c;
+  background: #4747d1;
+  border-color: #2a2aa8;
+  color: #d2d2f4;
+  text-shadow: -0.07em -0.07em #1c1c70;
   border-radius: 0.2em;
   display: block;
-  font-size: 0.95em;
-  padding: 0.5em;
-  text-align: center; }
+  font-size: 0.9em;
+  padding: 0.5em 0.17em;
+  text-align: center;
+  word-wrap: break-word; }
   .Post-author--name:not(:disabled):hover {
     cursor: pointer;
     text-decoration: none; }
   .Post-author--name:not(:disabled):hover {
-    background: #aae172; }
+    background: #3c3cce; }
   .Post-author--name:not(:disabled):active {
-    box-shadow: 0 0.5em 0.7em #a1de63 inset; }
+    box-shadow: 0 0.5em 0.7em #3232ca inset; }
   .Post-author--name:disabled {
-    background: #b3c4a1;
-    border-color: #86a16a;
-    color: #242c1c; }
+    background: #7474a4;
+    border-color: #53537f;
+    color: #161622; }
   .Post-author--name.admin {
-    background: #e48181;
-    border-color: #d53737;
-    color: #3b0c0c; }
+    background: #d14747;
+    border-color: #a82a2a;
+    color: #f4d2d2;
+    text-shadow: -0.07em -0.07em #701c1c; }
     .Post-author--name.admin:not(:disabled):hover {
-      background: #e17272; }
+      background: #ce3c3c; }
     .Post-author--name.admin:not(:disabled):active {
-      box-shadow: 0 0.5em 0.7em #de6363 inset; }
+      box-shadow: 0 0.5em 0.7em #ca3232 inset; }
     .Post-author--name.admin:disabled {
-      background: #c4a1a1;
-      border-color: #a16a6a;
-      color: #2c1c1c; }
+      background: #a47474;
+      border-color: #7f5353;
+      color: #221616; }
   @media (max-width: 640px) {
     .Post-author--name {
       border-radius: 0; } }
@@ -1706,7 +1689,7 @@ body.inverted {
   box-shadow: 0 0 3px #b6b6b6;
   border-radius: 0.1em;
   float: right;
-  padding: 0.25em;
+  padding: 0.15em;
   margin-top: 0.5em; }
   .Post-author--avatar img {
     width: 4em;
@@ -1719,14 +1702,17 @@ body.inverted {
   background-color: #fafafa;
   box-shadow: 0 0 3px #b6b6b6;
   border-radius: 0.2em;
+  color: #444;
+  font-size: 0.95em;
   padding: 1em;
-  margin-left: 9.7em; }
+  margin-left: 9.7rem; }
   @media (max-width: 640px) {
     .Post-contents {
       margin-left: 0;
       box-shadow: none; } }
 
-.Post-contents:hover a {
+.Post-contents:hover .Post-contents--header a,
+.Post-contents:hover .Post-contents--footer a {
   color: #666; }
 
 .Post-contents--header a,
@@ -1747,7 +1733,7 @@ body.inverted {
     text-decoration: underline; }
 
 .Post-contents--body {
-  margin: 1em 0; }
+  padding-top: 1em; }
   .Post-contents--body hr,
   .Post-contents--body blockquote,
   .Post-contents--body div {
@@ -1760,8 +1746,12 @@ body.inverted {
   .Post-contents--body blockquote {
     padding: 0.2em 0.5em;
     border-left: 0.3em solid #bdbddb;
-    color: #666;
+    color: #888;
     margin: 0; }
+  .Post-contents--body a {
+    text-decoration: none; }
+    .Post-contents--body a:hover {
+      text-decoration: underline; }
 
 .Post-contents--footer {
   font-size: 0.8em;
@@ -1773,22 +1763,57 @@ body.inverted {
   margin-left: auto;
   margin-right: auto;
   width: 98%;
+  background-color: #f7f7f7;
   box-shadow: 0 0 3px #b6b6b6;
   margin-top: 1em;
   font-size: 1.1em; }
 
-.Post-submit--body textarea {
-  border: 0;
-  box-shadow: none;
-  color: #444;
-  min-height: 12em;
+.Post-submit--controls {
+  padding: 0.2em; }
+
+.Post-controls--set {
+  float: left;
+  list-style-type: none;
+  margin: 0 0.2em;
+  padding: 0.01em;
   font-size: 0.9em;
-  padding: 0.75em;
-  width: 100%; }
+  position: relative; }
+  .Post-controls--set li {
+    float: left;
+    margin: 0 0.2em;
+    padding: 0.5em; }
+    .Post-controls--set li:hover {
+      background-color: white;
+      border-radius: 0.25em;
+      box-shadow: 0 0 0.15em #b6b6b6 inset;
+      cursor: pointer; }
+    .Post-controls--set li:active {
+      box-shadow: 0 0 0.23em #b6b6b6 inset; }
+  .Post-controls--set + .Post-controls--set:before {
+    background-color: #e5e5e5;
+    box-shadow: 0 0 2px white;
+    content: " ";
+    height: 80%;
+    position: absolute;
+    left: -0.21em;
+    top: 10%;
+    width: 1px; }
+  .Post-controls--set .fa-font {
+    color: #4040bf; }
+
+.Post-submit--body {
+  border: solid #e5e5e5;
+  border-width: 1px 0; }
+  .Post-submit--body textarea {
+    border: 0;
+    box-shadow: none;
+    color: #444;
+    min-height: 12em;
+    font-size: 0.9em;
+    padding: 0.75em;
+    width: 100%; }
 
 .Post-submit--senders {
-  background-color: #f7f7f7;
-  border-top: 1px solid #e5e5e5;
   padding: 1em; }
   .Post-submit--senders button {
     font-size: 0.9em;

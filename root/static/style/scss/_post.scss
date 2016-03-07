@@ -21,16 +21,17 @@
 }
 
 .Post-author--name {
-	@include button($hue: 90, $sat: 65%, $l: 70%);
+	@include button($hue: 240, $sat: 60%, $l: 55%, $invert: 1);
 	&.admin {
-		@include button-color($hue: 0, $sat: 65%, $l: 70%);
+		@include button-color($hue: 0, $sat: 60%, $l: 55%, $invert: 1);
 	}
 
 	border-radius: 0.2em;
 	display: block;
-	font-size: 0.95em;
-	padding: 0.5em;
+	font-size: 0.9em;
+	padding: 0.5em 0.17em;
 	text-align: center;
+	word-wrap: break-word;
 
 	@media #{$mobile} {
 		border-radius: 0;
@@ -42,7 +43,7 @@
 	box-shadow: 0 0 3px #b6b6b6;
 	border-radius: 0.1em;
 	float: right;
-	padding: 0.25em;
+	padding: 0.15em;
 	margin-top: 0.5em;
 
 	img {
@@ -59,8 +60,10 @@
 	background-color: hsla(0, 0%, 98%, 1);
 	box-shadow: 0 0 3px #b6b6b6;
 	border-radius: 0.2em;
+	color: #444;
+	font-size: 0.95em;
 	padding: 1em;
-	margin-left: 9.7em;
+	margin-left: 9.7rem;
 
 	@media #{$mobile} {
 		margin-left: 0;
@@ -68,8 +71,11 @@
 	}
 }
 
-.Post-contents:hover a {
-	color: #666;
+.Post-contents:hover {
+	.Post-contents--header a,
+	.Post-contents--footer a {
+		color: #666;
+	}
 }
 
 .Post-contents--header,
@@ -98,7 +104,7 @@
 
 .Post-contents--body {
 	@include bbcode;
-	margin: 1em 0;
+	padding-top: 1em;
 
 	hr {
 		background: transparent;
@@ -109,8 +115,16 @@
 	blockquote {
 		padding: 0.2em 0.5em;
 		border-left: 0.3em solid hsla(240, 30%, 80%, 1);
-		color: #666;
+		color: #888;
 		margin: 0;
+	}
+
+	a {
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 }
 
@@ -122,12 +136,63 @@
 .Post-submit {
 	@include container;
 
+	background-color: #f7f7f7;
 	box-shadow: 0 0 3px #b6b6b6;
 	margin-top: 1em;
 	font-size: 1.1em;
 }
 
+.Post-submit--controls {
+	@extend .clearfix;
+	padding: 0.2em;
+}
+
+.Post-controls--set {
+	float: left;
+	list-style-type: none;
+	margin: 0 0.2em;
+	padding: 0.01em;
+	font-size: 0.9em;
+	position: relative;
+
+	li {
+		float: left;
+		margin: 0 0.2em;
+		padding: 0.5em;
+
+		&:hover {
+			background-color: white;
+			border-radius: 0.25em;
+			box-shadow: 0 0 0.15em #b6b6b6 inset;
+			cursor: pointer;
+		}
+
+		&:active {
+			box-shadow: 0 0 0.23em #b6b6b6 inset;
+		}
+	}
+
+	& + .Post-controls--set:before {
+		@extend .noselect;
+		background-color: #e5e5e5;
+		box-shadow: 0 0 2px white;
+		content: " ";
+		height: 80%;
+		position: absolute;
+		left: -0.21em;
+		top: 10%;
+		width: 1px;
+	}
+
+	.fa-font {
+		color: hsla(240, 50%, 50%, 1);
+	}
+}
+
 .Post-submit--body {
+	border: solid #e5e5e5;
+	border-width: 1px 0;
+
 	textarea {
 		border: 0;
 		box-shadow: none;
@@ -140,8 +205,6 @@
 }
 
 .Post-submit--senders {
-	background-color: #f7f7f7;
-	border-top: 1px solid #e5e5e5;
 	padding: 1em;
 
 	button {

@@ -65,6 +65,17 @@ confirmDQ: Confirm DQ
 passwordRecovery: Password Recovery
 preferences: Preferences
 
+bold: Bold
+italic: Italic
+underline: Underline
+strikethrough: Strikethrough
+hyperlink: Hyperlink
+size: Size
+color: Colour
+quote: Quote
+centerAlign: Centre-align
+rightAlign: Right-align
+
 forgotPassword: Forgot password?
 loginRequired: You must be logged in to perform this action
 noPrelim: There is no prelim round for this event

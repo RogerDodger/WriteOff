@@ -17,10 +17,16 @@
 	}
 }
 
-@mixin button-color($hue: 200, $sat: 30%, $l: 80%) {
+@mixin button-color($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
 	background: hsla($hue, $sat, $l, 1);
 	border-color: hsla($hue, $sat, $l * .75, 1);
-	color: hsla($hue, $sat, $l * .2, 1);
+
+	@if $invert == 1 {
+		color: hsla($hue, $sat, 100% - ($l * .2), 1);
+		text-shadow: -0.07em -0.07em hsla($hue, $sat, $l * .5, 1);
+	} @else {
+		color: hsla($hue, $sat, $l * .2, 1);
+	}
 
 	&:not(:disabled) {
 		&:hover {
@@ -39,12 +45,12 @@
 	}
 }
 
-@mixin button($hue: 200, $sat: 30%, $l: 80%) {
+@mixin button($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
 	@include button-base;
-	@include button-color($hue, $sat, $l);
+	@include button-color($hue, $sat, $l, $invert);
 }
 
-@mixin button-group($hue: 200, $sat: 30%, $l: 80%) {
+@mixin button-group($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
 	list-style-type: none;
 	padding: 0;
 
@@ -57,7 +63,7 @@
 		}
 
 		a {
-			@include button($hue, $sat, $l);
+			@include button($hue, $sat, $l, $invert);
 		}
 	}
 }

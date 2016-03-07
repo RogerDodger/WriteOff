@@ -19,7 +19,7 @@ my $bb = Parse::BBCode->new({
 		i => '<em>%{parse}s</em>',
 		u => '<span style="text-decoration: underline">%{parse}s</span>',
 		s => '<del>%{parse}s</del>',
-		url => '<a class="link new-tab" href="%{link}a">%{parse}s</a>',
+		url => '<a href="%{link}a">%{parse}s</a>',
 		size => '<span style="font-size: %{size}aem;">%{parse}s</span>',
 		color => '<span style="color: %{color}a;">%{parse}s</span>',
 		smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
@@ -44,9 +44,15 @@ my $bb = Parse::BBCode->new({
 	escapes => {
 		Parse::BBCode::HTML->default_escapes,
 		size => sub {
-			$_[2] !~ /\D/ &&
-			8 <= $_[2] && $_[2] <= 72 ?
-			$_[2] / 16 : 1;
+			if ($_[2] =~ /^(\d+(?:\.\d+))(px|em|pt)?$/) {
+				my ($em, $unit) = ($1, $2 // '');
+				$em /= 16 if $unit eq 'px' || !$unit;
+				$em /= 12 if $unit eq 'pt';
+				return 0.5 < $em && $em < 4 ? $em : 1;
+			}
+			else {
+				return 1;
+			}
 		},
 		color => sub {
 			$_[2] =~ /\A#?[0-9a-zA-Z]+\z/ ? $_[2] : 'inherit';

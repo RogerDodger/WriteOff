@@ -37,27 +37,6 @@ ul ul {
 ol ol {
 	list-style-type: lower-alpha;
 }
-a.link,
-a.link:visited,
-a.link:link,
-a.link:link:visited,
-.expander.active {
-	color: brown;
-	transition: .05s all linear;
-	-moz-transition: .05s all linear;
-	-webkit-transition: .05s all linear;
-}
-a.link:hover,
-a.link:link:hover,
-.expander.active:hover {
-	color: coral;
-	cursor: pointer;
-}
-a.author, a.author:visited,
-a.artist, a.artist:visited {
-	color: inherit;
-	border-bottom: 1px dotted silver;
-}
 
 /*
  * Forms
