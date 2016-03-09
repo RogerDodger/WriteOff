@@ -1,5 +1,6 @@
 package WriteOff::Controller::Event;
 use Moose;
+
 use List::Util qw/shuffle/;
 use WriteOff::Award qw/:all/;
 use namespace::autoclean;
@@ -13,6 +14,11 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 
 	$c->stash->{event}{nocollapse} = 1;
 	$c->stash->{template} = 'event/view.tt';
+
+	if ($c->stash->{format} eq 'json') {
+		$c->stash->{json} = $c->stash->{event}->json;
+		$c->forward('View::JSON');
+	}
 }
 
 sub add :Local :Args(0) {

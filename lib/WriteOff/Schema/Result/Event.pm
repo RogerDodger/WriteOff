@@ -258,6 +258,32 @@ sub timeline {
 	];
 }
 
+sub json {
+	my $self = shift;
+
+	my %data = (
+		(map { $_ => $self->$_ } qw/id prompt wc_min wc_max content_level/),
+		(map {
+			$_ => {
+				id => $self->$_->id,
+				name => $self->$_->name,
+			}
+		} qw/format genre/),
+		rounds => [
+			map {{
+				id => $_->id,
+				name => $_->name,
+				mode => $_->mode,
+				action => $_->action,
+				start => $_->start->iso8601,
+				end => $_->end->iso8601,
+			}} $self->rounds->search({}, { order_by => 'start' }),
+		],
+	);
+
+	\%data;
+}
+
 sub reset_schedules {
 	my $self = shift;
 
