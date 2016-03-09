@@ -1,5 +1,5 @@
 <div class="Post-author">
-	<div class="Post-author--name {{ 'admin' IF post.artist.user.admin }}">
+	<div class="Post-author--name {{ 'admin' IF artist.user.admin }}">
 		{{ artist.name }}
 	</div>
 
