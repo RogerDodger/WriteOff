@@ -1,5 +1,5 @@
 {{ SET sidebar = document.sections.size }}
-<div class="Document {{ IF sidebar }}wide{{ ELSE }}narrow{{ END }} clearfix">
+<div class="Document {{ 'narrow' IF !sidebar }} clearfix">
 	<div class="Document-title">
 		{{ document.title }}
 	</div>

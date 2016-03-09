@@ -24,7 +24,7 @@
 
 .Post.highlight {
 	.Post-contents {
-		box-shadow: 0 0 1em hsla(180, 80%, 50%, 1);
+		box-shadow: 0 0 1em hsla(180, 50%, 75%, 1);
 	}
 }
 
@@ -89,7 +89,7 @@
 	border-radius: 0.2em;
 	color: #444;
 	font-size: 0.95em;
-	line-height: 1.6;
+	line-height: 1.4;
 	padding: 0;
 }
 
@@ -225,6 +225,10 @@
 		padding: 0.75em;
 		width: 100%;
 	}
+}
+
+.Post-contents--edit .Post-form--body {
+	margin-top: -1px;
 }
 
 .Post-form--senders {

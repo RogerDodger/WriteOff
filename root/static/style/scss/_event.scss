@@ -3,8 +3,23 @@
 // =============================================================================
 
 .Event-header {
-	@include header-boxed($hue: 100);
+	@include container;
+
+
+	background-color: hsla(100, 30%, 75%, 1);
+	border-size: 0.2em;
+	border-style: double;
+	border-color: hsla(100, 30%, 20%, 1);
+	font-size: 1.1em;
+	padding: 1em;
 	position: relative;
+
+	@media #{$mobile} {
+		padding: 1em 0.5em;
+		border-right-width: 0;
+		border-left-width: 0;
+		width: 100%;
+	}
 }
 
 .Event-details + .Event-header {

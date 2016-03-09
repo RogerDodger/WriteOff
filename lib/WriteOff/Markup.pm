@@ -59,6 +59,7 @@ my $post = Parse::BBCode->new({
 			my ($parser, $attr, $text, $info) = @_;
 
 			$text = Parse::BBCode::escape_html($text);
+			$text =~ s/\r\n|\n\r|\n|\r/<br>\n/g;
 
 			my $params = $parser->get_params;
 			my $posts = $params->{posts} or return $text;

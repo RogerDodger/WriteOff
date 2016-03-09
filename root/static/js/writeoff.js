@@ -996,7 +996,26 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	if (document.location.hash.search(/^#[0-9]+$/) != -1) {
-		$('.Post' + document.location.hash).addClass('highlight');
+	var hashchanged = function () {
+		$('.Post').removeClass('highlight');
+		if (document.location.hash.search(/^#[0-9]+$/) != -1) {
+			$('.Post' + document.location.hash).addClass('highlight');
+		}
 	}
+
+	$(window).on('hashchange', hashchanged);
+	hashchanged();
+});
+
+$(document).ready(function () {
+	$('.Post-reply').each(function () {
+		var $link = $(this);
+		var targetId = $link.attr('href').match(/(\d+)$/)[1];
+		var $target = $('.Post#' + targetId);
+
+		if ($target.size()) {
+			$link.attr('href', '#' + targetId);
+			$link.text('>>' + $target.find('.Post-author--name').text().trim());
+		}
+	});
 });

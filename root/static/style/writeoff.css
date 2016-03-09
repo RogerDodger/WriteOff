@@ -1028,7 +1028,7 @@ body.inverted {
  * Header
  */
 .Site-header--container {
-  max-width: 1040px;
+  max-width: 1160px;
   width: 95%;
   margin: 0 auto; }
 
@@ -1125,14 +1125,14 @@ body.inverted {
  */
 .Site-content > * {
   display: block;
-  max-width: 900px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   width: 98%; }
 
 .Canvas, .Document, .Story-container, .Event-details {
   display: block;
-  max-width: 900px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   width: 98%;
@@ -1146,7 +1146,7 @@ body.inverted {
 
 .Global-message {
   display: block;
-  max-width: 900px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   width: 98%; }
@@ -1197,10 +1197,8 @@ body.inverted {
 
 .Document, .Story-container {
   margin-top: 1em; }
-  .Document.wide, .wide.Story-container {
-    max-width: 1040px; }
   .Document.narrow, .narrow.Story-container {
-    max-width: 760px; }
+    max-width: 780px; }
   .Document > *:last-child, .Story-container > *:last-child {
     margin-bottom: 0; }
   .Document pre, .Story-container pre {
@@ -1264,8 +1262,14 @@ body.inverted {
   top: 0;
   float: right;
   font-size: 0.8em;
-  margin-left: 2.5em;
+  margin-left: 2rem;
   width: 25%; }
+
+.Document-index + .Document-body {
+  float: right;
+  width: calc(75% - 2em); }
+  .Document-index + .Document-body > *:first-child {
+    margin-top: 0; }
 
 .Document-index--topic {
   padding-left: 1em; }
@@ -1274,15 +1278,9 @@ body.inverted {
 .Document-index--topic {
   margin-top: 0.2em; }
 
-.Document.wide .Document-body, .wide.Story-container .Document-body {
-  float: right;
-  width: calc(75% - 2em); }
-  .Document.wide .Document-body > *:first-child, .wide.Story-container .Document-body > *:first-child {
-    margin-top: 0; }
-
 .Event-header {
   display: block;
-  max-width: 900px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   width: 98%;
@@ -1619,7 +1617,7 @@ body.inverted {
 
 .Post {
   display: block;
-  max-width: 900px;
+  max-width: 1020px;
   margin-left: auto;
   margin-right: auto;
   width: 98%;
@@ -1630,7 +1628,7 @@ body.inverted {
       box-shadow: 0 0 3px #b6b6b6; } }
 
 .Post.highlight .Post-contents {
-  box-shadow: 0 0 1em #19e5e6; }
+  box-shadow: 0 0 1em #9fdfdf; }
 
 .Post-author {
   float: left;
@@ -1712,7 +1710,7 @@ body.inverted {
   border-radius: 0.2em;
   color: #444;
   font-size: 0.95em;
-  line-height: 1.6;
+  line-height: 1.4;
   padding: 0; }
 
 .Post-contents:hover .Post-contents--header a {
@@ -1814,6 +1812,9 @@ body.inverted {
     font-size: 0.9rem;
     padding: 0.75em;
     width: 100%; }
+
+.Post-contents--edit .Post-form--body {
+  margin-top: -1px; }
 
 .Post-form--senders {
   padding: 1em; }
@@ -1959,7 +1960,7 @@ body.inverted {
 
 .Story {
   font-family: serif;
-  font-size: 1.1em;
+  font-size: 1.2em;
   line-height: 1.618;
   margin-bottom: 2em;
   text-align: justify; }

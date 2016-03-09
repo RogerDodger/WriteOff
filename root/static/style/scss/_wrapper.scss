@@ -51,7 +51,7 @@ body.inverted {
  */
 
 .Site-header--container {
-	max-width: 1040px;
+	max-width: $container-overflow;
 	width: 95%;
 	margin: 0 auto;
 }
@@ -196,7 +196,7 @@ body.inverted {
 
 @mixin container {
 	display: block;
-	max-width: 900px;
+	max-width: $container-wide;
 	margin-left: auto;
 	margin-right: auto;
 	width: 98%;
@@ -219,25 +219,6 @@ body.inverted {
 	}
 }
 
-
-@mixin header-boxed($hue, $sat: 30%) {
-	@include container;
-
-	background-color: hsla($hue, $sat, 75%, 1);
-	border-size: 0.2em;
-	border-style: double;
-	border-color: hsla($hue, $sat, 20%, 1);
-	font-size: 1.1em;
-	padding: 1em;
-
-	@media #{$mobile} {
-		padding: 1em 0.5em;
-		border-right-width: 0;
-		border-left-width: 0;
-		width: 100%;
-	}
-}
-
 .Global-message {
 	@include container;
 	@extend .Flash;
@@ -248,7 +229,7 @@ body.inverted {
  */
 
 .Site-footer--container {
-	max-width: 900px;
+	max-width: $container-default;
 	width: 95%;
 	padding: 1em 0;
 	margin: 0 auto;
