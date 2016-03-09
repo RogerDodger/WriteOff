@@ -1629,6 +1629,9 @@ body.inverted {
     .Post {
       box-shadow: 0 0 3px #b6b6b6; } }
 
+.Post.highlight .Post-contents {
+  box-shadow: 0 0 1em #19e5e6; }
+
 .Post-author {
   float: left;
   width: 9em; }

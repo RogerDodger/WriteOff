@@ -990,3 +990,13 @@ $(document).ready(function () {
 		});
 	}
 });
+
+// ===========================================================================
+// More responsive behaviour for post reply links
+// ===========================================================================
+
+$(document).ready(function () {
+	if (document.location.hash.search(/^#[0-9]+$/) != -1) {
+		$('.Post' + document.location.hash).addClass('highlight');
+	}
+});

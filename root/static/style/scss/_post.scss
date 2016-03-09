@@ -22,6 +22,12 @@
 	}
 }
 
+.Post.highlight {
+	.Post-contents {
+		box-shadow: 0 0 1em hsla(180, 80%, 50%, 1);
+	}
+}
+
 .Post-author {
 	float: left;
 	width: 9em;

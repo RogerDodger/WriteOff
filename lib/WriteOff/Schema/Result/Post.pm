@@ -4,7 +4,7 @@ package WriteOff::Schema::Result::Post;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
-use WriteOff::Util;
+use WriteOff::Markup;
 
 __PACKAGE__->table("posts");
 
@@ -36,7 +36,9 @@ __PACKAGE__->belongs_to('event', 'WriteOff::Schema::Result::Event', 'event_id', 
 sub render {
 	my $self = shift;
 
-	$self->body_render(WriteOff::Util::bbcode($self->body));
+	$self->body_render(
+		WriteOff::Markup::post($self->body, { posts => $self->result_source->resultset })
+	);
 }
 
 sub is_manipulable_by {

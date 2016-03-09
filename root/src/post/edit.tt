@@ -1,4 +1,4 @@
-<div>
+<div class="Post">
 	{{ INCLUDE 'post/author.tt'  artist = post.artist}}
 
 	<div class="Post-edit">
