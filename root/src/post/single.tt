@@ -22,6 +22,8 @@
 			</span>
 			{{ END }}
 
+			<span class="Post-replies"></span>
+
 			{{ IF c.user.active_artist }}
 			<a class="Post-control--reply" data-target="{{ post.id }}" {{ IF !entry && post.entry }}
 				href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"{{ END }}>

@@ -1010,12 +1010,26 @@ $(document).ready(function () {
 $(document).ready(function () {
 	$('.Post-reply').each(function () {
 		var $link = $(this);
+		var $caller = $link.parents('.Post');
 		var targetId = $link.attr('href').match(/(\d+)$/)[1];
 		var $target = $('.Post#' + targetId);
 
 		if ($target.size()) {
 			$link.attr('href', '#' + targetId);
 			$link.text('>>' + $target.find('.Post-author--name').text().trim());
+
+			var $replies = $target.find('.Post-replies');
+
+			if (!$replies.children().length) {
+				$replies.append(" &middot; ");
+			}
+
+			$replies
+				.append(' ')
+				.append($('<a/>')
+					.text('>>' + $caller.find('.Post-author--name').text().trim())
+					.attr('href', '#' + $caller.attr('id'))
+				);
 		}
 	});
 });
