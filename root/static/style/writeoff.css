@@ -596,11 +596,13 @@ textarea.example {
   color: #666; }
 
 * {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+          text-size-adjust: 100%; }
 
 body {
   color: #222;
-  font-size: 100%;
   font-family: sans-serif; }
 
 /* Light selection rather than dark with inverted text */
@@ -923,23 +925,24 @@ a {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before, .Form-group:before, .Post:before,
+.clearfix:before, .Form-group:before, .Post:before, .Post-contents--header:before,
 .clearfix:after,
 .Form-group:after,
-.Post:after {
+.Post:after,
+.Post-contents--header:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after, .Form-group:after, .Post:after {
+.clearfix:after, .Form-group:after, .Post:after, .Post-contents--header:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix, .Form-group, .Post {
+.clearfix, .Form-group, .Post, .Post-contents--header {
   *zoom: 1; }
 
 /*
@@ -1716,13 +1719,6 @@ body.inverted {
 .Post-contents:hover .Post-contents--header a {
   color: #666; }
 
-.Post-contents--header a {
-  cursor: pointer;
-  color: #999; }
-.Post-contents--header a:hover {
-  color: #222;
-  text-decoration: none; }
-
 .Post-contents--header {
   color: #999;
   font-size: 0.8em;
@@ -1730,7 +1726,11 @@ body.inverted {
   padding-bottom: 0.5em;
   padding-top: 1em;
   border-bottom: 1px solid #ddd; }
+  .Post-contents--header a {
+    cursor: pointer;
+    color: #999; }
   .Post-contents--header a:hover {
+    color: #222;
     text-decoration: underline; }
 
 .Post-control--reply,
