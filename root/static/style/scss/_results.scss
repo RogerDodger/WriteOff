@@ -6,7 +6,7 @@
 	@include striped-table;
 
 	& > tbody > tr {
-		$stripe: 20px;
+		$stripe: 1.25em;
 		background-image: repeating-linear-gradient(25deg, transparent,
 			transparent $stripe,
 			rgba(255,255,255,.15) $stripe,

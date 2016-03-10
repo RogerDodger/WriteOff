@@ -4,12 +4,12 @@
 // Config
 // ============================================================================
 
-$mobile: "(max-width: 640px)";
+$mobile: "(max-width: 40rem)";
 
-$container-overflow: 1160px;
-$container-wide: 1020px;
-$container-default: 900px;
-$container-narrow: 780px;
+$container-overflow: 72rem;
+$container-wide: 64rem;
+$container-default: 56rem;
+$container-narrow: 48rem;
 
 // ============================================================================
 // Partials
