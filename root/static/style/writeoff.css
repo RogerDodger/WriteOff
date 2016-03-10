@@ -925,24 +925,23 @@ a {
  * 2. The use of `table` rather than `block` is only necessary if using
  *    `:before` to contain the top-margins of child elements.
  */
-.clearfix:before, .Form-group:before, .Post:before, .Post-contents--header:before,
+.clearfix:before, .Form-group:before, .Post:before,
 .clearfix:after,
 .Form-group:after,
-.Post:after,
-.Post-contents--header:after {
+.Post:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
 
-.clearfix:after, .Form-group:after, .Post:after, .Post-contents--header:after {
+.clearfix:after, .Form-group:after, .Post:after {
   clear: both; }
 
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-.clearfix, .Form-group, .Post, .Post-contents--header {
+.clearfix, .Form-group, .Post {
   *zoom: 1; }
 
 /*
