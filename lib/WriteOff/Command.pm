@@ -45,6 +45,9 @@ available commands:
     event reset EVENT
         Resets schedules for event with id EVENT.
 
+    post render POST
+        Renders the post with id POST, or all posts if POST eq 'all'
+
     user add USERNAME ROLE
         Creates user USERNAME with role ROLE.
 

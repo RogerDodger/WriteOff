@@ -39,6 +39,8 @@ sub render {
 	$self->body_render(
 		WriteOff::Markup::post($self->body, { posts => $self->result_source->resultset })
 	);
+
+	$self;
 }
 
 sub is_manipulable_by {

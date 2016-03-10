@@ -38,9 +38,7 @@
 			{{ END }}
 		</div>
 
-		<div class="Post-contents--body">
-			{{ post.body_render | none }}
-		</div>
+		<div class="Post-contents--body">{{ post.body_render | none }}</div>
 
 		{{ IF c.user.can_edit(post) }}
 		<div class="Post-contents--edit">

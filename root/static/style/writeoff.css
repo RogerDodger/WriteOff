@@ -1741,7 +1741,8 @@ body.inverted {
 .Post-contents--body {
   margin: 0 1em;
   padding-top: 1em;
-  padding-bottom: 1.2em; }
+  padding-bottom: 1.2em;
+  white-space: pre-wrap; }
   .Post-contents--body hr,
   .Post-contents--body blockquote,
   .Post-contents--body div {
