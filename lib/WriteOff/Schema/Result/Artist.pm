@@ -61,9 +61,8 @@ sub avatar_write {
 	my @pathparts = File::Spec->splitpath($self->avatar_path($newId));
 	File::Path::mkpath($pathparts[1]);
 
-	my ($img, $thumb);
-	$img = Imager->new(file => $upload->tempname) or die $img->errstr;
-	$thumb = $img->scale(xpixels => 160, ypixels => 160, type => 'nonprop') or die $img->errstr;
+	my $img = Imager->new(file => $upload->tempname) or die Imager->errstr;
+	my $thumb = $img->scale(xpixels => 160, ypixels => 160, type => 'nonprop') or die $img->errstr;
 	$thumb->write(file => $self->avatar_path($newId), type => 'png') or die $thumb->errstr;
 
 	if (defined $self->avatar_id) {
