@@ -1958,9 +1958,12 @@ body.inverted {
     color: #888;
     margin: 0; }
   .Post-contents--body a {
+    color: blue;
     text-decoration: none; }
     .Post-contents--body a:hover {
       text-decoration: underline; }
+    .Post-contents--body a:not(.Post-reply):visited {
+      color: purple; }
 
 .Post-submit,
 .Post-edit {
