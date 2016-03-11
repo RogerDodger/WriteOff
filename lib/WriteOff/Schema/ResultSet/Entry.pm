@@ -60,6 +60,20 @@ sub gallery {
 	});
 }
 
+sub listing {
+	shift->search({
+		artist_public => 1,
+		tallied => 1,
+	}, {
+		join => 'event',
+		prefetch => 'event',
+		order_by => [
+			{ -desc => 'event.created' },
+			{ -asc => 'title' },
+		],
+	});
+}
+
 sub mode {
 	my ($self, $mode) = @_;
 
@@ -68,6 +82,14 @@ sub mode {
 		$mode eq 'fic' ? (story_id => { '!=' => undef }) :
 		()
 	});
+}
+
+sub public {
+	shift->search({ artist_public => 1 });
+}
+
+sub public_rs {
+	scalar shift->public;
 }
 
 sub rank_order {

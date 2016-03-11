@@ -49,7 +49,7 @@
 					<ul>
 						{{ IF c.user }}
 						<li>
-							<a href="#">
+							<a href="{{ c.uri_for_action('/artist/view', [ c.user.active_artist.id_uri ]) }}">
 								@<span class="Artist-swap--selected">{{ c.user.active_artist.name }}</span>
 								<i class="fa fa-caret-down"></i>
 							</a>
@@ -65,7 +65,8 @@
 											</button>
 										</form>
 									</div>
-									{{- }}<a class="Artist-swap--option" href="#">{{ artist.name }}</a>
+									{{- }}<a class="Artist-swap--option"
+										href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
 								</li>
 								{{ END }}
 								<li>

@@ -65,6 +65,7 @@ my @dependencies = (
 	'EBook::EPUB',
 	'Class::Null',
 	'Text::Sass::XS',
+	'Imager',
 );
 
 if (eval { require App::cpanminus; 1; }) {

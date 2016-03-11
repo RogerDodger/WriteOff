@@ -181,7 +181,7 @@ $(document).ready(function() {
 		.click(function() {
 			var $link = $(this);
 			var $icon = $(this).find('i');
-			var $row = $(this).parents('tr');
+			var $row = $(this).closest('tr');
 
 			while ($row.next() && $row.next().hasClass('Breakdown-row')) {
 				$row.next().remove();
@@ -570,7 +570,7 @@ $(document).ready(function () {
 	});
 
 	var moveup = function () {
-		var $row = $(this).parents('.Ballot-item');
+		var $row = $(this).closest('.Ballot-item');
 		var $target = $row.prev();
 
 		if ($row.parent().hasClass('unordered')) {
@@ -590,7 +590,7 @@ $(document).ready(function () {
 	};
 
 	var abstain = function () {
-		var $row = $(this).parents('.Ballot-item');
+		var $row = $(this).closest('.Ballot-item');
 		q.then(
 			$.ajax({
 				type: 'POST',
@@ -615,7 +615,7 @@ $(document).ready(function () {
 	};
 
 	var unabstain = function () {
-		var $row = $(this).parents('.Ballot-item');
+		var $row = $(this).closest('.Ballot-item');
 		q.then(
 			$.ajax({
 				type: 'POST',
@@ -751,7 +751,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Results, .Scoreboard, .Prompts, .Ballot').each(function () {
+	$('.Results, .Scoreboard, .Prompts, .Ballot, .Artist-entries').each(function () {
 		if ($(this).find('thead').size()) {
 			$(this).addClass('sortable');
 			new Tablesort(this);
@@ -817,7 +817,7 @@ $(document).ready(function () {
 	var $btns = $('.Artist-swap');
 	$btns.on('click', function (e) {
 		e.preventDefault();
-		var $btn = $(this)
+		var $btn = $(this);
 		var $form = $btn.closest('form');
 
 		q.then(
@@ -829,11 +829,15 @@ $(document).ready(function () {
 					res = $.parseJSON(res);
 					$btns.removeClass('active');
 					$btn.addClass('active');
-					$('.Artist-swap--selected').text(res.name);
+
+					$('.Artist-swap--selected')
+						.text(res.name)
+						.closest('a').attr('href', $btn.closest('li').find('a').attr('href'));
+
 					$('.Post-submit').each(function () {
 						var $post = $(this).closest('.Post');
 						$post.find('.Post-author--name').text(res.name);
-						$post.find('.POst-author--avatar img').attr('src', res.avatar);
+						$post.find('.Post-author--avatar img').attr('src', res.avatar);
 					});
 				}
 			})
@@ -911,18 +915,18 @@ $(document).ready(function () {
 	$('.Post-control--edit')
 		.removeAttr('href')
 		.click(function () {
-			$(this).parents('.Post').addClass('edit');
+			$(this).closest('.Post').addClass('edit');
 		});
 
 	$('.Post-edit--cancel').click(function () {
-		$(this).parents('.Post').removeClass('edit');
+		$(this).closest('.Post').removeClass('edit');
 	});
 
 	var q = $.when();
 	$('.Post-edit--save').click(function () {
 		var $btn = $(this);
-		var $form = $btn.parents('form');
-		var $post = $form.parents('.Post');
+		var $form = $btn.closest('form');
+		var $post = $form.closest('.Post');
 
 		q.then(
 			$.ajax({
@@ -946,7 +950,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	var $controls = $('.Post-form--controls');
 	if ($controls.size()) {
-		var $textarea = $controls.parents('form').find('textarea');
+		var $textarea = $controls.closest('form').find('textarea');
 
 		var subs = [
 			[ 'fa-bold',          'b', false ],
@@ -1010,7 +1014,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	$('.Post-reply').each(function () {
 		var $link = $(this);
-		var $caller = $link.parents('.Post');
+		var $caller = $link.closest('.Post');
 		var targetId = $link.attr('href').match(/(\d+)$/)[1];
 		var $target = $('.Post#' + targetId);
 
@@ -1030,6 +1034,33 @@ $(document).ready(function () {
 					.text('>>' + $caller.find('.Post-author--name').text().trim())
 					.attr('href', '#' + $caller.attr('id'))
 				);
+		}
+	});
+});
+
+// ===========================================================================
+// New avatar preview
+// ===========================================================================
+
+$(document).ready(function () {
+	$('input[name="avatar"]').on('change', function() {
+		var $avatar = $('.Artist-avatar img');
+
+		if (!$avatar.data('default')) {
+			$avatar.data('default', $avatar.attr('src'));
+		}
+
+		if (this.files && this.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				$avatar.attr('src', e.target.result);
+			};
+
+			reader.readAsDataURL(this.files[0]);
+		}
+		else {
+			$avatar.attr('src', $avatar.data('default'));
 		}
 	});
 });

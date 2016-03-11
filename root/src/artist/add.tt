@@ -3,7 +3,6 @@
 
 	<form class="Form" method="post">
 		{{ csrf_field | none }}
-		<input type="hidden" name="referer" value="{{ c.req.param('referer') || c.req.referer }}">
 
 		<div class="Form-item">
 			<label>{{ c.string('name') }}</label>

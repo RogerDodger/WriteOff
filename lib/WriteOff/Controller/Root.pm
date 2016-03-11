@@ -27,7 +27,6 @@ Detaches to index if the request is POST with a differing origin.
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
-
 	if ($c->req->uri->path =~ m{^/static/(style|js)/writeoff-[a-f0-9]+\.(css|js)$}) {
 		$c->serve_static_file("root/static/$1/writeoff.$2");
 		$c->log->abort(1);

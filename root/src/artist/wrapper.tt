@@ -1,0 +1,47 @@
+<div class="Artist-header">
+	<div class="Artist-header--container">
+		<div class="Artist-meta">
+			<div class="Artist-meta--container">
+				<div class="Artist-avatar">
+					<img src="{{ artist.avatar }}">
+				</div>
+
+				{{ IF c.user && c.user.id == artist.user_id }}
+				<a class="Artist-controls--edit" href="{{ c.uri_for_action('/artist/edit', [ artist.id_uri ]) }}">
+					{{ c.string('editArtist') }}
+				</a>
+				{{ END }}
+
+				<ul class="Artist-stats">
+					<li>
+						<i class="fa fa-fw fa-sign-in"></i>
+						{{ c.string('joinedOn', artist.created.date_html) | none }}
+					<li>
+						<i class="fa fa-fw fa-bookmark"></i>
+						{{ c.string('entryCount', entrys.count) }}
+					<li>
+						<i class="fa fa-fw fa-comment"></i>
+						{{ c.string('postCount', artist.posts_rs.count) }}
+				</ul>
+			</div>
+		</div>
+
+		<div class="Artist-name">
+			<a href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
+				{{ artist.name }}
+			</a>
+		</div>
+
+		{{ IF artist.bio }}
+		<div class="Artist-bio">
+			{{ artist.bio }}
+		</div>
+		{{ END }}
+	</div>
+</div>
+
+<div class="Artist-body">
+	<div class="Artist-body--container">
+		{{ content | none }}
+	</div>
+</div>

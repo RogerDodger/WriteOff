@@ -23,11 +23,12 @@ $container-narrow: 48rem;
 @import "wrapper";
 @import "document";
 
+@import "artist";
 @import "event";
 @import "post";
 @import "prompt";
-@import "story";
 @import "results";
 @import "scoreboard";
+@import "story";
 @import "user";
 @import "vote";

@@ -1,0 +1,131 @@
+// =============================================================================
+// Artist profile styles
+// =============================================================================
+
+.Artist-header {
+	max-width: none;
+	width: auto;
+
+	&::after {
+		background-color: hsla(0, 0%, 30%, 1);
+		content: " ";
+		display: block;
+		height: 0.3em;
+	}
+}
+
+.Artist-header--container {
+	@include container;
+	padding-bottom: 0.6em;
+}
+
+$meta-width: 11rem;
+$meta-margin: 1rem;
+
+.Artist-meta {
+	float: left;
+	width: $meta-width;
+	margin-right: $meta-margin;
+
+	@media #{$mobile} {
+		float: none;
+		width: auto;
+		margin-right: 0;
+	}
+}
+
+.Artist-feed {
+	margin-left: $meta-width + $meta-margin;
+}
+
+.Artist-avatar {
+	@include box;
+	@include sheet;
+	height: $meta-width;
+	width: $meta-width;
+	padding: 0.25rem;
+
+	img {
+		height: 100%;
+		width: 100%;
+	}
+}
+
+.Artist-name {
+	font-size: 2em;
+	text-shadow: 0.05em 0.05em white;
+	margin-bottom: 0.1em;
+	word-wrap: break-word;
+
+	a {
+		color: #000;
+
+		&:hover {
+			color: #666;
+			text-decoration: none;
+		}
+	}
+}
+
+.Artist-bio {
+	font-size: 1.1em;
+	color: #444;
+	text-shadow: 0.05em 0.05em white;
+}
+
+.Artist-stats {
+	margin: 0.5em 0;
+	padding: 0;
+	color: #444;
+	font-size: 0.8em;
+	line-height: 1.2;
+	list-style-type: none;
+}
+
+.Artist-controls--edit {
+	@include button($hue: 100);
+}
+
+.Artist-controls--delete {
+	@include button($hue: 20, $sat: 30%);
+}
+
+.Artist-controls--edit,
+.Artist-controls--delete {
+	font-size: 0.8em;
+	text-align: center;
+	width: 100%;
+}
+
+.Artist-body {
+	@include container;
+	margin-top: 1em;
+}
+
+.Artist-body--container {
+	padding-left: $meta-width + $meta-margin;
+
+	@media #{$mobile} {
+		padding-left: 0;
+	}
+}
+
+.Artist-entries {
+	@include striped-table;
+	@include box;
+}
+
+.Artist-entries--genre,
+.Artist-entries--format,
+.Artist-entries--event,
+.Artist-entries--title,
+.Artist-entries--rank,
+.Artist-entries--score {
+	text-align: center;
+}
+
+.Artist-edit {
+	@extend .Document;
+	font-size: 0.85em;
+	width: auto;
+}

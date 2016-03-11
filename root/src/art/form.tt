@@ -9,7 +9,7 @@
 {{ IF !c.user }}
 <div class="Flash">{{ c.string('loginRequiredArt') }}</div>
 {{ ELSIF event.art_subs_allowed }}
-<form class="Form" method="post">
+<form class="Form" method="post" enctype="multipart/form-data">
 	{{ csrf_field | none }}
 	{{- IF c.form.has_error }}
 		{{- FOREACH message IN c.form.messages('submit') }}

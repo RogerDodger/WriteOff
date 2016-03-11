@@ -8,7 +8,14 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 __PACKAGE__->config(model => 'Artist');
 
-sub fetch :Chained('/') :PathPart('artist') :CaptureArgs(1) :ActionClass('~Fetch') {}
+sub _fetch :ActionClass('~Fetch');
+
+sub fetch :Chained('/') :PathPart('artist') :CaptureArgs(1) {
+	my ($self, $c) = @_;
+	$c->forward('_fetch');
+	$c->stash->{entrys} = $c->stash->{artist}->entrys->listing;
+	push $c->stash->{title}, $c->stash->{artist}->name;
+}
 
 sub add :Local {
 	my ($self, $c) = @_;
@@ -28,16 +35,36 @@ sub do_add :Private {
 
 	my $name = $c->req->param('artist');
 	if (1 <= length $name && length $name <= $c->config->{len}{max}{user}) {
-		$c->user->update({
-			active_artist => $c->user->create_related('artists', { name => $name })
-		});
-
-		$c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
+		my $artist = $c->user->create_related('artists', { name => $name });
+		$c->user->update({ active_artist => $artist });
+		$c->res->redirect($c->uri_for_action('/artist/view', [ $artist->id_uri ]));
 	}
 }
 
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->detach('/forbidden') if $c->user->id != $c->stash->{artist}->user_id;
+
+	if ($c->req->method eq 'POST') {
+		if (defined $c->req->param('bio')) {
+			$c->stash->{artist}->bio(substr $c->req->param('bio'), 0, 256);
+		}
+
+		if (defined $c->req->upload('avatar')) {
+			$c->stash->{artist}->avatar_write($c->req->upload('avatar'));
+		}
+
+		$c->stash->{artist}->update;
+		$c->res->redirect($c->uri_for_action('artist/view', [ $c->stash->{artist}->id_uri ]));
+	}
+
+	$c->stash->{template} = 'artist/edit.tt';
+	push $c->stash->{title}, $c->string('edit');
+}
+
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
-	my ( $self, $c ) = @_;
+	my ($self, $c) = @_;
 
 	my %s = (tallied => 1);
 	$s{genre_id} = $1 if ($c->req->param('genre') // '') =~ /^(\d+)/;
@@ -71,7 +98,7 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 		}
 	);
 
-	$c->stash->{title} = 'Score Breakdown for ' . $c->stash->{artist}->name;
+	$c->stash->{title} = 'Scores';
 	$c->stash->{template} = 'scoreboard/scores.tt';
 }
 
@@ -89,6 +116,7 @@ sub swap :Local {
 		$c->user->update({ active_artist_id => $artist->id });
 		if ($c->stash->{ajax}) {
 			$c->res->body(encode_json {
+				id => $artist->id,
 				name => $artist->name,
 				avatar => $artist->avatar,
 			});
@@ -100,6 +128,12 @@ sub swap :Local {
 	else {
 		$c->detach('/error');
 	}
+}
+
+sub view :Chained('fetch') :PathPart('') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{template} = 'artist/view.tt';
 }
 
 =head1 AUTHOR

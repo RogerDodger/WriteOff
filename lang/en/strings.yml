@@ -36,8 +36,13 @@ delete: Delete
 dq: Disqualify
 submit: Submit
 vote: Vote
+save: Save
+cancel: Cancel
+saveChanges: Save changes
 castVote: Cast vote
 newArtist: New alias
+editArtist: Edit profile
+deleteArtist: Delete alias
 
 newArtistTitle: New Alias
 404: File Not Found
@@ -124,3 +129,6 @@ confirmPrompt: Enter the %s of the selected item to continue
 csrfDetected: Bad session
 notAdmin: You are not an admin
 notOrganiser: You are not an event organiser for this event
+joinedOn: Joined on %s
+postCount: %d posts
+entryCount: %d entries

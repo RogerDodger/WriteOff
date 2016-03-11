@@ -209,8 +209,8 @@ body.inverted {
 .Canvas {
 	@include container;
 	@include box;
+	@include sheet;
 
-	background-color: hsla(0, 0%, 98%, 1);
 	padding: 2em;
 
 	@media #{$mobile} {
