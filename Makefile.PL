@@ -66,6 +66,8 @@ my @dependencies = (
 	'Class::Null',
 	'Text::Sass::XS',
 	'Imager',
+	'Imager::File::PNG',
+	'Imager::File::JPEG',
 );
 
 if (eval { require App::cpanminus; 1; }) {

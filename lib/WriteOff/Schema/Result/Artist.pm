@@ -61,9 +61,9 @@ sub avatar_write {
 	my @pathparts = File::Spec->splitpath($self->avatar_path($newId));
 	File::Path::mkpath($pathparts[1]);
 
-	my $img = Imager->new(file => $upload->tempname) or die Imager->errstr;
-	my $thumb = $img->scale(xpixels => 160, ypixels => 160, type => 'nonprop') or die $img->errstr;
-	$thumb->write(file => $self->avatar_path($newId), type => 'png') or die $thumb->errstr;
+	my $img = Imager->new(file => $upload->tempname) or die Imager->errstr . "\n";
+	my $thumb = $img->scale(xpixels => 160, ypixels => 160, type => 'nonprop') or die $img->errstr . "\n";
+	$thumb->write(file => $self->avatar_path($newId), type => 'png') or die $thumb->errstr . "\n";
 
 	if (defined $self->avatar_id) {
 		unlink $self->avatar_path($self->avatar_id);
