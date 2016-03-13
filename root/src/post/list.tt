@@ -1,6 +1,6 @@
-{{ FOREACH p IN posts.thread(c.req.params.page).all }}
-	{{ INCLUDE post/single.tt  post = p }}
-{{ END }}
+{{ USE cache = Cache(cache => renderCache) }}
+
+{{ cache.proc('template' => 'post/list_.tt', 'key' => posts.uid(c.user)) }}
 
 {{ IF c.user.active_artist }}
 	{{ INCLUDE post/submit.tt }}

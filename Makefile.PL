@@ -68,6 +68,8 @@ my @dependencies = (
 	'Imager',
 	'Imager::File::PNG',
 	'Imager::File::JPEG',
+	'CHI',
+	'Cache::FastMmap',
 );
 
 if (eval { require App::cpanminus; 1; }) {

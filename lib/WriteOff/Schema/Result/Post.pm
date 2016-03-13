@@ -33,6 +33,12 @@ __PACKAGE__->belongs_to('artist', 'WriteOff::Schema::Result::Artist', 'artist_id
 __PACKAGE__->belongs_to('entry', 'WriteOff::Schema::Result::Entry', 'entry_id', { join_type => "left" });
 __PACKAGE__->belongs_to('event', 'WriteOff::Schema::Result::Event', 'event_id', { join_type => "left" });
 
+# Unique amongst any version of itself, as well as any other post
+sub uid {
+	my ($self, $user) = @_;
+	join ".", 'post', $self->id, $self->updated, $self->artist->updated, $user->can_edit($self);
+}
+
 sub render {
 	my $self = shift;
 

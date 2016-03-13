@@ -27,6 +27,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
+require CHI;
 require WriteOff::Log;
 require WriteOff::Util;
 
@@ -171,6 +172,13 @@ __PACKAGE__->config(
 		threshold => 73,
 		voter => 0.5,
 	},
+
+	renderCache => CHI->new(
+		expires_in => '10m',
+		expres_variance => 0.1,
+		driver => 'FastMmap',
+		namespace => 'render',
+	),
 
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,

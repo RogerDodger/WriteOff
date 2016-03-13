@@ -1,0 +1,7 @@
+<div class="Pager hidden"></div>
+
+{{ WHILE (post = posts.next) }}
+	{{ cache.proc('template' => 'post/single.tt', 'key' => post.uid(c.user)) }}
+{{ END }}
+
+<div class="Pager hidden"></div>

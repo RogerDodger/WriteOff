@@ -12,10 +12,16 @@ sub thread {
 			'artist',
 			'entry',
 		],
+		join => 'artist',
 		order_by => { -asc => 'me.created' },
-		# page => $page =~ /(\d+)/ ? int $1 : 1,
-		# rows => 40,
 	});
+}
+
+# Unique amongst any version of itself, as well as any other set of posts
+sub uid {
+	my ($self, $user) = @_;
+
+	join ',', $user->id, $self->count, map { $self->get_column($_)->max } qw/me.id me.updated artist.updated/;
 }
 
 1;
