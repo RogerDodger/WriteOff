@@ -1,4 +1,4 @@
-{{ USE cache = Cache(cache => renderCache) }}
+{{ USE cache = Cache( cache => c.config.renderCache ) }}
 
 {{ cache.proc('template' => 'post/list_.tt', 'key' => posts.uid(c.user)) }}
 

@@ -996,20 +996,78 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
-// More responsive behaviour for post reply links
+// Client-side post paging
 // ===========================================================================
 
 $(document).ready(function () {
+	var $posts = $('.Post');
+	var pageSize = 100;
+
+	var changePage = function (page) {
+		var $posts = $('.Post');
+		$posts.addClass('hidden');
+		$posts.slice(page * pageSize, (page + 1) * pageSize).removeClass('hidden');
+
+		$('.Page-changer').removeClass('selected').each(function () {
+			var $this = $(this);
+			if ($this.text() == page + 1) {
+				$this.addClass('selected');
+			}
+		});
+	};
+
+	if ($posts.size() > pageSize) {
+		var pages = Math.floor($posts.size() / pageSize);
+
+		$('.Pager').removeClass('hidden').each(function () {
+			var $pager = $(this);
+			for (var page = 0; page <= pages; page++) {
+				var $li = $('<li/>');
+				var $btn = $('<a class="Page-changer"/>');
+				$btn.click(function () {
+					var $this = $(this);
+					if (!$this.hasClass('selected')) {
+						changePage($this.text() - 1);
+						$('html, body').scrollTop($('.Pager').offset().top);
+					}
+				});
+				$btn.text(page + 1);
+				if (page == pages) {
+					$btn.addClass('selected');
+				}
+				$li.append($btn);
+				$pager.append($li);
+			}
+		});
+
+		// Change post ID text to its number in the listing
+		$posts.each(function (i) {
+			$(this).find('.Post-id a').text('#' + (i + 1));
+		});
+
+		changePage(0);
+	}
+
 	var hashchanged = function () {
 		$('.Post').removeClass('highlight');
 		if (document.location.hash.search(/^#[0-9]+$/) != -1) {
-			$('.Post' + document.location.hash).addClass('highlight');
+			var $post = $('.Post' + document.location.hash);
+			if ($post.size()) {
+				var index = $post.find('.Post-id a').text().substr(1);
+				changePage(Math.floor(index / pageSize));
+				$post.addClass('highlight');
+				$('html, body').scrollTop($post.offset().top);
+			}
 		}
 	}
 
 	$(window).on('hashchange', hashchanged);
 	hashchanged();
 });
+
+// ===========================================================================
+// More responsive behaviour for post reply links
+// ===========================================================================
 
 $(document).ready(function () {
 	$('.Post-reply').each(function () {

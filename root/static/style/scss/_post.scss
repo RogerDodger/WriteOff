@@ -252,3 +252,9 @@
 		@include button($hue: 0, $sat: 20%);
 	}
 }
+
+.Pager {
+	@include button-group($hue: 40, $sat: 30%);
+	margin: 1.5rem auto;
+	text-align: center;
+}

@@ -717,17 +717,19 @@ a {
   color: #233640;
   padding: 0.4em;
   font-size: 0.8em; }
-  .Table-button:not(:disabled):hover {
+  .Table-button:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Table-button:not(:disabled):hover {
+  .Table-button:not(:disabled):not(.selected):hover {
     background: #e5edf1; }
-  .Table-button:not(:disabled):active {
+  .Table-button:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
-  .Table-button:disabled {
+  .Table-button:disabled, .Table-button.selected {
     background: #f7f8f8;
     border-color: #b2bcc1;
     color: #2c3337; }
+    .Table-button:disabled:hover, .Table-button.selected:hover {
+      cursor: default; }
 
 .Clarify {
   position: relative;
@@ -757,7 +759,11 @@ a {
   .Flash p:not(:first-child), .Global-message p:not(:first-child) {
     margin-top: 1em; }
 
-.noselect, .Table.sortable > thead > tr > th, .Artist-entries.sortable > thead > tr > th, .Post-form--controls > ul + ul:before, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Ballot.sortable > thead > tr > th {
+.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .New-event--button:disabled, .New-event--button.selected, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
+.Post-form--senders .Post-edit--save:disabled,
+.Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Slates li a:disabled, .Slates li a.selected, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
+.Ballot-unabstain:disabled,
+.Ballot-unabstain.selected {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   khtml-user-select: none;
@@ -806,17 +812,19 @@ a {
   border-color: #66cc66;
   color: #143d14;
   font-size: 1.03em; }
-  .Form input[type="submit"]:not(:disabled):hover {
+  .Form input[type="submit"]:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Form input[type="submit"]:not(:disabled):hover {
+  .Form input[type="submit"]:not(:disabled):not(.selected):hover {
     background: #a3e0a3; }
-  .Form input[type="submit"]:not(:disabled):active {
+  .Form input[type="submit"]:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #94db94 inset; }
-  .Form input[type="submit"]:disabled {
+  .Form input[type="submit"]:disabled, .Form input[type="submit"].selected {
     background: #c3d5c3;
     border-color: #87ab87;
     color: #223022; }
+    .Form input[type="submit"]:disabled:hover, .Form input[type="submit"].selected:hover {
+      cursor: default; }
 .Form *[disabled] {
   background-color: #e6e6e6; }
 
@@ -1355,17 +1363,19 @@ body.inverted {
   background: #c7dbbd;
   border-color: #8fb87a;
   color: #25351d; }
-  .Artist-controls--edit:not(:disabled):hover {
+  .Artist-controls--edit:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Artist-controls--edit:not(:disabled):hover {
+  .Artist-controls--edit:not(:disabled):not(.selected):hover {
     background: #bcd4af; }
-  .Artist-controls--edit:not(:disabled):active {
+  .Artist-controls--edit:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #b0cda2 inset; }
-  .Artist-controls--edit:disabled {
+  .Artist-controls--edit:disabled, .Artist-controls--edit.selected {
     background: #cad1c7;
     border-color: #95a48e;
     color: #272d25; }
+    .Artist-controls--edit:disabled:hover, .Artist-controls--edit.selected:hover {
+      cursor: default; }
 
 .Artist-controls--delete {
   border-style: solid;
@@ -1378,17 +1388,19 @@ body.inverted {
   background: #dbc7bd;
   border-color: #b88f7a;
   color: #35251d; }
-  .Artist-controls--delete:not(:disabled):hover {
+  .Artist-controls--delete:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Artist-controls--delete:not(:disabled):hover {
+  .Artist-controls--delete:not(:disabled):not(.selected):hover {
     background: #d4bcaf; }
-  .Artist-controls--delete:not(:disabled):active {
+  .Artist-controls--delete:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #cdb0a2 inset; }
-  .Artist-controls--delete:disabled {
+  .Artist-controls--delete:disabled, .Artist-controls--delete.selected {
     background: #d1cac7;
     border-color: #a4958e;
     color: #2d2725; }
+    .Artist-controls--delete:disabled:hover, .Artist-controls--delete.selected:hover {
+      cursor: default; }
 
 .Artist-controls--edit,
 .Artist-controls--delete {
@@ -1572,17 +1584,19 @@ body.inverted {
       background: #c7bddb;
       border-color: #8f7ab8;
       color: #251d35; }
-      .Event-links.rules li a:not(:disabled):hover {
+      .Event-links.rules li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-links.rules li a:not(:disabled):hover {
+      .Event-links.rules li a:not(:disabled):not(.selected):hover {
         background: #bcafd4; }
-      .Event-links.rules li a:not(:disabled):active {
+      .Event-links.rules li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #b0a2cd inset; }
-      .Event-links.rules li a:disabled {
+      .Event-links.rules li a:disabled, .Event-links.rules li a.selected {
         background: #cac7d1;
         border-color: #958ea4;
         color: #27252d; }
+        .Event-links.rules li a:disabled:hover, .Event-links.rules li a.selected:hover {
+          cursor: default; }
 .Event-links.prompt {
   list-style-type: none;
   padding: 0; }
@@ -1602,17 +1616,19 @@ body.inverted {
       background: #d6bddb;
       border-color: #ad7ab8;
       color: #311d35; }
-      .Event-links.prompt li a:not(:disabled):hover {
+      .Event-links.prompt li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-links.prompt li a:not(:disabled):hover {
+      .Event-links.prompt li a:not(:disabled):not(.selected):hover {
         background: #ceafd4; }
-      .Event-links.prompt li a:not(:disabled):active {
+      .Event-links.prompt li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #c6a2cd inset; }
-      .Event-links.prompt li a:disabled {
+      .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected {
         background: #d0c7d1;
         border-color: #a08ea4;
         color: #2c252d; }
+        .Event-links.prompt li a:disabled:hover, .Event-links.prompt li a.selected:hover {
+          cursor: default; }
 .Event-links.fic {
   list-style-type: none;
   padding: 0; }
@@ -1632,17 +1648,19 @@ body.inverted {
       background: #dbbdd1;
       border-color: #b87aa3;
       color: #351d2d; }
-      .Event-links.fic li a:not(:disabled):hover {
+      .Event-links.fic li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-links.fic li a:not(:disabled):hover {
+      .Event-links.fic li a:not(:disabled):not(.selected):hover {
         background: #d4afc8; }
-      .Event-links.fic li a:not(:disabled):active {
+      .Event-links.fic li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #cda2bf inset; }
-      .Event-links.fic li a:disabled {
+      .Event-links.fic li a:disabled, .Event-links.fic li a.selected {
         background: #d1c7ce;
         border-color: #a48e9d;
         color: #2d252a; }
+        .Event-links.fic li a:disabled:hover, .Event-links.fic li a.selected:hover {
+          cursor: default; }
 .Event-links.art {
   list-style-type: none;
   padding: 0; }
@@ -1662,17 +1680,19 @@ body.inverted {
       background: #dbbdc2;
       border-color: #b87a85;
       color: #351d21; }
-      .Event-links.art li a:not(:disabled):hover {
+      .Event-links.art li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-links.art li a:not(:disabled):hover {
+      .Event-links.art li a:not(:disabled):not(.selected):hover {
         background: #d4afb6; }
-      .Event-links.art li a:not(:disabled):active {
+      .Event-links.art li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #cda2a9 inset; }
-      .Event-links.art li a:disabled {
+      .Event-links.art li a:disabled, .Event-links.art li a.selected {
         background: #d1c7c8;
         border-color: #a48e92;
         color: #2d2526; }
+        .Event-links.art li a:disabled:hover, .Event-links.art li a.selected:hover {
+          cursor: default; }
 .Event-links.commenting {
   list-style-type: none;
   padding: 0; }
@@ -1692,17 +1712,19 @@ body.inverted {
       background: #bdc2db;
       border-color: #7a85b8;
       color: #1d2135; }
-      .Event-links.commenting li a:not(:disabled):hover {
+      .Event-links.commenting li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-links.commenting li a:not(:disabled):hover {
+      .Event-links.commenting li a:not(:disabled):not(.selected):hover {
         background: #afb6d4; }
-      .Event-links.commenting li a:not(:disabled):active {
+      .Event-links.commenting li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #a2a9cd inset; }
-      .Event-links.commenting li a:disabled {
+      .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected {
         background: #c7c8d1;
         border-color: #8e92a4;
         color: #25262d; }
+        .Event-links.commenting li a:disabled:hover, .Event-links.commenting li a.selected:hover {
+          cursor: default; }
 
 .Event-admin {
   list-style-type: none;
@@ -1723,17 +1745,19 @@ body.inverted {
       background: #bdd1db;
       border-color: #7aa3b8;
       color: #1d2d35; }
-      .Event-admin li a:not(:disabled):hover {
+      .Event-admin li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-admin li a:not(:disabled):hover {
+      .Event-admin li a:not(:disabled):not(.selected):hover {
         background: #afc8d4; }
-      .Event-admin li a:not(:disabled):active {
+      .Event-admin li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
-      .Event-admin li a:disabled {
+      .Event-admin li a:disabled, .Event-admin li a.selected {
         background: #c7ced1;
         border-color: #8e9da4;
         color: #252a2d; }
+        .Event-admin li a:disabled:hover, .Event-admin li a.selected:hover {
+          cursor: default; }
 
 .Event-blurb > ul:first-child {
   list-style-type: none;
@@ -1754,17 +1778,19 @@ body.inverted {
       background: #bdc2db;
       border-color: #7a85b8;
       color: #1d2135; }
-      .Event-blurb > ul:first-child li a:not(:disabled):hover {
+      .Event-blurb > ul:first-child li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Event-blurb > ul:first-child li a:not(:disabled):hover {
+      .Event-blurb > ul:first-child li a:not(:disabled):not(.selected):hover {
         background: #afb6d4; }
-      .Event-blurb > ul:first-child li a:not(:disabled):active {
+      .Event-blurb > ul:first-child li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #a2a9cd inset; }
-      .Event-blurb > ul:first-child li a:disabled {
+      .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected {
         background: #c7c8d1;
         border-color: #8e92a4;
         color: #25262d; }
+        .Event-blurb > ul:first-child li a:disabled:hover, .Event-blurb > ul:first-child li a.selected:hover {
+          cursor: default; }
 
 .Archive-button {
   border-style: solid;
@@ -1777,17 +1803,19 @@ body.inverted {
   background: #e6e6e6;
   border-color: #acacac;
   color: #2e2e2e; }
-  .Archive-button:not(:disabled):hover {
+  .Archive-button:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Archive-button:not(:disabled):hover {
+  .Archive-button:not(:disabled):not(.selected):hover {
     background: #dadada; }
-  .Archive-button:not(:disabled):active {
+  .Archive-button:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #cfcfcf inset; }
-  .Archive-button:disabled {
+  .Archive-button:disabled, .Archive-button.selected {
     background: #e6e6e6;
     border-color: #acacac;
     color: #2e2e2e; }
+    .Archive-button:disabled:hover, .Archive-button.selected:hover {
+      cursor: default; }
 
 .New-event--button {
   border-style: solid;
@@ -1800,17 +1828,19 @@ body.inverted {
   background: #dbccbd;
   border-color: #b8997a;
   color: #35291d; }
-  .New-event--button:not(:disabled):hover {
+  .New-event--button:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .New-event--button:not(:disabled):hover {
+  .New-event--button:not(:disabled):not(.selected):hover {
     background: #d4c2af; }
-  .New-event--button:not(:disabled):active {
+  .New-event--button:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #cdb8a2 inset; }
-  .New-event--button:disabled {
+  .New-event--button:disabled, .New-event--button.selected {
     background: #d1ccc7;
     border-color: #a4998e;
     color: #2d2925; }
+    .New-event--button:disabled:hover, .New-event--button.selected:hover {
+      cursor: default; }
 
 .Archive-button,
 .New-event--button {
@@ -1865,30 +1895,34 @@ body.inverted {
   padding: 0.5em 0.17em;
   text-align: center;
   word-wrap: break-word; }
-  .Post-author--name:not(:disabled):hover {
+  .Post-author--name:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Post-author--name:not(:disabled):hover {
+  .Post-author--name:not(:disabled):not(.selected):hover {
     background: #3c3cce; }
-  .Post-author--name:not(:disabled):active {
+  .Post-author--name:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #3232ca inset; }
-  .Post-author--name:disabled {
+  .Post-author--name:disabled, .Post-author--name.selected {
     background: #7474a4;
     border-color: #53537f;
     color: #161622; }
+    .Post-author--name:disabled:hover, .Post-author--name.selected:hover {
+      cursor: default; }
   .Post-author--name.admin {
     background: #d14747;
     border-color: #a82a2a;
     color: #f9e9e9;
     text-shadow: -0.05em -0.05em #701c1c; }
-    .Post-author--name.admin:not(:disabled):hover {
+    .Post-author--name.admin:not(:disabled):not(.selected):hover {
       background: #ce3c3c; }
-    .Post-author--name.admin:not(:disabled):active {
+    .Post-author--name.admin:not(:disabled):not(.selected):active {
       box-shadow: 0 0.5em 0.7em #ca3232 inset; }
-    .Post-author--name.admin:disabled {
+    .Post-author--name.admin:disabled, .Post-author--name.admin.selected {
       background: #a47474;
       border-color: #7f5353;
       color: #221616; }
+      .Post-author--name.admin:disabled:hover, .Post-author--name.admin.selected:hover {
+        cursor: default; }
   @media (max-width: 40rem) {
     .Post-author--name {
       border-radius: 0; } }
@@ -2037,21 +2071,26 @@ body.inverted {
     background: #bddbbd;
     border-color: #7ab87a;
     color: #1d351d; }
-    .Post-form--senders button[type="submit"]:not(:disabled):hover,
-    .Post-form--senders .Post-edit--save:not(:disabled):hover {
+    .Post-form--senders button[type="submit"]:not(:disabled):not(.selected):hover,
+    .Post-form--senders .Post-edit--save:not(:disabled):not(.selected):hover {
       cursor: pointer;
       text-decoration: none; }
-    .Post-form--senders button[type="submit"]:not(:disabled):hover,
-    .Post-form--senders .Post-edit--save:not(:disabled):hover {
+    .Post-form--senders button[type="submit"]:not(:disabled):not(.selected):hover,
+    .Post-form--senders .Post-edit--save:not(:disabled):not(.selected):hover {
       background: #afd4af; }
-    .Post-form--senders button[type="submit"]:not(:disabled):active,
-    .Post-form--senders .Post-edit--save:not(:disabled):active {
+    .Post-form--senders button[type="submit"]:not(:disabled):not(.selected):active,
+    .Post-form--senders .Post-edit--save:not(:disabled):not(.selected):active {
       box-shadow: 0 0.5em 0.7em #a2cda2 inset; }
-    .Post-form--senders button[type="submit"]:disabled,
-    .Post-form--senders .Post-edit--save:disabled {
+    .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
+    .Post-form--senders .Post-edit--save:disabled,
+    .Post-form--senders .Post-edit--save.selected {
       background: #c7d1c7;
       border-color: #8ea48e;
       color: #252d25; }
+      .Post-form--senders button[type="submit"]:disabled:hover, .Post-form--senders button[type="submit"].selected:hover,
+      .Post-form--senders .Post-edit--save:disabled:hover,
+      .Post-form--senders .Post-edit--save.selected:hover {
+        cursor: default; }
   .Post-form--senders .Post-edit--cancel {
     border-style: solid;
     border-width: 1px;
@@ -2063,17 +2102,54 @@ body.inverted {
     background: #d6c2c2;
     border-color: #ad8585;
     color: #312121; }
-    .Post-form--senders .Post-edit--cancel:not(:disabled):hover {
+    .Post-form--senders .Post-edit--cancel:not(:disabled):not(.selected):hover {
       cursor: pointer;
       text-decoration: none; }
-    .Post-form--senders .Post-edit--cancel:not(:disabled):hover {
+    .Post-form--senders .Post-edit--cancel:not(:disabled):not(.selected):hover {
       background: #ceb6b6; }
-    .Post-form--senders .Post-edit--cancel:not(:disabled):active {
+    .Post-form--senders .Post-edit--cancel:not(:disabled):not(.selected):active {
       box-shadow: 0 0.5em 0.7em #c6a9a9 inset; }
-    .Post-form--senders .Post-edit--cancel:disabled {
+    .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected {
       background: #d0c8c8;
       border-color: #a09292;
       color: #2c2626; }
+      .Post-form--senders .Post-edit--cancel:disabled:hover, .Post-form--senders .Post-edit--cancel.selected:hover {
+        cursor: default; }
+
+.Pager {
+  list-style-type: none;
+  padding: 0;
+  margin: 1.5rem auto;
+  text-align: center; }
+  .Pager li {
+    display: inline-block; }
+    .Pager li:not(:last-child) {
+      margin-right: -1px;
+      margin-bottom: -1px; }
+    .Pager li a {
+      border-style: solid;
+      border-width: 1px;
+      display: inline-block;
+      line-height: 1;
+      padding: 0.8em;
+      text-decoration: none;
+      vertical-align: middle;
+      background: #dbd1bd;
+      border-color: #b8a37a;
+      color: #352d1d; }
+      .Pager li a:not(:disabled):not(.selected):hover {
+        cursor: pointer;
+        text-decoration: none; }
+      .Pager li a:not(:disabled):not(.selected):hover {
+        background: #d4c8af; }
+      .Pager li a:not(:disabled):not(.selected):active {
+        box-shadow: 0 0.5em 0.7em #cdbfa2 inset; }
+      .Pager li a:disabled, .Pager li a.selected {
+        background: #d1cec7;
+        border-color: #a49d8e;
+        color: #2d2a25; }
+        .Pager li a:disabled:hover, .Pager li a.selected:hover {
+          cursor: default; }
 
 .Prompts {
   width: 100%; }
@@ -2279,17 +2355,19 @@ body.inverted {
       background: #bdd1db;
       border-color: #7aa3b8;
       color: #1d2d35; }
-      .Slates li a:not(:disabled):hover {
+      .Slates li a:not(:disabled):not(.selected):hover {
         cursor: pointer;
         text-decoration: none; }
-      .Slates li a:not(:disabled):hover {
+      .Slates li a:not(:disabled):not(.selected):hover {
         background: #afc8d4; }
-      .Slates li a:not(:disabled):active {
+      .Slates li a:not(:disabled):not(.selected):active {
         box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
-      .Slates li a:disabled {
+      .Slates li a:disabled, .Slates li a.selected {
         background: #c7ced1;
         border-color: #8e9da4;
         color: #252a2d; }
+        .Slates li a:disabled:hover, .Slates li a.selected:hover {
+          cursor: default; }
 
 .Votes-summary {
   font-size: 1rem;
@@ -2539,17 +2617,19 @@ body.inverted {
     background: #bdd1db;
     border-color: #7aa3b8;
     color: #1d2d35; }
-    .Storys-access--update input:not(:disabled):hover {
+    .Storys-access--update input:not(:disabled):not(.selected):hover {
       cursor: pointer;
       text-decoration: none; }
-    .Storys-access--update input:not(:disabled):hover {
+    .Storys-access--update input:not(:disabled):not(.selected):hover {
       background: #afc8d4; }
-    .Storys-access--update input:not(:disabled):active {
+    .Storys-access--update input:not(:disabled):not(.selected):active {
       box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
-    .Storys-access--update input:disabled {
+    .Storys-access--update input:disabled, .Storys-access--update input.selected {
       background: #c7ced1;
       border-color: #8e9da4;
       color: #252a2d; }
+      .Storys-access--update input:disabled:hover, .Storys-access--update input.selected:hover {
+        cursor: default; }
 
 .Password-new {
   text-align: center;
@@ -2648,21 +2728,26 @@ body.inverted {
   color: #233640;
   padding: 0.4em;
   font-size: 0.8em; }
-  .Ballot-abstain:not(:disabled):hover,
-  .Ballot-unabstain:not(:disabled):hover {
+  .Ballot-abstain:not(:disabled):not(.selected):hover,
+  .Ballot-unabstain:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
-  .Ballot-abstain:not(:disabled):hover,
-  .Ballot-unabstain:not(:disabled):hover {
+  .Ballot-abstain:not(:disabled):not(.selected):hover,
+  .Ballot-unabstain:not(:disabled):not(.selected):hover {
     background: #e5edf1; }
-  .Ballot-abstain:not(:disabled):active,
-  .Ballot-unabstain:not(:disabled):active {
+  .Ballot-abstain:not(:disabled):not(.selected):active,
+  .Ballot-unabstain:not(:disabled):not(.selected):active {
     box-shadow: 0 0.5em 0.7em #d5e2e8 inset; }
-  .Ballot-abstain:disabled,
-  .Ballot-unabstain:disabled {
+  .Ballot-abstain:disabled, .Ballot-abstain.selected,
+  .Ballot-unabstain:disabled,
+  .Ballot-unabstain.selected {
     background: #f7f8f8;
     border-color: #b2bcc1;
     color: #2c3337; }
+    .Ballot-abstain:disabled:hover, .Ballot-abstain.selected:hover,
+    .Ballot-unabstain:disabled:hover,
+    .Ballot-unabstain.selected:hover {
+      cursor: default; }
 
 .Ballot-directions,
 .Ballot-append {

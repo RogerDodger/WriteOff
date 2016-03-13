@@ -175,8 +175,8 @@ __PACKAGE__->config(
 
 	renderCache => CHI->new(
 		expires_in => '10m',
-		expres_variance => 0.1,
-		driver => 'FastMmap',
+		expires_variance => 0.2,
+		driver => 'File',
 		namespace => 'render',
 	),
 
@@ -185,9 +185,12 @@ __PACKAGE__->config(
 );
 
 my $logger = WriteOff::Log->new;
-$logger->path(__PACKAGE__->path_to('log')) unless $ENV{CATALYST_DEBUG};
-__PACKAGE__->log($logger);
 
+if (!$ENV{CATALYST_DEBUG}) {
+	$logger->path(__PACKAGE__->path_to('log'));
+}
+
+__PACKAGE__->log($logger);
 __PACKAGE__->setup;
 
 $ENV{TZ} = __PACKAGE__->config->{timezone};

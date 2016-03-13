@@ -21,7 +21,7 @@ sub thread {
 sub uid {
 	my ($self, $user) = @_;
 
-	join ',', $user->id, $self->count, map { $self->get_column($_)->max } qw/me.id me.updated artist.updated/;
+	join ',', 'thread', $user->id, $self->count, map { $self->get_column($_)->max } qw/me.id me.updated artist.updated/;
 }
 
 1;

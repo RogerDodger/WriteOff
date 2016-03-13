@@ -11,7 +11,7 @@
 	text-decoration: none;
 	vertical-align: middle;
 
-	&:not(:disabled):hover {
+	&:not(:disabled):not(.selected):hover {
 		cursor: pointer;
 		text-decoration: none;
 	}
@@ -28,7 +28,7 @@
 		color: hsla($hue, $sat, $l * .2, 1);
 	}
 
-	&:not(:disabled) {
+	&:not(:disabled):not(.selected) {
 		&:hover {
 			background: hsla($hue, $sat, $l * .95, 1);
 		}
@@ -38,10 +38,16 @@
 		}
 	}
 
-	&:disabled {
+	&:disabled,
+	&.selected {
+		@extend .noselect;
 		background: hsla($hue, $sat * .35, $l, 1);
 		border-color: hsla($hue, $sat * .35, $l * .75, 1);
 		color: hsla($hue, $sat * .35, $l * .2, 1);
+
+		&:hover {
+			cursor: default;
+		}
 	}
 }
 

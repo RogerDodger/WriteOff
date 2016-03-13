@@ -38,6 +38,12 @@ sub cleanup :Local {
 	$c->model('DB::Token')->clean_expired;
 }
 
+sub clear :Local {
+	my ($self, $c) = @_;
+
+	$c->config->{renderCache}->clear;
+}
+
 sub schedule :Local {
 	my ( $self, $c ) = @_;
 
