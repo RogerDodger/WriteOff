@@ -74,7 +74,7 @@ sub auto :Private {
 	}
 
 	if (!$c->session->{introduced}) {
-		$c->session->{introduced} = 1 if $c->user;
+		$c->session->{introduced} = 1 if $c->user || $c->debug;
 	}
 
 	1;
