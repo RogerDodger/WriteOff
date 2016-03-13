@@ -390,6 +390,16 @@
 		display: inline-block;
 		width: 100%;
 	}
+
+	.Spoiler {
+		background-color: black;
+		color: black;
+
+		&:hover {
+			background-color: inherit;
+			color: inherit;
+		}
+	}
 }
 
 .Breakdown {

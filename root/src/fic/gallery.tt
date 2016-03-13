@@ -1,7 +1,7 @@
 {{ BLOCK divider }}
 <tbody class="Table-divider">
 	<tr>
-		<td colspan="{{ event.has('art') ? 5 : 4 }}"></td>
+		<td colspan="99"></td>
 	</tr>
 </tbody>
 {{ END }}
@@ -20,6 +20,9 @@
 					<th></th>
 					{{ END }}
 					<th colspan="2">Story</th>
+					{{ IF event.commenting }}
+					<th><i class="fa fa-comment" title="Comments"></i></th>
+					{{ END }}
 					<th class="Storys-wordcount">Words</th>
 				</tr>
 			</thead>
@@ -54,6 +57,9 @@
 						(<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.txt">txt</a>,
 						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.epub">epub</a>)
 					</td>
+					{{ IF event.commenting }}
+					<td class="Storys-posts">{{ entry.posts_rs.count }}</td>
+					{{ END }}
 					<td class="Storys-wordcount">{{ entry.story.wordcount.chunk(-3).join(',') }}</td>
 				</tr>
 			{{ END }}
@@ -72,6 +78,9 @@
 					<td class="Storys-export">
 						(<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
 					</td>
+					{{ IF event.commenting }}
+					<td class="Storys-posts"></td>
+					{{ END }}
 					<td class="Storys-wordcount">
 						{{ event.storys_rs.wordcount.chunk(-3).join(',') }}
 					</td>

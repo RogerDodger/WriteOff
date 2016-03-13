@@ -1982,6 +1982,12 @@ body.inverted {
   .Post-contents--body div {
     display: inline-block;
     width: 100%; }
+  .Post-contents--body .Spoiler {
+    background-color: black;
+    color: black; }
+    .Post-contents--body .Spoiler:hover {
+      background-color: inherit;
+      color: inherit; }
   .Post-contents--body hr {
     background: transparent;
     border: none;
@@ -2482,6 +2488,12 @@ body.inverted {
   .Story div {
     display: inline-block;
     width: 100%; }
+  .Story .Spoiler {
+    background-color: black;
+    color: black; }
+    .Story .Spoiler:hover {
+      background-color: inherit;
+      color: inherit; }
   .Story hr {
     background: transparent;
     border: none;
@@ -2589,6 +2601,7 @@ body.inverted {
 .Storys-num,
 .Storys-edit,
 .Storys-title,
+.Storys-posts,
 .Storys-author,
 .Storys-wordcount,
 .Storys-index,

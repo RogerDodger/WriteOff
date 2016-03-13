@@ -15,6 +15,7 @@ my %tags = (
 	size => '<span style="font-size: %{size}aem;">%{parse}s</span>',
 	color => '<span style="color: %{color}a;">%{parse}s</span>',
 	smcaps => '<span style="font-variant: small-caps">%{parse}s</span>',
+	spoiler => '<span class="Spoiler">%{parse}s</span>',
 	center => {
 		class => 'block',
 		output => '<div style="text-align: center">%{parse}s</div>',
