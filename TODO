@@ -1,27 +1,10 @@
-- [high] Fix countdowns from becoming out of sync
-- [high] Decay only scores of shared genre
-- [high] Add event scheduling
-- [high] Fix scoreboard sorting after an expand
-- [med] Viewable old ballots
-- [med] Get a position: sticky polyfill
-- [med] Story body editor buttons
-- [med] Add controller to disqualify entries
-- [med] Notifications
-- [med] Artist profiles
-- [med] Credentials change page
+- [high] Automatic event scheduling
+- [high] Reply hover
+- [high] Spoiler protection
+- [med] Smileys
+- [med] Event notifications (prompt selected)
+- [med] Post notifications
 - [low] Change mask criteria to involve probabilistic modelling
 - [low] View counter for stories
 - [low] Provide stylometric analysis of entries for author guessing
 - [low] Set up system for users to translate website copy
-
-# Schema changes
-
-- Voting rounds should be a separate table, *..1 with events
-- Role and UserRole should be removed. Add "admin" col to User.
-- Remove Heat/Ban since they aren't used.
-- Change most User relationships to being on Artist instead. The idea
-  is that User is used just for authentication. Artist is the identity.
-  This means that users should either have a way to mark an arist as
-  their "primary" artist, or every resource needs an added artist field.
-  For most things, the former seems more appropriate.
-- Handle canonicalisation of user.name, user.email, and artist.name
