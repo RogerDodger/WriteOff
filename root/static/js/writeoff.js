@@ -1000,11 +1000,10 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	var $posts = $('.Post');
+	var $posts = $('.Post.view');
 	var pageSize = 100;
 
 	var changePage = function (page) {
-		var $posts = $('.Post');
 		$posts.addClass('hidden');
 		$posts.slice(page * pageSize, (page + 1) * pageSize).removeClass('hidden');
 
