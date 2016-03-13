@@ -1002,6 +1002,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	var $posts = $('.Post.view');
 	var pageSize = 100;
+	var paged = $posts.size() > pageSize;
 
 	var changePage = function (page) {
 		$posts.addClass('hidden');
@@ -1015,7 +1016,7 @@ $(document).ready(function () {
 		});
 	};
 
-	if ($posts.size() > pageSize) {
+	if (paged) {
 		var pages = Math.floor($posts.size() / pageSize);
 
 		$('.Pager').removeClass('hidden').each(function () {
@@ -1052,10 +1053,12 @@ $(document).ready(function () {
 		if (document.location.hash.search(/^#[0-9]+$/) != -1) {
 			var $post = $('.Post' + document.location.hash);
 			if ($post.size()) {
-				var index = $post.find('.Post-id a').text().substr(1);
-				changePage(Math.floor(index / pageSize));
 				$post.addClass('highlight');
-				$('html, body').scrollTop($post.offset().top);
+				if (paged) {
+					changePage(Math.floor(
+						$post.find('.Post-id a').text().substr(1) / pageSize));
+					$('html, body').scrollTop($post.offset().top);
+				}
 			}
 		}
 	}
