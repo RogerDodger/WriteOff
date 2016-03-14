@@ -35,8 +35,12 @@ __PACKAGE__->belongs_to('event', 'WriteOff::Schema::Result::Event', 'event_id', 
 
 # Unique amongst any version of itself, as well as any other post
 sub uid {
-	my ($self, $user) = @_;
-	join ".", 'post', $self->id, $self->updated, $self->artist->updated, $user->can_edit($self);
+	my ($self, $user, $entry) = @_;
+
+	join(".", 'post',
+		$self->id, $self->updated, $self->artist->updated,
+		!!$user->id, $user->can_edit($self), !!$entry,
+	);
 }
 
 sub render {

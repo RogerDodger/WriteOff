@@ -1,7 +1,7 @@
 <ul class="Pager hidden"></ul>
 
 {{ WHILE (post = posts.next) }}
-	{{ cache.proc('template' => 'post/single.tt', 'key' => post.uid(c.user)) }}
+	{{ cache.proc('template' => 'post/single.tt', 'key' => post.uid(c.user, entry)) }}
 {{ END }}
 
 <ul class="Pager hidden"></ul>
