@@ -12,14 +12,15 @@
 	</div>
 
 	{{ IF event.fic_gallery_opened }}
-		<table class="Storys">
+		<table class="Storys gallery">
 			<thead>
 				<tr>
 					<th class="Storys-num">#</th>
 					{{ IF event.has('art') }}
-					<th></th>
+					<th class="no-sort"></th>
 					{{ END }}
-					<th colspan="2">Story</th>
+					<th>Story</th>
+					<th class="no-sort"></th>
 					{{ IF event.commenting }}
 					<th><i class="fa fa-comment" title="Comments"></i></th>
 					{{ END }}

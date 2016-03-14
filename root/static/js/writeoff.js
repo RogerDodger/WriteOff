@@ -862,7 +862,7 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Results, .Scoreboard, .Prompts, .Ballot, .Artist-entries').each(function () {
+	$('.Results, .Scoreboard, .Prompts, .Ballot, .Artist-entries, .Storys.gallery').each(function () {
 		if ($(this).find('thead').size()) {
 			$(this).addClass('sortable');
 			new Tablesort(this);
