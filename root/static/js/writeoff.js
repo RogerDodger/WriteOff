@@ -32,6 +32,90 @@ String.prototype.ucfirst = function() {
 	return this.substring(0, 1).toUpperCase() + this.substring(1, this.length);
 };
 
+Date.prototype.daysInMonth = function () {
+	var month = this.getUTCMonth();
+	if (month == 4 || month == 6 || month == 9 || month == 11) {
+		return 30;
+	}
+	else if (month == 2) {
+		return this.leapYear() ? 29 : 28;
+	}
+	else {
+		return 31;
+	}
+};
+
+Date.prototype.delta = function (other) {
+	var self                = this;
+	var other_              = other || new Date();
+	var significant_figures = 2;
+	var units               = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+
+	if (other < self) {
+		var ago = other.delta(self);
+		return 'in ' + ago.substr(0, ago.length - 4);
+	}
+
+	var delta = {};
+	units.forEach(function (unit, i) {
+		var m = 'getUTC' + (unit == 'year' ? 'Full' : '') + unit.ucfirst() + (i >= 3 ? 's' : '');
+		delta[unit] = other[m]() - self[m]();
+	});
+
+	// Normalise delta to positive values
+	if (delta['second'] < 0) {
+		delta['minute']--;
+		delta['second'] += 60;
+	}
+
+	if (delta['minute'] < 0) {
+		delta['hour']--;
+		delta['minute'] += 60;
+	}
+
+	if (delta['hour'] < 0) {
+		delta['day']--;
+		delta['hour'] += 24;
+	}
+
+	if (delta['day'] < 0) {
+		delta['month']--;
+		delta['day'] += other.daysInMonth();
+	}
+
+	if (delta['month'] < 0) {
+		delta['year']--;
+		delta['month'] += 12;
+	}
+
+	var deltas = [];
+	units.forEach(function (unit) {
+		if (significant_figures == 0) return;
+		var n = delta[unit];
+		if (n) deltas.push(n + " " + unit + (n == 1 ? '' : 's'));
+		// Significant figures start counting as soon as a non-zero is found.
+		if (deltas.length) significant_figures--;
+	});
+
+	var time;
+	// x and y
+	if (deltas.length <= 2) {
+		time = deltas.join(" and ");
+	}
+	// x, y, and z
+	else {
+		deltas[deltas.length - 1] = "and " + deltas[deltas.length - 1];
+		time = deltas.join(", ");
+	};
+
+	return time + " ago";
+};
+
+Date.prototype.leapYear = function () {
+	var y = this.getUTCFullYear();
+	return y % 4 == 0 && y % 100 != 0 || y % 400 == 0;
+};
+
 Date.prototype.getShortMonth = function () {
 	return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][this.getMonth()];
 };
@@ -682,6 +766,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 	var $countdowns = $('.Countdown time');
+	var $deltas = $('time.delta').not($countdowns);
 	var $dates = $('time.date');
 	var $datetimes = $('time.datetime');
 
@@ -725,6 +810,31 @@ $(document).ready(function () {
 		t0 = new Date();
 		setInterval(tick, 1000);
 		tick();
+	}
+
+	if ($deltas.size()) {
+		var t, t0, ttl = $deltas.size();
+		var tick = function tick (e) {
+			t = new Date();
+			// Same as above
+			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
+
+			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_));
+			e.textContent = delta;
+			if (/second/.test(delta) || /minute/.test(delta) && !/and/.test(delta)) {
+				setTimeout(tick, 5000 + Math.random() * 5000, e);
+			}
+			else if (/minute/.test(delta) || /hour/.test(delta) && !/and/.test(delta)) {
+				setTimeout(tick, 1000 * 60 + Math.random() * 500, e);
+			}
+			else {
+				setTimeout(tick, 1000 * 60 * 60 + Math.random() * 500, e);
+			}
+		};
+		t0 = new Date();
+		$deltas.each(function () {
+			tick(this);
+		});
 	}
 
 	$dates.each(function () {
@@ -1011,7 +1121,6 @@ $(document).ready(function () {
 
 		$('.Page-changer').removeClass('selected').each(function () {
 			var $this = $(this);
-			console.log($this.text(), page + 1);
 			if ($this.text() == page + 1) {
 				$this.addClass('selected');
 			}

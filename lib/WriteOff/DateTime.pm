@@ -26,7 +26,7 @@ sub DateTime::delta {
 sub DateTime::delta_html {
 	my $self = shift;
 
-	return sprintf '<time title="%s" datetime="%sZ">%s</time>',
+	return sprintf '<time class="delta" title="%s" datetime="%sZ">%s</time>',
 		$self->rfc2822,
 		$self->iso8601,
 		$self->delta;
