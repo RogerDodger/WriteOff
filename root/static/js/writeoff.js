@@ -50,6 +50,7 @@ Date.prototype.delta = function (other) {
 	var other_              = other || new Date();
 	var significant_figures = 2;
 	var units               = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+	var methods             = ['FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds'];
 
 	if (other < self) {
 		var ago = other.delta(self);
@@ -58,8 +59,7 @@ Date.prototype.delta = function (other) {
 
 	var delta = {};
 	units.forEach(function (unit, i) {
-		var m = 'getUTC' + (unit == 'year' ? 'Full' : '') + unit.ucfirst() + (i >= 3 ? 's' : '');
-		delta[unit] = other[m]() - self[m]();
+		delta[unit] = other[methods[i]]() - self[methods[i]]();
 	});
 
 	// Normalise delta to positive values
@@ -80,7 +80,7 @@ Date.prototype.delta = function (other) {
 
 	if (delta['day'] < 0) {
 		delta['month']--;
-		delta['day'] += other.daysInMonth();
+		delta['day'] += self.daysInMonth();
 	}
 
 	if (delta['month'] < 0) {
