@@ -39,7 +39,7 @@ sub uid {
 
 	join(".", 'post',
 		$self->id, $self->updated, $self->artist->updated,
-		!!$user->id, $user->can_edit($self), !!$entry,
+		!!$user->active_artist_id, $user->can_edit($self), !!$entry,
 	);
 }
 
