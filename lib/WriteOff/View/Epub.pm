@@ -145,7 +145,8 @@ sub process {
 	);
 
 	$self->spine->toc('ncx');
-	mkdir ($self->tmpdir . "/OPS") or die "Can't make OPS dir in " . $self->tmpdir;
+	my $dir = $self->tmpdir . "/OPS";
+	-d $dir or mkdir $dir or die "Can't make OPS dir in " . $self->tmpdir . ": $@";
 	# Implicitly generate UUID for book
 	$self->_set_uuid(Data::UUID->new->create_str);
 
@@ -158,9 +159,10 @@ sub process {
 
 	# single story ebook
 	if (defined(my $story = $c->stash->{story})) {
-		$self->add_title($story->title);
+		my $entry = $c->stash->{entry};
+		$self->add_title($entry->title);
 		$self->add_author(
-			$story->event->is_ended ? $story->artist->name : 'Anonymous'
+			$entry->artist_public ? $entry->artist->name : 'Anonymous'
 		);
 
 		my $id = $self->add_xhtml(
@@ -170,13 +172,13 @@ sub process {
 		);
 
 		$self->add_navpoint(
-			label      => $story->title,
+			label      => $entry->title,
 			id         => $id,
 			content    => 'chapter.xhtml',
 			play_order => 1,
 		);
 
-		if ($story->event->art) {
+		if ($story->entry->event->has('art')) {
 			my $images = $story->images;
 			while (my $image = $images->next) {
 				$self->add_image(
@@ -192,7 +194,7 @@ sub process {
 		$self->add_title($event->prompt);
 		$self->add_author('Writeoff Participants');
 
-		if ($event->art) {
+		if ($event->has('art')) {
 			my $images = $event->images;
 			while (my $image = $images->next) {
 				$self->add_image(
@@ -204,8 +206,9 @@ sub process {
 		}
 
 		my $i = 1;
-		for my $story ($event->storys->gallery->all) {
-			local $c->stash->{story} = $story;
+		for my $entry ($event->storys->gallery->all) {
+			$c->stash->{entry} = $entry;
+			$c->stash->{story} = $entry->story;
 
 			my $id = $self->add_xhtml(
 				"chapter$i.xhtml",
@@ -214,7 +217,7 @@ sub process {
 			);
 
 			$self->add_navpoint(
-				label      => $story->title,
+				label      => $entry->title,
 				id         => $id,
 				content    => "chapter$i.xhtml",
 				play_order => $i,

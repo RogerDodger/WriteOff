@@ -1,6 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
 <html xmlns="http://www.w3.org/1999/xhtml">
-	{{- SET entry = story.entry -}}
 	<head>
 		<title>{{ entry.title | xml }}</title>
 		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
@@ -13,7 +11,7 @@
 		<h2>by {{ entry.artist.name | xml }}</h2>
 		{{ END }}
 
-		{{ IF event.art }}
+		{{ IF event.has('art') }}
 		<div class="art">
 		{{ FOREACH image IN story.images }}
 			<img src="images/{{ image.filename | xml }}"/>
