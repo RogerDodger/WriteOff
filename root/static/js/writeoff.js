@@ -59,7 +59,8 @@ Date.prototype.delta = function (other) {
 
 	var delta = {};
 	units.forEach(function (unit, i) {
-		delta[unit] = other[methods[i]]() - self[methods[i]]();
+		var m = 'getUTC' + methods[i];
+		delta[unit] = other[m]() - self[m]();
 	});
 
 	// Normalise delta to positive values
