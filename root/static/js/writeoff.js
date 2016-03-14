@@ -1003,6 +1003,7 @@ $(document).ready(function () {
 	var $posts = $('.Post.view');
 	var pageSize = 100;
 	var paged = $posts.size() > pageSize;
+	var key = document.location.pathname + '/page';
 
 	var changePage = function (page) {
 		$posts.addClass('hidden');
@@ -1010,16 +1011,24 @@ $(document).ready(function () {
 
 		$('.Page-changer').removeClass('selected').each(function () {
 			var $this = $(this);
+			console.log($this.text(), page + 1);
 			if ($this.text() == page + 1) {
 				$this.addClass('selected');
 			}
 		});
+
+		localStorage.setItem(key, page);
 	};
+
+	// Change post ID text to its number in the listing
+	$posts.each(function (i) {
+		$(this).find('.Post-id a').text('#' + (i + 1));
+	});
 
 	if (paged) {
 		var pages = Math.floor($posts.size() / pageSize);
 
-		$('.Pager').removeClass('hidden').each(function () {
+		$('.Pager').removeClass('hidden').each(function (i) {
 			var $pager = $(this);
 			for (var page = 0; page <= pages; page++) {
 				var $li = $('<li/>');
@@ -1028,24 +1037,18 @@ $(document).ready(function () {
 					var $this = $(this);
 					if (!$this.hasClass('selected')) {
 						changePage($this.text() - 1);
-						$('html, body').scrollTop($('.Pager').offset().top);
+						if (i == 1) {
+							$('html, body').scrollTop($('.Pager').offset().top);
+						}
 					}
 				});
 				$btn.text(page + 1);
-				if (page == pages) {
-					$btn.addClass('selected');
-				}
 				$li.append($btn);
 				$pager.append($li);
 			}
 		});
 
-		// Change post ID text to its number in the listing
-		$posts.each(function (i) {
-			$(this).find('.Post-id a').text('#' + (i + 1));
-		});
-
-		changePage(0);
+		changePage(Number.parseInt(localStorage.getItem(key) || 0));
 	}
 
 	var hashchanged = function () {
