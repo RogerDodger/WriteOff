@@ -1059,51 +1059,57 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+	var markup = [
+		[ '.fa-bold',          'b', false, 66 ],
+		[ '.fa-italic',        'i', false, 73 ],
+		[ '.fa-underline',     'u', false, 85 ],
+		[ '.fa-strikethrough', 's', false, 83 ],
+
+		[ '.fa-link',        'url', true ],
+		[ '.fa-text-height', 'size', true ],
+		[ '.fa-font',        'color', true ],
+
+		[ '.fa-quote-right',  'quote', false, 81 ],
+		[ '.fa-align-center', 'center', false ],
+		[ '.fa-align-right',  'right', false ],
+	];
 	var $controls = $('.Post-form--controls');
-	if ($controls.size()) {
-		var $textarea = $controls.closest('form').find('textarea');
 
-		var subs = [
-			[ 'fa-bold',          'b', false ],
-			[ 'fa-italic',        'i', false ],
-			[ 'fa-underline',     'u', false ],
-			[ 'fa-strikethrough', 's', false ],
+	markup.forEach(function (e) {
+		var icon = e[0],
+		    code = e[1],
+		    hasArg = e[2],
+		    hotkey = e[3];
 
-			[ 'fa-link',        'url', true ],
-			[ 'fa-text-height', 'size', true ],
-			[ 'fa-font',        'color', true ],
-
-			[ 'fa-quote-right',  'quote', false ],
-			[ 'fa-align-center', 'center', false ],
-			[ 'fa-align-right',  'right', false ],
-		];
-
-		$controls.find('li').click(function () {
+		var clicked = function ($textarea) {
 			var selection = $textarea.getSelection();
-			var $icon = $(this).find('i');
 
-			subs.forEach(function (e) {
-				var key = e[0],
-				    code = e[1],
-				    hasArg = e[2];
-
-				if ($icon.hasClass(key)) {
-					if (hasArg) {
-						selection.text = '[' + code + '=""]' + selection.text + '[/' + code + ']';
-						selection.end = selection.start += 3 + code.length;
-					}
-					else {
-						selection.text = '[' + code + ']' + selection.text + '[/' + code + ']';
-						selection.start += 2 + code.length;
-						selection.end += 2 + code.length;
-					}
-				}
-			});
-
+			if (hasArg) {
+				selection.text = '[' + code + '=""]' + selection.text + '[/' + code + ']';
+				selection.end = selection.start += 3 + code.length;
+			}
+			else {
+				selection.text = '[' + code + ']' + selection.text + '[/' + code + ']';
+				selection.start += 2 + code.length;
+				selection.end += 2 + code.length;
+			}
 			$textarea.focus();
 			replaceSelection($textarea.get(0), selection);
+		};
+
+		$controls.find(icon).click(function () {
+			clicked($(this).closest('form').find('textarea'));
 		});
-	}
+
+		if (typeof hotkey === 'undefined') return;
+
+		$('.Post-form--body textarea').on('keydown', function (ev) {
+			if (ev.ctrlKey && ev.which == hotkey) {
+				ev.preventDefault();
+				clicked($(this));
+			}
+		});
+	});
 });
 
 // ===========================================================================

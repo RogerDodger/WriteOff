@@ -72,14 +72,14 @@ passwordRecovery: Password Recovery
 preferences: Preferences
 editPost: Edit Post
 
-bold: Bold
-italic: Italic
-underline: Underline
-strikethrough: Strikethrough
+bold: Bold (ctrl+b)
+italic: Italic (ctrl+i)
+underline: Underline (ctrl+u)
+strikethrough: Strikethrough (ctrl+s)
 hyperlink: Hyperlink
 size: Size
 color: Color
-quote: Quote
+quote: Quote (ctrl+q)
 centerAlign: Center-align
 rightAlign: Right-align
 
