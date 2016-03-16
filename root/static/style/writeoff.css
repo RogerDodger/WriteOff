@@ -600,6 +600,7 @@ textarea.example {
 
 body {
   color: #222;
+  background-color: #efefe7;
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
@@ -1021,17 +1022,6 @@ body {
   margin-top: 1em;
   height: 0;
   visibility: hidden; }
-
-/*
- * Global background color -- very dim colour to allow contrast
- */
-body {
-  background: #efefe7; }
-
-body.inverted {
-  background: #101018;
-  -webkit-filter: invert(100%);
-          filter: invert(100%); }
 
 /*
  * Header
@@ -1858,6 +1848,16 @@ body.inverted {
   @media (max-width: 40rem) {
     .Post {
       box-shadow: 0 0 3px #b6b6b6; } }
+
+.Post-hover {
+  box-shadow: 0 0 3px #b6b6b6;
+  background-color: #f3f3ed;
+  padding: 1em;
+  position: absolute;
+  max-width: 66rem; }
+  .Post-hover .Post {
+    margin: 0;
+    width: 100%; }
 
 .Post.highlight .Post-contents {
   box-shadow: 0 0 1em #9fdfdf; }

@@ -34,19 +34,6 @@ body {
 }
 
 /*
- * Global background color -- very dim colour to allow contrast
- */
-
-body {
-	background: hsla(60, 20%, 92%, 1);
-}
-
-body.inverted {
-	background: hsla(240, 20%, 8%, 1);
-	filter: #{ "invert(100%)" };
-}
-
-/*
  * Header
  */
 

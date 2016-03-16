@@ -10,7 +10,20 @@
 	word-wrap: break-word;
 
 	@media #{$mobile} {
-		box-shadow: 0 0 3px #b6b6b6;
+		@include box;
+	}
+}
+
+.Post-hover {
+	@include box;
+	background-color: hsla(60, 20%, 94%, 1);
+	padding: 1em;
+	position: absolute;
+	max-width: $container-wide + 2rem;
+
+	.Post {
+		margin: 0;
+		width: 100%;
 	}
 }
 

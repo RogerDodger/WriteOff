@@ -1219,6 +1219,27 @@ $(document).ready(function () {
 				);
 		}
 	});
+
+	$('.Post-reply, .Post-replies a')
+		.on('mouseover', function () {
+			var $link = $(this);
+			var $caller = $link.closest('.Post');
+			var $target = $('.Post#' + $link.attr('href').match(/(\d+)$/)[1]).clone();
+			var $hover = $('<div class="Post-hover"/>');
+
+			$hover.css({
+				top: $link.offset().top + $link.outerHeight() * 1.2,
+				left: $caller.offset().left - $('body').css('font-size').replace(/px/,''),
+			});
+
+			if ($link.is(':hover')) {
+				$hover.append($target.removeClass('hidden'));
+				$('body').append($hover);
+			}
+		})
+		.on('mouseout', function () {
+			$('.Post-hover').remove();
+		});
 });
 
 // ===========================================================================
