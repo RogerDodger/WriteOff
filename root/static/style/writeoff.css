@@ -1982,12 +1982,10 @@ body.inverted {
   .Post-contents--body div {
     display: inline-block;
     width: 100%; }
-  .Post-contents--body .Spoiler {
-    background-color: #222;
-    color: #222; }
-    .Post-contents--body .Spoiler:hover {
-      background-color: inherit;
-      color: inherit; }
+  .Post-contents--body .Spoiler:not(:hover) {
+    background-color: #444; }
+    .Post-contents--body .Spoiler:not(:hover), .Post-contents--body .Spoiler:not(:hover) > a, .Post-contents--body .Spoiler:not(:hover) > span {
+      color: #444 !important; }
   .Post-contents--body hr {
     background: transparent;
     border: none;
@@ -2004,9 +2002,6 @@ body.inverted {
       text-decoration: underline; }
     .Post-contents--body a:not(.Post-reply):visited {
       color: purple; }
-  .Post-contents--body .Spoiler {
-    background-color: #444;
-    color: #444; }
 
 .Post-submit,
 .Post-edit {
@@ -2491,12 +2486,10 @@ body.inverted {
   .Story div {
     display: inline-block;
     width: 100%; }
-  .Story .Spoiler {
-    background-color: #222;
-    color: #222; }
-    .Story .Spoiler:hover {
-      background-color: inherit;
-      color: inherit; }
+  .Story .Spoiler:not(:hover) {
+    background-color: #444; }
+    .Story .Spoiler:not(:hover), .Story .Spoiler:not(:hover) > a, .Story .Spoiler:not(:hover) > span {
+      color: #444 !important; }
   .Story hr {
     background: transparent;
     border: none;

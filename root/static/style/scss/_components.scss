@@ -391,13 +391,13 @@
 		width: 100%;
 	}
 
-	.Spoiler {
-		background-color: #222;
-		color: #222;
+	.Spoiler:not(:hover) {
+		background-color: #444;
 
-		&:hover {
-			background-color: inherit;
-			color: inherit;
+		&,
+		& > a,
+		& > span {
+			color: #444 !important;
 		}
 	}
 }
