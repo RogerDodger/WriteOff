@@ -52,6 +52,10 @@ Date.prototype.delta = function (other) {
 	var units               = ['year', 'month', 'day', 'hour', 'minute', 'second'];
 	var methods             = ['FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds'];
 
+	if (Math.abs(self.getTime() - other.getTime()) < 3000) {
+		return 'just now';
+	}
+
 	if (other < self) {
 		var ago = other.delta(self);
 		return 'in ' + ago.substr(0, ago.length - 4);
@@ -822,7 +826,7 @@ $(document).ready(function () {
 
 			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_));
 			e.textContent = delta;
-			if (/second/.test(delta) || /minute/.test(delta) && !/and/.test(delta)) {
+			if (delta == 'just now' || /second/.test(delta) || /minute/.test(delta) && !/and/.test(delta)) {
 				setTimeout(tick, 5000 + Math.random() * 5000, e);
 			}
 			else if (/minute/.test(delta) || /hour/.test(delta) && !/and/.test(delta)) {
