@@ -38,7 +38,7 @@ my %tags = (
 my %escapes = (
 	Parse::BBCode::HTML->default_escapes,
 	size => sub {
-		if ($_[2] =~ /^(\d+(?:\.\d+))(px|em|pt)?$/) {
+		if ($_[2] =~ /^(\d+(?:\.\d+)?)(px|em|pt)?$/) {
 			my ($em, $unit) = ($1, $2 // '');
 			$em /= 16 if $unit eq 'px' || !$unit;
 			$em /= 12 if $unit eq 'pt';
