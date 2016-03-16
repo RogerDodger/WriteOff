@@ -1247,3 +1247,18 @@ $(document).ready(function () {
 		}
 	});
 });
+
+// ===========================================================================
+// Story font selector
+// ===========================================================================
+
+$(document).ready(function () {
+	var $select = $('.Font-select');
+	var $example = $('.Story-example');
+
+	$example.removeClass('hidden');
+	$select.on('change', function () {
+			$example.css('font-family', $select.find(':selected').val());
+		})
+		.trigger('change');
+});

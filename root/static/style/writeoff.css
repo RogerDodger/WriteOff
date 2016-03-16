@@ -2474,12 +2474,22 @@ body.inverted {
 .Scoreboard-breakdown {
   font-size: 0.8em; }
 
-.Story {
-  font-family: serif;
-  font-size: 1.2em;
+.Story,
+.Story-example {
   line-height: 1.618;
-  margin-bottom: 2em;
   text-align: justify; }
+
+.Story-example {
+  border-left: 0.3em solid #bdbddb;
+  margin: 1em 0;
+  padding: 0.1em 0.5em;
+  font-size: 0.9em; }
+  .Story-example div + div {
+    margin-top: 1em; }
+
+.Story {
+  font-size: 1.2em;
+  margin-bottom: 2em; }
   .Story hr,
   .Story blockquote,
   .Story div {

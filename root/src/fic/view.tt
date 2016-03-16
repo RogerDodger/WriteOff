@@ -2,7 +2,7 @@
 	<div class="Story-title">{{ story.title }}</div>
 
 	{{ IF story.published }}
-	<div class="Story">
+	<div class="Story" style="font-family: {{ c.user.font || 'serif' }}">
 		{{ story.contents | bbcode }}
 		<!-- {{ story.wordcount }} words -->
 	</div>

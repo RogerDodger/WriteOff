@@ -72,6 +72,18 @@ passwordRecovery: Password Recovery
 preferences: Preferences
 editPost: Edit Post
 
+storyFont: Story font
+serif: Serif
+sans: Sans
+pangram: The quick brown fox jumps over the lazy dog.
+lipsum: |
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus at
+    lorem et vulputate. Nulla facilisi. Phasellus condimentum nisi purus, sed
+    dapibus lorem varius eu. Vestibulum luctus sapien suscipit ipsum
+    venenatis, id tincidunt lacus tristique. Donec eget vestibulum arcu. Ut
+    eget neque ac nisl commodo dictum vitae quis turpis. Proin porta eros ut
+    elit malesuada, ac placerat magna tempus.
+
 bold: Bold (ctrl+b)
 italic: Italic (ctrl+i)
 underline: Underline (ctrl+u)

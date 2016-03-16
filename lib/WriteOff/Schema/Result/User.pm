@@ -38,6 +38,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
 	"mailme",
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
+	"font",
+	{ data_type => "text", default_value => "serif", is_nullable => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",

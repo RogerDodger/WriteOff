@@ -129,6 +129,7 @@ sub prefs :Local :Args(0) {
 
 	$c->stash->{fillform} = {
 		mailme   => $c->user->mailme ? 'on' : '',
+		font     => $c->user->font,
 	};
 
 	push $c->stash->{title}, qw/User Preferences/;
@@ -136,12 +137,13 @@ sub prefs :Local :Args(0) {
 }
 
 sub do_prefs :Private {
-	my ( $self, $c ) = @_;
+my ( $self, $c ) = @_;
 
 	$c->forward('/check_csrf_token');
 
 	$c->user->update({
-		mailme   => $c->req->param('mailme') ? 1 : 0,
+		mailme => $c->req->param('mailme') ? 1 : 0,
+		font   => ($c->req->param('font') // '') =~ /^(serif|sans-serif)$/ ? $1 : 'serif',
 	});
 	$c->flash->{status_msg} = 'Preferences changed successfully';
 

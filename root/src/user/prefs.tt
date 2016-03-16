@@ -7,6 +7,19 @@
 		{{ csrf_field | none }}
 
 		<div class="Form-item">
+			<label>{{ c.string('storyFont') }}</label>
+			<select name="font" class="Font-select">
+				<option value="serif">{{ c.string('serif') }}</option>
+				<option value="sans-serif">{{ c.string('sans') }}</option>
+			</select>
+		</div>
+
+		<div class="Story-example hidden">
+			<div>{{ c.string('pangram') }}</div>
+			<div>{{ c.string('lipsum') }}</div>
+		</div>
+
+		<div class="Form-item">
 			<input name="mailme" type="checkbox">
 			<label>{{ c.string('mailme') }}</label>
 		</div>
