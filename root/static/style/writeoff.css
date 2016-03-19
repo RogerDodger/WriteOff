@@ -2373,14 +2373,12 @@ body {
           cursor: default; }
 
 .Votes-summary {
-  font-size: 1rem;
+  font-size: 0.6rem;
   text-align: center; }
   .Votes-summary ul {
     display: inline-block;
-    line-height: 0.4em;
     margin: 0;
     padding: 0;
-    font-size: 1.7em;
     text-align: center; }
     .Votes-summary ul li {
       list-style-type: none; }
