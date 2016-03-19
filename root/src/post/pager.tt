@@ -1,0 +1,12 @@
+{{ IF pager.first_page != pager.last_page }}
+<ul class="Pager {{ pos }}">
+	{{ FOREACH page IN [pager.first_page .. pager.last_page] }}
+	<li>
+		{{ IF page != pager.current_page }}
+		<a href="{{ c.req.uri_with({ 'page' = page }) }}">{{ page }}</a>
+		{{ ELSE }}
+		<a class="selected">{{ page }}</a>
+		{{ END }}
+	{{ END }}
+</ul>
+{{ END }}

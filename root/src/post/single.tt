@@ -4,7 +4,7 @@
 	<div class="Post-contents">
 		<div class="Post-contents--header">
 			<span class="Post-id">
-				<a href="/post/{{ post.id }}">#{{ post.id }}</a>
+				<a href="/post/{{ post.id }}">#{{ num || post.id }}</a>
 			</span>
 
 			&middot;

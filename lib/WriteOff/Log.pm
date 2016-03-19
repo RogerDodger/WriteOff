@@ -13,7 +13,7 @@ sub _log {
 	my ($self, $level, $fmt, @list) = @_;
 	return if $self->abort;
 
-	my $message = sprintf $fmt, @list;
+	my $message = scalar @list ? (sprintf $fmt, @list) : $fmt;
 	$message .= "\n" unless $message =~ /\n$/;
 	my $timestamp = POSIX::strftime($self->timeformat, localtime);
 

@@ -7,11 +7,15 @@ use base 'WriteOff::Schema::ResultSet';
 sub thread {
 	my ($self, $page) = @_;
 
+	$page //= 1;
+
 	$self->search_rs({}, {
 		prefetch => [
 			'artist',
 			'entry',
 		],
+		rows => 100,
+		page => $page,
 		join => 'artist',
 		order_by => { -asc => 'me.created' },
 	});
@@ -22,7 +26,7 @@ sub uid {
 	my ($self, $user) = @_;
 
 	join('.', 'thread',
-		$user->id, $self->count,
+		$user->id, $self->count, $self->pager->current_page,
 		map { $self->get_column($_)->max } qw/me.id me.updated artist.updated/
 	);
 }

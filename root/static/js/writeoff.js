@@ -1127,6 +1127,7 @@ $(document).ready(function () {
 	var key = document.location.pathname + '/page';
 
 	var changePage = function (page) {
+		return;
 		$posts.addClass('hidden');
 		$posts.slice(page * pageSize, (page + 1) * pageSize).removeClass('hidden');
 
@@ -1140,33 +1141,28 @@ $(document).ready(function () {
 		localStorage.setItem(key, page);
 	};
 
-	// Change post ID text to its number in the listing
-	$posts.each(function (i) {
-		$(this).find('.Post-id a').text('#' + (i + 1));
-	});
-
 	if (paged) {
 		var pages = Math.floor($posts.size() / pageSize);
 
-		$('.Pager').removeClass('hidden').each(function (i) {
-			var $pager = $(this);
-			for (var page = 0; page <= pages; page++) {
-				var $li = $('<li/>');
-				var $btn = $('<a class="Page-changer"/>');
-				$btn.click(function () {
-					var $this = $(this);
-					if (!$this.hasClass('selected')) {
-						changePage($this.text() - 1);
-						if (i == 1) {
-							$('html, body').scrollTop($('.Pager').offset().top);
-						}
-					}
-				});
-				$btn.text(page + 1);
-				$li.append($btn);
-				$pager.append($li);
-			}
-		});
+		// $('.Pager').removeClass('hidden').each(function (i) {
+		// 	var $pager = $(this);
+		// 	for (var page = 0; page <= pages; page++) {
+		// 		var $li = $('<li/>');
+		// 		var $btn = $('<a class="Page-changer"/>');
+		// 		$btn.click(function () {
+		// 			var $this = $(this);
+		// 			if (!$this.hasClass('selected')) {
+		// 				changePage($this.text() - 1);
+		// 				if (i == 1) {
+		// 					$('html, body').scrollTop($('.Pager').offset().top);
+		// 				}
+		// 			}
+		// 		});
+		// 		$btn.text(page + 1);
+		// 		$li.append($btn);
+		// 		$pager.append($li);
+		// 	}
+		// });
 
 		changePage(Number.parseInt(localStorage.getItem(key) || 0));
 	}
