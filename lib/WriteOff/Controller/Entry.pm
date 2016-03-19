@@ -182,7 +182,7 @@ sub votes :Private {
 
 	my $round = $c->model('DB::Round')->find($rid =~ /^(\d+)/ && $1);
 
-	if (!$round || $round->event_id != $c->stash->{entry}->event_id) {
+	if (!$round || $round->event_id != $c->stash->{event}->id || !$c->stash->{event}->tallied) {
 		$c->detach('/default');
 	}
 
