@@ -13,10 +13,10 @@ sub thread {
 		prefetch => [
 			'artist',
 			'entry',
+
 		],
 		rows => 100,
 		page => $page,
-		join => 'artist',
 		order_by => { -asc => 'me.created' },
 	});
 }

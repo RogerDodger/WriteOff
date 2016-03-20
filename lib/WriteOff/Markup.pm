@@ -72,13 +72,23 @@ my $post = Parse::BBCode->new({
 				}
 			}
 
+			my $fmt = qq{<a href="/post/%d" class="Post-reply" data-target="%d">%s%s</a>};
+
 			$text =~ s{
-				(&gt; &gt; ([0-9]+))
+				(&gt; &gt;) ([0-9]+)
 			}{
 				die "Too many replies in post\n" if $params->{limit}-- <= 0;
-				$posts->find($2)
-					? qq{<a href="/post/$2" class="Post-reply">$1</a>}
-					: $1
+				my $ret;
+				my $post = $posts->find($2);
+				if ($post) {
+					$params->{replies}{$2} = 1;
+					$ret = sprintf $fmt, $2, $2, $1,
+						Parse::BBCode::escape_html($post->artist->name);
+				}
+				else {
+					$ret = qq{$1$2};
+				}
+				$ret;
 			}xeg;
 
 			$text;

@@ -1,4 +1,4 @@
-<div class="Post view" id="{{ post.id }}">
+<div class="Post view" id="{{ post.id }}" data-page="{{ page }}">
 	{{ INCLUDE 'post/author.tt'  artist = post.artist }}
 
 	<div class="Post-contents">
@@ -22,7 +22,16 @@
 			</span>
 			{{ END }}
 
-			<span class="Post-replies"></span>
+			{{ IF post.children_rs.count }}
+			&middot;
+
+			<span class="Post-children">
+				{{ FOREACH child IN post.children }}
+				<a class="Post-reply" data-target="{{ child.id }}" href="{{ c.uri_for_action(
+					'/post/permalink', [ child.id ]) }}">&gt;&gt;{{ child.artist.name }}</a>
+				{{ END }}
+			</span>
+			{{ END }}
 
 			{{ IF c.user.active_artist }}
 			<a class="Post-control--reply" data-target="{{ post.id }}" {{ IF !entry && post.entry }}

@@ -1,8 +1,7 @@
-<ul class="Pager hidden"></ul>
-
+<div class="Posts">
 {{ FOREACH post IN posts.all }}
 	{{ SET num = posts.pager.first + loop.index }}
+	{{ SET page = posts.pager.current_page }}
 	{{ cache.proc('template' => 'post/single.tt', 'key' => post.uid(c.user, entry)) }}
 {{ END }}
-
-<ul class="Pager hidden"></ul>
+</div>

@@ -135,6 +135,9 @@
 	}
 }
 
+.Post-children {
+}
+
 .Post-control--reply,
 .Post-control--edit {
 	float: right;
@@ -275,5 +278,9 @@
 .Pager.loading,
 .Pager.loading + .Posts {
 	opacity: 0.5;
-	cursor: wait;
+
+	&:hover,
+	& > li > a:hover {
+		cursor: wait !important;
+	}
 }

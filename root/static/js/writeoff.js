@@ -349,57 +349,6 @@ $(document).ready(function() {
 	});
 });
 
-//==========================================================================
-// VoteRecord::fill magic
-//==========================================================================
-
-$(document).ready(function() {
-	var datamunge = function() {
-		var data = '';
-		$(this).children().each( function(i) {
-			if( i != 0 ) data += ';';
-			data += $(this).attr('data-id');
-		});
-		$('#sortable-data').attr('value', data);
-	};
-
-	$('#sortable').sortable({
-		update: datamunge,
-		create: datamunge
-	});
-
-
-	var absCheck = function () {
-		if (this.checked) {
-			$('#sortable li').addClass('ui-state-disabled');
-		}
-		else {
-			$('#sortable li').removeClass('ui-state-disabled');
-		}
-	};
-
-	// Set the handler and call it with right context
-	absCheck.call($('input[name=abstain]').click(absCheck).get(0));
-});
-
-// ===========================================================================
-// FAQ Expander
-// ===========================================================================
-
-$(document).ready(function() {
-	$('.expander').each(function() {
-		var $btn = $(this);
-		var $target = $btn.next();
-		if ($target && $target.hasClass('expandable')) {
-			$btn.addClass('active');
-			$target.addClass('hidden');
-			$btn.click(function() {
-				$target.toggleClass('hidden');
-			});
-		}
-	});
-});
-
 // ===========================================================================
 // Draw event timelines
 // ===========================================================================
@@ -1121,66 +1070,68 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	var $posts = $('.Post.view');
-	var pageSize = 100;
-	var paged = $posts.size() > pageSize;
+	var $pager = $('.Pager');
+	var $page = function (page) {
+		return $('.Post.view[data-page="' + page + '"]');
+	};
 	var key = document.location.pathname + '/page';
 
-	var changePage = function (page) {
-		return;
-		$posts.addClass('hidden');
-		$posts.slice(page * pageSize, (page + 1) * pageSize).removeClass('hidden');
+	var loadPage = function (page) {
+		if ($page(page).size()) return $.when();
 
-		$('.Page-changer').removeClass('selected').each(function () {
-			var $this = $(this);
-			if ($this.text() == page + 1) {
-				$this.addClass('selected');
+		$pager.addClass('loading');
+		return $.ajax({
+			method: 'GET',
+			url: document.location.pathname,
+			data: {
+				'page' : page
+			},
+			success: function (res, status, xhr) {
+				var $res = $($.parseHTML(res));
+				$('.Posts').append($res.find('.Post'));
+				$pager.removeClass('loading');
 			}
 		});
-
-		localStorage.setItem(key, page);
 	};
 
-	if (paged) {
-		var pages = Math.floor($posts.size() / pageSize);
+	var changePage = function (page) {
+		loadPage(page).then(function () {
+			$('.Post.view').addClass('hidden');
+			$page(page).removeClass('hidden');
+			$('.Pager a').removeClass('selected').each(function () {
+				var $this = $(this);
+				if ($this.text() == page) {
+					$this.addClass('selected');
+				}
+			});
+		});
+	};
 
-		// $('.Pager').removeClass('hidden').each(function (i) {
-		// 	var $pager = $(this);
-		// 	for (var page = 0; page <= pages; page++) {
-		// 		var $li = $('<li/>');
-		// 		var $btn = $('<a class="Page-changer"/>');
-		// 		$btn.click(function () {
-		// 			var $this = $(this);
-		// 			if (!$this.hasClass('selected')) {
-		// 				changePage($this.text() - 1);
-		// 				if (i == 1) {
-		// 					$('html, body').scrollTop($('.Pager').offset().top);
-		// 				}
-		// 			}
-		// 		});
-		// 		$btn.text(page + 1);
-		// 		$li.append($btn);
-		// 		$pager.append($li);
-		// 	}
-		// });
-
-		changePage(Number.parseInt(localStorage.getItem(key) || 0));
+	if ($pager.size()) {
+		$pager.find('a').removeAttr('href').click(function () {
+			var $this = $(this);
+			if (!$this.hasClass('selected') && !$pager.hasClass('loading')) {
+				changePage($this.text());
+				if ($this.closest('.Pager').hasClass('bottom')) {
+					$('html, body').scrollTop($('.Pager.top').offset().top);
+				}
+			}
+		});
 	}
 
 	var hashchanged = function () {
-		$('.Post').removeClass('highlight');
+		$('.Post.highlight').removeClass('highlight');
 		if (document.location.hash.search(/^#[0-9]+$/) != -1) {
 			var $post = $('.Post' + document.location.hash);
 			if ($post.size()) {
 				$post.addClass('highlight');
-				if (paged) {
-					changePage(Math.floor(
-						$post.find('.Post-id a').text().substr(1) / pageSize));
+				if ($pager.size()) {
+					changePage($post.attr('data-page'));
 					$('html, body').scrollTop($post.offset().top);
 				}
 			}
 		}
-	}
+	};
 
 	$(window).on('hashchange', hashchanged);
 	hashchanged();
@@ -1191,49 +1142,36 @@ $(document).ready(function () {
 // ===========================================================================
 
 $(document).ready(function () {
-	$('.Post-reply').each(function () {
-		var $link = $(this);
-		var $caller = $link.closest('.Post');
-		var targetId = $link.attr('href').match(/(\d+)$/)[1];
-		var $target = $('.Post#' + targetId);
-
-		if ($target.size()) {
-			$link.attr('href', '#' + targetId);
-			$link.text('>>' + $target.find('.Post-author--name').text().trim());
-
-			var $replies = $target.find('.Post-replies');
-
-			if (!$replies.children().length) {
-				$replies.append(" &middot; ");
+	$('.Post-reply')
+		.each(function () {
+			var $reply = $(this);
+			var $target = $('.Post#' + $reply.attr('data-target'));
+			if ($target.size()) {
+				$reply.attr('href', '#' + $target.attr('id'));
 			}
-
-			$replies
-				.append(' ')
-				.append($('<a/>')
-					.text('>>' + $caller.find('.Post-author--name').text().trim())
-					.attr('href', '#' + $caller.attr('id'))
-				);
-		}
-	});
-
-	$('.Post-reply, .Post-replies a')
-		.on('mouseover', function () {
+		})
+		.on('mouseenter', function () {
 			var $link = $(this);
 			var $caller = $link.closest('.Post');
-			var $target = $('.Post#' + $link.attr('href').match(/(\d+)$/)[1]).clone();
+			var $target = $('.Post#' + $link.attr('href').match(/(\d+)$/)[1]);
 			var $hover = $('<div class="Post-hover"/>');
+
+			if (!$target.size()) {
+				return; // FIND IT
+			}
 
 			$hover.css({
 				top: $link.offset().top + $link.outerHeight() * 1.2,
 				left: $caller.offset().left - $('body').css('font-size').replace(/px/,''),
 			});
+			$target = $target.clone();
 
 			if ($link.is(':hover')) {
 				$hover.append($target.removeClass('hidden'));
 				$('body').append($hover);
 			}
 		})
-		.on('mouseout', function () {
+		.on('mouseleave', function () {
 			$('.Post-hover').remove();
 		});
 });

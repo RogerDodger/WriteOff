@@ -71,11 +71,11 @@ a {
 /* Make placeholder text consistent across browsers */
 ::-webkit-input-placeholder {
   color: #999; }
-
-:-moz-placeholder {
+::-moz-placeholder {
   color: #999; }
-
 :-ms-input-placeholder {
+  color: #999; }
+::placeholder {
   color: #999; }
 
 .Divider {
@@ -1596,8 +1596,11 @@ body {
 
 .Pager.loading,
 .Pager.loading + .Posts {
-  opacity: 0.5;
-  cursor: wait; }
+  opacity: 0.5; }
+  .Pager.loading:hover, .Pager.loading > li > a:hover,
+  .Pager.loading + .Posts:hover,
+  .Pager.loading + .Posts > li > a:hover {
+    cursor: wait !important; }
 
 .Prompts {
   width: 100%; }
