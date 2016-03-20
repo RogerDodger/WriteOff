@@ -14,6 +14,8 @@ use WriteOff::DateTime;
 
 extends 'Catalyst::View::TT';
 
+$Template::Directive::WHILE_MAX = 2000;
+
 __PACKAGE__->config(
 	WRAPPER            => 'wrapper.tt',
 	ENCODING           => 'utf-8',
