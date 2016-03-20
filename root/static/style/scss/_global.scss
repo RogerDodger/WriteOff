@@ -14,6 +14,18 @@ body {
 	text-size-adjust: 100%;
 }
 
+table {
+	border-collapse: collapse;
+	word-wrap: break-word;
+}
+
+ol, ul {
+	& > ol,
+	& > ul {
+		list-style-type: lower-alpha;
+	}
+}
+
 /* Light selection rather than dark with inverted text */
 
 ::selection {
