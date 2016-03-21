@@ -60,6 +60,7 @@ sub add :Local {
 		artist_id => $c->user->active_artist_id,
 		event_id => $c->stash->{event}->id,
 		body => $c->req->param('body'),
+		body_render => '',
 	);
 
 	if ($c->req->param('entry') =~ /(\d+)/) {
@@ -70,8 +71,8 @@ sub add :Local {
 	}
 
 	my $post = $c->model('DB::Post')->new_result(\%post);
-	$post->render;
 	$post->insert;
+	$post->render->update;
 
 	$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 }
