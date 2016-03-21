@@ -1,7 +1,9 @@
 <div class="Posts">
+{{ SET artists = posts.artists_hash }}
 {{ FOREACH post IN posts.thread_prefetch }}
 	{{ SET num = posts.pager.first + loop.index }}
 	{{ SET page = posts.pager.current_page }}
-	{{ cache.proc('template' => 'post/single.tt', 'key' => post.uid(c.user, entry)) }}
+	{{ SET artist = artists.${post.artist_id} }}
+	{{ cache.proc('template' => 'post/single.tt', 'key' => post.uid(c.user, entry, artist)) }}
 {{ END }}
 </div>

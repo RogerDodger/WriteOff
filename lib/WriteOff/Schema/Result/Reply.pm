@@ -16,7 +16,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("parent_id", "child_id");
 
-__PACKAGE__->belongs_to('child', 'WriteOff::Schema::Result::Post', 'child_id');
-__PACKAGE__->belongs_to('parent', 'WriteOff::Schema::Result::Post', 'parent_id');
+__PACKAGE__->belongs_to('child', 'WriteOff::Schema::Result::Post', 'child_id', { join_type => 'left' });
+__PACKAGE__->belongs_to('parent', 'WriteOff::Schema::Result::Post', 'parent_id', { join_type => 'left' });
 
 1;

@@ -40,11 +40,13 @@ __PACKAGE__->many_to_many('parents', 'reply_parents', 'parent');
 
 # Unique amongst any version of itself, as well as any other post
 sub uid {
-	my ($self, $user, $entry) = @_;
+	my ($self, $user, $entry, $artist) = @_;
+
+	$artist //= $self->artist;
 
 	join(".", 'post',
-		$self->id, $self->updated, $self->artist->updated,
-		!!$user->active_artist_id, $user->can_edit($self), !!$entry,
+		$self->id, $self->updated, $artist->updated,
+		!!$user->active_artist_id, $user->can_edit($artist), !!$entry,
 	);
 }
 
@@ -75,7 +77,7 @@ sub render {
 sub is_manipulable_by {
 	my ($self, $user) = @_;
 
-	$self->artist->user_id == $user->id;
+	$self->artist->is_manipulable_by($user);
 }
 
 1;

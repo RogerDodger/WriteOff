@@ -37,7 +37,7 @@ sub user {
 		return $c->stash->{__user} = $user;
 	}
 
-	return $c->stash->{__user} if exists $c->stash->{__user};
+	return $c->stash->{__user} if $c->stash->{__user};
 
 	if (exists $c->session->{__user_id}) {
 		if (my $user = $c->model('DB::User')->find($c->session->{__user_id})) {

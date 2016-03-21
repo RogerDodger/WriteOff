@@ -219,9 +219,9 @@ sub publishes {
 }
 
 sub can_edit {
-	my ($self, $entry) = @_;
+	my ($self, $row) = @_;
 
-	return $entry->is_manipulable_by($self);
+	$row->is_manipulable_by($self);
 }
 
 sub storys {

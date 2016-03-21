@@ -224,7 +224,7 @@ sub page {
 	my $self = shift;
 
 	my $cache = $self->config->{pageCache};
-	my $key = join ".", $self->user->id, $self->req->uri->path;
+	my $key = join ".", $self->sessionid, $self->req->uri->path;
 	my $page = $self->req->param('page');
 
 	if ($page && $page =~ /^([1-9][0-9]*)$/) {

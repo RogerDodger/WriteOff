@@ -4,9 +4,24 @@ use strict;
 use warnings;
 use base 'WriteOff::Schema::ResultSet';
 
+sub artists_hash {
+	my $self = shift;
+
+	# Undo the paging, we want to get all artists in the thread
+	my %artists =
+		map { $_->id => $_ }
+			$self->result_source->schema->resultset('Post')
+				->search({ event_id => $self->get_column('event_id')->first })
+				->related_resultset('artist')
+				->all;
+
+	return \%artists;
+}
+
 sub thread {
 	my ($self, $page, $rows) = @_;
 
+	warn $page;
 	$page //= 1;
 	$rows //= 100;
 
@@ -21,12 +36,13 @@ sub thread {
 }
 
 sub thread_prefetch {
-	shift->search({}, {
+	my $self = shift;
+
+	$self->search({}, {
 		prefetch => [
-			'artist',
 			'entry',
-			# { reply_children => { child => 'artist' }},
-		],
+			{ reply_children => 'child' }
+		]
 	});
 }
 

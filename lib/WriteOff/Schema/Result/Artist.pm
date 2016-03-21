@@ -80,4 +80,10 @@ sub id_uri {
 	WriteOff::Util::simple_uri($self->id, $self->name);
 }
 
+sub is_manipulable_by {
+	my ($self, $user) = @_;
+
+	$self->user_id == $user->id;
+}
+
 1;
