@@ -60,7 +60,7 @@ sub render {
 		})
 	);
 
-	$self->parents->delete;
+	$self->reply_parents->delete;
 	$self->result_source->schema->resultset('Reply')->populate([
 		map {{
 			parent_id => $_,

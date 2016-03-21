@@ -15,6 +15,8 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	$c->stash->{event}{nocollapse} = 1;
 	$c->stash->{template} = 'event/view.tt';
 
+	$c->forward('/check_dry_page');
+
 	if ($c->stash->{format} eq 'json') {
 		$c->stash->{json} = $c->stash->{event}->json;
 		$c->forward('View::JSON');

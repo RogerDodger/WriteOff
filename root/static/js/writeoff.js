@@ -715,12 +715,67 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
+// .Post modifiers
+// ===========================================================================
+
+// Anything that modifies a .Post needs not only be applied on page load, but
+// also to new .Post elements loaded into the page.
+//
+// This array contains callbacks that refer to a passed context, e.g.
+//
+// function (context) {
+//   $('.Element', context).each(...);
+// };
+
+var postModifiers = [];
+
+postModifiers.apply = function (ctx) {
+	// $(selector, ctx) will only match *descendants* of ctx, so we box ctx
+	// in a div to make sure our selectors match everything in ctx
+	if (!$(ctx).is(document)) {
+		ctx = $('<div/>').append(ctx);
+	}
+
+	postModifiers.forEach(function (f) {
+		f(ctx);
+	});
+};
+
+// ===========================================================================
 // <time> prettifiers
 // ===========================================================================
 
+postModifiers.push(function (ctx) {
+	var $deltas = $('time.delta', ctx).not('.Countdown time');
+
+	if ($deltas.size()) {
+		var t, t0, ttl = $deltas.size();
+		var tick = function tick (e) {
+			t = new Date();
+			// Same as above
+			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
+
+			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_));
+			e.textContent = delta;
+			if (delta == 'just now' || /second/.test(delta) || /minute/.test(delta) && !/and/.test(delta)) {
+				setTimeout(tick, 5000 + Math.random() * 5000, e);
+			}
+			else if (/minute/.test(delta) || /hour/.test(delta) && !/and/.test(delta)) {
+				setTimeout(tick, 1000 * 60 + Math.random() * 500, e);
+			}
+			else {
+				setTimeout(tick, 1000 * 60 * 60 + Math.random() * 500, e);
+			}
+		};
+		t0 = new Date();
+		$deltas.each(function () {
+			tick(this);
+		});
+	}
+});
+
 $(document).ready(function () {
 	var $countdowns = $('.Countdown time');
-	var $deltas = $('time.delta').not($countdowns);
 	var $dates = $('time.date');
 	var $datetimes = $('time.datetime');
 
@@ -764,31 +819,6 @@ $(document).ready(function () {
 		t0 = new Date();
 		setInterval(tick, 1000);
 		tick();
-	}
-
-	if ($deltas.size()) {
-		var t, t0, ttl = $deltas.size();
-		var tick = function tick (e) {
-			t = new Date();
-			// Same as above
-			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
-
-			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_));
-			e.textContent = delta;
-			if (delta == 'just now' || /second/.test(delta) || /minute/.test(delta) && !/and/.test(delta)) {
-				setTimeout(tick, 5000 + Math.random() * 5000, e);
-			}
-			else if (/minute/.test(delta) || /hour/.test(delta) && !/and/.test(delta)) {
-				setTimeout(tick, 1000 * 60 + Math.random() * 500, e);
-			}
-			else {
-				setTimeout(tick, 1000 * 60 * 60 + Math.random() * 500, e);
-			}
-		};
-		t0 = new Date();
-		$deltas.each(function () {
-			tick(this);
-		});
 	}
 
 	$dates.each(function () {
@@ -884,7 +914,7 @@ $(document).ready(function () {
 		var $btn = $(this);
 		var $form = $btn.closest('form');
 
-		q.then(
+		q = q.then(
 			$.ajax({
 				type: 'POST',
 				url: $form.attr('action'),
@@ -955,8 +985,10 @@ $(document).ready(function () {
 	if (reply && pushReply(reply)) {
 		localStorage.removeItem('reply');
 	}
+});
 
-	$('.Post-control--reply')
+postModifiers.push(function (ctx) {
+	$('.Post-control--reply', ctx)
 		.each(function() {
 			$(this).data('redirect', $(this).attr('href'));
 		})
@@ -975,19 +1007,19 @@ $(document).ready(function () {
 		});
 });
 
-$(document).ready(function () {
-	$('.Post-control--edit')
+postModifiers.push(function (ctx) {
+	$('.Post-control--edit', ctx)
 		.removeAttr('href')
 		.click(function () {
 			$(this).closest('.Post').addClass('edit');
 		});
 
-	$('.Post-edit--cancel').click(function () {
+	$('.Post-edit--cancel', ctx).click(function () {
 		$(this).closest('.Post').removeClass('edit');
 	});
 
 	var q = $.when();
-	$('.Post-edit--save').click(function () {
+	$('.Post-edit--save', ctx).click(function () {
 		var $btn = $(this);
 		var $form = $btn.closest('form');
 		var $post = $form.closest('.Post');
@@ -998,7 +1030,9 @@ $(document).ready(function () {
 				url: $form.attr('action'),
 				data: $form.serializeArray(),
 				success: function(res, status, xhr) {
-					$post.find('.Post-contents--body').html(res);
+					res = $.parseHTML(res);
+					postModifiers.apply(res);
+					$post.find('.Post-contents--body').empty().append(res);
 				},
 				error: function(xhr, status, error) {
 					alert('Error: ' + error);
@@ -1011,7 +1045,7 @@ $(document).ready(function () {
 	});
 });
 
-$(document).ready(function () {
+postModifiers.push(function (ctx) {
 	var markup = [
 		[ '.fa-bold',          'b', false, 66 ],
 		[ '.fa-italic',        'i', false, 73 ],
@@ -1026,7 +1060,7 @@ $(document).ready(function () {
 		[ '.fa-align-center', 'center', false ],
 		[ '.fa-align-right',  'right', false ],
 	];
-	var $controls = $('.Post-form--controls');
+	var $controls = $('.Post-form--controls', ctx);
 
 	markup.forEach(function (e) {
 		var icon = e[0],
@@ -1056,7 +1090,7 @@ $(document).ready(function () {
 
 		if (typeof hotkey === 'undefined') return;
 
-		$('.Post-form--body textarea').on('keydown', function (ev) {
+		$('.Post-form--body textarea', ctx).on('keydown', function (ev) {
 			if (ev.ctrlKey && ev.which == hotkey) {
 				ev.preventDefault();
 				clicked($(this));
@@ -1066,8 +1100,26 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
-// Client-side post paging
+// Dynamic paging
 // ===========================================================================
+
+var $orphans = [];
+
+function loadOrphan (id) {
+	return $.ajax({
+		method: 'GET',
+		url: '/post/' + id + '/view',
+		data: {
+			event_id : event_id,
+			entry_id : entry_id,
+		},
+		success: function (res, status, xhr) {
+			res = $.parseHTML(res);
+			postModifiers.apply(res);
+			$orphans[id] = $(res).filter('.Post');
+		},
+	});
+}
 
 $(document).ready(function () {
 	var $pager = $('.Pager');
@@ -1077,25 +1129,33 @@ $(document).ready(function () {
 	var key = document.location.pathname + '/page';
 
 	var loadPage = function (page) {
-		if ($page(page).size()) return $.when();
-
-		$pager.addClass('loading');
-		return $.ajax({
-			method: 'GET',
+		var req = {
 			url: document.location.pathname,
 			data: {
 				'page' : page
-			},
-			success: function (res, status, xhr) {
-				var $res = $($.parseHTML(res));
-				$('.Posts').append($res.find('.Post'));
-				$pager.removeClass('loading');
 			}
-		});
+		};
+
+		if ($page(page).size()) {
+			req.method = 'POST';
+			req.data.dry = 1;
+			$.ajax(req);
+			return $.when();
+		}
+
+		$pager.addClass('loading');
+		req.method = 'GET';
+		req.success = function (res, status, xhr) {
+			res = $.parseHTML(res);
+			postModifiers.apply(res);
+			$('.Posts').append($(res).find('.Post'));
+			$pager.removeClass('loading');
+		};
+		return $.ajax(req);
 	};
 
 	var changePage = function (page) {
-		loadPage(page).then(function () {
+		return loadPage(page).then(function () {
 			$('.Post.view').addClass('hidden');
 			$page(page).removeClass('hidden');
 			$('.Pager a').removeClass('selected').each(function () {
@@ -1111,24 +1171,48 @@ $(document).ready(function () {
 		$pager.find('a').removeAttr('href').click(function () {
 			var $this = $(this);
 			if (!$this.hasClass('selected') && !$pager.hasClass('loading')) {
-				changePage($this.text());
-				if ($this.closest('.Pager').hasClass('bottom')) {
-					$('html, body').scrollTop($('.Pager.top').offset().top);
-				}
+				changePage($this.text()).then(function () {
+					if ($this.closest('.Pager').hasClass('bottom')) {
+						$('html, body').scrollTop($('.Pager.top').offset().top);
+					}
+				})
 			}
 		});
 	}
 
 	var hashchanged = function () {
 		$('.Post.highlight').removeClass('highlight');
+
 		if (document.location.hash.search(/^#[0-9]+$/) != -1) {
 			var $post = $('.Post' + document.location.hash);
-			if ($post.size()) {
+			var pid = document.location.hash.substr(1);
+			var q = $.when();
+
+			var jump = function () {
 				$post.addClass('highlight');
-				if ($pager.size()) {
-					changePage($post.attr('data-page'));
-					$('html, body').scrollTop($post.offset().top);
+				$('html, body').scrollTop($post.offset().top);
+			};
+
+			if ($post.size()) {
+				if ($post.hasClass('hidden')) {
+					q = changePage($post.attr('data-page'));
 				}
+				q.then(jump);
+			}
+			else {
+				if (!$orphans[pid]) {
+					q = loadOrphan(pid);
+				}
+
+				q.then(function () {
+					var $orphan = $orphans[pid];
+					if ($orphan && $orphan.attr('data-page')) {
+						changePage($orphan.attr('data-page')).then(function () {
+							$post = $('.Post' + document.location.hash);
+							jump();
+						});
+					}
+				})
 			}
 		}
 	};
@@ -1141,39 +1225,66 @@ $(document).ready(function () {
 // More responsive behaviour for post reply links
 // ===========================================================================
 
-$(document).ready(function () {
-	$('.Post-reply')
-		.each(function () {
-			var $reply = $(this);
-			var $target = $('.Post#' + $reply.attr('data-target'));
-			if ($target.size()) {
-				$reply.attr('href', '#' + $target.attr('id'));
-			}
-		})
+postModifiers.push(function (ctx) {
+	var q = $.when();
+
+	$('.Post-reply', ctx)
 		.on('mouseenter', function () {
-			var $link = $(this);
-			var $caller = $link.closest('.Post');
-			var $target = $('.Post#' + $link.attr('href').match(/(\d+)$/)[1]);
+			var $reply = $(this);
+			var $caller = $reply.closest('.Post');
+			var tid = $reply.attr('data-target');
+			var $target = $('.Post#' + tid);
 			var $hover = $('<div class="Post-hover"/>');
 
-			if (!$target.size()) {
-				return; // FIND IT
+			if ($target.size()) {
+				$target = $target.clone().removeClass('hidden');
+			}
+			else if ($orphans[tid]) {
+				$target = $orphans[tid];
+			}
+			else {
+				$reply.addClass('loading');
+				q = loadOrphan(tid).then(function () {
+					$reply.removeClass('loading');
+					$target = $orphans[tid];
+				});
 			}
 
-			$hover.css({
-				top: $link.offset().top + $link.outerHeight() * 1.2,
-				left: $caller.offset().left - $('body').css('font-size').replace(/px/,''),
+			q.then(function () {
+				$hover.css({
+					top: $reply.offset().top + $reply.outerHeight() * 1.2,
+					left: $caller.offset().left - $('body').css('font-size').replace(/px/,''),
+				});
+
+				if ($reply.is(':hover')) {
+					$hover.append($target);
+					$('body').append($hover);
+				}
 			});
-			$target = $target.clone();
-
-			if ($link.is(':hover')) {
-				$hover.append($target.removeClass('hidden'));
-				$('body').append($hover);
-			}
 		})
 		.on('mouseleave', function () {
 			$('.Post-hover').remove();
-		});
+		})
+		.on('click', function () {
+			var $reply = $(this);
+
+			q.then(function () {
+				var tid = $reply.attr('data-target');
+
+				var $post = $('.Post#' + tid);
+				if (!$post.size()) {
+					$post = $orphans[tid];
+				}
+
+				if ($post.size() && $post.attr('data-page')) {
+					document.location.hash = tid;
+				}
+				else {
+					window.location = '/post/' + tid;
+				}
+			});
+		})
+		.removeAttr('href');
 });
 
 // ===========================================================================
@@ -1216,4 +1327,12 @@ $(document).ready(function () {
 			$example.css('font-family', $select.find(':selected').val());
 		})
 		.trigger('change');
+});
+
+// ===========================================================================
+// Apply post modifiers to document
+// ===========================================================================
+
+$(document).ready(function () {
+	postModifiers.apply(document);
 });

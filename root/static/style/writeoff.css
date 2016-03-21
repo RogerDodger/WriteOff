@@ -1442,6 +1442,11 @@ body {
     .Post-contents--body a:not(.Post-reply):visited {
       color: purple; }
 
+.Post-reply {
+  cursor: pointer; }
+  .Post-reply.loading {
+    cursor: wait; }
+
 .Post-submit,
 .Post-edit {
   background-color: #f7f7f7;

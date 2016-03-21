@@ -5,19 +5,22 @@ use warnings;
 use base 'WriteOff::Schema::ResultSet';
 
 sub thread {
-	my ($self, $page) = @_;
+	my ($self, $page, $rows) = @_;
 
 	$page //= 1;
+	$rows //= 100;
 
 	$self->search_rs({}, {
 		prefetch => [
 			'artist',
 			'entry',
-
 		],
-		rows => 100,
 		page => $page,
-		order_by => { -asc => 'me.created' },
+		rows => $rows,
+		order_by => [
+			{ -asc => 'me.created' },
+			{ -asc => 'me.id' },
+		],
 	});
 }
 

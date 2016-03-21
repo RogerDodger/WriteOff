@@ -135,9 +135,6 @@
 	}
 }
 
-.Post-children {
-}
-
 .Post-control--reply,
 .Post-control--edit {
 	float: right;
@@ -175,6 +172,14 @@
 		&:not(.Post-reply):visited {
 			color: purple;
 		}
+	}
+}
+
+.Post-reply {
+	cursor: pointer;
+
+	&.loading {
+		cursor: wait;
 	}
 }
 

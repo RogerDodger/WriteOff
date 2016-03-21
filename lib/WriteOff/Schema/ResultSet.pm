@@ -51,4 +51,9 @@ sub join {
 	$self->search_rs(undef, { join => shift });
 }
 
+sub find_maybe {
+	my ($self, $id) = @_;
+	$self->find(($id // '') =~ /(\d+)/ && $1);
+}
+
 1;
