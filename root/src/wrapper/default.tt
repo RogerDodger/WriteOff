@@ -24,6 +24,8 @@
 		<script>
 			var timelines = [];
 			var now = new Date("{{ now.iso8601 }}Z");
+			var entry_id = {{ entry.id || 'undefined' }};
+			var event_id = {{ event.id || 'undefined' }};
 		</script>
 		<script src="/static/js/writeoff-{{ c.config.pid }}.js"></script>
 	</head>

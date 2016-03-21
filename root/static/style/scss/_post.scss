@@ -175,6 +175,14 @@
 	}
 }
 
+.Post-reply {
+	cursor: pointer;
+
+	&.loading {
+		cursor: wait;
+	}
+}
+
 .Post-submit,
 .Post-edit {
 	background-color: #f7f7f7;
@@ -270,4 +278,14 @@
 	@include button-group($hue: 40, $sat: 30%);
 	margin: 1.5rem auto;
 	text-align: center;
+}
+
+.Pager.loading,
+.Pager.loading + .Posts {
+	opacity: 0.5;
+
+	&:hover,
+	& > li > a:hover {
+		cursor: wait !important;
+	}
 }

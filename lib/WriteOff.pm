@@ -180,6 +180,12 @@ __PACKAGE__->config(
 		namespace => 'render',
 	),
 
+	pageCache => CHI->new(
+		expires_in => '7d',
+		driver => 'FastMmap',
+		namespace => 'page'
+	),
+
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );
@@ -214,8 +220,21 @@ sub mailfrom {
 	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
 }
 
-sub app_version {
-	return version->parse($VERSION)->stringify;
+sub page {
+	my $self = shift;
+
+	my $cache = $self->config->{pageCache};
+	my $key = join ".", $self->user->id, $self->req->uri->path;
+	my $page = $self->req->param('page');
+
+	if ($page && $page =~ /^([0-9]+)$/) {
+		$page = int $1;
+		$cache->set($key, $page);
+		return $page;
+	}
+	else {
+		return $cache->get($key) // 1;
+	}
 }
 
 =head1 NAME

@@ -285,6 +285,22 @@ sub check_csrf_token :Private {
 		or $c->detach('/error', [ $c->string('csrfDetected') ]);
 }
 
+=head2 check_dry_page
+
+Check if we are dry running to change the page cache.
+
+=cut
+
+sub check_dry_page :Private {
+	my ($self, $c) = @_;
+
+	if ($c->req->param('dry') && $c->req->param('page')) {
+		$c->page;
+		$c->res->body('Okay');
+		$c->detach;
+	}
+}
+
 =head2 strum
 
 Mogrify certain words in the response body.

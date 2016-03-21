@@ -5,15 +5,22 @@ use warnings;
 use base 'WriteOff::Schema::ResultSet';
 
 sub thread {
-	my ($self, $page) = @_;
+	my ($self, $page, $rows) = @_;
+
+	$page //= 1;
+	$rows //= 100;
 
 	$self->search_rs({}, {
 		prefetch => [
 			'artist',
 			'entry',
 		],
-		join => 'artist',
-		order_by => { -asc => 'me.created' },
+		page => $page,
+		rows => $rows,
+		order_by => [
+			{ -asc => 'me.created' },
+			{ -asc => 'me.id' },
+		],
 	});
 }
 
@@ -22,7 +29,7 @@ sub uid {
 	my ($self, $user) = @_;
 
 	join('.', 'thread',
-		$user->id, $self->count,
+		$user->id, $self->count, $self->pager->current_page,
 		map { $self->get_column($_)->max } qw/me.id me.updated artist.updated/
 	);
 }

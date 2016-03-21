@@ -7,7 +7,7 @@ BEGIN { extends 'Catalyst::Controller'; }
 sub fetch :Chained('/') :PathPart('post') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {
-	my ( $self, $c ) = @_;
+	my ($self, $c) = @_;
 
 	my $uri = $c->uri_for_action(
 		$c->stash->{post}->entry
@@ -16,6 +16,32 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	);
 
 	$c->res->redirect($uri . "#" . $c->stash->{post}->id);
+}
+
+sub view :Chained('fetch') :PathPart('view') :Args(0) {
+	my ($self, $c) = @_;
+
+	my $entry = $c->req->param('entry_id') // '';
+	my $event = $c->req->param('event_id') // '';
+
+	my $wrongEntry = $c->stash->{post}->entry_id && $entry && $c->stash->{post}->entry_id ne $entry;
+	my $rightEvent = $event eq $c->stash->{post}->event_id;
+
+	my $thread = !$c->stash->{post}->entry || !$entry && $rightEvent
+		? $c->stash->{post}->event->posts
+		: $c->stash->{post}->entry->posts;
+
+	$c->stash->{num} = $thread->search({
+			id => { '<=' => $c->stash->{post}->id },
+			created => { '<=' => $c->stash->{post}->created },
+		})->count;
+
+	$c->stash->{page} = !$rightEvent || $wrongEntry
+		? 0
+		: 1 + int($c->stash->{num} / 100);
+
+	$c->stash->{template} = 'post/single.tt';
+	push $c->stash->{title}, $c->string('postN', $c->stash->{post}->id);
 }
 
 sub add :Local {

@@ -15,6 +15,8 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	$c->stash->{event}{nocollapse} = 1;
 	$c->stash->{template} = 'event/view.tt';
 
+	$c->forward('/check_dry_page');
+
 	if ($c->stash->{format} eq 'json') {
 		$c->stash->{json} = $c->stash->{event}->json;
 		$c->forward('View::JSON');
@@ -179,22 +181,6 @@ sub results :Private {
 
 	push $c->stash->{title}, $c->string($c->stash->{mode} . 'Results');
 	$c->stash->{template} = 'event/results.tt';
-}
-
-sub slates :Chained('fetch') :PathPart('slates') :Args(1) {
-	my ($self, $c, $round) = @_;
-
-	$c->detach('/default') unless grep { $round eq $_ } qw/prelim public private/;
-
-	my $body = '';
-	my $slates = $c->stash->{event}->vote_records->round($round)->slates;
-	for my $slate (reverse sort { $#$a <=> $#$b } grep { $#$_ } @$slates) {
-		$body .= join ' ', @$slate;
-		$body .= "\n";
-	}
-
-	$c->res->content_type('text/plain; charset=utf-8');
-	$c->res->body($body);
 }
 
 sub view :Chained('fetch') :PathPart('submissions') :Args(0) {
