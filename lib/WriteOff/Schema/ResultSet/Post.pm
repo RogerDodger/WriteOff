@@ -11,10 +11,6 @@ sub thread {
 	$rows //= 100;
 
 	$self->search_rs({}, {
-		prefetch => [
-			'artist',
-			'entry',
-		],
 		page => $page,
 		rows => $rows,
 		order_by => [
@@ -24,9 +20,21 @@ sub thread {
 	});
 }
 
+sub thread_prefetch {
+	shift->search({}, {
+		prefetch => [
+			'artist',
+			'entry',
+			{ reply_children => { child => 'artist' }},
+		],
+	});
+}
+
 # Unique amongst any version of itself, as well as any other set of posts
 sub uid {
 	my ($self, $user) = @_;
+
+	$self = $self->search({}, { join => 'artist' });
 
 	join('.', 'thread',
 		$user->id, $self->count, $self->pager->current_page,
