@@ -38,7 +38,7 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 
 	$c->stash->{page} = !$rightEvent || $wrongEntry
 		? 0
-		: 1 + int($c->stash->{num} / 100);
+		: 1 + int(($c->stash->{num} - 1) / 100);
 
 	$c->stash->{template} = 'post/single.tt';
 	push $c->stash->{title}, $c->string('postN', $c->stash->{post}->id);
