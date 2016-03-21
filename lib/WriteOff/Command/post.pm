@@ -24,7 +24,7 @@ sub render {
 		: $self->db('Post')->search({ id => $id });
 
 	while (my $post = $posts->next) {
-		$post->render->update;
+		$post->render;
 	}
 }
 

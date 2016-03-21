@@ -59,7 +59,7 @@ sub add :Local {
 	my %post = (
 		artist_id => $c->user->active_artist_id,
 		event_id => $c->stash->{event}->id,
-		body => $c->req->param('body'),
+		body => $c->req->param('body') // '',
 		body_render => '',
 	);
 
@@ -70,9 +70,7 @@ sub add :Local {
 		}
 	}
 
-	my $post = $c->model('DB::Post')->new_result(\%post);
-	$post->insert;
-	$post->render->update;
+	my $post = $c->model('DB::Post')->create(\%post)->render;
 
 	$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 }
@@ -97,9 +95,9 @@ sub do_edit :Private {
 	$c->forward('/check_csrf_token');
 
 	my $post = $c->stash->{post};
-	$post->body($c->req->param('body'));
+
+	$post->body($c->req->param('body') // '');
 	$post->render;
-	$post->update;
 
 	if ($c->stash->{ajax}) {
 		$c->res->body($post->body_render);
