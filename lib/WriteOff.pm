@@ -227,7 +227,7 @@ sub page {
 	my $key = join ".", $self->user->id, $self->req->uri->path;
 	my $page = $self->req->param('page');
 
-	if ($page && $page =~ /^([0-9]+)$/) {
+	if ($page && $page =~ /^([1-9][0-9]*)$/) {
 		$page = int $1;
 		$cache->set($key, $page);
 		return $page;

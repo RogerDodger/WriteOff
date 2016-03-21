@@ -25,9 +25,13 @@ sub thread_prefetch {
 		prefetch => [
 			'artist',
 			'entry',
-			{ reply_children => { child => 'artist' }},
+			# { reply_children => { child => 'artist' }},
 		],
 	});
+}
+
+sub thread_prefetch_rs {
+	scalar shift->thread_prefetch;
 }
 
 # Unique amongst any version of itself, as well as any other set of posts
