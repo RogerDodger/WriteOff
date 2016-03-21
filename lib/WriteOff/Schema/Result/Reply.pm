@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 
-__PACKAGE__->table("replies");
+__PACKAGE__->table("replys");
 
 __PACKAGE__->add_columns(
 	"parent_id",

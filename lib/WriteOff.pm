@@ -31,7 +31,7 @@ require CHI;
 require WriteOff::Log;
 require WriteOff::Util;
 
-our $VERSION = 'v0.63.0';
+our $VERSION = 'v0.64.0';
 
 __PACKAGE__->config(
 	name => 'Writeoff',
