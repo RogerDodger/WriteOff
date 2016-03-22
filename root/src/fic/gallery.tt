@@ -22,6 +22,7 @@
 					<th>Story</th>
 					<th class="no-sort"></th>
 					{{ IF event.commenting }}
+					<th><i class="fa fa-users" title="Commenters"></i></th>
 					<th><i class="fa fa-comment" title="Comments"></i></th>
 					{{ END }}
 					<th class="Storys-wordcount">Words</th>
@@ -59,6 +60,7 @@
 						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.epub">epub</a>)
 					</td>
 					{{ IF event.commenting }}
+					<td class="Storys-posts">{{ entry.posts_rs.group_by_rs('artist_id').count }}</td>
 					<td class="Storys-posts">{{ entry.posts_rs.count }}</td>
 					{{ END }}
 					<td class="Storys-wordcount">{{ entry.story.wordcount.chunk(-3).join(',') }}</td>
@@ -80,6 +82,7 @@
 						(<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
 					</td>
 					{{ IF event.commenting }}
+					<td class="Storys-posts"></td>
 					<td class="Storys-posts"></td>
 					{{ END }}
 					<td class="Storys-wordcount">

@@ -56,4 +56,12 @@ sub find_maybe {
 	$self->find(($id // '') =~ /(\d+)/ && $1);
 }
 
+sub group_by {
+	shift->search({}, { group_by => shift });
+}
+
+sub group_by_rs {
+	scalar shift->group_by(@_);
+}
+
 1;
