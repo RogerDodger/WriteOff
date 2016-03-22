@@ -1,4 +1,9 @@
+- [high] Stop dupe posts
+- [high] Post upvotes
+- [high] Round cut explanation for FAQ
+- [high] Take scoreboards out of DB and into a file cache
 - [high] Automatic event scheduling
+- [med] Remove jQuery UI
 - [med] Smileys
 - [med] Event notifications (prompt selected)
 - [med] Post notifications
