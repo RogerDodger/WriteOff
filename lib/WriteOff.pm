@@ -177,6 +177,8 @@ __PACKAGE__->config(
 		expires_in => '10m',
 		expires_variance => 0.2,
 		driver => 'File',
+		depth => 3,
+		max_key_length => 16,
 		namespace => 'render',
 	),
 
