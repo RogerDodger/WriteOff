@@ -54,14 +54,12 @@ sub render {
 	my $self = shift;
 
 	my %replies;
-
-	$self->body_render(
-		WriteOff::Markup::post($self->body, {
+	$self->update({
+		body_render => WriteOff::Markup::post($self->body, {
 			posts => $self->result_source->resultset->search_rs({}, { join => 'artist' }),
 			replies => \%replies,
 		})
-	);
-
+	});
 	$self->reply_parents->delete;
 	$self->result_source->schema->resultset('Reply')->populate([
 		map {{
