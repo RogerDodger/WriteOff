@@ -1,5 +1,7 @@
 <div class="Post view" id="{{ post.id }}" data-page="{{ page }}">
-	{{ artist = artist || post.artist }}
+	{{- SET artist   = artist || post.artist }}
+	{{- SET editable = c.user.can_edit(artist) }}
+
 	{{ INCLUDE 'post/author.tt' }}
 
 	<div class="Post-contents">
@@ -41,7 +43,7 @@
 			</a>
 			{{ END }}
 
-			{{ IF c.user.can_edit(artist) }}
+			{{ IF editable }}
 			<a class="Post-control--edit" href="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
 				<i class="fa fa-pencil fa-fw" title="{{ c.string('edit') }}"></i>
 			</a>
@@ -50,7 +52,7 @@
 
 		<div class="Post-contents--body">{{ post.body_render | none }}</div>
 
-		{{ IF c.user.can_edit(artist) }}
+		{{ IF editable }}
 		<div class="Post-contents--edit">
 			<form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
 				{{ csrf_field | none }}
