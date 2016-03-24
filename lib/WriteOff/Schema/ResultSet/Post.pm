@@ -50,16 +50,4 @@ sub thread_prefetch_rs {
 	scalar shift->thread_prefetch;
 }
 
-# Unique amongst any version of itself, as well as any other set of posts
-sub uid {
-	my ($self, $user) = @_;
-
-	$self = $self->search({}, { join => 'artist' });
-
-	join('.', 'thread',
-		$user->id, $self->count, $self->pager->current_page,
-		map { $self->get_column($_)->max } qw/me.id me.updated artist.updated/
-	);
-}
-
 1;

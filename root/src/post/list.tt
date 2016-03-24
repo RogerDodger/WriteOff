@@ -2,7 +2,7 @@
 
 {{ PROCESS 'post/pager.tt'  pos = 'top', pager = posts.pager }}
 
-{{ cache.inc('template' => 'post/list_.tt', 'key' => posts.uid(c.user)) }}
+{{ INCLUDE 'post/list_.tt' }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'bottom', pager = posts.pager }}
 
