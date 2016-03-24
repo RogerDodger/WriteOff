@@ -5,9 +5,9 @@ use 5.01;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
-require List::Util;
-require WriteOff::Util;
-require WriteOff::Rank;
+use List::Util ();
+use WriteOff::Util ();
+use WriteOff::Rank ();
 
 __PACKAGE__->table("rounds");
 

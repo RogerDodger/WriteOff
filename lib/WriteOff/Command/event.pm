@@ -9,7 +9,7 @@ use HTML::Entities qw/decode_entities/;
 sub run {
 	my ($self, $command, @args) = @_;
 
-	if (defined $command && $command =~ /^(?:export|reset)$/) {
+	if (defined $command && $command =~ /^(?:export|reset|schedule)$/) {
 		$self->$command(@args);
 	}
 	else {
@@ -109,4 +109,42 @@ sub reset {
 	$e->reset_schedules;
 }
 
+sub schedule {
+	my $self = shift;
+
+	my @events = $self->db('Event')->active->all;
+
+	my $current = shift @events;
+	my ($prevFiM, $prevGen);
+	for my $e (@events) {
+		$prevFiM //= $e if $e->genre->name eq 'FiM';
+		$prevGen //= $e if $e->genre->name eq 'General';
+	}
+
+	my $cRounds = $current->rounds->ordered->search({ mode => 'fic' });
+	my $cWriting = $cRounds->search({ action => 'submit' })->first;
+
+	printf do { local $/ = <DATA> },
+		$prevGen->id_uri, $prevGen->prompt, $prevGen->format->name, $prevGen->id_uri,
+		$prevFiM->id_uri, $prevFiM->prompt, $prevFiM->format->name, $prevFiM->id_uri,
+		$current->id_uri, $current->prompt, $current->format->name, $current->wc_min, $current->wc_max, $current->genre->name,
+		$cWriting->start->delta_days($cWriting->end)->days * 24,
+		(map { $_->start->strftime("%b %d") } $cWriting, $cRounds->search({ action => "vote" })),
+		$current->id_uri;
+}
+
 1;
+
+__DATA__
+[center][b]Previous General Fiction Round: "[url=http://writeoff.me/event/%s]%s[/url]"[/b] (%s)[/center]
+[center][url=http://writeoff.me/event/%s/fic/results]Results[/url][/center]
+
+[center][b]Previous MLP Fanfic Round: "[url=http://writeoff.me/event/%s]%s[/url]"[/b] (%s)[/center]
+[center][url=http://writeoff.me/event/%s/fic/results]Results[/url][/center]
+
+[center][b][size=1.5em]Current Round: "[url=http://writeoff.me/event/%s]%s[/url]"[/size][/b][/center]
+[center]%s competition (%d–%d words), %s Fiction, %d-hour writing period[/center]
+[center]Writing period: Starts %s[/center]
+[center]Preliminary Judging: Starts %s[/center]
+[center]Finalist Judging: Starts %s[/center]
+[center][i]([u]Dates are approximate![/u] See [url=http://writeoff.me/event/%s/fic/submit]the fic submission page[/url] for a countdown timer.)[/i][/center]
