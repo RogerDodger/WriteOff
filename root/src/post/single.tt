@@ -36,18 +36,22 @@
 			</span>
 			{{ END }}
 
-			{{ IF c.user.active_artist_id }}
-			<a class="Post-control--reply" data-target="{{ post.id }}" {{ IF !entry && post.entry }}
-				href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"{{ END }}>
-				<i class="fa fa-reply fa-fw" title="{{ c.string('reply') }}"></i>
-			</a>
-			{{ END }}
+			<ul class="Post-controls">
+				{{ IF editable }}
+				<li>
+				<a class="Post-control--edit" href="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
+					<i class="fa fa-pencil fa-fw" title="{{ c.string('edit') }}"></i>
+				</a>
+				{{ END }}
 
-			{{ IF editable }}
-			<a class="Post-control--edit" href="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
-				<i class="fa fa-pencil fa-fw" title="{{ c.string('edit') }}"></i>
-			</a>
-			{{ END }}
+				{{ IF c.user.active_artist_id }}
+				<li>
+				<a class="Post-control--reply" data-target="{{ post.id }}" {{ IF !entry && post.entry }}
+					href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"{{ END }}>
+					<i class="fa fa-reply fa-fw" title="{{ c.string('reply') }}"></i>
+				</a>
+				{{ END }}
+			</ul>
 		</div>
 
 		<div class="Post-contents--body">{{ post.body_render | none }}</div>

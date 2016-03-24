@@ -1406,10 +1406,15 @@ body {
     color: #222;
     text-decoration: underline; }
 
-.Post-control--reply,
-.Post-control--edit {
+.Post-controls {
   float: right;
-  margin-left: 0.6em; }
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+  .Post-controls li {
+    float: left; }
+  .Post-controls li + li {
+    margin-left: 0.6em; }
 
 .Post-contents--body {
   margin: 0 1em;
