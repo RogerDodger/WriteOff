@@ -1,0 +1,34 @@
+<div class="Scoreboard-filter">
+	<div class="Scoreboard-filter--genre">
+		<div class="Scoreboard-filter--label">Genre</div>
+		<div class="Scoreboard-filter--options">
+		{{ FOREACH thing IN genres.all }}
+			{{ IF genre && thing.id == genre.id }}
+			<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
+			{{ ELSE }}
+			<a class="Scoreboard-filter--link" href="{{ thing.id_uri | format(gUrl) }}">{{ thing.name }}</a>
+			{{ END }}
+		{{ END }}
+		</div>
+	</div>
+
+	{{ IF fUrl }}
+	<div class="Scoreboard-filter--format">
+		<div class="Scoreboard-filter--label">Format</div>
+		<div class="Scoreboard-filter--options">
+		{{ IF !format }}
+			<span class="Scoreboard-filter--link selected">All</span>
+		{{ ELSE }}
+			<a class="Scoreboard-filter--link" href="{{ fUrl.substr(0, -3) }}">All</a>
+		{{ END }}
+		{{ FOREACH thing IN formats.all }}
+			{{ IF format && thing.id == format.id }}
+			<span class="Scoreboard-filter--link selected">{{ thing.name }}</span>
+			{{ ELSE }}
+			<a class="Scoreboard-filter--link" href="{{ thing.id_uri | format(fUrl) }}">{{ thing.name }}</a>
+			{{ END }}
+		{{ END }}
+		</div>
+	</div>
+	{{ END }}
+</div>

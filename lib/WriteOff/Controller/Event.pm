@@ -377,9 +377,6 @@ sub tally_round :Private {
 	if ($r->mode eq 'fic' && !$e->rounds->after($r)->count) {
 		$c->log->info("Tallying results for %s", $e->prompt);
 		$e->tally;
-
-		$c->forward('/scoreboard/calculate', [ 'en', $e->genre ]);
-		$c->forward('/scoreboard/calculate', [ 'en', $e->genre, $e->format ]);
 	}
 }
 

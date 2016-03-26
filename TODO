@@ -1,13 +1,13 @@
+- [high] Automatic event scheduling
 - [high] Stop dupe posts
 - [high] Post upvotes
 - [high] Round cut explanation for FAQ
-- [high] Take scoreboards out of DB and into a file cache
-- [high] Automatic event scheduling
 - [med] Remove jQuery UI
 - [med] Smileys
 - [med] Event notifications (prompt selected)
 - [med] Post notifications
 - [low] Change mask criteria to involve probabilistic modelling
+- [low] Show guesses on fic/view
 - [low] View counter for stories
 - [low] Provide stylometric analysis of entries for author guessing
 - [low] Set up system for users to translate website copy

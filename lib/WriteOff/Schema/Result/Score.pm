@@ -2,6 +2,7 @@ package WriteOff::Schema::Result::Score;
 
 use base qw/DBIx::Class::Core/;
 use WriteOff::Award;
+use WriteOff::Util ();
 
 __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
 __PACKAGE__->table('scores');
@@ -65,19 +66,25 @@ __PACKAGE__->result_source_instance->deploy_depends_on([
 	"WriteOff::Schema::Result::Event",
 ]);
 
-sub tally_awards {
-	my ($self, $awards) = @_;
+sub id_uri {
+	my $self = shift;
+	WriteOff::Util::simple_uri $self->id, $self->name;
+}
 
-	my $myawards = $awards->search(
+sub tally_awards {
+	my ($self, $awards, $cols) = @_;
+
+	my %bin = map { $_->award_id => 0 } @$cols;
+	$bin{$_->award_id}++ for $awards->search(
 		{ "entry.artist_id" => $self->id },
 		{ join => 'entry' },
-	);
+	)->all;
 
 	my @tally;
-	for my $award ($awards->unique) {
+	for my $award (@$cols) {
 		push @tally, {
 			award => $award,
-			count => $myawards->search({ award_id => $award->award_id })->count,
+			count => $bin{$award->award_id},
 		};
 	}
 

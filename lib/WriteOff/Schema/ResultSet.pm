@@ -53,7 +53,7 @@ sub join {
 
 sub find_maybe {
 	my ($self, $id) = @_;
-	$self->find(($id // '') =~ /(\d+)/ && $1);
+	defined $id && $id =~ /(\d+)/ && $self->find($1) || undef;
 }
 
 sub group_by {

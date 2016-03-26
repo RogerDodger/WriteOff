@@ -6,76 +6,71 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 sub index :Path('/scoreboard') {
-	my ( $self, $c, $gid, $fid) = @_;
+	my ($self, $c, $gid, $fid) = @_;
 
-	my $genre = $c->model('DB::Genre')->find(($gid // 1) =~ /^(\d+)/ && $1);
-	my $format = $c->model('DB::Format')->find(($fid // 0) =~ /^(\d+)/ && $1);
+	my $lang = 'en';
+	my $genre = $c->stash->{genre} = $c->model('DB::Genre')->find_maybe($gid // 1);
+	my $format = $c->stash->{format} = $c->model('DB::Format')->find_maybe($fid);
+	my $events = $c->model('DB::Event')->search({
+		tallied => 1,
+		genre_id => $genre->id,
+	});
 
-	if (!$genre) {
-		$c->detach('/default');
-	}
-	else {
-		$c->stash->{scoreboard} = $c->model('DB::Scoreboard')->search({
-				format_id => $format && $format->id,
-				genre_id => $genre && $genre->id,
-			})->first;
+	$c->detach('/default') if !$genre;
 
-		push $c->stash->{title}, join ' ',
-			(map $_->name, grep defined, $genre, $format),
-			$c->string('scoreboard');
-
-		$c->stash->{template} = 'scoreboard/index.tt';
-	}
-}
-
-sub calculate :Private {
-	my ($self, $c, $lang, $genre, $format) = @_;
-
-	$c->stash->{genre} = $genre;
-	$c->stash->{format} = $format;
-
-	$c->stash->{awards} = $c->model('DB::Award')->search({}, { join => { entry => "event" } });
-	$c->stash->{theorys} = $c->model('DB::Theory')->search(
-		{ award_id => { "!=" => undef } },
-		{ join => 'event' }
-	);
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
 	$c->stash->{gUrl} = '/scoreboard/%s';
-	$c->stash->{aUrl} = '/artist/%s/scores';
-
-	$c->stash->{$_} = $c->stash->{$_}->search({ "event.genre_id" => $genre->id }) for qw/awards theorys/;
 	$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';
-	$c->stash->{aUrl} .= '?genre=' . $genre->id_uri;
+	$c->stash->{aUrl} = '/artist/%s/scores?genre=' . $genre->id_uri;
 
 	if ($format) {
-		$c->stash->{$_} = $c->stash->{$_}->search({ "event.format_id" => $format->id }) for qw/awards theorys/;
 		$c->stash->{gUrl} .= '/' . $format->id_uri;
 		$c->stash->{aUrl} .= '&format=' . $format->id_uri;
+		$events = $events->search({ format_id => $format->id });
 	}
 
-	$c->stash->{artists} = $c->model('DB::Score')->search({
-		format_id => $format && $format->id,
-		genre_id => $genre && $genre->id,
-	});
+	my $cache = $c->config->{scoreCache};
+	my $key = join ".", $lang, $genre->id, ($format ? $format->id : ()), $events->count;
+	my $rendering = "rendering.$key";
 
+	$c->stash->{scoreboard} = $cache->get($key);
+	if (!$c->stash->{scoreboard} && !$cache->get($rendering)) {
+		$cache->set($rendering, 1, '10s');
+
+		my $pid = fork;
+		if (!defined $pid) {
+			$c->log->error("Fork failed!: $!");
+		}
+		elsif (!$pid) {
+			my %cond;
+			$cond{"genre_id"} = $genre->id;
+			$cond{"format_id"} = $format->id if $format;
+
+			$c->stash->{awards} = $c->model('DB::Award')->search(\%cond, {
+				join => { entry => "event" }
+			});
+
+			$c->stash->{theorys} = $c->model('DB::Theory')->search(
+				{ award_id => { "!=" => undef }, %cond },
+				{ join => 'event' }
+			);
+
+			$c->stash->{artists} = $c->model('DB::Score')->search({
+				genre_id => $genre->id,
+				format_id => $format ? $format->id : undef,
+			});
+
+			$c->stash->{wrapper} = 'wrapper/none.tt';
+			$cache->set($key, $c->view('TT')->render($c, 'scoreboard/table.tt'), '6w');
+			$cache->remove($rendering);
+			exit(0);
+		};
+	}
+
+	push $c->stash->{title}, join ' ', ($genre->name, $format ? $format->name : ()), $c->string('scoreboard');
 	$c->stash->{template} = 'scoreboard/index.tt';
-	$c->stash->{wrapper} = 'wrapper/none.tt';
-
-	my %key = (
-		lang => $lang,
-		genre_id => $genre->id,
-		format_id => $format && $format->id,
-	);
-	my $body = $c->view('TT')->render($c, 'scoreboard/index_.tt');
-
-	if (my $scoreboard = $c->model('DB::Scoreboard')->search(\%key)->first) {
-		$scoreboard->update({ body => $body });
-	}
-	else {
-		$c->model('DB::Scoreboard')->create({ %key, body => $body });
-	}
 }
 
 =head1 AUTHOR

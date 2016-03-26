@@ -3,8 +3,10 @@
 		{{ title.-1 }}
 	</div>
 
-	{{ IF scoreboard }}
-		{{ scoreboard.body | none }}
+	{{ INCLUDE scoreboard/nav.tt }}
+
+	{{ IF scoreboard.defined }}
+		{{ scoreboard | none }}
 	{{ ELSE }}
 	<div class="Flash">
 		{{ c.string('calculatingScoreboard') }}

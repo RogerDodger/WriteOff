@@ -1,57 +1,65 @@
 <h1>{{ title.list.join(' ') }}</h1>
 
-<table class="plain t-center">
-	<tr>
-		<th>Event</th>
-		<th>Entry</th>
-		<th colspan="2">Score</th>
-		<th>Awards</th>
-	</tr>
-	{{- FOREACH entry IN scores.all }}
-	<tr>
-		<td class="start">
-			<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('results'),
-				[ entry.event.id_uri ]) }}">
-				{{ entry.event.prompt }}
-			</a>
-		</td>
-		<td class="start">
-			<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('view'), [ entry.item_id ]) }}">
-				{{ entry.title }}
-			</a>
-		</td>
-		<td class="center">
-			<span title="{{ entry.score | format('%.5f') }}">
-				{{ entry.score | format('%d') }}
-			</span>
-		</td>
-		<td class="center">
-			<span title="{{ entry.${scoreKey} | format('%.5f') }}">
-				({{ entry.${scoreKey} | format('%d') }})
-			</span>
-		</td>
-		<td class="center">
-			{{ FOREACH award IN entry.awards; award.html | none; END }}
-		</td>
-	</tr>
-	{{- END }}
+<table class="Scoreboard-breakdown">
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Entry</th>
+			<th colspan="2">Score</th>
+			<th>Awards</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{- FOREACH entry IN scores.all }}
+		<tr>
+			<td class="Scoreboard-breakdown--prompt">
+				<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('results'),
+					[ entry.event.id_uri ]) }}">
+					{{ entry.event.prompt }}
+				</a>
+			</td>
+			<td class="Scoreboard-breakdown--title">
+				<a href="{{ c.uri_for( c.controller( entry.type.ucfirst ).action_for('view'), [ entry.item_id ]) }}">
+					{{ entry.title }}
+				</a>
+			</td>
+			<td class="Scoreboard-breakdown--score">
+				<span title="{{ entry.score | format('%.5f') }}">
+					{{ entry.score | format('%d') }}
+				</span>
+			</td>
+			<td class="Scoreboard-breakdown--score">
+				<span title="{{ entry.${scoreKey} | format('%.5f') }}">
+					({{ entry.${scoreKey} | format('%d') }})
+				</span>
+			</td>
+			<td class="Scoreboard-breakdown--awards">
+				{{ FOREACH award IN entry.awards; award.html | none; END }}
+			</td>
+		</tr>
+		{{- END }}
+	<tbody>
 </table>
 
 {{ IF theorys.count }}
-<table class="plain t-center" style="margin-top: 1em">
-	<tr>
-		<th>Event</th>
-		<th>Award</th>
-	</tr>
-	{{ FOREACH theory IN theorys.all }}
-	<tr>
-		<td class="start">
-			<a href="{{ c.uri_for_action('/fic/results', [ theory.event.id_uri ]) }}">
-				{{ theory.event.prompt }}
-			</a>
-		</td>
-		<td class="center">{{ theory.award.html | none }}</td>
-	</tr>
-	{{ END }}
+<table class="Scoreboard-breakdown" style="margin-top: 1em">
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Award</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{- FOREACH theory IN theorys.all }}
+		<tr>
+			<td class="Scoreboard-breakdown--prompt">
+				<a href="{{ c.uri_for_action('/fic/results', [ theory.event.id_uri ]) }}">
+					{{ theory.event.prompt }}
+				</a>
+			</td>
+			<td class="Scoreboard-breakdown--awards">{{ theory.award.html | none }}</td>
+		</tr>
+		{{- END }}
+	</tbody>
 </table>
 {{ END }}

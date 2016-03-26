@@ -173,19 +173,25 @@ __PACKAGE__->config(
 		voter => 0.5,
 	},
 
+	pageCache => CHI->new(
+		expires_in => '7d',
+		driver => 'FastMmap',
+		namespace => 'page'
+	),
+
 	renderCache => CHI->new(
 		expires_in => '10m',
 		expires_variance => 0.2,
 		driver => 'File',
 		depth => 3,
-		max_key_length => 16,
+		max_key_length => 8,
 		namespace => 'render',
 	),
 
-	pageCache => CHI->new(
-		expires_in => '7d',
-		driver => 'FastMmap',
-		namespace => 'page'
+	scoreCache => CHI->new(
+		driver => 'File',
+		max_key_length => 8,
+		namespace => 'score',
 	),
 
 	disable_component_resolution_regex_fallback => 1,

@@ -28,7 +28,7 @@ Cleans old data from the database.
 sub auto :Private {
 	my ($self, $c) = @_;
 
-	$c->req->address eq '127.0.0.1';
+	substr($c->req->address, -9) eq '127.0.0.1' or $c->detach('/default');
 }
 
 sub cleanup :Local {
@@ -42,6 +42,8 @@ sub clear :Local {
 	my ($self, $c) = @_;
 
 	$c->config->{renderCache}->clear;
+	$c->config->{pageCache}->clear;
+	$c->config->{scoreCache}->clear;
 }
 
 sub schedule :Local {
@@ -55,24 +57,6 @@ sub schedule :Local {
 	$rs->delete;
 
 	$c->forward($_->action, $_->args) for @schedules;
-}
-
-sub scoreboard :Local {
-	my ($self, $c) = @_;
-
-	for my $genre ($c->model('DB::Genre')->all) {
-		for my $format (undef, $c->model('DB::Format')->all) {
-			my $scoreboard = $c->model('DB::Scoreboard')->search({
-					lang => 'en',
-					genre_id => $genre->id,
-					format_id => $format && $format->id,
-				})->first;
-
-			if (!$scoreboard || $c->req->param('purge')) {
-				$c->forward('/scoreboard/calculate', [ 'en', $genre, $format ]);
-			}
-		}
-	}
 }
 
 sub end :Private {
