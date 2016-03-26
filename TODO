@@ -2,6 +2,8 @@
 - [high] Stop dupe posts
 - [high] Post upvotes
 - [high] Round cut explanation for FAQ
+- [high] Link to artist profile in every instance of name appearing
+- [med] More stuff in artist profiles
 - [med] Remove jQuery UI
 - [med] Smileys
 - [med] Event notifications (prompt selected)
