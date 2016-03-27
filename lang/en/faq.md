@@ -54,15 +54,15 @@ In the context of the model, this is the probability that a random voter will pr
 
 Each submission type in each event has a difficulty score calculated.
 
-For art submissions, this is always 500.
+For art submissions, is is always 500.
 
-For fic submissions, this is equal to ten times the average square root of the event’s story’s wordcounts.
+For fic submissions, it is equal to ten times the average square root of the event’s story’s wordcounts.
 For minific and short story contests, this is approximately 250 and 600 respectively.
 
 Entries are awarded a fraction of this score based on their performance.
-This is equal to `(1 - i/n)^e`, where *i* is the entry’s position (e.g, “1” for 1st place), *n* is the number of entries in the event, and *e* is 1.6.
+This is equal to (1 - *i*/*n*)<sup>*b*</sup>, where *i* is the entry’s position (e.g, “1” for 1st place), *n* is the number of entries in the event, and *b* is 1.6.
 
-This means that, for example, in a short story contest with 20 contestants, 1st place will receive `(1 - 1/20)^1.6 = 0.92 =` 92% of ~600 points, 10th place will receive `(1 - 10/20)^1.6 = 0.33 =` 33% of ~600 points, and last place will receive 0 points.
+This means that, for example, in a short story contest with 20 contestants, 1st place will receive (1 - 1/20)<sup>1.6</sup> = 0.92 = 92% of ~600 points, 10th place will receive (1 - 10/20)<sup>1.6</sup> = 0.33 = 33% of ~600 points, and last place will receive 0 points.
 
 In addition, any submission from an artist after the first will have 20% of the difficulty subtracted from its final score.
 In this way, it is possible for entries to get negative score, but also possible for an artist to get more points from an event with multiple entries than just one.
