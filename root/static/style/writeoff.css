@@ -639,7 +639,7 @@ body {
   margin-top: 1em; }
   .Document.narrow, .narrow.Artist-edit, .narrow.Story-container {
     max-width: 48rem; }
-  .Document > *:last-child, .Artist-edit > *:last-child, .Story-container > *:last-child {
+  .Document > :last-child, .Artist-edit > :last-child, .Story-container > :last-child {
     margin-bottom: 0; }
   .Document pre, .Artist-edit pre, .Story-container pre {
     background: #ededed;
@@ -679,6 +679,8 @@ body {
   font-weight: bold; }
   .Document-topic--title:not(:first-child) {
     margin-top: 1.5em; }
+  .Document-topic--title + p {
+    margin-top: 0.1em; }
 
 .Document-section--title {
   border-bottom: 1px solid #bfbfbf;
@@ -687,12 +689,6 @@ body {
   padding-bottom: 0.2em;
   margin-bottom: 0.5em;
   margin-top: 1.7em; }
-
-.Document-topic--title + p {
-  margin-top: 0; }
-
-.Document-body :last-child {
-  margin-bottom: 0; }
 
 .Document-index {
   position: -webkit-sticky;
@@ -703,11 +699,14 @@ body {
   margin-left: 2rem;
   width: 25%; }
 
+.Document-body > :first-child {
+  margin-top: 0; }
+.Document-body > :last-child {
+  margin-bottom: 0; }
+
 .Document-index + .Document-body {
   float: right;
   width: calc(75% - 2em); }
-  .Document-index + .Document-body > *:first-child {
-    margin-top: 0; }
 
 .Document-index--topic {
   padding-left: 1em; }
