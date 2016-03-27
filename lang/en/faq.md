@@ -22,9 +22,9 @@ If you want a submission deleted or edited after submissions are closed, you’l
 
 No. It will not appear in your ballot.
 
-### How many entries pass through the prelim round?
+### How many entries move on to the finals?
 
-Approximately 15 and 35 entries for short story and minific contests respectively.
+15 short stories, 35 minifics, or half the entries&mdash;whichever is smallest.
 
 ### How many entries do I get in my ballot?
 

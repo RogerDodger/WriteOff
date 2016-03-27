@@ -15,6 +15,6 @@ Once submissions close, voting begins. Anyone can vote, though in practise votin
 
 Voters are assigned stories from the competition to read and rank from best to worst. (What that means, exactly, is up to the voter.) [These rankings are then combined into a unified ranking](/faq#How-does-the-voting-algorithm-work), which is used to determine the winners.
 
-There are usually two voting rounds. After the first round, the top ranking stories move on to the next round, while the others are eliminated. Once eliminated, stories have their authors revealed.
+There are usually two voting rounds. After each voting round, [the top ranking stories move on to the next round](/faq#How-many-entries-move-on-to-the-finals), while the others are eliminated. Once eliminated, stories have their authors revealed.
 
 Once the voting rounds are finished, results are posted. The first, second, and third ranking stories receive gold, silver, and bronze medals respectively. Other miscellaneous awards are also dealt out.
