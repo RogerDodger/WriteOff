@@ -28,15 +28,15 @@ submitted stories.
 
 Stories can be formatted using BBCode. The following tags are supported:
 
-	[hr]                          Horizontal rule
-	[b]<text>[/b]                 Bold text
-	[i]<text>[/i]                 Italicised text
-	[u]<text>[/u]                 Underlined text
-	[s]<text>[/s]                 Struck-out text
-	[smcaps]<text>[/smcaps]       Text in small caps
-	[center]<text>[/center]       Centred text
-	[right]<text>[/right]         Right-aligned text
-	[quote]<text>[/quote]         A block quote
-	[size=<size>]<text>[/size]    Re-sized text
-	[url=<url>]<text>[/url]       A link to <url>
-	[color=<color>]<text>[/url]   Coloured text
+	[hr]                            Horizontal rule
+	[b]<text>[/b]                   Bold text
+	[i]<text>[/i]                   Italicised text
+	[u]<text>[/u]                   Underlined text
+	[s]<text>[/s]                   Struck-out text
+	[smcaps]<text>[/smcaps]         Text in small caps
+	[center]<text>[/center]         Centred text
+	[right]<text>[/right]           Right-aligned text
+	[quote]<text>[/quote]           A block quote
+	[size="<size>"]<text>[/size]    Re-sized text
+	[url="<url>"]<text>[/url]       A link to <url>
+	[color="<color>"]<text>[/url]   Coloured text

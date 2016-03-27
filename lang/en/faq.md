@@ -8,13 +8,13 @@ Yes.
 
 ### How do I format my story?
 
-See [this page](/style).
+See [the style guide](/style).
 
-### How do I delete/edit a submission?
+### How do I delete/edit an entry?
 
-You may delete/edit a submission by going to the submission page and following the appropriate links.
+By going to the submission page and following the appropriate links.
 
-If you want a submission deleted or edited after submissions are closed, you’ll have to take it up with the event’s organiser.
+You can only modify entries while submissions are still open. However, entries can be unpublished once the event is concluded.
 
 ## Voting
 
