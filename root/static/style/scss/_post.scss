@@ -111,18 +111,25 @@
 }
 
 .Post-contents:hover {
-	.Post-contents--header a {
-		color: #666;
+	.Post-contents--header {
+		a {
+			color: #666;
+		}
+
+		button {
+			color: #888;
+		}
 	}
 }
 
 .Post-contents--header {
 	color: #999;
-	font-size: 0.8em;
+	font-size: 0.75em;
 	margin: 0 1em;
-	padding-bottom: 0.5em;
+	padding-bottom: 0.7em;
 	padding-top: 1em;
 	border-bottom: 1px solid #ddd;
+	letter-spacing: 0.01em;
 
 	a {
 		cursor: pointer;
@@ -133,6 +140,15 @@
 		color: #222;
 		text-decoration: underline;
 	}
+}
+
+.Post-vote form {
+	display: inline;
+}
+
+.Post-vote--score {
+	color: green;
+	font-weight: bold;
 }
 
 .Post-controls {

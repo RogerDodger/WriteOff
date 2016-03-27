@@ -107,6 +107,14 @@ sub do_edit :Private {
 	}
 }
 
+sub _vote :ActionClass('~Vote') {}
+
+sub vote :Chained('fetch') :PathPart('vote') :Args(0) {
+	my ($self, $c) = @_;
+	$c->stash->{redirect} = $c->uri_for_action('/post/permalink', [ $c->stash->{post}->id ]);
+	$c->forward('_vote');
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

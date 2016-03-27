@@ -9,19 +9,21 @@ sub artists_hash {
 
 	# Undo the paging, we want to get all artists in the thread
 	my %artists =
-		map { $_->id => $_ }
-			$self->result_source->schema->resultset('Post')
-				->search({ event_id => $self->get_column('event_id')->first })
-				->related_resultset('artist')
-				->all;
+		map { $_->id => $_ } $self->fresh
+			->search({ event_id => $self->get_column('event_id')->first })
+			->related_resultset('artist')
+			->all;
 
 	return \%artists;
+}
+
+sub fresh {
+	shift->result_source->schema->resultset('Post');
 }
 
 sub thread {
 	my ($self, $page, $rows) = @_;
 
-	warn $page;
 	$page //= 1;
 	$rows //= 100;
 
@@ -48,6 +50,19 @@ sub thread_prefetch {
 
 sub thread_prefetch_rs {
 	scalar shift->thread_prefetch;
+}
+
+sub vote_map {
+	my ($self, $user) = @_;
+
+	return {} if !$user;
+
+	my %map = map { $_->id => 1 }
+		$self->fresh->search(
+			{ 'votes.user_id' => $user->id },
+			{ join => 'votes' })->all;
+
+	\%map;
 }
 
 1;

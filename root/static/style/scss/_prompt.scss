@@ -17,37 +17,12 @@
 	text-align: start;
 }
 
+.Prompts-name {
+	width: 100%;
+}
+
 .Prompts-vote {
 	white-space: nowrap;
-
-	.Prompts-vote--button {
-		@extend .button-reset;
-		color: #aaa;
-
-		&:disabled {
-			color: transparent;
-		}
-
-		&:not([disabled]):hover {
-			color: #666;
-		}
-	}
-
-	&[data-vote="1"] .Prompts-vote--button[value="1"] {
-		color: hsla(120, 60%, 60%, 1);
-
-		&:not([disabled]):hover {
-			color: hsla(120, 60%, 40%, 1);
-		}
-	}
-
-	&[data-vote="-1"] .Prompts-vote--button[value="-1"] {
-		color: hsla(0, 60%, 60%, 1);
-
-		&:not([disabled]):hover {
-			color: hsla(0, 60%, 40%, 1);
-		}
-	}
 }
 
 .Prompts-name {

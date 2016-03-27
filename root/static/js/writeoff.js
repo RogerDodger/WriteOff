@@ -876,17 +876,17 @@ $(document).ready(function () {
 })
 
 // ===========================================================================
-// Prompt vote buttons
+// Prompt and Post vote buttons
 // ===========================================================================
 
-$(document).ready(function () {
+postModifiers.push(function (ctx) {
 	var q = $.when();
-	$('.Prompts-vote--button').on('click', function (e) {
+	$('.Prompts-vote--button, .Post-vote--button', ctx).on('click', function (e) {
 		e.preventDefault();
 		var $btn = $(this);
 		var $form = $btn.closest('form');
 
-		q.then(
+		q = q.then(
 			$.ajax({
 				type: 'POST',
 				url: $form.attr('action'),
@@ -895,7 +895,13 @@ $(document).ready(function () {
 					value: $btn.attr('value')
 				}),
 				success: function(res, status, xhr) {
-					$form.closest('.Prompts-vote').attr('data-vote', res);
+					$form.attr('data-vote', res.vote);
+					if ('score' in res) {
+						$form.siblings().text(res.score || '');
+					}
+				},
+				error: function(xhr, status, err) {
+					alert('Vote failed: ' + err);
 				}
 			})
 		);

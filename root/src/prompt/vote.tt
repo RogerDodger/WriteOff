@@ -35,11 +35,11 @@
 		<tbody>
 			{{ FOREACH prompt IN prompts.all }}
 			<tr>
-				<td class="Prompts-vote" data-vote="{{ votes.${prompt.id} IF votes }}">
-					<form method="post" action="{{ c.req.uri }}">
+				<td class="Prompts-vote">
+					<form method="post" action="{{ c.req.uri }}" data-vote="{{ votes.${prompt.id} IF votes }}">
 						{{ csrf_field | none }}
 						<input type="hidden" name="prompt" value="{{ prompt.id }}">
-						<button class="Prompts-vote--button" name="toggle" value="1" {{ 'disabled' IF !votes_allowed }}>
+						<button class="Prompts-vote--button" name="value" value="1" {{ 'disabled' IF !votes_allowed }}>
 							<i class="fa fa-thumbs-up"></i>
 						</button>
 					</form>

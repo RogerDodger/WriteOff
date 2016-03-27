@@ -21,6 +21,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 0 },
 	"body_render",
 	{ data_type => "text", is_nullable => 0 },
+	"score",
+	{ data_type => "integer", is_nullable => 0, default_value => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",
@@ -34,6 +36,7 @@ __PACKAGE__->belongs_to('entry', 'WriteOff::Schema::Result::Entry', 'entry_id', 
 __PACKAGE__->belongs_to('event', 'WriteOff::Schema::Result::Event', 'event_id', { join_type => "left" });
 __PACKAGE__->has_many('reply_children', 'WriteOff::Schema::Result::Reply', 'parent_id', { join_type => "left" });
 __PACKAGE__->has_many('reply_parents', 'WriteOff::Schema::Result::Reply', 'child_id', { join_type => "left" });
+__PACKAGE__->has_many('votes', 'WriteOff::Schema::Result::PostVote', 'post_id');
 
 __PACKAGE__->many_to_many('children', 'reply_children', 'child');
 __PACKAGE__->many_to_many('parents', 'reply_parents', 'parent');

@@ -12,6 +12,18 @@
 
 			&middot;
 
+			<span class="Post-vote">
+				<span class="Post-vote--score">{{ post.score IF post.score }}</span>
+				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="{{ votes.${post.id} }}">
+					{{ csrf_field | none }}
+					<button class="Post-vote--button" name="value" value="1" {{ 'disabled' IF !c.user }}>
+						<i class="fa fa-thumbs-up"></i>
+					</button>
+				</form>
+			</span>
+
+			&middot;
+
 			<span class="Post-created">
 				{{ post.created.delta_html | none }}
 			</span>

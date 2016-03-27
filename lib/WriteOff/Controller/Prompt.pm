@@ -45,33 +45,13 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
 	$c->stash->{template} = 'prompt/vote.tt';
 }
 
+sub _do_vote :ActionClass("~Vote");
+
 sub do_vote :Private {
 	my ( $self, $c ) = @_;
-
-	$c->forward('/check_csrf_token');
-	return if !$c->user;
-
-	my $id = $c->req->param('prompt') or return;
-	my $toggle = $c->req->param('toggle') or return;
-
-	# Vote values other than 1 can be allowed by changing the $toggle regex
-	return unless $id =~ /^\d+$/a and $toggle =~ /^1$/;
-
-	if (my $prompt = $c->stash->{prompts}->find($id)) {
-		my $vote = $c->model('DB::PromptVote')->find_or_create({ user_id => $c->user->id, prompt_id => $id });
-		$vote->update({ value => ($vote->value // 0) == $toggle ? 0 : $toggle });
-		$prompt->update({ score => $prompt->votes->get_column('value')->sum });
-
-		if ($c->stash->{ajax}) {
-			$c->res->body($vote->value);
-		}
-		else {
-			$c->res->redirect($c->req->uri);
-		}
-	}
-	else {
-		$c->detach('/error');
-	}
+	$c->stash->{prompt} = $c->stash->{prompts}->find_maybe($c->req->param('prompt'));
+	$c->stash->{redirect} = $c->req->uri;
+	$c->forward('_do_vote');
 }
 
 sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {

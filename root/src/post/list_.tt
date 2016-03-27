@@ -1,5 +1,6 @@
 <div class="Posts">
 {{ SET artists = posts.artists_hash }}
+{{ SET votes = posts.vote_map(c.user) }}
 {{ SET page = posts.pager.current_page }}
 {{ SET first = posts.pager.first }}
 {{ FOREACH post IN posts.thread_prefetch }}

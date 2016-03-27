@@ -417,7 +417,8 @@ a {
 /*
  * Clear the default style of <button> elements, to contain .fa icons that submit forms
  */
-.button-reset, .Artist-swap, .Prompts-vote .Prompts-vote--button {
+.button-reset, .Artist-swap, .Prompts-vote button,
+.Post-vote button {
   background: none;
   padding: 0;
   border: none; }
@@ -1391,20 +1392,30 @@ body {
 
 .Post-contents:hover .Post-contents--header a {
   color: #666; }
+.Post-contents:hover .Post-contents--header button {
+  color: #888; }
 
 .Post-contents--header {
   color: #999;
-  font-size: 0.8em;
+  font-size: 0.75em;
   margin: 0 1em;
-  padding-bottom: 0.5em;
+  padding-bottom: 0.7em;
   padding-top: 1em;
-  border-bottom: 1px solid #ddd; }
+  border-bottom: 1px solid #ddd;
+  letter-spacing: 0.01em; }
   .Post-contents--header a {
     cursor: pointer;
     color: #999; }
   .Post-contents--header a:hover {
     color: #222;
     text-decoration: underline; }
+
+.Post-vote form {
+  display: inline; }
+
+.Post-vote--score {
+  color: green;
+  font-weight: bold; }
 
 .Post-controls {
   float: right;
@@ -1679,22 +1690,11 @@ body {
   width: 100%;
   text-align: start; }
 
+.Prompts-name {
+  width: 100%; }
+
 .Prompts-vote {
   white-space: nowrap; }
-  .Prompts-vote .Prompts-vote--button {
-    color: #aaa; }
-    .Prompts-vote .Prompts-vote--button:disabled {
-      color: transparent; }
-    .Prompts-vote .Prompts-vote--button:not([disabled]):hover {
-      color: #666; }
-  .Prompts-vote[data-vote="1"] .Prompts-vote--button[value="1"] {
-    color: #5cd65c; }
-    .Prompts-vote[data-vote="1"] .Prompts-vote--button[value="1"]:not([disabled]):hover {
-      color: #29a329; }
-  .Prompts-vote[data-vote="-1"] .Prompts-vote--button[value="-1"] {
-    color: #d65c5c; }
-    .Prompts-vote[data-vote="-1"] .Prompts-vote--button[value="-1"]:not([disabled]):hover {
-      color: #a32929; }
 
 .Prompts-name {
   width: 100%; }
@@ -2240,3 +2240,25 @@ body {
 .Ballot-append.active:hover, .Ballot-append.waiting {
   cursor: pointer;
   opacity: 1; }
+
+.Prompts-vote button,
+.Post-vote button {
+  color: #aaa; }
+  .Prompts-vote button:disabled,
+  .Post-vote button:disabled {
+    color: transparent; }
+  .Prompts-vote button:not([disabled]):hover,
+  .Post-vote button:not([disabled]):hover {
+    color: #666; }
+.Prompts-vote form[data-vote="1"] button[value="1"],
+.Post-vote form[data-vote="1"] button[value="1"] {
+  color: #5cd65c; }
+  .Prompts-vote form[data-vote="1"] button[value="1"]:not([disabled]):hover,
+  .Post-vote form[data-vote="1"] button[value="1"]:not([disabled]):hover {
+    color: #29a329; }
+.Prompts-vote form[data-vote="-1"] button[value="-1"],
+.Post-vote form[data-vote="-1"] button[value="-1"] {
+  color: #d65c5c; }
+  .Prompts-vote form[data-vote="-1"] button[value="-1"]:not([disabled]):hover,
+  .Post-vote form[data-vote="-1"] button[value="-1"]:not([disabled]):hover {
+    color: #a32929; }
