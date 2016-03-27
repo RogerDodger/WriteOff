@@ -160,11 +160,6 @@ $(document).ready(function ($) {
 		})
 		.trigger('change');
 
-	$('input.autocomplete-user').autocomplete({
-		source: '/user/list?format=json&q=username',
-		minLength: 1,
-	});
-
 	$('#preview img').each( function() {
 		$(this).data('default', $(this).attr('src'));
 	});
@@ -184,52 +179,6 @@ $(document).ready(function ($) {
 			img.attr('src', img.data('default'));
 		}
 	});
-
-	$('.dialog-fetcher')
-		.click( function(e) {
-			var div = $(
-				'<div class="dialog"><div class="loading"></div></div>'
-			).appendTo('body');
-
-			var pos = [ 'center', 40 ];
-
-			div.dialog({
-				title: 'Please Wait',
-				modal: true,
-				closeOnEscape: true,
-				width: 'auto',
-				resizable: false,
-				close: function(ui, e) {
-					div.remove();
-				},
-				position: pos
-			});
-
-			div.load(
-				$(this).data('target'),
-				function(res, status, xhr) {
-					if (status != 'error') {
-						//Order here is important
-						div.dialog('option', 'title', div.find('h1').html());
-						div.find('h1').remove();
-						div.dialog('option', 'position', pos);
-
-						div.find('input:first').focus();
-					}
-					else {
-						div.dialog('option', {
-							position: pos,
-							title: 'Error'
-						})
-						div.html( xhr.status + " " + xhr.statusText );
-					}
-				}
-			);
-		})
-		.each( function() {
-			$(this).data('target', $(this).attr('href') );
-		})
-		.removeAttr('href');
 });
 
 //==========================================================================

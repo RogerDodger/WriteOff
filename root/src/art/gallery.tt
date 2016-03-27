@@ -21,8 +21,8 @@
 			{{- END -}}
 
 			{{- IF show_storys && entry.image.storys_rs.count }}
-				<a class="dialog-fetcher" href="{{ c.uri_for_action('/art/rels', [ entry.id_uri ]) }}">
-					<span class="fa fa-picture-o"></span>
+				<a href="{{ c.uri_for_action('/art/rels', [ entry.id_uri ]) }}">
+					<i class="fa fa-newspaper-o"></i>
 				</a>
 			{{- END -}}
 			</figcaption>

@@ -43,9 +43,8 @@
 					<td class="Storys-num">{{ entry.num }}</td>
 					{{ IF event.has('art') }}
 					<td class="Storys-related">
-						<a class="dialog-fetcher" title="Show related artwork(s)"
-							href="{{ c.uri_for_action('/fic/rels', [ entry.id_uri ]) }}">
-							<span class="ui-icon ui-icon-image">[Related Artwork(s)]</span>
+						<a title="Related artwork(s)" href="{{ c.uri_for_action('/fic/rels', [ entry.id_uri ]) }}">
+							<i class="fa fa-picture-o"></i>
 						</a>
 					</td>
 					{{ END }}
