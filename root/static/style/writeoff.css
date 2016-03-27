@@ -2244,9 +2244,6 @@ body {
 .Prompts-vote button,
 .Post-vote button {
   color: #aaa; }
-  .Prompts-vote button:disabled,
-  .Post-vote button:disabled {
-    color: transparent; }
   .Prompts-vote button:not([disabled]):hover,
   .Post-vote button:not([disabled]):hover {
     color: #666; }
@@ -2262,3 +2259,6 @@ body {
   .Prompts-vote form[data-vote="-1"] button[value="-1"]:not([disabled]):hover,
   .Post-vote form[data-vote="-1"] button[value="-1"]:not([disabled]):hover {
     color: #a32929; }
+
+.Prompts-vote button:disabled {
+  color: transparent; }

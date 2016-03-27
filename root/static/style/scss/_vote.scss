@@ -109,10 +109,6 @@
 		@extend .button-reset;
 		color: #aaa;
 
-		&:disabled {
-			color: transparent;
-		}
-
 		&:not([disabled]):hover {
 			color: #666;
 		}
@@ -133,4 +129,8 @@
 			color: hsla(0, 60%, 40%, 1);
 		}
 	}
+}
+
+.Prompts-vote button:disabled {
+	color: transparent;
 }
