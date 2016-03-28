@@ -1398,8 +1398,7 @@ body {
   margin: 0 1em;
   padding-bottom: 0.7em;
   padding-top: 1em;
-  border-bottom: 1px solid #ddd;
-  letter-spacing: 0.01em; }
+  border-bottom: 1px solid #ddd; }
   .Post-contents--header a {
     cursor: pointer;
     color: #999; }
@@ -1420,8 +1419,7 @@ body {
   margin: 0;
   padding: 0; }
   .Post-controls li {
-    float: left; }
-  .Post-controls li + li {
+    float: left;
     margin-left: 0.6em; }
 
 .Post-contents--body {

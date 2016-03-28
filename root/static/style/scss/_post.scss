@@ -129,7 +129,6 @@
 	padding-bottom: 0.7em;
 	padding-top: 1em;
 	border-bottom: 1px solid #ddd;
-	letter-spacing: 0.01em;
 
 	a {
 		cursor: pointer;
@@ -140,6 +139,9 @@
 		color: #222;
 		text-decoration: underline;
 	}
+}
+
+.Post-children {
 }
 
 .Post-vote form {
@@ -159,9 +161,6 @@
 
 	li {
 		float: left;
-	}
-
-	li + li {
 		margin-left: 0.6em;
 	}
 }
