@@ -71,7 +71,7 @@ confirmDQ: Confirm DQ
 passwordRecovery: Password Recovery
 preferences: Preferences
 editPost: Edit Post
-postN: Post \#%d
+postN: Post #%d
 
 storyFont: Story font
 serif: Serif

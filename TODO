@@ -6,7 +6,6 @@
 - [med] Smileys
 - [med] Event notifications (prompt selected)
 - [med] Post notifications
-- [med] Show if you've voted on a post in Post::view
 - [low] Change mask criteria to involve probabilistic modelling
 - [low] Show guesses on fic/view
 - [low] View counter for stories
