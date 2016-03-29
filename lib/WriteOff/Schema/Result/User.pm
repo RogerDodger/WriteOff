@@ -224,6 +224,10 @@ sub can_edit {
 	$row->is_manipulable_by($self);
 }
 
+sub owns {
+	$_[0]->id == $_[1]->user_id;
+}
+
 sub storys {
 	shift->entrys->search({ story_id => { "!=" => undef } });
 }

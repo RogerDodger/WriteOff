@@ -116,6 +116,7 @@ sub _vote :ActionClass('~Vote') {}
 
 sub vote :Chained('fetch') :PathPart('vote') :Args(0) {
 	my ($self, $c) = @_;
+	return if $c->stash->{post}->artist->user_id == $c->user_id;
 	$c->stash->{redirect} = $c->uri_for_action('/post/permalink', [ $c->stash->{post}->id ]);
 	$c->forward('_vote');
 }

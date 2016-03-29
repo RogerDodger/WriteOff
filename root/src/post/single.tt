@@ -1,6 +1,7 @@
 <div class="Post view" id="{{ post.id }}" data-page="{{ page }}">
 	{{- SET artist   = artist || post.artist }}
 	{{- SET editable = c.user.can_edit(artist) }}
+	{{- SET votable  = c.user && !c.user.owns(artist) }}
 
 	{{ INCLUDE 'post/author.tt' }}
 
@@ -33,7 +34,7 @@
 				<span class="Post-vote--score">{{ post.score IF post.score }}</span>
 				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="{{ votes.${post.id} }}">
 					{{ csrf_field | none }}
-					<button class="Post-vote--button" name="value" value="1" {{ 'disabled' IF !c.user }}>
+					<button class="Post-vote--button" name="value" value="1" {{- 'disabled' IF !votable }}>
 						<i class="fa fa-thumbs-up"></i>
 					</button>
 				</form>
