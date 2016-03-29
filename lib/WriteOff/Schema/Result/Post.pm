@@ -48,8 +48,8 @@ sub uid {
 	$artist //= $self->artist;
 
 	join(".", 'post',
-		$self->id, $self->updated, $artist->updated,
-		!!$user->active_artist_id, $user->can_edit($artist), !!$entry,
+		$self->id, $self->updated, $artist->updated, !!$entry,
+		!!$user->active_artist_id, $user->can_edit($artist), $user->owns($artist),
 	);
 }
 
