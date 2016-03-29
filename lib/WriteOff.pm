@@ -230,10 +230,19 @@ sub mailfrom {
 
 sub page {
 	my $self = shift;
-
+	my $page = shift // $self->req->param('page');
 	my $cache = $self->config->{pageCache};
-	my $key = join ".", $self->sessionid, $self->req->uri->path;
-	my $page = $self->req->param('page');
+
+	my $key = $self->sessionid;
+	if ($self->stash->{entry}) {
+		$key .= '.entry.' . $self->stash->{entry}->id;
+	}
+	elsif ($self->stash->{event}) {
+		$key .= '.event.' . $self->stash->{event}->id;
+	}
+	else {
+		die "No page context";
+	}
 
 	if ($page && $page =~ /^([1-9][0-9]*)$/) {
 		$page = int $1;
@@ -244,6 +253,18 @@ sub page {
 		return $cache->get($key) // 1;
 	}
 }
+
+sub page_for {
+	my ($self, $num) = @_;
+
+	1 + int(($num - 1) / $self->page_size);
+}
+
+sub page_size {
+	shift->user->page_size || 100;
+}
+
+BEGIN { *rows = \&page_size }
 
 =head1 NAME
 

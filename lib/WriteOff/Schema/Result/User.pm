@@ -232,4 +232,6 @@ sub images {
 	shift->entrys->search({ image_id => { "!=" => undef } });
 }
 
+sub page_size { 100 }
+
 1;

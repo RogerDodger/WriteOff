@@ -21,6 +21,15 @@ sub fresh {
 	shift->result_source->schema->resultset('Post');
 }
 
+sub num_for {
+	my ($self, $post) = @_;
+
+	$self->search({
+		id => { '<=' => $post->id },
+		created => { '<=' => $post->created },
+	})->count;
+}
+
 sub thread {
 	my ($self, $page, $rows) = @_;
 

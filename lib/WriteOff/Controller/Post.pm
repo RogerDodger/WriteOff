@@ -15,6 +15,10 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 			: ('/event/permalink', [ $c->stash->{post}->event->id_uri ])
 	);
 
+	$c->stash->{entry} = $c->stash->{post}->entry;
+	$c->stash->{event} = $c->stash->{post}->event;
+	$c->page($c->page_for($c->stash->{post}->num));
+
 	$c->res->redirect($uri . "#" . $c->stash->{post}->id);
 }
 
@@ -31,14 +35,9 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 		? $c->stash->{post}->event->posts
 		: $c->stash->{post}->entry->posts;
 
-	$c->stash->{num} = $thread->search({
-			id => { '<=' => $c->stash->{post}->id },
-			created => { '<=' => $c->stash->{post}->created },
-		})->count;
-
-	$c->stash->{page} = !$rightEvent || $wrongEntry
-		? 0
-		: 1 + int(($c->stash->{num} - 1) / 100);
+	$c->stash->{num} = $thread->num_for($c->stash->{post});
+	$c->stash->{page} = $c->page_for($c->stash->{num});
+	$c->stash->{page} = 0 if !$rightEvent || $wrongEntry;
 
 	$c->stash->{template} = 'post/single.tt';
 	push $c->stash->{title}, $c->string('postN', $c->stash->{post}->id);

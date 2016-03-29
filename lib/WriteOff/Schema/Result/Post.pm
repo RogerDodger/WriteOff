@@ -53,6 +53,12 @@ sub uid {
 	);
 }
 
+sub num {
+	my $self = shift;
+	my $thread = $self->entry ? $self->entry->posts : $self->event->posts;
+	$thread->num_for($self);
+}
+
 sub render {
 	my $self = shift;
 

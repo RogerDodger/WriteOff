@@ -11,7 +11,7 @@ has timeformat => (is => 'rw', default => '%b %d %H:%M:%S');
 
 sub _log {
 	my ($self, $level, $fmt, @list) = @_;
-	return if $self->abort;
+	return if $self->abort || !defined $fmt;
 
 	my $message = scalar @list ? (sprintf $fmt, @list) : $fmt;
 	$message .= "\n" unless $message =~ /\n$/;
