@@ -39,11 +39,8 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 	$c->stash->{page} = $c->page_for($c->stash->{num});
 	$c->stash->{page} = 0 if !$rightEvent || $wrongEntry;
 
-	$c->stash->{votes} = {
-		map { $_->post_id => $_->value }
-		  grep defined,
-		    $c->model('DB::PostVote')->find($c->user->id, $c->stash->{post}->id)
-	};
+	my $vote = $c->model('DB::PostVote')->find($c->user->id, $c->stash->{post}->id);
+	$c->stash->{vote} = $vote && $vote->value;
 
 	$c->stash->{template} = 'post/single.tt';
 	push $c->stash->{title}, $c->string('postN', $c->stash->{post}->id);

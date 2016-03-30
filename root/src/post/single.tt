@@ -32,7 +32,7 @@
 
 			<span class="Post-vote">
 				<span class="Post-vote--score">{{ post.score IF post.score }}</span>
-				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="{{ votes.${post.id} }}">
+				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="{{ vote }}">
 					{{ csrf_field | none }}
 					<button class="Post-vote--button" name="value" value="1" {{- 'disabled' IF !votable }}>
 						<i class="fa fa-thumbs-up"></i>

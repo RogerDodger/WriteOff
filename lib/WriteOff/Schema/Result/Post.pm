@@ -43,12 +43,12 @@ __PACKAGE__->many_to_many('parents', 'reply_parents', 'parent');
 
 # Unique amongst any version of itself, as well as any other post
 sub uid {
-	my ($self, $user, $entry, $artist) = @_;
+	my ($self, $user, $entry, $artist, $vote) = @_;
 
 	$artist //= $self->artist;
 
 	join(".", 'post',
-		$self->id, $self->updated, $artist->updated, !!$entry,
+		$self->id, $self->updated, $artist->updated, !!$entry, !!$vote,
 		!!$user->active_artist_id, $user->can_edit($artist), $user->owns($artist),
 	);
 }
