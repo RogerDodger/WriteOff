@@ -54,7 +54,7 @@ In the context of the model, this is the probability that a random voter will pr
 
 Each submission type in each event has a difficulty score calculated.
 
-For art submissions, is is always 500.
+For art submissions, it is always 500.
 
 For fic submissions, it is equal to ten times the average square root of the event’s story’s wordcounts.
 For minific and short story contests, this is approximately 250 and 600 respectively.
