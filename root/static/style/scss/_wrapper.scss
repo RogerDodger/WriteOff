@@ -189,10 +189,6 @@ body {
 	width: 98%;
 }
 
-.Site-content > * {
-	@include container;
-}
-
 .Canvas {
 	@include container;
 	@include box;
