@@ -199,7 +199,7 @@ a {
   .Flash p:not(:first-child), .Global-message p:not(:first-child) {
     margin-top: 1em; }
 
-.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .New-event--button:disabled, .New-event--button.selected, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
+.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
 .Post-form--senders .Post-edit--save:disabled,
 .Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Slates li a:disabled, .Slates li a.selected, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
 .Ballot-unabstain:disabled,
@@ -1212,6 +1212,13 @@ body {
         .Event-blurb > ul:first-child li a:disabled:hover, .Event-blurb > ul:first-child li a.selected:hover {
           cursor: default; }
 
+.Event-list--buttons {
+  display: block;
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%; }
+
 .Archive-button {
   border-style: solid;
   border-width: 1px;
@@ -1222,7 +1229,10 @@ body {
   vertical-align: middle;
   background: #e6e6e6;
   border-color: #acacac;
-  color: #2e2e2e; }
+  color: #2e2e2e;
+  display: block;
+  margin-top: 0.5em;
+  text-align: center; }
   .Archive-button:not(:disabled):not(.selected):hover {
     cursor: pointer;
     text-decoration: none; }
@@ -1236,37 +1246,6 @@ body {
     color: #2e2e2e; }
     .Archive-button:disabled:hover, .Archive-button.selected:hover {
       cursor: default; }
-
-.New-event--button {
-  border-style: solid;
-  border-width: 1px;
-  display: inline-block;
-  line-height: 1;
-  padding: 0.8em;
-  text-decoration: none;
-  vertical-align: middle;
-  background: #dbccbd;
-  border-color: #b8997a;
-  color: #35291d; }
-  .New-event--button:not(:disabled):not(.selected):hover {
-    cursor: pointer;
-    text-decoration: none; }
-  .New-event--button:not(:disabled):not(.selected):hover {
-    background: #d4c2af; }
-  .New-event--button:not(:disabled):not(.selected):active {
-    box-shadow: 0 0.5em 0.7em #cdb8a2 inset; }
-  .New-event--button:disabled, .New-event--button.selected {
-    background: #d1ccc7;
-    border-color: #a4998e;
-    color: #2d2925; }
-    .New-event--button:disabled:hover, .New-event--button.selected:hover {
-      cursor: default; }
-
-.Archive-button,
-.New-event--button {
-  display: block;
-  text-align: center;
-  margin-top: 0.5em; }
 
 .Post {
   display: block;

@@ -120,17 +120,13 @@
 	@include button-group($hue: 230);
 }
 
+.Event-list--buttons {
+	@include container;
+}
+
 .Archive-button {
 	@include button($sat: 0%, $l: 90%);
-}
-
-.New-event--button {
-	@include button($hue: 30);
-}
-
-.Archive-button,
-.New-event--button {
 	display: block;
-	text-align: center;
 	margin-top: 0.5em;
+	text-align: center;
 }
