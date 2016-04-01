@@ -1389,7 +1389,7 @@ body {
 
 .Post-contents:hover .Post-contents--header a {
   color: #666; }
-.Post-contents:hover .Post-contents--header button {
+.Post-contents:hover .Post-contents--header button:not(:disabled) {
   color: #888; }
 
 .Post-contents--header {

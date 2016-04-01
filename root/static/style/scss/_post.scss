@@ -116,7 +116,7 @@
 			color: #666;
 		}
 
-		button {
+		button:not(:disabled) {
 			color: #888;
 		}
 	}
