@@ -7,6 +7,6 @@ New event and shizz. Here's the gist:
 - __Format:__ {{ event.format.name }}
 - __Starting time:__ {{ event.start.datetime_html | none }}
 
-Check out [the event overview]({{ c.uri_for_action('/event/permalink', event.id) }}) for more details.
+Check out [the event overview]({{ c.uri_for_action('/event/permalink', [ event.id ]) }}) for more details.
 
 {{ END }}
