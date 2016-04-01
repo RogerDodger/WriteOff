@@ -563,6 +563,13 @@ body {
 /*
  * Content - generic top-level containers
  */
+.Site-content > * {
+  display: block;
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%; }
+
 .Canvas, .Document, .Artist-edit, .Story-container, .Event-details {
   display: block;
   max-width: 64rem;
@@ -1246,6 +1253,11 @@ body {
     color: #2e2e2e; }
     .Archive-button:disabled:hover, .Archive-button.selected:hover {
       cursor: default; }
+
+.Posts {
+  width: 100%;
+  max-width: none;
+  margin: 0; }
 
 .Post {
   display: block;

@@ -2,6 +2,12 @@
 // Post styles
 // =============================================================================
 
+.Posts {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
 .Post {
 	@extend .clearfix;
 	@include container;
