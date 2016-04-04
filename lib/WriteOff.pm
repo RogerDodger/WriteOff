@@ -173,6 +173,12 @@ __PACKAGE__->config(
 		voter => 0.5,
 	},
 
+	limitCache => CHI->new(
+		expires_in => '10s',
+		driver => 'FastMmap',
+		namespace => 'limit',
+	),
+
 	pageCache => CHI->new(
 		expires_in => '7d',
 		driver => 'FastMmap',
