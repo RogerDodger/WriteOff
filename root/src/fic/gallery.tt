@@ -85,7 +85,7 @@
 					<td class="Storys-posts"></td>
 					{{ END }}
 					<td class="Storys-wordcount">
-						{{ event.storys_rs.wordcount.chunk(-3).join(',') }}
+						{{ event.wordcount.chunk(-3).join(',') }}
 					</td>
 				</tr>
 			</tbody>

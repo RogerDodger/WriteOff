@@ -8,7 +8,7 @@ use base "WriteOff::Schema::Result";
 
 use WriteOff::Util qw/maybe simple_uri sorted/;
 use WriteOff::Rank qw/twipie/;
-require List::Util;
+use List::Util ();
 
 __PACKAGE__->table("events");
 
@@ -342,6 +342,10 @@ sub tally {
 	$self->theorys->process if $self->guessing;
 
 	$self->update({ tallied => 1 });
+}
+
+sub wordcount {
+	List::Util::sum map $_->story->wordcount, shift->storys->search({}, { prefetch => 'story' });
 }
 
 1;

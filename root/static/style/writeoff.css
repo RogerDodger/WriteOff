@@ -2057,6 +2057,9 @@ body {
 .Storys-updated {
   text-align: center; }
 
+.Storys-listing {
+  width: 100%; }
+
 .Storys-export {
   white-space: nowrap; }
   @media (max-width: 40rem) {
