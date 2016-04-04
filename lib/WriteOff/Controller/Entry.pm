@@ -166,6 +166,7 @@ sub do_dq :Private {
 		$c->stash->{entry}->artist->name,
 	);
 
+	$c->stash->{entry}->guesses->delete;
 	$c->stash->{entry}->votes->delete;
 	$c->stash->{entry}->update({
 		artist_public => 1,
