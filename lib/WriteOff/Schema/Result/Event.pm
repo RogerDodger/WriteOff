@@ -345,7 +345,7 @@ sub tally {
 }
 
 sub wordcount {
-	List::Util::sum map $_->story->wordcount, shift->storys->search({}, { prefetch => 'story' });
+	shift->storys->related_resultset('story')->get_column('wordcount')->sum;
 }
 
 1;
