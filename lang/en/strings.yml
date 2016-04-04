@@ -48,6 +48,7 @@ newArtistTitle: New Alias
 404: File Not Found
 403: Forbidden
 400: Error
+redirect: Redirect
 scoreboard: Scoreboard
 artGallery: Art Gallery
 ficGallery: Fic Gallery
@@ -145,3 +146,4 @@ notOrganiser: You are not an event organiser for this event
 joinedOn: Joined on %s
 postCount: %d posts
 entryCount: %d entries
+doublePost: Double post detected—attempting to redirect

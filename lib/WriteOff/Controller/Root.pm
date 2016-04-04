@@ -310,6 +310,8 @@ Mogrify certain words in the response body.
 sub strum :Private {
 	my ( $self, $c ) = @_;
 
+	return if !defined $c->res->{body};
+
 	my $strum = $c->config->{strum} or return;
 	while (my($key, $strum) = each $strum) {
 		while((my $index = CORE::index $c->res->{body}, $key) >= 0) {

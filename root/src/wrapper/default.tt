@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
+		{{ IF refresh }}
+		<meta http-equiv="refresh" content="1; url={{ refresh }}">
+		{{ END }}
 
 		<title>{{ title_html | none }}</title>
 

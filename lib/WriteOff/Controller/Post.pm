@@ -52,6 +52,16 @@ sub add :Local {
 	return unless $c->user->active_artist_id;
 	$c->forward('/check_csrf_token');
 
+	my $cache = $c->config->{limitCache};
+	my $key = "post" . $c->user->id;
+	if ($cache->get($key)) {
+		$c->stash->{refresh} = $c->uri_for_action('/post/latest');
+		$c->stash->{status_msg} = $c->string('doublePost');
+		$c->stash->{template} = 'root/blank.tt';
+		return;
+	}
+	$cache->set($key, 1);
+
 	if ($c->req->param('event') =~ /(\d+)/) {
 		$c->stash->{event} = $c->model('DB::Event')->find($1);
 	}
@@ -107,6 +117,15 @@ sub do_edit :Private {
 	else {
 		$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 	}
+}
+
+sub latest :Local :Args(0) {
+	my ($self, $c) = @_;
+
+	my $post = $c->user->active_artist->posts->order_by({ -desc => 'created' })->first
+		or $c->detach('/default');
+
+	$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 }
 
 sub _vote :ActionClass('~Vote') {}

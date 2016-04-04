@@ -26,7 +26,7 @@ sub num_for {
 
 	$self->search({
 		id => { '<=' => $post->id },
-		created => { '<=' => $post->created },
+		created => { '<=' => $self->format_datetime($post->created) },
 	})->count;
 }
 
