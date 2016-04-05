@@ -39,11 +39,16 @@ sub cleanup :Local {
 }
 
 sub clear :Local {
-	my ($self, $c) = @_;
+	my ($self, $c, $target) = @_;
 
-	$c->config->{renderCache}->clear;
-	$c->config->{pageCache}->clear;
-	$c->config->{scoreCache}->clear;
+	my $cache = $c->config->{$target};
+
+	if ($cache && $cache->can('clear')) {
+		$cache->clear;
+	}
+	else {
+		die "Cache $target not found\n";
+	}
 }
 
 sub schedule :Local {
@@ -62,7 +67,12 @@ sub schedule :Local {
 sub end :Private {
 	my ($self, $c) = @_;
 
-	$c->res->body('Task complete');
+	if (@{ $c->error }) {
+		$c->forward('/end');
+	}
+	else {
+		$c->res->body('Task complete');
+	}
 }
 
 =head1 AUTHOR
