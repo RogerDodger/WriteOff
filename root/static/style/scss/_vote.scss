@@ -109,7 +109,7 @@
 		@extend .button-reset;
 		color: #aaa;
 
-		&:not([disabled]):hover {
+		&:not(:disabled):hover {
 			color: #666;
 		}
 	}
@@ -117,7 +117,7 @@
 	form[data-vote="1"] button[value="1"] {
 		color: hsla(120, 60%, 60%, 1);
 
-		&:not([disabled]):hover {
+		&:not(:disabled):hover {
 			color: hsla(120, 60%, 40%, 1);
 		}
 	}
@@ -125,7 +125,7 @@
 	form[data-vote="-1"] button[value="-1"] {
 		color: hsla(0, 60%, 60%, 1);
 
-		&:not([disabled]):hover {
+		&:not(:disabled):hover {
 			color: hsla(0, 60%, 40%, 1);
 		}
 	}

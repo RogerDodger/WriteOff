@@ -33,6 +33,32 @@
 	}
 }
 
+.Post-deleted {
+	background-color: hsla(27, 40%, 90%, 1);
+	border: 0.05em solid hsla(27, 40%, 75%, 1);
+	color: hsla(27, 40%, 30%, 1);
+	font-size: 0.85em;
+	padding: 0.5em 1em;
+}
+
+.Post-deleted--restore {
+	float: right;
+
+	form {
+		@extend .noselect;
+		display: inline;
+	}
+
+	button {
+		@extend .button-reset;
+		color: hsla(27, 40%, 40%, 1);
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
 .Post.edit {
 	.Post-contents--body {
 		@extend .hidden;
@@ -89,8 +115,8 @@
 }
 
 .Post-author--avatar {
+	@include box;
 	background-color: hsla(0, 0%, 98%, 1);
-	box-shadow: 0 0 3px #b6b6b6;
 	border-radius: 0.1em;
 	float: right;
 	padding: 0.15em;
@@ -107,25 +133,13 @@
 }
 
 .Post-contents {
+	@include box;
 	background-color: hsla(0, 0%, 98%, 1);
-	box-shadow: 0 0 3px #b6b6b6;
 	border-radius: 0.2em;
 	color: #444;
 	font-size: 0.95em;
 	line-height: 1.4;
 	padding: 0;
-}
-
-.Post-contents:hover {
-	.Post-contents--header {
-		a {
-			color: #666;
-		}
-
-		button:not(:disabled) {
-			color: #888;
-		}
-	}
 }
 
 .Post-contents--header {
@@ -136,17 +150,42 @@
 	padding-top: 1em;
 	border-bottom: 1px solid #ddd;
 
-	a {
+	a,
+	button:not(:disabled) {
 		cursor: pointer;
 		color: #999;
 	}
+}
 
-	a:hover {
-		color: #222;
-		text-decoration: underline;
+.Post-contents:hover {
+	.Post-contents--header {
+		a {
+			color: #666;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+		.Post-controls {
+			.fa,
+			button {
+				color: #777;
+
+				&:hover,
+				&:hover .fa {
+					color: #555;
+				}
+			}
+		}
 	}
 }
 
+.Post-controls button {
+	@extend .button-reset;
+}
+
+.Post-controls form,
 .Post-vote form {
 	display: inline;
 }

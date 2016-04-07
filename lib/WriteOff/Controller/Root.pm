@@ -33,6 +33,12 @@ sub auto :Private {
 		return 0;
 	}
 
+	if ($c->req->uri->path =~ m{^/static/avatar/}) {
+		$c->serve_static_file("root/static/avatar/default.jpg");
+		$c->log->abort(1);
+		return 0;
+	}
+
 	if ($c->debug) {
 		if ($c->req->param('login')) {
 			$c->user(

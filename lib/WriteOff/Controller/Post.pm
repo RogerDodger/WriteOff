@@ -90,12 +90,9 @@ sub add :Local {
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ($self, $c) = @_;
 
-	if ($c->user->can_edit($c->stash->{post})) {
-		$c->forward('do_edit') if $c->req->method eq 'POST';
-	}
-	else {
-		$c->detach('/forbidden');
-	}
+	$c->detach('/default')   if $c->stash->{post}->deleted;
+	$c->detach('/forbidden') if !$c->user->can_edit($c->stash->{post});
+	$c->forward('do_edit')   if $c->req->method eq 'POST';
 
 	$c->stash->{template} = 'post/edit.tt';
 	push $c->stash->{title}, $c->string('editPost');
@@ -107,7 +104,6 @@ sub do_edit :Private {
 	$c->forward('/check_csrf_token');
 
 	my $post = $c->stash->{post};
-
 	$post->body($c->req->param('body') // '');
 	$post->render;
 
@@ -115,8 +111,20 @@ sub do_edit :Private {
 		$c->res->body($post->body_render);
 	}
 	else {
-		$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
+		$c->forward('permalink');
 	}
+}
+
+sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->detach('/default')   unless $c->req->method eq 'POST';
+	$c->detach('/forbidden') unless $c->user->can_edit($c->stash->{post});
+	$c->forward('/check_csrf_token');
+
+	$c->stash->{post}->update({ deleted => int !$c->stash->{post}->deleted });
+
+	$c->forward('permalink');
 }
 
 sub latest :Local :Args(0) {
@@ -132,7 +140,7 @@ sub _vote :ActionClass('~Vote') {}
 
 sub vote :Chained('fetch') :PathPart('vote') :Args(0) {
 	my ($self, $c) = @_;
-	return if $c->stash->{post}->artist->user_id == $c->user_id;
+	$c->detach('/default') if $c->stash->{post}->artist->user_id == $c->user_id || $c->stash->{post}->deleted;
 	$c->stash->{redirect} = $c->uri_for_action('/post/permalink', [ $c->stash->{post}->id ]);
 	$c->forward('_vote');
 }

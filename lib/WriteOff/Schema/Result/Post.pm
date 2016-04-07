@@ -23,6 +23,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 0 },
 	"score",
 	{ data_type => "integer", is_nullable => 0, default_value => 0 },
+	"deleted",
+	{ data_type => "bit", is_nullable => 0, default_value => 0 },
 	"created",
 	{ data_type => "timestamp", is_nullable => 1 },
 	"updated",

@@ -199,7 +199,7 @@ a {
   .Flash p:not(:first-child), .Global-message p:not(:first-child) {
     margin-top: 1em; }
 
-.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
+.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .Post-deleted--restore form, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
 .Post-form--senders .Post-edit--save:disabled,
 .Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Slates li a:disabled, .Slates li a.selected, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
 .Ballot-unabstain:disabled,
@@ -417,7 +417,7 @@ a {
 /*
  * Clear the default style of <button> elements, to contain .fa icons that submit forms
  */
-.button-reset, .Artist-swap, .Prompts-vote button,
+.button-reset, .Artist-swap, .Post-deleted--restore button, .Post-controls button, .Prompts-vote button,
 .Post-vote button {
   background: none;
   padding: 0;
@@ -1281,6 +1281,22 @@ body {
     margin: 0;
     width: 100%; }
 
+.Post-deleted {
+  background-color: #f0e4db;
+  border: 0.05em solid #d9bda6;
+  color: #6b492e;
+  font-size: 0.85em;
+  padding: 0.5em 1em; }
+
+.Post-deleted--restore {
+  float: right; }
+  .Post-deleted--restore form {
+    display: inline; }
+  .Post-deleted--restore button {
+    color: #8f623d; }
+    .Post-deleted--restore button:hover {
+      text-decoration: underline; }
+
 .Post.highlight .Post-contents {
   box-shadow: 0 0 1em #9fdfdf; }
 
@@ -1349,8 +1365,8 @@ body {
       border-radius: 0; } }
 
 .Post-author--avatar {
-  background-color: #fafafa;
   box-shadow: 0 0 3px #b6b6b6;
+  background-color: #fafafa;
   border-radius: 0.1em;
   float: right;
   padding: 0.15em;
@@ -1363,18 +1379,13 @@ body {
       display: none; } }
 
 .Post-contents {
-  background-color: #fafafa;
   box-shadow: 0 0 3px #b6b6b6;
+  background-color: #fafafa;
   border-radius: 0.2em;
   color: #444;
   font-size: 0.95em;
   line-height: 1.4;
   padding: 0; }
-
-.Post-contents:hover .Post-contents--header a {
-  color: #666; }
-.Post-contents:hover .Post-contents--header button:not(:disabled) {
-  color: #888; }
 
 .Post-contents--header {
   color: #999;
@@ -1383,13 +1394,24 @@ body {
   padding-bottom: 0.7em;
   padding-top: 1em;
   border-bottom: 1px solid #ddd; }
-  .Post-contents--header a {
+  .Post-contents--header a,
+  .Post-contents--header button:not(:disabled) {
     cursor: pointer;
     color: #999; }
-  .Post-contents--header a:hover {
-    color: #222;
-    text-decoration: underline; }
 
+.Post-contents:hover .Post-contents--header a {
+  color: #666; }
+  .Post-contents:hover .Post-contents--header a:hover {
+    text-decoration: underline; }
+.Post-contents:hover .Post-contents--header .Post-controls .fa,
+.Post-contents:hover .Post-contents--header .Post-controls button {
+  color: #777; }
+  .Post-contents:hover .Post-contents--header .Post-controls .fa:hover, .Post-contents:hover .Post-contents--header .Post-controls .fa:hover .fa,
+  .Post-contents:hover .Post-contents--header .Post-controls button:hover,
+  .Post-contents:hover .Post-contents--header .Post-controls button:hover .fa {
+    color: #555; }
+
+.Post-controls form,
 .Post-vote form {
   display: inline; }
 
@@ -2226,20 +2248,20 @@ body {
 .Prompts-vote button,
 .Post-vote button {
   color: #aaa; }
-  .Prompts-vote button:not([disabled]):hover,
-  .Post-vote button:not([disabled]):hover {
+  .Prompts-vote button:not(:disabled):hover,
+  .Post-vote button:not(:disabled):hover {
     color: #666; }
 .Prompts-vote form[data-vote="1"] button[value="1"],
 .Post-vote form[data-vote="1"] button[value="1"] {
   color: #5cd65c; }
-  .Prompts-vote form[data-vote="1"] button[value="1"]:not([disabled]):hover,
-  .Post-vote form[data-vote="1"] button[value="1"]:not([disabled]):hover {
+  .Prompts-vote form[data-vote="1"] button[value="1"]:not(:disabled):hover,
+  .Post-vote form[data-vote="1"] button[value="1"]:not(:disabled):hover {
     color: #29a329; }
 .Prompts-vote form[data-vote="-1"] button[value="-1"],
 .Post-vote form[data-vote="-1"] button[value="-1"] {
   color: #d65c5c; }
-  .Prompts-vote form[data-vote="-1"] button[value="-1"]:not([disabled]):hover,
-  .Post-vote form[data-vote="-1"] button[value="-1"]:not([disabled]):hover {
+  .Prompts-vote form[data-vote="-1"] button[value="-1"]:not(:disabled):hover,
+  .Post-vote form[data-vote="-1"] button[value="-1"]:not(:disabled):hover {
     color: #a32929; }
 
 .Prompts-vote button:disabled {

@@ -33,6 +33,7 @@ edit: Edit
 reply: Reply
 create: Create
 delete: Delete
+restore: Restore
 dq: Disqualify
 submit: Submit
 vote: Vote
@@ -147,3 +148,4 @@ joinedOn: Joined on %s
 postCount: %d posts
 entryCount: %d entries
 doublePost: Double post detected—attempting to redirect
+postDeleted: Post by %s deleted %s
