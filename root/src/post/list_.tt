@@ -9,10 +9,6 @@
 	{{ SET vote = votes.${post.id} }}
 	{{ cache.proc(
 		'template' => 'post/single.tt',
-		'key' => post.uid(c.user, entry, artist, vote))
-			.replace(
-				'<input type="hidden" name="csrf_token" value="[a-z0-9]+">',
-				csrf_field
-			) }}
+		'key' => post.uid(c.user, entry, artist, vote)) }}
 {{ END }}
 </div>

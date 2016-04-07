@@ -99,10 +99,19 @@ $Template::Stash::LIST_OPS = {
 	},
 };
 
-sub csrf_field {
-	my ($self, $c) = @_;
+sub render {
+	my $self = shift;
+	my ($c, $template, $args) = @_;
+	my $ret = $self->next::method(@_);
 
-	return sprintf qq{<input type="hidden" name="csrf_token" value="%s">}, $c->csrf_token;
+	my $token = $c->csrf_token;
+	$ret =~ s{<csrf-field/>}{<input type="hidden" name="csrf_token" value="$token">}g;
+
+	$ret;
+}
+
+sub csrf_field {
+	qq{<csrf-field/>};
 }
 
 sub format_dt {
