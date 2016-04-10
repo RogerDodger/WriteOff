@@ -28,11 +28,11 @@ No. It will not appear in your ballot.
 
 ### How many entries do I get in my ballot?
 
-You're assigned an amount that approximates 35 minutes of reading/reviewing per day.
+An amount that approximates 35 minutes of reading/reviewing per day.
 
 ### How many entries can I abstain?
 
-You get 1 abstain, plus 1 for every 10 entries.
+1, plus 1 for every 10 entries on your ballot.
 
 ### How does the voting algorithm work?
 
@@ -70,16 +70,3 @@ This is to encourage multiple submissions from the same artist without encouragi
 
 After each event, scores decay by 10%.
 This is to encourage consistent performance and to enable newcomers to overtake the old guard.
-
-### Why is my name there twice?
-
-Accolades are tied to author/artist names, *not* login names.
-Login names are used to identify users with the site.
-The aliases are for what shows up next to each submission and in comments.
-Most people will probably use the same name for both, but the option is nice for those who like to use pseudonyms.
-
-## Miscellaneous
-
-### Can I host an event?
-
-[Send me an email](mailto:cthor@cpan.org) outlining what you’d like to do.
