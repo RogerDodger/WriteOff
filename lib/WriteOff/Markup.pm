@@ -103,7 +103,7 @@ my $story = Parse::BBCode->new({
 });
 
 sub post {
-	$post->render(@_);
+	$post->render(@_) =~ s/^(?:<br>)+|(?:<br>|\s)+$//gr;
 }
 
 sub story {
