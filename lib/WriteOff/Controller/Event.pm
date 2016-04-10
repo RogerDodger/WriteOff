@@ -99,7 +99,7 @@ sub do_add :Private {
 		end => $prelim->end->clone->add(days => $c->form->valid('final_dur')),
 	});
 
-	$c->stash->{event}->reset_schedules;
+	$c->stash->{event}->reset_jobs;
 
 	if ($c->req->param('notify_mailing_list')) {
 		$c->run_after_request( sub { $c->forward('/event/_notify_mailing_list') });

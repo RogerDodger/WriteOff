@@ -14,10 +14,10 @@ Application cron actions.
 
 =head1 METHODS
 
-=head2 check_schedule
+=head2 check_jobs
 
-Checks the schedule table and executes any actions that are set to be executed,
-deleting them afterwards (such that a scheduled task only executes once).
+Checks the job table and executes any actions that are set to be executed,
+deleting them afterwards (such that a scheduled job only executes once).
 
 =head2 cleanup
 
@@ -51,17 +51,27 @@ sub clear :Local {
 	}
 }
 
-sub schedule :Local {
+sub jobs :Local {
 	my ( $self, $c ) = @_;
 
-	my $rs = $c->model('DB::Schedule')->active_schedules;
+	my $rs = $c->model('DB::Job')->active;
 
-	# Extract and delete schedules *before* executing them, lest long-running
-	# tasks execute twice.
-	my @schedules = $rs->all;
+	# Extract and delete jobs *before* executing them, lest long-running
+	# jobs execute twice.
+	my @jobs = $rs->all;
 	$rs->delete;
 
-	$c->forward($_->action, $_->args) for @schedules;
+	$c->forward($_->action, $_->args) for @jobs;
+}
+
+sub schedule :Local {
+	my ($self, $c) = @_;
+
+	for my $sch ($c->model('DB::Schedule')->active->all) {
+		my $t0 = $sch->next;
+		$sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
+		$c->model('DB::Event')->create_from_format($t0, $sch->format, $sch->genre);
+	}
 }
 
 sub end :Private {

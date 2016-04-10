@@ -43,7 +43,7 @@ available commands:
         with id STORY belonging to user USERNAME.
 
     event reset EVENT
-        Resets schedules for event with id EVENT.
+        Resets jobs for event with id EVENT.
 
     post render POST
         Renders the post with id POST, or all posts if POST eq 'all'

@@ -1,0 +1,19 @@
+{{ title.push(c.string('schedule')) }}
+
+<div class="Document">
+	<div class="Document-title">{{ title.-1 }}</div>
+
+	{{ FOREACH schedule IN schedules.all }}
+	<div {{ IF loop.index }}style="margin-top: 1em;"{{ END }}>
+		<div>
+			{{ schedule.genre.name }}
+			{{ schedule.format.name }}
+		</div>
+		<div>
+		{{ schedule.next.date_html | none }}
+		to
+		{{ schedule.next.clone.add('days' => schedule.format.duration).date_html | none }}
+		</div>
+	</div>
+	{{ END }}
+</div>

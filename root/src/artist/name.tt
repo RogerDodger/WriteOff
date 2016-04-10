@@ -1,0 +1,3 @@
+<a class="Artist-name" href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
+	{{ artist.name }}
+</a>

@@ -13,13 +13,26 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
 	"name",
 	{ data_type => "text", is_nullable => 1 },
-	"created",
-	{ data_type => "timestamp", is_nullable => 1 },
+	"wc_min",
+	{ data_type => "integer", is_nullable => 1 },
+	"wc_max",
+	{ data_type => "integer", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->has_many("events", "WriteOff::Schema::Result::Event", "format_id");
+__PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::FormatRound", "format_id");
+
+sub duration {
+	shift->rounds
+		->search({}, {
+			'select'   => [ \"duration + offset" ],
+			'as'       => [ 'ttl' ],
+		})
+		->get_column('ttl')
+		->max;
+}
 
 sub id_uri {
 	my $self = shift;

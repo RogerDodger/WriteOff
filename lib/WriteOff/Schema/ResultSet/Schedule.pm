@@ -3,9 +3,14 @@ package WriteOff::Schema::ResultSet::Schedule;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
-sub active_schedules {	
+sub active {
 	my $self = shift;
-	return $self->search({ at => { '<' => $self->now } });
+
+	$self->search({
+		next => { '<=' =>
+			$self->format_datetime($self->now_dt->clone->add(days => 2))
+		}
+	});
 }
 
 1;

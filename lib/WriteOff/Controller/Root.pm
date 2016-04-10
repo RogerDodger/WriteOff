@@ -10,20 +10,6 @@ with 'Catalyst::TraitFor::Controller::reCAPTCHA';
 
 __PACKAGE__->config(namespace => '');
 
-=head1 NAME
-
-WriteOff::Controller::Root - Root Controller for WriteOff
-
-=head1 METHODS
-
-=head2 auto
-
-Logs the request.
-
-Detaches to index if the request is POST with a differing origin.
-
-=cut
-
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
@@ -86,12 +72,6 @@ sub auto :Private {
 	1;
 }
 
-=head2 index
-
-Lists all active events.
-
-=cut
-
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 
@@ -100,12 +80,6 @@ sub index :Path :Args(0) {
 	push $c->stash->{title}, 'Events';
 	$c->stash->{template} = 'event/list.tt';
 }
-
-=head2 archive
-
-Lists all old events.
-
-=cut
 
 sub archive :Local :Args(0) {
 	my ( $self, $c ) = @_;
@@ -116,12 +90,6 @@ sub archive :Local :Args(0) {
 	$c->stash->{template} = 'event/list.tt';
 }
 
-=head2 faq
-
-Frequently Asked Questions page
-
-=cut
-
 sub faq :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
@@ -131,12 +99,6 @@ sub faq :Local :Args(0) {
 	$c->stash->{template} = 'root/document.tt';
 }
 
-=head2 default
-
-Standard 404 error page
-
-=cut
-
 sub default :Path {
 	my ( $self, $c ) = @_;
 
@@ -144,12 +106,6 @@ sub default :Path {
 	$c->stash->{template} = 'root/404.tt';
 	$c->res->status(404);
 }
-
-=head2 forbidden
-
-Standard 403 page
-
-=cut
 
 sub forbidden :Private {
 	my ( $self, $c, $msg ) = @_;
@@ -160,12 +116,6 @@ sub forbidden :Private {
 	$c->stash->{template} = 'root/403.tt';
 	$c->res->status(403);
 }
-
-=head2 error
-
-Error page
-
-=cut
 
 sub error :Private {
 	my ( $self, $c, $msg ) = @_;
@@ -182,12 +132,6 @@ sub error :Private {
 	$c->stash->{template} = 'root/error.tt';
 }
 
-=head2 tos
-
-Terms of Service page
-
-=cut
-
 sub tos :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
@@ -197,12 +141,6 @@ sub tos :Local :Args(0) {
 	$c->stash->{template} = 'root/document.tt';
 }
 
-=head2 rights
-
-Content rights page
-
-=cut
-
 sub rights :Local :Args(0) {
 	my ($self, $c) = @_;
 
@@ -211,12 +149,6 @@ sub rights :Local :Args(0) {
 	push $c->stash->{title}, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';
 }
-
-=head2 intro
-
-Introduction page
-
-=cut
 
 sub intro :Local :Args(0) {
 	my ($self, $c) = @_;
@@ -228,12 +160,6 @@ sub intro :Local :Args(0) {
 	$c->stash->{template} = 'root/document.tt';
 }
 
-=head2 style
-
-Formatting and style guide
-
-=cut
-
 sub style :Local :Args(0) {
 	my ($self, $c) = @_;
 
@@ -242,12 +168,6 @@ sub style :Local :Args(0) {
 	push $c->stash->{title}, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';
 }
-
-=head2 robots
-
-Dynamically generated robots.txt
-
-=cut
 
 sub robots :Path('/robots.txt') :Args(0) {
 	my ($self, $c) = @_;
@@ -266,23 +186,11 @@ sub robots :Path('/robots.txt') :Args(0) {
 	$c->res->content_type('text/plain; charset=utf-8');
 }
 
-=head2 assert_admin
-
-Check that the user is the admin, detaching to a 403 if they aren't.
-
-=cut
-
 sub assert_admin :Private {
 	my ( $self, $c, $msg ) = @_;
 
 	$c->user->admin or $c->detach('/forbidden', [ $c->string('notAdmin') ]);
 }
-
-=head2 check_csrf_token
-
-Check that the user provided their csrf token in the request parameters.
-
-=cut
 
 sub check_csrf_token :Private {
 	my ($self, $c) = @_;
@@ -290,12 +198,6 @@ sub check_csrf_token :Private {
 	$c->req->param('csrf_token') eq $c->csrf_token
 		or $c->detach('/error', [ $c->string('csrfDetected') ]);
 }
-
-=head2 check_dry_page
-
-Check if we are dry running to change the page cache.
-
-=cut
 
 sub check_dry_page :Private {
 	my ($self, $c) = @_;
@@ -306,12 +208,6 @@ sub check_dry_page :Private {
 		$c->detach;
 	}
 }
-
-=head2 strum
-
-Mogrify certain words in the response body.
-
-=cut
 
 sub strum :Private {
 	my ( $self, $c ) = @_;
@@ -325,12 +221,6 @@ sub strum :Private {
 		}
 	}
 }
-
-=head2 render
-
-Attempt to render a view, if needed.
-
-=cut
 
 sub render : ActionClass('RenderView') {}
 

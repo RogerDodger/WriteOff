@@ -72,10 +72,7 @@ sub title {
 
 sub start {
 	my $round = shift->rounds->search(
-		{ -or => [
-			{ name => 'writing' },
-			{ name => 'drawing' },
-		]},
+		{ action => 'submit' },
 		{ order_by => { -asc => 'start' } },
 	)->first;
 
@@ -284,12 +281,12 @@ sub json {
 	\%data;
 }
 
-sub reset_schedules {
+sub reset_jobs {
 	my $self = shift;
 
-	my $rs = $self->result_source->schema->resultset('Schedule');
+	my $rs = $self->result_source->schema->resultset('Job');
 
-	# Remove old schedules
+	# Remove old jobs
 	$rs->search({
 		action => { like => '/event/%' },
 		-or => [
@@ -298,7 +295,7 @@ sub reset_schedules {
 		],
 	})->delete;
 
-	my @schedules = (
+	my @jobs = (
 		{
 			action => '/event/set_prompt',
 			at => $self->start,
@@ -312,16 +309,16 @@ sub reset_schedules {
 	);
 
 	for my $round ($self->rounds->vote->all) {
-		push @schedules, {
+		push @jobs, {
 			action => '/event/tally_round',
 			at => $round->end,
 			args => [ $self->id, $round->id ],
 		};
 	}
 
-	for my $schedule (@schedules) {
-		next if $schedule->{at} < $self->now_dt;
-		$rs->create($schedule);
+	for my $job (@jobs) {
+		next if $job->{at} < $self->now_dt;
+		$rs->create($job);
 	}
 }
 

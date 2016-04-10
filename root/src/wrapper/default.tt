@@ -41,7 +41,8 @@
 								<img class="Site-logo" src="/static/images/logo.png">
 							</a>
 						</li>
-						<li><a href="/scoreboard">Scoreboard</a></li>
+						<li><a href="/schedule">{{ c.string('schedule') }}</a></li>
+						<li><a href="/scoreboard">{{ c.string('scoreboard') }}</a></li>
 						{{ IF c.config.chat }}
 						<li><a href="{{ c.config.chat }}"><i class="fa fa-external-link"></i> Chat</a>
 						{{ END }}

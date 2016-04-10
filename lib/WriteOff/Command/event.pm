@@ -106,7 +106,7 @@ sub reset {
 		exit(1);
 	}
 
-	$e->reset_schedules;
+	$e->reset_jobs;
 }
 
 sub schedule {
