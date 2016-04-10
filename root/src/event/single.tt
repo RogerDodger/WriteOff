@@ -40,13 +40,7 @@
 		</span>
 	</div>
 
-	<div class="Event-timeline hidden"></div>
-
-	{{ SET timeline = event.timeline }}
-	{{ FOREACH round IN timeline; SET round.name = c.string(round.name); END }}
-	<script type="text/javascript">
-		timelines.push({{ timeline.json | none }});
-	</script>
+	{{ PROCESS 'event/timeline.tt'  timeline = event.timeline }}
 
 	<ul class="Event-links rules">
 		<li><a href="{{ c.uri_for_action('/event/rules', id) }}">Rules</a>

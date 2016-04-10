@@ -1254,6 +1254,9 @@ body {
     .Archive-button:disabled:hover, .Archive-button.selected:hover {
       cursor: default; }
 
+.Event-details .Event-timeline {
+  margin: 0.5em 0; }
+
 .Posts {
   width: 100%;
   max-width: none;
@@ -1937,6 +1940,12 @@ body {
 .Scoreboard-breakdown--prompt,
 .Scoreboard-breakdown--title {
   text-align: start; }
+
+.Schedule {
+  margin-top: 1.5em; }
+
+.Schedule-desc {
+  font-size: 1.1em; }
 
 .Story,
 .Story-example {

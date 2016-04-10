@@ -305,7 +305,7 @@ $(document).ready(function() {
 function DrawTimeline (e) {
 	var data = $(e).data('timeline');
 	var width = $(e).width();
-	var height = 95;
+	var height = 65;
 	var fontsize = 14;
 	var xpad = fontsize * 3;
 

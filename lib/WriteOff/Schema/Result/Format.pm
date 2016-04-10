@@ -4,7 +4,7 @@ package WriteOff::Schema::Result::Format;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
-use WriteOff::Util;
+use WriteOff::Util qw/LEEWAY/;
 
 __PACKAGE__->table("formats");
 
@@ -37,6 +37,29 @@ sub duration {
 sub id_uri {
 	my $self = shift;
 	return WriteOff::Util::simple_uri $self->id, $self->name;
+}
+
+sub timeline {
+	my ($self, $t0) = @_;
+	my (@timeline, %leeway);
+
+	for my $round ($self->rounds->ordered->all) {
+		my $start = $t0->clone->add(days => $round->offset);
+		my $end = $start->clone->add(days => $round->duration);
+
+		if ($round->mode eq 'submit') {
+			$leeway{$round->offset + $round->duration} = 1;
+		}
+		$start->add(minutes => LEEWAY) if $leeway{$round->offset};
+
+		push @timeline, {
+			name => $round->name,
+			start => $start->iso8601,
+			end => $end->iso8601,
+		};
+	}
+
+	\@timeline;
 }
 
 1;
