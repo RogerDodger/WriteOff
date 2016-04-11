@@ -6,8 +6,4 @@
 	{{ FOREACH schedule IN schedules.all }}
 		{{ PROCESS 'schedule/single.tt' }}
 	{{ END }}
-
-	{{ FOREACH schedule IN schedules.all }}
-		{{ PROCESS 'schedule/single.tt'  future = 1 }}
-	{{ END }}
 </div>

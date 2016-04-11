@@ -1,15 +1,16 @@
-{{ SET t0 = schedule.next.clone.add('weeks' => future ? schedule.period : 0) }}
 <div class="Schedule">
 	<div class="Schedule-desc">
 		<div class="Schedule-name">
 			<span class="Schedule-genre">{{ schedule.genre.name }}</span>
 			<span class="Schedule-format">{{ schedule.format.name }}</span>
-			&middot;
-			<span class="Schedule-start">{{ t0.date_html | none }}</span>
+			<span class="Schedule-start">
+				{{ schedule.next.date_html | none }}, then
+				{{ schedule.next.clone.add('weeks' => schedule.period).date_html | none }}
+			</span>
 		</div>
 	</div>
 
 	<div class="Schedule-timeline">
-		{{ PROCESS 'event/timeline.tt' timeline = schedule.format.timeline(t0)  }}
+		{{ PROCESS 'event/timeline.tt' timeline = schedule.format.timeline(schedule.next)  }}
 	</div>
 </div>
