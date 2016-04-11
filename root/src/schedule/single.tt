@@ -3,9 +3,6 @@
 		<div class="Schedule-name">
 			<span class="Schedule-genre">{{ schedule.genre.name }}</span>
 			<span class="Schedule-format">{{ schedule.format.name }}</span>
-			<span class="Schedule-start">
-				{{ schedule.next.date_html | none }}
-			</span>
 		</div>
 	</div>
 
