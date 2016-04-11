@@ -1,8 +1,8 @@
 <div class="Schedule">
 	<div class="Schedule-desc">
 		<div class="Schedule-name">
-			<span class="Schedule-genre">{{ schedule.genre.name }}</span>
-			<span class="Schedule-format">{{ schedule.format.name }}</span>
+			<span class="Genre" title="{{ schedule.genre.descr }}">{{ schedule.genre.name }}</span>
+			<span class="Format">{{ schedule.format.name }}</span>
 		</div>
 	</div>
 

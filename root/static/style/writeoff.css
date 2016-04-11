@@ -958,8 +958,9 @@ body {
     border-bottom-color: transparent;
     text-decoration: none; }
 
-.Event-genre[title] {
-  border-bottom: 1px dotted #15260d; }
+.Genre[title] {
+  border-bottom: 1px dotted #15260d;
+  cursor: help; }
 
 .Event-toggle {
   float: right;
@@ -1946,10 +1947,6 @@ body {
 
 .Schedule-desc {
   font-size: 1.07em; }
-
-.Schedule-start {
-  display: block;
-  font-size: 0.8em; }
 
 .Story,
 .Story-example {

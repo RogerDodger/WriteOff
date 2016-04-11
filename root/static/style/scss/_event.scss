@@ -43,8 +43,9 @@
 	}
 }
 
-.Event-genre[title] {
+.Genre[title] {
 	border-bottom: 1px dotted hsla(100, 50%, 10%, 1);
+	cursor: help;
 }
 
 .Event-toggle {
