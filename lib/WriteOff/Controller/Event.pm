@@ -359,6 +359,8 @@ sub set_prompt :Private {
 	}
 
 	$e->update({ prompt => $best->contents });
+	$c->stash->{event} = $e;
+	$c->forward('/event/_notify_mailing_list');
 }
 
 sub check_rounds :Private {
