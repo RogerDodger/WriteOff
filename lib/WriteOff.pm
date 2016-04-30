@@ -231,7 +231,7 @@ sub mailfrom {
 	$name //= $self->config->{name};
 	$user //= 'noreply';
 
-	return sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
+	sprintf "%s <%s@%s>", $name, $user, $self->config->{domain};
 }
 
 sub page {

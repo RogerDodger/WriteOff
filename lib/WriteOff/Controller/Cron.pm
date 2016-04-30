@@ -28,7 +28,12 @@ Cleans old data from the database.
 sub auto :Private {
 	my ($self, $c) = @_;
 
-	substr($c->req->address, -9) eq '127.0.0.1' or $c->detach('/default');
+	if (substr($c->req->address, -9) eq '127.0.0.1') {
+		$c->req->base('http://' . $c->config->{domain} . '/');
+		return 1;
+	}
+
+	$c->detach('/default');
 }
 
 sub cleanup :Local {

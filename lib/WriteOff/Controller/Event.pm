@@ -194,16 +194,12 @@ sub view :Chained('fetch') :PathPart('submissions') :Args(0) {
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->forward( $self->action_for('assert_organiser') );
+	$c->forward('assert_organiser');
 
 	if ($c->req->method eq 'POST') {
 		$c->forward('/check_csrf_token');
 
 		$c->form(
-			user => [
-				( $c->req->param('submit') =~ /Add/ ? 'NOT_BLANK' : () ),
-				[ 'NOT_DBIC_UNIQUE', $c->model('DB::User')->verified, 'username' ],
-			],
 			blurb => [ [ 'LENGTH', 1, $c->config->{len}{max}{blurb} ] ],
 			rules => [ [ 'LENGTH', 1, $c->config->{len}{max}{rules} ] ],
 			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
@@ -218,139 +214,65 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		rules => $c->stash->{event}->custom_rules,
 	};
 
-	$c->stash->{staff} = [
-		$c->stash->{event}->organisers->all,
-		$c->stash->{event}->judges->all,
-	];
-
 	push $c->stash->{title}, 'Edit';
 	$c->stash->{template} = 'event/edit.tt';
 }
 
 sub do_edit :Private {
-	my ( $self, $c ) = @_;
+	my ($self, $c) = @_;
 
 	if ($c->req->param('submit') eq 'Edit details') {
-
-		$c->stash->{event}->content_level( $c->form->valid('content_level') );
 		$c->stash->{event}->update({
-			blurb        => $c->form->valid('blurb'),
-			custom_rules => $c->form->valid('rules'),
+			blurb         => $c->form->valid('blurb'),
+			custom_rules  => $c->form->valid('rules'),
+			content_level => $c->form->valid('content_level'),
 		});
 
-		return $c->stash->{status_msg} = 'Details edited';
+		$c->stash->{status_msg} = 'Details edited';
 	}
-
-	my $user = $c->model('DB::User')->verified
-		->find({ username => $c->req->param('user') });
-
-	if ($c->req->param('submit') eq 'Add organiser' && $user) {
-		$c->forward( $c->controller('Root')->action_for('assert_admin') );
-
-		eval { $c->stash->{event}->add_to_users($user, { role => 'organiser' }) };
-
-		return $c->stash->{status_msg} = $@ ? '' : 'Organiser added';
-	}
-
-	if ($c->req->param('submit') eq 'Add judge' && $user) {
-		return 0 unless $c->stash->{event}->private;
-
-		eval { $c->stash->{event}->add_to_users($user, { role => 'judge' }) };
-
-		return $c->stash->{status_msg} = $@ ? '' : 'Judge added';
-	}
-}
-
-sub remove_judge :Chained('fetch') :PathPart('remove-judge') :Args(1) {
-	my ( $self, $c, $user_id ) = @_;
-
-	$c->forward( $self->action_for('assert_organiser') );
-
-	$c->forward( $self->action_for('remove_user'), [ $user_id, 'judge' ] );
-}
-
-sub remove_organiser :Chained('fetch') :PathPart('remove-organiser') :Args(1) {
-	my ( $self, $c, $user_id ) = @_;
-
-	$c->forward( $c->controller('Root')->action_for('assert_admin') );
-
-	$c->forward( $self->action_for('remove_user'), [ $user_id, 'organiser' ] );
-}
-
-sub remove_user :Private {
-	my ( $self, $c, $user_id, $role ) = @_;
-
-	my $junction = $c->model('DB::UserEvent')->find({
-		user_id  => $user_id,
-		event_id => $c->stash->{event}->id,
-		role     => $role,
-	});
-
-	if (defined $junction) {
-		$junction->delete;
-		$c->flash->{status_msg} = sprintf "%s removed", ucfirst $role;
-	}
-
-	$c->res->redirect( $c->uri_for(
-		$self->action_for('edit'), [ $c->stash->{event}->id_uri ]
-	));
 }
 
 sub assert_organiser :Private {
 	my ( $self, $c, $msg ) = @_;
 
-	$msg //= 'You are not an organiser for this event.';
-	$c->detach('/forbidden', [ $msg ]) unless
-		$c->stash->{event}->is_organised_by( $c->user );
+	$c->user->organises($c->stash->{event})
+		or $c->detach('/forbidden', [ $c->string('notOrganiser') ]);
 }
 
 sub notify_mailing_list :Chained('fetch') :PathPart('notify_mailing_list') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');
-	$c->run_after_request( sub{
-		$c->forward('/event/_notify_mailing_list');
-	});
+	$c->forward('/event/_notify_mailing_list');
 	$c->forward('permalink');
 }
 
 sub _notify_mailing_list :Private {
 	my ( $self, $c ) = @_;
 
-	return 0 if !UNIVERSAL::isa($c->stash->{event}, 'WriteOff::Schema::Result::Event');
+	UNIVERSAL::isa($c->stash->{event}, 'WriteOff::Schema::Result::Event') or return 0;
 
-	my $rs = $c->model('DB::User')->mailing_list;
-
-	$c->log->info( sprintf "Notifying mailing list of Event: %s - %s",
+	$c->log->info("Notifying mailing list of Event: %d - %s",
 		$c->stash->{event}->id,
 		$c->stash->{event}->prompt,
 	);
 
-	while (my $user = $rs->next) {
-		$c->stash->{email} = {
-			to           => $user->email,
-			from         => $c->mailfrom,
-			subject      => $c->config->{name} . " - New Event",
-			template     => 'email/event.tt',
-			content_type => 'text/html',
-		};
+	$c->stash->{email} = {
+		users     => scalar $c->model('DB::User')->mailing_list,
+		subject   => "New Event",
+		template  => 'email/event.tt',
+	};
 
-		$c->forward( $c->view('Email::Template') );
-
-		if (scalar @{ $c->error }) {
-			$c->log->error($_) for @{ $c->error };
-			$c->error(0);
-		}
-	}
+	$c->forward('View::Email::Bulk');
 }
 
 sub set_prompt :Private {
 	my ( $self, $c, $id ) = @_;
 
-	my $e = $c->model('DB::Event')->find($id) or return 0;
+	$c->stash->{event} = $c->model('DB::Event')->find($id) or return 0;
 
-	# In case of tie, we take one at random
-	my @p = shuffle $e->prompts->all;
+	# In case of tie, we take the first, which is random
+	my @p = shuffle $c->stash->{event}->prompts->all;
 	my $best = $p[0];
 	for my $p (@p) {
 		if ($p->score > $best->score) {
@@ -358,8 +280,10 @@ sub set_prompt :Private {
 		}
 	}
 
-	$e->update({ prompt => $best->contents });
-	$c->stash->{event} = $e;
+	if ($best) {
+		$c->stash->{event}->update({ prompt => $best->contents });
+	}
+
 	$c->forward('/event/_notify_mailing_list');
 }
 
