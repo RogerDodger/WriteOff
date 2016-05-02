@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width">
 		<style>
 			body {
-				width: 600px;
+				max-width: 600px;
 				font-size: 1.05em;
 			}
 
