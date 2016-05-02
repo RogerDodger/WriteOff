@@ -61,10 +61,10 @@ You're receiving this email because of your notification preferences.
 If you no longer want to receive notifications, log in to your account and
 change your preferences.
 			{{ ELSE }}
-This email was sent because of a user's actions.
+This email was sent because of a user requested it.
 
-If that user wasn't you, please ignore it. If you continue to receive email,
-please [let me know](mailto:cthor@cpan.org).
+If that user wasn't you, please ignore it. If you continue to receive similar
+emails, please [let me know](mailto:cthor@cpan.org).
 			{{ END }}
 		{{ END }}
 		</div>
