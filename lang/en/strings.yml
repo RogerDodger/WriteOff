@@ -20,6 +20,7 @@ name: Name
 username: Username
 password: Password
 timezone: Timezone
+emailNotifs: Email Notifications
 score: Score
 allowedTypes: Allowed types: %s
 maxSize: Max filesize: %dKB
@@ -96,7 +97,7 @@ hyperlink: Hyperlink
 size: Size
 color: Color
 quote: Quote (ctrl+q)
-centerAlign: Center-align
+centerAlign: Centre-align
 rightAlign: Right-align
 
 forgotPassword: Forgot password?
@@ -118,7 +119,6 @@ ballotDone: None left
 calculatingCandidates: Candidates are being calculated
 calculatingScoreboard: Scoreboard is being calculated
 storyRedacted: The contents of this story are no longer available
-mailme: Receive event notifications by email
 promptLimitReached: You have reached the prompt limit
 promptGuide: |
     - Prompts should&mdash;
@@ -129,9 +129,13 @@ promptGuide: |
             1. the first and last words are capitalised;
             2. articles, coordinating conjunctions, and prepositions shorter than 5 characters are not capitalised;
             3. everything else is capitalised.
+emailNotifsHint: |
+    You will only receive notifications that match your selections,
+    e.g., when a FiM Minific event is created, you will only be notified if
+    you have "Event created", "FiM", and "Minific" selected.
 unknownError: Something went wrong
 errorsPersist: |
-    If errors persist, please contact [the admin](mailto:cthor@cpan.org).
+    If errors persist, please [let me know](mailto:cthor@cpan.org).
 newPassword: |
     Your account's password has been set to the string below.
     You should login and change it to something more suitable.
@@ -150,3 +154,17 @@ postCount: %d posts
 entryCount: %d entries
 doublePost: Double post detected—attempting to redirect
 postDeleted: Post by %s deleted %s
+
+FiM: FiM
+Original: Original
+Short Story: Short Story
+Minific: Minific
+
+fim: FiM
+original: Original
+minific: Minific
+shortStory: Short Story
+eventCreated: Event Created
+promptSelected: Prompt Selected
+votingStarted: Voting Started
+resultsUp: Results Up

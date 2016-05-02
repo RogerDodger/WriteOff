@@ -1,0 +1,6 @@
+Tne final voting round for [{{ event.prompt }}]({{
+c.uri_for_action('/event/permalink', [ event.id_uri ]) }}) has ended and the
+ballots have been tallied.
+
+Check out [the results]({{ c.uri_for_action('/fic/results', [ event.id_uri ])
+}}) for the details!

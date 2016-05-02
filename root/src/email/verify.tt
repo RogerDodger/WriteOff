@@ -1,5 +1,3 @@
-{{ WRAPPER wrapper/email.tt }}
-
 You have been signed up to [{{ name }}]({{ c.uri_for('/') }}) with the following details:
 
 * __Username:__ {{ user.username }}
@@ -7,7 +5,3 @@ You have been signed up to [{{ name }}]({{ c.uri_for('/') }}) with the following
 * __Email:__ {{ user.email }}
 
 Go ahead and [verify this account]({{ c.uri_for_action('/user/do_verify', [ user.id, token.value ]) }}).
-
-If you don't have any idea what this is, please ignore it.
-
-{{ END }}

@@ -20,8 +20,36 @@
 		</div>
 
 		<div class="Form-item">
-			<input name="mailme" type="checkbox">
-			<label>{{ c.string('mailme') }}</label>
+			<label>
+				{{ c.string('emailNotifs') }}
+				<span class="Hint" data-hint="{{ c.string('emailNotifsHint') }}">?</span>
+			</label>
+
+			{{ BLOCK cb }}
+				<li>
+				<label class="Check-button">
+					<input name="{{ name _ opt.id }}" type="checkbox">
+					<span>{{ c.string(opt.name) }}</span>
+				</label>
+			{{ END }}
+
+			<ul class="Check-buttons">
+				{{ FOREACH opt IN triggers.all }}
+					{{ PROCESS cb  name = 'trigger' }}
+				{{ END }}
+			</ul>
+
+			<ul class="Check-buttons">
+				{{ FOREACH opt IN genres.all }}
+					{{ PROCESS cb  name = 'genre' }}
+				{{ END }}
+			</ul>
+
+			<ul class="Check-buttons">
+				{{ FOREACH opt IN formats.all }}
+					{{ PROCESS cb  name = 'format' }}
+				{{ END }}
+			</ul>
 		</div>
 
 		<div class="Form-item">

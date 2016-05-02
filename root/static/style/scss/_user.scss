@@ -7,3 +7,34 @@
 	font-size: 1.3em;
 	font-family: monospace;
 }
+
+.Check-buttons {
+	list-style-type: none;
+	padding: 0;
+	margin: 0.2em 0 0.5em 0;
+	font-size: 0.95em;
+
+	li {
+		display: inline-block;
+	}
+
+	label {
+		display: inline;
+	}
+}
+
+.Check-button {
+	input[type="checkbox"] {
+		@extend .hidden;
+
+		& + span {
+			@include button;
+			margin-right: -1px;
+			margin-bottom: -1px;
+		}
+
+		&:checked + span {
+			@include button-active($l: 70%);
+		}
+	}
+}

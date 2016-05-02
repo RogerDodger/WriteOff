@@ -125,26 +125,52 @@ sub prefs :Local :Args(0) {
 
 	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
 
+	$c->stash->{triggers} = $c->model('DB::EmailTrigger');
+	$c->stash->{formats} = $c->model('DB::Format');
+	$c->stash->{genres} = $c->model('DB::Genre');
+
 	$c->forward('do_prefs') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
-		mailme   => $c->user->mailme ? 'on' : '',
-		font     => $c->user->font,
+		font => $c->user->font,
+		map {
+			my $k = $_;
+			my $m = "sub_${_}s";
+			my $i = "${_}_id";
+			map {
+				$k . $_->$i, 'on'
+			} $c->user->$m->all;
+		} qw/trigger genre format/,
 	};
 
-	push $c->stash->{title}, qw/User Preferences/;
+	push $c->stash->{title}, $c->string('preferences');
 	$c->stash->{template} = 'user/prefs.tt';
 }
 
 sub do_prefs :Private {
-my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
 	$c->forward('/check_csrf_token');
 
 	$c->user->update({
-		mailme => $c->req->param('mailme') ? 1 : 0,
-		font   => ($c->req->param('font') // '') =~ /^(serif|sans-serif)$/ ? $1 : 'serif',
+		font => ($c->req->param('font') // '') =~ /^(serif|sans-serif)$/ ? $1 : 'serif',
 	});
+
+	for my $k (qw/trigger genre format/) {
+		my $m = "sub_${k}s";
+		$c->user->$m->delete;
+		$c->model('DB::Sub' . ucfirst $k)->populate([
+			map {{
+				user_id   => $c->user->id,
+				"${k}_id" => $_->id,
+			}}
+			grep {
+				$c->req->param($k . $_->id)
+			}
+			$c->stash->{$k . 's'}->all,
+		]);
+	}
+
 	$c->flash->{status_msg} = 'Preferences changed successfully';
 
 	$c->res->redirect($c->req->referer || $c->uri_for($c->action));
@@ -300,9 +326,9 @@ sub send_email :Private {
 		verification => 'email/verify.tt',
 	};
 	state $subject = {
-		relocation   => 'Email Change',
-		recovery     => 'Password Recovery',
-		verification => 'Verification',
+		relocation   => 'Email Change Requested',
+		recovery     => 'Password Recovery Requested',
+		verification => 'New User - Verification Required',
 	};
 
 	if (!exists $template->{$type}) {
@@ -331,7 +357,7 @@ EOF
 	$c->stash->{email} = {
 		to           => $mailto,
 		from         => $c->mailfrom,
-		subject      => join(' - ', $c->config->{name}, $subject->{$type}),
+		subject      => $subject->{$type},
 		template     => $template->{$type},
 		content_type => 'text/html',
 	};

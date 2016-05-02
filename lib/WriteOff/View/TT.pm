@@ -11,6 +11,7 @@ use Parse::BBCode;
 use Text::Markdown;
 use WriteOff::Util;
 use WriteOff::DateTime;
+use URI;
 
 extends 'Catalyst::View::TT';
 
@@ -21,7 +22,7 @@ __PACKAGE__->config(
 	START_TAG          => quotemeta('{{'),
 	END_TAG            => quotemeta('}}'),
 	TIMER              => 1,
-	expose_methods     => [ qw/csrf_field format_dt title_html spectrum/ ],
+	expose_methods     => [ qw/csrf_field data_uri format_dt title_html spectrum/ ],
 	render_die         => 1,
 );
 
@@ -112,6 +113,21 @@ sub render {
 
 sub csrf_field {
 	qq{<csrf-field/>};
+}
+
+sub data_uri {
+	my ($self, $c, $path) = @_;
+
+	my $ext = $path =~ /\.(\w+)$/ ? $1 : 'png';
+	open my $fh, "<", $c->path_to($path);
+	binmode $fh;
+
+	my $uri = URI->new('data:');
+	$uri->media_type("image/$ext");
+	$uri->data(do { local $/ = <$fh> });
+
+	close $fh;
+	"$uri";
 }
 
 sub format_dt {

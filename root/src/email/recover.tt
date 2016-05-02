@@ -1,8 +1,3 @@
-{{ WRAPPER wrapper/email.tt }}
-
 Your {{ name }} account, __{{ user.username }}__, has had a password reset requested.
-If you made this request, then go ahead and [reset your password]({{ c.uri_for_action('/user/do_recover', [ user.id, token.value ]) }}).
-
-If you did not make this request, someone may be trying to compromise your account. Please [let me know](mailto:{{ c.config.AdminEmail }}) about the situation.
-
-{{ END }}
+If you made this request, then go ahead and [reset your password]({{
+c.uri_for_action('/user/do_recover', [ user.id, token.value ]) }}).

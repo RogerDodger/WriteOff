@@ -100,10 +100,8 @@ sub do_add :Private {
 	});
 
 	$c->stash->{event}->reset_jobs;
-
-	if ($c->req->param('notify_mailing_list')) {
-		$c->run_after_request( sub { $c->forward('/event/_notify_mailing_list') });
-	}
+	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
+	$c->forward('/event/notify_mailing_list');
 
 	$c->flash->{status_msg} = 'Event created';
 	$c->res->redirect( $c->uri_for('/') );
@@ -239,28 +237,31 @@ sub assert_organiser :Private {
 		or $c->detach('/forbidden', [ $c->string('notOrganiser') ]);
 }
 
-sub notify_mailing_list :Chained('fetch') :PathPart('notify_mailing_list') :Args(0) {
-	my ( $self, $c ) = @_;
+sub notify_mailing_list :Private {
+	my ($self, $c) = @_;
 
-	$c->forward('/assert_admin');
-	$c->forward('/event/_notify_mailing_list');
-	$c->forward('permalink');
-}
+	return unless $c->stash->{trigger};
 
-sub _notify_mailing_list :Private {
-	my ( $self, $c ) = @_;
-
-	UNIVERSAL::isa($c->stash->{event}, 'WriteOff::Schema::Result::Event') or return 0;
-
-	$c->log->info("Notifying mailing list of Event: %d - %s",
+	$c->log->info("Sending mail for Event %d %s",
 		$c->stash->{event}->id,
-		$c->stash->{event}->prompt,
+		$c->stash->{trigger}->name,
 	);
 
 	$c->stash->{email} = {
-		users     => scalar $c->model('DB::User')->mailing_list,
-		subject   => "New Event",
-		template  => 'email/event.tt',
+		users => $c->model('DB::User')->subscribers(
+			trigger_id => $c->stash->{trigger}->id,
+			genre_id => $c->stash->{event}->genre_id,
+			format_id => $c->stash->{event}->format_id,
+		),
+		subject => $c->stash->{trigger}->prompt_in_subject
+			? (sprintf "%s %s",
+				$c->stash->{event}->prompt,
+				$c->string($c->stash->{trigger}->name))
+			: (sprintf "%s %s %s", map $c->string($_),
+				$c->stash->{event}->genre->name,
+				$c->stash->{event}->format->name,
+				$c->stash->{trigger}->name),
+		template => $c->stash->{trigger}->template,
 	};
 
 	$c->forward('View::Email::Bulk');
@@ -284,11 +285,17 @@ sub set_prompt :Private {
 		$c->stash->{event}->update({ prompt => $best->contents });
 	}
 
-	$c->forward('/event/_notify_mailing_list');
+	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });
+	$c->forward('/event/notify_mailing_list');
 }
 
 sub check_rounds :Private {
-	my ($self, $c) = @_;
+	my ($self, $c, $id ) = @_;
+
+	$c->stash->{event} = $c->model('DB::Event')->find($id) or return 0;
+
+	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'votingStarted' });
+	$c->forward('/event/notify_mailing_list');
 }
 
 sub tally_round :Private {
@@ -303,6 +310,10 @@ sub tally_round :Private {
 	if ($r->mode eq 'fic' && !$e->rounds->after($r)->count) {
 		$c->log->info("Tallying results for %s", $e->prompt);
 		$e->tally;
+
+		$c->stash->{event} = $e;
+		$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'resultsUp' });
+		$c->forward('/event/notify_mailing_list');
 	}
 }
 

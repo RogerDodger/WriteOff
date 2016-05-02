@@ -29,7 +29,9 @@ sub auto :Private {
 	my ($self, $c) = @_;
 
 	if (substr($c->req->address, -9) eq '127.0.0.1') {
-		$c->req->base('http://' . $c->config->{domain} . '/');
+		# Make URLS from uri_for in emails point to the public domain, instead
+		# of localhost:port
+		$c->req->base(URI->new('http://' . $c->config->{domain} . '/'));
 		return 1;
 	}
 
@@ -75,7 +77,10 @@ sub schedule :Local {
 	for my $sch ($c->model('DB::Schedule')->active->all) {
 		my $t0 = $sch->next;
 		$sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
-		$c->model('DB::Event')->create_from_format($t0, $sch->format, $sch->genre);
+
+		$c->stash->{event} = $c->model('DB::Event')->create_from_format($t0, $sch->format, $sch->genre);
+		$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
+		$c->forward('/event/notify_mailing_list');
 	}
 }
 

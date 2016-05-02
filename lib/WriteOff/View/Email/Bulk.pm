@@ -11,6 +11,8 @@ use Email::Sender::Simple;
 sub process {
 	my ($self, $c) = @_;
 
+	$c->stash->{bulk} = 1;
+
 	my $body = $c->view('TT')->render($c, $c->stash->{email}{template})
 		or die 'Failed to render template: ' . $c->stash->{email}{template} . "\n";
 

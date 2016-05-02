@@ -51,13 +51,16 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("email_unique", ["email_canonical"]);
 __PACKAGE__->add_unique_constraint("name_unique", ["name_canonical"]);
 
+__PACKAGE__->belongs_to("active_artist", "WriteOff::Schema::Result::Artist", "active_artist_id");
 __PACKAGE__->has_many("artists", "WriteOff::Schema::Result::Artist", "user_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "user_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "user_id");
 __PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "user_id");
-__PACKAGE__->has_many("tokens", "WriteOff::Schema::Result::Token", "user_id");
 __PACKAGE__->has_many("prompt_votes", "WriteOff::Schema::Result::PromptVote", "user_id");
-__PACKAGE__->belongs_to("active_artist", "WriteOff::Schema::Result::Artist", "active_artist_id");
+__PACKAGE__->has_many("tokens", "WriteOff::Schema::Result::Token", "user_id");
+__PACKAGE__->has_many("sub_triggers", "WriteOff::Schema::Result::SubTrigger", "user_id");
+__PACKAGE__->has_many("sub_formats", "WriteOff::Schema::Result::SubFormat", "user_id");
+__PACKAGE__->has_many("sub_genres", "WriteOff::Schema::Result::SubGenre", "user_id");
 __PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "user_id");
 
 __PACKAGE__->mk_group_accessors(

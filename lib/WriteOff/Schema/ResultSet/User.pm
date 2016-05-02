@@ -2,6 +2,7 @@ package WriteOff::Schema::ResultSet::User;
 
 use strict;
 use base 'WriteOff::Schema::ResultSet';
+use Carp ();
 
 sub with_stats {
 	my $self = shift;
@@ -68,6 +69,20 @@ sub clean_unverified {
 	$self->search({ verified => 0 })
 		->created_before( DateTime->now->subtract( days => 1 ) )
 		->delete_all;
+}
+
+sub subscribers {
+	my ($self, %cond) = @_;
+
+	Carp::croak "No $_" for grep !exists $cond{$_}, qw/trigger_id format_id genre_id/;
+
+	$self->search_rs(\%cond, {
+		join => [qw/
+			sub_triggers
+			sub_genres
+			sub_formats
+		/],
+	});
 }
 
 1;

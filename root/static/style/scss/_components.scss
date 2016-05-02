@@ -17,6 +17,10 @@
 	}
 }
 
+@mixin button-active($hue: 200, $sat: 30%, $l: 80%) {
+	box-shadow: 0 0.5em 0.7em hsla($hue, $sat, $l * .9, 1) inset;
+}
+
 @mixin button-color($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
 	background: hsla($hue, $sat, $l, 1);
 	border-color: hsla($hue, $sat, $l * .75, 1);
@@ -34,7 +38,7 @@
 		}
 
 		&:active {
-			box-shadow: 0 0.5em 0.7em hsla($hue, $sat, $l * .9, 1) inset;
+			@include button-active($hue, $sat, $l);
 		}
 	}
 
@@ -275,7 +279,61 @@
 		font-weight: bold;
 		font-size: 0.85em;
 		font-variant: small-caps;
+		position: relative;
 		text-shadow: 0 1px 1px #fff;
+
+		.Hint {
+			@extend .noselect;
+			cursor: help;
+			color: #222;
+			display: inline-block;
+			font-size: 0.7rem;
+			font-variant: normal;
+			font-weight: normal;
+			margin-left: 0.15em;
+			position: relative;
+			text-align: center;
+			width: 1.5em;
+
+			@media #{$mobile} {
+				position: absolute;
+				right: 0;
+			}
+
+			&::before {
+				border-radius: 1.5em;
+				border: 1px solid silver;
+				display: block;
+				content: " ";
+				height: 1.5em;
+				left: -0.05em;
+				position: absolute;
+				top: -0.2em;
+				width: 1.5em;
+			}
+
+			&:hover::after {
+				background: white;
+				border: 1px solid silver;
+				content: attr(data-hint);
+				display: block;
+				font-size: 1.1em;
+				left: 1.6em;
+				padding: 0.5em;
+				position: absolute;
+				text-align: start;
+				top: -0.5em;
+				width: 24rem;
+				z-index: 2;
+
+				@media #{$mobile} {
+					left: inherit;
+					right: 0;
+					top: 1.5em;
+					width: 85vw;
+				}
+			}
+		}
 	}
 
 	input[type="text"],

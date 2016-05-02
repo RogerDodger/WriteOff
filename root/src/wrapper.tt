@@ -1,7 +1,7 @@
 {{
 	DEFAULT wrapper = 'wrapper/default.tt';
-	CALL (wrapper = 'wrapper/bare.tt') IF template.name.match('^email/');
-}}
+	CALL (wrapper = 'wrapper/email.tt') IF template.name.match('^email/');
+-}}
 {{ WRAPPER $wrapper }}
 	{{ content | none }}
 {{ END }}

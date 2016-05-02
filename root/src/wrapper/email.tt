@@ -1,8 +1,72 @@
-{{ FILTER markdown -}}
-Hi there,
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<style>
+			body {
+				width: 600px;
+				font-size: 1.05em;
+			}
 
-{{ content | none }}
+			p {
+				margin: 0;
+			}
 
-{{ c.config.AdminName }}<br>
-{{ name }} admin
-{{- END }}
+			p + p {
+				margin-top: 1em;
+			}
+
+			.Email-header {
+				color: #bdc3cf;
+				padding: 0.3em;
+				background: hsla(0, 0%, 21%, 1) linear-gradient(hsla(0, 0%, 23%, 1), hsla(0, 0%, 18%, 1));
+			}
+
+			.Site-logo {
+				margin-left: 2em;
+			}
+
+			.Email-contents {
+				padding: 1.5em 1em;
+			}
+
+			.Email-footer {
+				background-color: hsla(0, 0%, 92%, 1);
+				font-size: 0.75em;
+				padding: 1em 1rem;
+			}
+
+			.Email-footer p + p {
+				margin-top: 0.5em;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="Email-header">
+			<div class="Site-logo">
+				<a href="{{ c.uri_for('/') }}">
+					<img alt="Writeoff" src="{{ data_uri('root/static/images/logo.png') }}">
+				</a>
+			</div>
+		</div>
+
+		<div class="Email-contents">{{ content | markdown }}</div>
+
+		<div class="Email-footer">
+		{{ FILTER markdown }}
+			{{ IF bulk }}
+You're receiving this email because of your notification preferences.
+
+If you no longer want to receive notifications, log in to your account and
+change your preferences.
+			{{ ELSE }}
+This email was sent because of a user's actions.
+
+If that user wasn't you, please ignore it. If you continue to receive email,
+please [let me know](mailto:cthor@cpan.org).
+			{{ END }}
+		{{ END }}
+		</div>
+	</body>
+</html>

@@ -1,0 +1,5 @@
+A(n) [{{ event.genre.name }} {{ event.format.name }} event]({{
+c.uri_for_action('/event/permalink', [ event.id ]) }}) is happening this
+weekend.
+
+Have your say in what the prompt is!

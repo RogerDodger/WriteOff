@@ -199,9 +199,9 @@ a {
   .Flash p:not(:first-child), .Global-message p:not(:first-child) {
     margin-top: 1em; }
 
-.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .Post-deleted--restore form, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
+.noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form label .Hint, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .Post-deleted--restore form, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
 .Post-form--senders .Post-edit--save:disabled,
-.Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Slates li a:disabled, .Slates li a.selected, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
+.Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Slates li a:disabled, .Slates li a.selected, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Check-button input[type="checkbox"] + span:disabled, .Check-button input[type="checkbox"] + span.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
 .Ballot-unabstain:disabled,
 .Ballot-unabstain.selected {
   -webkit-touch-callout: none;
@@ -218,7 +218,52 @@ a {
   font-weight: bold;
   font-size: 0.85em;
   font-variant: small-caps;
+  position: relative;
   text-shadow: 0 1px 1px #fff; }
+  .Form label .Hint {
+    cursor: help;
+    color: #222;
+    display: inline-block;
+    font-size: 0.7rem;
+    font-variant: normal;
+    font-weight: normal;
+    margin-left: 0.15em;
+    position: relative;
+    text-align: center;
+    width: 1.5em; }
+    @media (max-width: 40rem) {
+      .Form label .Hint {
+        position: absolute;
+        right: 0; } }
+    .Form label .Hint::before {
+      border-radius: 1.5em;
+      border: 1px solid silver;
+      display: block;
+      content: " ";
+      height: 1.5em;
+      left: -0.05em;
+      position: absolute;
+      top: -0.2em;
+      width: 1.5em; }
+    .Form label .Hint:hover::after {
+      background: white;
+      border: 1px solid silver;
+      content: attr(data-hint);
+      display: block;
+      font-size: 1.1em;
+      left: 1.6em;
+      padding: 0.5em;
+      position: absolute;
+      text-align: start;
+      top: -0.5em;
+      width: 24rem;
+      z-index: 2; }
+      @media (max-width: 40rem) {
+        .Form label .Hint:hover::after {
+          left: inherit;
+          right: 0;
+          top: 1.5em;
+          width: 85vw; } }
 .Form input[type="text"],
 .Form input[type="password"],
 .Form input[type="email"],
@@ -321,7 +366,7 @@ a {
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden, .Post.edit .Post-contents--body, .Post:not(.edit) .Post-contents--edit, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles, .Ballot .ordered .Ballot-unabstain,
+.hidden, .Post.edit .Post-contents--body, .Post:not(.edit) .Post-contents--edit, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles, .Check-button input[type="checkbox"], .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
 .Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
@@ -943,7 +988,7 @@ body {
 .Event-details + .Event-header {
   margin-top: 1em; }
 
-.Event-details.hidden + .Event-header, .Post.edit .Event-details.Post-contents--body + .Event-header, .Post:not(.edit) .Event-details.Post-contents--edit + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
+.Event-details.hidden + .Event-header, .Post.edit .Event-details.Post-contents--body + .Event-header, .Post:not(.edit) .Event-details.Post-contents--edit + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header, .Check-button input.Event-details[type="checkbox"] + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
 .Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
@@ -2130,6 +2175,45 @@ body {
   text-align: center;
   font-size: 1.3em;
   font-family: monospace; }
+
+.Check-buttons {
+  list-style-type: none;
+  padding: 0;
+  margin: 0.2em 0 0.5em 0;
+  font-size: 0.95em; }
+  .Check-buttons li {
+    display: inline-block; }
+  .Check-buttons label {
+    display: inline; }
+
+.Check-button input[type="checkbox"] + span {
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+  line-height: 1;
+  padding: 0.8em;
+  text-decoration: none;
+  vertical-align: middle;
+  background: #bdd1db;
+  border-color: #7aa3b8;
+  color: #1d2d35;
+  margin-right: -1px;
+  margin-bottom: -1px; }
+  .Check-button input[type="checkbox"] + span:not(:disabled):not(.selected):hover {
+    cursor: pointer;
+    text-decoration: none; }
+  .Check-button input[type="checkbox"] + span:not(:disabled):not(.selected):hover {
+    background: #afc8d4; }
+  .Check-button input[type="checkbox"] + span:not(:disabled):not(.selected):active {
+    box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
+  .Check-button input[type="checkbox"] + span:disabled, .Check-button input[type="checkbox"] + span.selected {
+    background: #c7ced1;
+    border-color: #8e9da4;
+    color: #252a2d; }
+    .Check-button input[type="checkbox"] + span:disabled:hover, .Check-button input[type="checkbox"] + span.selected:hover {
+      cursor: default; }
+.Check-button input[type="checkbox"]:checked + span {
+  box-shadow: 0 0.5em 0.7em #84aabd inset; }
 
 .Ballot {
   width: 100%; }

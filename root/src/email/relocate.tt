@@ -1,8 +1,3 @@
-{{ WRAPPER wrapper/email.tt }}
-
-__{{ c.user.username }}__ said that this is their new email address for {{ name }}.
-If that's you, then go ahead and [verify this address]({{ c.uri_for_action('/user/do_verify', [ user.id, token.value ]) }}).
-
-If you didn't request this email, please ignore it.
-
-{{- END }}
+__{{ c.user.username }}__ said that this is their new email address.
+If that's you, then go ahead and [verify this address]({{
+c.uri_for_action('/user/do_verify', [ user.id, token.value ]) }}).

@@ -22,6 +22,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->has_many("events", "WriteOff::Schema::Result::Event", "format_id");
+__PACKAGE__->has_many("subs", "WriteOff::Schema::Result::SubFormat", "format_id");
 __PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::FormatRound", "format_id");
 
 sub duration {

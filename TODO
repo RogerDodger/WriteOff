@@ -1,5 +1,6 @@
 - [high] Automatic event scheduling
 - [high] Link to artist profile in every instance of name appearing
+- [med] Make ranking algorithm consider edge case of an entry getting no votes
 - [med] Post preview
 - [med] More stuff in artist profiles
 - [med] Smileys
