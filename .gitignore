@@ -5,3 +5,4 @@ writeoff.log*
 config.yml
 scheduler.state
 nohup.out
+*.sublime-workspace

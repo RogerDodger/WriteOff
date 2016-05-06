@@ -1,10 +1,12 @@
-- [high] Automatic event scheduling
+- [high] Check Gmail PostMaster stuff
 - [high] Link to artist profile in every instance of name appearing
+- [high] Fix Anon
+- [high] Mobile rules for tables
+- [high] Refresh button on pager
 - [med] Make ranking algorithm consider edge case of an entry getting no votes
 - [med] Post preview
 - [med] More stuff in artist profiles
 - [med] Smileys
-- [med] Event notifications (prompt selected)
 - [med] Post notifications
 - [low] Change mask criteria to involve probabilistic modelling
 - [low] Show guesses on fic/view
