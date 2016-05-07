@@ -127,6 +127,23 @@ sub data_uri {
 	$uri->data(do { local $/ = <$fh> });
 
 	close $fh;
+
+	if ("$uri" =~ /^(.+;base64,)(.+)$/) {
+		my $meta = $1;
+		my $data = $2;
+
+		# Wrap the data to 80 characters -- long data URIs were causing
+		# problems with the DKIM signing of emails because the lines were too
+		# long, resulting in postfix truncating the message after signing
+		# (SMTP expects lines < 1000 chars), and therefore making the
+		# signature invalid
+		for (my $i = 80; $i <= length $data; $i += 81) {
+			substr($data, $i, 0, "\n");
+		}
+
+		return "$meta\n$data\n";
+	}
+
 	"$uri";
 }
 
