@@ -55,40 +55,92 @@
 	font-size: 0.7rem;
 }
 
-.Results-artist a {
-	color: inherit;
-	border-bottom: 1px dotted #666;
+.Guesses {
+	width: 100%;
+	table-layout: fixed;
+}
 
-	&:hover {
-		text-decoration: none;
+.Guesses-wrapper {
+	position: relative;
+}
+
+.Guesses-sticky {
+	position: absolute;
+	top: 1.3em;
+	width: 10em;
+	@media #{$mobile} {
+		width: 6.5em;
 	}
 }
 
-.Guesses > tbody > tr > td {
-	padding: 0.2em 0.8em;
-	vertical-align: top;
+.Guesses-grid {
+	margin-left: 10.5em;
+	overflow: auto;
+	@media #{$mobile} {
+		margin-left: 7em;
+	}
+
+	.fa {
+		vertical-align: middle;
+	}
+
+	.Guesses {
+		margin-bottom: 0.7em;
+	}
+}
+
+.Guesses-entry {
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: start;
+	text-overflow: ellipsis;
+}
+
+.Guesses-entry,
+.Guesses-guess, {
+	padding: 0.2em;
+}
+
+.Guesses-guess {
+	cursor: default;
+	text-align: center;
+	position: relative;
+
+	.fa-circle {
+		font-size: 0.5em;
+	}
+
+	&:not(:hover) .Guess-details {
+		@extend .invisible;
+	}
+}
+
+.Guess-details {
+	position: absolute;
+	left: 3.8em;
+	top: -0.7em;
+	background: white;
+	border: 1px solid hsla(200, 30%, 70%, 1);
+	z-index: 1;
+	white-space: nowrap;
+
+	display: table;
+	& > div {
+		display: table-row;
+		& > div {
+			display: table-cell;
+			padding: 0.1em 0.2em;
+		}
+	}
 }
 
 .Guesses-guesser {
-	text-align: right;
-}
-
-.Guesses-correct {
-	&:hover .Guesses-count {
-		@extend .hidden;
-	}
-
-	&:not(:hover) .Guesses-titles {
-		@extend .hidden;
-	}
-}
-
-.Guesses-count {
-	border-bottom: 1px dotted #444;
-}
-
-.Slates {
-	@include button-group($hue: 200);
+	font-weight: normal;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 6em;
+	padding: 0 0.2em;
+	text-overflow: ellipsis;
 }
 
 .Votes-summary {
