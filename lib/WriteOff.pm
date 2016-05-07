@@ -54,6 +54,10 @@ __PACKAGE__->config(
 	'View::Epub' => {
 		language => 'en',
 	},
+	'Plugin::Static::Simple' => {
+		ignore_dirs => [ qw/src/ ],
+		ignore_extensions => [],
+	},
 	'Plugin::Session' => {
 		flash_to_stash => 1,
 		expires => 365 * (60 * 60 * 24),
