@@ -24,4 +24,8 @@ __PACKAGE__->belongs_to("artist", "WriteOff::Schema::Result::Artist", "artist_id
 __PACKAGE__->belongs_to("theory", "WriteOff::Schema::Result::Theory", "theory_id");
 __PACKAGE__->belongs_to("entry", "WriteOff::Schema::Result::Entry", "entry_id");
 
+sub correct {
+	$_[0]->artist_id == $_[0]->entry->artist_id;
+}
+
 1;

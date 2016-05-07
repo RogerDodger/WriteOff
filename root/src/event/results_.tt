@@ -71,15 +71,15 @@
 			{{ FOREACH theory IN theorys.all }}
 			<tr>
 				<td class="Guesses-guesser">{{ theory.artist.name }}</td>
-				<td class="Guesses-correct">
-					<span class="Guesses-count">{{ theory.accuracy }} correct</span>
+				<td class="Guesses-correct">{{ theory.accuracy }} correct</td>
+				{{ FOREACH guess IN theory.guesses.all }}
 					<span class="Guesses-titles">
 					{{ FOREACH guess IN theory.guesses_rs.correct.all }}
 						<a href="{{ c.uri_for(view, [ guess.entry.id_uri ]) }}">
 							{{ guess.entry.title }}</a>{{ ',' IF !loop.last }}
 					{{ END }}
 					</span>
-				</td>
+				{{ END }}
 			</tr>
 			{{ END }}
 		</tbody>
