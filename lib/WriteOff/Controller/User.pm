@@ -100,7 +100,6 @@ sub do_register :Private {
 			password        => $c->form->valid('password'),
 			email           => $c->form->valid('email'),
 			email_canonical => lc $c->form->valid('email'),
-			mailme          => $c->req->params->{mailme} ? 1 : 0,
 		});
 
 		$c->stash->{user}->update({

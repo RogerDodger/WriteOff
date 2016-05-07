@@ -43,8 +43,6 @@
 			<label>Email<span class="required">*</span></label>
 			<input type="email" name="email" size="72" class="maxwidth"
 				maxlength="{{ c.config.len.max.email }}" required>
-			<input type="checkbox" name="mailme">
-			<label>{{ c.string('mailme') }}</label>
 		</div>
 
 		<div class="Form-item">
