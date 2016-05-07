@@ -6,6 +6,12 @@ use base 'WriteOff::Schema::ResultSet';
 use WriteOff::Award qw/:all/;
 require List::Util;
 
+sub artists_hash {
+	my $self = shift;
+	my %artists = map { $_->id => $_ } $self->related_resultset('artist')->all;
+	\%artists;
+}
+
 sub eligible {
 	shift->search({ disqualified => 0 });
 }

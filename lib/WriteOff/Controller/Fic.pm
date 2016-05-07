@@ -277,7 +277,7 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 
 	$c->stash->{theorys} = $c->stash->{event}->theorys->search(
 		{
-			accuracy => { '>' => 1 },
+			accuracy => { '>=' => 1 },
 		},
 		{
 			prefetch => [
@@ -289,6 +289,32 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 				{ -asc => 'artist.name' },
 			],
 		}
+	);
+
+	$c->stash->{guesses} = $c->model('DB')->storage->dbh_do(
+		sub {
+			my ($storage, $dbh, @args) = @_;
+
+			$dbh->selectall_hashref(
+				q{
+					SELECT
+						g.id AS id,
+						g.entry_id AS entry_id,
+						g.theory_id AS theory_id,
+						g.artist_id AS guessed_artist_id,
+						e.artist_id AS actual_artist_id,
+						(e.artist_id = g.artist_id) AS correct
+					FROM guesses g
+					LEFT JOIN theorys t ON g.theory_id = t.id
+					LEFT JOIN entrys e ON g.entry_id = e.id
+					WHERE e.event_id = ?
+				},
+				[ qw/entry_id theory_id/ ],
+				{},
+				@args,
+			);
+		},
+		$c->stash->{event}->id,
 	);
 
 	$c->stash->{mode} = 'fic';

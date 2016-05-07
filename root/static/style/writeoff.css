@@ -201,7 +201,7 @@ a {
 
 .noselect, .Table.sortable > thead > tr > th, .Table-button:disabled, .Table-button.selected, .Form label .Hint, .Form input[type="submit"]:disabled, .Form input[type="submit"].selected, .Artist-controls--edit:disabled, .Artist-controls--edit.selected, .Artist-controls--delete:disabled, .Artist-controls--delete.selected, .Artist-entries.sortable > thead > tr > th, .Event-links.rules li a:disabled, .Event-links.rules li a.selected, .Event-links.prompt li a:disabled, .Event-links.prompt li a.selected, .Event-links.fic li a:disabled, .Event-links.fic li a.selected, .Event-links.art li a:disabled, .Event-links.art li a.selected, .Event-links.commenting li a:disabled, .Event-links.commenting li a.selected, .Event-admin li a:disabled, .Event-admin li a.selected, .Event-blurb > ul:first-child li a:disabled, .Event-blurb > ul:first-child li a.selected, .Archive-button:disabled, .Archive-button.selected, .Post-deleted--restore form, .Post-author--name:disabled, .Post-author--name.selected, .Post-author--name.admin:disabled, .Post-author--name.admin.selected, .Post-form--controls > ul + ul:before, .Post-form--senders button[type="submit"]:disabled, .Post-form--senders button[type="submit"].selected,
 .Post-form--senders .Post-edit--save:disabled,
-.Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Slates li a:disabled, .Slates li a.selected, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Check-button input[type="checkbox"] + span:disabled, .Check-button input[type="checkbox"] + span.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
+.Post-form--senders .Post-edit--save.selected, .Post-form--senders .Post-edit--cancel:disabled, .Post-form--senders .Post-edit--cancel.selected, .Pager li a:disabled, .Pager li a.selected, .Prompts.sortable > thead > tr > th, .Results.sortable > thead > tr > th, .Scoreboard.sortable > thead > tr > th, .Storys.sortable > thead > tr > th, .Storys-access--update input:disabled, .Storys-access--update input.selected, .Check-button input[type="checkbox"] + span:disabled, .Check-button input[type="checkbox"] + span.selected, .Ballot.sortable > thead > tr > th, .Ballot-abstain:disabled, .Ballot-abstain.selected,
 .Ballot-unabstain:disabled,
 .Ballot-unabstain.selected {
   -webkit-touch-callout: none;
@@ -366,7 +366,7 @@ a {
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden, .Post.edit .Post-contents--body, .Post:not(.edit) .Post-contents--edit, .Guesses-correct:hover .Guesses-count, .Guesses-correct:not(:hover) .Guesses-titles, .Check-button input[type="checkbox"], .Ballot .ordered .Ballot-unabstain,
+.hidden, .Post.edit .Post-contents--body, .Post:not(.edit) .Post-contents--edit, .Check-button input[type="checkbox"], .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
 .Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
@@ -401,7 +401,7 @@ a {
 /*
  * Hide visually and from screenreaders, but maintain layout
  */
-.invisible {
+.invisible, .Guesses-guess:not(:hover) .Guess-details {
   visibility: hidden; }
 
 .transparent {
@@ -988,7 +988,7 @@ body {
 .Event-details + .Event-header {
   margin-top: 1em; }
 
-.Event-details.hidden + .Event-header, .Post.edit .Event-details.Post-contents--body + .Event-header, .Post:not(.edit) .Event-details.Post-contents--edit + .Event-header, .Guesses-correct:hover .Event-details.Guesses-count + .Event-header, .Guesses-correct:not(:hover) .Event-details.Guesses-titles + .Event-header, .Check-button input.Event-details[type="checkbox"] + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
+.Event-details.hidden + .Event-header, .Post.edit .Event-details.Post-contents--body + .Event-header, .Post:not(.edit) .Event-details.Post-contents--edit + .Event-header, .Check-button input.Event-details[type="checkbox"] + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
 .Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
@@ -1831,54 +1831,71 @@ body {
 .Results-breakdown {
   font-size: 0.7rem; }
 
-.Results-artist a {
-  color: inherit;
-  border-bottom: 1px dotted #666; }
-  .Results-artist a:hover {
-    text-decoration: none; }
+.Guesses {
+  width: 100%;
+  table-layout: fixed; }
 
-.Guesses > tbody > tr > td {
-  padding: 0.2em 0.8em;
-  vertical-align: top; }
+.Guesses-wrapper {
+  position: relative; }
+
+.Guesses-sticky {
+  position: absolute;
+  top: 1.3em;
+  width: 10em; }
+  @media (max-width: 40rem) {
+    .Guesses-sticky {
+      width: 6.5em; } }
+
+.Guesses-grid {
+  margin-left: 10.5em;
+  overflow: auto; }
+  @media (max-width: 40rem) {
+    .Guesses-grid {
+      margin-left: 7em; } }
+  .Guesses-grid .fa {
+    vertical-align: middle; }
+  .Guesses-grid .Guesses {
+    margin-bottom: 0.7em; }
+
+.Guesses-entry {
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: start;
+  text-overflow: ellipsis; }
+
+.Guesses-entry,
+.Guesses-guess {
+  padding: 0.2em; }
+
+.Guesses-guess {
+  cursor: default;
+  text-align: center;
+  position: relative; }
+  .Guesses-guess .fa-circle {
+    font-size: 0.5em; }
+
+.Guess-details {
+  position: absolute;
+  left: 3.8em;
+  top: -0.7em;
+  background: white;
+  border: 1px solid #9cbac9;
+  z-index: 1;
+  white-space: nowrap;
+  display: table; }
+  .Guess-details > div {
+    display: table-row; }
+    .Guess-details > div > div {
+      display: table-cell;
+      padding: 0.1em 0.2em; }
 
 .Guesses-guesser {
-  text-align: right; }
-
-.Guesses-count {
-  border-bottom: 1px dotted #444; }
-
-.Slates {
-  list-style-type: none;
-  padding: 0; }
-  .Slates li {
-    display: inline-block; }
-    .Slates li:not(:last-child) {
-      margin-right: -1px;
-      margin-bottom: -1px; }
-    .Slates li a {
-      border-style: solid;
-      border-width: 1px;
-      display: inline-block;
-      line-height: 1;
-      padding: 0.8em;
-      text-decoration: none;
-      vertical-align: middle;
-      background: #bdd1db;
-      border-color: #7aa3b8;
-      color: #1d2d35; }
-      .Slates li a:not(:disabled):not(.selected):hover {
-        cursor: pointer;
-        text-decoration: none; }
-      .Slates li a:not(:disabled):not(.selected):hover {
-        background: #afc8d4; }
-      .Slates li a:not(:disabled):not(.selected):active {
-        box-shadow: 0 0.5em 0.7em #a2bfcd inset; }
-      .Slates li a:disabled, .Slates li a.selected {
-        background: #c7ced1;
-        border-color: #8e9da4;
-        color: #252a2d; }
-        .Slates li a:disabled:hover, .Slates li a.selected:hover {
-          cursor: default; }
+  font-weight: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 6em;
+  padding: 0 0.2em;
+  text-overflow: ellipsis; }
 
 .Votes-summary {
   font-size: 0.6rem;
