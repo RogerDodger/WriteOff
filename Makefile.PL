@@ -16,6 +16,7 @@ my @dependencies = (
 	'Catalyst::View::JSON',
 	'Email::Sender::Simple',
 	'Email::MIME',
+	'CSS::Inliner',
 	'Template::Plugin::Cache',
 	'Template::AutoFilter::Parser',
 	'Catalyst::Plugin::ConfigLoader',

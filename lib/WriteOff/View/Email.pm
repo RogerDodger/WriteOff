@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use base 'Catalyst::View';
 
+use CSS::Inliner;
 use Email::MIME;
 use Email::Sender::Simple ();
 use Text::Wrap ();
@@ -27,6 +28,11 @@ sub process {
 		s/<!--.+?-->//gs;
 		s/^\s+|\s+$//g;
 	}
+
+	# Inline the CSS tags because GMail and Hotmail are butts
+	my $inliner = CSS::Inliner->new;
+	$inliner->read({ html => $html });
+	$html = $inliner->inlinify;
 
 	# Re-wrap paragraphs (templates are wrapped, but output won't line up properly)
 	$plain =~ s/(?<!\n)\n(?!\n)/ /g;
