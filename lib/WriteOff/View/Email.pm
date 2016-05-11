@@ -40,13 +40,19 @@ sub process {
 		parts => [
 			Email::MIME->create(
 				body => $plain,
-				content_type => 'text/plain',
-				encoding => 'utf-8',
+				attributes => {
+					content_type => 'text/plain',
+					charset => 'utf-8',
+					encoding => 'quoted-printable',
+				}
 			),
 			Email::MIME->create(
 				body => $html,
-				content_type => 'text/html',
-				charset => 'utf-8',
+				attributes => {
+					content_type => 'text/html',
+					charset => 'utf-8',
+					encoding => 'quoted-printable',
+				}
 			),
 		],
 	);
