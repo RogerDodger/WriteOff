@@ -1,5 +1,5 @@
 use utf8;
-package WriteOff::View::Email::Bulk;
+package WriteOff::View::Email;
 
 use strict;
 use warnings;
@@ -12,7 +12,6 @@ use Text::Wrap ();
 sub process {
 	my ($self, $c) = @_;
 
-	$c->stash->{bulk} = 1;
 	$c->stash->{subject} = $c->stash->{email}{subject} // 'No subject';
 
 	my $html = $c->view('TT')->render($c, $c->stash->{email}{template});
@@ -52,9 +51,16 @@ sub process {
 		],
 	);
 
-	for my $user ($c->stash->{email}{users}->all) {
-		$email->header_set(To => sprintf "%s <%s>", $user->name, $user->email);
+	if ($c->stash->{email}{to}) {
+		$email->header_set(To => $c->stash->{email}{to});
 		Email::Sender::Simple->send($email);
+	}
+
+	if ($c->stash->{email}{users}) {
+		for my $user ($c->stash->{email}{users}->all) {
+			$email->header_set(To => sprintf "%s <%s>", $user->name, $user->email);
+			Email::Sender::Simple->send($email);
+		}
 	}
 }
 

@@ -342,11 +342,7 @@ sub send_email :Private {
 
 	if ($cache->get($mailto)) {
 		$c->res->status(429);
-		$c->stash->{error} = <<EOF;
-An email was not sent because that address has been emailed recently. Please
-wait 10 minutes and try again.
-EOF
-		$c->detach('/error');
+		$c->detach('/error', [ $c->string('emailLimited') ]);
 	}
 
 	$c->log->info("Sending $type email to $mailto");
@@ -354,27 +350,15 @@ EOF
 	$c->stash->{token} = $c->stash->{user}->new_token($type, $mailto);
 
 	$c->stash->{email} = {
-		to           => $mailto,
-		from         => $c->mailfrom,
-		subject      => $subject->{$type},
-		template     => $template->{$type},
-		content_type => 'text/html',
+		to       => $mailto,
+		subject  => $subject->{$type},
+		template => $template->{$type},
 	};
 
-	$c->forward('View::Email::Template');
+	$c->forward('View::Email');
 
-	if (scalar @{ $c->error }) {
-		$c->log->error($_) for @{ $c->error };
-		$c->error(0);
-		$c->res->status(500);
-		$c->stash->{error} = "The $type email failed to send properly. "
-		                   . "Please wait a few minutes, then try resending it.";
-		$c->detach('/error');
-	}
-	else {
-		$c->stash->{mailsent} = 1;
-		$cache->set($mailto, 1);
-	}
+	$c->stash->{mailsent} = 1;
+	$cache->set($mailto, 1);
 }
 
 =head1 AUTHOR

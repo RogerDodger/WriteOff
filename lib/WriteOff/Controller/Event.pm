@@ -272,7 +272,8 @@ sub notify_mailing_list :Private {
 		template => $c->stash->{trigger}->template,
 	};
 
-	$c->forward('View::Email::Bulk');
+	$c->stash->{bulk} = 1;
+	$c->forward('View::Email');
 }
 
 sub set_prompt :Private {

@@ -145,6 +145,9 @@ loginLimited: |
     You have recently made a number of failed login attempts and for security
     reasons have been temporarily blocked from making any more. Please try again
     in around %d minutes.
+emailLimited: |
+    An email was not sent because that address has been emailed recently.
+    Please wait 10 minutes and try again.
 introSplash: |
     Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
 confirmPrompt: Enter the %s of the selected item to continue

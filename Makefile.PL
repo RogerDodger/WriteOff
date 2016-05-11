@@ -14,7 +14,7 @@ my @dependencies = (
 	'Catalyst::Restarter',
 	'Catalyst::View::TT',
 	'Catalyst::View::JSON',
-	'Catalyst::View::Email::Template',
+	'Email::Sender::Simple',
 	'Email::MIME',
 	'Template::Plugin::Cache',
 	'Template::AutoFilter::Parser',
