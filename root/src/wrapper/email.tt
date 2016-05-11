@@ -5,6 +5,8 @@
 		<meta name="viewport" content="width=device-width">
 
 		<title>{{ subject }}</title>
+	</head>
+	<body>
 		<style>
 			body {
 				max-width: 600px;
@@ -43,8 +45,7 @@
 				margin-top: 0.5em;
 			}
 		</style>
-	</head>
-	<body>
+
 		<div class="Email-header">
 			<div class="Site-logo">
 				<a href="{{ c.uri_for('/') }}">
