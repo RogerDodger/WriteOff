@@ -9,6 +9,14 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
+# # Uncomment for debugging
+# sub e :Chained('fetch') :PathPart('e') :Args(0) {
+# 	my ($self, $c) = @_;
+# 	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });
+# 	$c->forward('/event/notify_mailing_list');
+# 	$c->res->body('Okay');
+# }
+
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 

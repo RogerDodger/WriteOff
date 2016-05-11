@@ -3,6 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
+
+		<title>{{ subject }}</title>
 		<style>
 			body {
 				max-width: 600px;
@@ -46,7 +48,7 @@
 		<div class="Email-header">
 			<div class="Site-logo">
 				<a href="{{ c.uri_for('/') }}">
-					<img alt="Writeoff" src="{{ data_uri('root/static/images/logo.png') }}">
+					<img alt="Writeoff" src="{{ c.uri_for('/static/images/logo.png') }}">
 				</a>
 			</div>
 		</div>
