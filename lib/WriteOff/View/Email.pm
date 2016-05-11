@@ -43,6 +43,9 @@ sub process {
 			From    => $c->mailfrom,
 			Subject => $c->stash->{subject},
 		],
+		attributes => {
+			content_type => 'multipart/alternative',
+		},
 		parts => [
 			Email::MIME->create(
 				body => $plain,
