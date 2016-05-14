@@ -25,11 +25,10 @@ sub form :Private {
 		$c->stash->{artists} = $c->model('DB::Artist')->search({
 			-or => [
 				{ user_id => eval { $c->stash->{entry}->user_id } || $c->user->id },
-				{ name => 'Anonymous' },
+				{ id => 25 }, # Anonymous
 			],
 		}, {
 			order_by => [
-				{ -desc => \q{name = 'Anonymous'} },
 				{ -asc => 'created' },
 			],
 		});
