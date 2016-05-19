@@ -37,6 +37,7 @@ sub add {
 		email           => $email,
 		email_canonical => lc $email,
 		admin           => defined $role && $role eq 'admin',
+		verified        => 1,
 	});
 
 	$user->update({ active_artist_id =>
