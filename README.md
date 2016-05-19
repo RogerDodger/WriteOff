@@ -7,4 +7,4 @@ Installation
 
 To create an admin account, run:
 
-    ./script/command.pl user add USERNAME admin
+    ./script/command.pl user add USERNAME EMAIL admin

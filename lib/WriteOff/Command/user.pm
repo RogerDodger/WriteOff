@@ -15,15 +15,10 @@ sub run {
 }
 
 sub add {
-	my ($self, $name, $role) = @_;
-	if (!defined $name || !defined $role) {
-		$self->usage;
-	}
+	my ($self, $name, $email, $role) = @_;
 
-	my $role_obj = $self->db('Role')->find({ name => $role });
-	if (!defined $role_obj) {
-		say "Role `$role` does not exist";
-		exit(1);
+	if (!defined $name || !defined $email) {
+		$self->usage;
 	}
 
 	my $password = prompt('Password: ', -e => '*');
@@ -34,15 +29,26 @@ sub add {
 	}
 
 	say "Creating user $name...";
-	$self->db('User')->create({
-		username => $name,
-		password => $password,
-		verified => 1,
-	})->add_to_roles($role_obj);
+
+	my $user = $self->db('User')->create({
+		name            => $name,
+		name_canonical  => lc $name,
+		password        => $password,
+		email           => $email,
+		email_canonical => lc $email,
+		admin           => defined $role && $role eq 'admin',
+	});
+
+	$user->update({ active_artist_id =>
+		$user->create_related('artists', { name => $user->name })->id,
+	});
 }
 
 sub rename {
 	my $self = shift;
+
+	die "Not implemented\n";
+
 	if (@_ < 2) {
 		$self->help;
 	}

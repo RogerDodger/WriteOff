@@ -48,8 +48,8 @@ available commands:
     post render POST
         Renders the post with id POST, or all posts if POST eq 'all'
 
-    user add USERNAME ROLE
-        Creates user USERNAME with role ROLE.
+    user add USERNAME EMAIL [ROLE]
+        Creates user USERNAME with email EMAIL and role ROLE.
 
     user rename OLDNAME NEWNAME
         Renames a user from OLDNAME to NEWNAME. If NEWNAME exists, merges
@@ -65,16 +65,17 @@ sub run {
 		my $module = "${self}::${command}";
 		try {
 			load $module;
-			try {
-				$module->run(@args);
-			} catch {
-				print $_;
-				exit(1);
-			}
 		} catch {
 			say "Command `$command` not found.";
 			exit(1);
 		};
+
+		try {
+			$module->run(@args);
+		} catch {
+			print $_;
+			exit(1);
+		}
 	}
 	else {
 		$self->help;
