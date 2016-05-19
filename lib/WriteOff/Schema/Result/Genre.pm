@@ -22,7 +22,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->has_many("events", "WriteOff::Schema::Result::Event", "genre_id");
-__PACKAGE__->has_many("mailmes", "WriteOff::Schema::Result::MailmeGenre", "genre_id");
+__PACKAGE__->has_many("subs", "WriteOff::Schema::Result::SubGenre", "genre_id");
 
 sub id_uri {
 	my $self = shift;
