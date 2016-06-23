@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
 use Digest::MD5;
-use Image::Magick;
+use Imager;
 use File::Spec;
 use File::Copy;
 use WriteOff::Util qw/simple_uri/;
@@ -84,24 +84,19 @@ sub write {
 	my ($self, $img) = @_;
 	$self->version(substr Digest::MD5->md5_hex(time . rand() . $$), -6);
 
-	my $magick = Image::Magick->new;
-	$magick->Read($img);
-	$magick->Resize(geometry => '225x225');
-
 	my $thumbpath = File::Spec->catfile('root', $self->path('thumb'));
 
-	my $e = $magick->Write($thumbpath);
-	return $e if $e;
+	my $img = Imager->new(file => $img) or die Imager->errstr . "\n";
+	my $thumb = $img->scale(xpixels => 225, ypixels => 225, type => 'nonprop') or die $img->errstr . "\n";
+	$thumb->write(file => $thumbpath, type => 'png') or die $thumb->errstr . "\n";
 
 	if (!copy($img, File::Spec->catfile('root', $self->path))) {
 		my $e = $!;
 		unlink $thumbpath;
-		return $e;
+		die "$e\n";
 	}
-	else {
-		$self->clean;
-		return 0;
-	}
+
+	$self->clean;
 }
 
 1;

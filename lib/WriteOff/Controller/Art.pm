@@ -1,7 +1,6 @@
 package WriteOff::Controller::Art;
 use Moose;
 use namespace::autoclean;
-require Image::Magick;
 
 no warnings 'uninitialized';
 
@@ -69,11 +68,7 @@ sub do_write :Private {
 	my ($self, $c) = @_;
 
 	if (my $upload = $c->req->upload('image')) {
-		my $err = $c->stash->{image}->write($upload->tempname);
-		if ($err) {
-			$c->log->error($err);
-			$c->detach('/error', [ 'Image upload failed.' ]);
-		}
+		$c->stash->{image}->write($upload->tempname);
 	}
 }
 

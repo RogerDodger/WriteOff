@@ -51,7 +51,6 @@ my @dependencies = (
 	'YAML::XS',
 	'Config::General',
 	'Catalyst::Plugin::Log::Handler',
-	'Image::Magick',
 	'Parse::BBCode',
 	'Text::Markdown',
 	'Try::Tiny',
