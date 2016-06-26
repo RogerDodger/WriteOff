@@ -1110,8 +1110,9 @@ $(document).ready(function () {
 		$pager.find('a').removeAttr('href').click(function () {
 			var $this = $(this);
 			if (!$pager.hasClass('loading')) {
+				var refreshing = $this.hasClass('current');
 				loadPage($this.text()).then(function () {
-					if ($this.closest('.Pager').hasClass('bottom')) {
+					if (!refreshing && $this.closest('.Pager').hasClass('bottom')) {
 						$('html, body').scrollTop($('.Pager.top').offset().top);
 					}
 				})
