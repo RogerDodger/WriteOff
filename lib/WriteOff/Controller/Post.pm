@@ -37,7 +37,7 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 
 	$c->stash->{num} = $thread->num_for($c->stash->{post});
 	$c->stash->{page} = $c->page_for($c->stash->{num});
-	$c->stash->{page} = 0 unless $rightEvent && $rightEntry;
+	$c->stash->{page} = 0 if !$rightEvent || $entry && !$rightEntry;
 
 	my $vote = $c->model('DB::PostVote')->find($c->user->id, $c->stash->{post}->id);
 	$c->stash->{vote} = $vote && $vote->value;
