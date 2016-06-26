@@ -1129,7 +1129,6 @@ $(document).ready(function () {
 			var q = $.when();
 
 			var jump = function () {
-				console.log($post, $post.attr('data-page'));
 				$post.addClass('highlight');
 				$('html, body').scrollTop($post.offset().top);
 			};
@@ -1161,8 +1160,7 @@ $(document).ready(function () {
 		}
 	};
 
-	$(window).on('hashchange', hashchanged);
-	hashchanged();
+	$(window).on('hashchange', hashchanged).trigger('hashchange');
 });
 
 // ===========================================================================
@@ -1184,17 +1182,22 @@ postModifiers.push(function (ctx) {
 				$target = $target.clone().removeClass('hidden');
 			}
 			else if ($orphans[tid]) {
-				$target = $orphans[tid];
+				$target = $orphans[tid].clone();
 			}
 			else {
 				$reply.addClass('loading');
 				q = loadOrphan(tid).then(function () {
 					$reply.removeClass('loading');
-					$target = $orphans[tid];
+					$target = $orphans[tid].clone();
 				});
 			}
 
+
 			q.then(function () {
+				// Make sure a hashchange doesn't cause the browser to try and
+				// jump to the hoverbox.
+				$target.removeAttr('id');
+
 				$hover.css({
 					top: $reply.offset().top + $reply.outerHeight() * 1.2,
 					left: $caller.offset().left - $('body').css('font-size').replace(/px/,''),
@@ -1209,14 +1212,10 @@ postModifiers.push(function (ctx) {
 		.on('mouseleave', function () {
 			$('.Post-hover').remove();
 		})
+		.removeAttr('href')
 		.on('click', function () {
-			var $reply = $(this);
-
-			q = q.then(function () {
-				document.location.hash = $reply.attr('data-target');;
-			});
-		})
-		.removeAttr('href');
+			document.location.hash = $(this).attr('data-target');
+		});
 });
 
 // ===========================================================================
