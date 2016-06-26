@@ -341,9 +341,16 @@
 }
 
 .Pager {
-	@include button-group($hue: 40, $sat: 30%);
 	margin: 1.5rem auto;
 	text-align: center;
+
+	ul {
+		@include box;
+		@include button-group($hue: 40, $sat: 40%);
+		background-color: hsla(40, 40%, 80%, 1);
+		display: inline-block;
+		padding: 0.05em;
+	}
 }
 
 .Pager.loading,
@@ -351,7 +358,7 @@
 	opacity: 0.5;
 
 	&:hover,
-	& > li > a:hover {
+	& > ul > li > a:hover {
 		cursor: wait !important;
 	}
 }

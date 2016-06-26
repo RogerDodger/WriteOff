@@ -1084,49 +1084,33 @@ $(document).ready(function () {
 	var key = document.location.pathname + '/page';
 
 	var loadPage = function (page) {
-		var req = {
-			url: document.location.pathname,
-			data: {
-				'page' : page
-			}
-		};
-
-		if ($page(page).size()) {
-			req.method = 'POST';
-			req.data.dry = 1;
-			$.ajax(req);
-			return $.when();
-		}
-
 		$pager.addClass('loading');
-		req.method = 'GET';
-		req.success = function (res, status, xhr) {
-			res = $.parseHTML(res);
-			postModifiers.apply(res);
-			$('.Posts').append($(res).find('.Post'));
-			$pager.removeClass('loading');
-		};
-		return $.ajax(req);
-	};
+		return $.ajax({
+			url: document.location.pathname,
+			data: { 'page' : page },
+			method: 'GET',
+			success: function (res, status, xhr) {
+				res = $.parseHTML(res);
+				postModifiers.apply(res);
 
-	var changePage = function (page) {
-		return loadPage(page).then(function () {
-			$('.Post.view').addClass('hidden');
-			$page(page).removeClass('hidden');
-			$('.Pager a').removeClass('selected').each(function () {
-				var $this = $(this);
-				if ($this.text() == page) {
-					$this.addClass('selected');
-				}
-			});
+				$('.Posts').empty().append($(res).find('.Post'));
+
+				$('.Pager a').removeClass('current').each(function () {
+					var $this = $(this);
+					if ($this.text() == page) {
+						$this.addClass('current');
+					}
+				});
+				$pager.removeClass('loading');
+			},
 		});
 	};
 
 	if ($pager.size()) {
 		$pager.find('a').removeAttr('href').click(function () {
 			var $this = $(this);
-			if (!$this.hasClass('selected') && !$pager.hasClass('loading')) {
-				changePage($this.text()).then(function () {
+			if (!$pager.hasClass('loading')) {
+				loadPage($this.text()).then(function () {
 					if ($this.closest('.Pager').hasClass('bottom')) {
 						$('html, body').scrollTop($('.Pager.top').offset().top);
 					}
@@ -1139,33 +1123,37 @@ $(document).ready(function () {
 		$('.Post.highlight').removeClass('highlight');
 
 		if (document.location.hash.search(/^#[0-9]+$/) != -1) {
-			var $post = $('.Post' + document.location.hash);
+			var $post = $('.Posts .Post' + document.location.hash);
 			var pid = document.location.hash.substr(1);
 			var q = $.when();
 
 			var jump = function () {
+				console.log($post, $post.attr('data-page'));
 				$post.addClass('highlight');
 				$('html, body').scrollTop($post.offset().top);
 			};
 
 			if ($post.size()) {
-				if ($post.hasClass('hidden')) {
-					q = changePage($post.attr('data-page'));
-				}
-				q.then(jump);
+				jump();
 			}
 			else {
+
 				if (!$orphans[pid]) {
 					q = loadOrphan(pid);
 				}
 
 				q.then(function () {
 					var $orphan = $orphans[pid];
-					if ($orphan && $orphan.attr('data-page')) {
-						changePage($orphan.attr('data-page')).then(function () {
-							$post = $('.Post' + document.location.hash);
-							jump();
-						});
+					if ($orphan.size()) {
+						if ($orphan.attr('data-page') != '0') {
+							loadPage($orphan.attr('data-page')).then(function () {
+								$post = $('.Post' + document.location.hash);
+								jump();
+							});
+						}
+						else {
+							window.location = '/post/' + $orphan.attr('id');
+						}
 					}
 				})
 			}
@@ -1223,20 +1211,8 @@ postModifiers.push(function (ctx) {
 		.on('click', function () {
 			var $reply = $(this);
 
-			q.then(function () {
-				var tid = $reply.attr('data-target');
-
-				var $post = $('.Post#' + tid);
-				if (!$post.size()) {
-					$post = $orphans[tid];
-				}
-
-				if ($post.size() && $post.attr('data-page')) {
-					document.location.hash = tid;
-				}
-				else {
-					window.location = '/post/' + tid;
-				}
+			q = q.then(function () {
+				document.location.hash = $reply.attr('data-target');;
 			});
 		})
 		.removeAttr('href');

@@ -28,7 +28,7 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 	my $entry = $c->req->param('entry_id') // '';
 	my $event = $c->req->param('event_id') // '';
 
-	my $wrongEntry = $c->stash->{post}->entry_id && $entry && $c->stash->{post}->entry_id ne $entry;
+	my $rightEntry = $entry eq ($c->stash->{post}->entry_id // '');
 	my $rightEvent = $event eq $c->stash->{post}->event_id;
 
 	my $thread = !$c->stash->{post}->entry || !$entry && $rightEvent
@@ -37,7 +37,7 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 
 	$c->stash->{num} = $thread->num_for($c->stash->{post});
 	$c->stash->{page} = $c->page_for($c->stash->{num});
-	$c->stash->{page} = 0 if !$rightEvent || $wrongEntry;
+	$c->stash->{page} = 0 unless $rightEvent && $rightEntry;
 
 	my $vote = $c->model('DB::PostVote')->find($c->user->id, $c->stash->{post}->id);
 	$c->stash->{vote} = $vote && $vote->value;

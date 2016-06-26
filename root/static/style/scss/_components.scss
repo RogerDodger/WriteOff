@@ -57,7 +57,14 @@
 
 @mixin button($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
 	@include button-base;
-	@include button-color($hue, $sat, $l, $invert);
+
+	&.current {
+		@include button-color($hue, $sat + (100% - $sat) / 3, $l, $invert);
+	}
+
+	&:not(.current) {
+		@include button-color($hue, $sat, $l, $invert);
+	}
 }
 
 @mixin button-group($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
