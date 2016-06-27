@@ -161,17 +161,17 @@ a {
     cursor: pointer;
     text-decoration: none; }
   .Table-button.current {
-    background: #f3f9fb;
-    border-color: #94c6df;
-    color: #173a4c; }
+    background: #f6f8f9;
+    border-color: #acbec7;
+    color: #28353b; }
     .Table-button.current:not(:disabled):not(.selected):hover {
-      background: #e0eff6; }
+      background: #e7ecef; }
     .Table-button.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #cde4f0 inset; }
+      box-shadow: 0 0.5em 0.7em #d8e1e5 inset; }
     .Table-button.current:disabled, .Table-button.current.selected {
-      background: #f6f8f9;
-      border-color: #adbec6;
-      color: #28353b; }
+      background: #f7f8f8;
+      border-color: #b5bbbe;
+      color: #2e3335; }
       .Table-button.current:disabled:hover, .Table-button.current.selected:hover {
         cursor: default; }
   .Table-button:not(.current) {
@@ -320,17 +320,17 @@ a {
     cursor: pointer;
     text-decoration: none; }
   .Form input[type="submit"].current {
-    background: #aaeeaa;
-    border-color: #55dd55;
-    color: #0e440e; }
+    background: #bbddbb;
+    border-color: #78ba78;
+    color: #1c361c; }
     .Form input[type="submit"].current:not(:disabled):not(.selected):hover {
-      background: #99eb99; }
+      background: #aed6ae; }
     .Form input[type="submit"].current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #88e788 inset; }
+      box-shadow: 0 0.5em 0.7em #a0cfa0 inset; }
     .Form input[type="submit"].current:disabled, .Form input[type="submit"].current.selected {
-      background: #c0d8c0;
-      border-color: #81b181;
-      color: #1f321f; }
+      background: #c6d2c6;
+      border-color: #8da58d;
+      color: #242d24; }
       .Form input[type="submit"].current:disabled:hover, .Form input[type="submit"].current.selected:hover {
         cursor: default; }
   .Form input[type="submit"]:not(.current) {
@@ -873,17 +873,17 @@ body {
     cursor: pointer;
     text-decoration: none; }
   .Artist-controls--edit.current {
-    background: #c3e7b1;
-    border-color: #87cf63;
-    color: #223f13; }
+    background: #c9d6c2;
+    border-color: #92ad85;
+    color: #263121; }
     .Artist-controls--edit.current:not(:disabled):not(.selected):hover {
-      background: #b7e2a1; }
+      background: #beceb6; }
     .Artist-controls--edit.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #abde92 inset; }
+      box-shadow: 0 0.5em 0.7em #b3c6aa inset; }
     .Artist-controls--edit.current:disabled, .Artist-controls--edit.current.selected {
-      background: #c9d6c2;
-      border-color: #93ac86;
-      color: #263021; }
+      background: #cbcfc9;
+      border-color: #97a092;
+      color: #282c26; }
       .Artist-controls--edit.current:disabled:hover, .Artist-controls--edit.current.selected:hover {
         cursor: default; }
   .Artist-controls--edit:not(.current) {
@@ -913,17 +913,17 @@ body {
     cursor: pointer;
     text-decoration: none; }
   .Artist-controls--delete.current {
-    background: #e7c3b1;
-    border-color: #cf8763;
-    color: #3f2213; }
+    background: #d6c9c2;
+    border-color: #ad9285;
+    color: #312621; }
     .Artist-controls--delete.current:not(:disabled):not(.selected):hover {
-      background: #e2b7a1; }
+      background: #cebeb6; }
     .Artist-controls--delete.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #deab92 inset; }
+      box-shadow: 0 0.5em 0.7em #c6b3aa inset; }
     .Artist-controls--delete.current:disabled, .Artist-controls--delete.current.selected {
-      background: #d6c9c2;
-      border-color: #ac9386;
-      color: #302621; }
+      background: #cfcbc9;
+      border-color: #a09792;
+      color: #2c2826; }
       .Artist-controls--delete.current:disabled:hover, .Artist-controls--delete.current.selected:hover {
         cursor: default; }
   .Artist-controls--delete:not(.current) {
@@ -1125,17 +1125,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-links.rules li a.current {
-        background: #c3b1e7;
-        border-color: #8763cf;
-        color: #22133f; }
+        background: #c9c2d6;
+        border-color: #9285ad;
+        color: #262131; }
         .Event-links.rules li a.current:not(:disabled):not(.selected):hover {
-          background: #b7a1e2; }
+          background: #beb6ce; }
         .Event-links.rules li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #ab92de inset; }
+          box-shadow: 0 0.5em 0.7em #b3aac6 inset; }
         .Event-links.rules li a.current:disabled, .Event-links.rules li a.current.selected {
-          background: #c9c2d6;
-          border-color: #9386ac;
-          color: #262130; }
+          background: #cbc9cf;
+          border-color: #9792a0;
+          color: #28262c; }
           .Event-links.rules li a.current:disabled:hover, .Event-links.rules li a.current.selected:hover {
             cursor: default; }
       .Event-links.rules li a:not(.current) {
@@ -1172,17 +1172,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-links.prompt li a.current {
-        background: #deb1e7;
-        border-color: #bd63cf;
-        color: #37133f; }
+        background: #d3c2d6;
+        border-color: #a685ad;
+        color: #2e2131; }
         .Event-links.prompt li a.current:not(:disabled):not(.selected):hover {
-          background: #d8a1e2; }
+          background: #cab6ce; }
         .Event-links.prompt li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #d192de inset; }
+          box-shadow: 0 0.5em 0.7em #c1aac6 inset; }
         .Event-links.prompt li a.current:disabled, .Event-links.prompt li a.current.selected {
-          background: #d2c2d6;
-          border-color: #a686ac;
-          color: #2e2130; }
+          background: #cec9cf;
+          border-color: #9e92a0;
+          color: #2b262c; }
           .Event-links.prompt li a.current:disabled:hover, .Event-links.prompt li a.current.selected:hover {
             cursor: default; }
       .Event-links.prompt li a:not(.current) {
@@ -1219,17 +1219,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-links.fic li a.current {
-        background: #e7b1d5;
-        border-color: #cf63ab;
-        color: #3f1330; }
+        background: #d6c2cf;
+        border-color: #ad85a0;
+        color: #31212b; }
         .Event-links.fic li a.current:not(:disabled):not(.selected):hover {
-          background: #e2a1cd; }
+          background: #ceb6c6; }
         .Event-links.fic li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #de92c4 inset; }
+          box-shadow: 0 0.5em 0.7em #c6aabc inset; }
         .Event-links.fic li a.current:disabled, .Event-links.fic li a.current.selected {
-          background: #d6c2cf;
-          border-color: #ac869f;
-          color: #30212b; }
+          background: #cfc9cd;
+          border-color: #a0929b;
+          color: #2c262a; }
           .Event-links.fic li a.current:disabled:hover, .Event-links.fic li a.current.selected:hover {
             cursor: default; }
       .Event-links.fic li a:not(.current) {
@@ -1266,17 +1266,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-links.art li a.current {
-        background: #e7b1ba;
-        border-color: #cf6375;
-        color: #3f131a; }
+        background: #d6c2c5;
+        border-color: #ad858c;
+        color: #312123; }
         .Event-links.art li a.current:not(:disabled):not(.selected):hover {
-          background: #e2a1ac; }
+          background: #ceb6ba; }
         .Event-links.art li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #de929e inset; }
+          box-shadow: 0 0.5em 0.7em #c6aaae inset; }
         .Event-links.art li a.current:disabled, .Event-links.art li a.current.selected {
-          background: #d6c2c6;
-          border-color: #ac868c;
-          color: #302124; }
+          background: #cfc9ca;
+          border-color: #a09294;
+          color: #2c2627; }
           .Event-links.art li a.current:disabled:hover, .Event-links.art li a.current.selected:hover {
             cursor: default; }
       .Event-links.art li a:not(.current) {
@@ -1313,17 +1313,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-links.commenting li a.current {
-        background: #b1bae7;
-        border-color: #6375cf;
-        color: #131a3f; }
+        background: #c2c5d6;
+        border-color: #858cad;
+        color: #212331; }
         .Event-links.commenting li a.current:not(:disabled):not(.selected):hover {
-          background: #a1ace2; }
+          background: #b6bace; }
         .Event-links.commenting li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #929ede inset; }
+          box-shadow: 0 0.5em 0.7em #aaaec6 inset; }
         .Event-links.commenting li a.current:disabled, .Event-links.commenting li a.current.selected {
-          background: #c2c6d6;
-          border-color: #868cac;
-          color: #212430; }
+          background: #c9cacf;
+          border-color: #9294a0;
+          color: #26272c; }
           .Event-links.commenting li a.current:disabled:hover, .Event-links.commenting li a.current.selected:hover {
             cursor: default; }
       .Event-links.commenting li a:not(.current) {
@@ -1361,17 +1361,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-admin li a.current {
-        background: #b1d5e7;
-        border-color: #63abcf;
-        color: #13303f; }
+        background: #c2cfd6;
+        border-color: #85a0ad;
+        color: #212b31; }
         .Event-admin li a.current:not(:disabled):not(.selected):hover {
-          background: #a1cde2; }
+          background: #b6c6ce; }
         .Event-admin li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #92c4de inset; }
+          box-shadow: 0 0.5em 0.7em #aabcc6 inset; }
         .Event-admin li a.current:disabled, .Event-admin li a.current.selected {
-          background: #c2cfd6;
-          border-color: #869fac;
-          color: #212b30; }
+          background: #c9cdcf;
+          border-color: #929ba0;
+          color: #262a2c; }
           .Event-admin li a.current:disabled:hover, .Event-admin li a.current.selected:hover {
             cursor: default; }
       .Event-admin li a:not(.current) {
@@ -1409,17 +1409,17 @@ body {
         cursor: pointer;
         text-decoration: none; }
       .Event-blurb > ul:first-child li a.current {
-        background: #b1bae7;
-        border-color: #6375cf;
-        color: #131a3f; }
+        background: #c2c5d6;
+        border-color: #858cad;
+        color: #212331; }
         .Event-blurb > ul:first-child li a.current:not(:disabled):not(.selected):hover {
-          background: #a1ace2; }
+          background: #b6bace; }
         .Event-blurb > ul:first-child li a.current:not(:disabled):not(.selected):active {
-          box-shadow: 0 0.5em 0.7em #929ede inset; }
+          box-shadow: 0 0.5em 0.7em #aaaec6 inset; }
         .Event-blurb > ul:first-child li a.current:disabled, .Event-blurb > ul:first-child li a.current.selected {
-          background: #c2c6d6;
-          border-color: #868cac;
-          color: #212430; }
+          background: #c9cacf;
+          border-color: #9294a0;
+          color: #26272c; }
           .Event-blurb > ul:first-child li a.current:disabled:hover, .Event-blurb > ul:first-child li a.current.selected:hover {
             cursor: default; }
       .Event-blurb > ul:first-child li a:not(.current) {
@@ -1459,17 +1459,17 @@ body {
     cursor: pointer;
     text-decoration: none; }
   .Archive-button.current {
-    background: #dde8ee;
-    border-color: #91b5c8;
-    color: #1f333d; }
+    background: #e6e6e6;
+    border-color: #acacac;
+    color: #2e2e2e; }
     .Archive-button.current:not(:disabled):not(.selected):hover {
-      background: #cedee6; }
+      background: #dadada; }
     .Archive-button.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #bed4df inset; }
+      box-shadow: 0 0.5em 0.7em #cfcfcf inset; }
     .Archive-button.current:disabled, .Archive-button.current.selected {
-      background: #e3e6e8;
-      border-color: #a2afb6;
-      color: #293033; }
+      background: #e6e6e6;
+      border-color: #acacac;
+      color: #2e2e2e; }
       .Archive-button.current:disabled:hover, .Archive-button.current.selected:hover {
         cursor: default; }
   .Archive-button:not(.current) {
@@ -1568,18 +1568,18 @@ body {
     cursor: pointer;
     text-decoration: none; }
   .Post-author--name.current {
-    background: #3838e0;
-    border-color: #1c1cb6;
-    color: #e7e7fb;
-    text-shadow: -0.05em -0.05em #13137a; }
+    background: #5f5fb9;
+    border-color: #404092;
+    color: #ececf6;
+    text-shadow: -0.05em -0.05em #2b2b61; }
     .Post-author--name.current:not(:disabled):not(.selected):hover {
-      background: #2c2cdf; }
+      background: #5656b5; }
     .Post-author--name.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #2222db inset; }
+      box-shadow: 0 0.5em 0.7em #4d4daf inset; }
     .Post-author--name.current:disabled, .Post-author--name.current.selected {
-      background: #6f6faa;
-      border-color: #4e4e84;
-      color: #151523; }
+      background: #7d7d9c;
+      border-color: #5b5b78;
+      color: #181820; }
       .Post-author--name.current:disabled:hover, .Post-author--name.current.selected:hover {
         cursor: default; }
   .Post-author--name:not(.current) {
@@ -1791,21 +1791,21 @@ body {
       text-decoration: none; }
     .Post-form--senders button[type="submit"].current,
     .Post-form--senders .Post-edit--save.current {
-      background: #b1e7b1;
-      border-color: #63cf63;
-      color: #133f13; }
+      background: #c2d6c2;
+      border-color: #85ad85;
+      color: #213121; }
       .Post-form--senders button[type="submit"].current:not(:disabled):not(.selected):hover,
       .Post-form--senders .Post-edit--save.current:not(:disabled):not(.selected):hover {
-        background: #a1e2a1; }
+        background: #b6ceb6; }
       .Post-form--senders button[type="submit"].current:not(:disabled):not(.selected):active,
       .Post-form--senders .Post-edit--save.current:not(:disabled):not(.selected):active {
-        box-shadow: 0 0.5em 0.7em #92de92 inset; }
+        box-shadow: 0 0.5em 0.7em #aac6aa inset; }
       .Post-form--senders button[type="submit"].current:disabled, .Post-form--senders button[type="submit"].current.selected,
       .Post-form--senders .Post-edit--save.current:disabled,
       .Post-form--senders .Post-edit--save.current.selected {
-        background: #c2d6c2;
-        border-color: #86ac86;
-        color: #213021; }
+        background: #c9cfc9;
+        border-color: #92a092;
+        color: #262c26; }
         .Post-form--senders button[type="submit"].current:disabled:hover, .Post-form--senders button[type="submit"].current.selected:hover,
         .Post-form--senders .Post-edit--save.current:disabled:hover,
         .Post-form--senders .Post-edit--save.current.selected:hover {
@@ -1843,17 +1843,17 @@ body {
       cursor: pointer;
       text-decoration: none; }
     .Post-form--senders .Post-edit--cancel.current {
-      background: #e4b4b4;
-      border-color: #c96969;
-      color: #3c1616; }
+      background: #d3c5c5;
+      border-color: #a68c8c;
+      color: #2e2323; }
       .Post-form--senders .Post-edit--cancel.current:not(:disabled):not(.selected):hover {
-        background: #dea5a5; }
+        background: #cababa; }
       .Post-form--senders .Post-edit--cancel.current:not(:disabled):not(.selected):active {
-        box-shadow: 0 0.5em 0.7em #d99696 inset; }
+        box-shadow: 0 0.5em 0.7em #c1aeae inset; }
       .Post-form--senders .Post-edit--cancel.current:disabled, .Post-form--senders .Post-edit--cancel.current.selected {
-        background: #d4c4c4;
-        border-color: #aa8888;
-        color: #2f2222; }
+        background: #cecaca;
+        border-color: #9e9494;
+        color: #2b2727; }
         .Post-form--senders .Post-edit--cancel.current:disabled:hover, .Post-form--senders .Post-edit--cancel.current.selected:hover {
           cursor: default; }
     .Post-form--senders .Post-edit--cancel:not(.current) {
@@ -1898,31 +1898,31 @@ body {
           cursor: pointer;
           text-decoration: none; }
         .Pager ul li a.current {
-          background: #ebd6ad;
-          border-color: #d6ad5c;
-          color: #413110; }
+          background: #e0d3b8;
+          border-color: #c1a671;
+          color: #392e19; }
           .Pager ul li a.current:not(:disabled):not(.selected):hover {
-            background: #e7ce9d; }
+            background: #dacaaa; }
           .Pager ul li a.current:not(:disabled):not(.selected):active {
-            box-shadow: 0 0.5em 0.7em #e2c68d inset; }
+            box-shadow: 0 0.5em 0.7em #d3c19c inset; }
           .Pager ul li a.current:disabled, .Pager ul li a.current.selected {
-            background: #d7d0c1;
-            border-color: #aea084;
-            color: #312c20; }
+            background: #d3cec5;
+            border-color: #a79e8b;
+            color: #2e2b23; }
             .Pager ul li a.current:disabled:hover, .Pager ul li a.current.selected:hover {
               cursor: default; }
         .Pager ul li a:not(.current) {
-          background: #e0d3b8;
-          border-color: #c2a770;
-          color: #392e18; }
+          background: #ebd6ad;
+          border-color: #d6ad5c;
+          color: #413110; }
           .Pager ul li a:not(.current):not(:disabled):not(.selected):hover {
-            background: #dacaa9; }
+            background: #e7ce9d; }
           .Pager ul li a:not(.current):not(:disabled):not(.selected):active {
-            box-shadow: 0 0.5em 0.7em #d4c19b inset; }
+            box-shadow: 0 0.5em 0.7em #e2c68d inset; }
           .Pager ul li a:not(.current):disabled, .Pager ul li a:not(.current).selected {
-            background: #d3cec5;
-            border-color: #a79e8b;
-            color: #2f2b23; }
+            background: #d7d0c1;
+            border-color: #aea084;
+            color: #312c20; }
             .Pager ul li a:not(.current):disabled:hover, .Pager ul li a:not(.current).selected:hover {
               cursor: default; }
 
@@ -2436,17 +2436,17 @@ body {
       cursor: pointer;
       text-decoration: none; }
     .Storys-access--update input.current {
-      background: #b1d5e7;
-      border-color: #63abcf;
-      color: #13303f; }
+      background: #c2cfd6;
+      border-color: #85a0ad;
+      color: #212b31; }
       .Storys-access--update input.current:not(:disabled):not(.selected):hover {
-        background: #a1cde2; }
+        background: #b6c6ce; }
       .Storys-access--update input.current:not(:disabled):not(.selected):active {
-        box-shadow: 0 0.5em 0.7em #92c4de inset; }
+        box-shadow: 0 0.5em 0.7em #aabcc6 inset; }
       .Storys-access--update input.current:disabled, .Storys-access--update input.current.selected {
-        background: #c2cfd6;
-        border-color: #869fac;
-        color: #212b30; }
+        background: #c9cdcf;
+        border-color: #929ba0;
+        color: #262a2c; }
         .Storys-access--update input.current:disabled:hover, .Storys-access--update input.current.selected:hover {
           cursor: default; }
     .Storys-access--update input:not(.current) {
@@ -2493,17 +2493,17 @@ body {
     cursor: pointer;
     text-decoration: none; }
   .Check-button input[type="checkbox"] + span.current {
-    background: #b1d5e7;
-    border-color: #63abcf;
-    color: #13303f; }
+    background: #c2cfd6;
+    border-color: #85a0ad;
+    color: #212b31; }
     .Check-button input[type="checkbox"] + span.current:not(:disabled):not(.selected):hover {
-      background: #a1cde2; }
+      background: #b6c6ce; }
     .Check-button input[type="checkbox"] + span.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #92c4de inset; }
+      box-shadow: 0 0.5em 0.7em #aabcc6 inset; }
     .Check-button input[type="checkbox"] + span.current:disabled, .Check-button input[type="checkbox"] + span.current.selected {
-      background: #c2cfd6;
-      border-color: #869fac;
-      color: #212b30; }
+      background: #c9cdcf;
+      border-color: #929ba0;
+      color: #262a2c; }
       .Check-button input[type="checkbox"] + span.current:disabled:hover, .Check-button input[type="checkbox"] + span.current.selected:hover {
         cursor: default; }
   .Check-button input[type="checkbox"] + span:not(.current) {
@@ -2618,21 +2618,21 @@ body {
     text-decoration: none; }
   .Ballot-abstain.current,
   .Ballot-unabstain.current {
-    background: #f3f9fb;
-    border-color: #94c6df;
-    color: #173a4c; }
+    background: #f6f8f9;
+    border-color: #acbec7;
+    color: #28353b; }
     .Ballot-abstain.current:not(:disabled):not(.selected):hover,
     .Ballot-unabstain.current:not(:disabled):not(.selected):hover {
-      background: #e0eff6; }
+      background: #e7ecef; }
     .Ballot-abstain.current:not(:disabled):not(.selected):active,
     .Ballot-unabstain.current:not(:disabled):not(.selected):active {
-      box-shadow: 0 0.5em 0.7em #cde4f0 inset; }
+      box-shadow: 0 0.5em 0.7em #d8e1e5 inset; }
     .Ballot-abstain.current:disabled, .Ballot-abstain.current.selected,
     .Ballot-unabstain.current:disabled,
     .Ballot-unabstain.current.selected {
-      background: #f6f8f9;
-      border-color: #adbec6;
-      color: #28353b; }
+      background: #f7f8f8;
+      border-color: #b5bbbe;
+      color: #2e3335; }
       .Ballot-abstain.current:disabled:hover, .Ballot-abstain.current.selected:hover,
       .Ballot-unabstain.current:disabled:hover,
       .Ballot-unabstain.current.selected:hover {

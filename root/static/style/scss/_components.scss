@@ -59,7 +59,7 @@
 	@include button-base;
 
 	&.current {
-		@include button-color($hue, $sat + (100% - $sat) / 3, $l, $invert);
+		@include button-color($hue, $sat * 0.65, $l, $invert);
 	}
 
 	&:not(.current) {

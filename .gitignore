@@ -6,3 +6,4 @@ config.yml
 scheduler.state
 nohup.out
 *.sublime-workspace
+root/static/style/writeoff.css.map

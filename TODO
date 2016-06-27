@@ -2,7 +2,6 @@
 - [high] Localise $c->stash->{wrapper} in View::Email
 - [high] Link to artist profile in every instance of name appearing
 - [high] Mobile rules for tables
-- [high] Refresh button on pager
 - [med] Make ranking algorithm consider edge case of an entry getting no votes
 - [med] Post preview
 - [med] More stuff in artist profiles
