@@ -143,6 +143,11 @@ Number.prototype.zeropad = function (n) {
 	return s;
 }
 
+// t0 is compared against the real current time to determine how long the page
+// has been opened. This is useful to know what the "current" time is when
+// using a mocked now.
+var t0 = new Date();
+
 $(document).ready(function ($) {
 	$('input[type="checkbox"].toggler')
 		.on('change', function() {
@@ -698,10 +703,20 @@ postModifiers.push(function (ctx) {
 	var $deltas = $('time.delta', ctx).not('.Countdown time');
 
 	if ($deltas.size()) {
-		var t, t0, ttl = $deltas.size();
+		var t, ttl = $deltas.size();
 		var tick = function tick (e) {
 			t = new Date();
-			// Same as above
+			// `now` is defined in the global scope as the server's current time
+			// this is used so that it's spoofable, and so that countdowns are
+			// based off the server's clock rather than the client's
+
+			// `t0` is defined as `new Date()` on pageload. This is so we know
+			// what the "current" time is with respect to a spoofed `now`.
+
+			// 50ms is added for rounding purposes. The 1000ms interval can
+			// end up being 998-1002ms. This can have the countdown seem to
+			// skip a second as it goes from, for example, 4000ms to 2999ms to
+			// 2000ms remaining.
 			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
 
 			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_));
@@ -716,7 +731,6 @@ postModifiers.push(function (ctx) {
 				setTimeout(tick, 1000 * 60 * 60 + Math.random() * 500, e);
 			}
 		};
-		t0 = new Date();
 		$deltas.each(function () {
 			tick(this);
 		});
@@ -729,17 +743,10 @@ $(document).ready(function () {
 	var $datetimes = $('time.datetime');
 
 	if ($countdowns.size()) {
-		var t, t0;
+		var t;
 		var tick = function () {
 			t = new Date();
-			// `now` is defined in the global scope as the server's current time
-			// this is used so that it's spoofable, and so that ountdowns are
-			// based off the server's clock rather than the client's
-
-			// 50ms is added for rounding purposes. The 1000ms interval can
-			// end up being 998-1002ms. This can have the countdown seem to
-			// skip a second as it goes from, for example, 4000ms to 2999ms to
-			// 2000ms remaining.
+			// Same as above
 			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
 
 			$countdowns.each(function () {
@@ -765,7 +772,6 @@ $(document).ready(function () {
 					s.zeropad(2) + "s";
 			});
 		};
-		t0 = new Date();
 		setInterval(tick, 1000);
 		tick();
 	}
