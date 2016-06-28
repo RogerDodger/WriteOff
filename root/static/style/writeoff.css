@@ -1929,9 +1929,10 @@ body {
 .Pager.loading,
 .Pager.loading + .Posts {
   opacity: 0.5; }
-  .Pager.loading:hover, .Pager.loading > ul > li > a:hover,
+  .Pager.loading:hover,
+  .Pager.loading a:hover,
   .Pager.loading + .Posts:hover,
-  .Pager.loading + .Posts > ul > li > a:hover {
+  .Pager.loading + .Posts a:hover {
     cursor: wait !important; }
 
 .Prompts {

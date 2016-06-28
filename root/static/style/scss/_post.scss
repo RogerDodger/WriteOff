@@ -358,7 +358,7 @@
 	opacity: 0.5;
 
 	&:hover,
-	& > ul > li > a:hover {
+	a:hover {
 		cursor: wait !important;
 	}
 }
