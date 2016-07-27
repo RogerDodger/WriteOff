@@ -81,16 +81,16 @@ sub path {
 sub title { shift->entry->title }
 
 sub write {
-	my ($self, $img) = @_;
+	my ($self, $upload) = @_;
 	$self->version(substr Digest::MD5->md5_hex(time . rand() . $$), -6);
 
 	my $thumbpath = File::Spec->catfile('root', $self->path('thumb'));
 
-	my $img = Imager->new(file => $img) or die Imager->errstr . "\n";
+	my $img = Imager->new(file => $upload) or die Imager->errstr . "\n";
 	my $thumb = $img->scale(xpixels => 225, ypixels => 225, type => 'nonprop') or die $img->errstr . "\n";
 	$thumb->write(file => $thumbpath, type => 'png') or die $thumb->errstr . "\n";
 
-	if (!copy($img, File::Spec->catfile('root', $self->path))) {
+	if (!copy($upload, File::Spec->catfile('root', $self->path))) {
 		my $e = $!;
 		unlink $thumbpath;
 		die "$e\n";
