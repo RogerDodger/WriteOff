@@ -1,11 +1,8 @@
 ---
 domain: example.com
-AdminName: SomeAdmin
 AdminEmail: someadmin@example.com
 recaptcha:
     pub_key: 01010101010101
     priv_key: AAAAAAAAAAAAAA
 
-google_analytics_id: UA-XXXXXXX-X
 timezone: UTC
-footer_addendum: 0
