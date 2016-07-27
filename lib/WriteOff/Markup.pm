@@ -53,6 +53,8 @@ my %escapes = (
 	},
 );
 
+my $replyf = qq{<a href="/post/%d" class="Post-reply" data-target="%d">&gt;&gt;%s</a>};
+
 my $post = Parse::BBCode->new({
 	tags => {
 		%tags,
@@ -72,17 +74,15 @@ my $post = Parse::BBCode->new({
 				}
 			}
 
-			my $fmt = qq{<a href="/post/%d" class="Post-reply" data-target="%d">%s%s</a>};
-
 			$text =~ s{
-				(&gt; &gt;) ([0-9]+)
+				(&gt;&gt;) ([0-9]+)
 			}{
 				die "Too many replies in post\n" if $params->{limit}-- <= 0;
 				my $ret;
 				my $post = $posts->find($2);
 				if ($post) {
 					$params->{replies}{$2} = 1;
-					$ret = sprintf $fmt, $2, $2, $1,
+					$ret = sprintf $replyf, $2, $2,
 						Parse::BBCode::escape_html($post->artist->name);
 				}
 				else {
@@ -104,6 +104,19 @@ my $story = Parse::BBCode->new({
 
 sub post {
 	$post->render(@_) =~ s/^(?:<br>)+|(?:<br>|\s)+$//gr;
+}
+
+sub replies {
+	my $replies = shift;
+
+	if ($replies->count) {
+		return join "\n",
+			map {
+				sprintf $replyf, $_->id, $_->id, Parse::BBCode::escape_html($_->artist->name);
+			} $replies->all;
+	}
+
+	undef;
 }
 
 sub story {

@@ -50,10 +50,7 @@ sub thread_prefetch {
 	my $self = shift;
 
 	$self->search({}, {
-		prefetch => [
-			'entry',
-			{ reply_children => 'child' }
-		]
+		prefetch => [ 'entry' ],
 	});
 }
 

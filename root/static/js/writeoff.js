@@ -1198,8 +1198,7 @@ postModifiers.push(function (ctx) {
 				});
 			}
 
-
-			q.then(function () {
+			q = q.then(function () {
 				// Make sure a hashchange doesn't cause the browser to try and
 				// jump to the hoverbox.
 				$target.removeAttr('id');

@@ -21,6 +21,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 0 },
 	"body_render",
 	{ data_type => "text", is_nullable => 0 },
+	"children_render",
+	{ data_type => "text", is_nullable => 1 },
 	"score",
 	{ data_type => "integer", is_nullable => 0, default_value => 0 },
 	"deleted",
@@ -63,24 +65,43 @@ sub num {
 
 sub render {
 	my $self = shift;
+	my $posts = $self->result_source->resultset;
 
-	my %replies;
+	my %parents;
 	$self->update({
 		body_render => WriteOff::Markup::post($self->body, {
 			posts => $self->result_source->resultset->search_rs({}, { join => 'artist' }),
-			replies => \%replies,
+			replies => \%parents,
 		})
 	});
+
+	$self->_render_children;
+
+	# Have to get this now before we delete it
+	my @old = $self->reply_parents->get_column('parent_id')->all;
+
 	$self->reply_parents->delete;
 	$self->result_source->schema->resultset('Reply')->populate([
 		map {{
 			parent_id => $_,
 			child_id => $self->id,
-		}} keys %replies
+		}} keys %parents
 	]);
-	$self->parents->update({ updated => $self->updated });
+
+	# New and old parents have to re-render their children to include or remove this post
+	@old = grep { !delete $parents{$_} } @old;
+	$posts->find($_)->_render_children for @old, keys %parents;
 
 	$self;
+}
+
+sub _render_children {
+	my $self = shift;
+
+	my $children = $self->children->search({}, { prefetch => 'artist' });
+	$self->update({
+		children_render => WriteOff::Markup::replies($children),
+	});
 }
 
 sub is_manipulable_by {

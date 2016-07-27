@@ -77,15 +77,10 @@
 			</span>
 			{{ END }}
 
-			{{ IF post.children_rs.count }}
+			{{ IF post.children_render }}
 			&middot;
 
-			<span class="Post-children">
-				{{ FOREACH child IN post.children; artist = artists.${child.artist_id} || child.artist }}
-				<a class="Post-reply" data-target="{{ child.id }}" href="{{ c.uri_for_action(
-					'/post/permalink', [ child.id ]) }}">&gt;&gt;{{ artist.name }}</a>
-				{{ END }}
-			</span>
+			<span class="Post-children">{{ post.children_render | none }}</span>
 			{{ END }}
 		</div>
 
