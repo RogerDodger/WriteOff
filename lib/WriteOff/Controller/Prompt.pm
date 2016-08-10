@@ -73,7 +73,7 @@ sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {
 
 	$c->stash->{subs_left} = $subs_left->();
 
-	push $c->stash->{title}, 'Submit';
+	push @{ $c->stash->{title} }, 'Submit';
 	$c->stash->{template} = 'prompt/submit.tt';
 }
 
@@ -123,7 +123,7 @@ sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 
 	$c->forward('do_delete') if $c->req->method eq 'POST';
 
-	push $c->stash->{title}, $c->string('delete');
+	push @{ $c->stash->{title} }, $c->string('delete');
 	$c->stash->{template} = 'root/confirm.tt';
 }
 

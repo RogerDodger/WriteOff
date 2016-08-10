@@ -45,7 +45,7 @@ sub setup {
 				my $class = { h2 => 'section', h3 => 'topic' }->{$1};
 				my $title = $2;
 				my $id = WriteOff::Util::simple_uri $title;
-				push $doc->{sections}, { class => $class, id => $id, title => $title };
+				push @{ $doc->{sections} }, { class => $class, id => $id, title => $title };
 				qq{
 					<div id="$id" class="Document-$class--title">$title</div>
 				}

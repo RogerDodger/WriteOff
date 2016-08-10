@@ -43,7 +43,7 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 	$c->stash->{vote} = $vote && $vote->value;
 
 	$c->stash->{template} = 'post/single.tt';
-	push $c->stash->{title}, $c->string('postN', $c->stash->{post}->id);
+	push @{ $c->stash->{title} }, $c->string('postN', $c->stash->{post}->id);
 }
 
 sub add :Local {
@@ -95,7 +95,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	$c->forward('do_edit')   if $c->req->method eq 'POST';
 
 	$c->stash->{template} = 'post/edit.tt';
-	push $c->stash->{title}, $c->string('editPost');
+	push @{ $c->stash->{title} }, $c->string('editPost');
 }
 
 sub do_edit :Private {

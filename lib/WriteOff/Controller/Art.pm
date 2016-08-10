@@ -15,7 +15,7 @@ sub fetch :Chained('/') :PathPart('art') :CaptureArgs(1) {
 	$c->forward('_fetch');
 	$c->stash->{entry} = $c->stash->{image}->entry;
 	$c->stash->{event} = $c->stash->{entry}->event;
-	unshift $c->stash->{title}, $c->stash->{event}->title;
+	unshift @{ $c->stash->{title} }, $c->stash->{event}->title;
 }
 
 sub view :Chained('fetch') :PathPart('') :Args(0) {
@@ -32,7 +32,7 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 	$c->stash->{show_storys} = $c->stash->{event}->fic_gallery_opened;
 	$c->stash->{gallery} = $c->stash->{event}->images->gallery->search({}, { prefetch => 'image' });
 
-	push $c->stash->{title}, 'Gallery';
+	push @{ $c->stash->{title} }, 'Gallery';
 	$c->stash->{template} = 'art/gallery.tt';
 }
 
@@ -85,7 +85,7 @@ sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
 		}
 	}
 
-	push $c->stash->{title}, 'Submit';
+	push @{ $c->stash->{title} }, 'Submit';
 	$c->stash->{template} = 'art/submit.tt';
 }
 
@@ -143,7 +143,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		website    => $c->stash->{image}->contents,
 	};
 
-	push $c->stash->{title}, 'Edit';
+	push @{ $c->stash->{title} }, 'Edit';
 	$c->stash->{template} = 'art/edit.tt';
 }
 
@@ -199,7 +199,7 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->stash->{items} = $c->stash->{image}->storys;
 	$c->stash->{view} = $c->controller('Fic')->action_for('view');
 
-	push $c->stash->{title}, 'Related Story(s)';
+	push @{ $c->stash->{title} }, 'Related Story(s)';
 	$c->stash->{template} = 'item/list.tt';
 }
 

@@ -14,7 +14,7 @@ sub fetch :Chained('/') :PathPart('artist') :CaptureArgs(1) {
 	my ($self, $c) = @_;
 	$c->forward('_fetch');
 	$c->stash->{entrys} = $c->stash->{artist}->entrys->listing;
-	push $c->stash->{title}, $c->stash->{artist}->name;
+	push @{ $c->stash->{title} }, $c->stash->{artist}->name;
 }
 
 sub add :Local {
@@ -25,7 +25,7 @@ sub add :Local {
 	$c->forward('do_add') if $c->req->method eq 'POST';
 
 	$c->stash->{template} = 'artist/add.tt';
-	push $c->stash->{title}, $c->string('newArtistTitle');
+	push @{ $c->stash->{title} }, $c->string('newArtistTitle');
 }
 
 sub do_add :Private {
@@ -60,7 +60,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	}
 
 	$c->stash->{template} = 'artist/edit.tt';
-	push $c->stash->{title}, $c->string('edit');
+	push @{ $c->stash->{title} }, $c->string('edit');
 }
 
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {

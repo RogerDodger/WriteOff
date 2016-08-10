@@ -114,7 +114,7 @@ sub delete :Private {
 
 	$c->forward('do_delete') if $c->req->method eq 'POST';
 
-	push $c->stash->{title}, $c->string('delete');
+	push @{ $c->stash->{title} }, $c->string('delete');
 	$c->stash->{template} = 'root/confirm.tt';
 }
 
@@ -150,7 +150,7 @@ sub dq :Private {
 
 	$c->forward('do_dq') if $c->req->method eq 'POST';
 
-	push $c->stash->{title}, $c->string('dq');
+	push @{ $c->stash->{title} }, $c->string('dq');
 	$c->stash->{template} = 'root/confirm.tt';
 }
 
@@ -197,7 +197,7 @@ sub votes :Private {
 			})
 	];
 
-	push $c->stash->{title}, 'Vote breakdown for ' . $c->stash->{entry}->title;
+	push @{ $c->stash->{title} }, 'Vote breakdown for ' . $c->stash->{entry}->title;
 	$c->stash->{template} = 'entry/votes.tt';
 }
 

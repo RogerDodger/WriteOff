@@ -21,7 +21,7 @@ sub view :Chained('fetch') :PathPart('') Args(0) {
 		prefetch => { entry => 'round' },
 	});
 
-	push $c->stash->{title}, $c->string($c->stash->{ballot}->round->name . 'Ballot');
+	push @{ $c->stash->{title} }, $c->string($c->stash->{ballot}->round->name . 'Ballot');
 	$c->stash->{template} = 'ballot/view.tt';
 }
 

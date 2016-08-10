@@ -39,7 +39,7 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 		}
 	}
 
-	push $c->stash->{title}, $c->string('authorGuessing');
+	push @{ $c->stash->{title} }, $c->string('authorGuessing');
 	$c->stash->{template} = 'vote/guess.tt';
 }
 

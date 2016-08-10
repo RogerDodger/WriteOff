@@ -18,7 +18,7 @@ sub login :Local :Args(0) {
 
 	$c->detach('/error', [ 'You are already logged in.' ]) if $c->user;
 
-	push $c->stash->{title}, 'Login';
+	push @{ $c->stash->{title} }, 'Login';
 	$c->stash->{template} = 'user/login.tt';
 
 	$c->forward('do_login') if $c->req->method eq 'POST';
@@ -63,7 +63,7 @@ sub register :Local :Args(0) {
 
 	$c->forward('/captcha_get');
 
-	push $c->stash->{title}, 'Register';
+	push @{ $c->stash->{title} }, 'Register';
 	$c->stash->{template} = 'user/register.tt';
 
 	$c->forward('do_register') if $c->req->method eq 'POST';
@@ -142,7 +142,7 @@ sub prefs :Local :Args(0) {
 		} qw/trigger genre format/,
 	};
 
-	push $c->stash->{title}, $c->string('preferences');
+	push @{ $c->stash->{title} }, $c->string('preferences');
 	$c->stash->{template} = 'user/prefs.tt';
 }
 
@@ -189,7 +189,7 @@ sub credentials :Path('credentials') :Args(0) {
 		$c->forward('do_credentials');
 	}
 
-	push $c->stash->{title}, qw/User Credentials/;
+	push @{ $c->stash->{title} }, qw/User Credentials/;
 	$c->stash->{template} = 'user/credentials.tt';
 }
 
@@ -237,7 +237,7 @@ sub verify :Local :Args(0) {
 
 	$c->stash->{mailtype} = { noun => 'verification', verb => 'verify' };
 
-	push $c->stash->{title}, 'Resend verification email';
+	push @{ $c->stash->{title} }, 'Resend verification email';
 	$c->stash->{template} = 'user/mailme.tt';
 
 	if ($c->req->method eq 'POST') {
@@ -282,7 +282,7 @@ sub recover :Local :Args(0) {
 
 	$c->stash->{mailtype} = { noun => 'recovery', verb => 'recover' };
 
-	push $c->stash->{title}, 'Recover lost password';
+	push @{ $c->stash->{title} }, 'Recover lost password';
 	$c->stash->{template} = 'user/mailme.tt';
 
 	if ($c->req->method eq 'POST') {
@@ -307,7 +307,7 @@ sub do_recover :Chained('fetch') :PathPart('recover') :Args(1) {
 		$token->delete;
 		$c->stash->{pass} = $c->stash->{user}->new_password;
 
-		push $c->stash->{title}, 'Password Recovery';
+		push @{ $c->stash->{title} }, 'Password Recovery';
 		$c->stash->{template} = 'user/recovered.tt';
 	}
 	else {

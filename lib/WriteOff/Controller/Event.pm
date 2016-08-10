@@ -39,7 +39,7 @@ sub add :Local :Args(0) {
 	$c->stash->{genres} = $c->model('DB::Genre');
 	$c->stash->{formats} = $c->model('DB::Format');
 
-	push $c->stash->{title}, 'Add Event';
+	push @{ $c->stash->{title} }, 'Add Event';
 	$c->stash->{template} = 'event/add.tt';
 
 	if ($c->req->method eq 'POST') {
@@ -121,7 +121,7 @@ sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {
 	$c->detach('/error', ['There is no fic component to this event.'])
 		unless $c->stash->{event}->has('fic');
 
-	push $c->stash->{title}, 'Fic';
+	push @{ $c->stash->{title} }, 'Fic';
 }
 
 sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
@@ -130,13 +130,13 @@ sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
 	$c->detach('/error', ['There is no art component to this event.'])
 	unless $c->stash->{event}->has('art');
 
-	push $c->stash->{title}, 'Art';
+	push @{ $c->stash->{title} }, 'Art';
 }
 
 sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
-	push $c->stash->{title}, 'Prompt';
+	push @{ $c->stash->{title} }, 'Prompt';
 }
 
 sub vote :Chained('fetch') :PathPart('vote') :CaptureArgs(0) {
@@ -145,14 +145,14 @@ sub vote :Chained('fetch') :PathPart('vote') :CaptureArgs(0) {
 	$c->detach('/error', ['There is no voting component to this event.'])
 		unless $c->stash->{event}->has('voting');
 
-	push $c->stash->{title}, 'Vote';
+	push @{ $c->stash->{title} }, 'Vote';
 }
 
 sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{template} = 'event/rules.tt';
-	push $c->stash->{title}, 'Rules';
+	push @{ $c->stash->{title} }, 'Rules';
 }
 
 sub results :Private {
@@ -185,7 +185,7 @@ sub results :Private {
 
 	$c->stash->{ratings} = $c->model('DB::Rating');
 
-	push $c->stash->{title}, $c->string($c->stash->{mode} . 'Results');
+	push @{ $c->stash->{title} }, $c->string($c->stash->{mode} . 'Results');
 	$c->stash->{template} = 'event/results.tt';
 }
 
@@ -220,7 +220,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		rules => $c->stash->{event}->custom_rules,
 	};
 
-	push $c->stash->{title}, 'Edit';
+	push @{ $c->stash->{title} }, 'Edit';
 	$c->stash->{template} = 'event/edit.tt';
 }
 

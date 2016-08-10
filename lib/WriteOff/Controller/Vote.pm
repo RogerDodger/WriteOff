@@ -74,7 +74,7 @@ sub cast :Private {
 
 	if ($c->stash->{round}) {
 		$c->stash->{countdown} = $c->stash->{round}->end;
-		push $c->stash->{title}, $c->stash->{label} = $c->string($c->stash->{round}->name);
+		push @{ $c->stash->{title} }, $c->stash->{label} = $c->string($c->stash->{round}->name);
 	}
 	else {
 		if ($rounds->upcoming->count) {
@@ -94,7 +94,7 @@ sub cast :Private {
 		});
 	}
 
-	push $c->stash->{title}, $c->string('vote');
+	push @{ $c->stash->{title} }, $c->string('vote');
 	$c->stash->{template} = 'vote/cast.tt';
 
 	$c->forward('do_cast') if $c->req->method eq 'POST';

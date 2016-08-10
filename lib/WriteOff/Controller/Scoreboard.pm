@@ -69,7 +69,7 @@ sub index :Path('/scoreboard') {
 		};
 	}
 
-	push $c->stash->{title}, join ' ', ($genre->name, $format ? $format->name : ()), $c->string('scoreboard');
+	push @{ $c->stash->{title} }, join ' ', ($genre->name, $format ? $format->name : ()), $c->string('scoreboard');
 	$c->stash->{template} = 'scoreboard/index.tt';
 }
 

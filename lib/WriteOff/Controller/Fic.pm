@@ -15,7 +15,7 @@ sub fetch :Chained('/') :PathPart('fic') :CaptureArgs(1) {
 	$c->forward('_fetch');
 	$c->stash->{entry} = $c->stash->{story}->entry;
 	$c->stash->{event} = $c->stash->{entry}->event;
-	unshift $c->stash->{title}, $c->stash->{event}->title;
+	unshift @{ $c->stash->{title} }, $c->stash->{event}->title;
 }
 
 sub view :Chained('fetch') :PathPart('') :Args(0) {
@@ -57,7 +57,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 	else {
 		$c->stash->{gallery} = $c->stash->{event}->storys->gallery->search({}, { prefetch => 'story' });
 
-		push $c->stash->{title}, 'Gallery';
+		push @{ $c->stash->{title} }, 'Gallery';
 		$c->stash->{template} = 'fic/gallery.tt';
 	}
 }
@@ -122,7 +122,7 @@ sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 		}
 	}
 
-	push $c->stash->{title}, 'Submit';
+	push @{ $c->stash->{title} }, 'Submit';
 	$c->stash->{template} = 'fic/submit.tt';
 }
 
@@ -211,7 +211,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		story    => $c->stash->{story}->contents,
 	};
 
-	push $c->stash->{title}, 'Edit';
+	push @{ $c->stash->{title} }, 'Edit';
 	$c->stash->{template} = 'fic/edit.tt';
 }
 
@@ -266,7 +266,7 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->stash->{items} = $c->stash->{story}->images;
 	$c->stash->{view} = $c->controller('Art')->action_for('view');
 
-	push $c->stash->{title}, 'Related Artwork(s)';
+	push @{ $c->stash->{title} }, 'Related Artwork(s)';
 	$c->stash->{template} = 'item/list.tt';
 }
 

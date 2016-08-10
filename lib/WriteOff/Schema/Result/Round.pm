@@ -53,7 +53,7 @@ sub tally {
 		$self->ratings->delete;
 	}
 
-	for my $entry (keys $scores) {
+	for my $entry (keys %$scores) {
 		$self->create_related('ratings', {
 			entry_id => $entry,
 			value => $scores->{$entry},

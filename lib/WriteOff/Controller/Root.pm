@@ -62,7 +62,7 @@ sub auto :Private {
 	}
 
 	if ($c->config->{read_only}) {
-		push $c->stash->{messages}, 'The site is currently in read-only mode.';
+		push @{ $c->stash->{messages} }, 'The site is currently in read-only mode.';
 	}
 
 	if (!$c->session->{introduced}) {
@@ -77,7 +77,7 @@ sub index :Path :Args(0) {
 
 	$c->stash->{events} = $c->model('DB::Event')->active;
 
-	push $c->stash->{title}, 'Events';
+	push @{ $c->stash->{title} }, 'Events';
 	$c->stash->{template} = 'event/list.tt';
 }
 
@@ -86,7 +86,7 @@ sub archive :Local :Args(0) {
 
 	$c->stash->{events} = $c->model('DB::Event')->old;
 
-	push $c->stash->{title}, 'Event Archive';
+	push @{ $c->stash->{title} }, 'Event Archive';
 	$c->stash->{template} = 'event/list.tt';
 }
 
@@ -95,14 +95,14 @@ sub faq :Local :Args(0) {
 
 	$c->stash->{document} = $c->document('faq');
 
-	push $c->stash->{title}, 'FAQ';
+	push @{ $c->stash->{title} }, 'FAQ';
 	$c->stash->{template} = 'root/document.tt';
 }
 
 sub default :Path {
 	my ( $self, $c ) = @_;
 
-	push $c->stash->{title}, $c->string('404');
+	push @{ $c->stash->{title} }, $c->string('404');
 	$c->stash->{template} = 'root/404.tt';
 	$c->res->status(404);
 }
@@ -112,7 +112,7 @@ sub forbidden :Private {
 
 	$c->stash->{forbidden_msg} = $msg if $msg;
 
-	push $c->stash->{title}, $c->string('403');
+	push @{ $c->stash->{title} }, $c->string('403');
 	$c->stash->{template} = 'root/403.tt';
 	$c->res->status(403);
 }
@@ -128,7 +128,7 @@ sub error :Private {
 		$c->res->status(400);
 	}
 
-	push $c->stash->{title}, $c->string('400');
+	push @{ $c->stash->{title} }, $c->string('400');
 	$c->stash->{template} = 'root/error.tt';
 }
 
@@ -137,7 +137,7 @@ sub tos :Local :Args(0) {
 
 	$c->stash->{document} = $c->document('tos');
 
-	push $c->stash->{title}, $c->stash->{document}{title};
+	push @{ $c->stash->{title} }, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';
 }
 
@@ -146,7 +146,7 @@ sub rights :Local :Args(0) {
 
 	$c->stash->{document} = $c->document('rights');
 
-	push $c->stash->{title}, $c->stash->{document}{title};
+	push @{ $c->stash->{title} }, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';
 }
 
@@ -156,7 +156,7 @@ sub intro :Local :Args(0) {
 	$c->stash->{document} = $c->document('intro');
 	$c->session->{introduced} = 1;
 
-	push $c->stash->{title}, $c->stash->{document}{title};
+	push @{ $c->stash->{title} }, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';
 }
 
@@ -165,7 +165,7 @@ sub style :Local :Args(0) {
 
 	$c->stash->{document} = $c->document('style');
 
-	push $c->stash->{title}, $c->stash->{document}{title};
+	push @{ $c->stash->{title} }, $c->stash->{document}{title};
 	$c->stash->{template} = 'root/document.tt';
 }
 
@@ -215,7 +215,7 @@ sub strum :Private {
 	return if !defined $c->res->{body};
 
 	my $strum = $c->config->{strum} or return;
-	while (my($key, $strum) = each $strum) {
+	while (my($key, $strum) = each %$strum) {
 		while((my $index = CORE::index $c->res->{body}, $key) >= 0) {
 			substr($c->res->{body}, $index, length $key) = $strum;
 		}

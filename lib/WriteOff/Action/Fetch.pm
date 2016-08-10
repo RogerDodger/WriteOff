@@ -32,7 +32,7 @@ sub execute {
 	}
 
 	if ($item->can('title')) {
-		push $c->stash->{title}, $item->title;
+		push @{ $c->stash->{title} }, $item->title;
 	}
 
 	if (defined $ext) {
