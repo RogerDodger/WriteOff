@@ -7,12 +7,12 @@ EF_SRC = lib/extension-functions.c
 BCS_DST = bin/libsqlitebcsum.so
 BCS_SRC = lib/bcsum.c
 
-all: $(EF_DST) $(BCS_DST)
+all: bcs ef
 
-$(EF_DST) : $(EF_SRC)
+ef:
 	$(C_COMP) -fPIC -shared $(EF_SRC) -o $(EF_DST) -lm
 
-$(BCS_DST) : $(BCS_SRC)
+bcs:
 	$(C_COMP) -fPIC -shared $(BCS_SRC) -o $(BCS_DST) -lm
 
 clean:
