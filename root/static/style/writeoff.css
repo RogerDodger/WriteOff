@@ -46,7 +46,9 @@ table {
   border-collapse: collapse;
   word-wrap: break-word; }
 
-ol > ol, ol > ul, ul > ol, ul > ul {
+ol > ol,
+ol > ul, ul > ol,
+ul > ul {
   list-style-type: lower-alpha; }
 
 /* Light selection rather than dark with inverted text */
@@ -97,7 +99,8 @@ a {
       padding-left: 0.8em; }
     .Table > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Table > thead, .Table > tbody {
+  .Table > thead,
+  .Table > tbody {
     border: 1px solid #d0dce2; }
   .Table.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -115,7 +118,8 @@ a {
         padding-left: 0.6em; }
       .Table > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Table.grid > thead > tr > th, .Table.grid > tbody > tr > td {
+  .Table.grid > thead > tr > th,
+  .Table.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Table.grid > thead > tr > th {
@@ -231,8 +235,7 @@ a {
   khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  -webkit-user-select: none;
-          user-select: none; }
+  user-select: none; }
 
 .Form label {
   color: #666;
@@ -286,6 +289,7 @@ a {
           right: 0;
           top: 1.5em;
           width: 85vw; } }
+
 .Form input[type="text"],
 .Form input[type="password"],
 .Form input[type="email"],
@@ -300,13 +304,16 @@ a {
   padding: 0.25em;
   border-radius: 0.25em;
   width: 100%; }
+
 .Form input[type="checkbox"] {
   vertical-align: middle; }
   .Form input[type="checkbox"] + label {
     display: inline; }
+
 .Form textarea {
   font-size: 0.8em;
   margin-bottom: 0; }
+
 .Form input[type="submit"] {
   border-style: solid;
   border-width: 1px;
@@ -347,6 +354,7 @@ a {
       color: #223022; }
       .Form input[type="submit"]:not(.current):disabled:hover, .Form input[type="submit"]:not(.current).selected:hover {
         cursor: default; }
+
 .Form *[disabled] {
   background-color: #e6e6e6; }
 
@@ -355,6 +363,7 @@ a {
 
 .Form-group:first-of-type > .Form-item {
   margin-top: 0; }
+
 .Form-group > div {
   float: left;
   width: 100%; }
@@ -365,10 +374,13 @@ a {
   @media (max-width: 40rem) {
     .Form-group > div {
       padding: 0 !important; } }
+
 .Form-group.two > div {
   width: 50%; }
+
 .Form-group.three > div {
   width: 33.33%; }
+
 @media (max-width: 40rem) {
   .Form-group > div {
     width: 100% !important;
@@ -397,6 +409,7 @@ a {
 
 .Breakdown-row td {
   padding-top: 0 !important; }
+
 .Breakdown-row table {
   font-size: 0.9em; }
 
@@ -405,7 +418,8 @@ a {
  */
 .hidden, .Post.edit .Post-contents--body, .Post:not(.edit) .Post-contents--edit, .Check-button input[type="checkbox"], .Ballot .ordered .Ballot-unabstain,
 .Ballot .unordered .Ballot-unabstain, .Ballot .abstained .Ballot-abstain,
-.Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control, .Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
+.Ballot .abstained .Ballot-up, .Ballot .abstained:empty, .Ballot-append.waiting .Ballot-append--control,
+.Ballot-append:not(.active) .Ballot-append--control, .Ballot-append.active .Ballot-append--done, .Ballot-append:not(.waiting) .Ballot-append--wait {
   display: none !important;
   visibility: hidden; }
 
@@ -510,12 +524,10 @@ a {
  */
 body {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   height: 100%;
@@ -527,13 +539,11 @@ body {
 .Site-header,
 .Site-footer {
   -webkit-box-flex: 0;
-  -webkit-flex: none;
       -ms-flex: none;
           flex: none; }
 
 .Site-content {
   -webkit-box-flex: 1;
-  -webkit-flex: 1 0 auto;
       -ms-flex: 1 0 auto;
           flex: 1 0 auto;
   width: 100%; }
@@ -783,6 +793,7 @@ body {
 
 .Document-body > :first-child {
   margin-top: 0; }
+
 .Document-body > :last-child {
   margin-bottom: 0; }
 
@@ -970,7 +981,8 @@ body {
       padding-left: 0.8em; }
     .Artist-entries > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Artist-entries > thead, .Artist-entries > tbody {
+  .Artist-entries > thead,
+  .Artist-entries > tbody {
     border: 1px solid #d0dce2; }
   .Artist-entries.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -988,7 +1000,8 @@ body {
         padding-left: 0.6em; }
       .Artist-entries > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Artist-entries.grid > thead > tr > th, .Artist-entries.grid > tbody > tr > td {
+  .Artist-entries.grid > thead > tr > th,
+  .Artist-entries.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Artist-entries.grid > thead > tr > th {
@@ -1038,16 +1051,24 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 98%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   background-color: #b9d2ac;
   border-size: 0.2em;
   border-style: double;
   border-color: #2e4224;
   font-size: 1.1em;
-  padding: 1em;
-  position: relative; }
+  padding: 0 1em; }
   @media (max-width: 40rem) {
     .Event-header {
-      padding: 1em 0.5em;
+      padding: 0 0.5em;
       border-right-width: 0;
       border-left-width: 0;
       width: 100%; } }
@@ -1057,26 +1078,65 @@ body {
 
 .Event-details.hidden + .Event-header, .Post.edit .Event-details.Post-contents--body + .Event-header, .Post:not(.edit) .Event-details.Post-contents--edit + .Event-header, .Check-button input.Event-details[type="checkbox"] + .Event-header, .Ballot .ordered .Event-details.Ballot-unabstain + .Event-header,
 .Ballot .unordered .Event-details.Ballot-unabstain + .Event-header, .Ballot .abstained .Event-details.Ballot-abstain + .Event-header,
-.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header, .Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
+.Ballot .abstained .Event-details.Ballot-up + .Event-header, .Ballot .Event-details.abstained:empty + .Event-header, .Ballot-append.waiting .Event-details.Ballot-append--control + .Event-header,
+.Ballot-append:not(.active) .Event-details.Ballot-append--control + .Event-header, .Ballot-append.active .Event-details.Ballot-append--done + .Event-header, .Ballot-append:not(.waiting) .Event-details.Ballot-append--wait + .Event-header {
   margin-top: 0.5em; }
 
 .Event-header.active {
   cursor: pointer; }
 
-.Event-prompt {
+.Event-overview {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 1em;
+  margin-bottom: 0.7em; }
+  .Event-overview > div {
+    margin-bottom: 0.3em; }
+  @media (max-width: 40rem) {
+    .Event-overview {
+      margin-top: 0.5em;
+      margin-bottom: 0.2em; } }
+
+.Event-toggle {
+  margin-left: 1em; }
+
+.Event-last--image {
+  margin-left: 0.3em; }
+
+.Event-prompt,
+.Event-last--delta {
   color: inherit;
   border-bottom: 1px solid #15260d; }
-  .Event-prompt:hover {
+  .Event-prompt:hover,
+  .Event-last--delta:hover {
     border-bottom-color: transparent;
     text-decoration: none; }
+
+.Event-last--image {
+  box-shadow: 0 0 3px #b6b6b6;
+  background-color: white;
+  border-radius: 2px;
+  display: inline-block;
+  padding: 1px;
+  vertical-align: middle; }
+  .Event-last--image img {
+    height: 1.6em; }
 
 .Genre[title] {
   border-bottom: 1px dotted #15260d;
   cursor: help; }
-
-.Event-toggle {
-  float: right;
-  right: 0.4em; }
 
 .Event-header:not(.active) .Event-toggle {
   display: none; }
@@ -1152,6 +1212,7 @@ body {
           color: #27252d; }
           .Event-links.rules li a:not(.current):disabled:hover, .Event-links.rules li a:not(.current).selected:hover {
             cursor: default; }
+
 .Event-links.prompt {
   list-style-type: none;
   padding: 0; }
@@ -1199,6 +1260,7 @@ body {
           color: #2c252d; }
           .Event-links.prompt li a:not(.current):disabled:hover, .Event-links.prompt li a:not(.current).selected:hover {
             cursor: default; }
+
 .Event-links.fic {
   list-style-type: none;
   padding: 0; }
@@ -1246,6 +1308,7 @@ body {
           color: #2d252a; }
           .Event-links.fic li a:not(.current):disabled:hover, .Event-links.fic li a:not(.current).selected:hover {
             cursor: default; }
+
 .Event-links.art {
   list-style-type: none;
   padding: 0; }
@@ -1293,6 +1356,7 @@ body {
           color: #2d2526; }
           .Event-links.art li a:not(.current):disabled:hover, .Event-links.art li a:not(.current).selected:hover {
             cursor: default; }
+
 .Event-links.commenting {
   list-style-type: none;
   padding: 0; }
@@ -1533,8 +1597,15 @@ body {
     .Post-deleted--restore button:hover {
       text-decoration: underline; }
 
+@media (max-width: 40rem) {
+  .Post.highlight {
+    box-shadow: 0 0 1em #9fdfdf; } }
+
 .Post.highlight .Post-contents {
   box-shadow: 0 0 1em #9fdfdf; }
+  @media (max-width: 40rem) {
+    .Post.highlight .Post-contents {
+      box-shadow: none; } }
 
 .Post-author {
   float: left;
@@ -1640,7 +1711,7 @@ body {
   padding: 0; }
 
 .Post-contents--header {
-  color: #999;
+  color: #989898;
   font-size: 0.8em;
   margin: 0 1em;
   padding-bottom: 0.7em;
@@ -1649,18 +1720,23 @@ body {
   .Post-contents--header a,
   .Post-contents--header button:not(:disabled) {
     cursor: pointer;
-    color: #999; }
+    color: #989898; }
 
 .Post-contents:hover .Post-contents--header a {
   color: #666; }
   .Post-contents:hover .Post-contents--header a:hover {
     text-decoration: underline; }
+
 .Post-contents:hover .Post-contents--header .Post-controls .fa,
-.Post-contents:hover .Post-contents--header .Post-controls button {
-  color: #777; }
-  .Post-contents:hover .Post-contents--header .Post-controls .fa:hover, .Post-contents:hover .Post-contents--header .Post-controls .fa:hover .fa,
-  .Post-contents:hover .Post-contents--header .Post-controls button:hover,
-  .Post-contents:hover .Post-contents--header .Post-controls button:hover .fa {
+.Post-contents:hover .Post-contents--header .Post-controls button,
+.Post-contents:hover .Post-contents--header .Post-vote--button {
+  color: #888; }
+  .Post-contents:hover .Post-contents--header .Post-controls .fa:not(:disabled):hover,
+  .Post-contents:hover .Post-contents--header .Post-controls .fa:hover .fa,
+  .Post-contents:hover .Post-contents--header .Post-controls button:not(:disabled):hover,
+  .Post-contents:hover .Post-contents--header .Post-controls button:hover .fa,
+  .Post-contents:hover .Post-contents--header .Post-vote--button:not(:disabled):hover,
+  .Post-contents:hover .Post-contents--header .Post-vote--button:hover .fa {
     color: #555; }
 
 .Post-controls form,
@@ -1692,7 +1768,9 @@ body {
     width: 100%; }
   .Post-contents--body .Spoiler:not(:hover) {
     background-color: #444; }
-    .Post-contents--body .Spoiler:not(:hover), .Post-contents--body .Spoiler:not(:hover) > a, .Post-contents--body .Spoiler:not(:hover) > span {
+    .Post-contents--body .Spoiler:not(:hover),
+    .Post-contents--body .Spoiler:not(:hover) > a,
+    .Post-contents--body .Spoiler:not(:hover) > span {
       color: #444 !important; }
   .Post-contents--body hr {
     background: transparent;
@@ -1700,8 +1778,8 @@ body {
     border-bottom: 1px solid #bbb; }
   .Post-contents--body blockquote {
     padding: 0.1em 0.5em;
-    border-left: 0.3em solid #bdbddb;
-    color: #888;
+    border-left: 0.3em solid #9494d1;
+    opacity: 0.75;
     margin: 0; }
   .Post-contents--body a {
     color: blue;
@@ -1875,10 +1953,8 @@ body {
   margin: 1.5rem auto;
   text-align: center; }
   .Pager ul {
-    box-shadow: 0 0 3px #b6b6b6;
     list-style-type: none;
     padding: 0;
-    background-color: #e0d3b8;
     display: inline-block;
     padding: 0.05em; }
     .Pager ul li {
@@ -1943,7 +2019,8 @@ body {
       padding-left: 0.8em; }
     .Prompts > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Prompts > thead, .Prompts > tbody {
+  .Prompts > thead,
+  .Prompts > tbody {
     border: 1px solid #d0dce2; }
   .Prompts.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -1961,7 +2038,8 @@ body {
         padding-left: 0.6em; }
       .Prompts > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Prompts.grid > thead > tr > th, .Prompts.grid > tbody > tr > td {
+  .Prompts.grid > thead > tr > th,
+  .Prompts.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Prompts.grid > thead > tr > th {
@@ -2019,7 +2097,8 @@ body {
       padding-left: 0.8em; }
     .Results > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Results > thead, .Results > tbody {
+  .Results > thead,
+  .Results > tbody {
     border: 1px solid #d0dce2; }
   .Results.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -2037,7 +2116,8 @@ body {
         padding-left: 0.6em; }
       .Results > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Results.grid > thead > tr > th, .Results.grid > tbody > tr > td {
+  .Results.grid > thead > tr > th,
+  .Results.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Results.grid > thead > tr > th {
@@ -2178,7 +2258,8 @@ body {
       padding-left: 0.8em; }
     .Scoreboard > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Scoreboard > thead, .Scoreboard > tbody {
+  .Scoreboard > thead,
+  .Scoreboard > tbody {
     border: 1px solid #d0dce2; }
   .Scoreboard.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -2196,7 +2277,8 @@ body {
         padding-left: 0.6em; }
       .Scoreboard > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Scoreboard.grid > thead > tr > th, .Scoreboard.grid > tbody > tr > td {
+  .Scoreboard.grid > thead > tr > th,
+  .Scoreboard.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Scoreboard.grid > thead > tr > th {
@@ -2259,7 +2341,8 @@ body {
 .Scoreboard-breakdown {
   font-size: 0.8rem;
   margin: 0 auto; }
-  .Scoreboard-breakdown > tbody > tr > td, .Scoreboard-breakdown > thead > tr > th {
+  .Scoreboard-breakdown > tbody > tr > td,
+  .Scoreboard-breakdown > thead > tr > th {
     padding: 0.3em; }
 
 .Scoreboard-breakdown--prompt,
@@ -2295,7 +2378,9 @@ body {
     width: 100%; }
   .Story .Spoiler:not(:hover) {
     background-color: #444; }
-    .Story .Spoiler:not(:hover), .Story .Spoiler:not(:hover) > a, .Story .Spoiler:not(:hover) > span {
+    .Story .Spoiler:not(:hover),
+    .Story .Spoiler:not(:hover) > a,
+    .Story .Spoiler:not(:hover) > span {
       color: #444 !important; }
   .Story hr {
     background: transparent;
@@ -2339,7 +2424,8 @@ body {
       padding-left: 0.8em; }
     .Storys > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Storys > thead, .Storys > tbody {
+  .Storys > thead,
+  .Storys > tbody {
     border: 1px solid #d0dce2; }
   .Storys.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -2357,7 +2443,8 @@ body {
         padding-left: 0.6em; }
       .Storys > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Storys.grid > thead > tr > th, .Storys.grid > tbody > tr > td {
+  .Storys.grid > thead > tr > th,
+  .Storys.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Storys.grid > thead > tr > th {
@@ -2521,6 +2608,7 @@ body {
       color: #252a2d; }
       .Check-button input[type="checkbox"] + span:not(.current):disabled:hover, .Check-button input[type="checkbox"] + span:not(.current).selected:hover {
         cursor: default; }
+
 .Check-button input[type="checkbox"]:checked + span {
   box-shadow: 0 0.5em 0.7em #84aabd inset; }
 
@@ -2532,7 +2620,8 @@ body {
       padding-left: 0.8em; }
     .Ballot > tbody > tr > td:last-child {
       padding-right: 0.8em; }
-  .Ballot > thead, .Ballot > tbody {
+  .Ballot > thead,
+  .Ballot > tbody {
     border: 1px solid #d0dce2; }
   .Ballot.sortable > thead > tr > th:not(:empty):hover {
     cursor: pointer; }
@@ -2550,7 +2639,8 @@ body {
         padding-left: 0.6em; }
       .Ballot > thead > tr > th:last-child {
         padding-right: 0.6em; }
-  .Ballot.grid > thead > tr > th, .Ballot.grid > tbody > tr > td {
+  .Ballot.grid > thead > tr > th,
+  .Ballot.grid > tbody > tr > td {
     border-right: 1px solid #d0dce2;
     border-left: 1px solid #d0dce2; }
   .Ballot.grid > thead > tr > th {
@@ -2581,7 +2671,8 @@ body {
           height: 1px;
           margin: 1.2em auto;
           content: " "; }
-  .Ballot.cast > tbody, .Ballot.cast > thead {
+  .Ballot.cast > tbody,
+  .Ballot.cast > thead {
     border: none; }
   .Ballot > tbody > tr > td.Ballot-arrows, .Ballot > tbody > tr > td.Ballot-score, .Ballot > tbody > tr > td.Ballot-abstain--cell {
     text-align: center; }
@@ -2677,12 +2768,14 @@ body {
   .Prompts-vote button:not(:disabled):hover,
   .Post-vote button:not(:disabled):hover {
     color: #666; }
+
 .Prompts-vote form[data-vote="1"] button[value="1"],
 .Post-vote form[data-vote="1"] button[value="1"] {
   color: #5cd65c; }
   .Prompts-vote form[data-vote="1"] button[value="1"]:not(:disabled):hover,
   .Post-vote form[data-vote="1"] button[value="1"]:not(:disabled):hover {
     color: #29a329; }
+
 .Prompts-vote form[data-vote="-1"] button[value="-1"],
 .Post-vote form[data-vote="-1"] button[value="-1"] {
   color: #d65c5c; }
@@ -2692,5 +2785,3 @@ body {
 
 .Prompts-vote button:disabled {
   color: transparent; }
-
-/*# sourceMappingURL=writeoff.css.map */

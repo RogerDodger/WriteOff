@@ -76,6 +76,7 @@ sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{events} = $c->model('DB::Event')->active;
+	$c->stash->{show_last_post} = 1;
 
 	push @{ $c->stash->{title} }, 'Events';
 	$c->stash->{template} = 'event/list.tt';
@@ -84,7 +85,7 @@ sub index :Path :Args(0) {
 sub archive :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{events} = $c->model('DB::Event')->old;
+	$c->stash->{events} = $c->model('DB::Event')->archive;
 
 	push @{ $c->stash->{title} }, 'Event Archive';
 	$c->stash->{template} = 'event/list.tt';

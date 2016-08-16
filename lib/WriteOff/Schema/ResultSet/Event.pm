@@ -7,11 +7,28 @@ use WriteOff::Util qw/LEEWAY/;
 
 sub active {
 	my $self = shift;
-	return $self->search({},
+	my $t = $self->format_datetime($self->now_dt->subtract(months => 2));
+	return $self->search(
 		{
-			order_by => { -desc => 'created' },
-			rows => 5,
+			-or => [
+				'me.created' => { '>' => $t },
+				-and => [
+					'last_post_id' => { '!=' => undef },
+					'last_post.created' => { '>' => $t },
+				]
+			],
 		},
+		{
+			join => 'last_post',
+			order_by => { -desc => 'me.created' },
+		}
+	);
+}
+
+sub archive {
+	my $self = shift;
+	return $self->search({},
+		{ order_by => { -desc => 'created' } },
 	);
 }
 
@@ -62,13 +79,6 @@ sub create_from_format {
 	$event->reset_jobs;
 
 	$event;
-}
-
-sub old {
-	my $self = shift;
-	return $self->search({},
-		{ order_by => { -desc => 'created' } },
-	);
 }
 
 sub finished {

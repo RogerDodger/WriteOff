@@ -11,25 +11,26 @@ sub DateTime::rfc2822 {
 }
 
 sub DateTime::delta {
-	my $self  = shift;
-	my $other = shift || __PACKAGE__->now;
+	my $self = shift;
+	my $figs = shift || 2;
 	state $fmt = DateTime::Format::Human::Duration->new;
 
-	return $fmt->format_duration_between($other, $self,
+	return $fmt->format_duration_between(__PACKAGE__->now, $self,
 		past => '%s ago',
 		future => 'in %s',
 		no_time => 'just now',
-		significant_units => 2,
+		significant_units => $figs,
 	);
 }
 
 sub DateTime::delta_html {
-	my $self = shift;
+	my ($self, $figs) = @_;
 
-	return sprintf '<time class="delta" title="%s" datetime="%sZ">%s</time>',
+	sprintf '<time class="delta%s" title="%s" datetime="%sZ">%s</time>',
+		$figs == 1 ? " short" : '',
 		$self->rfc2822,
 		$self->iso8601,
-		$self->delta;
+		$self->delta($figs);
 }
 
 sub DateTime::date_html {

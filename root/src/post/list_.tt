@@ -1,11 +1,10 @@
 <div class="Posts">
-{{ SET artists = posts.artists_hash }}
 {{ SET votes = posts.vote_map(c.user) }}
 {{ SET page = posts.pager.current_page }}
 {{ SET first = posts.pager.first }}
 {{ FOREACH post IN posts.thread_prefetch }}
 	{{ SET num = first + loop.index }}
-	{{ SET artist = artists.${post.artist_id} }}
+	{{ SET artist = post.artist }}
 	{{ SET vote = votes.${post.id} }}
 	{{ cache.proc(
 		'template' => 'post/single.tt',

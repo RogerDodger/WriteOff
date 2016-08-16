@@ -1,17 +1,16 @@
-{{ USE cache = Cache }}
+{{ USE cache = Cache(cache => c.config.renderCache) }}
 
-{{- WHILE (event = events.next) }}
-{{
-	cache.inc(
-		'template' => 'event/single.tt',
-		'ttl' => c.debug || 360,
-		'keys' => {
-			'type' => 'event-listing',
-			'id' => event.id,
-			'organiser' => c.user.organises(event),
-		},
-	)
+{{#
+	If this is a FOREACH loop, `event` will remain set to the last event in the
+	loop, and then the wrapper will re-insert it at the top of the page.
+
+	TT scoping is dumb.
 }}
+
+{{ WHILE (event = events.next) }}
+	{{ cache.proc(
+		'template' => 'event/single.tt',
+		'key' => event.uid(show_last_post)) }}
 {{ END }}
 
 {{ IF c.action.name == 'index' }}

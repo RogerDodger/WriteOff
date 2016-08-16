@@ -5,16 +5,19 @@
 .Event-header {
 	@include container;
 
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
 	background-color: hsla(100, 30%, 75%, 1);
 	border-size: 0.2em;
 	border-style: double;
 	border-color: hsla(100, 30%, 20%, 1);
 	font-size: 1.1em;
-	padding: 1em;
-	position: relative;
+	padding: 0 1em;
 
 	@media #{$mobile} {
-		padding: 1em 0.5em;
+		padding: 0 0.5em;
 		border-right-width: 0;
 		border-left-width: 0;
 		width: 100%;
@@ -33,7 +36,36 @@
 	cursor: pointer;
 }
 
-.Event-prompt {
+.Event-overview {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+	$line-break: 0.3em;
+	margin-top: 1em;
+	margin-bottom: (1em - $line-break);
+	& > div {
+		margin-bottom: $line-break;
+	}
+
+	@media #{$mobile} {
+		margin-top: 0.5em;
+		margin-bottom: (0.5em - $line-break);
+	}
+}
+
+.Event-toggle {
+	margin-left: 1em;
+}
+
+.Event-last--image {
+	margin-left: 0.3em;
+}
+
+.Event-prompt,
+.Event-last--delta {
 	color: inherit;
 	border-bottom: 1px solid hsla(100, 50%, 10%, 1);
 
@@ -43,14 +75,22 @@
 	}
 }
 
+.Event-last--image {
+	@include box;
+	background-color: white;
+	border-radius: 2px;
+	display: inline-block;
+	padding: 1px;
+	vertical-align: middle;
+
+	img {
+		height: 1.6em;
+	}
+}
+
 .Genre[title] {
 	border-bottom: 1px dotted hsla(100, 50%, 10%, 1);
 	cursor: help;
-}
-
-.Event-toggle {
-	float: right;
-	right: 0.4em;
 }
 
 .Event-header:not(.active) .Event-toggle {

@@ -2,17 +2,29 @@
 
 <div class="Event-header" data-nocollapse="{{ event.nocollapse }}">
 	<div class="Event-overview">
-		<a class="Event-prompt" href="{{ c.uri_for_action('/event/permalink', id) }}">{{ event.prompt }}</a>
-		&middot;
-		<span class="Genre" title="{{ event.genre.descr }}">{{ event.genre.name }}</span>
-		<span class="Format">{{ event.format.name }}</span>
-		&middot;
-		<span class="Event-start">{{ event.start.date_html | none }}</span>
-
-		<div class="Event-toggle">
-			<i class="Event-toggle--down fa fa-angle-double-down"></i>
-			<i class="Event-toggle--up fa fa-angle-double-up"></i>
+		<div class="Event-overview--left">
+			<a class="Event-prompt" href="{{ c.uri_for_action('/event/permalink', id) }}">{{ event.prompt }}</a>
+			&middot;
+			<span class="Genre" title="{{ event.genre.descr }}">{{ event.genre.name }}</span>
+			<span class="Format">{{ event.format.name }}</span>
+			&middot;
+			<span class="Event-start">{{ event.start.date_html | none }}</span>
 		</div>
+
+		{{ IF show_last_post && event.last_post; post = event.last_post }}
+		<div class="Event-overview--right">
+			<a class="Event-last--delta" href="{{ c.uri_for_action('/post/permalink', [ post.id ]) }}">
+				{{ post.created.delta_html(1) | none }}</a>
+
+			<a class="Event-last--image" href="{{ c.uri_for_action('/artist/view', [ post.artist.id_uri ]) }}">
+				<img src="{{ post.artist.avatar }}">
+			</a>
+		</div>
+		{{ END }}
+	</div>
+	<div class="Event-toggle">
+		<i class="Event-toggle--down fa fa-angle-double-down"></i>
+		<i class="Event-toggle--up fa fa-angle-double-up"></i>
 	</div>
 </div>
 
@@ -75,13 +87,6 @@
 		{{ END }}
 	</ul>
 	{{ END }}
-
-	{{ IF c.user.organises(event) }}
-	<ul class="Event-admin">
-		<li><a href="{{ c.uri_for_action('/event/view', id) }}">View submissions</a>
-		<li><a href="{{ c.uri_for_action('/event/edit', id) }}">Edit event</a>
-	</ul>
-	{{- END }}
 
 	{{ IF event.commenting }}
 	<ul class="Event-links commenting">

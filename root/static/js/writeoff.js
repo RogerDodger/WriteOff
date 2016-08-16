@@ -45,25 +45,15 @@ Date.prototype.daysInMonth = function () {
 	}
 };
 
-Date.prototype.delta = function (other) {
-	var self                = this;
-	var other_              = other || new Date();
-	var significant_figures = 2;
-	var units               = ['year', 'month', 'day', 'hour', 'minute', 'second'];
-	var methods             = ['FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds'];
+Date.deltaUnits = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+Date.deltaMethods = ['FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds'];
 
-	if (Math.abs(self.getTime() - other.getTime()) < 3000) {
-		return 'just now';
-	}
-
-	if (other < self) {
-		var ago = other.delta(self);
-		return 'in ' + ago.substr(0, ago.length - 4);
-	}
+Date.prototype._delta = function (other) {
+	var self = this;
 
 	var delta = {};
-	units.forEach(function (unit, i) {
-		var m = 'getUTC' + methods[i];
+	Date.deltaUnits.forEach(function (unit, i) {
+		var m = 'getUTC' + Date.deltaMethods[i];
 		delta[unit] = other[m]() - self[m]();
 	});
 
@@ -93,27 +83,46 @@ Date.prototype.delta = function (other) {
 		delta['month'] += 12;
 	}
 
-	var deltas = [];
-	units.forEach(function (unit) {
-		if (significant_figures == 0) return;
+	return delta;
+}
+
+Date.prototype.delta = function (other_, sigFigs_) {
+	var self = this;
+	var other = other_ || new Date();
+	var sigFigs = sigFigs_ || 2;
+
+	if (Math.abs(self.getTime() - other.getTime()) < 3000) {
+		return 'just now';
+	}
+
+	var delta = self._delta(other);
+	var strings = [];
+
+	Date.deltaUnits.forEach(function (unit) {
+		if (!sigFigs) return;
 		var n = delta[unit];
-		if (n) deltas.push(n + " " + unit + (n == 1 ? '' : 's'));
+		if (n) strings.push(n + " " + unit + (n == 1 ? '' : 's'));
 		// Significant figures start counting as soon as a non-zero is found.
-		if (deltas.length) significant_figures--;
+		if (strings.length) sigFigs--;
 	});
 
-	var time;
+	var ret;
 	// x and y
-	if (deltas.length <= 2) {
-		time = deltas.join(" and ");
+	if (strings.length <= 2) {
+		ret = strings.join(" and ");
 	}
 	// x, y, and z
 	else {
-		deltas[deltas.length - 1] = "and " + deltas[deltas.length - 1];
-		time = deltas.join(", ");
+		strings[strings.length - 1] = ", and " + strings[strings.length - 1];
+		ret = strings.join(", ");
 	};
 
-	return time + " ago";
+	if (other < self) {
+		return "in " + ret;
+	}
+	else {
+		return ret + " ago";
+	}
 };
 
 Date.prototype.leapYear = function () {
@@ -493,7 +502,7 @@ $(document).ready(function () {
 			}
 
 			$btn.click(function (e) {
-				if (e.target.localName == 'a') {
+				if ($(e.target).is('a') || $(e.target).closest('a').length) {
 					// Disable expand if the "permalink" is clicked
 					return;
 				}
@@ -706,8 +715,8 @@ postModifiers.push(function (ctx) {
 		var t, ttl = $deltas.size();
 		var tick = function tick (e) {
 			t = new Date();
-			// `now` is defined in the global scope as the server's current time
-			// this is used so that it's spoofable, and so that countdowns are
+			// `now` is defined in the global scope as the server's current time.
+			// This is used so that it's spoofable, and so that countdowns are
 			// based off the server's clock rather than the client's
 
 			// `t0` is defined as `new Date()` on pageload. This is so we know
@@ -719,7 +728,7 @@ postModifiers.push(function (ctx) {
 			// 2000ms remaining.
 			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
 
-			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_));
+			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_), 1 + !$(e).hasClass('short'));
 			e.textContent = delta;
 			if (delta == 'just now' || /second/.test(delta) || /minute/.test(delta) && !/and/.test(delta)) {
 				setTimeout(tick, 5000 + Math.random() * 5000, e);

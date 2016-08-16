@@ -83,6 +83,7 @@ sub add :Local {
 	}
 
 	my $post = $c->model('DB::Post')->create(\%post)->render;
+	$c->stash->{event}->update({ last_post => $post });
 
 	$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 }
