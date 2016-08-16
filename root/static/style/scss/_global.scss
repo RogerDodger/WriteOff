@@ -20,9 +20,9 @@ table {
 }
 
 ol, ul {
-	& > ol,
-	& > ul {
+	ol, ul {
 		list-style-type: lower-alpha;
+		margin: 0;
 	}
 }
 

@@ -5,22 +5,25 @@
 Rules
 =====
 
-Failure to adhere to any of the following may be grounds for
-submissions being removed. Repeat or serious offences may result
-in culprits being barred from entering future events.
+Submissions that fail to follow these rules will be removed. Repeat or serious
+offences may result in offenders being banned from entering future events.
+
+For rules that have a degree of ambiguity—in particular, genre and prompt
+rules—enforcement at the fringes is done by voters.
 
 Contest
 -------
 
 1. Submitted works may not be submitted elsewhere until the event's conclusion.
 2. Submitted written works&mdash;
-	1. must be written primarily in English; and
+	1. must be written primarily in English;
+	2. must be {{ event.wc_min }}–{{ event.wc_max }} words long.
 	{{- IF event.has('drawing') }}
-	2. must be based on at least one of the submitted artworks to a reasonable
+	3. must be based on at least one of the submitted artworks to a reasonable
 	and discernible degree, with each related artwork&mdash;and only the
 	related artwork(s)&mdash;indicated on submission.
 	{{- ELSE }}
-	2. must be based on the prompt to a reasonable and discernible degree.
+	3. must be based on the prompt to a reasonable and discernible degree.
 	{{- END }}
 {{- IF event.has('drawing') }}
 3. Submitted artworks must be based on the prompt to a reasonable and discernible degree.
@@ -45,6 +48,13 @@ Custom
 {{ event.custom_rules | html }}
 
 {{- END }}
+
+Genre
+-----
+
+This event's genre is **{{ event.genre.name }}**. Submitted works to this event should fall under the following description:
+
+{{ event.genre.descr }}.
 
 Content
 -------

@@ -28,9 +28,12 @@
 	margin-top: 0;
 }
 
+.Document h1,
 .Document-title {
 	border-bottom: 1px solid hsla(0, 0%, 80%, 1);
 	font-size: 1.5em;
+	font-weight: normal;
+	margin-top: 0;
 	margin-bottom: 1em;
 	padding-bottom: 0.6em;
 }
@@ -65,12 +68,14 @@
 	}
 }
 
+.Document h2,
 .Document-section--title {
 	border-bottom: 1px solid hsla(0, 0%, 75%, 1);
 	color: hsla(0, 0%, 28%, 1);
 	font-size: 1.3em;
+	font-weight: normal;
 	padding-bottom: 0.2em;
-	margin-bottom: 0.5em;
+	margin-bottom: 1em;
 	margin-top: 1.7em;
 }
 

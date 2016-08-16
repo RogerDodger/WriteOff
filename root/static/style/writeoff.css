@@ -46,10 +46,9 @@ table {
   border-collapse: collapse;
   word-wrap: break-word; }
 
-ol > ol,
-ol > ul, ul > ol,
-ul > ul {
-  list-style-type: lower-alpha; }
+ol ol, ol ul, ul ol, ul ul {
+  list-style-type: lower-alpha;
+  margin: 0; }
 
 /* Light selection rather than dark with inverted text */
 ::-moz-selection {
@@ -746,9 +745,13 @@ body {
 .First {
   margin-top: 0; }
 
-.Document-title, .Story-title {
+.Document h1, .Artist-edit h1, .Story-container h1,
+.Document-title,
+.Story-title {
   border-bottom: 1px solid #cccccc;
   font-size: 1.5em;
+  font-weight: normal;
+  margin-top: 0;
   margin-bottom: 1em;
   padding-bottom: 0.6em; }
 
@@ -774,12 +777,14 @@ body {
   .Document-topic--title + p {
     margin-top: 0.1em; }
 
+.Document h2, .Artist-edit h2, .Story-container h2,
 .Document-section--title {
   border-bottom: 1px solid #bfbfbf;
   color: #474747;
   font-size: 1.3em;
+  font-weight: normal;
   padding-bottom: 0.2em;
-  margin-bottom: 0.5em;
+  margin-bottom: 1em;
   margin-top: 1.7em; }
 
 .Document-index {
