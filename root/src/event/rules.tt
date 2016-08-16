@@ -17,7 +17,7 @@ Contest
 1. Submitted works may not be submitted elsewhere until the event's conclusion.
 2. Submitted written works&mdash;
 	1. must be written primarily in English;
-	2. must be {{ event.wc_min }}–{{ event.wc_max }} words long.
+	2. must be {{ event.wc_min }}–{{ event.wc_max }} words long;
 	{{- IF event.has('drawing') }}
 	3. must be based on at least one of the submitted artworks to a reasonable
 	and discernible degree, with each related artwork&mdash;and only the

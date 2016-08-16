@@ -1,8 +1,8 @@
 # Introduction
 
-The Writeoff is, at its most basic level, a fiction writing competition in which participants write stories from a prompt within a short time limit. Authors are kept anonymous to keep the competition about the stories, not the people who write them.
+Writeoffs are fiction writing contests which aim to help authors improve their writing through competition and collaboration. (And for those who actually enjoy writing, it’s even be said to be fun.)
 
-But the Writeoff is more than that. It’s also a community of writers honing their craft. Critiquing each other’s work has become a long-standing Writeoff tradition, and anonymity helps keep these critiques fair and unbiased. The combination of competition and peer review has proven a great way for writers to improve their skill.
+Authors are anonymous for the duration of a contest. Critiquing each other’s work is a long standing Writeoff tradition, and anonymity helps keep these critiques fair and unbiased. Between this and the crucible of competition, authors are able to both improve and gauge their progress over time.
 
 Prompts are submitted and voted on by the community. Each user can submit a prompt any time before voting begins, which is 24 hours before the event starts. The prompt with the most votes becomes that round’s prompt.
 
