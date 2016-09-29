@@ -48,8 +48,15 @@ Date.prototype.daysInMonth = function () {
 Date.deltaUnits = ['year', 'month', 'day', 'hour', 'minute', 'second'];
 Date.deltaMethods = ['FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds'];
 
-Date.prototype._delta = function (other) {
+Date.prototype._delta = function (other_) {
 	var self = this;
+	var other = other_;
+
+	// The delta is always positive, so `self` must be the smaller date
+	if (self > other) {
+		other = self;
+		self = other_;
+	}
 
 	var delta = {};
 	Date.deltaUnits.forEach(function (unit, i) {
