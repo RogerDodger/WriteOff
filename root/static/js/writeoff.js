@@ -548,27 +548,44 @@ $(document).ready(function () {
 		);
 	};
 
-	Sortable.create($('.Ballot .ordered')[0], {
-		group: {
-			name: "ballot",
-			pull: false,
-			put: true
+	var drake = dragula([$('.Ballot .ordered')[0], $('.Ballot .unordered')[0]], {
+		moves: function (el, source, handle, sibling) {
+			return el.classList.contains('Ballot-item');
 		},
-		filter: '.Ballot-directions',
-		onSort: function () {
-			resetPercentiles();
-			sendOrder();
+		accepts: function (el, target, source, sibling) {
+			return target.classList.contains('ordered') || source.classList.contains('unordered');
 		}
 	});
 
-	Sortable.create($('.Ballot .unordered')[0], {
-		group: {
-			name: "ballot",
-			pull: true,
-			put: false
-		},
-		filter: '.Ballot-append',
+	drake.on('shadow', function () {
+		resetPercentiles();
 	});
+
+	drake.on('drop', function () {
+		sendOrder();
+	});
+
+	// Sortable.create($('.Ballot .ordered')[0], {
+	// 	group: {
+	// 		name: "ballot",
+	// 		pull: false,
+	// 		put: true
+	// 	},
+	// 	filter: '.Ballot-directions',
+	// 	onSort: function () {
+	// 		resetPercentiles();
+	// 		sendOrder();
+	// 	}
+	// });
+
+	// Sortable.create($('.Ballot .unordered')[0], {
+	// 	group: {
+	// 		name: "ballot",
+	// 		pull: true,
+	// 		put: false
+	// 	},
+	// 	filter: '.Ballot-append',
+	// });
 
 	var moveup = function () {
 		var $row = $(this).closest('.Ballot-item');

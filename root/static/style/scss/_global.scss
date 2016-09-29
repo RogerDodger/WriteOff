@@ -60,3 +60,9 @@ a {
 ::placeholder {
 	color: #999;
 }
+
+/* Make dragula drags force a dragging cursor */
+
+.gu-unselectable * {
+	cursor: grabbing !important;
+}

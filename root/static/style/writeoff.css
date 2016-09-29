@@ -82,6 +82,11 @@ a {
 ::placeholder {
   color: #999; }
 
+/* Make dragula drags force a dragging cursor */
+.gu-unselectable * {
+  cursor: -webkit-grabbing !important;
+  cursor: grabbing !important; }
+
 .Divider {
   display: block;
   background: -webkit-linear-gradient(left, transparent 0%, #999999 10%, #999999 90%, transparent 100%);
@@ -2766,6 +2771,13 @@ body {
 .Ballot-append.active:hover, .Ballot-append.waiting {
   cursor: pointer;
   opacity: 1; }
+
+.Ballot-item.gu-mirror {
+  display: none; }
+
+.Ballot-item {
+  cursor: -webkit-grab;
+  cursor: grab; }
 
 .Prompts-vote button,
 .Post-vote button {

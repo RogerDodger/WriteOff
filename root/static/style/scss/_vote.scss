@@ -103,6 +103,14 @@
 	}
 }
 
+.Ballot-item.gu-mirror {
+	display: none;
+}
+
+.Ballot-item {
+	cursor: grab;
+}
+
 .Prompts-vote,
 .Post-vote {
 	button {
