@@ -712,7 +712,7 @@ postModifiers.push(function (ctx) {
 	var $deltas = $('time.delta', ctx).not('.Countdown time');
 
 	if ($deltas.size()) {
-		var t, ttl = $deltas.size();
+		var t;
 		var tick = function tick (e) {
 			t = new Date();
 			// `now` is defined in the global scope as the server's current time.
@@ -1093,10 +1093,6 @@ function loadOrphan (id) {
 
 $(document).ready(function () {
 	var $pager = $('.Pager');
-	var $page = function (page) {
-		return $('.Post.view[data-page="' + page + '"]');
-	};
-	var key = document.location.pathname + '/page';
 
 	var loadPage = function (page) {
 		$pager.addClass('loading');

@@ -14,10 +14,17 @@
 	},
 	"build_systems":
 	[
-		{
-			"name": "Writeoff-sass",
-			"cmd": ["./build.sh"],
-			"selector": "source.scss"
-		}
+      {
+         "name": "Writeoff-sass",
+         "selector": "source.scss",
+         "working_dir": "${project_path}",
+         "cmd": ["make", "css"]
+      },
+      {
+         "name": "Writeoff-jsmin",
+         "selector": "source.js",
+         "working_dir": "${project_path}",
+         "cmd": ["make", "js"]
+      }
 	]
 }
