@@ -565,28 +565,6 @@ $(document).ready(function () {
 		sendOrder();
 	});
 
-	// Sortable.create($('.Ballot .ordered')[0], {
-	// 	group: {
-	// 		name: "ballot",
-	// 		pull: false,
-	// 		put: true
-	// 	},
-	// 	filter: '.Ballot-directions',
-	// 	onSort: function () {
-	// 		resetPercentiles();
-	// 		sendOrder();
-	// 	}
-	// });
-
-	// Sortable.create($('.Ballot .unordered')[0], {
-	// 	group: {
-	// 		name: "ballot",
-	// 		pull: true,
-	// 		put: false
-	// 	},
-	// 	filter: '.Ballot-append',
-	// });
-
 	var moveup = function () {
 		var $row = $(this).closest('.Ballot-item');
 		var $target = $row.prev();
