@@ -8,9 +8,6 @@ UPDATE users SET
 	email = NULL;
 
 DELETE FROM tokens;
-DELETE FROM sub_formats;
-DELETE FROM sub_genres;
-DELETE FROM sub_triggers;
 
 UPDATE storys SET contents = "" WHERE published = 0;
 
