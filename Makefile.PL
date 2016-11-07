@@ -10,7 +10,7 @@
 use 5.01;
 
 my @dependencies = (
-	'Catalyst::Runtime~5.90013',
+	'Catalyst::Runtime',
 	'Catalyst::Restarter',
 	'Catalyst::View::TT',
 	'Catalyst::View::JSON',
@@ -60,7 +60,7 @@ my @dependencies = (
 	'Digest::Whirlpool',
 	'Digest::SHA1',
 	'Digest::MD5',
-	'DateTime~1.01',
+	'DateTime',
 	'DateTime::Format::Human::Duration',
 	'WWW::Fimfiction',
 	'EBook::EPUB',
@@ -71,6 +71,7 @@ my @dependencies = (
 	'Imager::File::JPEG',
 	'CHI',
 	'Cache::FastMmap',
+	'Try::Tiny',
 );
 
 if (eval { require App::cpanminus; 1; }) {
