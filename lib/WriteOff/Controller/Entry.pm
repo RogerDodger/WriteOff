@@ -166,7 +166,22 @@ sub do_dq :Private {
 	);
 
 	$c->stash->{entry}->guesses->delete;
-	$c->stash->{entry}->votes->delete;
+
+	# Only delete votes in currently active rounds
+	#
+	# While it's unlikely to ever occur, should the results of a previous
+	# round be recalculated and this entry's votes in that round were deleted,
+	# the results could change. So if the round is no longer active, its votes
+	# are preserved.
+	$c->stash->{entry}->votes->search(
+		{
+			round_id => { -in =>
+				$c->stash->{entry}->event->rounds->active->get_column('id')->as_query
+			}
+		},
+		{ join => 'ballot' },
+	)->delete;
+
 	$c->stash->{entry}->update({
 		artist_public => 1,
 		disqualified => 1,
