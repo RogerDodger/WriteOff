@@ -474,6 +474,110 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
+// Guess graph
+// ===========================================================================
+
+function DrawGuessGraph (e) {
+	var fontsize = 14;
+	var ypad = fontsize * 3;
+	var xpad = fontsize * 3;
+
+	var data = (e).data('graph');
+	var width = $(e).width();
+	var rows = Math.max(
+		data.theorys.length, data.artists.length, data.entrys.length);
+	var height = ypad * 2 + rows * fontsize * 2;
+
+	var tscale = d3.scale.linear()
+		.domain([0, data.theorys.length - 1])
+		.range([0 + ypad, height - ypad]);
+
+	var ascale = d3.scale.linear()
+		.domain([0, data.artists.length - 1])
+		.range([0 + ypad, height - ypad]);
+
+	var escale =  d3.scale.linear()
+		.domain([0, data.entrys.length - 1])
+		.range([0 + ypad, height - ypad]);
+
+	var tx = 0 + xpad;
+	var ax = width / 2;
+	var ex = width - xpad;
+
+	// Clear previous draw
+	d3.select(e).selectAll('svg').remove();
+
+	var svg = d3.select(e)
+		.append('svg')
+		.attr('width', width)
+		.attr('height', height);
+
+	var cols = [
+		[ 'theorys', 'id', tx, tscale ],
+		[ 'artists', 'name', ax, ascale ],
+		[ 'entrys',  'title', ex, escale ],
+	];
+
+	cols.forEach(function (e) {
+		var name = e[0],
+			class_ = name.slice(0, -1),
+			id = e[1],
+			cx = e[2],
+			scale = e[3];
+
+		svg.selectAll('circle.' + class_)
+			.data(data[name])
+			.enter()
+			.append('circle')
+			.attr('cx', cx)
+			.attr('cy', function (e, i) {
+				return scale(i);
+			})
+			.attr('r', 5)
+			.attr('fill', 'grey')
+			.attr('stroke', 'black')
+			.attr('stroke-width', 1);
+
+		svg.selectAll('text.' + class_)
+			.data(data[name])
+			.enter()
+			.append('text')
+			.attr('x', cx)
+			.attr('y', function (e, i) {
+				return scale(i);
+			})
+			.attr('text-anchor', 'middle')
+			.attr('fill', 'black')
+			.attr('font-size', fontsize * 0.9)
+			.attr('font-family', 'sans-serif');
+	});
+};
+
+$(document).ready(function () {
+	$('.Event-timeline').each(function () {
+		var timeline = timelines.shift();
+
+		timeline.forEach(function (t) {
+			if ('start' in t) {
+				t.start = new Date(t.start + "Z");
+			}
+			t.end = new Date(t.end + "Z");
+		});
+
+		$(this).removeClass('hidden');
+		$(this).data('timeline', timeline);
+		DrawTimeline(this);
+	});
+
+	$(window).on('resize', function () {
+		$('.Event-timeline').each(function () {
+			DrawTimeline(this);
+		});
+	});
+});
+
+
+// ===========================================================================
 // Event Expander
 // ===========================================================================
 

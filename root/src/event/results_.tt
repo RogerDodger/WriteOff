@@ -68,81 +68,10 @@
 		<span>Guesses</span>
 	</div>
 
-	<div class="Guesses-wrapper">
+	<div class="Guesses">
 		{{- artists_ = entrys.artists_hash }}
 		{{- entrys_ = entrys.order_by({ '-asc' => 'title' }).all }}
 		{{- theorys_ = theorys.all }}
-		<div class="Guesses-sticky">
-			<table class="Guesses">
-				<tbody>
-					{{ FOREACH entry IN entrys_ }}
-					<tr>
-						<td class="Guesses-entry">
-							<a href="{{ c.uri_for(view, [ entry.id_uri ]) }}">
-								{{ entry.title }}
-							</a>
-						</td>
-					</tr>
-					{{ END }}
-				</tbody>
-			</table>
-		</div>
-
-		<div class="Guesses-grid">
-			<table class="Guesses">
-				<thead>
-					<tr>
-						{{ FOREACH theory IN theorys_ }}
-						<th class="Guesses-guesser">
-							<a href="{{ c.uri_for_action('/artist/view', [ theory.artist.id_uri ]) }}">
-								{{ theory.artist.name }}
-							</a>
-						</th>
-						{{ END }}
-					</tr>
-				</tbody>
-
-				<tbody>
-					{{ FOREACH entry IN entrys_ }}
-					<tr>
-						{{ gr = guesses.${entry.id} -}}
-						{{ FOREACH theory IN theorys_ }}
-						<td class="Guesses-guess">
-							{{ IF (guess = gr.${theory.id}) }}
-								{{ IF guess.correct }}
-								<i class="fa fa-check"></i>
-								{{ ELSE }}
-								<i class="fa fa-circle"></i>
-								{{ END }}
-
-								<div class="Guess-details">
-									{{ guessed = artists_.${guess.guessed_artist_id} }}
-									{{ actual  = artists_.${guess.actual_artist_id} }}
-									<div class="Guess-details--guessed">
-										<div class="Guess-details--label">{{ c.string('guessed') }}</div>
-										<div class="Guess-details--artist">
-											<a href="{{ c.uri_for_action('/artist/view', [ guessed.id_uri ]) }}">
-												{{ guessed.name }}
-											</a>
-										</div>
-									</div>
-									<div class="Guess-details--actual">
-										<div class="Guess-details--label">{{ c.string('actual') }}</div>
-										<div class="Guess-details--artist">
-											<a href="{{ c.uri_for_action('/artist/view', [ actual.id_uri ]) }}">
-												{{ actual.name }}
-											</a>
-										</div>
-									</div>
-								</div>
-							{{ END }}
-						</td>
-						{{ END }}
-					</tr>
-					{{ END }}
-				</tbody>
-			</table>
-		</div>
 	</div>
 	{{ END }}
 </div>
