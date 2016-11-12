@@ -482,17 +482,18 @@ $(document).ready(function () {
 // ===========================================================================
 
 function DrawGuessGraph (e) {
-	var fontsize = 14;
+	var fontsize = parseFloat($(e).css('font-size'));
 	var ypad = fontsize * 3;
-	var xpad = 8;
-	var vrad = 7;
-	var lmrg = 6;
+	var xpad = fontsize * 0.75;
+	var vrad = xpad - 1;
+	var lmrg = fontsize * 0.3;
+	var gwid = fontsize * 0.15;
 
 	var data = $(e).data('graph');
 	var width = $(e).width();
 	var rows = Math.max(
 		data.theorys.length, data.artists.length, data.entrys.length);
-	var height = ypad * (2 + rows);
+	var height = (vrad * 2 + fontsize + lmrg) * (2 + rows);
 
 	var yrange = [0 + ypad, height - vrad - 1];
 
@@ -512,16 +513,7 @@ function DrawGuessGraph (e) {
 	var ax = width / 2;
 	var ex = width - xpad;
 
-	// guessed = {};
-	// data.artists.forEach(function (e) { guessed[e.id] = 0; });
-	// data.guesses.forEach(function (e) { guessed[e.guessed_id]++; });
 	data.artists.sort(function (a, b) {
-		// if (guessed[a.id] < guessed[b.id]) {
-		// 	return -1;
-		// }
-		// if (guessed[a.id] > guessed[b.id]) {
-		// 	return 1;
-		// }
 		if (a.name.collate() < b.name.collate()) {
 			return -1;
 		}
@@ -590,7 +582,7 @@ function DrawGuessGraph (e) {
 				.attr('d', line)
 				.attr('fill', 'transparent')
 				.attr('stroke', color)
-				.attr('stroke-width', 3);
+				.attr('stroke-width', gwid);
 		});
 	};
 
@@ -603,16 +595,19 @@ function DrawGuessGraph (e) {
 
 		if (t.tagName !== "circle") return;
 
-		var xinvert = {}
-		xinvert[tx] = [ tscale, data.theorys, 'theory_id'  ];
-		xinvert[ax] = [ ascale, data.artists, 'guessed_id' ];
-		xinvert[ex] = [ escale, data.entrys,  'entry_id'   ];
+		var scale, set, fk;
+		if ((t.cx.baseVal.value - 0.1) < tx) {
+			scale = tscale, set = data.theorys, fk = 'theory_id';
+		}
+		else if ((t.cx.baseVal.value + 0.1) > ex) {
+			scale = escale, set = data.entrys, fk = 'entry_id';
+		}
+		else {
+			scale = ascale, set = data.artists, fk = 'guessed_id';
+		}
 
-		var props = xinvert[t.cx.baseVal.value];
-		var scale = props[0];
-		var id = props[1][Math.round(scale.invert(t.cy.baseVal.value))].id;
-		var fk = props[2];
-
+		var idx = Math.round(scale.invert(t.cy.baseVal.value));
+		var id = set[idx].id;
 		drawGuessLines(data.guesses.filter(function (g) {
 			return g[fk] === id;
 		}), true);
@@ -622,50 +617,51 @@ function DrawGuessGraph (e) {
 		[ 'theorys', 'artist_name', 'start',    tx, tx + vrad + lmrg, tscale ],
 		[ 'artists', 'name',        'middle',   ax, ax,               ascale ],
 		[ 'entrys',  'title',       'end',      ex, ex - vrad - lmrg, escale ],
-	];
+	].map(function (e) {
+		var ret = {};
+		['name', 'id', 'anchor', 'cx', 'tx', 'scale'].forEach(function (k, i) {
+			ret[k] = e[i];
+		});
+		ret.class_ = ret.name.slice(0, -1);
+		return ret;
+	});
 
-	cols.forEach(function (e) {
-		var name = e[0],
-			class_ = name.slice(0, -1),
-			id = e[1],
-			anchor = e[2],
-			cx = e[3],
-			tx = e[4],
-			scale = e[5];
+	cols.forEach(function (c) {
+		svg.selectAll('text.' + c.class_)
+			.data(data[c.name])
+			.enter()
+			.append('text')
+			.text(function (e, i) {
+				// TODO: pretty sure I shouldn't be doing this here?
+				return decode_utf8(e[c.id])
+				     + (name === "theorys" ? " (" + e.accuracy + ")" : "");
+			})
+			.attr('x', c.tx)
+			.attr('y', function (e, i) {
+				return c.scale(i) - (c.anchor === "middle" ? lmrg + vrad : 0);
+			})
+			.attr('text-anchor', c.anchor)
+			.attr('dominant-baseline', c.anchor === "middle" ? 'auto' : 'middle')
+			.attr('fill', 'black')
+			.attr('opacity', 0.5)
+			.attr('font-size', fontsize * 0.9)
+			.attr('font-family', 'sans-serif');
+	});
 
-		svg.selectAll('circle.' + class_)
-			.data(data[name])
+	cols.forEach(function (c) {
+		svg.selectAll('circle.' + c.class_)
+			.data(data[c.name])
 			.enter()
 			.append('circle')
-			.attr('cx', cx)
+			.attr('cx', c.cx)
 			.attr('cy', function (e, i) {
-				return scale(i);
+				return c.scale(i);
 			})
 			.attr('r', vrad)
 			.attr('fill', 'grey')
 			.attr('stroke', 'black')
 			.attr('stroke-width', 1)
 			.attr('cursor', 'pointer');
-
-		svg.selectAll('text.' + class_)
-			.data(data[name])
-			.enter()
-			.append('text')
-			.text(function (e, i) {
-				// TODO: pretty sure I shouldn't be doing this here?
-				return decode_utf8(e[id])
-				     + (name === "theorys" ? " (" + e.accuracy + ")" : "");
-			})
-			.attr('x', tx)
-			.attr('y', function (e, i) {
-				return scale(i) - (anchor === "middle" ? lmrg + vrad : 0);
-			})
-			.attr('text-anchor', anchor)
-			.attr('dominant-baseline', anchor === "middle" ? 'auto' : 'middle')
-			.attr('fill', 'black')
-			.attr('opacity', 0.5)
-			.attr('font-size', fontsize * 0.9)
-			.attr('font-family', 'sans-serif');
 	});
 };
 
