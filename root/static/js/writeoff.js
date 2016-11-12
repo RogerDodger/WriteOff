@@ -551,7 +551,7 @@ function DrawGuessGraph (e) {
 		var line = d3.svg.line()
 			.x(function (d) { return d.x; })
 			.y(function (d) { return d.y; })
-			.interpolate("linear");
+			.interpolate("cardinal");
 
 		var guessLine = function (e) {
 			return [
