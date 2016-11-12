@@ -13,7 +13,7 @@ __PACKAGE__->config(namespace => '');
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
-	if ($c->req->uri->path =~ m{^/static/(style|js)/writeoff-[a-f0-9]+\.(css|min.js)$}) {
+	if ($c->req->uri->path =~ m{^/static/(style|js)/writeoff-[a-f0-9]+\.(css|js|min\.js|)$}) {
 		$c->serve_static_file("root/static/$1/writeoff.$2");
 		$c->log->abort(1);
 		return 0;

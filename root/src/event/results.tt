@@ -1,6 +1,6 @@
 {{ IF event.tallied }}
 	{{
-		USE cache = Cache;
+		USE cache = Cache(cache => c.config.renderCache);
 		cache.inc(
 			'template' => 'event/results_.tt',
 			'ttl' => c.debug || 360,

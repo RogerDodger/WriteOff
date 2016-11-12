@@ -280,42 +280,62 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 			accuracy => { '>=' => 1 },
 		},
 		{
-			prefetch => [
-				'artist',
-				{ guesses => 'entry' },
-			],
+			join => 'artist',
 			order_by => [
 				{ -desc => 'me.accuracy' },
 				{ -asc => 'artist.name' },
 			],
+			result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 		}
 	);
 
-	$c->stash->{guesses} = $c->model('DB')->storage->dbh_do(
-		sub {
-			my ($storage, $dbh, @args) = @_;
-
-			$dbh->selectall_hashref(
-				q{
-					SELECT
-						g.id AS id,
-						g.entry_id AS entry_id,
-						g.theory_id AS theory_id,
-						g.artist_id AS guessed_artist_id,
-						e.artist_id AS actual_artist_id,
-						(e.artist_id = g.artist_id) AS correct
-					FROM guesses g
-					LEFT JOIN theorys t ON g.theory_id = t.id
-					LEFT JOIN entrys e ON g.entry_id = e.id
-					WHERE e.event_id = ?
+	# Lazy load this since we don't want to make DB hits if the template cache
+	# comes through
+	$c->stash->{graph} = sub {
+		{
+			theorys => [
+				$c->stash->{event}->theorys->search(
+					{
+						accuracy => { '>=' => 1 },
+					},
+					{
+						join => 'artist',
+						order_by => [
+							{ -desc => 'me.accuracy' },
+							{ -asc => 'artist.name' },
+						],
+						columns => [qw/me.id me.artist_id me.accuracy/],
+						'+columns' => {
+							'artist_name' => 'artist.name',
+						},
+						result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+					}
+				),
+			],
+			artists => [
+				map {{ id => $_->id, name => $_->name }}
+					values %{ $c->stash->{entrys}->artists_hash }
+			],
+			entrys => [
+				do {
+					# Hacky(?) way to clear the prefetch that is done in
+					# C::Event::results
+					my $rs = $c->stash->{entrys};
+					$rs->{attrs}->{prefetch} = undef;
+					$rs->search({}, {
+						columns => [qw/me.id me.artist_id me.title/],
+						result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+					});
 				},
-				[ qw/entry_id theory_id/ ],
-				{},
-				@args,
-			);
-		},
-		$c->stash->{event}->id,
-	);
+			],
+			guesses => [
+				$c->model('DB::GuessX')->search({}, {
+					bind => [$c->stash->{event}->id],
+					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+				})
+			],
+		}
+	};
 
 	$c->stash->{mode} = 'fic';
 	$c->stash->{view} = $self->action_for('view');

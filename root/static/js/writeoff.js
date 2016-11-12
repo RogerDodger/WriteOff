@@ -159,6 +159,10 @@ Number.prototype.zeropad = function (n) {
 	return s;
 }
 
+function decode_utf8 (s) {
+  return decodeURIComponent(escape(s));
+}
+
 // t0 is compared against the real current time to determine how long the page
 // has been opened. This is useful to know what the "current" time is when
 // using a mocked now.
@@ -480,29 +484,57 @@ $(document).ready(function () {
 function DrawGuessGraph (e) {
 	var fontsize = 14;
 	var ypad = fontsize * 3;
-	var xpad = fontsize * 3;
+	var xpad = 8;
+	var vrad = 7;
+	var lmrg = 6;
 
-	var data = (e).data('graph');
+	var data = $(e).data('graph');
 	var width = $(e).width();
 	var rows = Math.max(
 		data.theorys.length, data.artists.length, data.entrys.length);
-	var height = ypad * 2 + rows * fontsize * 2;
+	var height = ypad * (2 + rows);
+
+	var yrange = [0 + ypad, height - vrad - 1];
 
 	var tscale = d3.scale.linear()
 		.domain([0, data.theorys.length - 1])
-		.range([0 + ypad, height - ypad]);
+		.range(yrange);
 
 	var ascale = d3.scale.linear()
 		.domain([0, data.artists.length - 1])
-		.range([0 + ypad, height - ypad]);
+		.range(yrange);
 
 	var escale =  d3.scale.linear()
 		.domain([0, data.entrys.length - 1])
-		.range([0 + ypad, height - ypad]);
+		.range(yrange);
 
 	var tx = 0 + xpad;
 	var ax = width / 2;
 	var ex = width - xpad;
+
+	// guessed = {};
+	// data.artists.forEach(function (e) { guessed[e.id] = 0; });
+	// data.guesses.forEach(function (e) { guessed[e.guessed_id]++; });
+	data.artists.sort(function (a, b) {
+		// if (guessed[a.id] < guessed[b.id]) {
+		// 	return -1;
+		// }
+		// if (guessed[a.id] > guessed[b.id]) {
+		// 	return 1;
+		// }
+		if (a.name.collate() < b.name.collate()) {
+			return -1;
+		}
+		if (a.name.collate() > b.name.collate()) {
+			return 1;
+		}
+		return 0;
+	});
+
+	var ty = {}, ay = {}, ey = {};
+	data.theorys.forEach(function (e, i) { ty[e.id] = i; });
+	data.artists.forEach(function (e, i) { ay[e.id] = i; });
+	data.entrys.forEach( function (e, i) { ey[e.id] = i; });
 
 	// Clear previous draw
 	d3.select(e).selectAll('svg').remove();
@@ -512,18 +544,94 @@ function DrawGuessGraph (e) {
 		.attr('width', width)
 		.attr('height', height);
 
+	var dimg = svg.append('g');
+	var focusg = svg.append('g');
+
+	var drawGuessLines = function (guesses, focus) {
+		var line = d3.svg.line()
+			.x(function (d) { return d.x; })
+			.y(function (d) { return d.y; })
+			.interpolate("linear");
+
+		var guessLine = function (e) {
+			return [
+				{ x: tx, y: tscale(ty[e.theory_id]) },
+				{ x: ax, y: ascale(ay[e.guessed_id]) },
+				{ x: ex, y: escale(ey[e.entry_id]) },
+			];
+		};
+
+		var greenLines = guesses
+			.filter(function (e) { return e.correct; })
+			.map(guessLine);
+
+		var redLines = guesses
+			.filter(function (e) { return !e.correct; })
+			.map(guessLine);
+
+		var lines = [
+			[redLines,     'red', focus ? '#ffa0a0' : '#ffe8e8' ],
+			[greenLines, 'green', focus ? '#a0ffa0' : '#e8ffe8' ],
+		];
+
+		var container = focus ? focusg : dimg;
+
+		lines.forEach(function (e) {
+			var data = e[0],
+				class_ = e[1],
+				color = e[2];
+
+			container.selectAll('path.' + class_ + (focus ? '.focus' : ''))
+				.data(data)
+				.enter()
+				.append('path')
+				.classed(class_, true)
+				.classed('focus', focus)
+				.attr('d', line)
+				.attr('fill', 'transparent')
+				.attr('stroke', color)
+				.attr('stroke-width', 3);
+		});
+	};
+
+	drawGuessLines(data.guesses);
+
+	svg.on('click', function () {
+		var t = d3.event.target;
+
+		focusg.selectAll('*').remove();
+
+		if (t.tagName !== "circle") return;
+
+		var xinvert = {}
+		xinvert[tx] = [ tscale, data.theorys, 'theory_id'  ];
+		xinvert[ax] = [ ascale, data.artists, 'guessed_id' ];
+		xinvert[ex] = [ escale, data.entrys,  'entry_id'   ];
+
+		var props = xinvert[t.cx.baseVal.value];
+		var scale = props[0];
+		var id = props[1][Math.round(scale.invert(t.cy.baseVal.value))].id;
+		var fk = props[2];
+
+		drawGuessLines(data.guesses.filter(function (g) {
+			return g[fk] === id;
+		}), true);
+	});
+
 	var cols = [
-		[ 'theorys', 'id', tx, tscale ],
-		[ 'artists', 'name', ax, ascale ],
-		[ 'entrys',  'title', ex, escale ],
+		[ 'theorys', 'artist_name', 'start',    tx, tx + vrad + lmrg, tscale ],
+		[ 'artists', 'name',        'middle',   ax, ax,               ascale ],
+		[ 'entrys',  'title',       'end',      ex, ex - vrad - lmrg, escale ],
 	];
 
 	cols.forEach(function (e) {
 		var name = e[0],
 			class_ = name.slice(0, -1),
 			id = e[1],
-			cx = e[2],
-			scale = e[3];
+			anchor = e[2],
+			cx = e[3],
+			tx = e[4],
+			scale = e[5];
 
 		svg.selectAll('circle.' + class_)
 			.data(data[name])
@@ -533,49 +641,49 @@ function DrawGuessGraph (e) {
 			.attr('cy', function (e, i) {
 				return scale(i);
 			})
-			.attr('r', 5)
+			.attr('r', vrad)
 			.attr('fill', 'grey')
 			.attr('stroke', 'black')
-			.attr('stroke-width', 1);
+			.attr('stroke-width', 1)
+			.attr('cursor', 'pointer');
 
 		svg.selectAll('text.' + class_)
 			.data(data[name])
 			.enter()
 			.append('text')
-			.attr('x', cx)
-			.attr('y', function (e, i) {
-				return scale(i);
+			.text(function (e, i) {
+				// TODO: pretty sure I shouldn't be doing this here?
+				return decode_utf8(e[id])
+				     + (name === "theorys" ? " (" + e.accuracy + ")" : "");
 			})
-			.attr('text-anchor', 'middle')
+			.attr('x', tx)
+			.attr('y', function (e, i) {
+				return scale(i) - (anchor === "middle" ? lmrg + vrad : 0);
+			})
+			.attr('text-anchor', anchor)
+			.attr('dominant-baseline', anchor === "middle" ? 'auto' : 'middle')
 			.attr('fill', 'black')
+			.attr('opacity', 0.5)
 			.attr('font-size', fontsize * 0.9)
 			.attr('font-family', 'sans-serif');
 	});
 };
 
 $(document).ready(function () {
-	$('.Event-timeline').each(function () {
-		var timeline = timelines.shift();
+	$('.Guess-graph').each(function () {
+		var graph = graphs.shift();
 
-		timeline.forEach(function (t) {
-			if ('start' in t) {
-				t.start = new Date(t.start + "Z");
-			}
-			t.end = new Date(t.end + "Z");
-		});
-
-		$(this).removeClass('hidden');
-		$(this).data('timeline', timeline);
-		DrawTimeline(this);
+		$(this).parent().removeClass('hidden');
+		$(this).data('graph', graph);
+		DrawGuessGraph(this);
 	});
 
 	$(window).on('resize', function () {
-		$('.Event-timeline').each(function () {
-			DrawTimeline(this);
+		$('.Guess-graph').each(function () {
+			DrawGuessGraph(this);
 		});
 	});
 });
-
 
 // ===========================================================================
 // Event Expander

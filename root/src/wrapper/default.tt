@@ -13,14 +13,13 @@
 		<link rel="stylesheet" href="/static/style/vendor.css">
 		<link rel="stylesheet" href="/static/style/writeoff-{{ c.config.pid }}.css">
 
-		<script src="/static/js/vendor.js"></script>
 		<script>
 			var timelines = [];
+			var graphs = [];
 			var now = new Date("{{ now.iso8601 }}Z");
 			var entry_id = {{ entry.id || 'undefined' }};
 			var event_id = {{ event.id || 'undefined' }};
 		</script>
-		<script src="/static/js/writeoff-{{ c.config.pid }}.min.js"></script>
 	</head>
 
 	<body>
@@ -138,11 +137,12 @@
 				</div>
 			</div>
 		</footer>
-
-		<div class="Status-container hidden">
-			<div class="Status">
-
-			</div>
-		</div>
 	</body>
+
+	<script src="/static/js/vendor.js"></script>
+	{{ IF c.debug }}
+	<script src="/static/js/writeoff-{{ c.config.pid }}.js"></script>
+	{{ ELSE }}
+	<script src="/static/js/writeoff-{{ c.config.pid }}.min.js"></script>
+	{{ END }}
 </html>

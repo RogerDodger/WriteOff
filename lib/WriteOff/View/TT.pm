@@ -1,6 +1,7 @@
 package WriteOff::View::TT;
 use utf8;
 use 5.014;
+
 use JSON;
 use Moose;
 use namespace::autoclean;
@@ -94,6 +95,14 @@ $Template::Stash::LIST_OPS = {
 	map_username => sub {
 		return [ map { $_->username } @{ $_[0] } ];
 	},
+
+	json => sub {
+		return encode_json $_[0];
+	},
+};
+
+$Template::Stash::HASH_OPS = {
+	%$Template::Stash::HASH_OPS,
 
 	json => sub {
 		return encode_json $_[0];

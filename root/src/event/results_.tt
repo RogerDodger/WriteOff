@@ -64,14 +64,15 @@
 	</table>
 
 	{{ IF theorys.count }}
-	<div class="Document-subtitle">
-		<span>Guesses</span>
-	</div>
+	<div class="Guesses hidden">
+		<div class="Document-subtitle">
+			<span>Guesses</span>
+		</div>
 
-	<div class="Guesses">
-		{{- artists_ = entrys.artists_hash }}
-		{{- entrys_ = entrys.order_by({ '-asc' => 'title' }).all }}
-		{{- theorys_ = theorys.all }}
+		<div class="Guess-graph"></div>
+		<script>
+			graphs.push({{ graph().json | none }});
+		</script>
 	</div>
 	{{ END }}
 </div>
