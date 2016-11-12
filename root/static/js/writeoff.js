@@ -634,7 +634,7 @@ function DrawGuessGraph (e) {
 			.text(function (e, i) {
 				// TODO: pretty sure I shouldn't be doing this here?
 				return decode_utf8(e[c.id])
-				     + (name === "theorys" ? " (" + e.accuracy + ")" : "");
+				     + (c.name === "theorys" ? " (" + e.accuracy + ")" : "");
 			})
 			.attr('x', c.tx)
 			.attr('y', function (e, i) {
