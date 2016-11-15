@@ -364,22 +364,22 @@ function DrawTimeline (e) {
 		}))
 		.enter()
 		.append('circle')
-		.attr('title', function(d, i) {
-			return d.start.toUTCString();
-		})
 		.attr('cx', function(d, i) {
 			return scale(d.start);
+		})
+		.append('svg:title').text(function(d) {
+			return d.start.toUTCString();
 		});
 
 	svg.selectAll('circle.boundary.end')
 		.data(data)
 		.enter()
 		.append('circle')
-		.attr('title', function(d, i) {
-			return d.end.toUTCString();
-		})
 		.attr('cx', function(d, i) {
 			return scale(d.end);
+		})
+		.append('svg:title').text(function(d) {
+			return d.end.toUTCString();
 		});
 
 	svg.selectAll('circle')
@@ -390,15 +390,15 @@ function DrawTimeline (e) {
 		.attr('stroke-width', 1);
 
 	svg.append('circle')
-		.attr('title', function(d, i) {
-			return now.toUTCString();
-		})
 		.attr('cx', scale(now))
 		.attr('cy', height / 2)
 		.attr('r', 4)
 		.attr('fill', 'red')
 		.attr('stroke', 'black')
-		.attr('stroke-width', 1);
+		.attr('stroke-width', 1)
+		.append('svg:title').text(function(d) {
+			return now.toUTCString();
+		});
 
 	svg.selectAll('text.dates.start')
 		.data(data.filter(function (e, i) {
@@ -409,11 +409,11 @@ function DrawTimeline (e) {
 		.text(function(d, i) {
 			return d.start.getDate() + " " + d.start.getShortMonth();
 		})
-		.attr('title', function(d, i) {
-			return d.start.toUTCString();
-		})
 		.attr('x', function(d, i) {
 			return scale(d.start);
+		})
+		.append('svg:title').text(function(d) {
+			return d.start.toUTCString();
 		});
 
 	svg.selectAll('text.dates.end')
@@ -423,11 +423,11 @@ function DrawTimeline (e) {
 		.text(function(d, i) {
 			return d.end.getDate() + " " + d.end.getShortMonth();
 		})
-		.attr('title', function(d, i) {
-			return d.end.toUTCString();
-		})
 		.attr('x', function(d, i) {
 			return scale(d.end);
+		})
+		.append('svg:title').text(function(d) {
+			return d.end.toUTCString();
 		});
 
 	svg.selectAll('text')
