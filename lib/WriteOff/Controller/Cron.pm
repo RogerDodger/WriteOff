@@ -28,14 +28,8 @@ Cleans old data from the database.
 sub auto :Private {
 	my ($self, $c) = @_;
 
-	if (substr($c->req->address, -9) eq '127.0.0.1') {
-		# Make URLS from uri_for in emails point to the public domain, instead
-		# of localhost:port
-		$c->req->base(URI->new('http://' . $c->config->{domain} . '/'));
-		return 1;
-	}
-
-	$c->detach('/default');
+	substr($c->req->address, -9) eq '127.0.0.1'
+		or $c->error("Forbidden");
 }
 
 sub cleanup :Local {
@@ -54,7 +48,7 @@ sub clear :Local {
 		$cache->clear;
 	}
 	else {
-		die "Cache $target not found\n";
+		$c->error("Cache $target not found");
 	}
 }
 
@@ -87,8 +81,9 @@ sub schedule :Local {
 sub end :Private {
 	my ($self, $c) = @_;
 
-	if (@{ $c->error }) {
-		$c->forward('/end');
+	if ($c->has_errors) {
+		$c->res->body(join "\n", map "Error: $_", @{ $c->error });
+		$c->error(0);
 	}
 	else {
 		$c->res->body('Task complete');

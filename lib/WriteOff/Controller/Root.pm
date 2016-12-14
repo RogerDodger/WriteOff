@@ -25,6 +25,17 @@ sub auto :Private {
 		return 0;
 	}
 
+	# This is necessary because of a bug/exploit whereby requests hitting the
+	# website with a different $c->req->base were then having their results
+	# cached. The cached results would then appear to regular users which
+	# point to another domain. Not good!
+	#
+	# Also, this makes emails sent out point to the right domain, rather than
+	# localhost:<port>.
+	if (!$c->debug && $c->config->{domain}) {
+		$c->req->base(URI->new('//' . $c->config->{domain} . '/'));
+	}
+
 	if ($c->debug) {
 		if ($c->req->param('login')) {
 			$c->user(
