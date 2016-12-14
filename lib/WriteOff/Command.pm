@@ -66,7 +66,7 @@ sub run {
 		try {
 			load $module;
 		} catch {
-			say "Command `$command` not found.";
+			say "Failed to run command `$command`: $_";
 			exit(1);
 		};
 
