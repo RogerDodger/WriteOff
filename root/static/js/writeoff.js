@@ -536,8 +536,10 @@ function DrawGuessGraph (e) {
 		.attr('width', width)
 		.attr('height', height);
 
-	var dimg = svg.append('g');
-	var focusg = svg.append('g');
+	var dimg = svg.append('g').classed('guess-dim', true);
+	var focusg = svg.append('g').classed('guess-focus', true);
+	var labelg = svg.append('g').classed('labels', true);
+	var nodeg = svg.append('g').classed('nodes', true);
 
 	var drawGuessLines = function (guesses, focus) {
 		var line = d3.svg.line()
@@ -573,12 +575,11 @@ function DrawGuessGraph (e) {
 				class_ = e[1],
 				color = e[2];
 
-			container.selectAll('path.' + class_ + (focus ? '.focus' : ''))
+			container.selectAll('path.' + class_)
 				.data(data)
 				.enter()
 				.append('path')
 				.classed(class_, true)
-				.classed('focus', focus)
 				.attr('d', line)
 				.attr('fill', 'transparent')
 				.attr('stroke', color)
@@ -588,6 +589,28 @@ function DrawGuessGraph (e) {
 
 	drawGuessLines(data.guesses);
 
+	var cols = [
+		[ 'theorys', 'artist_name', 'theory_id',  'start',  tx, tx + vrad + lmrg, tscale ],
+		[ 'artists', 'name',        'guessed_id', 'middle', ax, ax,               ascale ],
+		[ 'entrys',  'title',       'entry_id',   'end',    ex, ex - vrad - lmrg, escale ],
+	].map(function (e) {
+		var ret = {};
+		['name', 'id', 'fk', 'anchor', 'cx', 'tx', 'scale'].forEach(function (k, i) {
+			ret[k] = e[i];
+		});
+		ret.class_ = ret.name.slice(0, -1);
+		return ret;
+	});
+
+	var focused = [];
+	// 1. If no lines are focused, clicking on a node will focus all
+	// intersecting lines.
+
+	// 2. If lines are already focused, then only intersecting lines that were
+	// already focused remain focused.
+
+	// 3. If cliking a node doesn't unfocus any lines, then all lines are
+	// unfocused.
 	svg.on('click', function () {
 		var t = d3.event.target;
 
@@ -595,39 +618,34 @@ function DrawGuessGraph (e) {
 
 		if (t.tagName !== "circle") return;
 
-		var scale, set, fk;
-		if ((t.cx.baseVal.value - 0.1) < tx) {
-			scale = tscale, set = data.theorys, fk = 'theory_id';
-		}
-		else if ((t.cx.baseVal.value + 0.1) > ex) {
-			scale = escale, set = data.entrys, fk = 'entry_id';
-		}
-		else {
-			scale = ascale, set = data.artists, fk = 'guessed_id';
-		}
-
-		var idx = Math.round(scale.invert(t.cy.baseVal.value));
-		var id = set[idx].id;
-		drawGuessLines(data.guesses.filter(function (g) {
-			return g[fk] === id;
-		}), true);
-	});
-
-	var cols = [
-		[ 'theorys', 'artist_name', 'start',    tx, tx + vrad + lmrg, tscale ],
-		[ 'artists', 'name',        'middle',   ax, ax,               ascale ],
-		[ 'entrys',  'title',       'end',      ex, ex - vrad - lmrg, escale ],
-	].map(function (e) {
-		var ret = {};
-		['name', 'id', 'anchor', 'cx', 'tx', 'scale'].forEach(function (k, i) {
-			ret[k] = e[i];
+		var col = cols.find(function (e) {
+			return t.cx.baseVal.value - e.cx < 0.1;
 		});
-		ret.class_ = ret.name.slice(0, -1);
-		return ret;
+
+		if (typeof col === 'undefined') return;
+
+		var idx = Math.round(col.scale.invert(t.cy.baseVal.value));
+		var id = data[col.name][idx].id;
+		var l = focused.length;
+
+		// (1)
+		if (!focused.length) focused = data.guesses;
+
+		// (2)
+		focused = focused.filter(function (g) {
+			return g[col.fk] === id;
+		});
+
+		// (3)
+		if (l === focused.length) {
+			focused = [];
+		}
+
+		drawGuessLines(focused, true);
 	});
 
 	cols.forEach(function (c) {
-		svg.selectAll('text.' + c.class_)
+		labelg.selectAll('text.' + c.class_)
 			.data(data[c.name])
 			.enter()
 			.append('text')
@@ -642,14 +660,14 @@ function DrawGuessGraph (e) {
 			})
 			.attr('text-anchor', c.anchor)
 			.attr('dominant-baseline', c.anchor === "middle" ? 'auto' : 'middle')
+			.attr('opacity', 0.8)
 			.attr('fill', 'black')
-			.attr('opacity', 0.5)
 			.attr('font-size', fontsize * 0.9)
 			.attr('font-family', 'sans-serif');
 	});
 
 	cols.forEach(function (c) {
-		svg.selectAll('circle.' + c.class_)
+		nodeg.selectAll('circle.' + c.class_)
 			.data(data[c.name])
 			.enter()
 			.append('circle')
