@@ -179,10 +179,10 @@
 
 		.Post-controls .fa,
 		.Post-controls button,
-		.Post-vote--button {
+		.Post-vote--button:not(:disabled):not([value="1"]) {
 			color: #888;
 
-			&:not(:disabled):hover,
+			&:hover,
 			&:hover .fa {
 				color: #555;
 			}
