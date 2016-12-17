@@ -611,6 +611,9 @@ function DrawGuessGraph (e) {
 
 	// 3. If cliking a node doesn't unfocus any lines, then all lines are
 	// unfocused.
+
+	// 4. If no lines are focused, focus all lines intersecting the
+	// clicked node.
 	svg.on('click', function () {
 		var t = d3.event.target;
 
@@ -626,20 +629,24 @@ function DrawGuessGraph (e) {
 
 		var idx = Math.round(col.scale.invert(t.cy.baseVal.value));
 		var id = data[col.name][idx].id;
+		var intersect = function (g) {
+			return g[col.fk] === id;
+		};
 		var l = focused.length;
 
 		// (1)
 		if (!focused.length) focused = data.guesses;
 
 		// (2)
-		focused = focused.filter(function (g) {
-			return g[col.fk] === id;
-		});
+		focused = focused.filter(intersect);
 
 		// (3)
 		if (l === focused.length) {
 			focused = [];
 		}
+
+		// (4)
+		if (!focused.length) focused = data.guesses.filter(intersect);
 
 		drawGuessLines(focused, true);
 	});
