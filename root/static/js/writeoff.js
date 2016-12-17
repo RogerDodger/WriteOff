@@ -565,7 +565,7 @@ function DrawGuessGraph (e) {
 
 		var lines = [
 			[redLines,     'red', focus ? '#ffa0a0' : '#ffe8e8' ],
-			[greenLines, 'green', focus ? '#a0ffa0' : '#e8ffe8' ],
+			[greenLines, 'green', focus ? '#94ff94' : '#dbffdb' ],
 		];
 
 		var container = focus ? focusg : dimg;
