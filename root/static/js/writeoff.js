@@ -616,7 +616,7 @@ function DrawGuessGraph (e) {
 
 		focusg.selectAll('*').remove();
 
-		if (t.tagName !== "circle") return;
+		if (t.tagName !== "circle") return focused = [];
 
 		var col = cols.find(function (e) {
 			return t.cx.baseVal.value - e.cx < 0.1;
