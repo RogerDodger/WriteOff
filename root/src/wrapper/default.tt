@@ -82,6 +82,7 @@
 								<li><a href="/event/add">New event</a></li>
 								{{ END }}
 								<li><a href="/user/prefs">Preferences</a></li>
+								<li><a href="/user/artists">Manage aliases</a></li>
 								<li><a href="/user/credentials?key=password">Change password</a></li>
 								<li><a href="/user/credentials?key=email">Change email</a></li>
 								<li><a href="/user/logout">Logout</a></li>

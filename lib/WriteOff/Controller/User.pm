@@ -13,10 +13,18 @@ sub fetch :Chained('/') :PathPart('user') :CaptureArgs(1) :ActionClass('~Fetch')
 		or $c->detach('/default');
 }
 
+sub artists :Local :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
+
+
+}
+
 sub login :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/error', [ 'You are already logged in.' ]) if $c->user;
+	$c->detach('/error', [ $c->string('areUser') ]) if $c->user;
 
 	push @{ $c->stash->{title} }, 'Login';
 	$c->stash->{template} = 'user/login.tt';
@@ -178,7 +186,7 @@ sub do_prefs :Private {
 sub credentials :Path('credentials') :Args(0) {
 	my ($self, $c) = @_;
 
-	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
+	$c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
 
 	my $key = $c->stash->{key} = $c->req->param('key') || '';
 	if ($key ne 'password' && $key ne 'email') {

@@ -152,6 +152,8 @@ confirmPrompt: Enter the %s of the selected item to continue
 csrfDetected: Bad session
 notAdmin: You are not an admin
 notOrganiser: You are not an event organiser for this event
+notUser: You are not logged in
+areUser: You are already logged in
 joinedOn: Joined on %s
 postCount: %d posts
 entryCount: %d entries
