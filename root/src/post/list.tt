@@ -1,8 +1,16 @@
-{{ USE cache = Cache( cache => c.config.renderCache ) }}
+{{ USE cache = Cache(cache => c.config.renderCache) }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'top', pager = posts.pager }}
 
-{{ INCLUDE 'post/list_.tt' }}
+{{ SET votes = posts.vote_map(c.user) }}
+{{ SET uid = posts.uid(event.id, entry.id) }}
+{{ uid }}
+{{ CALL cache.inc(
+	template => 'post/list_.tt',
+	key => uid) }}
+
+{{ SET t = "chi:" _ uid }}
+{{ PROCESS $t }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'bottom', pager = posts.pager }}
 

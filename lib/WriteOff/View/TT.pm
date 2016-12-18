@@ -22,10 +22,16 @@ __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
 	START_TAG          => quotemeta('{{'),
 	END_TAG            => quotemeta('}}'),
-	TIMER              => 1,
-	expose_methods     => [ qw/csrf_field data_uri format_dt title_html spectrum/ ],
+	expose_methods     => [ qw/data_uri format_dt title_html spectrum/ ],
 	render_die         => 1,
 );
+
+around template_vars => sub {
+	my $orig = shift;
+	my $self = shift;
+
+	($self->$orig(@_), csrf_field => qq{<csrf-field/>});
+};
 
 __PACKAGE__->config->{FILTERS} = {
 	markdown => sub {
@@ -64,6 +70,10 @@ __PACKAGE__->config->{PARSER} = Template::AutoFilter::Parser->new(__PACKAGE__->c
 
 $Template::Stash::SCALAR_OPS = {
 	%$Template::Stash::SCALAR_OPS,
+
+	ref => sub {
+		return \$_[0];
+	},
 
 	ucfirst => sub {
 		return ucfirst shift;
@@ -118,10 +128,6 @@ sub render {
 	$ret =~ s{<csrf-field/>}{<input type="hidden" name="csrf_token" value="$token">}g;
 
 	$ret;
-}
-
-sub csrf_field {
-	qq{<csrf-field/>};
 }
 
 sub data_uri {

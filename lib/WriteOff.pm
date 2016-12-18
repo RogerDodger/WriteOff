@@ -45,9 +45,6 @@ __PACKAGE__->config(
 	AdminEmail => 'admin@example.com',
 
 	default_view => 'TT',
-	'View::TT' => {
-		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
-	},
 	'View::JSON' => {
 		expose_stash => 'json',
 	},
@@ -206,6 +203,29 @@ __PACKAGE__->config(
 
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
+);
+
+__PACKAGE__->config(
+	'View::TT' => {
+		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
+		PROVIDERS => [
+			{
+				name => '_file_',
+				args => {},
+			},
+			{
+				name => 'CHI',
+				args => {
+					chi => __PACKAGE__->config->{renderCache},
+				},
+			},
+		],
+		PREFIX_MAP => {
+			file => 0,
+			chi => 1,
+			default => 0,
+		},
+	},
 );
 
 my $logger = WriteOff::Log->new;
