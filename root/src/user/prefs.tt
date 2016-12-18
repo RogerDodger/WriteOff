@@ -15,8 +15,9 @@
 		</div>
 
 		<div class="Story-example hidden">
-			<div>{{ c.string('pangram') }}</div>
-			<div>{{ c.string('lipsum') }}</div>
+			{{ FOREACH line IN c.string('lipsum').split("\n\n") }}
+			<div>{{ line }}</div>
+			{{ END }}
 		</div>
 
 		<div class="Form-item">
