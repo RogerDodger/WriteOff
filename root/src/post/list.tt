@@ -1,8 +1,10 @@
-{{ USE cache = Cache( cache => c.config.renderCache ) }}
+{{ USE cache = Cache(cache => c.config.renderCache) }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'top', pager = posts.pager }}
 
-{{ INCLUDE 'post/list_.tt' }}
+{{ cache.inc(
+	template => 'post/list_.tt',
+	key => posts.uid(event.id, entry.id)) }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'bottom', pager = posts.pager }}
 

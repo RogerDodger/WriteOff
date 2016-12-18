@@ -40,9 +40,9 @@ sub view :Chained('fetch') :PathPart('view') :Args(0) {
 	$c->stash->{page} = 0 if !$rightEvent || $entry && !$rightEntry;
 
 	my $vote = $c->model('DB::PostVote')->find($c->user->id, $c->stash->{post}->id);
-	$c->stash->{vote} = $vote && $vote->value;
+	$c->stash->{votes} = { $c->stash->{post}->id => $vote && $vote->value };
 
-	$c->stash->{template} = 'post/single.tt';
+	$c->stash->{template} = 'post/view.tt';
 	push @{ $c->stash->{title} }, $c->string('postN', $c->stash->{post}->id);
 }
 

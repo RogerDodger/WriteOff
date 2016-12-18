@@ -1,28 +1,28 @@
-<div class="Post view" id="{{ post.id }}" data-page="{{ page }}">
-{{- SET artist   = artist || post.artist }}
-{{- SET editable = c.user.can_edit(artist) }}
-{{- SET votable  = c.user && !c.user.owns(artist) }}
+<div class="Post view" id="{{ post.id }}" data-page="<!-- GET page -->">
+<!-- SET editable  $c->user->id == {{ artist.user_id }} -->
+<!-- SET votable   $c->user && !$stash->{editable} -->
+<!-- SET replyable $c->user->active_artist_id -->
 
 {{- IF post.deleted }}
 	<div class="Post-deleted">
-		{{ IF editable }}
+		<!-- IF editable -->
 		<div class="Post-deleted--restore">
 			<form method="post" action="{{ c.uri_for_action('/post/delete', [ post.id ]) }}">
 				{{ csrf_field | none }}
 				[<button>{{ c.string('restore') }}</button>]
 			</form>
 		</div>
-		{{ END }}
+		<!-- END -->
 
-		{{ c.string('postDeleted', artist.name, post.updated.delta_html) | none }}
+		{{ c.string('postDeleted', post.artist.name, post.updated.delta_html) | none }}
 	</div>
 {{- ELSE }}
-	{{ INCLUDE 'post/author.tt' }}
+	{{ INCLUDE 'post/author.tt' artist = post.artist }}
 
 	<div class="Post-contents">
 		<div class="Post-contents--header">
 			<ul class="Post-controls">
-				{{ IF editable }}
+				<!-- IF editable -->
 				<li class="Post-control--delete">
 					<form method="post" action="{{ c.uri_for_action('/post/delete', [ post.id ]) }}">
 						{{ csrf_field | none }}
@@ -35,15 +35,15 @@
 				<a class="Post-control--edit" href="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
 					<i class="fa fa-pencil fa-fw" title="{{ c.string('edit') }}"></i>
 				</a>
-				{{ END }}
+				<!-- END -->
 
-				{{ IF c.user.active_artist_id }}
+				<!-- IF replyable -->
 				<li>
-				<a class="Post-control--reply" data-target="{{ post.id }}" {{ IF !entry && post.entry -}}
-					href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"{{ END }}>
+				<a class="Post-control--reply" data-target="{{ post.id }}"{{ IF post.entry }}<!-- IF !entry -->
+					href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"<!-- END -->{{ END }}>
 					<i class="fa fa-reply fa-fw" title="{{ c.string('reply') }}"></i>
 				</a>
-				{{ END }}
+				<!-- END -->
 			</ul>
 
 			<span class="Post-id">
@@ -54,9 +54,10 @@
 
 			<span class="Post-vote">
 				<span class="Post-vote--score">{{ post.score IF post.score }}</span>
-				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="{{ vote }}">
+				<!-- SET vote $stash->{votes}->{ {{ post.id}} } -->
+				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="<!-- GET vote -->">
 					{{ csrf_field | none }}
-					<button class="Post-vote--button" name="value" value="1" {{- 'disabled' IF !votable }}>
+					<button class="Post-vote--button" name="value" value="1" <!-- IF !votable -->disabled<!-- END -->>
 						<i class="fa fa-thumbs-up"></i>
 					</button>
 				</form>
@@ -68,13 +69,13 @@
 				{{ post.created.delta_html | none }}
 			</span>
 
-			{{ IF !entry && post.entry }}
-			<span class="Post-entry">
-				on
-				<a href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}">
-					{{ post.entry.title }}
-				</a>
-			</span>
+			{{ IF post.entry }}
+				<!-- IF !entry -->
+				<span class="Post-entry">
+					on
+					<a href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}">{{ post.entry.title }}</a>
+				</span>
+				<!-- END -->
 			{{ END }}
 
 			{{ IF post.children_render }}
@@ -86,7 +87,7 @@
 
 		<div class="Post-contents--body">{{ post.body_render | none }}</div>
 
-		{{ IF editable }}
+		<!-- IF editable -->
 		<div class="Post-contents--edit">
 			<form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
 				{{ csrf_field | none }}
@@ -108,7 +109,7 @@
 				</div>
 			</form>
 		</div>
-		{{ END }}
+		<!-- END -->
 	</div>
 {{- END }}
 </div>

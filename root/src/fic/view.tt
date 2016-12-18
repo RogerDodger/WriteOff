@@ -23,6 +23,6 @@
 	{{- END }}
 </div>
 
-{{ IF event.commenting && event.fic_gallery_opened }}
-	{{ INCLUDE post/list.tt  posts = entry.posts_rs.thread(c.page) }}
+{{ IF posts }}
+	{{ INCLUDE post/list.tt }}
 {{ END }}
