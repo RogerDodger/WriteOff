@@ -2,15 +2,9 @@
 
 {{ PROCESS 'post/pager.tt'  pos = 'top', pager = posts.pager }}
 
-{{ SET votes = posts.vote_map(c.user) }}
-{{ SET uid = posts.uid(event.id, entry.id) }}
-{{ uid }}
-{{ CALL cache.inc(
+{{ cache.inc(
 	template => 'post/list_.tt',
-	key => uid) }}
-
-{{ SET t = "chi:" _ uid }}
-{{ PROCESS $t }}
+	key => posts.uid(event.id, entry.id)) }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'bottom', pager = posts.pager }}
 

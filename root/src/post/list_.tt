@@ -4,6 +4,23 @@
 {{ FOREACH post IN posts.thread_prefetch }}
 	{{ SET num = first + loop.index }}
 	{{ SET artist = post.artist }}
-	{{ PROCESS 'post/single_.tt' }}
+	{{ PROCESS post/single_.tt }}
+	{{#
+		It's unclear whether or not individual posts should be cached. Stats
+		for a 100 post page:
+
+		- No cache hits: ~750ms
+		- Cache hits on 99 posts (e.g. someone edited a post): ~250ms
+		- Don't use cache: ~600ms
+
+		Cacheing increases the maximum wait by a slight but noticeable amount
+		while improving the average considerably.
+
+		In both cases, a cache hit on the thread is ~100ms, which is very good.
+		Given this, I'm going with the lower max wait.
+	}}
+	{{# cache.proc(
+		template => 'post/single_.tt',
+		key => post.uid(artist)) }}
 {{ END }}
 </div>

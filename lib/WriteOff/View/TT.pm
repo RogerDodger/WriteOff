@@ -13,6 +13,7 @@ use Text::Markdown;
 use WriteOff::Util;
 use WriteOff::DateTime;
 use URI;
+use Time::HiRes qw/gettimeofday tv_interval/;
 
 extends 'Catalyst::View::TT';
 
@@ -30,7 +31,7 @@ around template_vars => sub {
 	my $orig = shift;
 	my $self = shift;
 
-	($self->$orig(@_), csrf_field => qq{<csrf-field/>});
+	($self->$orig(@_), csrf_field => qq{<!-- GET csrf_field -->});
 };
 
 __PACKAGE__->config->{FILTERS} = {
@@ -125,7 +126,94 @@ sub render {
 	my $ret = $self->next::method(@_);
 
 	my $token = $c->csrf_token;
-	$ret =~ s{<csrf-field/>}{<input type="hidden" name="csrf_token" value="$token">}g;
+	my $stash = $c->stash;
+	$stash->{csrf_field} = qq{<input type="hidden" name="csrf_token" value="$token">};
+
+	my $t0 = [gettimeofday];
+	# Very light-weight post-processing language:
+	#
+	#   Supports GET, SET, and IF statements
+	#   IF statements can only check the truthiness of a stash value
+	#   SET statements are eval()d in this method's context
+	#
+	# This enables us to cache a rendered template that needs small changes on
+	# a per user basis, such as showing the edit button only for the post's
+	# owner.
+	#
+	# The most important feature is SPEED. General purpose templating systems
+	# spend much needed time on accuracy and features. TT in particular spends
+	# a large amount of time compiling templates, which isn't bad when your
+	# templates don't change (since you can cache them), but for this use-case
+	# is disastrous. A 100 page thread took 3s to compile and render, which is
+	# far too much (even if subsequent renders are almost instant).
+	#
+	# SECURITY CONCERN: If user input can get here, then we're in big trouble.
+	# I don't see any good reason for users to be able to inject HTML
+	# comments, since that would surely mean an XSS vulnerability, but it
+	# might be overlooked at some point in future that it can be escalated
+	# into remote code execution.
+	my $grammar = qr{
+		<!--
+		\s+
+		(?| (GET) \s+ (\w+)
+		  | (SET) \s+ (\w+) \s+ (.+?)
+		  | (IF) \s+ (!?)(\w+)
+		  | (END)
+		  )
+		\s+
+		-->
+	}ox;
+
+	# First pass:
+	#   Replace GET with equivalent stash value
+	#   Evaluate SET statements
+	#   Remove true IF blocks
+	#   Replace false IF blocks with a <!-- REMOVE --> block
+	#   Don't evaluate statements inside a false IF block
+	# Second pass:
+	#   Remove text enclosed by a <!-- REMOVE --> block
+	my $state = 'default';
+	my @if = ();
+
+	$ret =~ s{$grammar}{
+		my $val = '';
+
+		if ($1 eq 'GET' && $state eq 'default') {
+			$val = $stash->{$2} // '';
+		}
+		elsif ($1 eq 'SET' && $state eq 'default') {
+			$stash->{$2} = eval $3;
+		}
+		elsif ($1 eq 'IF') {
+			if ($state eq 'default') {
+				if (!!$stash->{$3} ^ $2 eq '!') {
+					push @if, 'true';
+				}
+				else {
+					push @if, 'remove';
+					$state = 'remove';
+					$val = '<!-- REMOVE -->';
+				}
+			}
+			else {
+				push @if, 'null';
+			}
+		}
+		elsif ($1 eq 'END') {
+			die "END found without an associated IF\n" if @if == 0;
+
+			if ('remove' eq pop @if) {
+				$val = '<!-- END -->';
+				$state = 'default';
+			}
+		}
+
+		$val;
+	}ge;
+
+	$ret =~ s{<!-- REMOVE -->.+?<!-- END -->}{}sg;
+
+	$c->log->debug('Post-processor took %ss', tv_interval $t0);
 
 	$ret;
 }

@@ -21,8 +21,6 @@ sub fetch :Chained('/') :PathPart('fic') :CaptureArgs(1) {
 sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->forward('/check_dry_page');
-
 	if ($c->stash->{format} eq 'txt') {
 		$c->res->content_type('text/plain; charset=utf-8');
 		$c->res->body(
@@ -44,6 +42,11 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 				last;
 			}
 		}
+
+		if ($c->stash->{event}->commenting && $c->stash->{event}->fic_gallery_opened) {
+			$c->forward('/prepare_thread', [ $c->stash->{entry}->posts_rs ]);
+		}
+
 		$c->stash->{template} = 'fic/view.tt';
 	}
 }
