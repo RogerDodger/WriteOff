@@ -45,6 +45,9 @@ __PACKAGE__->config(
 	AdminEmail => 'admin@example.com',
 
 	default_view => 'TT',
+	'View::TT' => {
+		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
+	},
 	'View::JSON' => {
 		expose_stash => 'json',
 	},
@@ -166,7 +169,20 @@ __PACKAGE__->config(
 	read_only => 0,
 	pid => WriteOff::Util::token(),
 
-	# See FAQ for explanation of these constants
+	# How long it takes the average reader to review an entry:
+	#
+	#     work = wordcount/rate + offset
+	#
+	# i.e., it takes approximately 11 minutes + 1 per minute 200 words to
+	# review a story.
+	#
+	# Threshold is how many minutes of reading per day a voter could be
+	# expected to do, and determines how many entries make the finals. In
+	# other words, this number is chosen so that those who are determined to
+	# can reasonably read every entry in the finals.
+	#
+	# Voter is the fraction of the treshold that the *average* voter is
+	# expected to be able to read per day.
 	work => {
 		rate => 200,
 		offset => 11,
@@ -203,29 +219,6 @@ __PACKAGE__->config(
 
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
-);
-
-__PACKAGE__->config(
-	'View::TT' => {
-		INCLUDE_PATH => [ __PACKAGE__->path_to('root', 'src' ) ],
-		PROVIDERS => [
-			{
-				name => '_file_',
-				args => {},
-			},
-			{
-				name => 'CHI',
-				args => {
-					chi => __PACKAGE__->config->{renderCache},
-				},
-			},
-		],
-		PREFIX_MAP => {
-			file => 0,
-			chi => 1,
-			default => 0,
-		},
-	},
 );
 
 my $logger = WriteOff::Log->new;
