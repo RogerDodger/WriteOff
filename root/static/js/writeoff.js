@@ -1330,11 +1330,15 @@ function loadOrphan (id) {
 	});
 }
 
+postModifiers.push(function (ctx) {
+	$('.Pager a', ctx).removeAttr('href');
+});
+
 $(document).ready(function () {
-	var $pager = $('.Pager');
+	var $pagers = $('.Pager');
 
 	var loadPage = function (page) {
-		$pager.addClass('loading');
+		$pagers.addClass('loading');
 		return $.ajax({
 			url: document.location.pathname,
 			data: { 'page' : page },
@@ -1342,27 +1346,40 @@ $(document).ready(function () {
 			success: function (res, status, xhr) {
 				res = $.parseHTML(res);
 				postModifiers.apply(res);
+				var $res = $('<div/>').append(res);
 
-				$('.Posts').empty().append($(res).find('.Post'));
+				$('.Pager.top').html($res.find('.Pager.top ul'));
+				$('.Posts').html($res.find('.Post.view'));
+				$('.Pager.bottom').html($res.find('.Pager.bottom ul'));
 
-				$('.Pager a').removeClass('current').each(function () {
-					var $this = $(this);
-					if ($this.text() == page) {
-						$this.addClass('current');
-					}
-				});
-				$pager.removeClass('loading');
+				$pagers.removeClass('loading');
+
+				// Loading a new page via AJAX should behave like it would
+				// otherwise. Just as it's expected that a thread might be
+				// outdated if left too long (e.g., people edit their
+				// comments), it's also expected orphans would too, so we
+				// empty our cache at the same time as we load a new page.
+				$orphans = [];
+
+				// Because we use scrollTop after loading the page sometimes,
+				// the hover can get "stuck" (i.e., the mouseout event doesn't
+				// fire), so we clean it up here if necessary.
+				$('.Post-hover').remove();
 			},
 		});
 	};
 
-	if ($pager.size()) {
-		$pager.find('a').removeAttr('href').click(function () {
-			var $this = $(this);
-			if (!$pager.hasClass('loading')) {
-				var refreshing = $this.hasClass('current');
+	if ($pagers.size()) {
+		// Handler attaches to the $pagers so that we can modify their
+		// contents without having to add new handlers.
+		$pagers.on('click', 'a', function (e) {
+			var $this = $(e.target);
+			if (!$pagers.hasClass('loading')) {
+				// $this will be removed from the document after loadPage, so
+				// we find this now
+				var $pager = $this.closest('.Pager');
 				loadPage($this.text()).then(function () {
-					if (!refreshing && $this.closest('.Pager').hasClass('bottom')) {
+					if (!$this.hasClass('current') && $pager.hasClass('bottom')) {
 						$('html, body').scrollTop($('.Pager.top').offset().top);
 					}
 				})
@@ -1405,7 +1422,7 @@ $(document).ready(function () {
 							window.location = '/post/' + $orphan.attr('id');
 						}
 					}
-				})
+				});
 			}
 		}
 	};
