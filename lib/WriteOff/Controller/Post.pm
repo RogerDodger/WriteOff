@@ -6,20 +6,27 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 sub fetch :Chained('/') :PathPart('post') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-sub permalink :Chained('fetch') :PathPart('') :Args(0) {
-	my ($self, $c) = @_;
+sub permalink :Chained('fetch') :PathPart('') {
+	my ($self, $c, $ctx) = @_;
+	my $post = $c->stash->{post};
 
-	my $uri = $c->uri_for_action(
-		$c->stash->{post}->entry
-			? ($c->stash->{post}->entry->view, [ $c->stash->{post}->entry->id_uri ])
-			: ('/event/permalink', [ $c->stash->{post}->event->id_uri ])
-	);
+	my %view;
+	$view{event} = '/event/permalink' if $post->event_id;
+	$view{entry} = $post->entry->view if $post->entry_id;
 
-	$c->stash->{entry} = $c->stash->{post}->entry;
-	$c->stash->{event} = $c->stash->{post}->event;
-	$c->page($c->page_for($c->stash->{post}->num));
+	$ctx //= '';
+	for (qw/entry event/) {
+		$ctx = $_ if !exists $view{$ctx};
+	}
 
-	$c->res->redirect($uri . "#" . $c->stash->{post}->id);
+	my $uri = $c->uri_for_action($view{$ctx}, [ $post->$ctx->id_uri ]);
+
+	$c->stash->{entry} = $post->entry if $ctx eq 'entry';
+	$c->stash->{event} = $post->event;
+
+	$c->page($c->page_for($post->num($post->$ctx->posts_rs)));
+
+	$c->res->redirect($uri . "#" . $post->id);
 }
 
 sub view :Chained('fetch') :PathPart('view') :Args(0) {

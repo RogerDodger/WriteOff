@@ -13,7 +13,7 @@
 
 		{{ IF show_last_post && event.last_post; post = event.last_post }}
 		<div class="Event-overview--right">
-			<a class="Event-last--delta" href="{{ c.uri_for_action('/post/permalink', [ post.id ]) }}">
+			<a class="Event-last--delta" href="{{ c.uri_for_action('/post/permalink', [ post.id ], 'event') }}">
 				{{ post.created.delta_html(1) | none }}</a>
 
 			<a class="Event-last--image" href="{{ c.uri_for_action('/artist/view', [ post.artist.id_uri ]) }}">

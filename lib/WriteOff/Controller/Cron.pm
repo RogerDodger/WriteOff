@@ -86,7 +86,7 @@ sub end :Private {
 		$c->error(0);
 	}
 	else {
-		$c->res->body('Task complete');
+		$c->res->body("Task complete\n");
 	}
 }
 
