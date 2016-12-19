@@ -63,7 +63,7 @@
 		</tbody>
 	</table>
 
-	{{ IF theorys.count }}
+	{{ IF event.guessing }}
 	<div class="Guesses hidden">
 		<div class="Document-subtitle">
 			<span>Guesses</span>

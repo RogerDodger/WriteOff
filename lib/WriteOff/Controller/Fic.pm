@@ -278,42 +278,25 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 
 	$c->stash->{entrys} = $c->stash->{event}->storys->eligible;
 
-	$c->stash->{theorys} = $c->stash->{event}->theorys->search(
-		{
-			accuracy => { '>=' => 1 },
-		},
-		{
-			join => 'artist',
-			order_by => [
-				{ -desc => 'me.accuracy' },
-				{ -asc => 'artist.name' },
-			],
-			result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-		}
-	);
-
 	# Lazy load this since we don't want to make DB hits if the template cache
 	# comes through
 	$c->stash->{graph} = sub {
 		{
 			theorys => [
-				$c->stash->{event}->theorys->search(
-					{
-						accuracy => { '>=' => 1 },
+				$c->stash->{event}->theorys->search({}, {
+					join => [qw/artist guesses/],
+					group_by => [ 'me.id' ],
+					having => [ \'count(guesses.id) >= 1' ],
+					order_by => [
+						{ -desc => 'me.accuracy' },
+						{ -asc => 'artist.name' },
+					],
+					columns => [qw/me.id me.artist_id me.accuracy/],
+					'+columns' => {
+						'artist_name' => 'artist.name',
 					},
-					{
-						join => 'artist',
-						order_by => [
-							{ -desc => 'me.accuracy' },
-							{ -asc => 'artist.name' },
-						],
-						columns => [qw/me.id me.artist_id me.accuracy/],
-						'+columns' => {
-							'artist_name' => 'artist.name',
-						},
-						result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-					}
-				),
+					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+				}),
 			],
 			artists => [
 				map {{ id => $_->id, name => $_->name }}
