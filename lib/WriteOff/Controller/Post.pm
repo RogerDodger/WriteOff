@@ -19,14 +19,18 @@ sub permalink :Chained('fetch') :PathPart('') {
 		$ctx = $_ if !exists $view{$ctx};
 	}
 
-	my $uri = $c->uri_for_action($view{$ctx}, [ $post->$ctx->id_uri ]);
+	if (exists $view{$ctx}) {
+		$c->stash->{entry} = $post->entry if $ctx eq 'entry';
+		$c->stash->{event} = $post->event;
 
-	$c->stash->{entry} = $post->entry if $ctx eq 'entry';
-	$c->stash->{event} = $post->event;
+		$c->page($c->page_for($post->num($post->$ctx->posts_rs)));
 
-	$c->page($c->page_for($post->num($post->$ctx->posts_rs)));
-
-	$c->res->redirect($uri . "#" . $post->id);
+		my $url = $c->uri_for_action($view{$ctx}, [ $post->$ctx->id_uri ]);
+		$c->res->redirect($url . "#" . $post->id);
+	}
+	else {
+		$c->res->redirect($c->uri_for_action('/post/view', [ $post->id ]));
+	}
 }
 
 sub view :Chained('fetch') :PathPart('view') :Args(0) {
