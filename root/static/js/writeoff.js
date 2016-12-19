@@ -952,16 +952,11 @@ postModifiers.push(function (ctx) {
 			t = new Date();
 			// `now` is defined in the global scope as the server's current time.
 			// This is used so that it's spoofable, and so that countdowns are
-			// based off the server's clock rather than the client's
+			// based off the server's clock rather than the client's.
 
 			// `t0` is defined as `new Date()` on pageload. This is so we know
 			// what the "current" time is with respect to a spoofed `now`.
-
-			// 50ms is added for rounding purposes. The 1000ms interval can
-			// end up being 998-1002ms. This can have the countdown seem to
-			// skip a second as it goes from, for example, 4000ms to 2999ms to
-			// 2000ms remaining.
-			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
+			var now_ = now.getTime() + t.getTime() - t0.getTime();
 
 			var delta = (new Date($(e).attr('datetime'))).delta(new Date(now_), 1 + !$(e).hasClass('short'));
 			e.textContent = delta;
@@ -991,7 +986,7 @@ $(document).ready(function () {
 		var tick = function () {
 			t = new Date();
 			// Same as above
-			var now_ = now.getTime() + t.getTime() - t0.getTime() - 50;
+			var now_ = now.getTime() + t.getTime() - t0.getTime();
 
 			$countdowns.each(function () {
 				var ms = (new Date($(this).attr('datetime'))).getTime() - now_;
@@ -1016,7 +1011,16 @@ $(document).ready(function () {
 					s.zeropad(2) + "s";
 			});
 		};
-		setInterval(tick, 1000);
+
+		// Was doing 1000ms before, but this causes the timer to jump from 2s
+		// to 0s, or not to tick on the second. This is because setInterval
+		// doesn't guarantee it procs exactly every 1000ms. Sometimes it's
+		// 998ms or 1002ms.
+		//
+		// We can avoid the problem by simply ticking much more often. This
+		// would be a performance concern if there were many countdowns, but
+		// since there is only going to be 1 per page it's not a problem.
+		setInterval(tick, 100);
 		tick();
 	}
 
