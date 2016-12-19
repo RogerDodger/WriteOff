@@ -646,7 +646,7 @@ function DrawGuessGraph (e) {
 		}
 
 		// (4)
-		if (!focused.length) focused = data.guesses.filter(intersect);
+		else if (!focused.length) focused = data.guesses.filter(intersect);
 
 		drawGuessLines(focused, true);
 	});
