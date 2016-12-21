@@ -3,7 +3,7 @@
 		{{ c.string('manageArtists') }}
 	</div>
 
-	<form class="Form auto" method="post">
+	<form class="Form" method="post">
 		{{ csrf_field | none }}
 
 		<table class="Artists">
