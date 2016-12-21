@@ -1,0 +1,36 @@
+<div class="Document">
+	<div class="Document-title">
+		{{ c.string('manageArtists') }}
+	</div>
+
+	<form class="Form auto" method="post">
+		{{ csrf_field | none }}
+
+		<table class="Artists">
+			<thead>
+				<tr>
+					<th>{{ c.string('name') }}</th>
+					<th>
+						{{ c.string('artistActive') }}
+					</th>
+				</tr>
+			<tbody>
+			{{ FOREACH artist IN artists.all }}
+				<tr>
+					<td class="Artists-name">
+						<a href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
+					</td>
+					<td class="Artists-active">
+						<input type="checkbox" name="active-{{ artist.id }}"
+							{{ 'checked' IF artist.active }}>
+					</td>
+				</tr>
+			{{ END }}
+			</tbody>
+		</table>
+
+		<div class="Form-item">
+			<input type="submit" value="{{ c.string('update') }}">
+		</div>
+	</form>
+</div>

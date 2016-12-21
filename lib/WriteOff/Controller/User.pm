@@ -18,7 +18,16 @@ sub artists :Local :Args(0) {
 
 	$c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
 
+	$c->stash->{artists} = $c->user->artists->search({}, {
+		order_by => 'created',
+	});
 
+	if ($c->req->method eq 'POST') {
+		for my $artist ($c->stash->{artists}->all) {
+			$artist->active(!!$c->req->param('active-' . $artist->id));
+			$artist->update;
+		}
+	}
 }
 
 sub login :Local :Args(0) {

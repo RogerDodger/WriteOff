@@ -40,3 +40,12 @@
 		}
 	}
 }
+
+.Artists {
+	@include striped-table;
+}
+
+.Artists-name,
+.Artists-active {
+	text-align: center;
+}
