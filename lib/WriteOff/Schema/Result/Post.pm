@@ -57,7 +57,7 @@ sub uid {
 
 sub num {
 	my $self = shift;
-	my $thread = shift // $self->entry ? $self->entry->posts : $self->event->posts;
+	my $thread = shift // ($self->entry ? $self->entry->posts : $self->event->posts);
 	$thread->num_for($self);
 }
 
