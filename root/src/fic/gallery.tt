@@ -51,7 +51,7 @@
 					<td class="Storys-listing">
 						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">{{ entry.title }}</a>
 						{{ IF entry.artist_public }}
-						by {{ entry.artist.name }}
+						by {{ PROCESS artist/name.tt  artist = entry.artist }}
 						{{ END }}
 					</td>
 					<td class="Storys-export">

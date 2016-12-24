@@ -17,7 +17,7 @@
 				</a>
 
 			{{- IF entry.artist_public }}
-				by {{ entry.artist.name }}
+				by {{ PROCESS artist/name.tt  artist = entry.artist }}
 			{{- END -}}
 
 			{{- IF show_storys && entry.image.storys_rs.count }}

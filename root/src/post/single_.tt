@@ -14,7 +14,10 @@
 		</div>
 		<!-- END -->
 
-		{{ c.string('postDeleted', post.artist.name, post.updated.delta_html) | none }}
+		{{ name = BLOCK }}
+			{{ PROCESS artist/name.tt  artist = post.artist }}
+		{{ END }}
+		{{ c.string('postDeleted', name, post.updated.delta_html) | none }}
 	</div>
 {{- ELSE }}
 	{{ INCLUDE 'post/author.tt' artist = post.artist }}

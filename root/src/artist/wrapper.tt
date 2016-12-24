@@ -27,9 +27,7 @@
 		</div>
 
 		<div class="Artist-name">
-			<a href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
-				{{ artist.name }}
-			</a>
+			{{ PROCESS artist/name.tt }}
 		</div>
 
 		{{ IF artist.bio }}

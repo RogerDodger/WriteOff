@@ -21,7 +21,7 @@
 				{{ loop.count IF !loop.prev || artist.score != loop.prev.score }}
 			</td>
 			<td class="Scoreboard-name">
-				{{ artist.name }}
+				{{ PROCESS artist/name.tt }}
 			</td>
 			<td class="Scoreboard-score" data-sort="{{ artist.score }}">
 				<span title="{{ artist.score | format('%.5f') }}">

@@ -33,9 +33,7 @@
 				</td>
 
 				<td class="Results-artist">
-					<a href="{{ c.uri_for_action('/artist/view', [ entry.artist.id_uri ]) }}">
-						{{ entry.artist.name }}
-					</a>
+					{{ PROCESS artist/name.tt  artist = entry.artist }}
 				</td>
 				<td class="Results-title">
 					<a href="{{ c.uri_for(view, [ entry.id_uri ]) }}">{{ entry.title }}</a>

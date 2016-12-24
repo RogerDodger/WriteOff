@@ -18,7 +18,7 @@
 			{{ FOREACH artist IN artists.all }}
 				<tr>
 					<td class="Artists-name">
-						<a href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
+						{{ PROCESS artist/name.tt }}
 					</td>
 					<td class="Artists-active">
 						<input type="checkbox" name="active-{{ artist.id }}"

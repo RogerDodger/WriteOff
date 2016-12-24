@@ -51,7 +51,7 @@
 							{{ entry.title }}
 						</a>
 					</td>
-					<td class="Storys-author">{{ entry.artist.name }}</td>
+					<td class="Storys-author">{{ PROCESS artist/name.tt  artist = entry.artist }}</td>
 					<td class="Storys-wordcount">{{ entry.story.wordcount }}</td>
 					<td class="Storys-index">
 						<input type="checkbox" name="index-{{ entry.story_id }}"
