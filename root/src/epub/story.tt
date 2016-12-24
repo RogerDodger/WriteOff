@@ -7,18 +7,11 @@
 	<body>
 		<h1>{{ entry.title | xml }}</h1>
 
-		{{ IF entry.artist_public }}
-		<h2>by {{ entry.artist.name | xml }}</h2>
-		{{ END }}
-
 		{{ IF event.has('art') }}
 		<div class="art">
 		{{ FOREACH image IN story.images }}
 			<img src="images/{{ image.filename | xml }}"/>
 			<h5>{{ image.entry.title | xml }}</h5>
-			{{ IF image.entry.artist_public }}
-			<h6> by {{ image.entry.artist.name | xml }}</h6>
-			{{ END }}
 		{{ END }}
 		</div>
 		{{ END }}

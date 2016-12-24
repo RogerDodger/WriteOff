@@ -161,9 +161,7 @@ sub process {
 	if (defined(my $story = $c->stash->{story})) {
 		my $entry = $c->stash->{entry};
 		$self->add_title($entry->title);
-		$self->add_author(
-			$entry->artist_public ? $entry->artist->name : 'Anonymous'
-		);
+		$self->add_author('Anonymous');
 
 		my $id = $self->add_xhtml(
 			'chapter.xhtml',
