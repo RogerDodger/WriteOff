@@ -139,11 +139,11 @@
 
 @mixin striped($hue, $sat, $reverse: 0) {
 	&:nth-child(odd) {
-		background-color: hsla($hue, $sat + (100% - $sat) * .14, 96% - (2% * $reverse), 1);
+		background-color: hsla($hue, $sat + (100% - $sat) * .14, 94% - (2% * $reverse), 1);
 	}
 
 	&:nth-child(even) {
-		background-color: hsla($hue, $sat + (100% - $sat) * .14, 94% + (2% * $reverse), 1);
+		background-color: hsla($hue, $sat + (100% - $sat) * .14, 92% + (2% * $reverse), 1);
 	}
 }
 
@@ -172,7 +172,7 @@
 	}
 
 	& > thead {
-		background-color: hsla($hue, $sat, 93%, 1);
+		background-color: hsla($hue, $sat, 90%, 1);
 		border-bottom: 1px solid hsla($hue, $sat, 70%, 1);
 		font-size: 1.07em;
 
