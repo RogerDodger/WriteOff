@@ -564,8 +564,8 @@ function DrawGuessGraph (e) {
 			.map(guessLine);
 
 		var lines = [
-			[redLines,     'red', focus ? '#ffa0a0' : '#ffe8e8' ],
-			[greenLines, 'green', focus ? '#94ff94' : '#dbffdb' ],
+			[redLines,     'red', 0 ],
+			[greenLines, 'green', 120 ],
 		];
 
 		var container = focus ? focusg : dimg;
@@ -573,7 +573,8 @@ function DrawGuessGraph (e) {
 		lines.forEach(function (e) {
 			var data = e[0],
 				class_ = e[1],
-				color = e[2];
+				hue = e[2],
+				color = "hsla(" + hue + ",75%," + (focus ? "70%" : "92%") + ",1)";
 
 			container.selectAll('path.' + class_)
 				.data(data)
