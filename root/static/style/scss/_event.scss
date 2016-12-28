@@ -132,33 +132,19 @@
 }
 
 .Event-links {
-	&.rules {
-		@include button-group($hue: 260);
+	@each $type, $hue in ("rules"     , 260),
+	                     ("prompt"    , 290),
+	                     ("art"       , 320),
+	                     ("fic"       , 350),
+	                     ("commenting", 230) {
+		&.#{$type} {
+			@include button-group($hue, 40%);
+		}
 	}
-
-	&.prompt {
-		@include button-group($hue: 290);
-	}
-
-	&.fic {
-		@include button-group($hue: 320);
-	}
-
-	&.art {
-		@include button-group($hue: 350);
-	}
-
-	&.commenting {
-		@include button-group($hue: 230);
-	}
-}
-
-.Event-admin {
-	@include button-group($hue: 200);
 }
 
 .Event-blurb > ul:first-child {
-	@include button-group($hue: 230);
+	@include button-group($hue: 230, $sat: 40%);
 }
 
 .Event-list--buttons {
