@@ -574,7 +574,7 @@ function DrawGuessGraph (e) {
 			var data = e[0],
 				class_ = e[1],
 				hue = e[2],
-				color = "hsla(" + hue + ",75%," + (focus ? "70%" : "92%") + ",1)";
+				color = "hsla(" + hue + ",75%," + (focus ? "70%" : "93%") + ",1)";
 
 			container.selectAll('path.' + class_)
 				.data(data)
@@ -620,19 +620,24 @@ function DrawGuessGraph (e) {
 
 		focusg.selectAll('*').remove();
 
-		if (t.tagName !== "circle") return focused = [];
+		var intersect;
+		if (t.tagName !== "circle") {
+			intersect = function () { return false; };
+		}
+		else {
+			var col = cols.find(function (e) {
+				return t.cx.baseVal.value - e.cx < 0.1;
+			});
 
-		var col = cols.find(function (e) {
-			return t.cx.baseVal.value - e.cx < 0.1;
-		});
+			if (typeof col === 'undefined') return;
 
-		if (typeof col === 'undefined') return;
+			var idx = Math.round(col.scale.invert(t.cy.baseVal.value));
+			var id = data[col.name][idx].id;
+			intersect = function (g) {
+				return g[col.fk] === id;
+			};
+		}
 
-		var idx = Math.round(col.scale.invert(t.cy.baseVal.value));
-		var id = data[col.name][idx].id;
-		var intersect = function (g) {
-			return g[col.fk] === id;
-		};
 		var l = focused.length;
 
 		// (1)
