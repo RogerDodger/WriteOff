@@ -86,11 +86,16 @@ sub add :Local {
 		body_render => '',
 	);
 
+
 	if ($c->req->param('entry') =~ /(\d+)/) {
 		if ($c->stash->{entry} = $c->model('DB::Entry')->find($1)) {
 			$c->detach('/error') unless $c->stash->{event}->fic_gallery_opened;
 			$post{entry_id} = $c->stash->{entry}->id;
 		}
+	}
+
+	if (defined(my $role = $c->req->param('role'))) {
+		$post{role} = $role if grep { $_ eq $role } @{ $c->post_roles };
 	}
 
 	my $post = $c->model('DB::Post')->create(\%post)->render;

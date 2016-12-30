@@ -54,4 +54,14 @@ sub user_id {
 	return $self->user->id || -1;
 }
 
+sub post_roles {
+	my $c = shift;
+
+	return $c->stash->{__post_roles} //= [
+		'user',
+		('organiser') x!! $c->user->organises($c->stash->{event}),
+		('admin') x!! $c->user->admin,
+	];
+}
+
 1;

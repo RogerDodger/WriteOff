@@ -7,11 +7,13 @@
 
 			{{ INCLUDE 'post/form.tt' }}
 
-			<div class="Post-form--senders">
-				<button type="submit">
-					<i class="fa fa-check"></i>
-					Save
-				</button>
+			<div class="Post-form--footer">
+				<div class="Post-form--senders">
+					<button type="submit">
+						<i class="fa fa-check"></i>
+						Save
+					</button>
+				</div>
 			</div>
 		</form>
 	</div>

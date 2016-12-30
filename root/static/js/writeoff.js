@@ -1533,6 +1533,20 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
+// New post role preview
+// ===========================================================================
+
+$(document).ready(function () {
+	$('.Post-form--role')
+		.on('change', function () {
+			$(this).closest('.Post')
+				.removeClass('user admin organiser')
+				.addClass(this.value);
+		})
+		.trigger('change');
+});
+
+// ===========================================================================
 // Apply post modifiers to document
 // ===========================================================================
 

@@ -48,6 +48,9 @@ castVote: Cast vote
 newArtist: New alias
 editArtist: Edit profile
 deleteArtist: Delete alias
+user: User
+admin: Admin
+organiser: Organiser
 
 newArtistTitle: New Alias
 404: File Not Found

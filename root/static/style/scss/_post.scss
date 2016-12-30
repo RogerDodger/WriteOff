@@ -112,9 +112,6 @@
 
 .Post-author--name {
 	@include button($hue: 240, $sat: 60%, $l: 55%, $invert: 1);
-	&.admin {
-		@include button-color($hue: 0, $sat: 60%, $l: 55%, $invert: 1);
-	}
 
 	border-radius: 0.2em;
 	display: block;
@@ -126,6 +123,14 @@
 	@media #{$mobile} {
 		border-radius: 0;
 	}
+}
+
+.admin .Post-author--name {
+	@include button-color($hue: 0, $sat: 55%, $l: 50%, $invert: 1);
+}
+
+.organiser .Post-author--name {
+	@include button-color($hue: 30, $sat: 55%, $l: 45%, $invert: 1);
 }
 
 .Post-author--avatar {
@@ -331,15 +336,23 @@
 	}
 }
 
-.Post-contents--edit .Post-form--body {
-	margin-top: -1px;
+.Post-contents--edit {
+	.Post-form--body {
+		margin-top: -1px;
+	}
+
+	.Post-form--footer {
+		font-size: 0.9em;
+	}
 }
 
-.Post-form--senders {
+.Post-form--footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	padding: 1em;
 
-	button,
-	div {
+	button {
 		font-size: 0.9em;
 	}
 
@@ -350,6 +363,10 @@
 
 	.Post-edit--cancel {
 		@include button($hue: 0, $sat: 20%);
+	}
+
+	.Post-form--role {
+		width: auto;
 	}
 }
 

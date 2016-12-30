@@ -210,7 +210,7 @@ sub offset {
 sub organises {
 	my ($self, $event) = @_;
 
-	return $event->is_organised_by($self);
+	return defined $event && $event->is_organised_by($self);
 }
 
 sub publishes {

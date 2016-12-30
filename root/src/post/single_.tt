@@ -1,4 +1,4 @@
-<div class="Post view" id="{{ post.id }}" data-page="<!-- GET page -->">
+<div class="Post view {{ post.role }}" id="{{ post.id }}" data-page="<!-- GET page -->">
 <!-- SET editable  $c->user->id == {{ artist.user_id }} -->
 <!-- SET votable   $c->user && !$stash->{editable} -->
 <!-- SET replyable $c->user->active_artist_id -->
@@ -99,15 +99,17 @@
 					<textarea name="body" rows="1" cols="1" maxlength="65535">{{ post.body }}</textarea>
 				</div>
 
-				<div class="Post-form--senders">
-					<div class="Post-edit--save">
-						<i class="fa fa-check"></i>
-						{{ c.string('save') }}
-					</div>
+				<div class="Post-form--footer">
+					<div class="Post-form--senders">
+						<div class="Post-edit--save">
+							<i class="fa fa-check"></i>
+							{{ c.string('save') }}
+						</div>
 
-					<div class="Post-edit--cancel">
-						<i class="fa fa-close"></i>
-						{{ c.string('cancel') }}
+						<div class="Post-edit--cancel">
+							<i class="fa fa-close"></i>
+							{{ c.string('cancel') }}
+						</div>
 					</div>
 				</div>
 			</form>

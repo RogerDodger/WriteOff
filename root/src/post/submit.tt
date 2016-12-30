@@ -11,11 +11,25 @@
 
 			{{ INCLUDE 'post/form.tt' }}
 
-			<div class="Post-form--senders">
-				<button type="submit">
-					<i class="fa fa-comment"></i>
-					Post comment
-				</button>
+			<div class="Post-form--footer">
+				<div class="Post-form--senders">
+					<button type="submit">
+						<i class="fa fa-comment"></i>
+						Post comment
+					</button>
+				</div>
+
+				<div class="Post-form--role--container">
+					{{ IF c.post_roles.size == 1 }}
+					<input type="hidden" name="role" value="{{ c.post_roles.first }}">
+					{{ ELSE }}
+					<select class="Post-form--role" name="role">
+						{{ FOREACH role IN c.post_roles }}
+						<option value="{{ role }}">{{ c.string(role) }}</option>
+						{{ END }}
+					</select>
+					{{ END }}
+				</div>
 			</div>
 		</form>
 	</div>
