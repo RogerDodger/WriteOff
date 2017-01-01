@@ -48,7 +48,9 @@
 		<div class="Email-header">
 			<div class="Site-logo">
 				<a href="{{ c.uri_for('/') }}">
-					<img alt="Writeoff" src="{{ c.uri_for('/static/images/logo.png') }}">
+					<img alt="Writeoff" width="134" height="49"
+						src="https://{{ c.uri_for('/static/images/logo.png') }}"
+					/>
 				</a>
 			</div>
 		</div>
