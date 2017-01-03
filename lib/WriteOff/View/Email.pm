@@ -15,9 +15,18 @@ sub process {
 
 	$c->stash->{subject} = $c->stash->{email}{subject} // 'No subject';
 
+	# Assets in some email clients won't work with a relative URI scheme, so
+	# we need to specify one to use in emails. Default to HTTP.
+	$c->req->base->scheme($c->config->{https} ? 'https' : 'http');
+
 	my $html = $c->view('TT')->render($c, $c->stash->{email}{template});
-	$c->stash->{wrapper} = 'wrapper/none.tt';
-	my $plain = $c->view('TT')->render($c, $c->stash->{email}{template});
+	my $plain = do {
+		local $c->stash->{wrapper} = 'wrapper/none.tt';
+		$c->view('TT')->render($c, $c->stash->{email}{template});
+	};
+
+	# Resetting scheme to its original value
+	$c->req->base->scheme('');
 
 	if (!$html || !$plain) {
 		die 'Failed to render template: ' . $c->stash->{email}{template} . "\n";
@@ -37,6 +46,10 @@ sub process {
 	# Re-wrap paragraphs (templates are wrapped, but output won't line up properly)
 	$plain =~ s/(?<!\n)\n(?!\n)/ /g;
 	$plain = Text::Wrap::wrap("", "", $plain);
+
+	if ($c->debug) {
+		return $c->res->body($html);
+	}
 
 	my $email = Email::MIME->create(
 		header => [

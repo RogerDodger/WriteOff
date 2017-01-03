@@ -14,7 +14,6 @@ sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch'
 # 	my ($self, $c) = @_;
 # 	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });
 # 	$c->forward('/event/notify_mailing_list');
-# 	$c->res->body('Okay');
 # }
 
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {

@@ -35,6 +35,9 @@ sub auto :Private {
 	if (!$c->debug && $c->config->{domain}) {
 		$c->req->base(URI->new('//' . $c->config->{domain} . '/'));
 	}
+	else {
+		$c->req->base(URI->new('//' . $c->req->base->authority));
+	}
 
 	if ($c->debug) {
 		if ($c->req->param('login')) {
