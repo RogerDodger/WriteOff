@@ -101,6 +101,7 @@ strikethrough: Strikethrough (ctrl+s)
 hyperlink: Hyperlink
 size: Size
 color: Color
+spoiler: Spoiler
 quote: Quote (ctrl+q)
 centerAlign: Centre-align
 rightAlign: Right-align

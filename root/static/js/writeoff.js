@@ -1266,6 +1266,7 @@ postModifiers.push(function (ctx) {
 		[ '.fa-italic',        'i', false, 73 ],
 		[ '.fa-underline',     'u', false, 85 ],
 		[ '.fa-strikethrough', 's', false, 83 ],
+		[ '.fa-low-vision', 'spoiler', false ],
 
 		[ '.fa-link',        'url', true ],
 		[ '.fa-text-height', 'size', true ],

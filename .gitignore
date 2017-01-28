@@ -8,5 +8,7 @@ nohup.out
 *.sublime-workspace
 root/static/js/writeoff.min.js
 root/static/js/writeoff.min.js.map
+root/static/js/vendor.js
 root/static/style/writeoff.css
 root/static/style/writeoff.css.map
+root/static/style/vendor.css

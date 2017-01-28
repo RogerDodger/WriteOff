@@ -8,6 +8,8 @@
 			<i class="fa fa-fw fa-underline"></i></li>
 		<li title="{{ c.string('strikethrough') }}">
 			<i class="fa fa-fw fa-strikethrough"></i></li>
+		<li title="{{ c.string('spoiler') }}">
+			<i class="fa fa-fw fa-low-vision"></i></li>
 	</ul>
 
 	<ul>
