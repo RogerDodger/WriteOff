@@ -10,7 +10,7 @@
 		<title>{{ title_html | none }}</title>
 
 		<link rel="icon" href="/favicon.ico?v=6">
-		<link rel="stylesheet" href="/static/style/vendor.css">
+		<link rel="stylesheet" href="/static/style/vendor-{{ c.config.pid }}.css">
 		<link rel="stylesheet" href="/static/style/writeoff-{{ c.config.pid }}.css">
 
 		<script>
@@ -140,7 +140,7 @@
 		</footer>
 	</body>
 
-	<script src="/static/js/vendor.js"></script>
+	<script src="/static/js/vendor-{{ c.config.pid }}.js"></script>
 	{{ IF c.debug }}
 	<script src="/static/js/writeoff-{{ c.config.pid }}.js"></script>
 	{{ ELSE }}
