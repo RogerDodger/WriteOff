@@ -13,7 +13,7 @@ sub _fetch :ActionClass('~Fetch');
 sub fetch :Chained('/') :PathPart('artist') :CaptureArgs(1) {
 	my ($self, $c) = @_;
 	$c->forward('_fetch');
-	$c->stash->{entrys} = $c->stash->{artist}->entrys->listing;
+
 	push @{ $c->stash->{title} }, $c->stash->{artist}->name;
 }
 
@@ -132,6 +132,16 @@ sub swap :Local {
 
 sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ($self, $c) = @_;
+
+	$c->stash->{entrys} = $c->stash->{artist}->entrys->search({
+		tallied => 1,
+		'me.artist_public' => 1,
+	},
+	{
+		join => 'event',
+		prefetch => [ 'awards', { event => [ 'rounds', 'entrys' ] } ],
+		order_by => { -desc => 'event.created' },
+	});
 
 	$c->stash->{template} = 'artist/view.tt';
 }

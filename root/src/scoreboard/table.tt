@@ -1,6 +1,6 @@
 <table class="Scoreboard">
 	<thead>
-		{{ awardCols = awards.unique }}
+		{{ awardCols = awards.headers }}
 		<tr>
 			<th data-sort-method="number">#</th>
 			<th>Competitor</th>

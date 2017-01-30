@@ -209,8 +209,15 @@ sub results :Chained('/event/art') :PathPart('results') :Args(0) {
 	$c->stash->{entrys} = $c->stash->{event}->images->eligible;
 	$c->stash->{mode} = 'art';
 	$c->stash->{view} = $self->action_for('view');
+	$c->stash->{breakdown} = $self->action_for('votes');
 
 	$c->forward('/event/results');
+}
+
+sub votes :Chained('fetch') :PathPart('votes') :Args(1) {
+	my ($self, $c, $round) = @_;
+
+	$c->forward('/entry/votes', [ $round ]);
 }
 
 =head1 AUTHOR

@@ -115,13 +115,25 @@ $meta-margin: 1rem;
 	@include box;
 }
 
-.Artist-entries--genre,
-.Artist-entries--format,
-.Artist-entries--event,
-.Artist-entries--title,
+.Artist-entries--date {
+	text-align: end;
+}
+
+.Artist-entries--awards,
 .Artist-entries--rank,
+.Artist-entries--pct,
 .Artist-entries--score {
 	text-align: center;
+}
+
+.Artist-entries--date,
+.Artist-entries--awards {
+	white-space: nowrap;
+}
+
+.Artist-entries--title {
+	text-align: start;
+	width: 100%;
 }
 
 .Artist-edit {

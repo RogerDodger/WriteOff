@@ -66,20 +66,6 @@ sub gallery {
 	});
 }
 
-sub listing {
-	shift->search({
-		artist_public => 1,
-		tallied => 1,
-	}, {
-		join => 'event',
-		prefetch => 'event',
-		order_by => [
-			{ -desc => 'event.created' },
-			{ -asc => 'title' },
-		],
-	});
-}
-
 sub mode {
 	my ($self, $mode) = @_;
 
@@ -194,17 +180,28 @@ sub _tally_awards {
 	my %artists;
 	my %last;
 	my @medals = ( GOLD, SILVER, BRONZE );
+	my %students = %{ $self->first->event->students($self->first->mode) };
+	my $graduate;
 
 	my %mxerr = map { $_->id => $_->ratings->get_column('error')->max } $rounds->all;
 	my $n = $self->count - 1;
 
 	for my $entry ($self->rank_order->all) {
 		my $aid = $entry->artist_id;
-
 		my @awards;
+
 		for my $rating ($entry->ratings) {
 			if ($mxerr{$rating->round_id} == $rating->error) {
 				push @awards, CONFETTI();
+			}
+		}
+
+		if ($students{$aid}) {
+			# Have to consider the case where two "students" tie and both get
+			# a mortarboard. Otherwise, only the first student gets one.
+			if (!defined $graduate || $graduate == $entry->rank) {
+				push @awards, MORTARBOARD();
+				$graduate = $entry->rank;
 			}
 		}
 

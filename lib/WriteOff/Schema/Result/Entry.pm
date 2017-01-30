@@ -68,6 +68,10 @@ __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
 __PACKAGE__->mk_group_accessors(column => 'num');
 
+sub awards_sorted {
+	sort { $a->order <=> $b->order } shift->awards;
+}
+
 sub difficulty {
 	my $self = shift;
 
@@ -114,37 +118,6 @@ sub pos_low {
 	return shift->rank_low;
 }
 
-# TODO: delete all this
-
-sub _compare_scores {
-	my ($left, $right) = @_;
-
-	for my $round (qw/private public prelim/) {
-		my $meth = "${round}_score";
-		if (defined $left->$meth && defined $right->$meth) {
-			return $left->$meth <=> $right->$meth;
-		}
-		elsif (defined $left->$meth) {
-			return 1;
-		}
-		elsif (defined $right->$meth) {
-			return -1;
-		}
-	}
-
-	0;
-}
-
-sub score_totals {
-	my $self = shift;
-
-	return [
-		($self->private_score) x!! $self->private_score,
-		($self->public_score) x!! $self->public_score,
-		($self->prelim_score / 10) x!! $self->prelim_score
-	];
-}
-
 sub id_uri {
 	my $self = shift;
 
@@ -155,6 +128,24 @@ sub detected {
 	my $self = shift;
 
 	return $self->guesses->search({ artist_id => $self->artist_id })->count;
+}
+
+sub pct {
+	my $self = shift;
+
+	return $self->{__pct} if exists $self->{__pct};
+
+	$self->{__pct} = defined $self->rank
+		? (1 - $self->rank / $self->event->entrys->mode($self->mode)->get_column('rank_low')->max)
+		: undef;
+}
+
+sub deadline {
+	my $self = shift;
+
+	# We're populating ->rounds with a prefetch. The grep here dodges hitting the DB again.
+	$self->{__deadline} //=
+		(grep { $_->mode eq $self->mode && $_->action eq 'submit' } $self->event->rounds)[-1]->end_leeway;
 }
 
 1;

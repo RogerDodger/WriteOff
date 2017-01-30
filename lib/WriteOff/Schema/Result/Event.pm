@@ -8,6 +8,7 @@ use base "WriteOff::Schema::Result";
 
 use WriteOff::Util qw/maybe simple_uri sorted/;
 use WriteOff::Rank qw/twipie/;
+use WriteOff::Award qw/MORTARBOARD/;
 use List::Util ();
 
 __PACKAGE__->table("events");
@@ -342,6 +343,34 @@ sub tally {
 	$self->theorys->process if $self->guessing;
 
 	$self->update({ tallied => 1 });
+}
+
+sub students {
+	my ($self, $mode) = @_;
+
+	my $fk = { fic => 'story_id', art => 'image_id' }->{$mode}
+		or die "Unknown mode $mode";
+
+	return $self->result_source->schema->storage->dbh_do(
+		sub {
+			my ($storage, $dbh, @params) = @_;
+
+			$dbh->selectall_hashref(qq{
+				SELECT artist_id
+				FROM entrys me
+				WHERE event_id = ?
+				AND 0 = (
+					SELECT COUNT(*)
+					FROM awards
+					LEFT JOIN entrys ON awards.entry_id=entrys.id
+					WHERE entrys.artist_id=me.artist_id
+					AND awards.award_id=?
+					AND entrys.$fk IS NOT NULL
+				)
+			}, 'artist_id', undef, @params);
+		},
+		$self->id, MORTARBOARD()->id
+	);
 }
 
 sub uid {

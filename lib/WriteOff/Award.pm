@@ -9,7 +9,7 @@ my @awards;
 
 BEGIN {
 	# Order of this array is immutable -- IDs must be persistent
-	@awards = qw/GOLD SILVER BRONZE CONFETTI SPOON RIBBON SLEUTH MASK/;
+	@awards = qw/GOLD SILVER BRONZE CONFETTI SPOON RIBBON SLEUTH MASK MORTARBOARD/;
 
 	my $i = 0;
 	for my $award (@awards) {
@@ -28,14 +28,18 @@ our @EXPORT_OK = ( @awards, qw/all_awards sort_awards/ );
 our %EXPORT_TAGS = ( awards => \@awards, all => \@EXPORT_OK );
 
 my %attr = (
-	_GOLD()     => [ 1, 'gold',     'Gold medal',   'First place'        ],
-	_SILVER()   => [ 2, 'silver',   'Silver medal', 'Second place'       ],
-	_BRONZE()   => [ 3, 'bronze',   'Bronze medal', 'Third place'        ],
-	_CONFETTI() => [ 4, 'confetti', 'Confetti',     'Most controversial' ],
-	_SPOON()    => [ 5, 'spoon',    'Wooden spoon', 'Last place'         ],
-	_RIBBON()   => [ 6, 'ribbon',   'Ribbon',       'Consolation prize'  ],
-	_SLEUTH()   => [ 7, 'sleuth',   'Sleuth',       'Best guesser'       ],
-	_MASK()     => [ 8, 'mask',     'Mask',         'Avoided detection'  ],
+	_GOLD()        => [  1, 'gold',        'Gold medal',   'First place',  1 ],
+	_SILVER()      => [  2, 'silver',      'Silver medal', 'Second place', 1 ],
+	_BRONZE()      => [  3, 'bronze',      'Bronze medal', 'Third place',  1 ],
+
+	_MORTARBOARD() => [ 11, 'mortarboard', 'Mortarboard',  'Best new entrant',   0 ],
+	_CONFETTI()    => [ 12, 'confetti',    'Confetti',     'Most controversial', 1 ],
+	_SPOON()       => [ 13, 'spoon',       'Wooden spoon', 'Last place',         1 ],
+	_MASK()        => [ 14, 'mask',        'Mask',         'Avoided detection',  1 ],
+
+	_RIBBON()      => [ 21, 'ribbon',      'Ribbon',       'Participation',  1 ],
+
+	_SLEUTH()      => [ 31, 'sleuth',      'Sleuth',       'Best guesser', 1 ],
 );
 
 my @order = sort { $attr{$a}->[0] <=> $attr{$b}->[0] } keys %attr;
@@ -79,6 +83,10 @@ sub order {
 
 sub src {
 	return '/static/images/awards/' . shift->name . '.png';
+}
+
+sub tallied {
+	return $attr{shift->id}->[4];
 }
 
 sub title {

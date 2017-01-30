@@ -34,7 +34,7 @@
 				</span>
 			</td>
 			<td class="Scoreboard-breakdown--awards">
-				{{ FOREACH award IN entry.awards; award.html | none; END }}
+				{{ FOREACH award IN entry.awards_sorted; award.html | none; END }}
 			</td>
 		</tr>
 		{{- END }}
