@@ -18,18 +18,18 @@ Contest
 2. Submitted written works&mdash;
 	1. must be written primarily in English;
 	2. must be {{ event.wc_min }}–{{ event.wc_max }} words long;
-	{{- IF event.has('drawing') }}
+	{{- IF event.has('art') }}
 	3. must be based on at least one of the submitted artworks to a reasonable
 	and discernible degree, with each related artwork&mdash;and only the
 	related artwork(s)&mdash;indicated on submission.
 	{{- ELSE }}
 	3. must be based on the prompt to a reasonable and discernible degree.
 	{{- END }}
-{{- IF event.has('drawing') }}
+{{- IF event.has('art') }}
 3. Submitted artworks must be based on the prompt to a reasonable and discernible degree.
 {{- END }}
 4. Participants&mdash;
-	{{- IF event.has('drawing') }}
+	{{- IF event.has('art') }}
 	1. may start drawing only after the prompt is released;
 	2. may start writing only after the artworks are released;
 	{{- ELSE }}
