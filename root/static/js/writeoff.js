@@ -779,7 +779,7 @@ $(document).ready(function () {
 	var resetPercentiles = function () {
 		var n = $('.Ballot .ordered .Ballot-item').length;
 		$('.Ballot .ordered .Ballot-score').each(function (i) {
-			var score = 100 * (1 - i/(n - 1));
+			var score = 100 * (1 - i/(n - 1)) || 100;
 			this.innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '%</span>';
 		});
 	};
