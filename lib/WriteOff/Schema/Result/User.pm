@@ -55,6 +55,7 @@ __PACKAGE__->belongs_to("active_artist", "WriteOff::Schema::Result::Artist", "ac
 __PACKAGE__->has_many("artists", "WriteOff::Schema::Result::Artist", "user_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "user_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "user_id");
+__PACKAGE__->has_many("notifs", "WriteOff::Schema::Result::Notif", "user_id");
 __PACKAGE__->has_many("prompts", "WriteOff::Schema::Result::Prompt", "user_id");
 __PACKAGE__->has_many("prompt_votes", "WriteOff::Schema::Result::PromptVote", "user_id");
 __PACKAGE__->has_many("tokens", "WriteOff::Schema::Result::Token", "user_id");

@@ -1,0 +1,43 @@
+<div class="Notif {{ 'unread' IF !notif.read }}">
+	<div class="Notif-body">
+		<form class="Notif-clear" method="post" action="{{ c.uri_for_action('/notif/clear', [ notif.id ]) }}" >
+			{{ csrf_field | none }}
+			<button title="{{ c.string('notifClear') }}">
+				<i class="fa fa-tag"></i>
+			</button>
+		</form>
+
+		{{ IF (post = notif.post) }}
+			{{ poster = BLOCK }}
+				{{ PROCESS artist/name.tt  artist = post.artist }}
+			{{ END }}
+
+			{{ source = c.string(notif.string, poster) }}
+
+			{{ IF post.entry }}
+				{{ context = BLOCK }}
+					{{ PROCESS entry/link.tt  entry = post.entry }}
+				{{ END }}
+				{{ c.string('notifEntry', source, context) | none }}
+			{{ ELSIF post.event }}
+				{{ context = BLOCK }}
+					{{ PROCESS event/link.tt  event = post.event }}
+				{{ END }}
+				{{ c.string('notifEvent', source, context) | none }}
+			{{ ELSE }}
+				{{ source | none }}
+			{{ END }}
+		{{ END }}
+
+		<form class="Notif-follow" method="post" action="{{ c.uri_for_action('/notif/follow', [ notif.id ]) }}">
+			{{ csrf_field | none }}
+			<button title="{{ c.string('notifFollow') }}">
+				<i class="fa fa-long-arrow-right"></i>
+			</button>
+		</form>
+	</div>
+
+	<div class="Notif-created">
+		{{ notif.created.delta_html(1) | none }}
+	</div>
+</div>

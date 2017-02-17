@@ -4,6 +4,8 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+use WriteOff::Notif qw/:all/;
+
 sub fetch :Chained('/') :PathPart('post') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
 sub permalink :Chained('fetch') :PathPart('') {
@@ -100,6 +102,45 @@ sub add :Local {
 
 	my $post = $c->model('DB::Post')->create(\%post)->render;
 	$c->stash->{event}->update({ last_post => $post });
+
+	# We don't want to notify someone of the same post multiple times, so we
+	# keep track of who has already been notified.
+	#
+	# Notifs have precedence of REPLY MENTION COMMENT, such that, for example,
+	# if a post would proc a REPLY and a COMMENT notif for the same user, that
+	# user will receive only a REPLY notif.
+	#
+	# This behaviour isn't defined in the Notif class since it's merely a
+	# result of the order in which the notifs are created here.
+	#
+	# Also, don't notify someone of their own post.
+	my %notifd = ( $c->user->id => 1 );
+	my @notifs;
+
+	my %base = (
+		post_id => $post->id,
+		created => $c->model('DB::Notif')->format_datetime($post->created),
+	);
+
+	for my $parent ($post->parents->search({}, { prefetch => 'artist' })->all) {
+		next if $notifd{$parent->artist->user_id}++;
+
+		push @notifs, {
+			user_id => $parent->artist->user_id,
+			notif_id => REPLY()->id,
+		};
+	}
+
+	if (my $entry = $c->stash->{entry}) {
+		next if $notifd{$entry->user_id}++;
+
+		push @notifs, {
+			user_id => $entry->user_id,
+			notif_id => COMMENT()->id,
+		};
+	}
+
+	$c->model('DB::Notif')->populate([ map { { %$_, %base } } @notifs ]);
 
 	$c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
 }

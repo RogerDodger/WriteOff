@@ -139,7 +139,7 @@ sub do_register :Private {
 sub prefs :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/forbidden', [ 'You are not logged in.' ]) unless $c->user;
+	$c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
 
 	$c->stash->{triggers} = $c->model('DB::EmailTrigger');
 	$c->stash->{formats} = $c->model('DB::Format');

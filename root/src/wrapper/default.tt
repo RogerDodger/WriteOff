@@ -43,6 +43,14 @@
 				<div class="Site-header--user">
 					<ul>
 						{{ IF c.user }}
+						<li class="Notif-bell">
+							<a href="/user/notifs">
+								<i class="fa fa-bell"></i>
+								{{ IF (n = c.user.notifs_rs.unread_rs.count) }}
+								<span class="Notif-bell--count">{{ n }}</span>
+								{{ END }}
+							</a>
+						</li>
 						<li>
 							<a href="{{ c.uri_for_action('/artist/view', [ c.user.active_artist.id_uri ]) }}">
 								@<span class="Artist-swap--selected">{{ c.user.active_artist.name }}</span>

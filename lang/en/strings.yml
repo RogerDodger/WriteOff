@@ -83,6 +83,7 @@ manageArtists: Manage aliases
 preferences: Preferences
 editPost: Edit Post
 postN: Post #%d
+notifs: Notifications
 
 storyFont: Story font
 serif: Serif
@@ -165,6 +166,16 @@ postCount: %d posts
 entryCount: %d entries
 doublePost: Double post detected—attempting to redirect
 postDeleted: Post by %s deleted %s
+noNotifs: You have no notifications
+
+notifComment: %s commented
+notifMention: %s mentioned you
+notifReply: %s replied to your post
+notifEvent: %s in %s
+notifEntry: %s on %s
+notifFollow: View post
+notifClear: Mark as read
+notifsClear: Mark all as read
 
 FiM: FiM
 Original: Original
