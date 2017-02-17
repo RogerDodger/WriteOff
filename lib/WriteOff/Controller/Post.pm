@@ -132,12 +132,12 @@ sub add :Local {
 	}
 
 	if (my $entry = $c->stash->{entry}) {
-		next if $notifd{$entry->user_id}++;
-
-		push @notifs, {
-			user_id => $entry->user_id,
-			notif_id => COMMENT()->id,
-		};
+		if (!$notifd{$entry->user_id}++) {
+			push @notifs, {
+				user_id => $entry->user_id,
+				notif_id => COMMENT()->id,
+			};
+		}
 	}
 
 	$c->model('DB::Notif')->populate([ map { { %$_, %base } } @notifs ]);
