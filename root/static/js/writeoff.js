@@ -777,10 +777,18 @@ $(document).ready(function () {
 	var q = $.when();
 
 	var resetPercentiles = function () {
-		var n = $('.Ballot .ordered .Ballot-item').length;
+		var n = $('.Ballot .ordered .Ballot-score').length;
+		$('.Ballot .Ballot-score').text('N/A');
 		$('.Ballot .ordered .Ballot-score').each(function (i) {
-			var score = 100 * (1 - i/(n - 1));
-			this.innerHTML = '<span title="' + score.toFixed(5) + '">' + Math.round(score) + '%</span>';
+			var pct = (1 - i/(n - 1));
+			if (!isNaN(pct)) {
+				this.innerHTML = '<span>' + (i+1).ordinal() + '</span>';
+				this.firstChild.style.color = 'hsla(' + (120 * pct) + ', 100%, 25%, 1)';
+				this.firstChild.title = (100 * pct).toFixed(0) + '%';
+			}
+			else {
+				this.innerHTML = '&ndash;';
+			}
 		});
 	};
 
@@ -842,7 +850,6 @@ $(document).ready(function () {
 					vote: $row.find('input').attr('value')
 				},
 				success: function (abstainsLeft) {
-					$row.find('.Ballot-score').text('N/A');
 					$row.detach();
 					$('.Ballot .abstained').append($row);
 					$('.Ballot .abstained').prev().removeClass('hidden');

@@ -32,8 +32,7 @@
 					<td class="Ballot-score" data-sort="{{ 0 + (i == vote.value) }}">{{ IF i == vote.value }}&bull;{{ END }}</td>
 					{{ END }}
 				{{ ELSE }}
-					{{ PROCESS 'vote/ballot-score.tt'
-						score = loop.max == 0 ? 'NaN' : 100 * (1 - loop.index / loop.max) }}
+					{{ PROCESS 'vote/ballot-score.tt'  score = [loop.index, loop.max] }}
 					{{ PROCESS title }}
 				{{ END }}
 			</tr>

@@ -18,7 +18,7 @@
 	<table class="Ballot cast">
 		<tbody class="ordered">
 			{{ FOREACH vote IN ordered.all }}
-				{{ PROCESS 'vote/ballot-item.tt'  score = loop.max == 0 ? 'NaN' : 100 * (1 - loop.index / loop.max) }}
+				{{ PROCESS 'vote/ballot-item.tt'  score = [loop.index, loop.max] }}
 			{{ END }}
 
 			<tr class="Ballot-directions">

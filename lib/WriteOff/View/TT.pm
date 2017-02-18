@@ -79,6 +79,10 @@ $Template::Stash::SCALAR_OPS = {
 	ucfirst => sub {
 		return ucfirst shift;
 	},
+
+	ordinal => sub {
+		return $_ . (qw/th st nd rd/)[/(?<!1)([123])$/ ? $1 : 0] for int shift;
+	},
 };
 
 $Template::Stash::LIST_OPS = {
