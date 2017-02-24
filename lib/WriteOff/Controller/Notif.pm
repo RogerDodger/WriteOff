@@ -52,6 +52,7 @@ sub list :Path('/user/notifs') :Args(0) {
 		prefetch => [
 			{ post => [qw/artist entry/] },
 		],
+		order_by => { -desc => 'me.created' },
 	});
 
 	push @{ $c->stash->{title} }, $c->string('notifs');

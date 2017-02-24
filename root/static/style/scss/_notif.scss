@@ -34,6 +34,7 @@
 	color: #444;
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	justify-content: space-between;
 	font-size: 0.9em;
 	padding: 0.2em 0;
@@ -71,4 +72,5 @@
 
 .Notif-created {
 	color: #666;
+	white-space: nowrap;
 }
