@@ -31,8 +31,6 @@ sub clear_all :Path('/user/notifs/clear') {
 sub follow :Chained('fetch') :PathPart('follow') Args(0) {
 	my ($self, $c) = @_;
 
-	$c->forward('/check_csrf_token');
-
 	if ($c->user->id == $c->stash->{notif}->user_id) {
 		$c->stash->{notif}->update({ read => 1 }) if !$c->stash->{notif}->read;
 		$c->stash->{post} = $c->stash->{notif}->post;

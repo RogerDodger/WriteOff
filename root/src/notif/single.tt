@@ -29,12 +29,9 @@
 			{{ END }}
 		{{ END }}
 
-		<form class="Notif-follow" method="post" action="{{ c.uri_for_action('/notif/follow', [ notif.id ]) }}">
-			{{ csrf_field | none }}
-			<button title="{{ c.string('notifFollow') }}">
-				<i class="fa fa-long-arrow-right"></i>
-			</button>
-		</form>
+		<a class="Notif-follow" href="{{ c.uri_for_action('/notif/follow', [ notif.id ]) }}">
+			<i class="fa fa-long-arrow-right"></i>
+		</a>
 	</div>
 
 	<div class="Notif-created">
