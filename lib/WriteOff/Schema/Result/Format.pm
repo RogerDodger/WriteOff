@@ -55,6 +55,8 @@ sub timeline {
 
 		push @timeline, {
 			name => $round->name,
+			mode => $round->mode,
+			action => $round->action,
 			start => $start->iso8601,
 			end => $end->iso8601,
 		};

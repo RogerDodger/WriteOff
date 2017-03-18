@@ -248,13 +248,11 @@ sub timeline {
 	[
 		map {{
 			name => $_->name,
+			mode => $_->mode,
+			action => $_->action,
 			start => $_->start->iso8601,
 			end => $_->end->iso8601,
 		}}
-		grep {
-			# dont show art vote round in timeline for now
-			$_->mode ne 'art' or $_->action ne 'vote'
-		}
 		shift->rounds->search({ }, { order_by => 'start' })
 	];
 }

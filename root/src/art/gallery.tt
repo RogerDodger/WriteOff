@@ -32,7 +32,7 @@
 	</div>
 	{{- ELSE }}
 	<div class="Countdown">
-		{{ event.art_gallery_opens.delta_html }}
+		{{ event.art_gallery_opens.delta_html | none }}
 	</div>
 	{{- END }}
 </div>

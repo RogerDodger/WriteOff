@@ -7,6 +7,18 @@
  * it under the same terms as Perl version 5.
  */
 
+Array.prototype.uniq = function() {
+	var u = [];
+	var h = {};
+	for (var i = 0; i < this.length; ++i) {
+		if (!h[this[i]]) {
+			h[this[i]] = true;
+			u.push(this[i]);
+		}
+	}
+	return u;
+}
+
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g, "");
 };
@@ -329,10 +341,12 @@ $(document).ready(function() {
 
 function DrawTimeline (e) {
 	var data = $(e).data('timeline');
+	var modes = data.map(function (e) { return e.mode; }).uniq();
+
 	var width = $(e).width();
-	var height = 65;
+	var heightMode = 65;
 	var fontsize = 14;
-	var xpad = fontsize * 3;
+	var xpad = fontsize * 2;
 
 	// Don't draw if the container is hidden
 	if (!width) {
@@ -349,109 +363,122 @@ function DrawTimeline (e) {
 	var svg = d3.select(e)
 		.append('svg')
 		.attr('width', width)
-		.attr('height', height);
+		.attr('height', heightMode * modes.length);
 
-	svg.append('line')
-		.attr('stroke', 'black')
-		.attr('x1', 0)
-		.attr('y1', height / 2)
-		.attr('x2', width)
-		.attr('y2', height / 2);
+	modes.forEach(function (m, i) {
+		var rounds = data.filter(function (e) { return e.mode === m; });
+		var g = svg.append('g');
+		var cy = heightMode * (i + 0.5);
 
-	svg.selectAll('circle.boundary.start')
-		.data(data.filter(function (e, i) {
-			return i == 0 || e.start - data[i-1].end > 10 * 60 * 1000;
-		}))
-		.enter()
-		.append('circle')
-		.attr('cx', function(d, i) {
-			return scale(d.start);
-		})
-		.append('svg:title').text(function(d) {
-			return d.start.toUTCString();
-		});
+		g.selectAll('line.timeline')
+			.data(rounds)
+			.enter()
+			.append('line')
+			.attr('stroke', 'black')
+			.attr('x1', function (d) {
+				return scale(d.start);
+			})
+			.attr('x2', function (d) {
+				return scale(d.end);
+			})
+			.attr('y1', cy)
+			.attr('y2', cy);
 
-	svg.selectAll('circle.boundary.end')
-		.data(data)
-		.enter()
-		.append('circle')
-		.attr('cx', function(d, i) {
-			return scale(d.end);
-		})
-		.append('svg:title').text(function(d) {
-			return d.end.toUTCString();
-		});
+		g.selectAll('circle.boundary.start')
+			.data(rounds.filter(function (e, i) {
+				return i == 0 || e.start - rounds[i-1].end > 10 * 60 * 1000;
+			}))
+			.enter()
+			.append('circle')
+			.attr('cx', function(d, i) {
+				return scale(d.start);
+			})
+			.append('svg:title').text(function(d) {
+				return d.start.toUTCString();
+			});
 
-	svg.selectAll('circle')
-		.attr('cy', height / 2)
-		.attr('r', 5)
-		.attr('fill', 'grey')
-		.attr('stroke', 'black')
-		.attr('stroke-width', 1);
+		g.selectAll('circle.boundary.end')
+			.data(rounds)
+			.enter()
+			.append('circle')
+			.attr('cx', function(d, i) {
+				return scale(d.end);
+			})
+			.append('svg:title').text(function(d) {
+				return d.end.toUTCString();
+			});
 
-	svg.append('circle')
-		.attr('cx', scale(now))
-		.attr('cy', height / 2)
-		.attr('r', 4)
-		.attr('fill', 'red')
-		.attr('stroke', 'black')
-		.attr('stroke-width', 1)
-		.append('svg:title').text(function(d) {
-			return now.toUTCString();
-		});
+		g.selectAll('circle')
+			.attr('cy', cy)
+			.attr('r', 5)
+			.attr('fill', 'grey')
+			.attr('stroke', 'black')
+			.attr('stroke-width', 1);
 
-	svg.selectAll('text.dates.start')
-		.data(data.filter(function (e, i) {
-			return i == 0 || e.start - data[i-1].end > 12 * 60 * 60 * 1000;
-		}))
-		.enter()
-		.append('text')
-		.text(function(d, i) {
-			return d.start.getDate() + " " + d.start.getShortMonth();
-		})
-		.attr('x', function(d, i) {
-			return scale(d.start);
-		})
-		.append('svg:title').text(function(d) {
-			return d.start.toUTCString();
-		});
+		g.append('circle')
+			.attr('cx', scale(now))
+			.attr('cy', cy)
+			.attr('r', 4)
+			.attr('fill', 'red')
+			.attr('stroke', 'black')
+			.attr('stroke-width', 1)
+			.append('svg:title').text(function(d) {
+				return now.toUTCString();
+			});
 
-	svg.selectAll('text.dates.end')
-		.data(data)
-		.enter()
-		.append('text')
-		.text(function(d, i) {
-			return d.end.getDate() + " " + d.end.getShortMonth();
-		})
-		.attr('x', function(d, i) {
-			return scale(d.end);
-		})
-		.append('svg:title').text(function(d) {
-			return d.end.toUTCString();
-		});
+		g.selectAll('text.dates.start')
+			.data(rounds.filter(function (e, i) {
+				return i == 0 || e.start - rounds[i-1].end > 12 * 60 * 60 * 1000;
+			}))
+			.enter()
+			.append('text')
+			.text(function(d, i) {
+				return d.start.getDate() + " " + d.start.getShortMonth();
+			})
+			.attr('x', function(d, i) {
+				return scale(d.start);
+			})
+			.append('svg:title').text(function(d) {
+				return d.start.toUTCString();
+			});
 
-	svg.selectAll('text')
-		.attr('text-anchor', 'middle')
-		.attr('y', height / 2 + fontsize * 1.5)
-		.attr('fill', 'black')
-		.attr('font-size', fontsize * 0.9)
-		.attr('font-family', 'sans-serif');
+		g.selectAll('text.dates.end')
+			.data(rounds)
+			.enter()
+			.append('text')
+			.text(function(d, i) {
+				return d.end.getDate() + " " + d.end.getShortMonth();
+			})
+			.attr('x', function(d, i) {
+				return scale(d.end);
+			})
+			.append('svg:title').text(function(d) {
+				return d.end.toUTCString();
+			});
 
-	svg.selectAll('text.labels')
-		.data(data)
-		.enter()
-		.append('text')
-		.text(function(d, i) {
-			return d.name;
-		})
-		.attr('text-anchor', 'middle')
-		.attr('x', function(d, i) {
-			return (scale(d.end) + scale(d.start)) / 2;
-		})
-		.attr('y', height / 2 - fontsize * 0.75)
-		.attr('fill', 'black')
-		.attr('font-size', fontsize)
-		.attr('font-family', 'sans-serif');
+		g.selectAll('text')
+			.attr('text-anchor', 'middle')
+			.attr('y', cy + fontsize * 1.5)
+			.attr('fill', 'black')
+			.attr('font-size', fontsize * 0.9)
+			.attr('font-family', 'sans-serif');
+
+		g.selectAll('text.labels')
+			.data(rounds)
+			.enter()
+			.append('text')
+			.text(function(d, i) {
+				return d.name;
+			})
+			.attr('text-anchor', 'middle')
+			.attr('x', function(d, i) {
+				return (scale(d.end) + scale(d.start)) / 2;
+			})
+			.attr('y', cy - fontsize * 0.75)
+			.attr('fill', 'black')
+			.attr('font-size', fontsize)
+			.attr('font-family', 'sans-serif');
+	});
 };
 
 $(document).ready(function () {

@@ -17,7 +17,7 @@
 	</div>
 
 	<div class="Countdown">
-		{{ event.end.delta_html | none }}
+		{{ event.rounds_rs.search_rs({ mode => mode, name => 'final' }).first.end.delta_html | none }}
 	</div>
 </div>
 {{ END }}
