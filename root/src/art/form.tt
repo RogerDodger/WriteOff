@@ -51,7 +51,7 @@
 
 		<figure id="preview">
 			<img alt="{{ c.string('preview') }}"
-				src="{{ preview || c.uri_for('/static/images/transparent-230x230.png') }}"
+				src="{{ image.path(1) || c.uri_for('/static/images/transparent-230x230.png') }}"
 				title="{{ image && image.hovertext }}">
 		</figure>
 	</div>

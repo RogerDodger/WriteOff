@@ -68,6 +68,10 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 sub form :Private {
 	my ($self, $c) = @_;
 
+	if ($c->stash->{event}->has('art')) {
+		$c->stash->{images} = $c->stash->{event}->images->seed_order;
+	}
+
 	$c->stash->{mode} = 'fic';
 	$c->forward('/entry/form');
 }
@@ -80,7 +84,7 @@ sub do_form :Private {
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 
 	if ($c->stash->{event}->has('art')) {
-		my @ids = $c->stash->{event}->images->get_column('id')->all;
+		my @ids = $c->stash->{event}->images->get_column('image_id')->all;
 		my @params = $c->req->param('image_id') or return 0;
 
 		my %uniq;
@@ -89,8 +93,8 @@ sub do_form :Private {
 			return 0 unless looks_like_number($id) && grep { $id == $_ } @ids;
 
 			# Param must be unique
-			return 0 if $uniq{$_};
-			$uniq{$_} = 1;
+			return 0 if $uniq{$id};
+			$uniq{$id} = 1;
 		}
 	}
 

@@ -3,13 +3,5 @@
 		{{ image.title }}
 	</div>
 
-	<div class="Countdown">
-		{{ IF event.art_subs_allowed }}
-			{{ event.art_end.delta_html | none }}
-		{{ ELSE }}
-			{{ c.string('subsClosed') }}
-		{{ END }}
-	</div>
-
 	{{ INCLUDE art/form.tt }}
 </div>

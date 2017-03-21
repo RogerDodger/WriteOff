@@ -1,6 +1,7 @@
 package WriteOff::Controller::Art;
 use Moose;
 use namespace::autoclean;
+use Try::Tiny;
 
 no warnings 'uninitialized';
 
@@ -24,6 +25,25 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 	$c->res->redirect(
 		$c->stash->{image}->path($c->stash->{format} eq 'thumb')
 	);
+}
+
+sub view :Chained('fetch') :PathPart('') :Args(0) {
+	my ( $self, $c ) = @_;
+
+	if ($c->stash->{event}->art_gallery_opened) {
+		my @gallery = $c->stash->{event}->images->gallery->all;
+		my $i = 0;
+		$i++ while $gallery[$i]->id != $c->stash->{entry}->id;
+		$c->stash->{num} = $gallery[$i]->num;
+		$c->stash->{prev} = $gallery[$i-1];
+		$c->stash->{next} = $gallery[$i-$#gallery];
+
+		if ($c->stash->{event}->commenting) {
+			$c->forward('/prepare_thread', [ $c->stash->{entry}->posts_rs ]);
+		}
+	}
+
+	$c->stash->{template} = 'art/view.tt';
 }
 
 sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
@@ -68,7 +88,11 @@ sub do_write :Private {
 	my ($self, $c) = @_;
 
 	if (my $upload = $c->req->upload('image')) {
-		$c->stash->{image}->write($upload->tempname);
+		try {
+			$c->stash->{image}->write($upload->tempname);
+		} catch {
+			$c->stash->{error_msg} = $_;
+		}
 	}
 }
 
@@ -80,7 +104,7 @@ sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
 	if ($c->user) {
 		$c->stash->{entrys} = $c->stash->{event}->images->search({ user_id => $c->user->id });
 
-		if ($c->stash->{event}->art_subs_allowed) {
+		if ($c->req->method eq 'POST' && $c->stash->{event}->art_subs_allowed) {
 			$c->forward('do_submit');
 		}
 	}
@@ -93,13 +117,13 @@ sub do_submit :Private {
 	my( $self, $c ) = @_;
 
 	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
-	$c->forward('/entry/do_submit');
 
 	if (!$c->form->has_error && $c->req->upload('image')) {
 		my $image = $c->stash->{image} = $c->model('DB::Image')->new_result({
 			hovertext => $c->form->valid('hovertext'),
 			mimetype  => $c->form->valid('mimetype'),
 			filesize  => $c->form->valid('filesize'),
+			version   => 'temp',
 		});
 
 		# Choose a random ID until it works (i.e., until it's unique)
@@ -110,8 +134,14 @@ sub do_submit :Private {
 		}
 
 		$c->forward('do_write');
-		$image->update;
+		if (defined $c->stash->{error_msg}) {
+			$image->delete and return;
+		}
+		else {
+			$image->update;
+		}
 
+		$c->forward('/entry/do_submit');
 		$c->stash->{entry}->image_id($image->id);
 		$c->stash->{entry}->insert;
 
@@ -140,7 +170,6 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		artist     => $c->stash->{image}->entry->artist_id,
 		title      => $c->stash->{image}->entry->title,
 		hovertext  => $c->stash->{image}->hovertext,
-		website    => $c->stash->{image}->contents,
 	};
 
 	push @{ $c->stash->{title} }, 'Edit';
@@ -151,30 +180,37 @@ sub do_edit :Private {
 	my ( $self, $c ) = @_;
 
 	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
-	$c->forward('/entry/do_edit');
 
 	if (!$c->form->has_error) {
-		$c->log->info("Art %d edited by %s: %s by %s (%.2fKB)",
-			$c->stash->{story}->id,
-			$c->user->name,
-			$c->form->valid('title'),
-			$c->stash->{entry}->artist->name,
-			$c->form->valid('filesize') / 1024,
-		);
+		if ($c->req->upload('image')) {
+			$c->stash->{image}->set_columns({
+				mimetype => $c->form->valid('mimetype'),
+				filesize => $c->form->valid('filesize'),
+			});
+
+			$c->forward('do_write');
+
+			if (defined $c->stash->{error_msg}) {
+				$c->stash->{image}->discard_changes;
+				return;
+			}
+		}
 
 		$c->stash->{image}->update({
 			hovertext => $c->form->valid('hovertext'),
 		});
 
-		if ($c->req->upload('image')) {
-			$c->forward('do_write');
+		$c->forward('/entry/do_edit');
 
-			$c->stash->{image}->update({
-				mimetype => $c->form->valid('mimetype'),
-				filesize => $c->form->valid('filesize'),
-			});
-		}
+		$c->log->info("Art %d edited by %s: %s by %s (%.2fKB)",
+			$c->stash->{image}->id,
+			$c->user->name,
+			$c->form->valid('title'),
+			$c->stash->{entry}->artist->name,
+			$c->form->valid('filesize') / 1024,
+		);
 	}
+
 }
 
 sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
@@ -189,6 +225,12 @@ sub do_delete :Private {
 	$c->forward('/check_csrf_token');
 	$c->stash->{image}->version("")->clean;
 	$c->forward('/entry/do_delete');
+}
+
+sub dq :Chained('fetch') :PathPart('dq') {
+	my ($self, $c) = @_;
+
+	$c->forward('/entry/dq');
 }
 
 sub rels :Chained('fetch') :PathPart('rels') :Args(0) {

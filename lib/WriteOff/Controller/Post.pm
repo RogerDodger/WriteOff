@@ -88,11 +88,19 @@ sub add :Local {
 		body_render => '',
 	);
 
-
 	if ($c->req->param('entry') =~ /(\d+)/) {
 		if ($c->stash->{entry} = $c->model('DB::Entry')->find($1)) {
-			$c->detach('/error') unless $c->stash->{event}->fic_gallery_opened;
-			$post{entry_id} = $c->stash->{entry}->id;
+			my $meth = $c->stash->{entry}->mode . '_gallery_opened';
+
+			if ($c->stash->{entry}->event_id != $c->stash->{event}->id) {
+				$c->detach('/error', [ 'Entry not in event' ]);
+			}
+			elsif (!$c->stash->{event}->$meth) {
+				$c->detach('/error', [ 'Gallery not opened yet' ]);
+			}
+			else {
+				$post{entry_id} = $c->stash->{entry}->id;
+			}
 		}
 	}
 

@@ -13,6 +13,7 @@ story: Story
 words: Words
 wordcount: Wordcount
 caption: Caption
+filesize: Filesize
 image: Image
 prompt: Prompt
 login: Login
@@ -32,6 +33,7 @@ publish: Publish
 guessed: Guessed
 actual: Actual
 update: Update
+preview: Preview
 edit: Edit
 reply: Reply
 create: Create

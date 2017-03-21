@@ -154,7 +154,7 @@ __PACKAGE__->config(
 		},
 		img => {
 			size  => 2 * 1024 * 1024,
-			types => [ qw:image/jpeg image/png image/gif: ],
+			types => [ qw:image/jpeg image/png: ],
 		},
 	},
 	login => {

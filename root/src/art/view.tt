@@ -1,0 +1,13 @@
+<div class="Document">
+	<div class="Document-title">{{ entry.title }}</div>
+
+	<div class="Image-container">
+		<img class="Image" src="{{ image.path }}">
+	</div>
+
+	{{ INCLUDE entry/nav.tt }}
+</div>
+
+{{ IF posts }}
+	{{ INCLUDE post/list.tt }}
+{{ END }}

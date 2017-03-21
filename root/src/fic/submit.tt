@@ -34,6 +34,7 @@
 						</span>
 					</th>
 				</tr>
+			</thead>
 			<tbody>
 			{{ FOREACH entry IN entrys.all }}
 				<tr>

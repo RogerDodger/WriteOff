@@ -12,15 +12,7 @@
 	</div>
 	{{ END }}
 
-	{{- IF event.fic_gallery_opened }}
-	<div class="Story-nav">
-		<a href="{{ c.uri_for( c.action, [ prev.id_uri ]) }}">« Prev</a>
-		&nbsp;
-		<strong>{{ num }}</strong>
-		&nbsp;
-		<a href="{{ c.uri_for( c.action, [ next.id_uri ]) }}">Next »</a>
-	</div>
-	{{- END }}
+	{{ INCLUDE entry/nav.tt }}
 </div>
 
 {{ IF posts }}

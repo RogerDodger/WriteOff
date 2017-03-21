@@ -32,12 +32,12 @@
 		</div>
 	</div>
 
-	{{- IF (images = event.images_rs.metadata.seed_order.all) }}
+	{{- IF images; }}
 	<div class="Form-item">
 		<label>{{ c.string('relatedArt') }}<span class="required">*</span></label>
 		<select name="image_id" size="{{ images.size }}" multiple required>
-			{{- FOREACH image IN images }}
-				<option value="{{ image.id }}">{{ image.title }}</option>
+			{{- FOREACH entry IN images.all }}
+				<option value="{{ entry.image_id }}">{{ entry.title }}</option>
 			{{- END }}
 		</select>
 	</div>

@@ -1,0 +1,19 @@
+// =============================================================================
+// Entry stylings (fic/art comman styles)
+// =============================================================================
+
+.Entrys {
+	@include striped-table;
+}
+
+.Entrys-edit,
+.Entrys-title,
+.Entrys-artist,
+.Entrys-filesize,
+.Entrys-filetype {
+	text-align: center;
+}
+
+.Entry-nav {
+	text-align: center;
+}
