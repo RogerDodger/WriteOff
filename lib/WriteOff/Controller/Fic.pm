@@ -33,18 +33,17 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 		$c->forward('View::Epub');
 	}
 	else {
-		my @gallery = $c->stash->{event}->storys->gallery->all;
-		for my $i (0..$#gallery) {
-			if ($gallery[$i]->id == $c->stash->{story}->entry->id) {
-				$c->stash->{num} = $gallery[$i]->num;
-				$c->stash->{prev} = $gallery[$i-1];
-				$c->stash->{next} = $gallery[$i-$#gallery];
-				last;
-			}
-		}
+		if ($c->stash->{event}->fic_gallery_opened) {
+			my @gallery = $c->stash->{event}->storys->gallery->all;
+			my $i = 0;
+			$i++ while $gallery[$i]->id != $c->stash->{entry}->id && $i < $#gallery;
+			$c->stash->{num} = $gallery[$i]->num;
+			$c->stash->{prev} = $gallery[$i-1];
+			$c->stash->{next} = $gallery[$i-$#gallery];
 
-		if ($c->stash->{event}->commenting && $c->stash->{event}->fic_gallery_opened) {
-			$c->forward('/prepare_thread', [ $c->stash->{entry}->posts_rs ]);
+			if ($c->stash->{event}->commenting) {
+				$c->forward('/prepare_thread', [ $c->stash->{entry}->posts_rs ]);
+			}
 		}
 
 		$c->stash->{template} = 'fic/view.tt';

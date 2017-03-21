@@ -33,7 +33,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 	if ($c->stash->{event}->art_gallery_opened) {
 		my @gallery = $c->stash->{event}->images->gallery->all;
 		my $i = 0;
-		$i++ while $gallery[$i]->id != $c->stash->{entry}->id;
+		$i++ while $gallery[$i]->id != $c->stash->{entry}->id && $i < $#gallery;
 		$c->stash->{num} = $gallery[$i]->num;
 		$c->stash->{prev} = $gallery[$i-1];
 		$c->stash->{next} = $gallery[$i-$#gallery];
@@ -102,7 +102,9 @@ sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
 	$c->forward('form');
 
 	if ($c->user) {
-		$c->stash->{entrys} = $c->stash->{event}->images->search({ user_id => $c->user->id });
+		$c->stash->{entrys} = $c->user->organises($c->stash->{event})
+			? $c->stash->{event}->images
+			: $c->stash->{event}->images->search({ user_id => $c->user->id });
 
 		if ($c->req->method eq 'POST' && $c->stash->{event}->art_subs_allowed) {
 			$c->forward('do_submit');
