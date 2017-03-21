@@ -71,7 +71,7 @@ sub is_manipulable_by {
 
 	return $user->is_admin
 	    || $self->entry->event->is_organised_by($user)
-	    || $self->entry->user_id == $user->id && $self->event->art_subs_allowed;
+	    || $self->entry->user_id == $user->id && $self->entry->event->art_subs_allowed;
 }
 
 sub path {
