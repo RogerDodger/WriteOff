@@ -95,7 +95,7 @@ sub work {
 
 	$self->story
 		? $work->{offset} + $self->story->wordcount / $work->{rate}
-		: 500;
+		: $work->{offset};
 }
 
 BEGIN { *type = \&mode }
