@@ -2,7 +2,7 @@
 	<div class="Document-title">{{ entry.title }}</div>
 
 	<div class="Image-container">
-		<img class="Image" src="{{ image.path }}">
+		<img class="Image" src="{{ image.path }}" title="{{ image.hovertext }}">
 	</div>
 
 	{{ INCLUDE entry/nav.tt }}
