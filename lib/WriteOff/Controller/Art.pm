@@ -22,14 +22,6 @@ sub fetch :Chained('/') :PathPart('art') :CaptureArgs(1) {
 sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->redirect(
-		$c->stash->{image}->path($c->stash->{format} eq 'thumb')
-	);
-}
-
-sub view :Chained('fetch') :PathPart('') :Args(0) {
-	my ( $self, $c ) = @_;
-
 	if ($c->stash->{event}->art_gallery_opened) {
 		my @gallery = $c->stash->{event}->images->gallery->all;
 		my $i = 0;

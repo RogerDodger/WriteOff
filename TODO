@@ -1,14 +1,5 @@
-
-- [high] Localise $c->stash->{wrapper} in View::Email
-- [high] Link to artist profile in every instance of name appearing
-- [high] Mobile rules for tables
-- [med] Make ranking algorithm consider edge case of an entry getting no votes
-- [med] Post preview
-- [med] More stuff in artist profiles
-- [med] Smileys
-- [med] Post notifications
-- [low] Change mask criteria to involve probabilistic modelling
-- [low] Show guesses on fic/view
-- [low] View counter for stories
-- [low] Provide stylometric analysis of entries for author guessing
-- [low] Set up system for users to translate website copy
+- Email notifs for art events
+- Event tallying for art events
+- Ballot work calculation for art rounds?
+- Caption in art/view
+- Rename art rounds to pic rounds

@@ -68,7 +68,7 @@ sub form :Private {
 	my ($self, $c) = @_;
 
 	if ($c->stash->{event}->has('art')) {
-		$c->stash->{images} = $c->stash->{event}->images->seed_order;
+		$c->stash->{rels} = $c->stash->{event}->images->seed_order;
 	}
 
 	$c->stash->{mode} = 'fic';
@@ -83,7 +83,7 @@ sub do_form :Private {
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 
 	if ($c->stash->{event}->has('art')) {
-		my @ids = $c->stash->{event}->images->get_column('image_id')->all;
+		my @ids = $c->stash->{rels}->get_column('image_id')->all;
 		my @params = $c->req->param('image_id') or return 0;
 
 		my %uniq;

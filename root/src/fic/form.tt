@@ -32,11 +32,11 @@
 		</div>
 	</div>
 
-	{{- IF images; }}
+	{{- IF rels }}
 	<div class="Form-item">
 		<label>{{ c.string('relatedArt') }}<span class="required">*</span></label>
-		<select name="image_id" size="{{ images.size }}" multiple required>
-			{{- FOREACH entry IN images.all }}
+		<select name="image_id" size="{{ rels.count }}" multiple required>
+			{{- FOREACH entry IN rels.all }}
 				<option value="{{ entry.image_id }}">{{ entry.title }}</option>
 			{{- END }}
 		</select>

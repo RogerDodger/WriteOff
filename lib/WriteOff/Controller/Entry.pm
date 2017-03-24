@@ -32,6 +32,14 @@ sub form :Private {
 				{ -asc => 'created' },
 			],
 		});
+
+		if ($c->stash->{rels}) {
+			$c->stash->{rels} = $c->stash->{rels}->search({
+				user_id => {
+					'!=' => eval { $c->stash->{entry}->user_id } || $c->user->id,
+				},
+			});
+		}
 	}
 }
 
