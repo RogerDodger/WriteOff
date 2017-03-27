@@ -147,6 +147,17 @@
 	}
 }
 
+@mixin striped-list($hue: 200, $sat: 30%) {
+	border: 1px solid hsla($hue, $sat * .8, 85%, 1);
+	list-style-type: none;
+	padding-left: 0;
+
+	li {
+		padding: 0.8em;
+		@include striped($hue, $sat);
+	}
+}
+
 @mixin striped-table($hue: 200, $sat: 30%) {
 	width: 100%;
 	$border-color: hsla($hue, $sat * .8, 85%, 1);

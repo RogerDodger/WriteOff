@@ -17,3 +17,16 @@
 .Entry-nav {
 	text-align: center;
 }
+
+.Entrys-rels {
+	@include striped-list;
+	margin-bottom: 2em;
+}
+
+.Entrys-rels--label {
+	font-size: 1.1em;
+}
+
+.Entrys-rels--title {
+	text-align: start;
+}

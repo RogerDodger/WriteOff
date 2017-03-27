@@ -12,6 +12,18 @@
 	</div>
 	{{ END }}
 
+	{{ IF images.count }}
+	<div class="Document-subtitle">
+		<span>Pics</span>
+	</div>
+
+	<ul class="Entrys-rels">
+		{{ FOREACH entry IN images.all }}
+		<li>{{ INCLUDE 'entry/link.tt' }}</li>
+		{{ END }}
+	</ul>
+	{{ END }}
+
 	{{ INCLUDE entry/nav.tt }}
 </div>
 

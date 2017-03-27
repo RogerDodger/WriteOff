@@ -44,6 +44,11 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 			if ($c->stash->{event}->commenting) {
 				$c->forward('/prepare_thread', [ $c->stash->{entry}->posts_rs ]);
 			}
+
+		}
+
+		if ($c->stash->{event}->art_gallery_opened) {
+			$c->stash->{images} = $c->stash->{story}->images->related_resultset('entry')->seed_order;
 		}
 
 		$c->stash->{template} = 'fic/view.tt';

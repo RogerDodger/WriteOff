@@ -12,19 +12,11 @@
 				title="{{ entry.image.hovertext }}">
 
 			<figcaption>
-				<a href="{{ c.uri_for_action('/art/view', [ entry.id_uri ]) }}">
-					{{ entry.title | html }}
-				</a>
+				{{ INCLUDE 'entry/link.tt' }}
 
-			{{- IF entry.artist_public }}
-				by {{ PROCESS artist/name.tt  artist = entry.artist }}
-			{{- END -}}
-
-			{{- IF show_storys && entry.image.storys_rs.count }}
-				<a href="{{ c.uri_for_action('/art/rels', [ entry.id_uri ]) }}">
-					<i class="fa fa-newspaper-o"></i>
-				</a>
-			{{- END -}}
+				{{- IF entry.artist_public }}
+					by {{ PROCESS artist/name.tt  artist = entry.artist }}
+				{{- END -}}
 			</figcaption>
 
 		</figure>
