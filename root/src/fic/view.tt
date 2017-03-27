@@ -18,8 +18,8 @@
 	</div>
 
 	<ul class="Entrys-rels">
-		{{ WHILE (entry = images.next) }}
-		<li>{{ INCLUDE 'entry/link.tt' }}</li>
+		{{ WHILE (e = images.next) }}
+		<li>{{ INCLUDE 'entry/link.tt' entry = e }}</li>
 		{{ END }}
 	</ul>
 	{{ END }}

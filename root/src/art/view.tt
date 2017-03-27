@@ -11,8 +11,8 @@
 	</div>
 
 	<ul class="Entrys-rels">
-		{{ WHILE (entry = storys.next) }}
-		<li>{{ INCLUDE 'entry/link.tt' }}</li>
+		{{ WHILE (e = storys.next) }}
+		<li>{{ INCLUDE 'entry/link.tt' entry = e }}</li>
 		{{ END }}
 	</ul>
 	{{ END }}
