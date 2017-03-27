@@ -1,6 +1,9 @@
 package WriteOff::Controller::Art;
 use Moose;
 use namespace::autoclean;
+use Digest::MD5;
+use Imager;
+use List::Util qw/min max/;
 use Try::Tiny;
 
 no warnings 'uninitialized';
@@ -60,10 +63,14 @@ sub do_form :Private {
 
 	$c->forward('/entry/do_form');
 
-	my $img = $c->req->upload('image');
-	if ($img) {
-		$c->req->params->{mimetype} = $img->mimetype;
-		$c->req->params->{filesize} = $img->size;
+	my $upload = $c->req->upload('image');
+	if ($upload) {
+		$c->stash->{imager} = Imager->new(file => $upload->tempname)
+			or die "Failed to read image: " . Imager->errstr . "\n";
+
+		$c->req->params->{xpixels} = $c->stash->{imager}->getwidth;
+		$c->req->params->{ypixels} = $c->stash->{imager}->getheight;
+		$c->req->params->{filesize} = $upload->size;
 	}
 
 	$c->form(
@@ -71,7 +78,8 @@ sub do_form :Private {
 			[ 'LENGTH', 1, $c->config->{len}{max}{alt} ],
 			'TRIM_COLLAPSE',
 		],
-		mimetype  => [ [ 'IN_ARRAY', @{ $c->config->{biz}{img}{types} } ] ],
+		xpixels   => [ [ 'GREATER_THAN', $c->config->{biz}{img}{xmin} - 1 ] ],
+		ypixels   => [ [ 'GREATER_THAN', $c->config->{biz}{img}{ymin} - 1 ] ],
 		filesize  => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
 	);
 }
@@ -79,12 +87,82 @@ sub do_form :Private {
 sub do_write :Private {
 	my ($self, $c) = @_;
 
-	if (my $upload = $c->req->upload('image')) {
+	if (my $imgr = $c->stash->{imager}) {
+		my $row = $c->stash->{image};
+		my %biz = %{ $c->config->{biz}{img} };
+
+		$row->version(substr Digest::MD5->md5_hex(rand), -6);
+
 		try {
-			$c->stash->{image}->write($upload->tempname);
+			# Resize if image too large
+			if ($imgr->getwidth > $biz{xmax} || $imgr->getheight > $biz{ymax}) {
+				$imgr = $imgr->scale(xpixels => $biz{xmax},
+				                     ypixels => $biz{ymax},
+				                     type => 'min') or die $imgr->errstr . "\n";
+			}
+
+			# Apply watermark if desired
+			my $fontsize = min(900, $imgr->getwidth) / 18;
+
+			my %ypos = (
+				top => $fontsize,
+				middle => $imgr->getheight / 2,
+				bottom => $imgr->getheight - $fontsize,
+			);
+
+			if (my $y = $ypos{scalar $c->req->param('watermark')}) {
+				my $layer = Imager->new(
+					xsize => $imgr->getwidth,
+					ysize => $imgr->getheight,
+					channels => 4);
+				my $border = $fontsize / 36;
+
+				my $black = Imager::Color->new(0, 0, 0, 255);
+				my $white = Imager::Color->new(255, 255, 255, 255);
+
+				my %base = (
+					string => $c->uri_for_action_abs('/art/view', [ $row->id ]),
+					x => $imgr->getwidth / 2,
+					y => $y,
+					halign => 'center',
+					valign => 'center',
+					aa => 1,
+					size => $fontsize,
+					font => Imager::Font->new(
+						file => $c->path_to('root/static/fonts/Z003-MediumItalic.otf')));
+
+				for my $i (-1..1) {
+					for my $j (-1..1) {
+						my %p = %base;
+						$p{x} = $base{x} + $i * $border;
+						$p{y} = $base{y} + $j * $border;
+						$layer->align_string(%p, color => $black) or die $layer->errstr . "\n";
+					}
+				}
+				$layer->align_string(%base, color => $white) or die $layer->errstr . "\n";
+				$imgr->compose(src => $layer, opacity => 0.25);
+			}
+
+			# Create a thumbnail for gallery
+			my $thumb = $imgr->scale(xpixels => $biz{xmin}, ypixels => $biz{ymin}, type => 'min')
+				or die $imgr->errstr . "\n";
+
+			# Write and compress
+			$row->mimetype('image/jpeg');
+			my $fullpath = $c->path_to('root', $row->path);
+			my $thumbpath = $c->path_to('root', $row->path('thumb'));
+
+			my @base = (jpegquality => 90, jpeg_optimize => 1, i_background => 'white');
+			$imgr->write(@base, file => $fullpath) or die $thumb->errstr . "\n";
+			$thumb->write(@base, file => $thumbpath) or die $thumb->errstr . "\n";
+
+			$row->filesize((stat $fullpath)[7]);
 		} catch {
+			$row->discard_changes if $row->in_storage;
 			$c->stash->{error_msg} = $_;
-		}
+		};
+
+		$row->clean;
 	}
 }
 
@@ -115,8 +193,8 @@ sub do_submit :Private {
 	if (!$c->form->has_error && $c->req->upload('image')) {
 		my $image = $c->stash->{image} = $c->model('DB::Image')->new_result({
 			hovertext => $c->form->valid('hovertext'),
-			mimetype  => $c->form->valid('mimetype'),
 			filesize  => $c->form->valid('filesize'),
+			mimetype  => 'image/jpeg',
 			version   => 'temp',
 		});
 
@@ -176,19 +254,8 @@ sub do_edit :Private {
 	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
 
 	if (!$c->form->has_error) {
-		if ($c->req->upload('image')) {
-			$c->stash->{image}->set_columns({
-				mimetype => $c->form->valid('mimetype'),
-				filesize => $c->form->valid('filesize'),
-			});
-
-			$c->forward('do_write');
-
-			if (defined $c->stash->{error_msg}) {
-				$c->stash->{image}->discard_changes;
-				return;
-			}
-		}
+		$c->forward('do_write');
+		return if defined $c->stash->{error_msg};
 
 		$c->stash->{image}->update({
 			hovertext => $c->form->valid('hovertext'),

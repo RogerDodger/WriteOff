@@ -28,6 +28,7 @@ use Catalyst qw/
 extends 'Catalyst';
 
 require CHI;
+require Imager;
 require WriteOff::Log;
 require WriteOff::Util;
 
@@ -109,6 +110,8 @@ __PACKAGE__->config(
 				story     => { NOT_BLANK     => 'Story is required' },
 				image     => { NOT_BLANK     => 'Image is required' },
 				mimetype  => { IN_ARRAY      => 'Image not a valid type' },
+				xpixels   => { GREATER_THAN  => 'Image too small' },
+				ypixels   => { GREATER_THAN  => 'Image too small' },
 				captcha   => { EQUAL_TO      => 'Invalid CAPTCHA' },
 				prompt    => {
 					NOT_BLANK   => 'Prompt is required',
@@ -155,6 +158,10 @@ __PACKAGE__->config(
 		img => {
 			size  => 2 * 1024 * 1024,
 			types => [ qw:image/jpeg image/png: ],
+			xmin => 225,
+			ymin => 225,
+			xmax => 1800,
+			ymax => 1800,
 		},
 	},
 	login => {
@@ -220,6 +227,8 @@ __PACKAGE__->config(
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );
+
+Imager->set_file_limits(width => 10_000, height => 10_000, bytes => 50_000_000);
 
 my $logger = WriteOff::Log->new;
 
@@ -288,6 +297,16 @@ sub page_size {
 }
 
 BEGIN { *rows = \&page_size }
+
+sub uri_for_action_abs {
+	my $self = shift;
+
+	$self->req->base->scheme($self->config->{https} ? 'https' : 'http');
+	my $uri = $self->uri_for_action(@_);
+	$self->req->base->scheme('');
+
+	return $uri;
+}
 
 =head1 NAME
 

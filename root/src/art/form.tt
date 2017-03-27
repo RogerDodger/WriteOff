@@ -32,11 +32,26 @@
 		</div>
 	</div>
 
-	<div class="Form-item">
-		<label>{{ c.string('caption') }}</label>
-		<input name="hovertext" type="text" size="72"
-			maxlength="{{ c.config.len.max.alt }}"
-			onchange="$('#preview img').attr('title', this.value)">
+	<div class="Form-group two">
+		<div class="Form-item">
+			<label>{{ c.string('caption') }}</label>
+			<input name="hovertext" type="text" size="72"
+				maxlength="{{ c.config.len.max.alt }}"
+				onchange="$('#preview img').attr('title', this.value)">
+		</div>
+
+		<div class="Form-item">
+			<label>
+				{{ c.string('watermark') }}
+				<span class="Hint" data-hint="{{ c.string('watermarkHint') }}">?</span>
+			</label>
+			<select name="watermark">
+				<option value="" selected>None</option>
+				<option value="top">{{ c.string('top') }}</option>
+				<option value="middle">{{ c.string('middle') }}</option>
+				<option value="bottom">{{ c.string('bottom') }}</option>
+			</select>
+		</div>
 	</div>
 
 	<div class="Form-item">
@@ -54,7 +69,11 @@
 				src="{{ image.path(1) || c.uri_for('/static/images/transparent-230x230.png') }}"
 				title="{{ image && image.hovertext }}">
 		</figure>
+		<span class="Form-note">
+			<a href="/style">{{ c.document('style').title }}</a>
+		</span>
 	</div>
+
 
 	<div class="Form-item">
 		<input type="submit" value="Submit" id="submit">

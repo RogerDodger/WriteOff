@@ -13,6 +13,10 @@ story: Story
 words: Words
 wordcount: Wordcount
 caption: Caption
+watermark: Watermark
+top: Top
+middle: Middle
+bottom: Bottom
 filesize: Filesize
 image: Image
 prompt: Prompt
@@ -142,6 +146,10 @@ emailNotifsHint: |
     You will only receive notifications that match your selections,
     e.g., when a FiM Minific event is created, you will only be notified if
     you have "Event created", "FiM", and "Minific" selected.
+watermarkHint: |
+    Watermark the submission in the chosen position. "None" is recommended.
+    This option is to provide a standardised watermark for those who feel it's
+    necessary.
 unknownError: Something went wrong
 errorsPersist: |
     If errors persist, please [let me know](mailto:cthor@cpan.org).

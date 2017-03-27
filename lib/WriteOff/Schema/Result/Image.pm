@@ -4,11 +4,7 @@ package WriteOff::Schema::Result::Image;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
-use Digest::MD5;
-use Imager;
 use File::Spec;
-use File::Copy;
-use Try::Tiny;
 use WriteOff::Util qw/simple_uri/;
 
 __PACKAGE__->table("images");
@@ -80,32 +76,5 @@ sub path {
 }
 
 sub title { shift->entry->title }
-
-sub write {
-	my ($self, $upload) = @_;
-
-	my $oldv = $self->version;
-	$self->version(substr Digest::MD5->md5_hex(time . rand() . $$), -6);
-
-	my $thumbpath = File::Spec->catfile('root', $self->path('thumb'));
-
-	try {
-		my $img = Imager->new(file => $upload) or die Imager->errstr . "\n";
-		my $thumb = $img->scale(xpixels => 225, ypixels => 225) or die $img->errstr . "\n";
-		$thumb->write(file => $thumbpath) or die $thumb->errstr . "\n";
-
-		if (!copy($upload, File::Spec->catfile('root', $self->path))) {
-			my $e = $!;
-			unlink $thumbpath;
-			die "$e\n";
-		}
-	}
-	catch {
-		$self->version($oldv);
-		die $_;
-	};
-
-	$self->clean;
-}
 
 1;

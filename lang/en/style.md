@@ -1,6 +1,6 @@
 # Formatting & Style Guide
 
-## Style
+## Fic Style
 
 To aid with author anonymity, the following style rules should be applied to all
 submitted stories.
@@ -24,7 +24,7 @@ submitted stories.
 
 	There was a weak scene break just there.
 
-## Formatting
+## Fic Formatting
 
 Stories can be formatted using BBCode. The following tags are supported:
 
@@ -40,3 +40,17 @@ Stories can be formatted using BBCode. The following tags are supported:
 	[size="<size>"]<text>[/size]    Re-sized text
 	[url="<url>"]<text>[/url]       A link to <url>
 	[color="<color>"]<text>[/url]   Coloured text
+
+## Pic Formatting
+
+To aid with author anonymity, identifying marks of any kind (e.g., signatures)
+are not allowed. If a watermark is desired, one linking to the pic's page can
+be generated automatically.
+
+In addition, the following should be taken into consideration:
+
+1. Images must be at least 225x225px
+2. Images larger than 1800x1800px will be scaled down
+3. Images will be displayed in a container with max-width of about 900px
+4. Gallery thumbnails are at most 225x225px
+5. Images will be compressed with JPEG quality 90
