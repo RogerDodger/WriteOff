@@ -193,7 +193,7 @@ sub process {
 		$self->add_author('Writeoff Participants');
 
 		if ($event->has('art')) {
-			my $images = $event->images;
+			my $images = $event->images->related_resultset('image');
 			while (my $image = $images->next) {
 				$self->add_image(
 					File::Spec->catfile('images', $image->filename),

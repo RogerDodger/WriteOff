@@ -45,6 +45,16 @@ sub clean {
 	$self;
 }
 
+sub contents {
+	my ($self, $thumb) = @_;
+
+	open my $fh, File::Spec->catfile('root', $self->path($thumb));
+	my $bin = do { local $/ = <$fh> };
+	close $fh;
+
+	return $bin;
+}
+
 sub extension {
 	return shift->mimetype =~ s{^image/}{}r =~ s{jpeg}{jpg}r;
 }
