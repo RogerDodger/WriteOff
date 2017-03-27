@@ -199,12 +199,12 @@ sub fic_subs_allowed {
 
 sub art_gallery_opened {
 	my $row = shift;
-	return $row->art_gallery_opens <= $row->now_dt;
+	return $row->has('art') && $row->art_gallery_opens <= $row->now_dt;
 }
 
 sub fic_gallery_opened {
 	my $row = shift;
-	return $row->fic_gallery_opens <= $row->now_dt;
+	return $row->has('fic') && $row->fic_gallery_opens <= $row->now_dt;
 }
 
 sub art_votes_allowed {
