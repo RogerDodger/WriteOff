@@ -134,7 +134,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{entrys} = $c->stash->{artist}->entrys->search({
-		tallied => 1,
+		'me.score' => { '!=' => undef },
 		'me.artist_public' => 1,
 	},
 	{
