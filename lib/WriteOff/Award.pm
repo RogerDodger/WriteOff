@@ -9,7 +9,7 @@ my @awards;
 
 BEGIN {
 	# Order of this array is immutable -- IDs must be persistent
-	@awards = qw/GOLD SILVER BRONZE CONFETTI SPOON RIBBON SLEUTH MASK MORTARBOARD/;
+	@awards = qw/GOLD SILVER BRONZE CONFETTI SPOON RIBBON SLEUTH MASK MORTARBOARD LIGHTBULB/;
 
 	my $i = 0;
 	for my $award (@awards) {
@@ -36,6 +36,7 @@ my %attr = (
 	_CONFETTI()    => [ 12, 'confetti',    'Confetti',     'Most controversial', 1 ],
 	_SPOON()       => [ 13, 'spoon',       'Wooden spoon', 'Last place',         1 ],
 	_MASK()        => [ 14, 'mask',        'Mask',         'Avoided detection',  1 ],
+	_LIGHTBULB()   => [ 15, 'lightbulb',   'Lightbulb',    'Most inspiring', 1 ],
 
 	_RIBBON()      => [ 21, 'ribbon',      'Ribbon',       'Participation',  1 ],
 

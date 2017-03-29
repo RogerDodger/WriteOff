@@ -333,10 +333,9 @@ sub tally {
 	my $rounds = $self->rounds->search({ action => 'vote' });
 
 	# Apply decay to older events' scores;
-	$entrys->decay($self->genre, $self->format);
+	$entrys->decay($self->genre, $self->format, $self->id);
 
 	$storys->tally($rounds->search_rs({ mode => 'fic' }));
-	$images->tally($rounds->search_rs({ mode => 'art' })) if $self->has('art');
 
 	$self->theorys->process if $self->guessing;
 

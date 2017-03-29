@@ -167,18 +167,20 @@ sub results :Private {
 		],
 	});
 
-	$c->stash->{rounds} = [
-		grep { $_->ratings->count }
-			$c->stash->{event}->rounds->search(
-				{
-					mode => $c->stash->{mode},
-					action => 'vote',
-				},
-				{
-					order_by => { -desc => 'end' },
-				}
-			)
-	];
+	my $rounds = $c->stash->{event}->rounds->search(
+		{
+			mode => $c->stash->{mode},
+			action => 'vote',
+		},
+		{
+			order_by => { -desc => 'end' },
+		}
+	);
+
+	$c->stash->{final} = $rounds->first;
+
+	# Filter out rounds without ratings
+	$c->stash->{rounds} = [grep { $_->ratings->count } $rounds->all];
 
 	for my $round (@{ $c->stash->{rounds} }) {
 		$round->{has_error} = $round->ratings->search({ error => { "!=" => undef }})->count;
@@ -316,14 +318,20 @@ sub tally_round :Private {
 
 	$c->log->info("Tallying %s %s round for %s", $r->mode, $r->name, $e->prompt);
 	$r->tally($c->config->{work});
+	$r->update({ tallied => 1 });
 
-	if ($r->mode eq 'fic' && !$e->rounds->after($r)->count) {
-		$c->log->info("Tallying results for %s", $e->prompt);
-		$e->tally;
+	if (!$e->rounds->mode($r->mode)->after($r)->count) {
+		$c->log->info("Tallying %s results for %s", $r->mode, $e->prompt);
 
-		$c->stash->{event} = $e;
-		$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'resultsUp' });
-		$c->forward('/event/notify_mailing_list');
+		if ($r->mode eq 'fic') {
+			$e->tally($r->mode);
+			$c->stash->{event} = $e;
+			$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'resultsUp' });
+			$c->forward('/event/notify_mailing_list');
+		}
+		else {
+			$e->images->eligible->tally(scalar $e->rounds->vote->art);
+		}
 	}
 }
 

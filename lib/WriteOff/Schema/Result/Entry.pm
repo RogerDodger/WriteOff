@@ -66,6 +66,9 @@ __PACKAGE__->belongs_to("story", "WriteOff::Schema::Result::Story", "story_id");
 __PACKAGE__->has_many("votes", "WriteOff::Schema::Result::Vote", "entry_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 
+__PACKAGE__->has_many('image_storys', "WriteOff::Schema::Result::ImageStory", { "foreign.image_id" => "self.image_id" });
+__PACKAGE__->has_many('story_images', "WriteOff::Schema::Result::ImageStory", { "foreign.story_id" => "self.story_id" });
+
 __PACKAGE__->mk_group_accessors(column => 'num');
 
 sub awards_sorted {

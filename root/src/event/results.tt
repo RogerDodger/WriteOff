@@ -1,4 +1,4 @@
-{{ IF event.tallied }}
+{{ IF final.tallied }}
 	{{
 		USE cache = Cache(cache => c.config.renderCache);
 		cache.inc(
@@ -17,7 +17,7 @@
 	</div>
 
 	<div class="Countdown">
-		{{ event.rounds_rs.search_rs({ mode => mode, name => 'final' }).first.end.delta_html | none }}
+		{{ final.end.delta_html | none }}
 	</div>
 </div>
 {{ END }}

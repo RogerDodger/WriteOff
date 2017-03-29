@@ -22,6 +22,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 0 },
 	"action",
 	{ data_type => "text", is_nullable => 0 },
+	"tallied",
+	{ data_type => "bit", is_nullable => 1 },
 	"start",
 	{ data_type => "timestamp", is_nullable => 0 },
 	"end",

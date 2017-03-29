@@ -17,10 +17,13 @@ sub eligible {
 }
 
 sub decay {
-	my ($self, $genre, $format) = @_;
+	my ($self, $genre, $format, $eid) = @_;
 
 	my $scores = $self->search(
-		{ score => { '!=' => undef } },
+		{
+			score => { '!=' => undef },
+			event_id => { '!=' => $eid },
+		},
 		{ join => 'event' });
 
 	my $gScores = $scores->search({ genre_id => $genre->id });
@@ -180,8 +183,19 @@ sub _tally_awards {
 	my %artists;
 	my %last;
 	my @medals = ( GOLD, SILVER, BRONZE );
-	my %students = %{ $self->first->event->students($self->first->mode) };
+	my $first = $self->first;
+	my %students = %{ $first->event->students($self->first->mode) };
 	my $graduate;
+
+	my %rels;
+	my $mxrel;
+	if ($first->mode eq 'art') {
+		# TODO: Trying to optimise this with a prefetch gives "ambiguous
+		# column image_id" error. Not really that important since this
+		# function runs like once a month.
+		%rels = map { $_->id => $_->image_storys->count } $self->all;
+		$mxrel = List::Util::max values %rels;
+	}
 
 	my %mxerr = map { $_->id => $_->ratings->get_column('error')->max } $rounds->all;
 	my $n = $self->count - 1;
@@ -189,6 +203,10 @@ sub _tally_awards {
 	for my $entry ($self->rank_order->all) {
 		my $aid = $entry->artist_id;
 		my @awards;
+
+		if (defined $mxrel and $rels{$entry->id} == $mxrel) {
+			push @awards, LIGHTBULB();
+		}
 
 		for my $rating ($entry->ratings) {
 			if ($mxerr{$rating->round_id} == $rating->error) {
