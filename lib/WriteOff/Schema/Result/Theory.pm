@@ -14,6 +14,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
 	"event_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+	"mode",
+	{ data_type => "text", is_nullable => 0 },
 	"user_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"artist_id",

@@ -55,6 +55,10 @@ sub ordered {
 	shift->order_by('start');
 }
 
+sub reversed {
+	shift->order_by({ -desc => 'end' });
+}
+
 sub submit {
 	shift->search({ action => 'submit' });
 }

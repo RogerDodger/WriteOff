@@ -67,6 +67,9 @@
 	<ul class="Event-links art">
 		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
 		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
+		{{ IF event.guessing }}
+		<li><a href="{{ c.uri_for_action('/guess/art', id) }}">Guessing</a>
+		{{ END }}
 
 		{{ IF event.has('art', 'vote') }}
 		<li><a href="{{ c.uri_for_action('/vote/art', id) }}">Voting</a>
@@ -79,7 +82,9 @@
 	<ul class="Event-links fic">
 		<li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
 		<li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
+		{{ IF event.guessing }}
 		<li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
+		{{ END }}
 
 		{{ IF event.has('fic', 'vote') }}
 		<li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>

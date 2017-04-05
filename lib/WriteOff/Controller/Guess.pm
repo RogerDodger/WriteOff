@@ -2,20 +2,43 @@ package WriteOff::Controller::Guess;
 use Moose;
 use namespace::autoclean;
 use Scalar::Util qw/looks_like_number/;
+use WriteOff::Util qw/sorted/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
+sub art :PathPart('guess') :Chained('/event/art') :Args(0) {
 	my ($self, $c) = @_;
-	my $e = $c->stash->{event};
 
 	$c->stash(
-		open => $e->rounds->fic->submit->first->end_leeway,
-		close => $e->end,
+		mode => 'art',
+		candidates => scalar $c->stash->{event}->images,
+		open => $c->stash->{event}->rounds->art->submit->ordered->first->end_leeway,
+		close => $c->stash->{event}->rounds->art->vote->reversed->first->end,
 	);
 
-	if ($e->author_guessing_allowed) {
-		$c->stash->{candidates} = $e->storys->search({ artist_public => 0 })->gallery;
+	$c->forward('guess');
+}
+
+sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash(
+		mode => 'fic',
+		candidates => scalar $c->stash->{event}->storys,
+		open => $c->stash->{event}->rounds->fic->submit->ordered->first->end_leeway,
+		close => $c->stash->{event}->rounds->fic->vote->reversed->first->end,
+	);
+
+	$c->forward('guess');
+}
+
+sub guess :Private {
+	my ($self, $c) = @_;
+
+	$c->stash->{opened} = sorted $c->stash->{open}, $c->stash->{now}, $c->stash->{close};
+
+	if ($c->stash->{opened}) {
+		$c->stash->{candidates} = $c->stash->{candidates}->search({ artist_public => 0 })->gallery;
 		$c->stash->{artists} = [
 			map { $_->artist }
 				$c->stash->{candidates}->search({}, {
@@ -27,8 +50,9 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 
 		if ($c->user) {
 			$c->stash->{theory} = $c->model("DB::Theory")->find_or_create({
-				event_id => $e->id,
-				user_id => $c->user->id
+				event_id => $c->stash->{event}->id,
+				user_id => $c->user->id,
+				mode => $c->stash->{mode},
 			});
 
 			$c->stash->{fillform} = {
@@ -39,7 +63,7 @@ sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
 		}
 	}
 
-	push @{ $c->stash->{title} }, $c->string('authorGuessing');
+	push @{ $c->stash->{title} }, $c->string('guess');
 	$c->stash->{template} = 'vote/guess.tt';
 }
 

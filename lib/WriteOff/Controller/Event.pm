@@ -159,6 +159,50 @@ sub rules :Chained('fetch') :PathPart('rules') :Args(0) {
 sub results :Private {
 	my ( $self, $c ) = @_;
 
+	# Copy this now since we're going to overwrite with a prefetched RS
+	my $entrys_clean = $c->stash->{entrys};
+
+	$c->stash->{theorys} = $c->stash->{event}->theorys->search({ mode => $c->stash->{mode} });
+
+	# Lazy load this since we don't want to make DB hits if the template cache
+	# comes through
+	$c->stash->{graph} = sub {
+		{
+			theorys => [
+				$c->stash->{theorys}->search({}, {
+					join => [qw/artist guesses/],
+					group_by => [ 'me.id' ],
+					having => [ \'count(guesses.id) >= 1' ],
+					order_by => [
+						{ -desc => 'me.accuracy' },
+						{ -asc => 'artist.name' },
+					],
+					columns => [qw/me.id me.artist_id me.accuracy/],
+					'+columns' => {
+						'artist_name' => 'artist.name',
+					},
+					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+				}),
+			],
+			artists => [
+				map {{ id => $_->id, name => $_->name }}
+					values %{ $entrys_clean->artists_hash }
+			],
+			entrys => [
+				$entrys_clean->search({}, {
+					columns => [qw/me.id me.artist_id me.title/],
+					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+				})
+			],
+			guesses => [
+				$c->model('DB::GuessX')->search({}, {
+					bind => [$c->stash->{event}->id],
+					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+				})
+			],
+		}
+	};
+
 	$c->stash->{entrys} = $c->stash->{entrys}->search({}, {
 		prefetch => [ qw/artist awards ratings/ ],
 		order_by => [

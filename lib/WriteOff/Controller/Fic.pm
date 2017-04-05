@@ -285,52 +285,6 @@ sub results :Chained('/event/fic') :PathPart('results') :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{entrys} = $c->stash->{event}->storys->eligible;
-
-	# Lazy load this since we don't want to make DB hits if the template cache
-	# comes through
-	$c->stash->{graph} = sub {
-		{
-			theorys => [
-				$c->stash->{event}->theorys->search({}, {
-					join => [qw/artist guesses/],
-					group_by => [ 'me.id' ],
-					having => [ \'count(guesses.id) >= 1' ],
-					order_by => [
-						{ -desc => 'me.accuracy' },
-						{ -asc => 'artist.name' },
-					],
-					columns => [qw/me.id me.artist_id me.accuracy/],
-					'+columns' => {
-						'artist_name' => 'artist.name',
-					},
-					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-				}),
-			],
-			artists => [
-				map {{ id => $_->id, name => $_->name }}
-					values %{ $c->stash->{entrys}->artists_hash }
-			],
-			entrys => [
-				do {
-					# Hacky(?) way to clear the prefetch that is done in
-					# C::Event::results
-					my $rs = $c->stash->{entrys};
-					$rs->{attrs}->{prefetch} = undef;
-					$rs->search({}, {
-						columns => [qw/me.id me.artist_id me.title/],
-						result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-					});
-				},
-			],
-			guesses => [
-				$c->model('DB::GuessX')->search({}, {
-					bind => [$c->stash->{event}->id],
-					result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-				})
-			],
-		}
-	};
-
 	$c->stash->{mode} = 'fic';
 	$c->stash->{view} = $self->action_for('view');
 	$c->stash->{breakdown} = $self->action_for('votes');
