@@ -7,6 +7,7 @@
 			'keys' => {
 				'type' => 'event/results',
 				'id' => event.id,
+				'mode' => mode,
 			},
 		);
 	}}
