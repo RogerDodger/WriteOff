@@ -362,7 +362,6 @@ sub tally_round :Private {
 
 	$c->log->info("Tallying %s %s round for %s", $r->mode, $r->name, $e->prompt);
 	$r->tally($c->config->{work});
-	$r->update({ tallied => 1 });
 
 	if (!$e->rounds->mode($r->mode)->after($r)->count) {
 		$c->log->info("Tallying %s results for %s", $r->mode, $e->prompt);
@@ -377,6 +376,8 @@ sub tally_round :Private {
 			$e->images->eligible->tally(scalar $e->rounds->vote->art);
 		}
 	}
+
+	$r->update({ tallied => 1 });
 }
 
 =head1 AUTHOR
