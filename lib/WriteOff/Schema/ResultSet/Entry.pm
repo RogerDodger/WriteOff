@@ -198,8 +198,6 @@ sub _tally_awards {
 	}
 
 	my %mxerr = map { $_->id => $_->ratings->get_column('error')->max } $rounds->all;
-	my $n = $self->count - 1;
-
 	for my $entry ($self->rank_order->all) {
 		my $aid = $entry->artist_id;
 		my @awards;
@@ -265,17 +263,17 @@ sub _tally_scores {
 	# numbers with one decimal place
 	my $D = $self->difficulty * 10;
 
-	my $n = $self->count - 1;
+	my $max = $self->get_column('rank_low')->max;
 	my %artists;
 	for my $entry ($self->rank_order->all) {
 		my $aid = $entry->artist_id;
 
 		my $pos = ($entry->rank + $entry->rank_low) / 2;
-		my $pct = ($n-$pos)/($n+1);
+		my $pct = 1 - ($pos + 1) / ($max + 1);
 		my $score = $D * $pct ** 1.6;
 
 		if (exists $artists{$aid}) {
-			# Additional entries have a small deduction
+			# Additional entries have a small penalty
 			$score -= $D * 0.2;
 		}
 		else {
