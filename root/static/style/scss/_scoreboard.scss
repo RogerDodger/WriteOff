@@ -19,29 +19,30 @@
 }
 
 .Scoreboard-filter {
-	display: table;
-	font-size: 0.9em;
-	margin: 1em auto;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	// font-size: 0.8em;
+	margin: calc(-2rem - 1px);
+	margin-bottom: 2rem;
+
+	padding: 1em 2rem;
+
+	background-color: hsla(200, 17%, 92%, 1);
+	border: 1px solid hsla(200, 17%, 80%, 1);
 }
 
-.Scoreboard-filter--genre,
-.Scoreboard-filter--format {
-	display: table-row;
-}
+.Scoreboard-filter--cat {
+	display: flex;
+	flex-direction: column;
 
-.Scoreboard-filter--label,
-.Scoreboard-filter--options {
-	display: table-cell;
-}
+	& + .Scoreboard-filter--cat {
+		margin-left: 0.8em;
+	}
 
-.Scoreboard-filter--label {
-	font-weight: bold;
-	padding-right: 1.2em;
-	text-align: right;
-}
-
-.Scoreboard-filter--link {
-	padding: 0 0.2em;
+	label {
+		font-variant: small-caps;
+	}
 }
 
 .Scoreboard-breakdown {

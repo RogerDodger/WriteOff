@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 use JSON;
 use Scalar::Util qw/looks_like_number/;
+use WriteOff::Mode qw/:all/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -66,15 +67,19 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ($self, $c) = @_;
 
-	my %s = (tallied => 1);
+	my $mode = WriteOff::Mode->find($c->paramo('mode')) // FIC;
+
+	my %s;
 	$s{genre_id} = $1 if ($c->req->param('genre') // '') =~ /^(\d+)/;
-	$s{format_id} = $1 if ($c->req->param('format') // '') =~ /^(\d+)/;
+	$s{format_id} = $1 if $mode->is(FIC) and ($c->req->param('format') // '') =~ /^(\d+)/;
 
 	$c->stash->{scoreKey} = $s{format_id} ? 'score_format' : 'score_genre';
 
 	$c->stash->{scores} = $c->stash->{artist}->entrys->search(
 		{
 			%s,
+			$mode->fkey => { "!=" => undef },
+			score => { "!=" => undef },
 			disqualified => 0,
 			artist_public => 1,
 		},
@@ -90,6 +95,7 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	$c->stash->{theorys} = $c->stash->{artist}->theorys->search(
 		{
 			%s,
+			mode => $mode->name,
 			award_id => { "!=" => undef },
 		},
 		{

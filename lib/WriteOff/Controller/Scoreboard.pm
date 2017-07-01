@@ -2,41 +2,51 @@ package WriteOff::Controller::Scoreboard;
 use Moose;
 use Scalar::Util qw/looks_like_number/;
 use namespace::autoclean;
+use WriteOff::Mode qw/:all/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
 sub index :Path('/scoreboard') {
 	my ($self, $c, $gid, $fid) = @_;
 
-	my $lang = 'en';
-	my $genre = $c->stash->{genre} = $c->model('DB::Genre')->find_maybe($gid // 1);
-	my $format = $c->stash->{format} = $c->model('DB::Format')->find_maybe($fid);
-	my $events = $c->model('DB::Event')->search({
-		tallied => 1,
-		genre_id => $genre->id,
-	});
+	my $s = $c->stash;
 
-	$c->detach('/default') if !$genre;
+	$s->{modes} = \@WriteOff::Mode::ALL;
+	$s->{genres} = $c->model('DB::Genre');
+	$s->{formats} = $c->model('DB::Format');
 
-	$c->stash->{genres} = $c->model('DB::Genre');
-	$c->stash->{formats} = $c->model('DB::Format');
+	$s->{mode} = WriteOff::Mode->find($c->paramo('mode')) // FIC;
+	$s->{genre} = $s->{genres}->find_maybe($c->paramo('genre')) // $s->{genres}->find(1);
 
-	$c->stash->{gUrl} = '/scoreboard/%s';
-	$c->stash->{fUrl} = '/scoreboard/' . $genre->id_uri . '/%s';
-	$c->stash->{aUrl} = '/artist/%s/scores?genre=' . $genre->id_uri;
+	if ($s->{mode}->is(FIC)) {
+		$s->{format} = $s->{formats}->find_maybe($c->paramo('format'));
+	}
+	else {
+		$s->{format} = undef;
+	}
 
-	if ($format) {
-		$c->stash->{gUrl} .= '/' . $format->id_uri;
-		$c->stash->{aUrl} .= '&format=' . $format->id_uri;
-		$events = $events->search({ format_id => $format->id });
+	my $rounds = $c->model('DB::Round')->search(
+		{
+			'me.tallied' => 1,
+			mode => $s->{mode}->name,
+			name => 'final',
+			genre_id => $s->{genre}->id,
+		},
+		{
+			join => 'event',
+		}
+	);
+
+	if ($s->{format}) {
+		$rounds = $rounds->search({ format_id => $s->{format}->id });
 	}
 
 	my $cache = $c->config->{scoreCache};
-	my $key = join ".", $lang, $genre->id, ($format ? $format->id : ()), $events->count;
+	my $key = join ".", 'en', $s->{mode}->name, $s->{genre}->id, ($s->{format} ? $s->{format}->id : ''), $rounds->count;
 	my $rendering = "rendering.$key";
 
-	$c->stash->{scoreboard} = $cache->get($key);
-	if (!$c->stash->{scoreboard} && !$cache->get($rendering)) {
+	$s->{scoreboard} = $cache->get($key);
+	if (!$s->{scoreboard} && !$cache->get($rendering)) {
 		$cache->set($rendering, 1, '10s');
 
 		my $pid = fork;
@@ -45,31 +55,46 @@ sub index :Path('/scoreboard') {
 		}
 		elsif (!$pid) {
 			my %cond;
-			$cond{"genre_id"} = $genre->id;
-			$cond{"format_id"} = $format->id if $format;
+			$cond{"genre_id"} = $s->{genre}->id;
+			$cond{"format_id"} = $s->{format}->id if $s->{format};
 
-			$c->stash->{awards} = $c->model('DB::Award')->search(\%cond, {
-				join => { entry => "event" }
-			});
-
-			$c->stash->{theorys} = $c->model('DB::Theory')->search(
-				{ award_id => { "!=" => undef }, %cond },
+			$s->{theorys} = $c->model('DB::Theory')->search(
+				{ %cond,
+					mode => $s->{mode}->name,
+					award_id => { "!=" => undef },
+				},
 				{ join => 'event' }
 			);
 
-			$c->stash->{artists} = $c->model('DB::Score')->search({
-				genre_id => $genre->id,
-				format_id => $format ? $format->id : undef,
+			$s->{awards} = $c->model('DB::Award')->search(
+				{ %cond,
+					$s->{mode}->fkey => { '!=' => undef },
+				},
+				{ join => { entry => "event" } }
+			);
+
+			$s->{skey} = "score_" . ($s->{format} ? "format" : "genre");
+
+			$s->{artists} = $c->model('DB::Score')->search({}, {
+				bind => [$s->{mode}->fkey, $s->{genre}->id, $s->{format} && $s->{format}->id],
+				order_by => { -desc => $s->{skey} },
 			});
 
-			$c->stash->{wrapper} = 'wrapper/none.tt';
+			$s->{aUrl} = $c->uri_for_action('/artist/scores', [ '%s' ], $c->req->params);
+
+			local $s->{wrapper} = 'wrapper/none.tt';
 			$cache->set($key, $c->view('TT')->render($c, 'scoreboard/table.tt'), '6w');
 			$cache->remove($rendering);
 			exit(0);
-		};
+		}
 	}
+	$c->stash->{scoreboard} = $cache->get($key);
 
-	push @{ $c->stash->{title} }, join ' ', ($genre->name, $format ? $format->name : ()), $c->string('scoreboard');
+	push @{ $c->stash->{title} },
+		($s->{format} ? () : $c->string($s->{mode}->name)),
+		$s->{genre}->name,
+		($s->{format} ? $s->{format}->name : ()),
+		$c->string('scoreboard');
 	$c->stash->{template} = 'scoreboard/index.tt';
 }
 

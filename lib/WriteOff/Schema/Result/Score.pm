@@ -5,59 +5,42 @@ use WriteOff::Award;
 use WriteOff::Util ();
 
 __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
-__PACKAGE__->table('scores');
+__PACKAGE__->table('scoresx');
 
 __PACKAGE__->add_columns(
 	"id",
 	{ data_type => "integer" },
 	"name",
 	{ data_type => "text" },
-	"score",
+	"score_genre",
 	{ data_type => "real" },
-	"format_id",
-	{ data_type => "integer", is_foreign_key => 1 },
-	"genre_id",
-	{ data_type => "integer", is_foreign_key => 1 },
+	"score_format",
+	{ data_type => "real" },
 );
+
+__PACKAGE__->result_source_instance->is_virtual(1);
 
 __PACKAGE__->result_source_instance->view_definition(q{
 	SELECT
 	  artists.id AS id,
 	  artists.name AS name,
-	  SUM(entrys.score_genre) AS score,
-	  events.genre_id AS genre_id,
-	  NULL AS format_id
+	  SUM(entrys.score_genre) AS score_genre,
+	  SUM(entrys.score_format) AS score_format
 	FROM
 	  artists
 	CROSS JOIN
-	  entrys ON artists.id=entrys.artist_id
+	  entrys ON artists.id=entrys.artist_id AND entrys.score IS NOT NULL
 	CROSS JOIN
-	  events ON entrys.event_id=events.id AND events.tallied=1
+	  events ON entrys.event_id=events.id
 	WHERE
-	  disqualified=0 AND artist_public=1
+	      (?1 != 'image_id' OR image_id IS NOT NULL)
+	  AND (?1 != 'story_id' OR story_id IS NOT NULL)
+	  AND score IS NOT NULL
+	  AND artist_public=1
+	  AND genre_id = ?2
+	  AND (?3 IS NULL OR format_id = ?3)
 	GROUP BY
-	  artists.id, genre_id
-
-	UNION
-
-	SELECT
-	  artists.id AS id,
-	  artists.name AS name,
-	  SUM(entrys.score_format) AS score,
-	  events.genre_id AS genre_id,
-	  events.format_id AS format_id
-	FROM
-	  artists
-	CROSS JOIN
-	  entrys ON artists.id=entrys.artist_id
-	CROSS JOIN
-	  events ON entrys.event_id=events.id AND events.tallied=1
-	WHERE
-	  disqualified=0 AND artist_public=1
-	GROUP BY
-	  artists.id, genre_id, format_id
-
-	ORDER BY score DESC
+	  artists.id
 });
 
 __PACKAGE__->result_source_instance->deploy_depends_on([

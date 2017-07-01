@@ -15,6 +15,12 @@ sub by_rs {
 	scalar shift->by(@_);
 }
 
+sub mode {
+	my ($self, $mode) = @_;
+
+	$self->search({ mode => $mode });
+}
+
 sub process {
 	my $self = shift;
 

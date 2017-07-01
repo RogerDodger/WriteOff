@@ -363,17 +363,16 @@ sub tally_round :Private {
 	$c->log->info("Tallying %s %s round for %s", $r->mode, $r->name, $e->prompt);
 	$r->tally($c->config->{work});
 
-	if (!$e->rounds->mode($r->mode)->after($r)->count) {
+	if ($r->name eq 'final') {
 		$c->log->info("Tallying %s results for %s", $r->mode, $e->prompt);
 
+		$e->theorys->search({ mode => $r->mode })->process if $e->guessing;
+		$e->score($r->mode);
+
 		if ($r->mode eq 'fic') {
-			$e->tally($r->mode);
 			$c->stash->{event} = $e;
 			$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'resultsUp' });
 			$c->forward('/event/notify_mailing_list');
-		}
-		else {
-			$e->images->eligible->tally(scalar $e->rounds->vote->art);
 		}
 	}
 

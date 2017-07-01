@@ -1,9 +1,7 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ title.-1 }}
-	</div>
+	<div class="Document-title">{{ c.string('scoreboard') }}</div>
 
-	{{ INCLUDE scoreboard/nav.tt }}
+	{{ PROCESS scoreboard/nav.tt }}
 
 	{{ IF scoreboard.defined }}
 		{{ scoreboard | none }}

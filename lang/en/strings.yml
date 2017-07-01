@@ -50,6 +50,7 @@ guess: Guess
 vote: Vote
 save: Save
 cancel: Cancel
+go: Go
 artistActive: Swappable
 saveChanges: Save changes
 castVote: Cast vote
@@ -205,3 +206,9 @@ eventCreated: Event Created
 promptSelected: Prompt Selected
 votingStarted: Voting Started
 resultsUp: Results Up
+
+format: Format
+genre: Genre
+mode: Mode
+fic: Fic
+art: Art

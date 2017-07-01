@@ -8,7 +8,8 @@ use base "WriteOff::Schema::Result";
 
 use WriteOff::Util qw/maybe simple_uri sorted/;
 use WriteOff::Rank qw/twipie/;
-use WriteOff::Award qw/MORTARBOARD/;
+use WriteOff::Award qw/:all/;
+use WriteOff::Mode qw/:all/;
 use List::Util ();
 
 __PACKAGE__->table("events");
@@ -324,20 +325,159 @@ sub reset_jobs {
 	}
 }
 
-sub tally {
-	my $self = shift;
+sub score {
+	my ($self, $mode, %opt) = @_;
+
+	$mode = WriteOff::Mode->find($mode // 'fic');
+	$opt{decay} //= 1;
+	$opt{award} //= 1;
+	$opt{score} //= 1;
+
 	my $schema = $self->result_source->schema;
-	my $entrys = $schema->resultset('Entry');
-	my $storys = $self->storys->eligible;
-	my $images = $self->images->eligible;
-	my $rounds = $self->rounds->search({ action => 'vote' });
+	my $entrys = $self->entrys->search({
+		$mode->fkey => { '!=' => undef },
+		rank        => { '!=' => undef },
+		rank_low    => { '!=' => undef },
+	});
 
-	# Apply decay to older events' scores;
-	$entrys->decay($self->genre, $self->format, $self->id);
+	Carp::croak sprintf "No %s entries for %s\n", $mode->name, $self->id_uri
+		if !$entrys->count;
 
-	$storys->tally($rounds->search_rs({ mode => 'fic' }));
+	# Apply decay to older events' scores
+	if ($opt{decay}) {
+		my $scores = $schema->resultset('Entry')->search(
+			{
+				score => { '!=' => undef },
+				$mode->fkey => { '!=' => undef },
+			},
+			{ join => 'event' },
+		);
 
-	$self->theorys->process if $self->guessing;
+		my $gScores = $scores->search({ genre_id => $self->genre_id });
+		$gScores->update({ score_genre => \q{score_genre * 0.9} });
+
+		my $fScores = $gScores->search({ format_id => $self->format_id });
+		$fScores->update({ score_format => \q{score_format * 0.9} });
+	}
+
+	# Assign awards to the entries
+	if ($opt{award}) {
+		# In case this sub is re-run, clear awards previous assigned
+		$self->entrys->related_resultset('awards')->delete;
+
+		my $rounds = $self->rounds->search({
+			action => 'vote',
+			mode => $mode->name
+		});
+
+		my %aawards;
+		my %last;
+		my @medals = ( GOLD, SILVER, BRONZE );
+		my %students = %{ $self->students($mode->name) };
+		my $graduate;
+
+		my %rels;
+		my $mxrel;
+		if ($mode->is(PIC)) {
+			# TODO: Trying to optimise this with a prefetch gives "ambiguous
+			# column image_id" error. Not really that important since this
+			# function runs like once a month.
+			%rels = map { $_->id => $_->image_storys->count } $entrys->all;
+			$mxrel = List::Util::max values %rels;
+		}
+		my %mxerr = map { $_->id => $_->ratings->get_column('error')->max } $rounds->all;
+
+		for my $entry ($entrys->rank_order->all) {
+			my $aid = $entry->artist_id;
+			my @awards;
+
+			if (defined $mxrel and $rels{$entry->id} == $mxrel) {
+				push @awards, LIGHTBULB();
+			}
+
+			for my $rating ($entry->ratings) {
+				if ($mxerr{$rating->round_id} == $rating->error) {
+					push @awards, CONFETTI();
+				}
+			}
+
+			if ($students{$aid}) {
+				# Have to consider the case where two "students" tie and both get
+				# a mortarboard. Otherwise, only the first student gets one.
+				if (!defined $graduate || $graduate == $entry->rank) {
+					push @awards, MORTARBOARD();
+					$graduate = $entry->rank;
+				}
+			}
+
+			if (!exists $aawards{$aid}) {
+				# Artists can only get one medal, so the medal check only
+				# happens if this artist hasn't been passed yet
+				if (%last && $last{rank} == $entry->rank) {
+					push @awards, $last{medal};
+					shift @medals;
+				} elsif (@medals) {
+					push @awards, shift @medals;
+					%last = (rank => $entry->rank, medal => $awards[-1]);
+				} else {
+					undef %last;
+				}
+
+				$aawards{$aid} = [ [ $entry, RIBBON ] ];
+			}
+
+			for my $award (@awards) {
+				push @{ $aawards{$aid} }, [ $entry, $award ];
+			}
+		}
+
+		for my $awards (values %aawards) {
+			# Shift off ribbon if artist has >1 award
+			if (@$awards != 1) {
+				shift @$awards;
+			}
+		}
+
+		$schema->resultset('Award')->populate([
+			map {
+				map {{
+					entry_id => $_->[0]->id,
+					award_id => $_->[1]->id,
+				}} @$_
+			} values %aawards
+		]);
+	}
+
+	# Assign scores to the entries
+	if ($opt{score}) {
+		# Multiply by 10 because whole numbers are nicer to display than
+		# numbers with one decimal place
+		my $D = $entrys->difficulty * 10;
+
+		my $max = $entrys->get_column('rank_low')->max;
+		my %seen;
+		for my $entry ($entrys->rank_order->all) {
+			my $aid = $entry->artist_id;
+
+			my $pos = ($entry->rank + $entry->rank_low) / 2;
+			my $pct = 1 - ($pos + 1) / ($max + 1);
+			my $score = $D * $pct ** 1.6;
+
+			if (exists $seen{$aid}) {
+				# Additional entries have a small penalty
+				$score -= $D * 0.2;
+			}
+			else {
+				$seen{$aid} = 1;
+			}
+
+			$entry->update({
+				score => $score,
+				score_format => $score,
+				score_genre => $score,
+			});
+		}
+	}
 
 	$self->update({ tallied => 1 });
 }
@@ -345,8 +485,7 @@ sub tally {
 sub students {
 	my ($self, $mode) = @_;
 
-	my $fk = { fic => 'story_id', art => 'image_id' }->{$mode}
-		or die "Unknown mode $mode";
+	my $fk = WriteOff::Mode->find($mode)->fkey;
 
 	return $self->result_source->schema->storage->dbh_do(
 		sub {

@@ -18,14 +18,14 @@
 		{{- FOREACH artist IN artists.all }}
 		<tr>
 			<td class="Scoreboard-rank" data-sort="{{ loop.count }}">
-				{{ loop.count IF !loop.prev || artist.score != loop.prev.score }}
+				{{ loop.count IF !loop.prev || artist.${skey} != loop.prev.${skey} }}
 			</td>
 			<td class="Scoreboard-name">
 				{{ PROCESS artist/name.tt }}
 			</td>
-			<td class="Scoreboard-score" data-sort="{{ artist.score }}">
-				<span title="{{ artist.score | format('%.5f') }}">
-					{{ artist.score | format('%d') }}
+			<td class="Scoreboard-score" data-sort="{{ artist.${skey} }}">
+				<span title="{{ artist.${skey} | format('%.5f') }}">
+					{{ artist.${skey} | format('%d') }}
 				</span>
 			</td>
 

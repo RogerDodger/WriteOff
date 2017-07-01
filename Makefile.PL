@@ -62,7 +62,6 @@ my @dependencies = (
 	'Digest::MD5',
 	'DateTime',
 	'DateTime::Format::Human::Duration',
-	'WWW::Fimfiction',
 	'EBook::EPUB',
 	'Class::Null',
 	'Text::Sass::XS',

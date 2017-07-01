@@ -298,6 +298,12 @@ sub page_size {
 
 BEGIN { *rows = \&page_size }
 
+sub paramo {
+	my ($self, $key) = @_;
+
+	return scalar $self->req->param($key) // '';
+}
+
 sub uri_for_action_abs {
 	my $self = shift;
 
