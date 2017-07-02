@@ -24,7 +24,7 @@
 	<div class="Scoreboard-filter--cat">
 		<label>{{ c.string('format') }}</label>
 		<select class="Scoreboard-filter--dropdown" name="format">
-			<option value=""></option>
+			<option></option>
 			{{ FOREACH el IN formats.all }}
 			<option value="{{ el.id }}" {{ 'selected' IF el.id == format.id }}>
 				{{ c.string(el.name) }}

@@ -248,65 +248,6 @@ $(document).ready(function() {
 });
 
 //==========================================================================
-// Collapsing score breakdowns
-//==========================================================================
-
-$(document).ready(function() {
-	$('.Breakdown')
-		.click(function() {
-			var $link = $(this);
-			var $icon = $(this).find('i');
-			var $row = $(this).closest('tr');
-
-			while ($row.next() && $row.next().hasClass('Breakdown-row')) {
-				$row.next().remove();
-			}
-
-			var expand = $icon.hasClass('fa-plus');
-			$row.find('.Breakdown i').each(function () {
-				$(this).removeClass('fa-minus');
-				$(this).addClass('fa-plus');
-				$(this).attr('title', 'Show breakdown');
-			});
-
-			if (expand) {
-				$icon.removeClass('fa-plus');
-				$icon.addClass('fa-minus');
-				$icon.attr('title', 'Hide breakdown');
-
-				var $expand_row = $row.clone().addClass('Breakdown-row');
-				var $expand_cell = $('<td colspan="99"/>');
-				$expand_row.html($expand_cell);
-
-				$row.after($expand_row);
-				$row.after('<tr class="Breakdown-row hidden"/>');
-
-				if ($link.data('res')) {
-					$expand_cell.html($link.data('res'));
-				}
-				else {
-					$expand_cell.load(
-						$link.data('target'),
-						function(res, status, xhr) {
-							if (status != 'error') {
-								$expand_cell.find('h1').remove();
-								$link.data('res', $expand_cell.html());
-							}
-							else {
-								$expand_cell.html(xhr.statusTxt);
-							}
-						}
-					);
-				}
-			}
-		})
-		.each(function() {
-			$(this).data('target', $(this).attr('href'));
-		})
-		.removeAttr('href');
-});
-
-//==========================================================================
 // Story form wordcount checker
 //==========================================================================
 
@@ -964,6 +905,8 @@ $(document).ready(function () {
 // function (context) {
 //   $('.Element', context).each(...);
 // };
+//
+// (Note: This can and is used for elements other than .Post)
 
 var postModifiers = [];
 
@@ -1084,11 +1027,156 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
+// Load scoreboard with AJAX
+// ===========================================================================
+
+$(document).ready(function() {
+	var $form = $('.Scoreboard-filter');
+	if (!$form.length) return;
+	var $doc = $form.closest('.Document');
+	var $spinner = $doc.find('.Spinner');
+
+	// Because most of the layout is centered, allowing the scroll bar to
+	// disappear while the scoreboard disappears temporarily creates a
+	// jarring effect where everything repositions. Instead, force the
+	// scroll bar to show on this page no matter what.
+	$('html').attr('style', 'overflow-y: scroll');
+
+	// Hide the submit control since we're doing AJAX updates
+	$form.find('[type="submit"]').addClass('hidden');
+
+	// Hide the "format" control if mode is "fic"
+	$form.find('select[name="mode"]')
+		.change(function () {
+			var $fmt = $form.find('[name="format"]');
+			$fmt.prop('disabled', this.value != "fic");
+			$fmt.closest('.Scoreboard-filter--cat')
+				[$fmt.prop('disabled') ? 'addClass' : 'removeClass']('hidden');
+			if ($fmt.prop('disabled')) $fmt.val('');
+		})
+		.change();
+
+	var xhr = new XMLHttpRequest();
+	var timeout;
+
+	function fetchScoreboard (retry_) {
+		var retry = (typeof retry_ === "undefined") ? retry_ : false;
+
+		// If a previous fetch is queued, kill it
+		xhr.abort();
+		window.clearTimeout(timeout);
+
+		$doc.find('.Scoreboard').remove();
+		$spinner.removeClass('hidden');
+		var path = window.location.pathname + '?' + $form.serialize();
+
+		// Chop blank format off for tidy URL
+		path = path.replace(/&format=$/, '');
+
+		if (!retry) {
+			window.history.pushState('', '', path);
+		}
+
+		xhr.open('GET', path);
+		xhr.send();
+	}
+
+	xhr.addEventListener('load', function () {
+		res = $.parseHTML(xhr.response);
+		postModifiers.apply(res);
+		var $res = $('<div/>').append(res);
+
+		if ($res.find('.Scoreboard').length) {
+			$spinner.addClass('hidden');
+			$res.find('.Scoreboard').insertAfter($form);
+		}
+		else {
+			timeout = window.setTimeout(function () {
+				xhr.open('GET', xhr.responseURL);
+				xhr.send();
+			}, 3000);
+		}
+	});
+
+	xhr.addEventListener('error', function () {
+		alert('Something went wrong');
+		$spinner.addClass('hidden');
+	});
+
+	$form.find('select').change(fetchScoreboard);
+
+	var $flash = $doc.find('.Flash');
+	if ($flash.length) {
+		$flash.remove();
+		fetchScoreboard();
+	}
+});
+
+//==========================================================================
+// Collapsing score breakdowns
+//==========================================================================
+
+postModifiers.push(function (ctx) {
+	$('.Breakdown', ctx)
+		.click(function() {
+			var $link = $(this);
+			var $icon = $(this).find('i');
+			var $row = $(this).closest('tr');
+
+			while ($row.next() && $row.next().hasClass('Breakdown-row')) {
+				$row.next().remove();
+			}
+
+			var expand = $icon.hasClass('fa-plus');
+			$row.find('.Breakdown i').each(function () {
+				$(this).removeClass('fa-minus');
+				$(this).addClass('fa-plus');
+				$(this).attr('title', 'Show breakdown');
+			});
+
+			if (expand) {
+				$icon.removeClass('fa-plus');
+				$icon.addClass('fa-minus');
+				$icon.attr('title', 'Hide breakdown');
+
+				var $expand_row = $row.clone().addClass('Breakdown-row');
+				var $expand_cell = $('<td colspan="99"/>');
+				$expand_row.html($expand_cell);
+
+				$row.after($expand_row);
+				$row.after('<tr class="Breakdown-row hidden"/>');
+
+				if ($link.data('res')) {
+					$expand_cell.html($link.data('res'));
+				}
+				else {
+					$expand_cell.load(
+						$link.data('target'),
+						function(res, status, xhr) {
+							if (status != 'error') {
+								$expand_cell.find('h1').remove();
+								$link.data('res', $expand_cell.html());
+							}
+							else {
+								$expand_cell.html(xhr.statusTxt);
+							}
+						}
+					);
+				}
+			}
+		})
+		.each(function() {
+			$(this).data('target', $(this).attr('href'));
+		})
+		.removeAttr('href');
+});
+
+// ===========================================================================
 // Sortable tables
 // ===========================================================================
 
-$(document).ready(function () {
-	$('.Results, .Scoreboard, .Prompts, .Ballot, .Artist-entries, .Storys.gallery').each(function () {
+postModifiers.push(function (ctx) {
+	$('.Results, .Scoreboard, .Prompts, .Ballot, .Artist-entries, .Storys.gallery', ctx).each(function () {
 		if ($(this).find('thead').size()) {
 			$(this).addClass('sortable');
 			new Tablesort(this);
@@ -1273,7 +1361,7 @@ postModifiers.push(function (ctx) {
 		var $form = $btn.closest('form');
 		var $post = $form.closest('.Post');
 
-		q.then(
+		q = q.then(
 			$.ajax({
 				method: 'POST',
 				url: $form.attr('action'),

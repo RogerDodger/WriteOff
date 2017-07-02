@@ -21,6 +21,7 @@ $s->resultset('Entry')->update({
 my $rounds = $s->resultset('Round')->search({
 	action => 'vote',
 	name => 'final',
+	tallied => 1,
 }, { prefetch => 'event' });
 
 my $scores = $s->resultset('Entry')->search(

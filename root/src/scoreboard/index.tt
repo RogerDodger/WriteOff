@@ -10,4 +10,6 @@
 		{{ c.string('calculatingScoreboard') }}
 	</div>
 	{{ END }}
+
+	{{ INCLUDE fragment/spinner.tt }}
 </div>
