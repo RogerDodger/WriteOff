@@ -1059,26 +1059,40 @@ $(document).ready(function() {
 	var xhr = new XMLHttpRequest();
 	var timeout;
 
-	function fetchScoreboard (retry_) {
-		var retry = (typeof retry_ === "undefined") ? retry_ : false;
-
+	function fetchScoreboard () {
 		// If a previous fetch is queued, kill it
 		xhr.abort();
 		window.clearTimeout(timeout);
 
 		$doc.find('.Scoreboard').remove();
 		$spinner.removeClass('hidden');
-		var path = window.location.pathname + '?' + $form.serialize();
 
+		// Scoreboard › Minific › Original • Writeoff
+		// Scoreboard › Original › Art • Writeoff
+		var title = ['format', 'genre', 'mode'].map(function (e) {
+			return $form.find('[name="' + e + '"] :selected').text().trim();
+		});
+
+		// If format defined, pop mode, else shift format
+		title[ title[0].length ? 'pop' : 'shift' ]();
+
+		document.title = document.title.replace(
+			/^(.+? › ).+( • .+?)$/,
+			'$1' + title.join(' › ') + '$2'
+		);
+
+		var path = window.location.pathname + '?' + $form.serialize();
 		// Chop blank format off for tidy URL
 		path = path.replace(/&format=$/, '');
+		window.history.pushState('', '', path);
 
-		if (!retry) {
-			window.history.pushState('', '', path);
-		}
-
-		xhr.open('GET', path);
-		xhr.send();
+		// For some reason, Firefox doesn't flush the document.title if
+		// there's  an XHR immediately after it. Delaying the xhr.open
+		// slightly seems to flush it.
+		setTimeout(function () {
+			xhr.open('GET', path);
+			xhr.send();
+		}, 4);
 	}
 
 	xhr.addEventListener('load', function () {
@@ -1099,7 +1113,7 @@ $(document).ready(function() {
 	});
 
 	xhr.addEventListener('error', function () {
-		alert('Something went wrong');
+		alert('Failed to fetch scoreboard');
 		$spinner.addClass('hidden');
 	});
 
