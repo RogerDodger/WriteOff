@@ -1067,8 +1067,8 @@ $(document).ready(function() {
 		$doc.find('.Scoreboard').remove();
 		$spinner.removeClass('hidden');
 
-		// Scoreboard › Minific › Original • Writeoff
-		// Scoreboard › Original › Art • Writeoff
+		// Minific › Original › Scoreboard • Writeoff
+		// Original › Art › Scoreboard • Writeoff
 		var title = ['format', 'genre', 'mode'].map(function (e) {
 			return $form.find('[name="' + e + '"] :selected').text().trim();
 		});
@@ -1077,8 +1077,8 @@ $(document).ready(function() {
 		title[ title[0].length ? 'pop' : 'shift' ]();
 
 		document.title = document.title.replace(
-			/^(.+? › ).+( • .+?)$/,
-			'$1' + title.join(' › ') + '$2'
+			/^.+( › .+? • .+?)$/,
+			title.join(' › ') + '$1'
 		);
 
 		var path = window.location.pathname + '?' + $form.serialize();

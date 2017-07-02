@@ -91,10 +91,10 @@ sub index :Path('/scoreboard') {
 	$c->stash->{scoreboard} = $cache->get($key);
 
 	push @{ $c->stash->{title} },
+		$c->string('scoreboard'),
 		($s->{format} ? () : $c->string($s->{mode}->name)),
-		$s->{genre}->name,
-		($s->{format} ? $s->{format}->name : ()),
-		$c->string('scoreboard');
+		$c->string($s->{genre}->name),
+		($s->{format} ? $c->string($s->{format}->name) : ());
 	$c->stash->{template} = 'scoreboard/index.tt';
 }
 
