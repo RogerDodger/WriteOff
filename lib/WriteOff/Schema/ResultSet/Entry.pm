@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'WriteOff::Schema::ResultSet';
 use WriteOff::Award qw/:all/;
+use WriteOff::Mode;
 require List::Util;
 
 sub artists_hash {
@@ -56,9 +57,7 @@ sub mode {
 	my ($self, $mode) = @_;
 
 	$self->search({
-		$mode eq 'art' ? (image_id => { '!=' => undef }) :
-		$mode eq 'fic' ? (story_id => { '!=' => undef }) :
-		()
+		WriteOff::Mode->find($mode // 'fic')->fkey => { '!=' => undef }
 	});
 }
 
