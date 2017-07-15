@@ -3,6 +3,7 @@ use Moose;
 use Scalar::Util qw/looks_like_number/;
 use namespace::autoclean;
 use WriteOff::Mode qw/:all/;
+use WriteOff::Util qw/maybe/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -80,7 +81,11 @@ sub index :Path('/scoreboard') {
 				order_by => { -desc => $s->{skey} },
 			});
 
-			$s->{aUrl} = $c->uri_for_action('/artist/scores', [ '%s' ], $c->req->params);
+			$s->{aUrl} = $c->uri_for_action('/artist/scores', [ '%s' ], {
+				mode => $s->{mode}->name,
+				genre => $s->{genre}->id,
+				maybe(format => $s->{format} && $s->{format}->id),
+			});
 
 			local $s->{wrapper} = 'wrapper/none.tt';
 			$cache->set($key, $c->view('TT')->render($c, 'scoreboard/table.tt'), '6w');
