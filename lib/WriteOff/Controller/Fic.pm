@@ -72,7 +72,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 sub form :Private {
 	my ($self, $c) = @_;
 
-	if ($c->stash->{event}->has('art')) {
+	if ($c->stash->{event}->pic2fic) {
 		$c->stash->{rels} = $c->stash->{event}->images->seed_order;
 	}
 
@@ -87,7 +87,7 @@ sub do_form :Private {
 
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 
-	if ($c->stash->{event}->has('art')) {
+	if ($c->stash->{event}->pic2fic) {
 		my @ids = $c->stash->{rels}->get_column('image_id')->all;
 		my @params = $c->req->param('image_id') or return 0;
 
@@ -103,7 +103,7 @@ sub do_form :Private {
 	}
 
 	$c->form(
-		image_id => [ $c->stash->{event}->has('art') ? 'NOT_BLANK' : () ],
+		image_id => [ $c->stash->{event}->pic2fic ? 'NOT_BLANK' : () ],
 		story => [ 'NOT_BLANK' ],
 		wordcount => [
 			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ]
@@ -159,7 +159,7 @@ sub do_submit :Private {
 		$c->stash->{entry}->story_id($story->id);
 		$c->stash->{entry}->insert;
 
-		if ($c->stash->{event}->has('art')) {
+		if ($c->stash->{event}->pic2fic) {
 			my $imgstry = $c->model('DB::ImageStory');
 			for my $id ($c->req->param('image_id')) {
 				$imgstry->create({
@@ -246,7 +246,7 @@ sub do_edit :Private {
 			wordcount => $c->form->valid('wordcount'),
 		});
 
-		if ($c->stash->{event}->has('art')) {
+		if ($c->stash->{event}->pic2fic) {
 			$c->stash->{story}->image_stories->delete;
 			my $imgstry = $c->model('DB::ImageStory');
 			for my $id ($c->req->param('image_id')) {
