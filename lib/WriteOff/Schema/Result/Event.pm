@@ -237,6 +237,30 @@ sub artist_guessing_allowed {
 	return $row->art_gallery_opened && !$row->ended;
 }
 
+sub fic2pic {
+	my $self = shift;
+
+	$self->{__fic2pic} //= do {
+		my $rounds = $self->rounds->search({ action => 'submit' })->ordered;
+		my $fic = $rounds->search({ mode => 'fic' })->first;
+		my $pic = $rounds->search({ mode => 'art' })->first;
+
+		defined $fic && defined $pic && $fic->end <= $pic->start;
+	}
+}
+
+sub pic2fic {
+	my $self = shift;
+
+	$self->{__pic2fic} //= do {
+		my $rounds = $self->rounds->search({ action => 'submit' })->ordered;
+		my $fic = $rounds->search({ mode => 'fic' })->first;
+		my $pic = $rounds->search({ mode => 'art' })->first;
+
+		defined $fic && defined $pic && $pic->end <= $fic->start;
+	}
+}
+
 sub ended {
 	my $self = shift;
 
