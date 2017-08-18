@@ -85,6 +85,7 @@ sub cast :Private {
 	if ($c->user) {
 		$c->stash->{ballots} = $c->stash->{event}->ballots->search({
 			user_id => $c->user->id,
+			mode => $c->stash->{mode},
 			$c->stash->{round} ? (round_id => { '!=' => $c->stash->{round}->id }) : (),
 		}, {
 			join => 'votes',
