@@ -402,7 +402,7 @@ sub score {
 
 		my %rels;
 		my $mxrel;
-		if ($mode->is(PIC)) {
+		if ($mode->is(PIC) && $self->pic2fic || $mode->is(FIC) && $self->fic2pic) {
 			# TODO: Trying to optimise this with a prefetch gives "ambiguous
 			# column image_id" error. Not really that important since this
 			# function runs like once a month.

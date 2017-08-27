@@ -176,7 +176,8 @@ sub process {
 			play_order => 1,
 		);
 
-		if ($story->entry->event->has('art')) {
+		my $event = $story->entry->event;
+		if ($event->fic2pic || $event->pic2fic) {
 			my $images = $story->images;
 			while (my $image = $images->next) {
 				$self->add_image(
@@ -192,7 +193,7 @@ sub process {
 		$self->add_title($event->prompt);
 		$self->add_author('Writeoff Participants');
 
-		if ($event->has('art')) {
+		if ($event->fic2pic || $event->pic2fic) {
 			my $images = $event->images->related_resultset('image');
 			while (my $image = $images->next) {
 				$self->add_image(
