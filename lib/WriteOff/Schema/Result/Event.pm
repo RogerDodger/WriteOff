@@ -586,9 +586,15 @@ sub calibrate {
 					$rounds[0]->delete;
 					shift @rounds;
 				}
+
 			},
 		);
+
+		if ($d > 0) {
+			$self->reset_jobs;
+		}
 	}
+
 }
 
 1;
