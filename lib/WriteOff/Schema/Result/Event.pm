@@ -278,7 +278,7 @@ sub timeline {
 			start => $_->start->iso8601,
 			end => $_->end->iso8601,
 		}}
-		shift->rounds->search({ }, { order_by => 'start' })
+		shift->rounds->search({ }, { order_by => 'end' })
 	];
 }
 
@@ -540,6 +540,55 @@ sub uid {
 
 sub wordcount {
 	shift->storys->related_resultset('story')->get_column('wordcount')->sum;
+}
+
+sub calibrate {
+	my ($self, $work) = @_;
+
+	my $rounds = $self->rounds->fic->vote;
+	my $entrys = $self->storys;
+	my $n = $rounds->count - 1;
+
+	my $wFinals = $work->{threshold} * $rounds->search({ name => 'final' })->first->days;
+	my $wTotal = List::Util::sum(map $_->work($work), $entrys->all);
+
+	# After $n cuts cutting $c entries, the finals should have $wFinals work,
+	# i.e., $wT * $c ** $n = $wF
+	#
+	# We want to cut at least 1/3 of the entries per round, so find $n when $c
+	# = 0.66
+	my $c = 0.66;
+	my $maxN = (log($wFinals) - log($wTotal)) / log($c);
+	printf "%f * $c ** %f = %f\n", $wTotal, $maxN, $wFinals if $ENV{WRITEOFF_DEBUG};
+
+	my $d = $n - List::Util::max(0, int $maxN);
+	my @rounds = reverse $rounds->ordered->all;
+
+	if (!$ENV{WRITEOFF_DEBUG}) {
+		# Don't calibrate if a round has already been tallied
+		return if $rounds->search({ tallied => 1 })->count;
+
+		$self->result_source->schema->storage->dbh_do(
+			sub {
+				my ($storage, $dbh) = @_;
+
+				# TODO: fix schema so this isn't necessary
+				$dbh->do(q{ PRAGMA foreign_keys = 'OFF' });
+
+				for (1..$d) {
+					for my $i (0..$#rounds-1) {
+						$rounds[$i + 1]->update({
+							name => $rounds[$i]->name,
+							end => $rounds[$i]->end,
+						});
+					}
+
+					$rounds[0]->delete;
+					shift @rounds;
+				}
+			},
+		);
+	}
 }
 
 1;

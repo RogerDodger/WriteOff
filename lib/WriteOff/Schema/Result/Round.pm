@@ -37,6 +37,12 @@ __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "round_id");
 __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "round_id");
 
+sub days {
+	my $self = shift;
+
+	$self->end->delta_days($self->start)->in_units('days');
+}
+
 sub end_leeway {
 	shift->end->clone->add(minutes => WriteOff::Util::LEEWAY);
 }
