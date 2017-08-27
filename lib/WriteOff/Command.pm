@@ -28,9 +28,8 @@ available commands:
         Renames an artist from OLDNAME to NEWNAME. If NEWNAME exists, merges
         OLDNAME with NEWNAME.
 
-    backup data [FILENAME]
-        Backs up the SQLite database to a timestamped file. If given, the
-        database is loaded from FILENAME.
+    backup data
+        Backs up the SQLite database to a timestamped file.
 
     backup logs
         Archives the logs with gunzip.
@@ -48,6 +47,9 @@ available commands:
     post render POST
         Renders the post with id POST, or all posts if POST eq 'all'
 
+    restore data FILENAME
+    	Restores the SQLite database from FILENAME.
+
     user add USERNAME EMAIL [ROLE]
         Creates user USERNAME with email EMAIL and role ROLE.
 
@@ -62,18 +64,24 @@ sub run {
 	my ($self, $command, @args) = @_;
 
 	if (defined $command && $command !~ /[^a-z]/ && $command !~ /^h(?:elp)?$/) {
-		my $module = "${self}::${command}";
-		try {
-			load $module;
-		} catch {
-			say "Failed to run command `$command`: $_";
-			exit(1);
-		};
+		if ($self eq __PACKAGE__) {
+			my $module = "${self}::${command}";
+			try {
+				load $module;
+			} catch {
+				print $_ if $ENV{WRITEOFF_DEBUG};
+				say "Command `$command` does not exist";
+				exit(1);
+			};
 
-		try {
 			$module->run(@args);
-		} catch {
-			print $_;
+		}
+		elsif ($self->can($command) && $command ne 'run') {
+			$self->$command(@args);
+		}
+		else {
+			my $module = substr($self, length(__PACKAGE__) + 2);
+			say "Command `$module $command` does not exist";
 			exit(1);
 		}
 	}
