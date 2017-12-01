@@ -1,6 +1,8 @@
 package WriteOff::Controller::Entry;
 use Moose;
 use namespace::autoclean;
+use Scalar::Util qw/looks_like_number/;
+use WriteOff::Mode qw/:all/;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -67,6 +69,24 @@ sub do_form :Private {
 			['NOT_DBIC_UNIQUE', $c->stash->{artists}, 'id'],
 		],
 	);
+
+	if ($c->stash->{rels}) {
+		my $rkey = $c->stash->{mode} eq 'fic' ? PIC()->fkey : FIC()->fkey;
+
+		my @ids = $c->stash->{rels}->get_column($rkey)->all;
+		my @params = $c->req->param($rkey) or $c->yuck("No related works selected");
+
+		my %uniq;
+		for my $id (@params) {
+
+			# Param must be in the set of valid @ids
+			$c->yuck("Invalid $rkey: $id") unless looks_like_number($id) && grep { $id == $_ } @ids;
+
+			# Param must be unique
+			$c->yuck("Duplicate $rkey: $id") if $uniq{$id};
+			$uniq{$id} = 1;
+		}
+	}
 }
 
 sub do_submit :Private {
@@ -108,6 +128,24 @@ sub do_edit :Private {
 	}
 }
 
+sub do_rels :Private {
+	my ($self ,$c) = @_;
+
+	if ($c->stash->{rels}) {
+		my $ikey = FIC()->fkey;
+		my $fkey = PIC()->fkey;
+
+		if ($c->stash->{mode} eq 'art') {
+			($ikey, $fkey) = ($fkey, $ikey);
+		}
+
+		my %q = ($ikey => $c->stash->{entry}->item_id);
+		my $rs = $c->model('DB::ImageStory');
+		$rs->search(\%q)->delete;
+		$rs->create({ %q, $fkey => int $_ }) for $c->req->param($fkey);
+	}
+}
+
 sub delete :Private {
 	my ($self, $c) = @_;
 
@@ -137,6 +175,7 @@ sub do_delete :Private {
 		$c->stash->{entry}->artist->name,
 	);
 
+	$c->stash->{entry}->item->image_stories->delete;
 	$c->stash->{entry}->item->delete;
 	$c->stash->{entry}->delete;
 

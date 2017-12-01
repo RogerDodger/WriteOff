@@ -54,6 +54,17 @@
 		</div>
 	</div>
 
+	{{- IF rels }}
+	<div class="Form-item">
+		<label>{{ c.string('relatedFic') }}<span class="required">*</span></label>
+		<select name="story_id" size="{{ rels.count }}" multiple required>
+			{{- FOREACH entry IN rels.all }}
+				<option value="{{ entry.story_id }}">{{ entry.title }}</option>
+			{{- END }}
+		</select>
+	</div>
+	{{- END }}
+
 	<div class="Form-item">
 		<label>{{ c.string('image') }}{{ '<span class="required">*</span>' IF image_required }}</label>
 		<input name="image" type="file"

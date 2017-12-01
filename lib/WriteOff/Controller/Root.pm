@@ -143,7 +143,7 @@ sub error :Private {
 		$c->res->status(400);
 	}
 
-	push @{ $c->stash->{title} }, $c->string('400');
+	push @{ $c->stash->{title} }, $c->string('error');
 	$c->stash->{template} = 'root/error.tt';
 }
 
@@ -249,6 +249,8 @@ sub end :Private {
 		my $msg = join "\n", @{ $c->error };
 		$c->log->error($_) for @{ $c->error };
 		$c->error(0);
+		$c->res->location(undef);
+		$c->res->code(500);
 		$c->forward('error', [ $msg ]);
 	}
 

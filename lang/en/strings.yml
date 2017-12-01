@@ -9,6 +9,7 @@ author: Author
 website: Website
 contents: Contents
 relatedArt: Related Artwork(s)
+relatedFic: Related Fic(s)
 entry: Entry
 story: Story
 words: Words
@@ -64,7 +65,7 @@ organiser: Organiser
 newArtistTitle: New Alias
 404: File Not Found
 403: Forbidden
-400: Error
+error: Error
 redirect: Redirect
 scoreboard: Scoreboard
 schedule: Schedule

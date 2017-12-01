@@ -32,7 +32,7 @@ require Imager;
 require WriteOff::Log;
 require WriteOff::Util;
 
-our $VERSION = 'v0.65.0';
+our $VERSION = 'v0.80.0';
 
 __PACKAGE__->config(
 	name => 'Writeoff',
@@ -312,6 +312,12 @@ sub uri_for_action_abs {
 	$self->req->base->scheme('');
 
 	return $uri;
+}
+
+sub yuck {
+	my ($self, $msg) = @_;
+
+	$self->detach('/error', [ $msg ]);
 }
 
 =head1 NAME

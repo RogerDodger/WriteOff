@@ -84,26 +84,9 @@ sub do_form :Private {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/entry/do_form');
-
 	$c->req->params->{wordcount} = wordcount( $c->req->params->{story} );
 
-	if ($c->stash->{event}->pic2fic) {
-		my @ids = $c->stash->{rels}->get_column('image_id')->all;
-		my @params = $c->req->param('image_id') or return 0;
-
-		my %uniq;
-		for my $id (@params) {
-			# Param must be in the set of valid image_ids
-			return 0 unless looks_like_number($id) && grep { $id == $_ } @ids;
-
-			# Param must be unique
-			return 0 if $uniq{$id};
-			$uniq{$id} = 1;
-		}
-	}
-
 	$c->form(
-		image_id => [ $c->stash->{event}->pic2fic ? 'NOT_BLANK' : () ],
 		story => [ 'NOT_BLANK' ],
 		wordcount => [
 			[ 'BETWEEN', $c->stash->{event}->wc_min, $c->stash->{event}->wc_max ]
@@ -140,7 +123,7 @@ sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
 sub do_submit :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('do_form');
 	$c->forward('/entry/do_submit');
 
 	if (!$c->form->has_error) {
@@ -158,16 +141,7 @@ sub do_submit :Private {
 
 		$c->stash->{entry}->story_id($story->id);
 		$c->stash->{entry}->insert;
-
-		if ($c->stash->{event}->pic2fic) {
-			my $imgstry = $c->model('DB::ImageStory');
-			for my $id ($c->req->param('image_id')) {
-				$imgstry->create({
-					story_id => $story->id,
-					image_id => int $id,
-				});
-			}
-		}
+		$c->forward('/entry/do_rels');
 
 		$c->log->info("Fic %d submitted by %s: %s by %s (%d words)",
 			$story->id,
@@ -229,7 +203,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('do_form');
 	$c->forward('/entry/do_edit');
 
 	if (!$c->form->has_error) {
@@ -246,14 +220,7 @@ sub do_edit :Private {
 			wordcount => $c->form->valid('wordcount'),
 		});
 
-		if ($c->stash->{event}->pic2fic) {
-			$c->stash->{story}->image_stories->delete;
-			my $imgstry = $c->model('DB::ImageStory');
-			for my $id ($c->req->param('image_id')) {
-				my $image = $c->model('DB::Image')->find($id);
-				$c->stash->{story}->add_to_images($image);
-			}
-		}
+		$c->forward('/entry/do_rels');
 	}
 }
 

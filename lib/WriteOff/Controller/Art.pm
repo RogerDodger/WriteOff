@@ -57,6 +57,10 @@ sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
 sub form :Private {
 	my ($self, $c) = @_;
 
+	if ($c->stash->{event}->fic2pic) {
+		$c->stash->{rels} = $c->stash->{event}->storys->seed_order;
+	}
+
 	$c->stash->{mode} = 'art';
 	$c->forward('/entry/form');
 }
@@ -191,7 +195,7 @@ sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
 sub do_submit :Private {
 	my( $self, $c ) = @_;
 
-	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('do_form');
 
 	if (!$c->form->has_error && $c->req->upload('image')) {
 		my $image = $c->stash->{image} = $c->model('DB::Image')->new_result({
@@ -219,6 +223,7 @@ sub do_submit :Private {
 		$c->forward('/entry/do_submit');
 		$c->stash->{entry}->image_id($image->id);
 		$c->stash->{entry}->insert;
+		$c->forward('/entry/do_rels');
 
 		$c->log->info("Art %d submitted by %s: %s by %s (%.2fKB)",
 			$image->id,
@@ -237,13 +242,12 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 		if !$c->user->can_edit($c->stash->{image});
 
 	$c->forward('form');
-	if ($c->req->method eq 'POST' && $c->stash->{event}->art_subs_allowed) {
-		$c->forward('do_edit');
-	}
+	$c->forward('do_edit') if $c->req->method eq 'POST';
 
 	$c->stash->{fillform} = {
 		artist     => $c->stash->{image}->entry->artist_id,
 		title      => $c->stash->{image}->entry->title,
+		story_id   => [ $c->stash->{image}->storys->get_column('id')->all ],
 		hovertext  => $c->stash->{image}->hovertext,
 	};
 
@@ -254,7 +258,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 sub do_edit :Private {
 	my ( $self, $c ) = @_;
 
-	$c->forward('do_form') or $c->detach('/error', [ 'Bad input' ]);
+	$c->forward('do_form');
 
 	if (!$c->form->has_error) {
 		$c->forward('do_write');
@@ -265,6 +269,7 @@ sub do_edit :Private {
 		});
 
 		$c->forward('/entry/do_edit');
+		$c->forward('/entry/do_rels');
 
 		$c->log->info("Art %d edited by %s: %s by %s (%.2fKB)",
 			$c->stash->{image}->id,

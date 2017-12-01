@@ -28,8 +28,8 @@ our @EXPORT_OK = ( @modes );
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 my %attr = (
-	_FIC() => [ 'fic', 'story_id' ],
-	_PIC() => [ 'art', 'image_id' ],
+	_FIC() => [ 'fic', 'story_id', 'story' ],
+	_PIC() => [ 'art', 'image_id', 'image' ],
 );
 
 our @ALL = map { __PACKAGE__->new($_) } keys %attr;
@@ -64,6 +64,10 @@ sub id {
 
 sub is {
 	return shift->id == shift->id;
+}
+
+sub item {
+	return $attr{shift->id}->[2];
 }
 
 sub name {
