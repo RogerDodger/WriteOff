@@ -387,7 +387,7 @@ sub score {
 	# Assign awards to the entries
 	if ($opt{award}) {
 		# In case this sub is re-run, clear awards previous assigned
-		$self->entrys->related_resultset('awards')->delete;
+		$entrys->related_resultset('awards')->delete;
 
 		my $rounds = $self->rounds->search({
 			action => 'vote',
