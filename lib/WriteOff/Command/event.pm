@@ -20,6 +20,13 @@ sub _find {
 	$e;
 }
 
+sub award {
+	my $self = shift;
+	my $e = $self->_find(shift);
+	my $mode = WriteOff::Mode->find(shift // 'fic');
+	$e->score($mode->name, decay => 0, score => 0);
+}
+
 sub calibrate {
 	my $self = shift;
 	my $e = $self->_find(@_);
