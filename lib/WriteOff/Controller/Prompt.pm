@@ -50,8 +50,8 @@ sub _do_vote :ActionClass("~Vote");
 sub do_vote :Private {
 	my ( $self, $c ) = @_;
 	$c->stash->{prompt} = $c->stash->{prompts}->find_maybe($c->req->param('prompt'));
-	$c->stash->{redirect} = $c->req->uri;
 	$c->forward('_do_vote');
+	$c->res->redirect($c->req->uri) if !defined $c->res->body;
 }
 
 sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {

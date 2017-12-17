@@ -38,9 +38,6 @@ sub execute {
 		};
 		$c->forward('View::JSON');
 	}
-	else {
-		$c->res->redirect($c->stash->{redirect});
-	}
 }
 
 1;

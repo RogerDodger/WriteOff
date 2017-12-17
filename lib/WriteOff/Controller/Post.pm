@@ -206,9 +206,14 @@ sub _vote :ActionClass('~Vote') {}
 
 sub vote :Chained('fetch') :PathPart('vote') :Args(0) {
 	my ($self, $c) = @_;
-	$c->detach('/default') if $c->stash->{post}->artist->user_id == $c->user_id || $c->stash->{post}->deleted;
-	$c->stash->{redirect} = $c->uri_for_action('/post/permalink', [ $c->stash->{post}->id ]);
+
+	$c->detach('/forbidden')
+		if $c->stash->{post}->artist->user_id == $c->user_id || $c->stash->{post}->deleted;
+
 	$c->forward('_vote');
+
+	$c->res->redirect($c->uri_for_action('/post/permalink', [ $c->stash->{post}->id ]))
+		if !defined $c->res->body;
 }
 
 __PACKAGE__->meta->make_immutable;
