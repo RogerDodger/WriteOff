@@ -405,8 +405,9 @@ sub score {
 		if ($mode->is(PIC) && $self->pic2fic || $mode->is(FIC) && $self->fic2pic) {
 			# TODO: Trying to optimise this with a prefetch gives "ambiguous
 			# column image_id" error. Not really that important since this
-			# function runs like once a month.
-			%rels = map { $_->id => $_->image_storys->count } $entrys->all;
+			# function runs like once a month
+			my $meth = $mode->is(FIC) ? 'story_images' : 'image_storys';
+			%rels = map { $_->id => $_->$meth->count } $entrys->all;
 			$mxrel = List::Util::max values %rels;
 		}
 		my %mxerr = map { $_->id => $_->ratings->get_column('error')->max } $rounds->all;

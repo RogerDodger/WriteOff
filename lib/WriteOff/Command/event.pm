@@ -34,7 +34,7 @@ sub reset {
 
 sub score {
 	my $self = shift;
-	my $e = $self->_find(@_);
+	my $e = $self->_find(shift);
 	my $mode = WriteOff::Mode->find(shift // 'fic');
 	$e->score($mode->name, decay => 0);
 }

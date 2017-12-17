@@ -47,6 +47,8 @@ sub new {
 sub find {
 	my ($class, $name) = @_;
 
+	return $name if UNIVERSAL::isa($name, __PACKAGE__);
+
 	for my $mode (@ALL) {
 		return $mode if $mode->name eq $name;
 	}
