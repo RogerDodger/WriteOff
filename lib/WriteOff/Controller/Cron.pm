@@ -72,7 +72,8 @@ sub schedule :Local {
 		my $t0 = $sch->next;
 		$sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
 
-		$c->stash->{event} = $c->model('DB::Event')->create_from_format($t0, $sch->format, $sch->genre);
+		$c->stash->{event} = $c->model('DB::Event')->create_from_sched($sch, $t0);
+
 		$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
 		$c->forward('/event/notify_mailing_list');
 	}

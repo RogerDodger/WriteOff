@@ -1,4 +1,4 @@
-package WriteOff::Schema::ResultSet::FormatRound;
+package WriteOff::Schema::ResultSet::ScheduleRound;
 
 use strict;
 use warnings;

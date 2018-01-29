@@ -7,6 +7,6 @@
 	</div>
 
 	<div class="Schedule-timeline">
-		{{ PROCESS 'event/timeline.tt' timeline = schedule.format.timeline(schedule.next)  }}
+		{{ PROCESS 'event/timeline.tt' timeline = schedule.timeline  }}
 	</div>
 </div>

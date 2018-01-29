@@ -4,6 +4,7 @@ package WriteOff::Schema::Result::Schedule;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
+use WriteOff::Util qw/LEEWAY/;
 
 __PACKAGE__->table("schedules");
 
@@ -24,5 +25,41 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
 __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
+__PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::ScheduleRound", "schedule_id");
+
+sub duration {
+	shift->rounds
+		->search({}, {
+			'select'   => [ \"duration + offset" ],
+			'as'       => [ 'ttl' ],
+		})
+		->get_column('ttl')
+		->max;
+}
+
+sub timeline {
+	my $self = shift;
+	my (@timeline, %leeway);
+
+	for my $round ($self->rounds->ordered->all) {
+		my $start = $self->next->clone->add(days => $round->offset);
+		my $end = $start->clone->add(days => $round->duration);
+
+		if ($round->mode eq 'submit') {
+			$leeway{$round->offset + $round->duration} = 1;
+		}
+		$start->add(minutes => LEEWAY) if $leeway{$round->offset};
+
+		push @timeline, {
+			name => $round->name,
+			mode => $round->mode,
+			action => $round->action,
+			start => $start->iso8601,
+			end => $end->iso8601,
+		};
+	}
+
+	\@timeline;
+}
 
 1;

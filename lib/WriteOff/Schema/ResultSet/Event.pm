@@ -32,15 +32,23 @@ sub archive {
 	);
 }
 
-sub create_from_format {
-	my ($self, $t0, $format, $genre, $organisers) = @_;
-	my $schema = $self->result_source->schema;
+sub create_from_sched {
+	my ($self, $sched, $t0, $orgs) = @_;
 
-	UNIVERSAL::isa($_->[0], $_->[1]) or Carp::croak "$_->[0] not a $_->[1]" for (
-		[$t0, 'DateTime'],
-		[$format, 'WriteOff::Schema::Result::Format'],
-		[$genre, 'WriteOff::Schema::Result::Genre'],
-	);
+	Carp::croak "Schedule not defined" unless defined $sched;
+
+	UNIVERSAL::isa($_->[0], $_->[1]) or Carp::croak "$_->[0] not a $_->[1]"
+		for grep { defined $_->[0] } (
+			[$sched, 'WriteOff::Schema::Result::Schedule'],
+			[$t0, 'DateTime'],
+			[$orgs, 'WriteOff::Schema::ResultSet::User'],
+		);
+
+	$t0 //= $sched->next;
+
+	my $schema = $self->result_source->schema;
+	my $format = $sched->format;
+	my $genre = $sched->genre;
 
 	my $event = $self->create({
 		format_id => $format->id,
@@ -50,13 +58,13 @@ sub create_from_format {
 		content_level => 'T',
 	});
 
-	$organisers //= $schema->resultset('User')->search({ admin => 1 });
-	for my $user ($organisers->all) {
+	$orgs //= $schema->resultset('User')->search({ admin => 1 });
+	for my $user ($orgs->all) {
 		$event->add_to_users($user, { role => 'organiser' });
 	}
 
 	my %leeway;
-	for my $round ($format->rounds->ordered->all) {
+	for my $round ($sched->rounds->ordered->all) {
 		my $start = $t0->clone->add(days => $round->offset);
 		my $end = $start->clone->add(days => $round->duration);
 
