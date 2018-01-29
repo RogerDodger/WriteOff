@@ -12,14 +12,11 @@ sub add_columns {
 	for my $col (keys %cols) {
 		my $info = $cols{$col};
 
-		next unless $info->{data_type} eq 'timestamp';
-
-		if ($col eq 'created') {
+		if ($info->{data_type} eq 'timestamp') {
 			$info->{dynamic_default_on_create} = 'get_timestamp';
-		}
-		elsif ($col eq 'updated') {
-			$info->{dynamic_default_on_create} = 'get_timestamp';
-			$info->{dynamic_default_on_update} = 'get_timestamp';
+			if ($col eq 'updated') {
+				$info->{dynamic_default_on_update} = 'get_timestamp';
+			}
 		}
 	}
 
