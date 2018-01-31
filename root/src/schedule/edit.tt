@@ -5,7 +5,7 @@
 
 	{{ PROCESS 'fragment/js-required.tt' }}
 
-	<form class="Form Schedule-form" method="post">
+	<form class="Form" method="post">
 		{{ csrf_field | none }}
 
 		<div class="Form-item">

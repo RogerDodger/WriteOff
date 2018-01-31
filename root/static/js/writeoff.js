@@ -1701,7 +1701,7 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
-// Schedule form
+// Timeline form
 // ===========================================================================
 
 function RenderSchedule () {
@@ -1716,10 +1716,9 @@ function RenderSchedule () {
 			fic: 'writing',
 		},
 	};
-	const ACTIONS = [ 'submit', 'vote' ];
 	const DAY = 1000 * 60 * 60 * 24;
 
-	var $form = $('.Schedule-form');
+	var $form = $('.Rounds').closest('form');
 	var $rounds = $form.find('.Rounds .Round');
 
 	var date = $form.find('[type="date"]').get(0).valueAsDate;
@@ -1804,6 +1803,11 @@ function RenderSchedule () {
 }
 
 $(document).ready(function () {
+	var $rounds = $('.Rounds');
+	if (!$rounds.length) {
+		return;
+	}
+
 	$('.Round-add').on('click', function (e) {
 		e.preventDefault();
 		var $t = $('.Round-template .Round').clone(true, true);
@@ -1818,9 +1822,9 @@ $(document).ready(function () {
 		RenderSchedule();
 	});
 
-	$('.Schedule-form').find('input, select').on('change', RenderSchedule);
+	$rounds.closest('form').find('input, select').on('change', RenderSchedule);
 
-	var drake = dragula([$('.Rounds').get(0)]);
+	var drake = dragula([$rounds.get(0)]);
 	drake.on('drop', RenderSchedule);
 
 	RenderSchedule();
