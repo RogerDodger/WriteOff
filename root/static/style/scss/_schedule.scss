@@ -6,6 +6,25 @@
 	margin-top: 1.5em;
 }
 
-.Schedule-desc {
+.Schedule-header {
 	font-size: 1.07em;
+	display: flex;
+	align-items: center;
+}
+
+.Schedule-edit {
+	margin-left: 0.5em;
+	font-size: 0.8em;
+}
+
+.Round-add {
+	@include button($hue: 200);
+}
+
+.Round-remove--pad {
+	visibility: hidden;
+
+	@media #{$mobile} {
+		display: none !important;
+	}
 }

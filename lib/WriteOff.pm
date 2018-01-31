@@ -188,7 +188,7 @@ __PACKAGE__->config(
 	# other words, this number is chosen so that those who are determined to
 	# can reasonably read every entry in the finals.
 	#
-	# Voter is the fraction of the treshold that the *average* voter is
+	# Voter is the fraction of the threshold that the *average* voter is
 	# expected to be able to read per day.
 	work => {
 		rate => 200,
@@ -302,6 +302,12 @@ sub paramo {
 	my ($self, $key) = @_;
 
 	return scalar $self->req->param($key) // '';
+}
+
+sub parami {
+	my ($self, $key) = @_;
+
+	return $self->paramo($key) =~ /(\d+)/ ? int $1 : undef;
 }
 
 sub uri_for_action_abs {

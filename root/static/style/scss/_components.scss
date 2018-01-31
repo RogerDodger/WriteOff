@@ -290,7 +290,8 @@
 	user-select: none;
 }
 
-.Form {
+.Form,
+.Form-item {
 	label {
 		color: #666;
 		display: block;
@@ -398,6 +399,28 @@
 	margin-top: 1em;
 }
 
+.Form-subtitle {
+	color: #444;
+	margin-top: 1em;
+	font-weight: bold;
+	font-variant: small-caps;
+}
+
+.Form-subsection {
+	margin-top: 1.3em;
+	padding: 0.1em 0.5em;
+	border-left: 0.3em solid hsla(240, 40%, 70%, 0.75);
+}
+
+.Form-subtitle + .Form-subsection,
+.Form-subtitle + * > .Form-subsection:first-of-type {
+	margin-top: 0.5em;
+}
+
+.Form-subsection + .Event-timeline {
+	margin-top: 1em;
+}
+
 .Form-group {
 	@extend .clearfix;
 
@@ -434,6 +457,10 @@
 		& > div {
 			width: 100% !important;
 			padding: 0 !important;
+		}
+
+		&:first-of-type > .Form-item:not(:first-of-type) {
+			margin-top: 1em;
 		}
 	}
 }

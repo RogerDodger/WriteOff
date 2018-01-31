@@ -282,6 +282,16 @@ $(document).ready(function() {
 
 function DrawTimeline (e) {
 	var data = $(e).data('timeline');
+
+	// Don't draw if there's no data
+	if (!data) {
+		return;
+	}
+
+	data.sort(function (a, b) {
+		return a.start.getTime() - b.start.getTime();
+	});
+
 	var modes = data.map(function (e) { return e.mode; }).uniq();
 
 	var width = $(e).width();
@@ -295,7 +305,10 @@ function DrawTimeline (e) {
 	}
 
 	var scale = d3.time.scale()
-		.domain([data[0].start, data[data.length-1].end])
+		.domain([
+			data[0].start,
+			Math.max.apply(null, data.map(function (e) { return e.end; }))
+		])
 		.range([0 + xpad, width - xpad]);
 
 	// Clear previous draw
@@ -327,7 +340,7 @@ function DrawTimeline (e) {
 
 		g.selectAll('circle.boundary.start')
 			.data(rounds.filter(function (e, i) {
-				return i == 0 || e.start - rounds[i-1].end > 10 * 60 * 1000;
+				return i == 0 || Math.abs(e.start - rounds[i-1].end) > 10 * 60 * 1000;
 			}))
 			.enter()
 			.append('circle')
@@ -369,7 +382,7 @@ function DrawTimeline (e) {
 
 		g.selectAll('text.dates.start')
 			.data(rounds.filter(function (e, i) {
-				return i == 0 || e.start - rounds[i-1].end > 12 * 60 * 60 * 1000;
+				return i == 0 || Math.abs(e.start - rounds[i-1].end) > 12 * 60 * 60 * 1000;
 			}))
 			.enter()
 			.append('text')
@@ -425,6 +438,10 @@ function DrawTimeline (e) {
 $(document).ready(function () {
 	$('.Event-timeline').each(function () {
 		var timeline = timelines.shift();
+
+		if (typeof timeline === "undefined") {
+			return;
+		}
 
 		timeline.forEach(function (t) {
 			if ('start' in t) {
@@ -1681,6 +1698,132 @@ $(document).ready(function () {
 				.addClass(this.value);
 		})
 		.trigger('change');
+});
+
+// ===========================================================================
+// Schedule form
+// ===========================================================================
+
+function RenderSchedule () {
+	const NAMES = {
+		vote: [
+			[ 'final' ],
+			[ 'prelim', 'final' ],
+			[ 'prelim', 'semifinal', 'final' ],
+		],
+		submit: {
+			art: 'drawing',
+			fic: 'writing',
+		},
+	};
+	const ACTIONS = [ 'submit', 'vote' ];
+	const DAY = 1000 * 60 * 60 * 24;
+
+	var $form = $('.Schedule-form');
+	var $rounds = $form.find('.Rounds .Round');
+
+	var date = $form.find('[type="date"]').get(0).valueAsDate;
+	var time = $form.find('[type="time"]').get(0).valueAsDate;
+	var t0 = new Date(date.getTime() + time.getTime());
+
+	var $rorder = $form.find('[name="rorder"]');
+	var $modes = $rounds.find('[name="mode"]')
+	var modes = Array.prototype.map.call($modes, function (e) { return e.value; }).uniq();
+	var rorder = 'simul';
+
+	var t = {};
+	modes.forEach(function (m) { t[m] = t0.getTime(); });
+
+	if (modes.length == 2) {
+		$rorder.attr('disabled', false);
+		$rorder.closest('.Form-item').removeClass('hidden');
+
+		var rorder = $rorder.filter(':checked').val() || 'simul';
+
+		if (rorder !== 'simul') {
+			var fr = rorder.substring(0, 3).replace('pic', 'art');
+			var to = rorder.substring(4, 7).replace('pic', 'art');
+
+			var $fr = $rounds.find('[name="mode"]')
+				.filter(function () { return this.value === fr;	})
+				.first();
+
+			t[to] += DAY * $fr.closest('.Round').find('[name="duration"]').val();
+		}
+	}
+	else {
+		$rorder.attr('disabled', true);
+		$rorder.closest('.Form-item').addClass('hidden');
+	}
+
+	var timeline = [];
+
+	$rounds.each(function (e, i) {
+		var $round = $(i);
+
+		timeline.push({
+			mode: $round.find('[name="mode"]').val(),
+			duration: $round.find('[name="duration"]').val(),
+		});
+	});
+
+	modes.forEach(function (m) {
+		var tl = timeline.filter(function (r) { return r.mode === m; });
+		var s = tl.slice(0, 1);
+		var v = tl.slice(1, tl.length);
+
+		s.forEach(function (r, i) {
+			r.action = 'submit';
+			r.name = NAMES[r.action][r.mode];
+		});
+
+		v.forEach(function (r, i) {
+			r.action = 'vote';
+			if (v.length <= 3) {
+				r.name = NAMES[r.action][ v.length - 1 ][i];
+			}
+			else {
+				r.name = 'round ' + (i + 1);
+			}
+		});
+
+		tl.forEach(function (r, i) {
+			r.start = new Date(t[r.mode]);
+			t[r.mode] += DAY * r.duration;
+			r.end = new Date(t[r.mode]);
+
+			if (r.name) r.name = r.name.ucfirst();
+		});
+	});
+
+	$('.Event-timeline').each(function () {
+		$(this).removeClass('hidden');
+		$(this).data('timeline', timeline);
+		DrawTimeline(this);
+	});
+}
+
+$(document).ready(function () {
+	$('.Round-add').on('click', function (e) {
+		e.preventDefault();
+		var $t = $('.Round-template .Round').clone(true, true);
+		$t.find(':disabled').attr('disabled', false);
+		$('.Rounds').append($t);
+		RenderSchedule();
+	});
+
+	$('.Round-remove').on('click', function (e) {
+		e.preventDefault();
+		$(this).closest('.Form-subsection').remove();
+		RenderSchedule();
+	});
+
+	$('.Schedule-form').find('input, select').on('change', RenderSchedule);
+
+	var drake = dragula([$('.Rounds').get(0)]);
+	drake.on('drop', RenderSchedule);
+
+	RenderSchedule();
 });
 
 // ===========================================================================

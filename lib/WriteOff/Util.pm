@@ -8,7 +8,7 @@ use Digest;
 use Time::HiRes qw/gettimeofday/;
 use WriteOff::Markup;
 
-our @EXPORT_OK = qw/LEEWAY maybe simple_uri sorted token wordcount uniq/;
+our @EXPORT_OK = qw/LEEWAY maybe rorder simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 sub LEEWAY () { 5 } # minutes
@@ -19,6 +19,29 @@ sub bbcode {
 
 sub maybe ($$) {
 	$_[1] ? @_ : ();
+}
+
+# TODO: put this somewhere else
+sub rorder {
+	my $rounds = shift;
+
+	my $submit = $rounds->search({ action => 'submit' })->ordered;
+	my $fic = $submit->search({ mode => 'fic' })->first;
+	my $pic = $submit->search({ mode => 'art' })->first;
+
+	if (defined $fic && defined $pic) {
+		if ($pic->end <= $fic->start) {
+			return "pic2fic";
+		}
+		elsif ($fic->end <= $pic->start) {
+			return "fic2pic";
+		}
+		else {
+			return "simul";
+		}
+	}
+
+	undef;
 }
 
 sub simple_uri {

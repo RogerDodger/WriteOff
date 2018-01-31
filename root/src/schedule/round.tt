@@ -1,0 +1,30 @@
+<div class="Form-subsection Round">
+	<div class="Form-group three">
+		<div class="Form-item">
+			<label>{{ c.string('mode') }}</label>
+			<select name="mode" required {{ disabled }}>
+				{{ FOREACH m IN modes }}
+				<option value="{{ m.name }}" {{ 'selected' IF m.name == round.mode }}>
+					{{ m.name }}
+				</option>
+				{{ END }}
+			</select>
+		</div>
+
+		<div class="Form-item">
+			<label>{{ c.string('duration') }}</label>
+			<div class="Form-caption--container">
+				<input type="number" name="duration" min=1 step=1
+					value="{{ round.duration || 1 }}" required {{ disabled }}>
+				<span class="Form-caption">{{ c.string('days') }}</span>
+			</div>
+		</div>
+
+		<div class="Form-item">
+			<label class="Round-remove--pad">Pad</label>
+			<button name="addRound" type="submit" class="Round-remove">
+				{{ c.string('removeRound') }}
+			</button>
+		</div>
+	</div>
+</div>

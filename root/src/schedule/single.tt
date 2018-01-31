@@ -1,9 +1,14 @@
 <div class="Schedule">
-	<div class="Schedule-desc">
+	<div class="Schedule-header">
 		<div class="Schedule-name">
 			<span class="Genre" title="{{ schedule.genre.descr }}">{{ schedule.genre.name }}</span>
 			<span class="Format">{{ schedule.format.name }}</span>
 		</div>
+		{{ IF c.user.admin }}
+		<div class="Schedule-edit">
+			[<a href="{{ c.uri_for_action('/schedule/edit', [ schedule.id ]) }}">{{ c.string('edit')}}</a>]
+		</div>
+		{{ END }}
 	</div>
 
 	<div class="Schedule-timeline">

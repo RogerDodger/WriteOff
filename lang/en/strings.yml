@@ -51,6 +51,7 @@ guess: Guess
 vote: Vote
 save: Save
 cancel: Cancel
+scheduleAt: Schedule @ %s
 go: Go
 artistActive: Swappable
 saveChanges: Save changes
@@ -61,6 +62,19 @@ deleteArtist: Delete alias
 user: User
 admin: Admin
 organiser: Organiser
+nextEvent: Next Event
+nextEventNote: Date/Time is in UTC
+period: Period
+action: Action
+mode: Mode
+offset: Offset
+duration: Duration
+hours: Hours
+days: Days
+weeks: Weeks
+rounds: Rounds
+addRound: Add Round
+removeRound: Remove Round
 
 newArtistTitle: New Alias
 404: File Not Found
@@ -84,6 +98,7 @@ artistGuessing: Fic Guessing
 artResults: Art Results
 ficResults: Fic Results
 prelim: Prelim
+semifinal: Semi-final
 final: Final
 prelimBallot: My Prelim Ballot
 finalBallot: My Final Ballot
@@ -173,6 +188,8 @@ emailLimited: |
 introSplash: |
     Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
 confirmPrompt: Enter the %s of the selected item to continue
+jsRequired: |
+    This page requires JavaScript to work properly
 csrfDetected: Bad session
 notAdmin: You are not an admin
 notOrganiser: You are not an event organiser for this event
@@ -184,6 +201,11 @@ entryCount: %d entries
 doublePost: Double post detected—attempting to redirect
 postDeleted: Post by %s deleted %s
 noNotifs: You have no notifications
+
+badInput: Bad input
+tooManyRounds: Too many rounds
+
+scheduleUpdated: Schedule updated
 
 notifComment: %s commented
 notifMention: %s mentioned you

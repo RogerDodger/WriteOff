@@ -62,4 +62,9 @@ sub timeline {
 	\@timeline;
 }
 
+sub rorder {
+	my $self = shift;
+	$self->{__rorder} //= WriteOff::Util::rorder($self->rounds_rs);
+}
+
 1;
