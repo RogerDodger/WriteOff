@@ -1,9 +1,10 @@
 package WriteOff::DateTime;
 
+use 5.014;
+use Try::Tiny;
 require DateTime;
 require DateTime::Format::Human::Duration;
 require DateTime::Format::RFC3339;
-use 5.014;
 
 sub DateTime::rfc2822 {
 	my $self = shift;
@@ -56,6 +57,31 @@ sub now {
 		return DateTime::Format::RFC3339->parse_datetime($t);
 	}
 	return DateTime->now;
+}
+
+sub parse {
+	my ($self, $date, $time) = @_;
+	my ($y, $mo, $d, $h, $mi, $s);
+
+	if ($date =~ /(\d{4})-(\d{2})-(\d{2})/) {
+		($y, $mo, $d) = ($1, $2, $3);
+	}
+
+	if ($time =~ /(\d{2}):(\d{2})(?::(\d{2}))?/) {
+		($h, $mi, $s) = ($1, $2, $3);
+	}
+
+	return try {
+		DateTime->new(
+			year => $y,
+			month => $mo,
+			day => $d,
+			hour => $h // 0,
+			minute => $mi // 0,
+			second => $s // 0,
+			time_zone => 'UTC',
+		);
+	}
 }
 
 sub timezones {

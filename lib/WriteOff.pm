@@ -163,6 +163,12 @@ __PACKAGE__->config(
 			xmax => 1800,
 			ymax => 1800,
 		},
+		dur => {
+			max => 60,
+		},
+		prd => {
+			max => 53,
+		},
 	},
 	login => {
 		limit => 10,

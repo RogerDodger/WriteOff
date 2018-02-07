@@ -14,7 +14,7 @@
 		<div class="Form-item">
 			<label>{{ c.string('duration') }}</label>
 			<div class="Form-caption--container">
-				<input type="number" name="duration" min=1 step=1
+				<input type="number" name="duration" min=1 max={{ c.config.biz.dur.max }} step=1
 					value="{{ round.duration || 1 }}" required {{ disabled }}>
 				<span class="Form-caption">{{ c.string('days') }}</span>
 			</div>

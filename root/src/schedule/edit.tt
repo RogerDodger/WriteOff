@@ -10,7 +10,7 @@
 
 		<div class="Form-item">
 			<label>{{ c.string('nextEvent') }}</label>
-			<input type="date" name="nextDate" required min="{{ minDate }}"
+			<input type="date" name="nextDate" required min="{{ minDate.strftime('%Y-%m-%d') }}"
 				value="{{ sched.next.strftime('%Y-%m-%d') }}">
 			<input type="time" name="nextTime" required
 				value="{{ sched.next.strftime('%H:%M') }}">
@@ -22,7 +22,8 @@
 				<label>{{ c.string('period') }}</label>
 				<div class="Form-caption--container">
 					<input type="number" name="period"
-						value="{{ sched.period }}" step=1 min=1 required>
+						step=1 min=0 max={{ c.config.biz.prd.max }}
+						value="{{ sched.period }}" required>
 					<span class="Form-caption">{{ c.string('weeks') }}</span>
 				</div>
 			</div>
