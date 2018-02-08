@@ -44,6 +44,7 @@ edit: Edit
 reply: Reply
 create: Create
 delete: Delete
+new: New
 restore: Restore
 dq: Disqualify
 submit: Submit
@@ -83,6 +84,8 @@ error: Error
 redirect: Redirect
 scoreboard: Scoreboard
 schedule: Schedule
+editSchedule: Edit Schedule
+newSchedule: New Schedule
 artGuessing: Art Guessing
 ficGuessing: Fic Guessing
 artGallery: Art Gallery

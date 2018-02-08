@@ -24,6 +24,46 @@ sub index :Path :Args(0) {
 	$c->stash->{schedules} = $c->model('DB::Schedule')->search({}, { order_by => 'next' });
 }
 
+sub add :Local {
+	my ($self, $c) = @_;
+
+	$c->forward('/assert_admin');
+	$c->stash->{sched} = $c->model('DB::Schedule')->new_result({});
+	$c->forward('form');
+	$c->forward('do_add') if $c->req->method eq 'POST';
+}
+
+sub do_add :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('do_form');
+	$c->stash->{sched}->insert;
+	$c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds } };
+
+	$c->flash->{status_msg} = $c->string('scheduleUpdated');
+	$c->res->redirect($c->uri_for_action('/schedule/index'));
+}
+
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->forward('/assert_admin');
+	$c->forward('form');
+	$c->forward('do_edit') if $c->req->method eq 'POST';
+}
+
+sub do_edit :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('do_form');
+	$c->stash->{sched}->update;
+	$c->stash->{sched}->rounds->delete;
+	$c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds } };
+
+	$c->flash->{status_msg} = $c->string('scheduleUpdated');
+	$c->res->redirect($c->uri_for_action('/schedule/index'));
+}
+
 sub form :Private {
 	my ($self, $c) = @_;
 
@@ -56,7 +96,7 @@ sub do_form :Private {
 		$c->yuck($c->string('badInput'))
 	}
 
-	$c->stash->{schedule}->set_columns({
+	$c->stash->{sched}->set_columns({
 		next => $next,
 		format_id => $format->id,
 		genre_id => $genre->id,
@@ -64,28 +104,6 @@ sub do_form :Private {
 	});
 
 	$c->forward('/round/do_form');
-}
-
-sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
-	my ($self, $c) = @_;
-
-	$c->forward('/assert_admin');
-
-	$c->forward('form');
-
-	$c->forward('do_edit') if $c->req->method eq 'POST';
-}
-
-sub do_edit :Private {
-	my ($self, $c) = @_;
-
-	$c->forward('do_form');
-	$c->stash->{schedule}->update;
-	$c->stash->{schedule}->rounds->delete;
-	$c->stash->{schedule}->create_related('rounds', $_) for @{ $c->stash->{rounds } };
-
-	$c->flash->{status_msg} = $c->string('scheduleUpdated');
-	$c->res->redirect($c->uri_for_action('/schedule/index'));
 }
 
 __PACKAGE__->meta->make_immutable;

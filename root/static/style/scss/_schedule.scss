@@ -17,6 +17,13 @@
 	font-size: 0.8em;
 }
 
+.Schedule-add {
+	@include button($sat: 0%, $l: 90%);
+	display: block;
+	margin-top: 0.5em;
+	text-align: center;
+}
+
 .Round-add {
 	@include button($hue: 200);
 }

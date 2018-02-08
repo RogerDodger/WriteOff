@@ -1,0 +1,82 @@
+{{ PROCESS 'fragment/js-required.tt' }}
+
+<form class="Form" method="post">
+	{{ csrf_field | none }}
+
+	<div class="Form-item">
+		<label>{{ c.string('nextEvent') }}</label>
+		<input type="date" name="nextDate" required min="{{ minDate.strftime('%Y-%m-%d') }}"
+			value="{{ sched.next.strftime('%Y-%m-%d') }}">
+		<input type="time" name="nextTime" required
+			value="{{ sched.next.strftime('%H:%M') }}">
+		<div class="Form-note">{{ c.string('nextEventNote') }}</div>
+	</div>
+
+	<div class="Form-group three">
+		<div class="Form-item">
+			<label>{{ c.string('period') }}</label>
+			<div class="Form-caption--container">
+				<input type="number" name="period"
+					step=1 min=0 max={{ c.config.biz.prd.max }}
+					value="{{ sched.period }}" required>
+				<span class="Form-caption">{{ c.string('weeks') }}</span>
+			</div>
+		</div>
+
+		<div class="Form-item">
+			<label>{{ c.string('format') }}</label>
+			<select name="format">
+				{{ FOREACH f IN formats.all }}
+				<option value="{{ f.id }}" {{ 'selected' IF f.id == sched.format_id }}>
+					{{ c.string(f.name) }}
+				</option>
+				{{ END }}
+			</select>
+		</div>
+
+		<div class="Form-item">
+			<label>{{ c.string('genre') }}</label>
+			<select name="genre">
+				{{ FOREACH g IN genres.all }}
+				<option value="{{ g.id }}" {{ 'selected' IF g.id == sched.genre_id }}>
+					{{ c.string(g.name) }}
+				</option>
+				{{ END }}
+			</select>
+		</div>
+	</div>
+
+	<div class="Form-item">
+		{{ FOREACH val IN [ 'simul', 'fic2pic', 'pic2fic' ] }}
+		<label>
+			<input type="radio" name="rorder" value="{{ val }}"
+				{{ 'checked' IF val == rorder }}>
+			{{ val }}
+		</label>
+		{{ END }}
+	</div>
+
+	<div class="Round-template hidden">
+		{{ INCLUDE schedule/round.tt  disabled = 'disabled' }}
+	</div>
+
+	<div class="Form-subtitle">{{ c.string('rounds') }}</div>
+
+	<div class="Rounds">
+	{{ FOREACH round IN schedule.rounds }}
+		{{ PROCESS schedule/round.tt }}
+	{{ END }}
+	</div>
+
+	<div class="Form-subsection">
+		<button name="addRound" type="submit" class="Round-add">
+			{{ c.string('addRound') }}
+		</button>
+	</div>
+
+	{{ PROCESS event/timeline.tt  timeline = schedule.timeline }}
+
+	<div class="Form-item">
+		<input type="submit" value="{{ c.string('submit') }}">
+	</div>
+</form>

@@ -1,5 +1,7 @@
 {{ FOREACH round IN timeline; SET round.name = c.string(round.name); END }}
 <div class="Event-timeline hidden"></div>
+{{ IF timeline }}
 <script type="text/javascript">
 	timelines.push({{ timeline.json | none }});
 </script>
+{{ END }}

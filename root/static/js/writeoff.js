@@ -284,7 +284,7 @@ function DrawTimeline (e) {
 	var data = $(e).data('timeline');
 
 	// Don't draw if there's no data
-	if (!data) {
+	if (!data || !data.length) {
 		return;
 	}
 
@@ -442,6 +442,8 @@ $(document).ready(function () {
 		if (typeof timeline === "undefined") {
 			return;
 		}
+
+		console.log(typeof timeline, timeline)
 
 		timeline.forEach(function (t) {
 			if ('start' in t) {
@@ -1723,7 +1725,13 @@ function RenderSchedule () {
 
 	var date = $form.find('[type="date"]').get(0).valueAsDate;
 	var time = $form.find('[type="time"]').get(0).valueAsDate;
-	var t0 = new Date(date.getTime() + time.getTime());
+	var t0;
+	if (date !== null && time !== null) {
+		t0 = new Date(date.getTime() + time.getTime());
+	}
+	else {
+		t0 = new Date(0);
+	}
 
 	var $rorder = $form.find('[name="rorder"]');
 	var $modes = $rounds.find('[name="mode"]')

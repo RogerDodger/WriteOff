@@ -6,4 +6,10 @@
 	{{ FOREACH schedule IN schedules.all }}
 		{{ PROCESS 'schedule/single.tt' }}
 	{{ END }}
+
+	{{ IF c.user.admin }}
+	<a class="Schedule-add" href="{{ c.uri_for_action('/schedule/add') }}">
+		{{ c.string('new') }}
+	</a>
+	{{ END }}
 </div>
