@@ -3,6 +3,8 @@ use Moose;
 
 use List::Util qw/shuffle/;
 use WriteOff::Award qw/:all/;
+use WriteOff::DateTime;
+use WriteOff::Util qw/LEEWAY/;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -116,6 +118,160 @@ sub do_add :Private {
 	$c->res->redirect( $c->uri_for('/') );
 }
 
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->forward('assert_organiser');
+	$c->forward('form');
+	$c->stash->{dateFrozen} = $c->stash->{event}->started;
+	$c->stash->{rulesFrozen} = $c->stash->{event}->fic_gallery_opened;
+	$c->forward('do_edit') if $c->req->method eq 'POST';
+	$c->stash->{template} = 'event/edit.tt';
+}
+
+sub do_edit :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('do_form');
+
+	my %keep;
+	my $rounds_rs = $c->stash->{event}->rounds;
+	for my $round (@{ $c->stash->{rounds} }) {
+		if (exists $round->{id}) {
+			my $row = $round->{row} = $rounds_rs->find_maybe($round->{id})
+				or $c->yuck($c->string('badInput'));
+
+			if ($row->finished) {
+				$row->start == $round->{start} && $row->end == $round->{end}
+					or $c->yuck($c->string('cantChangeFinishedRound'));
+			}
+
+			if ($row->active) {
+				$row->start == $round->{start}
+					or $c->yuck($c->string('cantChangeActiveRoundStart'));
+			}
+
+			if ($row->finished || $row->active) {
+				$row->mode eq $round->{mode} &&
+				$row->action eq $round->{action}
+					or $c->yuck($c->string('badInput'));
+			}
+
+			$keep{$row->id} = 1;
+		}
+		else {
+			$round->{start} > $c->stash->{now}
+				or $c->yuck($c->string('cantMakeRoundAlreadyStarted'));
+		}
+	}
+
+	for my $row ($rounds_rs->all) {
+		$row->delete if !$keep{$row->id};
+	}
+
+	for my $round (@{ $c->stash->{rounds} }) {
+		if (my $row = delete $round->{row}) {
+			$row->update($round);
+		}
+		else {
+			$c->stash->{event}->create_related('rounds', $round);
+		}
+	}
+
+	$c->stash->{event}->update;
+	$c->stash->{event}->reset_jobs;
+
+	$c->flash->{status_msg} = $c->string('eventUpdated');
+	$c->res->redirect($c->uri_for_action('/event/permalink', [ $c->stash->{event}->id_uri ]));
+}
+
+sub form :Private {
+	my ($self, $c) = @_;
+
+	$c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
+	$c->stash->{contentLevels} = [ qw/E T A M/ ];
+	$c->stash->{modes} = \@WriteOff::Mode::ALL;
+	$c->stash->{formats} = $c->model('DB::Format');
+	$c->stash->{genres} = $c->model('DB::Genre');
+}
+
+sub do_form :Private {
+	my ($self, $c) = @_;
+
+	$c->forward('/check_csrf_token');
+
+	my $start = WriteOff::DateTime->parse($c->paramo('date'), $c->paramo('time'));
+	my $prompt = $c->paramo('prompt');
+	my $blurb = $c->paramo('blurb');
+	my $genre = $c->stash->{genres}->find_maybe($c->paramo('genre'));
+	my $format = $c->stash->{formats}->find_maybe($c->paramo('format'));
+	my $clevel = $c->paramo('content_level');
+	my $wc_min = $c->parami('wc_min');
+	my $wc_max = $c->parami('wc_max');
+
+	if (
+		(grep !defined, $start, $format, $genre) or
+		(!grep $_ eq $clevel, @{ $c->stash->{contentLevels} }) or
+		$c->config->{len}{max}{prompt} < length $prompt or
+		$c->config->{len}{max}{blurb} < length $blurb
+	) {
+		$c->yuck($c->string('badInput'));
+	}
+
+	if ($wc_min > $wc_max) {
+		($wc_min, $wc_max) = ($wc_max, $wc_min);
+	}
+
+	if ($c->stash->{dateFrozen}) {
+		$start = $c->stash->{event}->start;
+	}
+	elsif ($start <= $c->stash->{minDate}) {
+		$c->yuck($c->string('eventTooSoon'));
+	}
+
+	$c->stash->{event}->set_column(blurb => $blurb);
+
+	unless ($c->stash->{rulesFrozen}) {
+		$c->stash->{event}->set_columns({
+			format_id => $format->id,
+			genre_id => $genre->id,
+			content_level => $clevel,
+			wc_min => $wc_min,
+			wc_max => $wc_max,
+		});
+	}
+
+	if ($c->stash->{event}->in_storage && $c->stash->{event}->started && !$c->stash->{rulesFrozen}) {
+		$c->stash->{event}->prompt($prompt)
+	}
+	elsif (!length $prompt) {
+		$c->stash->{event}->prompt_fixed(undef);
+	}
+	else {
+		$c->stash->{event}->prompt_fixed($prompt);
+	}
+
+	$c->forward('/round/do_form');
+
+	my %leeway;
+	for my $round (@{ $c->stash->{rounds} }) {
+		$leeway{$round->{mode}}{$round->{offset} + $round->{duration}} = 1
+			if $round->{action} eq 'submit';
+	}
+
+	for my $round (@{ $c->stash->{rounds} }) {
+		$round->{start} = $start->clone->add(days => $round->{offset});
+		$round->{end} = $round->{start}->clone->add(days => $round->{duration});
+
+		if ($leeway{$round->{mode}}{$round->{offset}}) {
+			$round->{start}->add(minutes => LEEWAY);
+		}
+
+		delete $round->{offset};
+		delete $round->{duration};
+	}
+}
+
 sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
@@ -129,13 +285,16 @@ sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
 	$c->detach('/error', ['There is no art component to this event.'])
-	unless $c->stash->{event}->has('art');
+		unless $c->stash->{event}->has('art');
 
 	push @{ $c->stash->{title} }, 'Art';
 }
 
 sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+
+	$c->detach('/error', ['There is no prompt round for this event.'])
+		if $c->stash->{event}->prompt_fixed;
 
 	push @{ $c->stash->{title} }, 'Prompt';
 }
@@ -244,47 +403,6 @@ sub view :Chained('fetch') :PathPart('submissions') :Args(0) {
 	$c->detach('/default', [ 'Page under development...' ]);
 }
 
-sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
-	my ( $self, $c ) = @_;
-
-	$c->forward('assert_organiser');
-
-	if ($c->req->method eq 'POST') {
-		$c->forward('/check_csrf_token');
-
-		$c->form(
-			blurb => [ [ 'LENGTH', 1, $c->config->{len}{max}{blurb} ] ],
-			rules => [ [ 'LENGTH', 1, $c->config->{len}{max}{rules} ] ],
-			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
-		);
-
-		$c->forward('do_edit') if !$c->form->has_error;
-	}
-
-	$c->stash->{fillform} = {
-		content_level => $c->stash->{event}->content_level,
-		blurb => $c->stash->{event}->blurb,
-		rules => $c->stash->{event}->custom_rules,
-	};
-
-	push @{ $c->stash->{title} }, 'Edit';
-	$c->stash->{template} = 'event/edit.tt';
-}
-
-sub do_edit :Private {
-	my ($self, $c) = @_;
-
-	if ($c->req->param('submit') eq 'Edit details') {
-		$c->stash->{event}->update({
-			blurb         => $c->form->valid('blurb'),
-			custom_rules  => $c->form->valid('rules'),
-			content_level => $c->form->valid('content_level'),
-		});
-
-		$c->stash->{status_msg} = 'Details edited';
-	}
-}
-
 sub assert_organiser :Private {
 	my ( $self, $c, $msg ) = @_;
 
@@ -326,19 +444,24 @@ sub notify_mailing_list :Private {
 sub set_prompt :Private {
 	my ( $self, $c, $id ) = @_;
 
-	$c->stash->{event} = $c->model('DB::Event')->find($id) or return 0;
+	my $e = $c->stash->{event} = $c->model('DB::Event')->find($id) or return 0;
 
-	# In case of tie, we take the first, which is random
-	my @p = shuffle $c->stash->{event}->prompts->all;
-	my $best = $p[0];
-	for my $p (@p) {
-		if ($p->score > $best->score) {
-			$best = $p;
-		}
+	if ($e->prompt_fixed) {
+		$e->update({ prompt => $e->prompt_fixed });
 	}
+	else {
+		# In case of tie, we take the first, which is random
+		my @p = shuffle $e->prompts->all;
+		my $best = $p[0];
+		for my $p (@p) {
+			if ($p->score > $best->score) {
+				$best = $p;
+			}
+		}
 
-	if ($best) {
-		$c->stash->{event}->update({ prompt => $best->contents });
+		if ($best) {
+			$e->update({ prompt => $best->contents });
+		}
 	}
 
 	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });

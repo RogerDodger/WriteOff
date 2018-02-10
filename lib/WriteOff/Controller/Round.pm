@@ -4,7 +4,7 @@ use namespace::autoclean;
 use DateTime::Format::Pg;
 use Try::Tiny;
 use WriteOff::Mode;
-use WriteOff::Util qw/uniq/;
+use WriteOff::Util qw/maybe uniq/;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -13,6 +13,7 @@ sub do_form :Private {
 
    my @modes = $c->req->param('mode');
    my @durs = $c->req->param('duration');
+   my @ids = $c->req->param('round_id');
 
    if (@modes == 0 || @modes != @durs) {
       $c->yuck($c->string('noRounds'));
@@ -26,9 +27,10 @@ sub do_form :Private {
          or $c->yuck($c->string('badInput'));
 
       push @rounds, {
+         maybe(id => shift @ids),
          mode => $mode->name,
          duration => int $1,
-      }
+      };
    }
 
    my %names = (

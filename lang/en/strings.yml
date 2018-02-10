@@ -13,7 +13,9 @@ relatedFic: Related Fic(s)
 entry: Entry
 story: Story
 words: Words
+contentLevel: Content level
 wordcount: Wordcount
+blurb: Blurb
 caption: Caption
 watermark: Watermark
 top: Top
@@ -62,9 +64,11 @@ editArtist: Edit profile
 deleteArtist: Delete alias
 user: User
 admin: Admin
+start: Start
 organiser: Organiser
 nextEvent: Next Event
-nextEventNote: Date/Time is in UTC
+promptNote: Prompt will show as "TBD" until event starts
+dateTimeNote: Date/Time is in UTC
 period: Period
 action: Action
 mode: Mode
@@ -209,8 +213,13 @@ badInput: Bad input
 tooManyRounds: Too many rounds
 noRounds: No rounds
 nextEventTooSoon: Next event is too soon
+nextEventTooSoon: Event is too soon
+cantChangeFinishedRound: Can't change finished round
+cantChangeActiveRoundStart: Can't change active round's start
+cantMakeRoundAlreadyStarted: Can't make a round that's already started
 
 scheduleUpdated: Schedule updated
+eventUpdated: Event updated
 
 notifComment: %s commented
 notifMention: %s mentioned you

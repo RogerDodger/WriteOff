@@ -1,0 +1,13 @@
+<div class="Form-item">
+	<label>{{ c.string('format') }}</label>
+	<select name="format" {{ 'disabled' IF rulesFrozen }}>
+		{{ FOREACH f IN formats.all }}
+		<option value="{{ f.id }}" {{ 'selected' IF f.id == selected }}>
+			{{ c.string(f.name) }}
+		</option>
+		{{ END }}
+	</select>
+	{{ IF rulesFrozen }}
+	<input type="hidden" name="format" value="{{ selected }}">
+	{{ END }}
+</div>

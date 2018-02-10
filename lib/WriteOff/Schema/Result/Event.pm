@@ -25,6 +25,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"prompt",
 	{ data_type => "text", default_value => "TBD", is_nullable => 0 },
+	"prompt_fixed",
+	{ data_type => "text", is_nullable => 1 },
 	"blurb",
 	{ data_type => "text", is_nullable => 1 },
 	"wc_min",
@@ -119,6 +121,8 @@ sub has_started {
 	my $self = shift;
 	return sorted $self->start, $self->now_dt;
 }
+
+BEGIN { *started = \&has_started }
 
 sub prompt_voting {
 	shift->start->clone->subtract(days => 1);
@@ -237,28 +241,18 @@ sub artist_guessing_allowed {
 	return $row->art_gallery_opened && !$row->ended;
 }
 
-sub fic2pic {
+sub rorder {
 	my $self = shift;
 
-	$self->{__fic2pic} //= do {
-		my $rounds = $self->rounds->search({ action => 'submit' })->ordered;
-		my $fic = $rounds->search({ mode => 'fic' })->first;
-		my $pic = $rounds->search({ mode => 'art' })->first;
+	$self->{__rorder} //= WriteOff::Util::rorder($self->rounds_rs);
+}
 
-		defined $fic && defined $pic && $fic->end <= $pic->start;
-	}
+sub fic2pic {
+	shift->rorder eq 'fic2pic';
 }
 
 sub pic2fic {
-	my $self = shift;
-
-	$self->{__pic2fic} //= do {
-		my $rounds = $self->rounds->search({ action => 'submit' })->ordered;
-		my $fic = $rounds->search({ mode => 'fic' })->first;
-		my $pic = $rounds->search({ mode => 'art' })->first;
-
-		defined $fic && defined $pic && $pic->end <= $fic->start;
-	}
+	shift->rorder eq 'pic2fic';
 }
 
 sub ended {

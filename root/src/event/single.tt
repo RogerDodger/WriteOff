@@ -29,10 +29,25 @@
 </div>
 
 <div class="Event-details">
+	<!-- SET edits $c->user->admin -->
+	{{ FOREACH orgr IN event.organisers }}
+	<!-- SET edits $c->stash->{edits} || $c->user->id == {{ orgr.id }} -->
+	{{ END }}
+
+	<!-- IF edits -->
+	<div class="Event-edit">
+		[<a href="{{ c.uri_for_action('/event/edit', [ event.id_uri ]) }}">{{
+			c.string('edit')
+		}}</a>]
+	</div>
+	<!-- END -->
+
 	<div class="Event-staff--container">
 		Organised by
 		<span class="Event-staff">
-			{{ event.organisers.map_username.join_serial }}
+			{{ FOREACH orgr IN event.organisers }}
+				<span class="Event-organiser">{{ orgr.name }}</span>
+			{{ END }}
 		</span>
 	</div>
 
@@ -58,10 +73,12 @@
 		<li><a href="{{ c.uri_for_action('/event/rules', id) }}">Rules</a>
 	</ul>
 
+	{{ IF !event.prompt_fixed }}
 	<ul class="Event-links prompt">
 		<li><a href="{{ c.uri_for_action('/prompt/submit', id) }}">Prompt Submission</a>
 		<li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a>
 	</ul>
+	{{ END }}
 
 	{{ IF event.has('art') }}
 	<ul class="Event-links art">

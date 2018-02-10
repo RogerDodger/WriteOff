@@ -1,38 +1,7 @@
+{{ title.push(c.string('edit')) }}
+
 <div class="Document">
-	<div class="Document-title">
-		Edit Event
-	</div>
+	<div class="Document-title">{{ event.prompt }}</div>
 
-	<form class="Form" method="post">
-		{{ csrf_field | none }}
-
-		{{- IF c.form.has_error }}
-			{{- FOREACH message IN c.form.messages('submit') }}
-				{{ INCLUDE fragment/error_msg.tt }}
-			{{- END }}
-		{{- END }}
-
-		<div class="Form-item">
-			<label>Blurb</label>
-			<textarea name="blurb" rows="8" cols="32"></textarea>
-		</div>
-
-		<div class="Form-item">
-			<label>Custom rules</label>
-			<textarea name="rules" rows="8" cols="32"></textarea>
-		</div>
-
-		<div class="Form-item">
-			<label>Content level</label>
-			<select name="content_level">
-				<option value="E">Everyone</option>
-				<option value="T">Teen</option>
-				<option value="M">Mature</option>
-			</select>
-		</div>
-
-		<div class="Form-item">
-			<input type="submit" name="submit" value="Edit details">
-		</div>
-	</form>
+	{{ INCLUDE event/form.tt }}
 </div>

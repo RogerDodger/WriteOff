@@ -1736,7 +1736,6 @@ function RenderSchedule () {
 	var $rorder = $form.find('[name="rorder"]');
 	var $modes = $rounds.find('[name="mode"]')
 	var modes = Array.prototype.map.call($modes, function (e) { return e.value; }).uniq();
-	var rorder = 'simul';
 
 	var t = {};
 	modes.forEach(function (m) { t[m] = t0.getTime(); });
@@ -1832,8 +1831,15 @@ $(document).ready(function () {
 
 	$rounds.closest('form').find('input, select').on('change', RenderSchedule);
 
-	var drake = dragula([$rounds.get(0)]);
-	drake.on('drop', RenderSchedule);
+	// var drake = dragula([$rounds.get(0)], {
+	// 	accepts: function(el, target, source, sibling) {
+	// 		return sibling === null || !sibling.classList.contains('frozen');
+	// 	},
+	// 	invalid: function (el, handle) {
+	// 		return el.classList.contains('frozen');
+	// 	}
+	// });
+	// drake.on('drop', RenderSchedule);
 
 	RenderSchedule();
 });

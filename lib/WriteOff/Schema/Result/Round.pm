@@ -8,6 +8,7 @@ use base "WriteOff::Schema::Result";
 use List::Util ();
 use WriteOff::Util ();
 use WriteOff::Rank ();
+use WriteOff::DateTime;
 
 __PACKAGE__->table("rounds");
 
@@ -37,14 +38,25 @@ __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "round_id");
 __PACKAGE__->has_many("ratings", "WriteOff::Schema::Result::Rating", "round_id");
 
+sub active {
+	my $self = shift;
+	$self->start <= WriteOff::DateTime->now && !$self->finished;
+}
+
 sub days {
 	my $self = shift;
 
 	$self->end->delta_days($self->start)->in_units('days');
 }
 
+BEGIN { *duration = \&days };
+
 sub end_leeway {
 	shift->end->clone->add(minutes => WriteOff::Util::LEEWAY);
+}
+
+sub finished {
+	shift->end <= WriteOff::DateTime->now;
 }
 
 sub tally {

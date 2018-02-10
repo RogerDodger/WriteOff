@@ -29,10 +29,14 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->belongs_to("schedule", "WriteOff::Schema::Result::Schedule", "schedule_id");
 
+sub active { 0 }
+
 sub end {
 	my $self = shift;
 	$self->offset + $self->duration;
 }
+
+sub finished { 0 }
 
 sub start {
 	shift->offset;

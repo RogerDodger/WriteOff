@@ -111,6 +111,18 @@ $Template::Stash::LIST_OPS = {
 		return [ map { $_->username } @{ $_[0] } ];
 	},
 
+	map => [sub {
+		my $key = shift;
+
+		return sub {
+			return [
+				map {
+					UNIVERSAL::can($_, $key) ? $_->$key : $_->{$key}
+				} @{ $_[0] }
+			]
+		}
+	}, 1],
+
 	json => sub {
 		return encode_json $_[0];
 	},

@@ -79,7 +79,7 @@ sub do_form :Private {
 
 	$c->forward('/check_csrf_token');
 
-	my $next = WriteOff::DateTime->parse($c->paramo('nextDate'), $c->paramo('nextTime'));
+	my $next = WriteOff::DateTime->parse($c->paramo('date'), $c->paramo('time'));
 	my $format = $c->stash->{formats}->find_maybe($c->paramo('format'));
 	my $genre = $c->stash->{genres}->find_maybe($c->paramo('genre'));
 	my $period = $c->parami('period');

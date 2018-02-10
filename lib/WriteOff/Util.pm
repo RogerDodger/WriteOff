@@ -41,7 +41,7 @@ sub rorder {
 		}
 	}
 
-	undef;
+	'';
 }
 
 sub simple_uri {

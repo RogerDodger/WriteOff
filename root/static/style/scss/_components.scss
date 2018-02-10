@@ -362,7 +362,6 @@
 	input[type="url"],
 	input[type="number"],
 	input[type="search"],
-	input[type="datetime"],
 	textarea,
 	select {
 		background: hsla(0, 0%, 99%, 1);
@@ -370,6 +369,11 @@
 		padding: 0.25em;
 		border-radius: 0.25em;
 		width: 100%;
+
+		&:read-only {
+			background: hsla(0, 0%, 94%, 1);
+			color: #888;
+		}
 	}
 
 	input[type="checkbox"] {
@@ -445,12 +449,18 @@
 		}
 	}
 
-	&.two > div {
+	&.two > * {
 		width: 50%;
+
+		&:first-child { padding-right: 0.5em; }
+		&:last-child { padding-left: 0.5em; }
 	}
 
-	&.three > div {
+	&.three > * {
 		width: 33.33%;
+
+		&:nth-child(1), &:nth-child(2) { padding-right: 0.5em; }
+		&:nth-child(2), &:nth-child(3) { padding-left: 0.5em; }
 	}
 
 	@media #{$mobile} {

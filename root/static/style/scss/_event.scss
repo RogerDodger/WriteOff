@@ -124,6 +124,11 @@
 	text-indent: -2em;
 }
 
+.Event-edit {
+	margin-left: 0.5em;
+	float: right;
+}
+
 .Event-links,
 .Event-admin,
 .Event-blurb > ul:first-child {
@@ -160,4 +165,17 @@
 
 .Event-details .Event-timeline {
 	margin: 0.5em 0;
+}
+
+.Event-form--wordcount {
+	display: flex;
+
+	input[type="number"] {
+		flex-grow: 1;
+		width: 4em;
+	}
+}
+
+.Form-item textarea.Event-form--blurb {
+	font-size: 1em;
 }
