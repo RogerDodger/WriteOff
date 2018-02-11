@@ -49,7 +49,7 @@ sub do_add :Private {
 	$c->forward('do_form');
 	$c->stash->{event}->insert;
 	$c->stash->{event}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
-	$c->forward('_insert_staff');
+	$c->forward('_upsert_staff');
 	$c->stash->{event}->reset_jobs;
 
 	# $c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
@@ -120,7 +120,7 @@ sub do_edit :Private {
 	}
 
 	$c->stash->{event}->update;
-	$c->forward('_insert_staff');
+	$c->forward('_upsert_staff');
 	$c->stash->{event}->reset_jobs;
 
 	$c->flash->{status_msg} = $c->string('eventUpdated');
@@ -235,7 +235,7 @@ sub do_form :Private {
 	}
 }
 
-sub _insert_staff :Private {
+sub _upsert_staff :Private {
 	my ($self, $c) = @_;
 
 	for my $role (keys %{ $c->stash->{staff} }) {
