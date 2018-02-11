@@ -85,6 +85,7 @@ addRound: Add Round
 removeRound: Remove Round
 
 newArtistTitle: New Alias
+newEventTitle: New Event
 404: File Not Found
 403: Forbidden
 error: Error
@@ -222,6 +223,7 @@ cantChangeActiveRoundStart: Can't change active round's start
 cantMakeRoundAlreadyStarted: Can't make a round that's already started
 
 scheduleUpdated: Schedule updated
+eventCreated: Event created
 eventUpdated: Event updated
 
 notifComment: %s commented
@@ -236,6 +238,7 @@ notifsClear: Mark all as read
 FiM: FiM
 Original: Original
 Short Story: Short Story
+Polished Story: Polished Story
 Minific: Minific
 
 fim: FiM

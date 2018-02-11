@@ -3,6 +3,6 @@
 	<input type="date" name="date" required min="{{ minDate.strftime('%Y-%m-%d') }}"
 		value="{{ datetime.strftime('%Y-%m-%d') }}" {{ 'readonly' IF dateFrozen }}>
 	<input type="time" name="time" required
-		value="{{ datetime.strftime('%H:%M') }}" {{ 'readonly' IF dateFrozen }}>
+		value="{{ datetime.strftime('%H:%M') || '12:00' }}" {{ 'readonly' IF dateFrozen }}>
 	<div class="Form-note">{{ c.string('dateTimeNote') }}</div>
 </div>

@@ -4,7 +4,7 @@ use Moose;
 use List::Util qw/shuffle/;
 use WriteOff::Award qw/:all/;
 use WriteOff::DateTime;
-use WriteOff::Util qw/LEEWAY/;
+use WriteOff::Util qw/LEEWAY uniq/;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -38,84 +38,25 @@ sub add :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward('/assert_admin');
-
-	$c->stash->{genres} = $c->model('DB::Genre');
-	$c->stash->{formats} = $c->model('DB::Format');
-
-	push @{ $c->stash->{title} }, 'Add Event';
-	$c->stash->{template} = 'event/add.tt';
-
-	if ($c->req->method eq 'POST') {
-		$c->forward('/check_csrf_token');
-
-		$c->form(
-			start => [ 'NOT_BLANK', [qw/DATETIME_FORMAT RFC3339/] ],
-			content_level => [ 'NOT_BLANK', [ 'IN_ARRAY', qw/E T M/ ] ],
-			format => [
-				'NOT_BLANK',
-				[ 'NOT_DBIC_UNIQUE', $c->model('DB::Format'), 'id' ],
-			],
-			genre => [
-				'NOT_BLANK',
-				[ 'NOT_DBIC_UNIQUE', $c->model('DB::Genre'), 'id' ],
-			],
-			wc_min => [ qw/NOT_BLANK UINT/ ],
-			wc_max => [ qw/NOT_BLANK UINT/ ],
-			fic_dur    => [ qw/NOT_BLANK UINT/ ],
-			prelim_dur => [ qw/NOT_BLANK UINT/ ],
-			final_dur => [ qw/NOT_BLANK UINT/ ],
-		);
-
-		$c->forward('do_add') if !$c->form->has_error;
-	}
+	$c->forward('form');
+	$c->forward('do_add') if $c->req->method eq 'POST';
 }
 
 sub do_add :Private {
 	my ( $self, $c ) = @_;
 
-	my $start = $c->form->valid('start');
-
-	$c->stash->{event} = $c->model('DB::Event')->create({
-		prompt        => 'TBD',
-		genre_id      => $c->form->valid('genre'),
-		format_id     => $c->form->valid('format'),
-		content_level => $c->form->valid('content_level'),
-		wc_min        => $c->form->valid('wc_min'),
-		wc_max        => $c->form->valid('wc_max'),
-	});
-
-	$c->stash->{event}->add_to_users($c->user, { role => 'organiser' });
-
-	my $writing = $c->stash->{event}->create_related('rounds', {
-		name => 'writing',
-		mode => 'fic',
-		action => 'submit',
-		start => $start,
-		end => $start->clone->add(hours => $c->form->valid('fic_dur')),
-	});
-
-	my $prelim = $c->stash->{event}->create_related('rounds', {
-		name => 'prelim',
-		mode => 'fic',
-		action => 'vote',
-		start => $writing->end_leeway,
-		end => $writing->end->clone->add(days => $c->form->valid('prelim_dur')),
-	});
-
-	my $final = $c->stash->{event}->create_related('rounds', {
-		name => 'final',
-		mode => 'fic',
-		action => 'vote',
-		start => $prelim->end,
-		end => $prelim->end->clone->add(days => $c->form->valid('final_dur')),
-	});
-
+	$c->stash->{event} = $c->model('DB::Event')->new_result({});
+	$c->forward('do_form');
+	$c->stash->{event}->insert;
+	$c->stash->{event}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
+	$c->forward('_insert_staff');
 	$c->stash->{event}->reset_jobs;
-	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
-	$c->forward('/event/notify_mailing_list');
 
-	$c->flash->{status_msg} = 'Event created';
-	$c->res->redirect( $c->uri_for('/') );
+	# $c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
+	# $c->forward('/event/notify_mailing_list');
+
+	$c->flash->{status_msg} = $c->string('eventCreated');
+	$c->res->redirect($c->uri_for_action('/event/permalink', [ $c->stash->{event}->id_uri ]));
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
@@ -123,10 +64,10 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 
 	$c->forward('assert_organiser');
 	$c->forward('form');
+	$c->stash->{rorder} = $c->stash->{event}->rorder;
 	$c->stash->{dateFrozen} = $c->stash->{event}->started;
 	$c->stash->{rulesFrozen} = $c->stash->{event}->fic_gallery_opened;
 	$c->forward('do_edit') if $c->req->method eq 'POST';
-	$c->stash->{template} = 'event/edit.tt';
 }
 
 sub do_edit :Private {
@@ -178,17 +119,8 @@ sub do_edit :Private {
 		}
 	}
 
-	for my $role (keys %{ $c->stash->{staff} }) {
-		$c->stash->{event}->artist_events->search({ role => $role })->delete;
-		for my $staff (@{ $c->stash->{staff}{$role} }) {
-			$c->stash->{event}->create_related('artist_events', {
-				artist_id => $staff->id,
-				role => $role,
-			});
-		}
-	}
-
 	$c->stash->{event}->update;
+	$c->forward('_insert_staff');
 	$c->stash->{event}->reset_jobs;
 
 	$c->flash->{status_msg} = $c->string('eventUpdated');
@@ -200,7 +132,6 @@ sub form :Private {
 
 	$c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
 	$c->stash->{contentLevels} = [ qw/E T A M/ ];
-	$c->stash->{rorder} = $c->stash->{event}->rorder;
 	$c->stash->{modes} = \@WriteOff::Mode::ALL;
 	$c->stash->{formats} = $c->model('DB::Format');
 	$c->stash->{genres} = $c->model('DB::Genre');
@@ -293,7 +224,7 @@ sub do_form :Private {
 	my $artists = $c->model('DB::Artist');
 	for my $role (keys %staff) {
 		my @ids = $c->req->param("${role}_id");
-		for my $id (@ids) {
+		for my $id (uniq @ids) {
 			my $artist = $artists->find_maybe($id) or $c->yuk('badInput');
 			push @{ $staff{$role} }, $artist;
 		}
@@ -301,6 +232,20 @@ sub do_form :Private {
 
 	if (exists $staff{organiser} && !@{ $staff{organiser} }) {
 		push @{ $staff{organiser} }, $c->user->active_artist;
+	}
+}
+
+sub _insert_staff :Private {
+	my ($self, $c) = @_;
+
+	for my $role (keys %{ $c->stash->{staff} }) {
+		$c->stash->{event}->artist_events->search({ role => $role })->delete;
+		for my $staff (@{ $c->stash->{staff}{$role} }) {
+			$c->stash->{event}->create_related('artist_events', {
+				artist_id => $staff->id,
+				role => $role,
+			});
+		}
 	}
 }
 

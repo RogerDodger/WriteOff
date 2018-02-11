@@ -22,3 +22,7 @@ INSERT INTO artist_event
 	AND role != 'prompt-voter';
 
 DELETE from user_event WHERE role != 'prompt-voter';
+
+INSERT INTO
+	formats (name, created, wc_min, wc_max)
+	VALUES ("Polished Story", datetime('now'), 3000, 12000);
