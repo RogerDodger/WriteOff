@@ -32,16 +32,17 @@ sub add {
 
 	my $user = $self->db('User')->create({
 		name            => $name,
-		name_canonical  => lc $name,
+		name_canonical  => CORE::fc $name,
 		password        => $password,
 		email           => $email,
-		email_canonical => lc $email,
+		email_canonical => CORE::fc $email,
 		verified        => 1,
 	});
 
 	my $artist = $self->db('Artist')->create({
 		user_id => $user->id,
 		name => $user->name,
+		name_canonical => $user->name_canonical,
 		admin => defined $role && $role eq 'admin' || 0,
 		# For some bizarre reason, this isn't being done automatically BUT ONLY
 		# HERE. Artist->create has auto timestamps everywhere else, and

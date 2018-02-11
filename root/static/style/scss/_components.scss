@@ -529,3 +529,20 @@
 		font-size: 0.9em;
 	}
 }
+
+.Auto-complete {
+	position: absolute;
+	width: 16em;
+	max-height: 16em;
+	overflow-x: hidden;
+	overflow-y: auto;
+	white-space: nowrap;
+
+	background-color: hsla(0, 0%, 99%, 1);
+	border: 1px solid #ccc;
+}
+
+.Auto-complete .fa-spinner,
+.Auto-complete--text {
+	margin: 0.5em;
+}

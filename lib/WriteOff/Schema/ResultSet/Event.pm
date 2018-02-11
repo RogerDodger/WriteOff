@@ -64,16 +64,24 @@ sub create_from_sched {
 	}
 
 	my %leeway;
-	for my $round ($sched->rounds->ordered->all) {
+	my @rounds = $sched->rounds;
+	for my $round (@rounds) {
+		# Rounds after a submit round start LEEWAY minutes late, since
+		# the submit rounds are LEEWAY minutes longer than actually listed
+		if ($round->action eq 'submit') {
+			$leeway{$round->mode}{$round->offset + $round->duration} = 1;
+		}
+	}
+
+	for my $round (@rounds) {
 		my $start = $t0->clone->add(days => $round->offset);
 		my $end = $start->clone->add(days => $round->duration);
 
-		# Rounds after a submit round start LEEWAY minutes late, since the submit
-		# rounds are LEEWAY minutes longer than actual
-		if ($round->action eq 'submit') {
-			$leeway{$round->offset + $round->duration} = 1;
-		}
-		$start->add(minutes => LEEWAY) if $leeway{$round->offset};
+		$start->add(minutes => LEEWAY)
+			if $leeway{$round->mode}{$round->offset}
+			# An offset submit round is dependent on another mode's submit round,
+			# (fic2pic or pic2fic) so it also has a LEEWAY added
+			|| $round->action eq 'submit' && $round->offset;
 
 		$event->create_related('rounds', {
 			start => $start,

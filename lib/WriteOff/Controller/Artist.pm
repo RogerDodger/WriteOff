@@ -36,7 +36,10 @@ sub do_add :Private {
 
 	my $name = $c->req->param('artist');
 	if (1 <= length $name && length $name <= $c->config->{len}{max}{user}) {
-		my $artist = $c->user->create_related('artists', { name => $name });
+		my $artist = $c->user->create_related('artists', {
+			name => $name,
+			name_canonical => CORE::fc $name,
+		});
 		$c->user->update({ active_artist => $artist });
 		$c->res->redirect($c->uri_for_action('/artist/view', [ $artist->id_uri ]));
 	}
@@ -150,6 +153,24 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 	});
 
 	$c->stash->{template} = 'artist/view.tt';
+}
+
+sub search :Local :Args(1) {
+	my ($self, $c, $name) = @_;
+
+	$c->stash->{artists} = $c->model('DB::Artist')->search({
+		-or => [
+			"me.id" => $name,
+			name_canonical => { like => CORE::fc($name) . "%" },
+		],
+	}, {
+		join => [ "posts", "entrys" ],
+		group_by => "me.id",
+		order_by => [
+			{ -desc => \"count(posts.id) + 10*count(entrys.id)" },
+			{ -asc => "me.name_canonical" },
+		],
+	});
 }
 
 =head1 AUTHOR

@@ -332,6 +332,12 @@ sub yuck {
 	$self->detach('/error', [ $msg ]);
 }
 
+sub yuk {
+	my ($self, $msg) = @_;
+
+	$self->detach('/error', [ $self->string($msg) ]);
+}
+
 =head1 NAME
 
 WriteOff - Writing contests with anonymous voting

@@ -3,6 +3,24 @@
 <form class="Form" method="post">
 	{{ csrf_field | none }}
 
+	{{ IF c.user.admin }}
+	<div class="Form-item">
+		<label>{{ c.string('organisers') }}</label>
+		<input class="Staff-search" name="organiser" type="text">
+		{{ FOREACH artist IN event.organisers }}
+			{{ INCLUDE "artist/search-result.tt"  key = "organiser_id" }}
+		{{ END }}
+	</div>
+	{{ END }}
+
+	<div class="Form-item">
+		<label>{{ c.string('judges') }}</label>
+		<input class="Staff-search" name="judge" type="text">
+		{{ FOREACH artist IN event.judges }}
+			{{ INCLUDE "artist/search-result.tt"  key = "judge_id" }}
+		{{ END }}
+	</div>
+
 	{{ INCLUDE schedule/datetime.tt  label = 'start' datetime = event.start }}
 
 	<div class="Form-group three">

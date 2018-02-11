@@ -66,6 +66,9 @@ user: User
 admin: Admin
 start: Start
 organiser: Organiser
+organisers: Organisers
+judge: Judge
+judges: Judges
 nextEvent: Next Event
 promptNote: Prompt will show as "TBD" until event starts
 dateTimeNote: Date/Time is in UTC

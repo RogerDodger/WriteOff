@@ -107,22 +107,24 @@ sub do_register :Private {
 			'EMAIL_MX',
 			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'email' ]
 		],
-		captcha  => [ [ 'EQUAL_TO', 1 ] ],
+		# captcha  => [ [ 'EQUAL_TO', 1 ] ],
 	);
 
 	if (!$c->form->has_error) {
 		$c->stash->{user} = $c->model('DB::User')->create({
 			name            => $c->form->valid('username'),
-			name_canonical  => lc $c->form->valid('username'),
+			name_canonical  => CORE::fc $c->form->valid('username'),
 			password        => $c->form->valid('password'),
 			email           => $c->form->valid('email'),
-			email_canonical => lc $c->form->valid('email'),
+			email_canonical => CORE::fc $c->form->valid('email'),
 		});
 
 		$c->stash->{user}->update({
-			active_artist_id =>
+			active_artist =>
 				$c->stash->{user}->create_related('artists', {
-					name => $c->stash->{user}->name })->id
+					name => $c->stash->{user}->name,
+					name_canonical => $c->stash->{user}->name_canonical,
+				})
 		});
 
 		$c->log->info( sprintf 'User created: %s (%s)',

@@ -1,0 +1,5 @@
+<div class="Artist-search--results">
+	{{ FOREACH artist IN artists.all }}
+		{{ PROCESS "artist/search-result.tt" }}
+	{{ END }}
+</div>

@@ -1,7 +1,10 @@
 ALTER TABLE events ADD COLUMN prompt_fixed TEXT;
 
-ALTER TABLE artists ADD COLUMN 'admin' BIT NOT NULL DEFAULT 0;
-ALTER TABLE artists ADD COLUMN 'mod' BIT NOT NULL DEFAULT 0;
+ALTER TABLE artists ADD COLUMN admin BIT NOT NULL DEFAULT 0;
+ALTER TABLE artists ADD COLUMN mod BIT NOT NULL DEFAULT 0;
+ALTER TABLE artists ADD COLUMN name_canonical NOT NULL DEFAULT '';
+
+CREATE INDEX artists_name_canonical ON artists(name_canonical);
 
 UPDATE artists SET admin=1 WHERE id=8;
 

@@ -178,6 +178,16 @@ sub do_edit :Private {
 		}
 	}
 
+	for my $role (keys %{ $c->stash->{staff} }) {
+		$c->stash->{event}->artist_events->search({ role => $role })->delete;
+		for my $staff (@{ $c->stash->{staff}{$role} }) {
+			$c->stash->{event}->create_related('artist_events', {
+				artist_id => $staff->id,
+				role => $role,
+			});
+		}
+	}
+
 	$c->stash->{event}->update;
 	$c->stash->{event}->reset_jobs;
 
@@ -210,14 +220,11 @@ sub do_form :Private {
 	my $wc_min = $c->parami('wc_min');
 	my $wc_max = $c->parami('wc_max');
 
-	if (
-		(grep !defined, $start, $format, $genre) or
-		(!grep $_ eq $clevel, @{ $c->stash->{contentLevels} }) or
-		$c->config->{len}{max}{prompt} < length $prompt or
-		$c->config->{len}{max}{blurb} < length $blurb
-	) {
-		$c->yuck($c->string('badInput'));
-	}
+	$c->yuck($c->string('badInput'))
+		if (grep !defined, $start, $format, $genre)
+		or (!grep $_ eq $clevel, @{ $c->stash->{contentLevels} })
+		or $c->config->{len}{max}{prompt} < length $prompt
+		or $c->config->{len}{max}{blurb} < length $blurb;
 
 	if ($wc_min > $wc_max) {
 		($wc_min, $wc_max) = ($wc_max, $wc_min);
@@ -256,20 +263,44 @@ sub do_form :Private {
 
 	my %leeway;
 	for my $round (@{ $c->stash->{rounds} }) {
-		$leeway{$round->{mode}}{$round->{offset} + $round->{duration}} = 1
-			if $round->{action} eq 'submit';
+		# Rounds after a submit round start LEEWAY minutes late, since
+		# the submit rounds are LEEWAY minutes longer than actually listed
+		if ($round->{action} eq 'submit') {
+			$leeway{$round->{mode}}{$round->{offset} + $round->{duration}} = 1
+		}
 	}
 
 	for my $round (@{ $c->stash->{rounds} }) {
 		$round->{start} = $start->clone->add(days => $round->{offset});
 		$round->{end} = $round->{start}->clone->add(days => $round->{duration});
 
-		if ($leeway{$round->{mode}}{$round->{offset}}) {
-			$round->{start}->add(minutes => LEEWAY);
-		}
+		$round->{start}->add(minutes => LEEWAY)
+			if $leeway{$round->{mode}}{$round->{offset}}
+			# An offset submit round is dependent on another mode's submit round,
+			# (fic2pic or pic2fic) so it also has a LEEWAY added
+			|| $round->{action} eq 'submit' && $round->{offset};
 
 		delete $round->{offset};
 		delete $round->{duration};
+	}
+
+	my %staff = (
+		judge => [],
+		(organiser => []) x!! $c->user->admin,
+	);
+	$c->stash->{staff} = \%staff;
+
+	my $artists = $c->model('DB::Artist');
+	for my $role (keys %staff) {
+		my @ids = $c->req->param("${role}_id");
+		for my $id (@ids) {
+			my $artist = $artists->find_maybe($id) or $c->yuk('badInput');
+			push @{ $staff{$role} }, $artist;
+		}
+	}
+
+	if (exists $staff{organiser} && !@{ $staff{organiser} }) {
+		push @{ $staff{organiser} }, $c->user->active_artist;
 	}
 }
 

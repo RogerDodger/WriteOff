@@ -443,8 +443,6 @@ $(document).ready(function () {
 			return;
 		}
 
-		console.log(typeof timeline, timeline)
-
 		timeline.forEach(function (t) {
 			if ('start' in t) {
 				t.start = new Date(t.start + "Z");
@@ -1845,6 +1843,88 @@ $(document).ready(function () {
 	// drake.on('drop', RenderSchedule);
 
 	RenderSchedule();
+});
+
+// ===========================================================================
+// Auto-complete artist search input
+// ===========================================================================
+
+$(document).ready(function () {
+	var q;
+	var $fields = $('.Staff-search');
+	var $ac = $('<div class="Auto-complete hidden"/>');
+	var $spinner = $('<i class="fa fa-spinner fa-pulse"/>');
+	var $nomatches = $('<span class="Auto-complete--text">No matches</span>');
+	$('body').append($ac);
+
+	if (!$fields.length) return;
+
+	var deleteStaff = function (e) {
+		e.preventDefault();
+		$(this).remove();
+	};
+
+	$fields.on('input focus', function (e) {
+		var $this = $(this);
+		var term = this.value;
+
+		if (!$this.is(":focus") || !term.length) {
+			return $ac.addClass('hidden').empty();
+		}
+		if (q) q.abort();
+
+		var offset = $this.offset()
+		$ac.css({
+			top: Math.round(1 + offset.top + $this.innerHeight()) + "px",
+			left: offset.left + "px",
+		});
+		$ac.empty().append($spinner).removeClass('hidden');
+		$ac.data('field', this);
+
+		q = $.ajax({
+			type: 'GET',
+			url: '/artist/search/' + term,
+			success: function(data, status, xhr) {
+				$ac.empty();
+
+				var $artists = $(data).find('.Artist-search--result');
+
+				if ($artists.length) {
+					$artists.find('input[type="hidden"]').attr('name', $this.attr('name') + "_id");
+
+					$artists.on('click', function (e) {
+						e.preventDefault();
+						var $a = $(this);
+						$a.off('click');
+						$a.on('click', deleteStaff);
+						$this.closest('.Form-item').append($a);
+						$this.val('');
+						$ac.addClass('hidden').empty();
+					});
+
+					$ac.append($artists);
+				}
+				else {
+					$ac.append($nomatches);
+				}
+			},
+		});
+	});
+
+	$(document).on('mousedown', function (e) {
+		if (!$ac.hasClass('hidden')) {
+			var $t = $(e.target);
+			if (!$t.closest('.Auto-complete').length && !$t.closest('input').is($ac.data('field'))) {
+				$ac.addClass('hidden').empty();
+			}
+		}
+	});
+
+	$fields.css({
+		"border-bottom-left-radius": 0,
+	});
+
+	$('.Artist-search--result').on('click', deleteStaff);
 });
 
 // ===========================================================================

@@ -23,6 +23,8 @@ __PACKAGE__->add_columns(
 	{ data_type => "bit", is_nullable => 0, default_value => 0 },
 	"name",
 	{ data_type => "text", is_nullable => 0 },
+	"name_canonical",
+	{ data_type => "text", is_nullable => 0 },
 	"avatar_id",
 	{ data_type => "text", is_nullable => 1 },
 	"bio",
