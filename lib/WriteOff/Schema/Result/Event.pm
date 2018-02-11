@@ -52,6 +52,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
+__PACKAGE__->has_many("artist_events", "WriteOff::Schema::Result::ArtistEvent", "event_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "event_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "event_id");
 __PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
@@ -64,6 +65,7 @@ __PACKAGE__->has_many("theorys", "WriteOff::Schema::Result::Theory", "event_id")
 __PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "event_id");
 
 __PACKAGE__->many_to_many(users => 'user_events', 'user');
+__PACKAGE__->many_to_many(artists => 'artist_events', 'artist');
 
 sub storys {
 	return shift->entrys->search({ story_id => { '!=' => undef }});
@@ -150,7 +152,7 @@ sub id_uri {
 sub organisers {
 	my $self = shift;
 
-	return $self->users->search({ role => 'organiser' }, {
+	return $self->artists->search({ role => 'organiser' }, {
 		'+select' => [ \'role' ],
 		'+as' => [ 'role' ],
 	});
@@ -159,7 +161,7 @@ sub organisers {
 sub judges {
 	my $self = shift;
 
-	return $self->users->search({ role => 'judge' }, {
+	return $self->artists->search({ role => 'judge' }, {
 		'+select' => [ \'role' ],
 		'+as' => [ 'role' ],
 	});
@@ -170,7 +172,7 @@ sub is_organised_by {
 	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
 		or return 0;
 
-	return $self->organisers->search({ id => $user->id })->count
+	return $self->organisers->search({ id => $user->active_artist_id })->count
 	    || $user->is_admin;
 }
 

@@ -31,7 +31,7 @@
 <div class="Event-details">
 	<!-- SET edits $c->user->admin -->
 	{{ FOREACH orgr IN event.organisers }}
-	<!-- SET edits $c->stash->{edits} || $c->user->id == {{ orgr.id }} -->
+	<!-- SET edits $c->stash->{edits} || $c->user->active_artist_id == {{ orgr.id }} -->
 	{{ END }}
 
 	<!-- IF edits -->
@@ -45,8 +45,8 @@
 	<div class="Event-staff--container">
 		Organised by
 		<span class="Event-staff">
-			{{ FOREACH orgr IN event.organisers }}
-				<span class="Event-organiser">{{ orgr.name }}</span>
+			{{ FOREACH artist IN event.organisers }}
+				{{ INCLUDE artist/name.tt }}
 			{{ END }}
 		</span>
 	</div>
@@ -55,7 +55,9 @@
 	<div class="Event-staff--container">
 		Judged by
 		<span class="Event-staff">
-			{{ event.judges.map_username.join_serial }}
+			{{ FOREACH artist IN event.judges }}
+				{{ INCLUDE artist/name.tt }}
+			{{ END }}
 		</span>
 	</div>
 	{{ END }}

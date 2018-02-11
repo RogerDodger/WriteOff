@@ -190,6 +190,7 @@ sub form :Private {
 
 	$c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
 	$c->stash->{contentLevels} = [ qw/E T A M/ ];
+	$c->stash->{rorder} = $c->stash->{event}->rorder;
 	$c->stash->{modes} = \@WriteOff::Mode::ALL;
 	$c->stash->{formats} = $c->model('DB::Format');
 	$c->stash->{genres} = $c->model('DB::Genre');

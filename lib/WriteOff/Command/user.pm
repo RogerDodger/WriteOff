@@ -36,13 +36,21 @@ sub add {
 		password        => $password,
 		email           => $email,
 		email_canonical => lc $email,
-		admin           => defined $role && $role eq 'admin',
 		verified        => 1,
 	});
 
-	$user->update({ active_artist_id =>
-		$user->create_related('artists', { name => $user->name })->id,
+	my $artist = $self->db('Artist')->create({
+		user_id => $user->id,
+		name => $user->name,
+		admin => defined $role && $role eq 'admin' || 0,
+		# For some bizarre reason, this isn't being done automatically BUT ONLY
+		# HERE. Artist->create has auto timestamps everywhere else, and
+		# User->create just above this does too ... ???
+		created => DateTime->now,
+		updated => DateTime->now,
 	});
+
+	$user->update({ active_artist_id => $artist->id });
 }
 
 sub rename {

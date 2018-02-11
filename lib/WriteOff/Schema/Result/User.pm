@@ -32,8 +32,6 @@ __PACKAGE__->add_columns(
 	{ data_type => "text", is_nullable => 1 },
 	"email_canonical",
 	{ data_type => "text", is_nullable => 1 },
-	"admin",
-	{ data_type => "bit", is_nullable => 0, default_value => 0 },
 	"verified",
 	{ data_type => "integer", default_value => 0, is_nullable => 0 },
 	"mailme",
@@ -81,6 +79,10 @@ __PACKAGE__->filter_column('password', {
 		bcrypt($plain, $settings);
 	},
 });
+
+sub admin {
+	shift->active_artist->admin;
+}
 
 sub check_password {
 	my ($self, $plain) = @_;

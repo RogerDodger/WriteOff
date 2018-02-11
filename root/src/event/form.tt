@@ -8,7 +8,7 @@
 	<div class="Form-group three">
 		<div class="Form-item">
 			<label>{{ c.string('prompt') }}</label>
-			<input type="text" name="prompt" value="{{ event.started ? event.prompt_fixed : event.prompt }}"
+			<input type="text" name="prompt" value="{{ event.started ? event.prompt : event.prompt_fixed }}"
 				maxlength={{ c.config.len.max.prompt }} {{ 'readonly' IF rulesFrozen }}>
 			{{ IF !event.started }}
 			<div class="Form-note">{{ c.string('promptNote') }}</div>
@@ -37,7 +37,6 @@
 			<label>{{ c.string('wordcount') }}</label>
 			<div class="Event-form--wordcount">
 				<input type="number" name="wc_min" value="{{ event.wc_min }}" required {{ 'readonly' IF rulesFrozen }}>
-				<span>&ndash;</span>
 				<input type="number" name="wc_max" value="{{ event.wc_max }}" required {{ 'readonly' IF rulesFrozen }}>
 			</div>
 		</div>

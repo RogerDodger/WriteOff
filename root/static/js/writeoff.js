@@ -1276,38 +1276,41 @@ postModifiers.push(function (ctx) {
 // Artist swap buttons
 // ===========================================================================
 
-$(document).ready(function () {
-	var q = $.when();
-	var $btns = $('.Artist-swap');
-	$btns.on('click', function (e) {
-		e.preventDefault();
-		var $btn = $(this);
-		var $form = $btn.closest('form');
+// Page behaviour is now too dependent on active_artist to AJAX this. Just do
+// a normal POST and reload the page.
 
-		q = q.then(
-			$.ajax({
-				type: 'POST',
-				url: $form.attr('action'),
-				data: $form.serializeArray(),
-				success: function(res, status, xhr) {
-					res = $.parseJSON(res);
-					$btns.removeClass('active');
-					$btn.addClass('active');
+// $(document).ready(function () {
+// 	var q = $.when();
+// 	var $btns = $('.Artist-swap');
+// 	$btns.on('click', function (e) {
+// 		e.preventDefault();
+// 		var $btn = $(this);
+// 		var $form = $btn.closest('form');
 
-					$('.Artist-swap--selected')
-						.text(res.name)
-						.closest('a').attr('href', $btn.closest('li').find('a').attr('href'));
+// 		q = q.then(
+// 			$.ajax({
+// 				type: 'POST',
+// 				url: $form.attr('action'),
+// 				data: $form.serializeArray(),
+// 				success: function(res, status, xhr) {
+// 					res = $.parseJSON(res);
+// 					$btns.removeClass('active');
+// 					$btn.addClass('active');
 
-					$('.Post-submit').each(function () {
-						var $post = $(this).closest('.Post');
-						$post.find('.Post-author--name').text(res.name);
-						$post.find('.Post-author--avatar img').attr('src', res.avatar);
-					});
-				}
-			})
-		);
-	});
-});
+// 					$('.Artist-swap--selected')
+// 						.text(res.name)
+// 						.closest('a').attr('href', $btn.closest('li').find('a').attr('href'));
+
+// 					$('.Post-submit').each(function () {
+// 						var $post = $(this).closest('.Post');
+// 						$post.find('.Post-author--name').text(res.name);
+// 						$post.find('.Post-author--avatar img').attr('src', res.avatar);
+// 					});
+// 				}
+// 			})
+// 		);
+// 	});
+// });
 
 // ===========================================================================
 // Post editor functions

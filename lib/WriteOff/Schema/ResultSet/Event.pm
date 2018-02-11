@@ -41,7 +41,7 @@ sub create_from_sched {
 		for grep { defined $_->[0] } (
 			[$sched, 'WriteOff::Schema::Result::Schedule'],
 			[$t0, 'DateTime'],
-			[$orgs, 'WriteOff::Schema::ResultSet::User'],
+			[$orgs, 'WriteOff::Schema::ResultSet::Artist'],
 		);
 
 	$t0 //= $sched->next;
@@ -58,9 +58,9 @@ sub create_from_sched {
 		content_level => 'T',
 	});
 
-	$orgs //= $schema->resultset('User')->search({ admin => 1 });
-	for my $user ($orgs->all) {
-		$event->add_to_users($user, { role => 'organiser' });
+	$orgs //= $schema->resultset('Artist')->search({ admin => 1 });
+	for my $artist ($orgs->all) {
+		$event->add_to_artists($artist, { role => 'organiser' });
 	}
 
 	my %leeway;
