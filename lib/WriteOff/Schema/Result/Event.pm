@@ -176,6 +176,14 @@ sub is_organised_by {
 	    || $user->is_admin;
 }
 
+sub is_judged_by {
+	my $self = shift;
+	my $user = $self->result_source->schema->resultset('User')->resolve(shift)
+		or return 0;
+
+	return $self->judges->search({ id => $user->active_artist_id })->count;
+}
+
 sub prompt_subs_allowed {
 	my $row = shift;
 	return sorted $row->now_dt, $row->prompt_voting;

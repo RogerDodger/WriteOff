@@ -159,6 +159,7 @@ loginRequiredArt: You must be logged in to submit art
 loginRequiredFic: You must be logged in to submit fics
 loginRequiredPrompt: You must be logged in to submit prompts
 loginRequiredVote: You must be logged in to vote
+judgeRequiredVote: You must be a judge to vote in the final
 ballotDirections: Drag candidates here to rank them
 ballotAppend: Add another
 ballotDone: None left

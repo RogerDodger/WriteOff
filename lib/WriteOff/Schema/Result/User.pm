@@ -216,6 +216,12 @@ sub organises {
 	return defined $event && $event->is_organised_by($self);
 }
 
+sub judges {
+	my ($self, $event) = @_;
+
+	return defined $event && $event->is_judged_by($self);
+}
+
 sub publishes {
 	my ($self, $entry) = @_;
 

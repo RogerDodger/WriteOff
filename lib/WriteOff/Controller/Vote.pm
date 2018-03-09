@@ -25,27 +25,33 @@ sub cast :Private {
 		action => 'vote',
 	});
 
-	$c->stash->{round} = $rounds->active->first;
+	my $round = $c->stash->{round} = $rounds->active->first;
 
-	if ($c->stash->{round} && $c->stash->{round}->entrys->count && $c->user) {
+	if ($round && $round->name eq 'final' && $round->event->judges->count) {
+		if (!$c->user->judges($round->event)) {
+			$c->stash->{notJudge} = 1;
+		}
+	}
+
+	if ($round && $round->entrys->count && $c->user && !$c->stash->{notJudge}) {
 		my $ballot = $c->stash->{event}->ballots->find_or_create({
 			user_id => $c->user->id,
-			round_id => $c->stash->{round}->id,
+			round_id => $round->id,
 		});
 
-		$c->stash->{pool} = $c->stash->{round}->entrys->search({
+		$c->stash->{pool} = $round->entrys->search({
 			'me.id' => { -not_in => $ballot->votes->get_column('entry_id')->as_query },
 			user_id => { '!=' => $c->user->id },
 		});
 
 		if (!$ballot->votes->count) {
 			# Copy previous votes to the ballot
-			my $prevRound = $rounds->before($c->stash->{round})->first;
+			my $prevRound = $rounds->before($round)->first;
 			my $prevBallot = $prevRound && $prevRound->ballots->search({ user_id => $c->user->id })->first;
 
 			if ($prevBallot) {
 				for my $vote ($prevBallot->votes->join('entry')->all) {
-					next if $vote->entry->round_id != $c->stash->{round}->id;
+					next if $vote->entry->round_id != $round->id;
 					next if $ballot->search_related('votes', { entry_id => $vote->entry_id })->count;
 
 					$ballot->create_related('votes', {
@@ -56,7 +62,7 @@ sub cast :Private {
 			}
 
 			# Assign some stories to the ballot
-			my $mins = $c->stash->{round}->end->delta_ms($c->stash->{round}->start)->in_units('minutes');
+			my $mins = $round->end->delta_ms($round->start)->in_units('minutes');
 			my $w = $mins / 1440 * $c->config->{work}{threshold} * $c->config->{work}{voter};
 
 			for my $entry ($c->stash->{pool}->sample->all) {
@@ -72,9 +78,9 @@ sub cast :Private {
 		$c->stash->{abstained} = $ballot->votes->search({ abstained => 1 });
 	}
 
-	if ($c->stash->{round}) {
-		$c->stash->{countdown} = $c->stash->{round}->end;
-		push @{ $c->stash->{title} }, $c->stash->{label} = $c->string($c->stash->{round}->name);
+	if ($round) {
+		$c->stash->{countdown} = $round->end;
+		push @{ $c->stash->{title} }, $c->stash->{label} = $c->string($round->name);
 	}
 	else {
 		if ($rounds->upcoming->count) {

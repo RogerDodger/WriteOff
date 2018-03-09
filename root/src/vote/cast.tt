@@ -73,6 +73,16 @@
 	</table>
 	{{ END }}
 
+	{{ IF round }}
+		{{ IF !c.user }}
+		<div class="Flash">{{ c.string('loginRequiredVote') }}</div>
+		{{ ELSIF notJudge }}
+		<div class="Flash">{{ c.string('judgeRequiredVote') }}</div>
+		{{ ELSIF !ballot }}
+		<div class="Flash">{{ c.string('calculatingCandidates') }}</div>
+		{{ END }}
+	{{ END }}
+
 	{{ IF ballots && ballots.count }}
 	<div class="Document-subtitle">
 		<span>My Votes</span>
@@ -91,15 +101,5 @@
 			{{ END }}
 		</tbody>
 	</table>
-	{{ END }}
-
-	{{ IF round && !c.user }}
-	<div class="Flash">
-		{{ c.string('loginRequiredVote') }}
-	</div>
-	{{ ELSIF round && !ballot }}
-	<div class="Flash">
-		{{ c.string('calculatingCandidates') }}
-	</div>
 	{{ END }}
 </div>
