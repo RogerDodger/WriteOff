@@ -86,6 +86,13 @@ sub auto :Private {
 	1;
 }
 
+# sub hang :Local :Args(0) {
+# 	my $n = 0;
+# 	while (1) {
+# 		$n++;
+# 	}
+# }
+
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 

@@ -27,6 +27,7 @@ use Catalyst qw/
 
 extends 'Catalyst';
 
+require Carp;
 require CHI;
 require Imager;
 require WriteOff::Log;
@@ -243,6 +244,14 @@ if (!$ENV{CATALYST_DEBUG}) {
 }
 
 __PACKAGE__->log($logger);
+
+$SIG{USR2} = sub {
+	local $| = 1;
+	open my $fh, ">>", "/tmp/usr2.log";
+	print $fh Carp::longmess("caught SIGUSR2");
+	close $fh;
+};
+
 __PACKAGE__->setup;
 
 $ENV{TZ} = __PACKAGE__->config->{timezone};
