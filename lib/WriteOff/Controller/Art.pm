@@ -77,7 +77,6 @@ sub do_form :Private {
 
 		$c->req->params->{xpixels} = $c->stash->{imager}->getwidth;
 		$c->req->params->{ypixels} = $c->stash->{imager}->getheight;
-		$c->req->params->{filesize} = $upload->size;
 	}
 
 	$c->form(
@@ -87,7 +86,6 @@ sub do_form :Private {
 		],
 		xpixels   => [ [ 'GREATER_THAN', $c->config->{biz}{img}{xmin} - 1 ] ],
 		ypixels   => [ [ 'GREATER_THAN', $c->config->{biz}{img}{ymin} - 1 ] ],
-		filesize  => [ [ 'LESS_THAN', $c->config->{biz}{img}{size} ] ],
 	);
 }
 
@@ -200,8 +198,10 @@ sub do_submit :Private {
 	if (!$c->form->has_error && $c->req->upload('image')) {
 		my $image = $c->stash->{image} = $c->model('DB::Image')->new_result({
 			hovertext => $c->form->valid('hovertext'),
-			filesize  => $c->form->valid('filesize'),
 			mimetype  => 'image/jpeg',
+
+			# These NOT NULL values are temporary and updated by do_write
+			filesize  => 1,
 			version   => 'temp',
 		});
 
@@ -230,7 +230,7 @@ sub do_submit :Private {
 			$c->user->name,
 			$c->form->valid('title'),
 			$c->stash->{entry}->artist->name,
-			$c->form->valid('filesize') / 1024,
+			$c->stash->{image}->filesize / 1024,
 		);
 	}
 }
@@ -276,7 +276,7 @@ sub do_edit :Private {
 			$c->user->name,
 			$c->form->valid('title'),
 			$c->stash->{entry}->artist->name,
-			$c->form->valid('filesize') / 1024,
+			$c->stash->{image}->filesize / 1024,
 		);
 	}
 
