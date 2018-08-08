@@ -97,11 +97,12 @@ sub do_form :Private {
 	}
 
 	$c->stash->{sched}->set_columns({
-		next => $next,
 		format_id => $format->id,
 		genre_id => $genre->id,
 		period => $period,
 	});
+
+	$c->stash->{sched}->next($next);
 
 	$c->forward('/round/do_form');
 }
