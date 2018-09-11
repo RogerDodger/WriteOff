@@ -11,8 +11,10 @@ __PACKAGE__->add_columns(
 	"id",
 	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
 	"event_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"round_id",
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+	"poll_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 	"user_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -30,6 +32,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->belongs_to("event", "WriteOff::Schema::Result::Event", "event_id");
 __PACKAGE__->belongs_to("round", "WriteOff::Schema::Result::Round", "round_id");
+__PACKAGE__->belongs_to("poll", "WriteOff::Schema::Result::Poll", "poll_id");
 __PACKAGE__->belongs_to("user", "WriteOff::Schema::Result::User", "user_id");
 __PACKAGE__->has_many("votes", "WriteOff::Schema::Result::Vote", "ballot_id");
 

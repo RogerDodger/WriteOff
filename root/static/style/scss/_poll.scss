@@ -1,0 +1,45 @@
+// =============================================================================
+// Poll styles
+// =============================================================================
+
+.Polls-slug a {
+	color: hsla(0, 92%, 60%, 1);
+	text-shadow: 1px 1px 2px #000;
+}
+
+.Poll-create {
+	@include box;
+	background: hsla(200, 40%, 92%, 1);
+	margin: 0 auto;
+	max-width: 40rem;
+	padding: 0.6em 0;
+}
+
+.Poll-create--bid,
+.Poll-create--title {
+	padding: 0 1rem;
+	display: block;
+	outline: 0;
+	border: 0;
+	background: none;
+	width: 100%;
+	color: #222;
+}
+
+.Poll-create--title {
+	font-size: 1.5em;
+	border-bottom: 0.15em double hsla(200, 40%, 80%, 1);
+	padding-bottom: 0.2em;
+}
+
+.Poll-create--bid {
+	padding-top: 0.4em;
+	padding-bottom: 0.2em;
+	font-size: 1.2em;
+	border-bottom: 0.1em solid hsla(200, 40%, 80%, 1);
+}
+
+.Poll-create--submit {
+	margin-left: 1em;
+	margin-top: 1em;
+}

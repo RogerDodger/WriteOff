@@ -1,7 +1,7 @@
 /*
  * Dynamic web page behaviour for WriteOff
  *
- * Copyright (c) 2016 Cameron Thornton <cthor@cpan.org>
+ * Copyright (c) 2018 Cameron Thornton <cthor@cpan.org>
  *
  * This library is free software. You can redistribute it and/or modify
  * it under the same terms as Perl version 5.
@@ -1925,6 +1925,31 @@ $(document).ready(function () {
 	});
 
 	$('.Artist-search--result').on('click', deleteStaff);
+});
+
+// ===========================================================================
+// Poll form dynamic behaviour
+// ===========================================================================
+
+$(document).ready(function () {
+	var $form = $('.Poll-create');
+	if (!$form.length) return;
+
+	var $blank = $('.Poll-create--bid').first().clone();
+
+	function checkEmpty () {
+		var makeNew = true;
+		var $bids = $form.find('.Poll-create--bid');
+		$bids.each(function () { makeNew = makeNew && this.value != ''; });
+
+		if (makeNew) {
+			var $new = $blank.clone();
+			$new.on('input', checkEmpty);
+			$bids.last().after($new);
+		}
+	};
+
+	$('.Poll-create--bid').on('input', checkEmpty);
 });
 
 // ===========================================================================

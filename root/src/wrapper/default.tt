@@ -37,6 +37,11 @@
 						{{ IF c.config.chat }}
 						<li><a href="{{ c.config.chat }}"><i class="fa fa-external-link"></i> Chat</a>
 						{{ END }}
+						{{ IF c.controller.isa("WriteOff::Controller::Poll") }}
+						<li class="Polls-slug">
+							<a href="/polls" >{{ c.string('polls') }}</a>
+						</li>
+						{{ END }}
 					</ul>
 				</div>
 
