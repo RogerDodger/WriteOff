@@ -4,5 +4,4 @@ AdminEmail: someadmin@example.com
 recaptcha:
     pub_key: 01010101010101
     priv_key: AAAAAAAAAAAAAA
-
 timezone: UTC

@@ -13,7 +13,7 @@ use Catalyst qw/
 	+WriteOff::Plugin::Strings
 
 	Session
-	Session::Store::File
+	Session::Store::Cookie
 	Session::State::Cookie
 
 	Cache
@@ -62,7 +62,7 @@ __PACKAGE__->config(
 	},
 	'Plugin::Session' => {
 		flash_to_stash => 1,
-		expires => 365 * (60 * 60 * 24),
+		storage_cookie_expires => '+1y',
 	},
 	'Plugin::ConfigLoader' => {
 		file => 'config.yml',

@@ -23,7 +23,7 @@ my @dependencies = (
 	'Catalyst::Plugin::Static::Simple',
 	'Catalyst::Plugin::Unicode::Encoding',
 	'Catalyst::Plugin::Session',
-	'Catalyst::Plugin::Session::Store::File',
+	'Catalyst::Plugin::Session::Store::Cookie',
 	'Catalyst::Plugin::Session::State::Cookie',
 	'Catalyst::Plugin::FormValidator::Simple',
 	'Catalyst::Plugin::Cache',
