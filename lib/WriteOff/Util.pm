@@ -5,11 +5,15 @@ use strict;
 use warnings;
 use base 'Exporter';
 use Digest;
+use Math::Random::ISAAC::XS;
+use Crypt::URandom qw/urandom/;
 use Time::HiRes qw/gettimeofday/;
 use WriteOff::Markup;
 
 our @EXPORT_OK = qw/LEEWAY maybe rorder simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
+
+my $_rng = Math::Random::ISAAC::XS->new( map { unpack( "N", urandom(4) ) } 1 .. 256);
 
 sub LEEWAY () { 5 } # minutes
 
@@ -69,10 +73,7 @@ sub sorted {
 
 sub token {
 	my $salt = shift // '';
-	Digest->new(shift // 'MD5')
-		->add($salt)
-		->add((gettimeofday)[1])
-		->add(rand)->hexdigest;
+	Digest->new(shift // 'MD5')->add($salt)->add($_rng->irand)->hexdigest;
 }
 
 sub wordcount ($) {

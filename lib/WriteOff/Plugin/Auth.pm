@@ -18,8 +18,9 @@ sub authenticate {
 
 sub csrf_token {
 	my $c = shift;
+	my $key = '__csrf_token';
 
-	return $c->session->{__csrf_token} //= WriteOff::Util::token();
+	return $c->session($key) // ($c->session->{$key} = WriteOff::Util::token());
 }
 
 sub logout {
@@ -39,8 +40,8 @@ sub user {
 
 	return $c->stash->{__user} if $c->stash->{__user};
 
-	if (exists $c->session->{__user_id}) {
-		if (my $user = $c->model('DB::User')->find($c->session->{__user_id})) {
+	if (my $uid = $c->session('__user_id')) {
+		if (my $user = $c->model('DB::User')->find($uid)) {
 			return $c->stash->{__user} = $user;
 		}
 	}

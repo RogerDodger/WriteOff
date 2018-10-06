@@ -125,7 +125,7 @@
 				<div class="Global-message">{{ msg }}</div>
 			{{ END }}
 
-			{{ IF !c.session.introduced }}
+			{{ IF !c.session('introduced') }}
 			<div class="Flash big">{{ c.string('introSplash') | markdown }}</div>
 			{{ END }}
 

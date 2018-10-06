@@ -11,10 +11,7 @@ use Catalyst qw/
 
 	+WriteOff::Plugin::Auth
 	+WriteOff::Plugin::Strings
-
-	Session
-	Session::Store::Cookie
-	Session::State::Cookie
+	+WriteOff::Plugin::Session
 
 	Cache
 
@@ -59,10 +56,6 @@ __PACKAGE__->config(
 	'Plugin::Static::Simple' => {
 		ignore_dirs => [ qw/src/ ],
 		ignore_extensions => [],
-	},
-	'Plugin::Session' => {
-		flash_to_stash => 1,
-		storage_cookie_expires => '+1y',
 	},
 	'Plugin::ConfigLoader' => {
 		file => 'config.yml',
