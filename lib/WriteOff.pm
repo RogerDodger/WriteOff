@@ -260,6 +260,18 @@ if (defined __PACKAGE__->config->{now}) {
 	$ENV{WRITEOFF_DATETIME} = __PACKAGE__->config->{now};
 }
 
+before prepare => sub {
+	my ($self, $env, $ctx) = @_;
+
+	$ctx->{PATH_INFO} =~ s{^/static/(style|js)/(writeoff|vendor)-[a-f0-9]+\.(css|js|min\.js|)$}
+	                       {/static/$1/$2.$3};
+
+	if ($ctx->{PATH_INFO} =~ m{^/static/avatar/}) {
+		$ctx->{PATH_INFO} = '/static/avatar/default.jpg'
+			if !-f $self->path_to('root', $ctx->{PATH_INFO});
+	}
+};
+
 sub lang {
 	my ($self, $lang) = @_;
 

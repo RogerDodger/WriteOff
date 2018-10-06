@@ -13,18 +13,6 @@ __PACKAGE__->config(namespace => '');
 sub auto :Private {
 	my ( $self, $c ) = @_;
 
-	if ($c->req->uri->path =~ m{^/static/(style|js)/(writeoff|vendor)-[a-f0-9]+\.(css|js|min\.js|)$}) {
-		$c->serve_static_file("root/static/$1/$2.$3");
-		$c->log->abort(1);
-		return 0;
-	}
-
-	if ($c->req->uri->path =~ m{^/static/avatar/}) {
-		$c->serve_static_file("root/static/avatar/default.jpg");
-		$c->log->abort(1);
-		return 0;
-	}
-
 	# This is necessary because of a bug/exploit whereby requests hitting the
 	# website with a different $c->req->base were then having their results
 	# cached. The cached results would then appear to regular users which
