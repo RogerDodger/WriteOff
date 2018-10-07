@@ -1,3 +1,14 @@
+Dependencies
+============
+
+- perl v5.14+
+- gcc
+- make
+- [sqlite3](https://www.sqlite.org/index.html)
+- [terser](https://github.com/terser-js/terser)
+- [autoprefixer](https://github.com/postcss/autoprefixer)
+- [postcss-cli](https://github.com/postcss/postcss-cli)
+
 Installation
 ============
 

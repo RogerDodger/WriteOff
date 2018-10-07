@@ -40,8 +40,4 @@ js-cat:
 	$(js_cat) $(js_dir)/vendor/*.js > $(js_dir)/vendor.js
 
 js-min:
-	uglifyjs --compress --mangle -p relative \
-	         --output         $(js_dir)/writeoff.min.js \
-	         --source-map     $(js_dir)/writeoff.min.js.map \
-	         --source-map-url      $(js_url)/writeoff.min.js.map \
-	                          $(js_dir)/writeoff.js
+	terser -c -m -o $(js_dir)/writeoff.min.js $(js_dir)/writeoff.js
