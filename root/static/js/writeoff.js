@@ -1535,17 +1535,27 @@ $(document).ready(function () {
 	if ($pagers.size()) {
 		// Handler attaches to the $pagers so that we can modify their
 		// contents without having to add new handlers.
-		$pagers.on('click', 'a', function (e) {
+		$pagers.on('click', '.Pager-page', function (e) {
 			var $this = $(e.target);
 			if (!$pagers.hasClass('loading')) {
 				// $this will be removed from the document after loadPage, so
 				// we find this now
 				var $pager = $this.closest('.Pager');
-				loadPage($this.text()).then(function () {
+				loadPage($this.text().trim()).then(function () {
 					if (!$this.hasClass('current') && $pager.hasClass('bottom')) {
 						$('html, body').scrollTop($('.Pager.top').offset().top);
 					}
 				})
+			}
+		});
+
+		$pagers.on('click', '.Pager-anchor', function (e) {
+			var $pager = $(e.target).closest('.Pager');
+			if ($pager.hasClass('top')) {
+				$('html, body').scrollTop($('.Pager.bottom').offset().top);
+			}
+			else {
+				$('html, body').scrollTop($('.Pager.top').offset().top - $pager.innerHeight());
 			}
 		});
 	}

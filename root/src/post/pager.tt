@@ -1,9 +1,18 @@
-<div class="Pager {{ pos }}">
+{{ SET ipos = (pos == 'top' ? 'bottom' : 'top') }}
+
+<div class="Pager {{ pos }}" id="pager-{{ pos }}">
 	<ul>
+		<li>
+			<a href="#pager-{{ ipos }}"
+				class="Pager-anchor" title="{{ c.string('backTo' _ ipos.ucfirst()) }}">
+				<i class="fa fa-long-arrow-{{ ipos == 'top' ? 'up' : 'down' }}"></i>
+			</a>
 		{{ FOREACH page IN [pager.first_page .. pager.last_page] }}
 		<li>
 			<a href="{{ c.req.uri_with({ 'page' = page }) }}"
-				class="{{ 'current' IF page == pager.current_page }}">{{ page }}</a>
+				class="Pager-page {{ 'current' IF page == pager.current_page }}">
+				{{ page }}
+			</a>
 		{{ END }}
 	</ul>
 </div>

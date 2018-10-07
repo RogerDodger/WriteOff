@@ -84,6 +84,8 @@ rounds: Rounds
 addRound: Add Round
 removeRound: Remove Round
 polls: Polls
+backToTop: Back to top
+backToBottom: Go to end
 
 newArtistTitle: New Alias
 newEventTitle: New Event
