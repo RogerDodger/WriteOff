@@ -60,13 +60,13 @@ __PACKAGE__->config(
 	'Plugin::ConfigLoader' => {
 		file => 'config.yml',
 	},
-    'Plugin::Cache' => {
-        backend => {
-            namespace => 'WriteOff',
-            class => 'Cache::Memory',
-            default_expires => '600 sec',
-        },
-    },
+	'Plugin::Cache' => {
+		backend => {
+			namespace => 'WriteOff',
+			class => 'Cache::Memory',
+			default_expires => '600 sec',
+		},
+	},
 
 	timezone => 'UTC',
 	validator => {
@@ -180,7 +180,7 @@ __PACKAGE__->config(
 	#
 	#     work = wordcount/rate + offset
 	#
-	# i.e., it takes approximately 11 minutes + 1 per minute 200 words to
+	# i.e., it takes approximately 1 minute per 200 words, plus 11 minutes, to
 	# review a story.
 	#
 	# Threshold is how many minutes of reading per day a voter could be
