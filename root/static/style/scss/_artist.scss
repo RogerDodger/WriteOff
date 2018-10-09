@@ -141,69 +141,76 @@
 	flex-direction: column;
 }
 
+.Artist-entry--footer,
+.Artist-entry--header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	& > *:nth-child(2) { margin-left: 0.5rem; }
+}
+
+.Artist-entry--header {
+	flex-grow: 1;
+	margin-bottom: 0.5em;
+}
+
 .Artist-entry--title {
 	flex-grow: 1;
 	font-size: 1.3em;
-	margin-bottom: 0.5em;
 	word-wrap: break-word;
 }
 
-.Artist-entry--meta {
-	display: flex;
-	flex-flow: row wrap;
+.Artist-entry--footer {
 	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: -0.3em;
+}
 
+.Artist-entry--mode,
+.Artist-entry--deadline,
+.Artist-entry--placing {
 	color: #777;
 }
 
+.Artist-entry--mode {
+	grid-area: mode;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+
 .Artist-entry--deadline {
+	font-size: 0.9em;
 	white-space: nowrap;
+	a { color: inherit }
+	a:hover { text-decoration: underline }
+}
 
-	a {
-		color: inherit;
-	}
-
-	a:hover {
-		text-decoration: underline;
-	}
-
-	padding-right: 0.6em;
+.Artist-entry--placing {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .Artist-entry--separator {
 	width: 0.07em;
 	background: #ccc;
 
-	$overflow: 0.4em;
+	$overflow: 0.3em;
 	height: 1em + ($overflow * 2);
+	margin: 0 0.6em;
 	margin-bottom: -1 * $overflow;
 	position: relative;
 	top: -0.5 * $overflow;
 }
 
-.Artist-entry--placing {
-	padding-left: 0.6em;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
+.Artist-entry--awards {
+	margin: 0 0.25em;
 
-.Artist-entry--awards .Award {
-	width: 1.3em;
-	height: 1.3em;
-}
-
-.Artist-entry--pct,
-.Artist-entry--score {
-	padding-left: 0.3em;
-}
-
-.Artist-entry--mode {
-	flex-grow: 1;
-	text-align: end;
-	text-transform: uppercase;
-	font-size: 0.8em;
-	padding-left: 0.3em;
+	.Award {
+		width: 1.4rem;
+		height: 1.4rem;
+	}
 }
 
 .Artist-edit {
