@@ -1,43 +1,13 @@
 {{ WRAPPER 'artist/wrapper.tt' }}
-<div class="Artist-profile">
-	{{ IF entrys.count }}
-	<table class="Artist-entries">
-		<thead>
-			<tr>
-				<th>Date</th>
-				<th class="no-sort"></th>
-				<th>Entry</th>
-				<th data-sort-method="number">Rank</th>
-				<th data-sort-method="number" title="Percentile">Pct</th>
-				<th data-sort-method="number">Score</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{ FOREACH entry IN entrys.all }}
-			<tr>
-				<td class="Artist-entries--date" data-sort="{{ entry.deadline.iso8601 }}">
-					<a href="{{ c.uri_for_action('/event/permalink', [ entry.event.id_uri ]) }}">{{ entry.deadline.date_html | none }}</a>
-				</td>
-				<td class="Artist-entries--awards">
-					{{ FOREACH award IN entry.awards_sorted; award.html | none; END }}
-				</td>
-				<td class="Artist-entries--title">
-					<a href="{{ c.uri_for(c.controller(entry.mode.ucfirst).action_for('view'), [ entry.id_uri ]) }}">
-						{{ entry.title }}
-					</a>
-				</td>
-				<td class="Artist-entries--rank">{{ entry.rank + 1 IF entry.rank.defined }}</td>
-				<td class="Artist-entries--pct" data-sort="{{ entry.pct IF entry.rank.defined }}"
-						title="{{ entry.pct | format('%.5f') IF entry.rank.defined }}">
-					{{ entry.pct * 100 | format('%.0f%%') IF entry.rank.defined }}
-				</td>
-				<td class="Artist-entries--score" title="{{ entry.score | format('%.5f') IF entry.score.defined }}">
-					{{ entry.score | format('%.0f') IF entry.score.defined }}
-				</td>
-			</tr>
-			{{ END }}
-		</tbody>
-	</table>
-	{{ END }}
-</div>
+	<h3>{{ c.string('popularEntrys') }}</h3>
+
+	{{ INCLUDE artist/entrys_.tt  entrys = artist.entrys_rs.popular_rs }}
+
+	<h3>{{ c.string('popularPosts') }}</h3>
+
+	<div class="Artist-posts">
+		{{ FOREACH post IN artist.posts_rs.popular }}
+			{{ INCLUDE post/single_.tt }}
+		{{ END }}
+	</div>
 {{ END }}

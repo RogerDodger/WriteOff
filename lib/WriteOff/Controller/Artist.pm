@@ -142,17 +142,28 @@ sub swap :Local {
 sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ($self, $c) = @_;
 
-	$c->stash->{entrys} = $c->stash->{artist}->entrys->search({
-		'me.score' => { '!=' => undef },
-		'me.artist_public' => 1,
-	},
-	{
-		join => 'event',
-		prefetch => [ 'awards', { event => [ 'rounds', 'entrys' ] } ],
-		order_by => { -desc => 'event.created' },
+	$c->stash->{template} = 'artist/view.tt';
+}
+
+sub posts :Chained('fetch') :PathPart('posts') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{posts} = $c->stash->{artist}->posts->search({}, {
+		order_by => { -desc => 'created' },
+		rows => 25,
 	});
 
-	$c->stash->{template} = 'artist/view.tt';
+	$c->stash->{template} = 'artist/posts.tt';
+	push @{ $c->stash->{title} }, $c->string('posts');
+}
+
+sub entrys :Chained('fetch') :PathPart('entries') :Args(0) {
+	my ($self, $c) = @_;
+
+	$c->stash->{entrys} = $c->stash->{artist}->entrys->profile;
+
+	$c->stash->{template} = 'artist/entrys.tt';
+	push @{ $c->stash->{title} }, $c->string('entrys');
 }
 
 sub search :Local :Args(1) {

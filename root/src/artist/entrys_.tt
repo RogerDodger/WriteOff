@@ -1,0 +1,41 @@
+<div class="Artist-entries">
+	{{ FOREACH entry IN entrys.all }}
+	<div class="Artist-entry">
+		<div class="Artist-entry--title">
+			<a href="{{ c.uri_for(c.controller(entry.mode.ucfirst).action_for('view'), [ entry.id_uri ]) }}">
+				{{ entry.title }}
+			</a>
+		</div>
+
+		<div class="Artist-entry--meta">
+			<div class="Artist-entry--deadline">
+				<i class="fa fa-calendar"></i>
+				<a href="{{ c.uri_for_action('/event/permalink', [ entry.event.id_uri ]) }}">{{ entry.deadline.date_html | none }}</a>
+			</div>
+
+			{{ IF entry.rank.defined }}
+			<div class="Artist-entry--separator"></div>
+
+			<div class="Artist-entry--placing">
+				<div class="Artist-entry--awards">
+					{{ FOREACH award IN entry.awards_sorted; award.html | none; END }}
+				</div>
+
+				<div class="Artist-entry--rank">{{ entry.rank + 1 | ordinal }}</div>
+
+				<div class="Artist-entry--pct"
+					title="{{ entry.pct | format('%.5f') IF entry.rank.defined }}">
+					{{ entry.pct * 100 | format('%.0f%%') IF entry.rank.defined }}
+				</div>
+
+				<div class="Artist-entry--score" title="{{ entry.score | format('%.5f') IF entry.score.defined }}">
+					{{ entry.score | format('%.0f') | minus IF entry.score.defined }}
+				</div>
+			</div>
+			{{ END }}
+
+			<div class="Artist-entry--mode">{{ entry.mode }}</div>
+		</div>
+	</div>
+	{{ END }}
+</div>

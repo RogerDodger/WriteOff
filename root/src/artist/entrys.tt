@@ -1,0 +1,3 @@
+{{ WRAPPER 'artist/wrapper.tt' }}
+	{{ INCLUDE artist/entrys_.tt }}
+{{ END }}

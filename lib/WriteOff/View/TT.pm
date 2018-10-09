@@ -64,6 +64,17 @@ __PACKAGE__->config->{FILTERS} = {
 	}, 1],
 
 	simple_uri => \&WriteOff::Util::simple_uri,
+
+	ordinal => sub {
+		my $i = $_[0] % 10;
+		my $ii = $_[0] % 100;
+		return $_[0] . ($i == 0 || $i >= 4 || $ii >= 11 && $ii <= 13 ? "th" : ("st", "nd", "rd")[$i-1]);
+	},
+
+	minus => sub {
+		$_[0] =~ s/-/&minus;/gr;
+	},
+
 	none => sub { $_[0] },
 };
 

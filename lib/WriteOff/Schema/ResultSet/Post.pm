@@ -31,6 +31,13 @@ sub num_for {
 	})->count;
 }
 
+sub popular {
+	shift->search({}, {
+		order_by => { -desc => 'score' },
+		rows => 10,
+	});
+}
+
 sub thread {
 	my ($self, $page, $rows) = @_;
 

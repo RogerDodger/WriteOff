@@ -61,6 +61,32 @@ sub mode {
 	});
 }
 
+sub profile {
+	shift->search(
+		{
+			'me.score' => { '!=' => undef },
+			'me.artist_public' => 1,
+		},
+		{
+			join => 'event',
+			prefetch => [ 'awards', { event => [ 'rounds', 'entrys' ] } ],
+			order_by => [
+				{ -desc => 'event.created' },
+				{ -desc => 'me.score' },
+			],
+		}
+	);
+}
+
+sub popular {
+	shift->profile->search({}, {
+		order_by => { -desc => 'me.score' },
+		rows => 8,
+	});
+}
+
+sub popular_rs { scalar shift->popular }
+
 sub public {
 	shift->search({ artist_public => 1 });
 }

@@ -2,145 +2,212 @@
 // Artist profile styles
 // =============================================================================
 
-.Artist-header {
-	max-width: none;
-	width: auto;
+.Artist-profile {
+	display: flex;
+	flex-direction: row;
+	max-width: $container-overflow;
+}
 
-	&::after {
-		background-color: hsla(0, 0%, 30%, 1);
-		content: " ";
-		display: block;
-		height: 0.3em;
+.Artist-sidebar {
+	width: 100%;
+	max-width: 15rem;
+	margin-right: 3rem;
+
+	& > * + * {
+		margin-top: 0.5rem;
 	}
 }
 
-.Artist-header--container {
-	@include container;
-	padding-bottom: 0.6em;
+.Artist-body {
+	width: 100%;
 }
 
-$meta-width: 11rem;
-$meta-margin: 1rem;
+@media (max-width: $container-wide) {
+	.Artist-profile {
+		flex-direction: column;
+		align-items: center;
+	}
 
-.Artist-meta {
-	float: left;
-	width: $meta-width;
-	margin-right: $meta-margin;
-
-	@media #{$mobile} {
-		float: none;
-		width: auto;
+	.Artist-sidebar {
 		margin-right: 0;
 	}
 }
 
-.Artist-feed {
-	margin-left: $meta-width + $meta-margin;
-}
-
 .Artist-avatar {
-	@include box;
-	@include sheet;
-	height: $meta-width;
-	width: $meta-width;
-	padding: 0.25rem;
+	width: 13rem;
+	height: 13rem;
+	margin: 0 auto;
 
-	img {
-		height: 100%;
-		width: 100%;
-	}
+	padding: 0.2rem;
+	background: white;
+
+	img { width: 100%; height: 100%; }
 }
 
 .Artist-name {
-	font-size: 2em;
-	text-shadow: 0.05em 0.05em white;
-	margin-bottom: 0.1em;
-	word-wrap: break-word;
+	margin: 0.5rem 0;
+	font-size: 1.2em;
+	font-weight: bold;
 
-	a {
-		color: #000;
-
-		&:hover {
-			color: #666;
-			text-decoration: none;
-		}
+	a, a:visited {
+		color: inherit;
 	}
 }
 
 .Artist-bio {
-	font-size: 1.1em;
-	color: #444;
-	text-shadow: 0.05em 0.05em white;
+	font-size: 0.9em;
 }
 
-.Artist-stats {
-	margin: 0.5em 0;
-	padding: 0;
-	color: #444;
-	font-size: 0.8em;
-	line-height: 1.2;
-	list-style-type: none;
+.Artist-joined {
+	margin-top: 0.8rem;
+	font-size: 0.9em;
+	color: #666;
 }
 
-.Artist-controls--edit {
-	@include button($hue: 100);
-}
-
-.Artist-controls--delete {
-	@include button($hue: 20, $sat: 30%);
-}
-
-.Artist-controls--edit,
-.Artist-controls--delete {
-	font-size: 0.8em;
-	text-align: center;
-	width: 100%;
-}
-
-.Artist-body {
-	@include container;
-	margin-top: 1em;
-}
-
-.Artist-body--container {
-	padding-left: $meta-width + $meta-margin;
-
-	@media #{$mobile} {
-		padding-left: 0;
+.Artist-edit--button {
+	a {
+		@include button($hue: 120);
+		width: 100%;
+		padding: 0.6rem;
+		text-align: center;
 	}
 }
 
-.Artist-entries {
-	@include striped-table;
-	@include box;
-}
-
-.Artist-entries--date {
-	text-align: end;
-}
-
-.Artist-entries--awards,
-.Artist-entries--rank,
-.Artist-entries--pct,
-.Artist-entries--score {
-	text-align: center;
-}
-
-.Artist-entries--date,
-.Artist-entries--awards {
-	white-space: nowrap;
-}
-
-.Artist-entries--title {
-	text-align: start;
+.Artist-nav {
 	width: 100%;
+	list-style-type: none;
+	padding: 0;
+	border-bottom: 0.05em solid #aaa;
+
+	li {
+		display: inline-block;
+		padding-left: 0;
+		margin: 0 1em;
+
+		a {
+			display: inline-block;
+			padding: 0.7em 0.3em;
+			color: #666;
+			border-bottom: 0.05em solid transparent;
+			transition: 0.2s all;
+		}
+
+		a:hover {
+			border-color: #aaa;
+		}
+
+		&.current a {
+			font-weight: bold;
+			border-color: hsla(200, 90%, 50%, 1);
+		}
+
+		a:hover,
+		&.current a {
+			text-decoration: none;
+			color: inherit;
+		}
+	}
+}
+
+.Artist-nav--count {
+	display: inline-block;
+	font-weight: bold;
+	padding: 0.2em 0.35em;
+	background-color: hsla(0, 0%, 88%, 1);
+	border-radius: 0.4em;
+	font-size: 0.7em;
+	line-height: 1;
+	position: relative;
+	top: -0.15em;
+}
+
+.Artist-entries {
+	display: grid;
+	grid-template-columns: 49% 49%;
+	grid-gap: 1em;
+
+	@media #{$mobile} {
+		grid-template-columns: 1fr;
+	}
+}
+
+.Artist-entry {
+	border: 0.05em solid #ccc;
+	border-radius: 0.2em;
+	background: white;
+	line-height: 1;
+	padding: 1em;
+	// padding-bottom: 0.6em;
+	display: flex;
+	flex-direction: column;
+}
+
+.Artist-entry--title {
+	flex-grow: 1;
+	font-size: 1.3em;
+	margin-bottom: 0.5em;
+	word-wrap: break-word;
+}
+
+.Artist-entry--meta {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+
+	color: #777;
+}
+
+.Artist-entry--deadline {
+	white-space: nowrap;
+
+	a {
+		color: inherit;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
+	padding-right: 0.6em;
+}
+
+.Artist-entry--separator {
+	width: 0.07em;
+	height: 1.8em;
+	margin-bottom: -0.4em;
+	background: #ccc;
+}
+
+.Artist-entry--placing {
+	padding-left: 0.6em;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.Artist-entry--awards .Award {
+	width: 1.3em;
+	height: 1.3em;
+}
+
+.Artist-entry--pct,
+.Artist-entry--score {
+	padding-left: 0.3em;
+}
+
+.Artist-entry--mode {
+	flex-grow: 1;
+	text-align: end;
+	text-transform: uppercase;
+	font-size: 0.8em;
+	padding-left: 0.3em;
 }
 
 .Artist-edit {
 	@extend .Document;
-	font-size: 0.85em;
-	width: auto;
 }
+
+// Used to search for organisers/judges
 
 .Artist-search--results {
 	border: 0.1em solid #ccc;
