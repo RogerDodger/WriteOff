@@ -137,7 +137,6 @@
 	background: white;
 	line-height: 1;
 	padding: 1em;
-	// padding-bottom: 0.6em;
 	display: flex;
 	flex-direction: column;
 }
@@ -173,9 +172,13 @@
 
 .Artist-entry--separator {
 	width: 0.07em;
-	height: 1.8em;
-	margin-bottom: -0.4em;
 	background: #ccc;
+
+	$overflow: 0.4em;
+	height: 1em + ($overflow * 2);
+	margin-bottom: -1 * $overflow;
+	position: relative;
+	top: -0.5 * $overflow;
 }
 
 .Artist-entry--placing {
