@@ -1,0 +1,45 @@
+<div class="Document">
+	<div class="Document-title">Awardmock</div>
+
+	<style>
+		.awardzoom .Award { height: 1.5em; width: 1.5em; }
+		.awardzoom2 .Award { height: 2em; width: 2em; }
+		.awardzoom3 .Award { height: 3em; width: 3em; }
+		.awardzoom4 .Award { height: 5em; width: 5em; }
+	</style>
+
+	<p>
+	{{ FOREACH award IN awards }}
+		{{ award.name }}<br>
+	{{ END }}
+
+	<p class="awardmin">
+	{{ FOREACH award IN awards }}
+		{{ award.html | none }}
+	{{ END }}
+
+	<p class="awardzoom">
+	{{ FOREACH award IN awards }}
+		{{ award.html | none }}
+	{{ END }}
+
+	<p class="awardzoom2">
+	{{ FOREACH award IN awards }}
+		{{ award.html | none }}
+	{{ END }}
+
+	<p class="awardzoom3">
+	{{ FOREACH award IN awards }}
+		{{ award.html | none }}
+	{{ END }}
+
+	<p class="awardzoom4">
+	{{ FOREACH award IN awards }}
+		{{ award.html | none }}
+	{{ END }}
+
+	<p>
+	<input name="awardmock" type="file" multiple>
+	<p>
+	<button class="awardreset">Reset</button>
+</div>

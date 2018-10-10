@@ -81,6 +81,14 @@ sub auto :Private {
 # 	}
 # }
 
+sub awardmock :Local {
+	my ($self, $c) = @_;
+
+	$c->stash->{awards} = \@WriteOff::Award::ORDERED;
+
+	$c->stash->{template} = 'root/awardmock.tt';
+}
+
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 

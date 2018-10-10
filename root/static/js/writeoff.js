@@ -1963,6 +1963,61 @@ $(document).ready(function () {
 });
 
 // ===========================================================================
+// Mock awards sitewide
+// ===========================================================================
+
+const AWARDS = [
+	'gold',
+	'silver',
+	'bronze',
+	'mortarboard',
+	'confetti',
+	'spoon',
+	'mask',
+	'lightbulb',
+	'ribbon',
+	'sleuth',
+];
+
+function awardMock() {
+	AWARDS.forEach(function (award) {
+		var img = localStorage.getItem(award);
+		if (img) {
+			$('.Award.' + award).attr('src', img);
+		}
+	});
+}
+
+$(document).ready(function () {
+	$('input[name="awardmock"]').on('change', function () {
+		if (!this.files) return;
+
+		for (var i = 0; i < this.files.length; ++i) {
+			var file = this.files[i];
+			var awardName = file.name.replace(/\..+/,'');
+			console.log(awardName);
+			if (AWARDS.includes(awardName)) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					localStorage.setItem(awardName, e.target.result);
+					awardMock();
+				};
+				reader.readAsDataURL(file);
+			}
+		}
+	});
+
+	$('.awardreset').on('click', function () {
+		AWARDS.forEach(function (award) {
+			localStorage.removeItem(award);
+			$('.Award.' + award).attr('src', '/static/images/awards/' + award + '.png');
+		});
+	});
+
+	awardMock();
+});
+
+// ===========================================================================
 // Apply post modifiers to document
 // ===========================================================================
 

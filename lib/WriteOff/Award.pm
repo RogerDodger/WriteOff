@@ -70,8 +70,8 @@ sub alt {
 
 sub html {
 	my $self = shift;
-	return sprintf q{<img class="Award" src="%s" alt="%s" title="%s">},
-		$self->src, $self->alt, $self->title;
+	return sprintf q{<img class="Award %s" src="%s" alt="%s" title="%s">},
+		$self->name, $self->src, $self->alt, $self->title;
 }
 
 sub name {
