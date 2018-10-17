@@ -68,7 +68,7 @@ sub color {
 	for my $artist ($self->db('Artist')->all) {
 		$artist->avatar_write_color->update;
 
-		printf "%16s %s %s\n",
+		printf "%16s %7s %s\n",
 			$artist->avatar_id // 'default.jpg',
 			$artist->color // '',
 			Encode::encode_utf8 $artist->name;

@@ -91,8 +91,9 @@ sub avatar_write_color {
 	my ($self, $img) = @_;
 
 	if (!$img) {
-		return if !$self->avatar_id;
-		$img = Imager->new(file => $self->avatar_path($self->avatar_id)) or return;
+		$self->avatar_id
+			and $img = Imager->new(file => $self->avatar_path($self->avatar_id))
+			or return $self;
 	}
 
 	my $pal = $img->to_paletted({ make_colors => 'webmap' });
