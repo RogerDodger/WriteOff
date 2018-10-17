@@ -6,10 +6,11 @@
 	From: Adelaide, Australia
 
 /* THANKS */
+	GroaningGreyAgony: Award icon vectors
 	Kazunekit: EBook output for stories
 
 /* SITE */
 	Language: English
-	Technology: Perl5, Catalyst, Template Toolkit, Git, jQuery, jQueryUI, modernizr
+	Technology: Perl5, Catalyst, SQLite3, Git, jQuery
 	Doctype: HTML5
-	Editor: Sublime Text 2
+	Editor: Sublime Text

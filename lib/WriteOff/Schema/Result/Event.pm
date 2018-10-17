@@ -566,6 +566,7 @@ sub calibrate {
 	my $maxN = (log($wFinals) - log($wTotal)) / log($c);
 	printf "%f * $c ** %f = %f\n", $wTotal, $maxN, $wFinals if $ENV{WRITEOFF_DEBUG};
 
+	# Delete $d rounds
 	my $d = $n - List::Util::max(0, int $maxN);
 	my @rounds = reverse $rounds->ordered->all;
 

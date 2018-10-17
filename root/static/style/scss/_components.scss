@@ -546,3 +546,25 @@
 .Auto-complete--text {
 	margin: 0.5em;
 }
+
+.Container {
+	@include container;
+}
+
+.Canvas {
+	@include container;
+	@include box;
+	@include sheet;
+
+	padding: 2em;
+
+	@media #{$mobile} {
+		padding: 2em 0.5em;
+		width: auto;
+	}
+}
+
+.Global-message {
+	@include container;
+	@extend .Flash;
+}

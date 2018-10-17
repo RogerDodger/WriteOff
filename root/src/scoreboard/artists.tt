@@ -1,0 +1,8 @@
+{{
+	USE cache = Cache(cache => c.config.renderCache);
+	cache.inc(
+		'template' => 'scoreboard/artists_.tt',
+		'ttl' => c.debug || 360,
+		'key' => key
+	);
+}}

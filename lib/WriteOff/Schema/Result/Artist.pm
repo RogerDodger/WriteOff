@@ -6,6 +6,7 @@ use warnings;
 use base "WriteOff::Schema::Result";
 use File::Path;
 use File::Spec;
+use Graphics::ColorObject;
 use Imager;
 use WriteOff::Award;
 use WriteOff::Util;
@@ -26,6 +27,8 @@ __PACKAGE__->add_columns(
 	"name_canonical",
 	{ data_type => "text", is_nullable => 0 },
 	"avatar_id",
+	{ data_type => "text", is_nullable => 1 },
+	"color",
 	{ data_type => "text", is_nullable => 1 },
 	"bio",
 	{ data_type => "text", is_nullable => 1 },
@@ -81,6 +84,53 @@ sub avatar_write {
 		unlink $self->avatar_path($self->avatar_id);
 	}
 	$self->avatar_id($newId);
+	$self->avatar_write_color($thumb);
+}
+
+sub avatar_write_color {
+	my ($self, $img) = @_;
+
+	if (!$img) {
+		return if !$self->avatar_id;
+		$img = Imager->new(file => $self->avatar_path($self->avatar_id)) or return;
+	}
+
+	my $pal = $img->to_paletted({ make_colors => 'webmap' });
+
+	my @colors = map {
+		$pal->getpixel(
+			x => [ 0 .. $pal->getwidth - 1 ],
+			y => [ $_ ],
+		);
+	} 0 .. $pal->getheight - 1;
+
+	my @rgb = map {
+		my $i = $_;
+		WriteOff::Util::avg(map { ($_->rgba)[$i] } @colors)
+	} 0..2;
+
+	# 2018-10-15
+	# Supressing an unavoidable warning from Graphics::ColorObject
+	#   Use of uninitialized value within @_ in lc at line 1905.
+	local $SIG{__WARN__} = sub {
+		warn $_[0] unless $_[0] =~ /ColorObject.pm line 1905.$/;
+	};
+
+	my $lch = Graphics::ColorObject->new_RGB255([@rgb])->as_LCHuv;
+	$lch->[0] = 50;
+	$lch->[1] = 30;
+
+	my $web = "#" . lc Graphics::ColorObject->new_LCHuv($lch)->as_RGBhex;
+
+	$self->color($web);
+}
+
+sub color_dark {
+	my $self = shift;
+	return if !$self->color;
+	my $lch = Graphics::ColorObject->new_RGBhex($self->color)->as_LCHuv;
+	$lch->[0] /= 2;
+	"#" . Graphics::ColorObject->new_LCHuv($lch)->as_RGBhex;
 }
 
 sub id_uri {

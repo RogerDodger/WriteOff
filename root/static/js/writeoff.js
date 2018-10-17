@@ -1050,17 +1050,6 @@ $(document).ready(function () {
 $(document).ready(function() {
 	var $form = $('.Scoreboard-filter');
 	if (!$form.length) return;
-	var $doc = $form.closest('.Document');
-	var $spinner = $doc.find('.Spinner');
-
-	// Because most of the layout is centered, allowing the scroll bar to
-	// disappear while the scoreboard disappears temporarily creates a
-	// jarring effect where everything repositions. Instead, force the
-	// scroll bar to show on this page no matter what.
-	$('html').attr('style', 'overflow-y: scroll');
-
-	// Hide the submit control since we're doing AJAX updates
-	$form.find('[type="submit"]').addClass('hidden');
 
 	// Hide the "format" control if mode is "fic"
 	$form.find('select[name="mode"]')
@@ -1073,133 +1062,70 @@ $(document).ready(function() {
 		})
 		.change();
 
-	var xhr = new XMLHttpRequest();
-	var timeout;
-
-	function fetchScoreboard () {
-		// If a previous fetch is queued, kill it
-		xhr.abort();
-		window.clearTimeout(timeout);
-
-		$doc.find('.Scoreboard').remove();
-		$spinner.removeClass('hidden');
-
-		// Minific › Original › Scoreboard • Writeoff
-		// Original › Art › Scoreboard • Writeoff
-		var title = ['format', 'genre', 'mode'].map(function (e) {
-			return $form.find('[name="' + e + '"] :selected').text().trim();
-		});
-
-		// If format defined, pop mode, else shift format
-		title[ title[0].length ? 'pop' : 'shift' ]();
-
-		document.title = document.title.replace(
-			/^.+( › .+? • .+?)$/,
-			title.join(' › ') + '$1'
-		);
-
+	// Go to new scoreboard if a select is changed
+	$form.find('select').change(function () {
 		var path = window.location.pathname + '?' + $form.serialize();
-		// Chop blank format off for tidy URL
 		path = path.replace(/&format=$/, '');
-		window.history.pushState('', '', path);
-
-		// For some reason, Firefox doesn't flush the document.title if
-		// there's  an XHR immediately after it. Delaying the xhr.open
-		// slightly seems to flush it.
-		setTimeout(function () {
-			xhr.open('GET', path);
-			xhr.send();
-		}, 4);
-	}
-
-	xhr.addEventListener('load', function () {
-		res = $.parseHTML(xhr.response);
-		postModifiers.apply(res);
-		var $res = $('<div/>').append(res);
-
-		if ($res.find('.Scoreboard').length) {
-			$spinner.addClass('hidden');
-			$res.find('.Scoreboard').insertAfter($form);
-		}
-		else {
-			timeout = window.setTimeout(function () {
-				xhr.open('GET', xhr.responseURL);
-				xhr.send();
-			}, 3000);
-		}
+		window.location = path;
 	});
 
-	xhr.addEventListener('error', function () {
-		alert('Failed to fetch scoreboard');
-		$spinner.addClass('hidden');
-	});
-
-	$form.find('select').change(fetchScoreboard);
-
-	var $flash = $doc.find('.Flash');
-	if ($flash.length) {
-		$flash.remove();
-		fetchScoreboard();
-	}
+	// Hide the submit control since the above clicks it automatically
+	$form.find('[type="submit"]').addClass('hidden');
 });
 
 //==========================================================================
 // Collapsing score breakdowns
 //==========================================================================
 
-postModifiers.push(function (ctx) {
-	$('.Breakdown', ctx)
-		.click(function() {
-			var $link = $(this);
-			var $icon = $(this).find('i');
-			var $row = $(this).closest('tr');
+$(document).ready(function () {
+	var $board = $('.Scoreboard');
+	if (!$board.length) return;
 
-			while ($row.next() && $row.next().hasClass('Breakdown-row')) {
-				$row.next().remove();
+	$board.find('.Scoreboard-breakdown--toggle').each(function() {
+		$(this).data('target', $(this).attr('href'));
+	})
+	.removeAttr('href');
+
+	$board.on('click', '.Scoreboard-breakdown--toggle i', function (e) {
+		var $btn = $(e.target);
+		var $link = $btn.closest('a');
+		var $artist = $btn.closest('.Scoreboard-artist');
+		var $spinner = $artist.find('.Spinner');
+
+		var addExpanded = function () {
+			$artist.addClass('expanded')
+			if ($artist.find('.Scoreboard-breakdown--entry').length > 2) {
+				$artist.addClass('span-max');
 			}
+		};
 
-			var expand = $icon.hasClass('fa-plus');
-			$row.find('.Breakdown i').each(function () {
-				$(this).removeClass('fa-minus');
-				$(this).addClass('fa-plus');
-				$(this).attr('title', 'Show breakdown');
-			});
+		if ($btn.hasClass('fa-expand')) {
+			var $ctn = $artist.find('.Scoreboard-breakdown');
 
-			if (expand) {
-				$icon.removeClass('fa-plus');
-				$icon.addClass('fa-minus');
-				$icon.attr('title', 'Hide breakdown');
-
-				var $expand_row = $row.clone().addClass('Breakdown-row');
-				var $expand_cell = $('<td colspan="99"/>');
-				$expand_row.html($expand_cell);
-
-				$row.after($expand_row);
-				$row.after('<tr class="Breakdown-row hidden"/>');
-
-				if ($link.data('res')) {
-					$expand_cell.html($link.data('res'));
-				}
-				else {
-					$expand_cell.load(
-						$link.data('target'),
-						function(res, status, xhr) {
-							if (status != 'error') {
-								$expand_cell.find('h1').remove();
-								$link.data('res', $expand_cell.html());
-							}
-							else {
-								$expand_cell.html(xhr.statusTxt);
-							}
-						}
-					);
-				}
+			if ($ctn.get(0).hasChildNodes()) {
+				addExpanded();
 			}
-		})
-		.each(function() {
-			$(this).data('target', $(this).attr('href'));
-		})
-		.removeAttr('href');
+			else {
+				$artist.addClass('loading');
+
+				$.get($link.data('target'), function (res, status, xhr) {
+					$artist.removeClass('loading');
+
+					if (status != 'error') {
+						var $res = $($.parseHTML(res));
+						$ctn.append($res.find('.Scoreboard-breakdown--entry'));
+						addExpanded();
+					}
+					else {
+						alert(xhr.statusText);
+					}
+				});
+			}
+		}
+		else {
+			$artist.removeClass('expanded span-max loading');
+		}
+	})
 });
 
 // ===========================================================================
@@ -1995,7 +1921,6 @@ $(document).ready(function () {
 		for (var i = 0; i < this.files.length; ++i) {
 			var file = this.files[i];
 			var awardName = file.name.replace(/\..+/,'');
-			console.log(awardName);
 			if (AWARDS.includes(awardName)) {
 				var reader = new FileReader();
 				reader.onload = function(e) {
@@ -2010,7 +1935,7 @@ $(document).ready(function () {
 	$('.awardreset').on('click', function () {
 		AWARDS.forEach(function (award) {
 			localStorage.removeItem(award);
-			$('.Award.' + award).attr('src', '/static/images/awards/' + award + '.png');
+			$('.Award.' + award).attr('src', '/static/images/awards/' + award + '.svg');
 		});
 	});
 

@@ -43,4 +43,14 @@ sub award {
 	$self->award_id && WriteOff::Award->new($self->award_id);
 }
 
+sub awards_sorted {
+	shift->award // ();
+}
+
+sub deadline {
+	my $self = shift;
+
+	$self->event->rounds->search({ mode => $self->mode, name => 'final' })->first->end;
+}
+
 1;

@@ -21,7 +21,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->belongs_to("entry", "WriteOff::Schema::Result::Entry", "entry_id");
 
-for my $meth (qw/alt html name order src tallied title/) {
+for my $meth (qw/alt color html name order src tallied title/) {
 	eval qq{
 		sub $meth {
 			WriteOff::Award->new(shift->award_id)->$meth;

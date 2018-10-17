@@ -2,60 +2,267 @@
 // Scoreboard style
 // =============================================================================
 
-.Scoreboard {
-	@include striped-table;
 
-	& > tbody > tr > td {
-		text-align: center;
-	}
-}
-
-.Scoreboard-awards {
-	line-height: 0;
-
-	.Award + .Award {
-		margin-left: -10px;
-	}
+.Scoreboard-nav {
+	width: 100%;
+	background-color: hsla(200, 17%, 92%, 1);
+	border: 1px solid hsla(200, 17%, 80%, 1);
+	margin-top: -1em;
 }
 
 .Scoreboard-filter {
 	display: flex;
-	flex-direction: row;
+	flex-flow: row wrap;
 	align-items: flex-end;
-	// font-size: 0.8em;
-	margin: calc(-2rem - 1px);
-	margin-bottom: 2rem;
-
-	padding: 1em 2rem;
-
-	background-color: hsla(200, 17%, 92%, 1);
-	border: 1px solid hsla(200, 17%, 80%, 1);
 }
 
 .Scoreboard-filter--cat {
 	display: flex;
 	flex-direction: column;
-
-	& + .Scoreboard-filter--cat {
-		margin-left: 0.8em;
-	}
+	margin-right: 0.8em;
 
 	label {
 		font-variant: small-caps;
 	}
 }
 
-.Scoreboard-breakdown {
-	font-size: 0.8rem;
-	margin: 0 auto;
+.Scoreboard {
+	max-width: 88rem;
+	margin-top: 1em;
 
-	& > tbody > tr > td,
-	& > thead > tr > th {
-		padding: 0.3em;
+	display: grid;
+	grid-gap: 1em;
+	grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+	align-items: start;
+}
+
+.Scoreboard-artist {
+	@include sheet;
+	border: 1px solid #ccc;
+	border-radius: 0.2em;
+	position: relative;
+
+	&.expanded.span-max {
+		grid-column: 1 / -1;
+	}
+
+	&.expanded,
+	&.loading {
+		.Scoreboard-artist--awards,
+		.fa-expand { display: none }
+	}
+
+	&:not(.expanded) {
+		.Scoreboard-breakdown,
+		.fa-compress { display: none }
 	}
 }
 
-.Scoreboard-breakdown--prompt,
+.Scoreboard-breakdown--toggle {
+	cursor: pointer;
+}
+
+.Scoreboard-artist--header {
+	display: grid;
+	grid-template-columns: 8.6em calc(100% - 8.6em);
+	grid-template-rows: minmax(3.5em, 1fr) auto auto;
+
+	& > * {
+		z-index: 5;
+	}
+}
+
+.Scoreboard-artist--band {
+	z-index: 1;
+	grid-row: 1;
+	grid-column: 1 / -1;
+	background-color: #555;
+}
+
+.Scoreboard-artist--stripe {
+	z-index: 2;
+	grid-row: 2;
+	grid-column: 1 / -1;
+	background-color: #333;
+}
+
+.Scoreboard-artist--expand {
+	grid-row: 1;
+	grid-column: 2;
+	align-self: start;
+	justify-self: end;
+	margin: 0.5em;
+
+	a {
+		color: white;
+	}
+}
+
+.Scoreboard-artist--name {
+	grid-row: 3;
+	grid-column: 2;
+	font-size: 1.15em;
+	margin: 0.3em 0;
+	overflow-wrap: break-word;
+}
+
+
+.Scoreboard-artist--score,
+.Scoreboard-artist--rank {
+	margin: 0.3em 0;
+	grid-row: 2;
+	grid-column: 2;
+	color: #ddd;
+}
+
+.Scoreboard-artist--score {
+	font-size: 1.1em;
+	justify-self: end;
+	align-self: center;
+}
+
+.Scoreboard-artist--rank {
+	font-size: 1.4em;
+	justify-self: start;
+}
+
+.Scoreboard-artist--name,
+.Scoreboard-artist--score {
+	margin-right: 0.5em;
+}
+
+.Scoreboard-artist--avatar {
+	grid-row: 1 / -1;
+	grid-column: 1;
+	margin: 0.8em;
+	align-self: start;
+	justify-self: start;
+
+	img {
+		width: 7em;
+		height: 7em;
+	}
+}
+
+.Scoreboard-artist--awards {
+	$size: 2.5em;
+
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax($size, 1fr));
+	grid-row-gap: 0.5em;
+
+	.Award {
+		height: $size;
+		width: $size;
+	}
+}
+
+.Scoreboard-artist--awards,
+.Scoreboard-breakdown {
+	padding: 0.5em;
+	padding-top: 0;
+}
+
+.Scoreboard-breakdown {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(13em, 1fr));
+	grid-gap: 0.5em;
+}
+
+.Scoreboard-breakdown--entry {
+	@include sheet;
+	align-self: start;
+
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 4em auto auto auto;
+
+	& > * {
+		z-index: 5;
+	}
+}
+
+.Scoreboard-breakdown--band {
+	background-color: #ababab;
+	grid-row: 1;
+	grid-column: 1 / -1;
+	z-index: 3;
+}
+
+.Scoreboard-breakdown--awards {
+	grid-row: 1;
+	grid-column: 1 / -1;
+	justify-self: center;
+	margin: 0.5em;
+
+	.Award {
+		height: 3em;
+		width: 3em;
+	}
+}
+
+.Scoreboard-breakdown--placing {
+	grid-row: 2;
+	grid-column: 1;
+}
+
+.Scoreboard-breakdown--score {
+	grid-row: 2;
+	grid-column: 2;
+}
+
+.Scoreboard-breakdown--score,
+.Scoreboard-breakdown--placing {
+	margin-top: 0.3em;
+	align-self: center;
+}
+
+.Scoreboard-breakdown--score { margin-right: 1em }
+.Scoreboard-breakdown--placing { margin-left: 1em }
+
+.Scoreboard-breakdown--score {
+	justify-self: end;
+}
+
+.Scoreboard-breakdown--realscore {
+	padding-left: 0.4em;
+	margin-left: 0.4em;
+	border-left: 1px solid #ccc;
+}
+
+.Scoreboard-breakdown--rank {
+	padding-right: 0.4em;
+	margin-right: 0.4em;
+	border-right: 1px solid #ccc;
+}
+
+.Scoreboard-breakdown--basescore,
+.Scoreboard-breakdown--pct {
+	font-size: 0.7em;
+	color: #666;
+	align-self: center;
+}
+
 .Scoreboard-breakdown--title {
-	text-align: start;
+	grid-row: 3;
+	grid-column: 1 / -1;
+	font-size: 1.1em;
+	margin: 0 0.5em;
+	overflow-wrap: break-word;
+
+	&.theory {
+		margin-top: 0.3em;
+	}
+}
+
+.Scoreboard-breakdown--deadline {
+	grid-row: 4;
+	grid-column: 1 / -1;
+	justify-self: end;
+	margin: 0.5em;
+	margin-top: 0;
+
+	a {
+		color: #555;
+	}
 }

@@ -218,12 +218,6 @@ __PACKAGE__->config(
 		namespace => 'render',
 	),
 
-	scoreCache => CHI->new(
-		driver => 'File',
-		max_key_length => 8,
-		namespace => 'score',
-	),
-
 	disable_component_resolution_regex_fallback => 1,
 	enable_catalyst_header => 1,
 );

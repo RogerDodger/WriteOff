@@ -1,39 +1,46 @@
-<form class="Scoreboard-filter" action="{{ c.uri_for_action(c.action) }}" method="GET">
-	<div class="Scoreboard-filter--cat">
-		<label>{{ c.string('mode') }}</label>
-		<select class="Scoreboard-filter--dropdown" name="mode">
-			{{ FOREACH el IN modes }}
-			<option value="{{ el.name }}" {{ 'selected' IF el.id == mode.id }}>
-				{{ c.string(el.name) }}
-			</option>
-			{{ END }}
-		</select>
-	</div>
+<div class="Scoreboard-nav">
+	<div class="ctn p1">
+		<form class="Scoreboard-filter"
+			action="{{ c.uri_for_action(c.action) }}"
+			method="GET">
 
-	<div class="Scoreboard-filter--cat">
-		<label>{{ c.string('genre') }}</label>
-		<select class="Scoreboard-filter--dropdown" name="genre">
-			{{ FOREACH el IN genres.all }}
-			<option value="{{ el.id }}" {{ 'selected' IF el.id == genre.id }}>
-				{{ c.string(el.name) }}
-			</option>
-			{{ END }}
-		</select>
-	</div>
+			<div class="Scoreboard-filter--cat">
+				<label>{{ c.string('mode') }}</label>
+				<select class="Scoreboard-filter--dropdown" name="mode">
+					{{ FOREACH el IN modes }}
+					<option value="{{ el.name }}" {{ 'selected' IF el.id == mode.id }}>
+						{{ c.string(el.name) }}
+					</option>
+					{{ END }}
+				</select>
+			</div>
 
-	<div class="Scoreboard-filter--cat">
-		<label>{{ c.string('format') }}</label>
-		<select class="Scoreboard-filter--dropdown" name="format">
-			<option></option>
-			{{ FOREACH el IN formats.all }}
-			<option value="{{ el.id }}" {{ 'selected' IF el.id == format.id }}>
-				{{ c.string(el.name) }}
-			</option>
-			{{ END }}
-		</select>
-	</div>
+			<div class="Scoreboard-filter--cat">
+				<label>{{ c.string('genre') }}</label>
+				<select class="Scoreboard-filter--dropdown" name="genre">
+					{{ FOREACH el IN genres.all }}
+					<option value="{{ el.id }}" {{ 'selected' IF el.id == genre.id }}>
+						{{ c.string(el.name) }}
+					</option>
+					{{ END }}
+				</select>
+			</div>
 
-	<div class="Scoreboard-filter--cat">
-		<button type="submit">{{ c.string('go') }}</button>
+			<div class="Scoreboard-filter--cat">
+				<label>{{ c.string('format') }}</label>
+				<select class="Scoreboard-filter--dropdown" name="format">
+					<option></option>
+					{{ FOREACH el IN formats.all }}
+					<option value="{{ el.id }}" {{ 'selected' IF el.id == format.id }}>
+						{{ c.string(el.name) }}
+					</option>
+					{{ END }}
+				</select>
+			</div>
+
+			<div class="Scoreboard-filter--cat">
+				<button type="submit">{{ c.string('go') }}</button>
+			</div>
+		</form>
 	</div>
-</form>
+</div>

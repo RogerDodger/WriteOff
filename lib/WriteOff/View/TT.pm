@@ -25,6 +25,7 @@ __PACKAGE__->config(
 	END_TAG            => quotemeta('}}'),
 	expose_methods     => [ qw/data_uri format_dt title_html spectrum/ ],
 	render_die         => 1,
+	TIMER              => 1,
 );
 
 around template_vars => sub {

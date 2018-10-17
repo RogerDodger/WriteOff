@@ -1,4 +1,4 @@
-<div class="Artist-profile">
+<div class="Artist-profile ctn">
 	<div class="Artist-sidebar">
 		<div class="Artist-avatar">
 			<img src="{{ artist.avatar }}">

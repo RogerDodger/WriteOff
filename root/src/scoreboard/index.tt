@@ -1,15 +1,7 @@
-<div class="Document">
-	<div class="Document-title">{{ c.string('scoreboard') }}</div>
+{{ PROCESS scoreboard/nav.tt }}
 
-	{{ PROCESS scoreboard/nav.tt }}
-
-	{{ IF scoreboard.defined }}
-		{{ scoreboard | none }}
-	{{ ELSE }}
-	<div class="Flash">
-		{{ c.string('calculatingScoreboard') }}
-	</div>
-	{{ END }}
-
-	{{ INCLUDE fragment/spinner.tt }}
-</div>
+{{ IF scoreboard.defined }}
+	{{ scoreboard | none }}
+{{ ELSE }}
+	{{ PROCESS scoreboard/artists.tt }}
+{{ END }}

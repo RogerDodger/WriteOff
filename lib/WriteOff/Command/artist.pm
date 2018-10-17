@@ -1,11 +1,12 @@
 package WriteOff::Command::artist;
 
 use WriteOff::Command;
+use Encode;
 
 sub run {
 	my ($self, $command, @args) = @_;
 
-	if (defined $command && $command =~ /^(?:rename)$/) {
+	if (defined $command && $command =~ /^(?:rename|color)$/) {
 		$self->$command(@args);
 	}
 	else {
@@ -58,6 +59,19 @@ sub rename {
 		eval {
 			$score->image->update({ artist => $newname });
 		};
+	}
+}
+
+sub color {
+	my $self = shift;
+
+	for my $artist ($self->db('Artist')->all) {
+		$artist->avatar_write_color->update;
+
+		printf "%16s %s %s\n",
+			$artist->avatar_id // 'default.jpg',
+			$artist->color // '',
+			Encode::encode_utf8 $artist->name;
 	}
 }
 

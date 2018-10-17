@@ -2,8 +2,12 @@ $spinner-offset: 187;
 $spinner-duration: 1.4s;
 
 .Spinner {
-   display: flex;
+   display: none;
    justify-content: center;
+}
+
+.loading .Spinner {
+   display: flex;
 }
 
 .Spinner-container {

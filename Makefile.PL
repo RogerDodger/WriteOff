@@ -62,6 +62,8 @@ my @dependencies = (
 	'Imager',
 	'Imager::File::PNG',
 	'Imager::File::JPEG',
+	'Graphics::ColorNames::Netscape',
+	'Graphics::ColorObject',
 );
 
 if (eval { require App::cpanminus; 1; }) {

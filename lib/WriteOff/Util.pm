@@ -10,12 +10,18 @@ use Crypt::URandom qw/urandom/;
 use Time::HiRes qw/gettimeofday/;
 use WriteOff::Markup;
 
-our @EXPORT_OK = qw/LEEWAY maybe rorder simple_uri sorted token wordcount uniq/;
+our @EXPORT_OK = qw/LEEWAY avg maybe rorder simple_uri sorted token wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 my $_rng = Math::Random::ISAAC::XS->new( map { unpack( "N", urandom(4) ) } 1 .. 256);
 
 sub LEEWAY () { 5 } # minutes
+
+sub avg {
+	my $sum = 0;
+	$sum += $_ for @_;
+	$sum / @_;
+}
 
 sub bbcode {
 	WriteOff::Markup::story(@_);

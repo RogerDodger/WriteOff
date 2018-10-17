@@ -47,11 +47,21 @@
 				width: 100%;
 			}
 
+			&.Results-awards {
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+
 			&.Results-awards,
 			&.Results-artist {
 				white-space: nowrap;
 			}
 		}
+	}
+
+	.Award {
+		height: 1.8em;
+		width: 1.8em;
 	}
 }
 

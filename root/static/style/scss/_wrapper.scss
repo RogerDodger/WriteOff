@@ -127,12 +127,17 @@ body {
 			display: block;
 			opacity: 1;
 			visibility: visible;
-			z-index: 5;
+			z-index: 10;
 		}
 	}
 
 	div > ul > li:hover {
 		background-color: hsla(0, 0%, 8%, 1);
+	}
+
+	div > ul > li.current a {
+		color: hsla(0, 92%, 60%, 1);
+		text-shadow: 1px 1px 2px #000;
 	}
 
 	ul > li > ul > li {
@@ -175,40 +180,6 @@ body {
 	vertical-align: middle;
 	line-height: 0;
 	height: 32px;
-}
-
-/*
- * Content - generic top-level containers
- */
-
-@mixin container {
-	display: block;
-	max-width: $container-wide;
-	margin-left: auto;
-	margin-right: auto;
-	width: 98%;
-}
-
-.Site-content > * {
-	@include container;
-}
-
-.Canvas {
-	@include container;
-	@include box;
-	@include sheet;
-
-	padding: 2em;
-
-	@media #{$mobile} {
-		padding: 2em 0.5em;
-		width: auto;
-	}
-}
-
-.Global-message {
-	@include container;
-	@extend .Flash;
 }
 
 /*

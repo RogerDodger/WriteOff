@@ -1,0 +1,69 @@
+{{ SET ctrl = c.controller(mode.name.ucfirst) }}
+<div class="Scoreboard-breakdown ctn">
+{{- FOREACH score IN scores }}
+	<div class="Scoreboard-breakdown--entry">
+		{{ SET awards = score.item.awards_sorted }}
+		<div class="Scoreboard-breakdown--band"
+			style="background-color: {{ awards.first.color }}"></div>
+
+		{{ IF score.type == 'entry'; entry = score.item }}
+		<div class="Scoreboard-breakdown--awards">
+			{{ FOREACH award IN entry.awards_sorted; award.html | none; END }}
+		</div>
+
+		<div class="Scoreboard-breakdown--title">
+			<a href="{{ c.uri_for(ctrl.action_for('view'), [ entry.id_uri ]) }}">
+				{{ entry.title }}
+			</a>
+		</div>
+
+		<div class="Scoreboard-breakdown--placing flex-row">
+			<div class="Scoreboard-breakdown--rank">
+				{{ entry.rank + 1 | ordinal }}
+			</div>
+
+			<div class="Scoreboard-breakdown--pct"
+				title="{{ entry.pct | format('%.5f') }}">
+				{{ entry.pct * 100 | format('%.0f%%') }}
+			</div>
+		</div>
+
+		<div class="Scoreboard-breakdown--score flex-row">
+			<div class="Scoreboard-breakdown--basescore"
+				title="{{ entry.score | format('%.5f') }}">
+				{{ entry.score | format('%d') }}
+			</div>
+
+			<div class="Scoreboard-breakdown--realscore"
+				title="{{ entry.${scoreKey} | format('%.5f') }}">
+				{{ entry.${scoreKey} | format('%d') }}
+			</div>
+		</div>
+
+		<div class="Scoreboard-breakdown--deadline">
+			<i class="fa fa-calendar"></i>
+			<a href="{{ c.uri_for_action('/event/permalink', [ entry.event.id_uri ]) }}">
+				{{ entry.deadline.date_html | none }}
+			</a>
+		</div>
+		{{- ELSIF score.type == 'theory'; theory = score.item }}
+		<div class="Scoreboard-breakdown--title theory">
+			<a href="{{ c.uri_for(ctrl.action_for('results'), [ theory.event.id_uri ]) }}">
+				{{ theory.event.prompt }}
+			</a>
+		</div>
+
+		<div class="Scoreboard-breakdown--deadline">
+			<i class="fa fa-calendar"></i>
+			<a href="{{ c.uri_for_action('/event/permalink', [ theory.event.id_uri ]) }}">
+				{{ theory.deadline.date_html | none }}
+			</a>
+		</div>
+
+		<div class="Scoreboard-breakdown--awards">
+			{{ theory.award.html | none }}
+		</div>
+		{{- END }}
+	</div>
+{{- END }}
+</div>

@@ -2,7 +2,7 @@
 // Schedule listing styles
 // =============================================================================
 
-.Schedule {
+.Schedule:not(:first-child) {
 	margin-top: 1.5em;
 }
 

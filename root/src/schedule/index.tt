@@ -1,8 +1,6 @@
 {{ title.push(c.string('schedule')) }}
 
 <div class="Document">
-	<div class="Document-title">{{ title.-1 }}</div>
-
 	{{ FOREACH schedule IN schedules.all }}
 		{{ PROCESS 'schedule/single.tt' }}
 	{{ END }}

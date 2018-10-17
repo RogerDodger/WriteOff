@@ -70,35 +70,24 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 	my ($self, $c) = @_;
 
-	my $mode = WriteOff::Mode->find($c->paramo('mode')) // FIC;
+	$c->stash->{mode} = WriteOff::Mode->find($c->paramo('mode')) // FIC;
 
 	my %s;
 	$s{genre_id} = $1 if ($c->req->param('genre') // '') =~ /^(\d+)/;
-	$s{format_id} = $1 if $mode->is(FIC) and ($c->req->param('format') // '') =~ /^(\d+)/;
+	$s{format_id} = $1
+		if $c->stash->{mode}->is(FIC)
+		and ($c->req->param('format') // '') =~ /^(\d+)/;
 
 	$c->stash->{scoreKey} = $s{format_id} ? 'score_format' : 'score_genre';
 
-	$c->stash->{scores} = $c->stash->{artist}->entrys->search(
-		{
-			%s,
-			$mode->fkey => { "!=" => undef },
-			score => { "!=" => undef },
-			disqualified => 0,
-			artist_public => 1,
-		},
-		{
-			prefetch => 'event',
-			order_by => [
-				{ -desc  => 'event.created' },
-				{ -desc => 'score' },
-			]
-		}
-	);
+	my $entrys = $c->stash->{artist}->entrys->profile->search({ %s,
+		"me." . $c->stash->{mode}->fkey => { "!=" => undef }
+	});
 
-	$c->stash->{theorys} = $c->stash->{artist}->theorys->search(
+	my $theorys = $c->stash->{artist}->theorys->search(
 		{
 			%s,
-			mode => $mode->name,
+			mode => $c->stash->{mode}->name,
 			award_id => { "!=" => undef },
 		},
 		{
@@ -107,8 +96,16 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 		}
 	);
 
-	$c->stash->{title} = 'Scores';
-	$c->stash->{template} = 'scoreboard/scores.tt';
+	$c->stash->{scores} = [
+		sort {
+			$b->{item}->event->created <=> $a->{item}->event->created ||
+			$b->{type} cmp $a->{type}
+		}
+		  (map {{ type => 'entry', item => $_ }} $entrys->all),
+		  (map {{ type => 'theory', item => $_ }} $theorys->all)
+	];
+
+	$c->stash->{template} = 'scoreboard/entrys.tt';
 }
 
 sub swap :Local {

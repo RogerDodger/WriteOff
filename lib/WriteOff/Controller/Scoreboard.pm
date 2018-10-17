@@ -2,6 +2,7 @@ package WriteOff::Controller::Scoreboard;
 use Moose;
 use Scalar::Util qw/looks_like_number/;
 use namespace::autoclean;
+use WriteOff::Award qw/sort_awards/;
 use WriteOff::Mode qw/:all/;
 use WriteOff::Util qw/maybe/;
 
@@ -26,74 +27,57 @@ sub index :Path('/scoreboard') {
 		$s->{format} = undef;
 	}
 
-	my $rounds = $c->model('DB::Round')->search(
-		{
-			'me.tallied' => 1,
+	my %cond;
+	$cond{"genre_id"} = $s->{genre}->id;
+	$cond{"format_id"} = $s->{format}->id if $s->{format};
+
+	my $theorys = $c->model('DB::Theory')->search(
+		{ %cond,
 			mode => $s->{mode}->name,
-			name => 'final',
-			genre_id => $s->{genre}->id,
+			award_id => { "!=" => undef },
 		},
-		{
-			join => 'event',
-		}
+		{ join => 'event' }
 	);
 
-	if ($s->{format}) {
-		$rounds = $rounds->search({ format_id => $s->{format}->id });
-	}
+	$c->stash->{key} =
+		join ".", 'sb', map $_->id, grep defined, map $s->{$_}, qw/mode genre format/;
 
-	my $cache = $c->config->{scoreCache};
-	my $key = join ".", 'en', $s->{mode}->name, $s->{genre}->id, ($s->{format} ? $s->{format}->id : ''), $rounds->count;
-	my $rendering = "rendering.$key";
+	# Closure wackiness so that we delay the database hit until the first
+	# call. This way a cache hit makes database hit.
+	$s->{awards} = {
+		for => sub {
+			$c->log->debug("Seeding theorys into \%sl");
+			my %sl;
+			for my $theory ($theorys->all) {
+				$sl{$theory->artist_id} //= [];
+				push @{ $sl{$theory->artist_id} }, $theory->award;
+			}
 
-	$s->{scoreboard} = $cache->get($key);
-	if (!$s->{scoreboard} && !$cache->get($rendering)) {
-		$cache->set($rendering, 1, '10s');
+			my $for = sub {
+				my $artist = shift;
+				sort_awards
+					grep { $_->tallied }
+						@{ $artist->awards },
+						@{ $sl{$artist->id} // [] };
+			};
 
-		my $pid = fork;
-		if (!defined $pid) {
-			$c->log->error("Fork failed!: $!");
+			$s->{awards}{for} = $for;
+			$for->(@_);
 		}
-		elsif (!$pid) {
-			my %cond;
-			$cond{"genre_id"} = $s->{genre}->id;
-			$cond{"format_id"} = $s->{format}->id if $s->{format};
+	};
 
-			$s->{theorys} = $c->model('DB::Theory')->search(
-				{ %cond,
-					mode => $s->{mode}->name,
-					award_id => { "!=" => undef },
-				},
-				{ join => 'event' }
-			);
+	$s->{skey} = "score_" . ($s->{format} ? "format" : "genre");
 
-			$s->{awards} = $c->model('DB::Award')->search(
-				{ %cond,
-					$s->{mode}->fkey => { '!=' => undef },
-				},
-				{ join => { entry => "event" } }
-			);
+	$s->{artists} = $c->model('DB::ArtistX')->search({}, {
+		bind => [$s->{mode}->fkey, $s->{genre}->id, $s->{format} && $s->{format}->id],
+		order_by => { -desc => $s->{skey} },
+	});
 
-			$s->{skey} = "score_" . ($s->{format} ? "format" : "genre");
-
-			$s->{artists} = $c->model('DB::Score')->search({}, {
-				bind => [$s->{mode}->fkey, $s->{genre}->id, $s->{format} && $s->{format}->id],
-				order_by => { -desc => $s->{skey} },
-			});
-
-			$s->{aUrl} = $c->uri_for_action('/artist/scores', [ '%s' ], {
-				mode => $s->{mode}->name,
-				genre => $s->{genre}->id,
-				maybe(format => $s->{format} && $s->{format}->id),
-			});
-
-			local $s->{wrapper} = 'wrapper/none.tt';
-			$cache->set($key, $c->view('TT')->render($c, 'scoreboard/table.tt'), '6w');
-			$cache->remove($rendering);
-			exit(0);
-		}
-	}
-	$c->stash->{scoreboard} = $cache->get($key);
+	$s->{aUrl} = $c->uri_for_action('/artist/scores', [ '%s' ], {
+		mode => $s->{mode}->name,
+		genre => $s->{genre}->id,
+		maybe(format => $s->{format} && $s->{format}->id),
+	});
 
 	push @{ $c->stash->{title} },
 		$c->string('scoreboard'),
