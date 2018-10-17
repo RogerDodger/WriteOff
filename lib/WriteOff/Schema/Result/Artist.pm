@@ -110,11 +110,11 @@ sub avatar_write_color {
 		WriteOff::Util::avg(map { ($_->rgba)[$i] } @colors)
 	} 0..2;
 
-	# 2018-10-15
+	# 2018-10-17
 	# Supressing an unavoidable warning from Graphics::ColorObject
 	#   Use of uninitialized value within @_ in lc at line 1905.
 	local $SIG{__WARN__} = sub {
-		warn $_[0] unless $_[0] =~ /ColorObject.pm line 1905.$/;
+		warn $_[0] unless $_[0] =~ /ColorObject.pm line 1905/;
 	};
 
 	my $lch = Graphics::ColorObject->new_RGB255([@rgb])->as_LCHuv;
