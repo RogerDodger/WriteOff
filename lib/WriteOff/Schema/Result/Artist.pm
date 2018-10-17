@@ -123,6 +123,7 @@ sub avatar_write_color {
 	my $web = "#" . lc Graphics::ColorObject->new_LCHuv($lch)->as_RGBhex;
 
 	$self->color($web);
+	$self;
 }
 
 sub color_dark {
