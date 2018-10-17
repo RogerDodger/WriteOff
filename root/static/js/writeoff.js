@@ -1128,6 +1128,65 @@ $(document).ready(function () {
 	})
 });
 
+//==========================================================================
+// Collapsing score breakdowns
+//==========================================================================
+
+postModifiers.push(function (ctx) {
+	$('.Breakdown', ctx)
+		.click(function() {
+			var $link = $(this);
+			var $icon = $(this).find('i');
+			var $row = $(this).closest('tr');
+
+			while ($row.next() && $row.next().hasClass('Breakdown-row')) {
+				$row.next().remove();
+			}
+
+			var expand = $icon.hasClass('fa-plus');
+			$row.find('.Breakdown i').each(function () {
+				$(this).removeClass('fa-minus');
+				$(this).addClass('fa-plus');
+				$(this).attr('title', 'Show breakdown');
+			});
+
+			if (expand) {
+				$icon.removeClass('fa-plus');
+				$icon.addClass('fa-minus');
+				$icon.attr('title', 'Hide breakdown');
+
+				var $expand_row = $row.clone().addClass('Breakdown-row');
+				var $expand_cell = $('<td colspan="99"/>');
+				$expand_row.html($expand_cell);
+
+				$row.after($expand_row);
+				$row.after('<tr class="Breakdown-row hidden"/>');
+
+				if ($link.data('res')) {
+					$expand_cell.html($link.data('res'));
+				}
+				else {
+					$expand_cell.load(
+						$link.data('target'),
+						function(res, status, xhr) {
+							if (status != 'error') {
+								$expand_cell.find('h1').remove();
+								$link.data('res', $expand_cell.html());
+							}
+							else {
+								$expand_cell.html(xhr.statusTxt);
+							}
+						}
+					);
+				}
+			}
+		})
+		.each(function() {
+			$(this).data('target', $(this).attr('href'));
+		})
+		.removeAttr('href');
+});
+
 // ===========================================================================
 // Sortable tables
 // ===========================================================================
