@@ -1,6 +1,6 @@
 {{ SET ipos = (pos == 'top' ? 'bottom' : 'top') }}
 
-<div class="Pager {{ pos }}" id="pager-{{ pos }}">
+<div class="Pager {{ pos }} ctn flex-row center" id="pager-{{ pos }}">
 	<ul>
 		<li>
 			<a href="#pager-{{ ipos }}"

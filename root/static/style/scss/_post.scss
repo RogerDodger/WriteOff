@@ -372,15 +372,12 @@
 
 .Pager {
 	margin: 2.5rem auto;
-	text-align: center;
 
 	ul {
 		@include button-group($hue: 40, $sat: 60%);
+		margin: 0;
 
 		li a {
-			display: flex;
-			align-items: center;
-			justify-content: center;
 			width: 2.5em;
 			height: 2.5em;
 		}
