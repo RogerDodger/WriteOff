@@ -47,4 +47,10 @@ __PACKAGE__->result_source_instance->deploy_depends_on([
 	"WriteOff::Schema::Result::Vote",
 ]);
 
+sub pct {
+	my $self = shift;
+
+	$self->right / ($self->left + $self->right);
+}
+
 1;

@@ -249,14 +249,11 @@ sub votes :Private {
 	}
 
 	$c->stash->{summary} = [
-		sort {
-			(1 + $a->left) / ($a->left + $a->right + 1) <=>
-			(1 + $b->left) / ($b->left + $b->right + 1)
-		}
-		$c->model('DB::VoteSummary')
-			->search({}, {
-				bind => [ $c->stash->{entry}->id, $round->id ]
-			})
+		sort { $b->pct <=> $a->pct || $b->right <=> $a->right || $a->left <=> $b->left }
+			$c->model('DB::VoteSummary')
+				->search({}, {
+					bind => [ $c->stash->{entry}->id, $round->id ]
+				})
 	];
 
 	push @{ $c->stash->{title} }, 'Vote breakdown for ' . $c->stash->{entry}->title;

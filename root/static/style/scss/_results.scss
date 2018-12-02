@@ -157,18 +157,6 @@
 	text-overflow: ellipsis;
 }
 
-.Votes-summary {
-	font-size: 0.6rem;
-	text-align: center;
-
-	ul {
-		display: inline-block;
-		margin: 0;
-		padding: 0;
-		text-align: center;
-
-		li {
-			list-style-type: none;
-		}
-	}
+tr.Breakdown-row > td {
+	font-size: 1rem;
 }
