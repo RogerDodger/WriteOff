@@ -1,34 +1,23 @@
 <h1>{{ title.-1 }}</h1>
 
 {{ BLOCK pips }}
-	{{ IF n }}
-	<div class="Entry-votes--pips" title="{{ n }}" style="
-		flex-basis: {{ p * 100 | format('%5.2f') }}%;
-		flex-shrink: {{ n }};
-	">
+	<div class="Entry-votes--pips" title="{{ n }}">
 		{{ FILTER repeat(n) }}
 		<svg class="Entry-votes--pip" viewBox="0 0 100 100">
-			<polygon fill="#000000" points="0 0, 100 0, 50 100" />
+			<polygon fill="#000000" points="0 0, 50 66, 100 0, 50 100"/>
 		</svg>
 		{{ END }}
 	</div>
-	{{ END }}
 {{ END }}
 
 <dlv class="Entry-votes">
 	{{ FOREACH line IN summary }}
-		{{
-			SET h = 1.5;
-			FOREACH n IN [line.left, line.right];
-				rows = (n + 4) div 5;
-				tens = (n + 1) div 10;
-				fiftys = (n + 1) div 50;
-				h = h + rows / 2 + (tens + fiftys) * 3 / 16;
-			END;
-		}}
-	<div class="Entry-votes--ballot" style="min-height: {{ h }}em;">
+	<div class="Entry-votes--ballot" style="
+		grid-template-rows: 0.5em {{line.left}}fr 1em {{line.right}}fr 0.5em
+	">
 		{{ PROCESS pips n = line.left  p = 1 - line.pct }}
-		<div class="Entry-votes--pct" title="{{ line.pct * 100 | format('%5.2f') }}">
+		<div class="Entry-votes--pct"
+			title="{{ line.pct * 100 | format('%5.2f') }}">
 			{{ line.pct * 100 | format('%3.0f') }}%
 		</div>
 		{{ PROCESS pips n = line.right  p = line.pct }}

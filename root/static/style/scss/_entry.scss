@@ -34,32 +34,45 @@
 .Entry-votes {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(3.5em, 1fr));
-	grid-gap: 0.5em 0;
 	grid-auto-rows: minmax(4em, auto);
+	grid-gap: 0.5em 0;
 }
 
 .Entry-votes--ballot {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	border-left: 1px solid #aaa;
-	border-right: 1px solid #aaa;
-	margin-left: -1px;
+	display: grid;
+	position: relative;
+	margin-right: -1px;
+
+	&::before,
+	&::after {
+		$offset: (29em / 32);
+		content: ' ';
+		display: block;
+		position: absolute;
+		background: #aaa;
+		width: 1px;
+		height: calc(100% - #{$offset * 2});
+		top: $offset;
+	}
+
+	&::before { left: 0 }
+	&::after { right: 0 }
 }
 
 .Entry-votes--pct {
-	font-size: (10em / 16);
 	text-align: center;
-	margin: 0 -1px;
+	align-self: center;
+	$size: 12;
+	font-size: (1em * $size / 16);
 
 	$l: red;
 	$d: transparent;
-	$fade-start: (18em / 10);
-	$fade-end: (12em / 10);
+	$fade-start: (20em / $size);
+	$fade-end: (14em / $size);
 
 	background-position: center;
 	background-repeat: no-repeat;
-	background-size: auto (3em / 10);
+	background-size: auto (3em / $size);
 	background-image: linear-gradient(to left,
 		$l,
 		$l calc(50% - #{$fade-start}),
@@ -82,6 +95,7 @@
 	justify-items: end;
 	width: 100%;
 	overflow: hidden;
+	grid-row: span 2;
 }
 
 .Entry-votes--pips:last-child {
@@ -94,9 +108,9 @@
 }
 
 .Entry-votes--pip:nth-child(10n+11) {
-	margin-top: (3em / 16);
+	margin-top: (4em / 16);
 }
 
 .Entry-votes--pip:nth-child(50n+51) {
-	margin-top: (6em / 16);
+	margin-top: (8em / 16);
 }
