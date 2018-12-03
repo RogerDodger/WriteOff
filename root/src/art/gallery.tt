@@ -4,7 +4,7 @@
 	</div>
 
 	{{- IF event.pic_gallery_opened }}
-	<div class="artworks">
+	<div class="pics">
 		{{- FOREACH entry IN gallery.all }}
 		<figure>
 			<img src="{{ entry.image.path('thumb') }}"

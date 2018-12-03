@@ -244,7 +244,7 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->stash->{items} = $c->stash->{story}->images;
 	$c->stash->{view} = $c->controller('Pic')->action_for('view');
 
-	push @{ $c->stash->{title} }, 'Related Artwork(s)';
+	push @{ $c->stash->{title} }, 'Related Pic(s)';
 	$c->stash->{template} = 'item/list.tt';
 }
 
