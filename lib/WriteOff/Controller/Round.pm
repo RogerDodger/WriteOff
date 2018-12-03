@@ -39,7 +39,7 @@ sub do_form :Private {
          [ 'prelim', 'semifinal', 'final' ],
       ],
       submit => {
-         art => 'drawing',
+         pic => 'drawing',
          fic => 'writing',
       },
    );
@@ -50,7 +50,6 @@ sub do_form :Private {
       my $rorder = $c->paramo('rorder') || 'simul';
 
       if ($rorder eq 'fic2pic' || $rorder eq 'pic2fic') {
-         $rorder =~ s/pic/art/;
          my $fr = substr $rorder, 0, 3;
          my $to = substr $rorder, 4, 3;
 

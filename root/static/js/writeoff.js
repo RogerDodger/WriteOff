@@ -1710,7 +1710,7 @@ function RenderSchedule () {
 			[ 'prelim', 'semifinal', 'final' ],
 		],
 		submit: {
-			art: 'drawing',
+			pic: 'drawing',
 			fic: 'writing',
 		},
 	};
@@ -1743,8 +1743,8 @@ function RenderSchedule () {
 		var rorder = $rorder.filter(':checked').val() || 'simul';
 
 		if (rorder !== 'simul') {
-			var fr = rorder.substring(0, 3).replace('pic', 'art');
-			var to = rorder.substring(4, 7).replace('pic', 'art');
+			var fr = rorder.substring(0, 3);
+			var to = rorder.substring(4, 7);
 
 			var $fr = $rounds.find('[name="mode"]')
 				.filter(function () { return this.value === fr;	})

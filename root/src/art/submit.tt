@@ -1,9 +1,9 @@
 <div class="Document">
 	<div class="Document-title">
-		{{ c.string('artSubmission') }}
+		{{ c.string('picSubmission') }}
 	</div>
 
-	{{ INCLUDE art/form.tt }}
+	{{ INCLUDE pic/form.tt }}
 
 	{{ IF c.user && entrys.count }}
 	<div class="Document-subtitle">
@@ -24,15 +24,15 @@
 			<tr>
 				<td class="Entrys-edit">
 					{{ IF c.user.can_edit(entry.image) }}
-					[<a href="{{ c.uri_for_action('/art/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
-					[<a href="{{ c.uri_for_action('/art/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
+					[<a href="{{ c.uri_for_action('/pic/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
+					[<a href="{{ c.uri_for_action('/pic/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
 					{{ END }}
 					{{ IF c.user.organises(event) && !entry.disqualified }}
-					[<a href="{{ c.uri_for_action('/art/dq', [ entry.id_uri ]) }}">{{ c.string('dq') }}</a>]
+					[<a href="{{ c.uri_for_action('/pic/dq', [ entry.id_uri ]) }}">{{ c.string('dq') }}</a>]
 					{{ END }}
 				</td>
 				<td class="Entrys-title">
-					<a href="{{ c.uri_for_action('/art/view', [ entry.id_uri ]) }}">
+					<a href="{{ c.uri_for_action('/pic/view', [ entry.id_uri ]) }}">
 						{{ entry.title }}
 					</a>
 				</td>

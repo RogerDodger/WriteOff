@@ -3,5 +3,5 @@
 		{{ image.title }}
 	</div>
 
-	{{ INCLUDE art/form.tt }}
+	{{ INCLUDE pic/form.tt }}
 </div>

@@ -36,7 +36,7 @@ sub clean {
 	my $self = shift;
 
 	my $fn = $self->filename;
-	for my $dir (qw{root/static/art root/static/art/thumb}) {
+	for my $dir (qw{root/static/pic root/static/pic/thumb}) {
 		for my $img (glob File::Spec->catfile($dir, $self->id . '-*')) {
 			$img =~ qr{$fn$} or unlink $img;
 		}
@@ -77,12 +77,12 @@ sub is_manipulable_by {
 
 	return $user->is_admin
 	    || $self->entry->event->is_organised_by($user)
-	    || $self->entry->user_id == $user->id && $self->entry->event->art_subs_allowed;
+	    || $self->entry->user_id == $user->id && $self->entry->event->pic_subs_allowed;
 }
 
 sub path {
 	my ($self, $thumb) = @_;
-	'/static/art/' . ('thumb/' x!! $thumb) . $self->filename;
+	'/static/pic/' . ('thumb/' x!! $thumb) . $self->filename;
 }
 
 sub title { shift->entry->title }

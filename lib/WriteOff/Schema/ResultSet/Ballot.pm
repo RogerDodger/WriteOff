@@ -64,8 +64,8 @@ sub fic {
 	return shift->mode('fic');
 }
 
-sub art {
-	return shift->mode('art');
+sub pic {
+	return shift->mode('pic');
 }
 
 1;

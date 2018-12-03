@@ -37,7 +37,7 @@ sub rorder {
 
 	my $submit = $rounds->search({ action => 'submit' })->ordered;
 	my $fic = $submit->search({ mode => 'fic' })->first;
-	my $pic = $submit->search({ mode => 'art' })->first;
+	my $pic = $submit->search({ mode => 'pic' })->first;
 
 	if (defined $fic && defined $pic) {
 		if ($pic->end <= $fic->start) {

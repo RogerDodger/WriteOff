@@ -26,8 +26,8 @@ sub after {
 		);
 }
 
-sub art {
-	shift->search({ mode => 'art' });
+sub pic {
+	shift->search({ mode => 'pic' });
 }
 
 sub before {

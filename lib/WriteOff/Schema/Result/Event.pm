@@ -102,12 +102,12 @@ sub fic_end {
 	Carp::croak "Deprecated round time `fic_end` called";
 }
 
-sub art {
-	Carp::croak "Deprecated round time `art` called";
+sub pic {
+	Carp::croak "Deprecated round time `pic` called";
 }
 
-sub art_end {
-	Carp::croak "Deprecated round time `art_end` called";
+sub pic_end {
+	Carp::croak "Deprecated round time `pic_end` called";
 }
 
 sub has {
@@ -194,9 +194,9 @@ sub prompt_votes_allowed {
 	return sorted $row->prompt_voting, $row->now_dt, $row->start;
 }
 
-sub art_gallery_opens {
+sub pic_gallery_opens {
 	my $self = shift;
-	$self->has('art') && $self->rounds->art->submit->first->end_leeway;
+	$self->has('pic') && $self->rounds->pic->submit->first->end_leeway;
 }
 
 sub fic_gallery_opens {
@@ -204,17 +204,17 @@ sub fic_gallery_opens {
 	$self->has('fic') && $self->rounds->fic->submit->first->end_leeway;
 }
 
-sub art_subs_allowed {
-	shift->rounds->art->submit->active(leeway => 1)->count;
+sub pic_subs_allowed {
+	shift->rounds->pic->submit->active(leeway => 1)->count;
 }
 
 sub fic_subs_allowed {
 	shift->rounds->fic->submit->active(leeway => 1)->count;
 }
 
-sub art_gallery_opened {
+sub pic_gallery_opened {
 	my $row = shift;
-	return $row->has('art') && $row->art_gallery_opens <= $row->now_dt;
+	return $row->has('pic') && $row->pic_gallery_opens <= $row->now_dt;
 }
 
 sub fic_gallery_opened {
@@ -222,9 +222,9 @@ sub fic_gallery_opened {
 	return $row->has('fic') && $row->fic_gallery_opens <= $row->now_dt;
 }
 
-sub art_votes_allowed {
+sub pic_votes_allowed {
 	my $row = shift;
-	return sorted $row->art_end, $row->now_dt, $row->end;
+	return sorted $row->pic_end, $row->now_dt, $row->end;
 }
 
 sub prelim_votes_allowed {
@@ -248,7 +248,7 @@ sub author_guessing_allowed {
 sub artist_guessing_allowed {
 	my $row = shift;
 
-	return $row->art_gallery_opened && !$row->ended;
+	return $row->pic_gallery_opened && !$row->ended;
 }
 
 sub rorder {

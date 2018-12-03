@@ -29,7 +29,7 @@ our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 my %attr = (
 	_FIC() => [ 'fic', 'story_id', 'story' ],
-	_PIC() => [ 'art', 'image_id', 'image' ],
+	_PIC() => [ 'pic', 'image_id', 'image' ],
 );
 
 our @ALL = map { __PACKAGE__->new($_) } keys %attr;

@@ -14,7 +14,7 @@ __PACKAGE__->config(model => 'Image');
 
 sub _fetch :ActionClass('~Fetch') {}
 
-sub fetch :Chained('/') :PathPart('art') :CaptureArgs(1) {
+sub fetch :Chained('/') :PathPart('pic') :CaptureArgs(1) {
 	my ($self, $c) = @_;
 	$c->forward('_fetch');
 	$c->stash->{entry} = $c->stash->{image}->entry;
@@ -25,7 +25,7 @@ sub fetch :Chained('/') :PathPart('art') :CaptureArgs(1) {
 sub view :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 
-	if ($c->stash->{event}->art_gallery_opened) {
+	if ($c->stash->{event}->pic_gallery_opened) {
 		my @gallery = $c->stash->{event}->images->gallery->all;
 		my $i = 0;
 		$i++ while $gallery[$i]->id != $c->stash->{entry}->id && $i < $#gallery;
@@ -42,16 +42,16 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 		}
 	}
 
-	$c->stash->{template} = 'art/view.tt';
+	$c->stash->{template} = 'pic/view.tt';
 }
 
-sub gallery :Chained('/event/art') :PathPart('gallery') :Args(0) {
+sub gallery :Chained('/event/pic') :PathPart('gallery') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{gallery} = $c->stash->{event}->images->gallery->search({}, { prefetch => 'image' });
 
 	push @{ $c->stash->{title} }, 'Gallery';
-	$c->stash->{template} = 'art/gallery.tt';
+	$c->stash->{template} = 'pic/gallery.tt';
 }
 
 sub form :Private {
@@ -61,7 +61,7 @@ sub form :Private {
 		$c->stash->{rels} = $c->stash->{event}->storys->seed_order;
 	}
 
-	$c->stash->{mode} = 'art';
+	$c->stash->{mode} = 'pic';
 	$c->forward('/entry/form');
 }
 
@@ -126,7 +126,7 @@ sub do_write :Private {
 				my $white = Imager::Color->new(255, 255, 255, 255);
 
 				my %base = (
-					string => $c->uri_for_action_abs('/art/view', [ $row->id ]),
+					string => $c->uri_for_action_abs('/pic/view', [ $row->id ]),
 					x => $imgr->getwidth / 2,
 					y => $y,
 					halign => 'center',
@@ -171,7 +171,7 @@ sub do_write :Private {
 	}
 }
 
-sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
+sub submit :Chained('/event/pic') :PathPart('submit') :Args(0) {
 	my ( $self, $c ) = @_;
 
 	$c->forward('form');
@@ -181,13 +181,13 @@ sub submit :Chained('/event/art') :PathPart('submit') :Args(0) {
 			? $c->stash->{event}->images
 			: $c->stash->{event}->images->search({ user_id => $c->user->id });
 
-		if ($c->req->method eq 'POST' && $c->stash->{event}->art_subs_allowed) {
+		if ($c->req->method eq 'POST' && $c->stash->{event}->pic_subs_allowed) {
 			$c->forward('do_submit');
 		}
 	}
 
 	push @{ $c->stash->{title} }, 'Submit';
-	$c->stash->{template} = 'art/submit.tt';
+	$c->stash->{template} = 'pic/submit.tt';
 }
 
 sub do_submit :Private {
@@ -252,7 +252,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 	};
 
 	push @{ $c->stash->{title} }, 'Edit';
-	$c->stash->{template} = 'art/edit.tt';
+	$c->stash->{template} = 'pic/edit.tt';
 }
 
 sub do_edit :Private {
@@ -314,11 +314,11 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->stash->{template} = 'item/list.tt';
 }
 
-sub results :Chained('/event/art') :PathPart('results') :Args(0) {
+sub results :Chained('/event/pic') :PathPart('results') :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{entrys} = $c->stash->{event}->images->eligible;
-	$c->stash->{mode} = 'art';
+	$c->stash->{mode} = 'pic';
 	$c->stash->{view} = $self->action_for('view');
 	$c->stash->{breakdown} = $self->action_for('votes');
 

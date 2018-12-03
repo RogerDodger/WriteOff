@@ -105,19 +105,19 @@ scoreboard: Scoreboard
 schedule: Schedule
 editSchedule: Edit Schedule
 newSchedule: New Schedule
-artGuessing: Art Guessing
+picGuessing: Art Guessing
 ficGuessing: Fic Guessing
-artGallery: Art Gallery
+picGallery: Art Gallery
 ficGallery: Fic Gallery
-artSubmission: Art Submission
+picSubmission: Art Submission
 ficSubmission: Fic Submission
 promptSubmission: Prompt Submission
 promptVoting: Prompt Voting
-artVoting: Art Voting
+picVoting: Art Voting
 ficVoting: Fic Voting
 authorGuessing: Art Guessing
 artistGuessing: Fic Guessing
-artResults: Art Results
+picResults: Art Results
 ficResults: Fic Results
 prelim: Prelim
 semifinal: Semi-final
@@ -166,7 +166,7 @@ guessesClosed: Guesses are closed
 subsClosed: Submissions are closed
 cantEdit: You cannot edit this item
 cantDelete: You cannot delete this item
-loginRequiredArt: You must be logged in to submit art
+loginRequiredArt: You must be logged in to submit pics
 loginRequiredFic: You must be logged in to submit fics
 loginRequiredPrompt: You must be logged in to submit prompts
 loginRequiredVote: You must be logged in to vote
@@ -267,4 +267,4 @@ format: Format
 genre: Genre
 mode: Mode
 fic: Fic
-art: Art
+pic: Art

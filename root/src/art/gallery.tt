@@ -1,9 +1,9 @@
 <div class="Document">
 	<div class="Document-title">
-		{{ c.string('artGallery') }}
+		{{ c.string('picGallery') }}
 	</div>
 
-	{{- IF event.art_gallery_opened }}
+	{{- IF event.pic_gallery_opened }}
 	<div class="artworks">
 		{{- FOREACH entry IN gallery.all }}
 		<figure>
@@ -24,7 +24,7 @@
 	</div>
 	{{- ELSE }}
 	<div class="Countdown">
-		{{ event.art_gallery_opens.delta_html | none }}
+		{{ event.pic_gallery_opens.delta_html | none }}
 	</div>
 	{{- END }}
 </div>

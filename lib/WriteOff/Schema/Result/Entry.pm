@@ -86,7 +86,7 @@ sub difficulty {
 sub mode {
 	my $self = shift;
 
-	$self->image_id && 'art' || 'fic';
+	$self->image_id && 'pic' || 'fic';
 }
 
 sub view {

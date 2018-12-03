@@ -8,7 +8,7 @@
 		<h1>{{ entry.title | xml }}</h1>
 
 		{{ IF story.images_rs.count }}
-		<div class="art">
+		<div class="pic">
 		{{ FOREACH image IN story.images }}
 			<img src="images/{{ image.filename | xml }}"/>
 			<h5>{{ image.entry.title | xml }}</h5>

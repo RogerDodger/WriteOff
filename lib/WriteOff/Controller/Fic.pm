@@ -47,7 +47,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 
 		}
 
-		if ($c->stash->{event}->art_gallery_opened) {
+		if ($c->stash->{event}->pic_gallery_opened) {
 			$c->stash->{images} = $c->stash->{story}->images->related_resultset('entry')->seed_order;
 		}
 

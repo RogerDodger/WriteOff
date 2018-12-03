@@ -258,11 +258,11 @@ sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {
 	push @{ $c->stash->{title} }, 'Fic';
 }
 
-sub art :Chained('fetch') :PathPart('art') :CaptureArgs(0) {
+sub pic :Chained('fetch') :PathPart('pic') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 
-	$c->detach('/error', ['There is no art component to this event.'])
-		unless $c->stash->{event}->has('art');
+	$c->detach('/error', ['There is no pic component to this event.'])
+		unless $c->stash->{event}->has('pic');
 
 	push @{ $c->stash->{title} }, 'Art';
 }

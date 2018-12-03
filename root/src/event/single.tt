@@ -82,17 +82,17 @@
 	</ul>
 	{{ END }}
 
-	{{ IF event.has('art') }}
-	<ul class="Event-links art">
-		<li><a href="{{ c.uri_for_action('/art/submit', id) }}">Art Submission</a>
-		<li><a href="{{ c.uri_for_action('/art/gallery', id) }}">Gallery</a>
+	{{ IF event.has('pic') }}
+	<ul class="Event-links pic">
+		<li><a href="{{ c.uri_for_action('/pic/submit', id) }}">Art Submission</a>
+		<li><a href="{{ c.uri_for_action('/pic/gallery', id) }}">Gallery</a>
 		{{ IF event.guessing }}
-		<li><a href="{{ c.uri_for_action('/guess/art', id) }}">Guessing</a>
+		<li><a href="{{ c.uri_for_action('/guess/pic', id) }}">Guessing</a>
 		{{ END }}
 
-		{{ IF event.has('art', 'vote') }}
-		<li><a href="{{ c.uri_for_action('/vote/art', id) }}">Voting</a>
-		<li><a href="{{ c.uri_for_action('/art/results', id) }}">Results</a>
+		{{ IF event.has('pic', 'vote') }}
+		<li><a href="{{ c.uri_for_action('/vote/pic', id) }}">Voting</a>
+		<li><a href="{{ c.uri_for_action('/pic/results', id) }}">Results</a>
 		{{ END }}
 	</ul>
 	{{ END }}

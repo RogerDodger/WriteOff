@@ -135,7 +135,7 @@ sub do_rels :Private {
 		my $ikey = FIC()->fkey;
 		my $fkey = PIC()->fkey;
 
-		if ($c->stash->{mode} eq 'art') {
+		if ($c->stash->{mode} eq 'pic') {
 			($ikey, $fkey) = ($fkey, $ikey);
 		}
 

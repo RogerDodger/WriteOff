@@ -149,7 +149,7 @@
 .Event-links {
 	@each $type, $hue in ("rules"     , 260),
 	                     ("prompt"    , 290),
-	                     ("art"       , 320),
+	                     ("pic"       , 320),
 	                     ("fic"       , 350),
 	                     ("commenting", 230) {
 		&.#{$type} {

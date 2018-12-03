@@ -6,14 +6,14 @@ use WriteOff::Util qw/sorted/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-sub art :PathPart('guess') :Chained('/event/art') :Args(0) {
+sub pic :PathPart('guess') :Chained('/event/pic') :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash(
-		mode => 'art',
+		mode => 'pic',
 		candidates => scalar $c->stash->{event}->images,
-		open => $c->stash->{event}->rounds->art->submit->ordered->first->end_leeway,
-		close => $c->stash->{event}->rounds->art->vote->reversed->first->end,
+		open => $c->stash->{event}->rounds->pic->submit->ordered->first->end_leeway,
+		close => $c->stash->{event}->rounds->pic->vote->reversed->first->end,
 	);
 
 	$c->forward('guess');
