@@ -264,7 +264,7 @@ sub pic :Chained('fetch') :PathPart('pic') :CaptureArgs(0) {
 	$c->detach('/error', ['There is no pic component to this event.'])
 		unless $c->stash->{event}->has('pic');
 
-	push @{ $c->stash->{title} }, 'Art';
+	push @{ $c->stash->{title} }, 'Pic';
 }
 
 sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {

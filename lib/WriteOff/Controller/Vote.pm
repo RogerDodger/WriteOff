@@ -159,7 +159,7 @@ sub pic :PathPart('vote') :Chained('/event/pic') :Args(0) {
 	my ($self, $c) = @_;
 
 	$c->stash->{mode} = 'pic';
-	$c->stash->{view} = $c->controller('Art')->action_for('view');
+	$c->stash->{view} = $c->controller('Pic')->action_for('view');
 
 	$c->forward('cast');
 }

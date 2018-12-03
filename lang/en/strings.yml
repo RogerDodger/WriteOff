@@ -105,19 +105,19 @@ scoreboard: Scoreboard
 schedule: Schedule
 editSchedule: Edit Schedule
 newSchedule: New Schedule
-picGuessing: Art Guessing
+picGuessing: Pic Guessing
 ficGuessing: Fic Guessing
-picGallery: Art Gallery
+picGallery: Pic Gallery
 ficGallery: Fic Gallery
-picSubmission: Art Submission
+picSubmission: Pic Submission
 ficSubmission: Fic Submission
 promptSubmission: Prompt Submission
 promptVoting: Prompt Voting
-picVoting: Art Voting
+picVoting: Pic Voting
 ficVoting: Fic Voting
-authorGuessing: Art Guessing
+authorGuessing: Pic Guessing
 artistGuessing: Fic Guessing
-picResults: Art Results
+picResults: Pic Results
 ficResults: Fic Results
 prelim: Prelim
 semifinal: Semi-final
@@ -267,4 +267,4 @@ format: Format
 genre: Genre
 mode: Mode
 fic: Fic
-pic: Art
+pic: Pic

@@ -1,4 +1,4 @@
-package WriteOff::Controller::Art;
+package WriteOff::Controller::Pic;
 use Moose;
 use namespace::autoclean;
 use Digest::MD5;
@@ -225,7 +225,7 @@ sub do_submit :Private {
 		$c->stash->{entry}->insert;
 		$c->forward('/entry/do_rels');
 
-		$c->log->info("Art %d submitted by %s: %s by %s (%.2fKB)",
+		$c->log->info("Pic %d submitted by %s: %s by %s (%.2fKB)",
 			$image->id,
 			$c->user->name,
 			$c->form->valid('title'),
@@ -271,7 +271,7 @@ sub do_edit :Private {
 		$c->forward('/entry/do_edit');
 		$c->forward('/entry/do_rels');
 
-		$c->log->info("Art %d edited by %s: %s by %s (%.2fKB)",
+		$c->log->info("Pic %d edited by %s: %s by %s (%.2fKB)",
 			$c->stash->{image}->id,
 			$c->user->name,
 			$c->form->valid('title'),

@@ -242,7 +242,7 @@ sub rels :Chained('fetch') :PathPart('rels') :Args(0) {
 	$c->detach('/default') if !$c->stash->{entry}->event->fic_gallery_opened;
 
 	$c->stash->{items} = $c->stash->{story}->images;
-	$c->stash->{view} = $c->controller('Art')->action_for('view');
+	$c->stash->{view} = $c->controller('Pic')->action_for('view');
 
 	push @{ $c->stash->{title} }, 'Related Artwork(s)';
 	$c->stash->{template} = 'item/list.tt';

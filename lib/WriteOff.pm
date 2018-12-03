@@ -98,7 +98,7 @@ __PACKAGE__->config(
 				},
 				author    => { DBIC_UNIQUE   => 'Author name is reserved by another user' },
 				artist    => { DBIC_UNIQUE   => 'Artist name is reserved by another user' },
-				image_id  => { NOT_BLANK     => 'Art Title is required' },
+				image_id  => { NOT_BLANK     => 'Pic Title is required' },
 				website   => { HTTP_URL      => 'Website is not a valid HTTP URL' },
 				wordcount => { BETWEEN       => 'Wordcount too high or too low' },
 				story     => { NOT_BLANK     => 'Story is required' },
