@@ -1,6 +1,7 @@
 package WriteOff::Controller::Root;
 use Moose;
 use namespace::autoclean;
+use feature 'state';
 require WriteOff::DateTime;
 
 no warnings "uninitialized";
@@ -119,6 +120,19 @@ sub faq :Local :Args(0) {
 
 sub default :Path {
 	my ( $self, $c ) = @_;
+
+	state $renamed = [
+		qr{^/art/(.+)$},             sub { "/pic/$1" },
+		qr{^/event/(.+?)/art/(.+)$}, sub { "/event/$1/pic/$2" },
+		qr{^/static/art/(.+)$},      sub { "/static/pic/$1" },
+	];
+
+	for (my $i = 0; $i <= $#$renamed; $i += 2) {
+		if ($c->req->uri->path =~ $renamed->[$i]) {
+			$c->res->redirect($c->uri_for($renamed->[$i+1]->()), 302);
+			$c->detach;
+		}
+	}
 
 	push @{ $c->stash->{title} }, $c->string('404');
 	$c->stash->{template} = 'root/404.tt';
