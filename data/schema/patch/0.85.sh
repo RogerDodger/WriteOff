@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$( dirname "$0" )/../../.."
+
 sqlite3 data/WriteOff.db <<SQL
 UPDATE rounds          SET mode='pic' WHERE mode='art';
 UPDATE schedule_rounds SET mode='pic' WHERE mode='art';
