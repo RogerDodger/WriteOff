@@ -69,10 +69,14 @@ sub schedule :Local {
 	my ($self, $c) = @_;
 
 	for my $sch ($c->model('DB::Schedule')->active->all) {
-		my $t0 = $sch->next;
-		$sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
+		$c->stash->{event} = $c->model('DB::Event')->create_from_sched($sch);
 
-		$c->stash->{event} = $c->model('DB::Event')->create_from_sched($sch, $t0);
+		if ($sch->period > 0) {
+			$sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
+		}
+		else {
+			$sch->delete;
+		}
 
 		$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
 		$c->forward('/event/notify_mailing_list');
