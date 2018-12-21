@@ -118,7 +118,7 @@ sub avatar_write_color {
 	};
 
 	my $lch = Graphics::ColorObject->new_RGB255([@rgb])->as_LCHuv;
-	$lch->[0] = 50;
+	$lch->[0] = 40;
 	$lch->[1] = 30;
 
 	my $web = "#" . lc Graphics::ColorObject->new_LCHuv($lch)->as_RGBhex;
