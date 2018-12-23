@@ -78,6 +78,8 @@ sub profile {
 	);
 }
 
+sub profile_rs { scalar shift->profile }
+
 sub popular {
 	shift->profile->search({}, {
 		order_by => { -desc => 'me.score' },
@@ -91,9 +93,7 @@ sub public {
 	shift->search({ artist_public => 1 });
 }
 
-sub public_rs {
-	scalar shift->public;
-}
+sub public_rs { scalar shift->public }
 
 sub rank_order {
 	return shift->order_by({ -asc => [qw/rank title/] });
