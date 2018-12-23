@@ -98,11 +98,11 @@ sub scores :Chained('fetch') :PathPart('scores') :Args(0) {
 
 	$c->stash->{scores} = [
 		sort {
-			$b->{item}->event->created <=> $a->{item}->event->created ||
-			$b->{type} cmp $a->{type}
+			$b->event->created <=> $a->event->created ||
+			$b->class cmp $a->class
 		}
-		  (map {{ type => 'entry', item => $_ }} $entrys->all),
-		  (map {{ type => 'theory', item => $_ }} $theorys->all)
+		  $entrys->all,
+		  $theorys->all
 	];
 
 	$c->stash->{template} = 'scoreboard/entrys.tt';

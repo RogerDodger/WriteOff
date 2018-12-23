@@ -1,13 +1,9 @@
-{{ WRAPPER 'artist/wrapper.tt' }}
-	<h3>{{ c.string('popularEntrys') }}</h3>
-
+{{ WRAPPER 'artist/card.tt' }}
 	{{ INCLUDE artist/entrys_.tt  entrys = artist.entrys_rs.popular_rs }}
-
-	<h3>{{ c.string('popularPosts') }}</h3>
-
-	<div class="Artist-posts">
-		{{ FOREACH post IN artist.posts_rs.popular }}
-			{{ INCLUDE post/single_.tt }}
-		{{ END }}
-	</div>
 {{ END }}
+
+<div class="Artist-posts">
+	{{ FOREACH post IN artist.posts_rs.popular }}
+		{{ INCLUDE post/single_.tt }}
+	{{ END }}
+</div>

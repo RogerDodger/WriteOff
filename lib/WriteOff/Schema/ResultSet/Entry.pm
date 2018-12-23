@@ -81,7 +81,7 @@ sub profile {
 sub popular {
 	shift->profile->search({}, {
 		order_by => { -desc => 'me.score' },
-		rows => 8,
+		rows => 10,
 	});
 }
 

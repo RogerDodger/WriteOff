@@ -53,4 +53,6 @@ sub deadline {
 	$self->event->rounds->search({ mode => $self->mode, name => 'final' })->first->end;
 }
 
+sub class { 'theory' }
+
 1;

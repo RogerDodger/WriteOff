@@ -1,7 +1,5 @@
-{{ WRAPPER 'artist/wrapper.tt' }}
-<div class="Artist-edit">
-	<div class="Document-title">{{ c.string('edit') }}</div>
-
+{{ WRAPPER 'artist/card.tt' }}
+<div class="p1">
 	<form class="Form" method="post" enctype="multipart/form-data">
 		<div class="Form-item">
 			<label>Avatar</label>

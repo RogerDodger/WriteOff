@@ -1,8 +1,10 @@
-{{ WRAPPER 'artist/wrapper.tt' }}
-	<div class="Artist-posts">
-		{{ FOREACH post IN posts.all }}
-			{{ INCLUDE post/single_.tt }}
-		{{ END }}
-	</div>
-	<div class="Flash" style="margin-top: 1em;">Paging WIP</div>
-{{ END }}
+{{ INCLUDE artist/card.tt }}
+
+<div class="Artist-posts ctn">
+	{{ FOREACH post IN posts.all }}
+		{{ INCLUDE post/single_.tt }}
+	{{ END }}
+
+	<div class="Flash mt1">Paging WIP</div>
+</div>
+

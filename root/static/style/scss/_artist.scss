@@ -2,114 +2,125 @@
 // Artist profile styles
 // =============================================================================
 
-.Artist-profile {
-	display: flex;
-	flex-direction: row;
-	max-width: $container-overflow;
-}
+.Artist-card {
+	@include container;
+	max-width: 69rem;
+	border: 1px solid #ccc;
+	border-radius: 0.2em;
+	background-color: #fafafa;
 
-.Artist-sidebar {
-	width: 100%;
-	max-width: 15rem;
-	margin-right: 3rem;
+	display: grid;
+	grid-template-columns: 12em calc(100% - 12em);
+	grid-template-rows: minmax(5em, 1fr) auto minmax(1em, auto) auto auto;
+	grid-template-areas:
+		"avatar joined"
+		"avatar name"
+		"avatar bio"
+		"nav nav"
+		"content content";
 
-	& > * + * {
-		margin-top: 0.5rem;
+	& > * {
+		z-index: 5;
 	}
 }
 
-.Artist-body {
-	width: 100%;
+.Artist-card--band {
+	z-index: 1;
+	grid-row: 1;
+	grid-column: 1 / -1;
+	background-color: #5e5e5e;
 }
 
-@media (max-width: $container-wide) {
-	.Artist-profile {
-		flex-direction: column;
-		align-items: center;
+.Artist-card--stripe {
+	z-index: 2;
+	grid-row: 2;
+	grid-column: 1 / -1;
+	background-color: #303030;
+}
+
+.Artist-card--avatar {
+	grid-area: avatar;
+	margin: 1em;
+	margin-bottom: 0.5em;
+
+	img {
+		width: 10em;
+		height: 10em;
 	}
-
-	.Artist-sidebar {
-		margin-right: 0;
-	}
 }
 
-.Artist-avatar {
-	width: 13rem;
-	height: 13rem;
-	margin: 0 auto;
-
-	padding: 0.2rem;
-	background: white;
-
-	img { width: 100%; height: 100%; }
-}
-
-.Artist-name {
-	margin: 0.5rem 0;
-	font-size: 1.2em;
-	font-weight: bold;
+.Artist-card--name {
+	grid-area: name;
+	color: #fff;
+	margin: 0.4em 0.2em 0.4em 0;
+	font-size: 1.25em;
+	overflow-wrap: break-word;
 
 	a, a:visited {
 		color: inherit;
 	}
-}
 
-.Artist-bio {
-	font-size: 0.9em;
-}
-
-.Artist-joined {
-	margin-top: 0.8rem;
-	font-size: 0.9em;
-	color: #666;
-}
-
-.Artist-edit--button {
-	a {
-		@include button($hue: 120);
-		width: 100%;
-		padding: 0.6rem;
-		text-align: center;
+	a:hover {
+		text-decoration: underline;
 	}
 }
 
-.Artist-nav {
-	width: 100%;
-	list-style-type: none;
-	padding: 0;
-	border-bottom: 0.05em solid #aaa;
+.Artist-card--bio {
+	grid-area: bio;
+	margin: 0.4em 0.5em 0 0;
+}
 
-	li {
-		display: inline-block;
-		padding-left: 0;
-		margin: 0 1em;
+.Artist-card--joined {
+	grid-area: joined;
+	color: #f8f8f8;
+	font-size: (14em / 16);
+	justify-self: end;
+	margin: 0.5em 0.5em 0 0;
+}
 
-		a {
-			display: inline-block;
-			padding: 0.7em 0.3em;
-			color: #666;
-			border-bottom: 0.05em solid transparent;
-			transition: 0.2s all;
+.Artist-card--edit {
+	grid-area: joined;
+	align-self: end;
+	margin: 0.5em 0;
+
+	a, a:visited {
+		color: #fff;
+	}
+}
+
+.Artist-card--nav {
+	grid-area: nav;
+	justify-self: center;
+
+	display: flex;
+	flex-direction: row;
+	text-align: center;
+	align-items: end;
+	margin-top: 0.3em;
+
+	& > a {
+		transition: 0.2s all;
+		border-bottom: (2em / 16) solid transparent;
+		padding: 0.5em 1em;
+
+		&, &:visited {
+			color: #777;
 		}
 
-		a:hover {
-			border-color: #aaa;
-		}
-
-		&.current a {
-			font-weight: bold;
-			border-color: hsla(200, 90%, 50%, 1);
-		}
-
-		a:hover,
-		&.current a {
+		&:hover {
+			color: #333;
+			border-bottom-color: #ccc;
 			text-decoration: none;
-			color: inherit;
+		}
+
+		&.current {
+			border-bottom-color: hsla(200, 80%, 75%, 1);
+			color: #333;
 		}
 	}
 }
 
-.Artist-nav--count {
+.Artist-card--nav-count {
 	display: inline-block;
 	font-weight: bold;
 	padding: 0.2em 0.35em;
@@ -121,100 +132,120 @@
 	top: -0.15em;
 }
 
+.Artist-card--content {
+	grid-area: content;
+}
+
+@media (max-width: 30rem) {
+	.Artist-card--avatar {
+		margin: 0.5em;
+
+		img {
+			width: 6em;
+			height: 6em;
+		}
+	}
+
+	.Artist-card {
+		grid-template-columns: 7em calc(100% - 7em);
+		grid-template-rows: 3.4em auto 1fr repeat(4, auto);
+		grid-template-areas:
+			"avatar joined"
+			"avatar name"
+			"avatar null"
+			"bio bio"
+			"nav nav"
+			"content content";
+	}
+
+	.Artist-card--avatar {
+		margin-bottom: 0;
+	}
+
+	.Artist-card--bio {
+		margin-left: 0.5em;
+	}
+}
+
+// Artist entry listing on profile and scoreboard
+
 .Artist-entries {
 	display: grid;
-	grid-template-columns: 49% 49%;
-	grid-gap: 1em;
-
-	@media #{$mobile} {
-		grid-template-columns: 1fr;
-	}
+	align-items: start;
+	grid-template-columns: repeat(auto-fill, minmax(13em, 1fr));
+	grid-gap: 0.5em;
+	padding: 0 0.5em 0.5em 0.5em;
 }
 
 .Artist-entry {
-	border: 0.05em solid #ccc;
-	border-radius: 0.2em;
-	background: white;
-	line-height: 1;
-	padding: 1em;
-	display: flex;
-	flex-direction: column;
-}
-
-.Artist-entry--footer,
-.Artist-entry--header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-
-	& > *:nth-child(2) { margin-left: 0.5rem; }
-}
-
-.Artist-entry--header {
-	flex-grow: 1;
-	margin-bottom: 0.5em;
-}
-
-.Artist-entry--title {
-	flex-grow: 1;
-	font-size: 1.3em;
-	word-wrap: break-word;
-}
-
-.Artist-entry--footer {
-	align-items: center;
-	flex-wrap: wrap;
-	margin-bottom: -0.3em;
-}
-
-.Artist-entry--mode,
-.Artist-entry--deadline,
-.Artist-entry--placing {
-	color: #777;
-}
-
-.Artist-entry--mode {
-	grid-area: mode;
-	text-transform: uppercase;
-	font-size: 0.8em;
-}
-
-.Artist-entry--deadline {
-	font-size: 0.9em;
-	white-space: nowrap;
-	a { color: inherit }
-	a:hover { text-decoration: underline }
-}
-
-.Artist-entry--placing {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
-
-.Artist-entry--separator {
-	width: 0.07em;
-	background: #ccc;
-
-	$overflow: 0.3em;
-	height: 1em + ($overflow * 2);
-	margin: 0 0.6em;
-	margin-bottom: -1 * $overflow;
-	position: relative;
-	top: -0.5 * $overflow;
+	@include sheet;
 }
 
 .Artist-entry--awards {
-	margin: 0 0.25em;
+	background-color: #ababab;
+	padding: 0.5em;
+	min-height: 4em;
 
 	.Award {
-		width: 1.4rem;
-		height: 1.4rem;
+		height: 3em;
+		width: 3em;
 	}
+
+	margin-bottom: 0.3em;
 }
 
-.Artist-edit {
-	@extend .Document;
+.Artist-entry--title {
+	font-size: 1.1em;
+	margin: 0 0.5em;
+	overflow-wrap: break-word;
+}
+
+.Artist-entry--competition {
+	font-size: (13em / 16);
+	color: #555;
+	text-align: center;
+}
+
+.Artist-entry--score,
+.Artist-entry--placing {
+	align-self: center;
+}
+
+.Artist-entry--score { margin-right: 1em }
+.Artist-entry--placing { margin-left: 1em }
+
+.Artist-entry--score {
+	justify-self: end;
+}
+
+.Artist-entry--rank {
+	padding-right: 0.4rem;
+	margin-right: 0.4rem;
+	border-right: 1px solid #ccc;
+}
+
+* + .Artist-entry--realscore {
+	padding-left: 0.4rem;
+	margin-left: 0.4rem;
+	border-left: 1px solid #ccc;
+}
+
+.Artist-entry--basescore,
+.Artist-entry--pct {
+	font-size: 0.7em;
+	color: #666;
+	align-self: center;
+}
+
+.Artist-entry--deadline {
+	text-align: end;
+	font-size: (14em / 16);
+	margin: 0.5em;
+	margin-top: 0;
+
+	a {
+		color: #555;
+	}
 }
 
 // Used to search for organisers/judges

@@ -151,4 +151,6 @@ sub deadline {
 		(grep { $_->mode eq $self->mode && $_->action eq 'submit' } $self->event->rounds)[-1]->end_leeway;
 }
 
+sub class { 'entry' }
+
 1;

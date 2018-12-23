@@ -1,0 +1,58 @@
+<div class="Artist-card">
+	<div class="Artist-card--band"
+		style="background-color: {{ artist.color }}"></div>
+	<div class="Artist-card--stripe"
+		style="background-color: {{ artist.color_dark }}"></div>
+
+	<div class="Artist-card--avatar">
+		<img src="{{ artist.avatar }}">
+	</div>
+
+	<div class="Artist-card--joined">
+		<i class="fa fa-calendar"></i>
+		{{ artist.created.date_html | none }}
+	</div>
+
+	<div class="Artist-card--name">
+		{{ PROCESS artist/name.tt }}
+	</div>
+
+	{{ IF artist.bio }}
+	<div class="Artist-card--bio">
+		{{ artist.bio }}
+	</div>
+	{{ END }}
+
+	{{ IF artist.user_id == c.user.id }}
+	<div class="Artist-card--edit">
+		<a href="{{ c.uri_for_action('/artist/edit', [ artist.id_uri ]) }}">
+			<i class="fa fa-pencil"></i>
+		</a>
+	</div>
+	{{ END }}
+
+	<div class="Artist-card--nav">
+		{{ FOREACH tab IN [
+			  ['view', 'overview'],
+			  ['entrys', 'entrys', artist.entrys_rs.count ],
+			  ['posts', 'posts', artist.posts_rs.count ],
+			] }}
+			{{ SET action = c.controller.action_for(tab.0) }}
+			<a
+				href="{{ c.uri_for_action(action, [ artist.id_uri ]) }}"
+				class="{{ 'current' IF action.name == c.action.name }}"
+			>
+				{{ c.string(tab.1) }}
+				{{ IF tab.2 }}
+				<span class="Artist-card--nav-count">{{ tab.2 }}</span>
+				{{ END }}
+			</a>
+		{{ END }}
+	</div>
+
+	{{ IF content }}
+	<div class="Artist-card--content">
+		{{ content | none }}
+	</div>
+	{{ END }}
+</div>

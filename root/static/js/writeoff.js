@@ -1094,7 +1094,7 @@ $(document).ready(function () {
 
 		var addExpanded = function () {
 			$artist.addClass('expanded')
-			if ($artist.find('.Scoreboard-breakdown--entry').length > 2) {
+			if ($artist.find('.Artist-entry').length > 2) {
 				$artist.addClass('span-max');
 			}
 		};
@@ -1112,8 +1112,8 @@ $(document).ready(function () {
 					$artist.removeClass('loading');
 
 					if (status != 'error') {
-						var $res = $($.parseHTML(res));
-						$ctn.append($res.find('.Scoreboard-breakdown--entry'));
+						var $res = $('<div/>').append($.parseHTML(res));
+						$ctn.append($res.find('.Artist-entries'));
 						addExpanded();
 					}
 					else {
@@ -1648,7 +1648,7 @@ postModifiers.push(function (ctx) {
 
 $(document).ready(function () {
 	$('input[name="avatar"]').on('change', function() {
-		var $avatar = $('.Artist-avatar img');
+		var $avatar = $('.Artist-card--avatar img');
 
 		if (!$avatar.data('default')) {
 			$avatar.data('default', $avatar.attr('src'));

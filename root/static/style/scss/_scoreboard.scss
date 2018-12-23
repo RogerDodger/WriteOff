@@ -76,14 +76,14 @@
 	z-index: 1;
 	grid-row: 1;
 	grid-column: 1 / -1;
-	background-color: #555;
+	background-color: #5e5e5e;
 }
 
 .Scoreboard-artist--stripe {
 	z-index: 2;
 	grid-row: 2;
 	grid-column: 1 / -1;
-	background-color: #333;
+	background-color: #303030;
 }
 
 .Scoreboard-artist--expand {
@@ -157,112 +157,6 @@
 	}
 }
 
-.Scoreboard-artist--awards,
-.Scoreboard-breakdown {
-	padding: 0.5em;
-	padding-top: 0;
-}
-
-.Scoreboard-breakdown {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(13em, 1fr));
-	grid-gap: 0.5em;
-}
-
-.Scoreboard-breakdown--entry {
-	@include sheet;
-	align-self: start;
-
-	display: grid;
-	grid-template-columns: 50% 50%;
-	grid-template-rows: 4em auto auto auto;
-
-	& > * {
-		z-index: 5;
-	}
-}
-
-.Scoreboard-breakdown--band {
-	background-color: #ababab;
-	grid-row: 1;
-	grid-column: 1 / -1;
-	z-index: 3;
-}
-
-.Scoreboard-breakdown--awards {
-	grid-row: 1;
-	grid-column: 1 / -1;
-	justify-self: center;
-	margin: 0.5em;
-
-	.Award {
-		height: 3em;
-		width: 3em;
-	}
-}
-
-.Scoreboard-breakdown--placing {
-	grid-row: 2;
-	grid-column: 1;
-}
-
-.Scoreboard-breakdown--score {
-	grid-row: 2;
-	grid-column: 2;
-}
-
-.Scoreboard-breakdown--score,
-.Scoreboard-breakdown--placing {
-	margin-top: 0.3em;
-	align-self: center;
-}
-
-.Scoreboard-breakdown--score { margin-right: 1em }
-.Scoreboard-breakdown--placing { margin-left: 1em }
-
-.Scoreboard-breakdown--score {
-	justify-self: end;
-}
-
-.Scoreboard-breakdown--realscore {
-	padding-left: 0.4em;
-	margin-left: 0.4em;
-	border-left: 1px solid #ccc;
-}
-
-.Scoreboard-breakdown--rank {
-	padding-right: 0.4em;
-	margin-right: 0.4em;
-	border-right: 1px solid #ccc;
-}
-
-.Scoreboard-breakdown--basescore,
-.Scoreboard-breakdown--pct {
-	font-size: 0.7em;
-	color: #666;
-	align-self: center;
-}
-
-.Scoreboard-breakdown--title {
-	grid-row: 3;
-	grid-column: 1 / -1;
-	font-size: 1.1em;
-	margin: 0 0.5em;
-	overflow-wrap: break-word;
-
-	&.theory {
-		margin-top: 0.3em;
-	}
-}
-
-.Scoreboard-breakdown--deadline {
-	grid-row: 4;
-	grid-column: 1 / -1;
-	justify-self: end;
-	margin: 0.5em;
-	margin-top: 0;
-
-	a {
-		color: #555;
-	}
+.Scoreboard-artist--awards {
+	padding: 0 0.5em 0.5em 0.5em;
 }
