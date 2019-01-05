@@ -12,6 +12,7 @@ use Catalyst qw/
 	+WriteOff::Plugin::Auth
 	+WriteOff::Plugin::Strings
 	+WriteOff::Plugin::Session
+	+WriteOff::Plugin::Captcha
 
 	Cache
 

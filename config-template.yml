@@ -6,6 +6,5 @@ AdminEmail: someadmin@example.com
 recaptcha:
     pub_key: 01010101010101
     priv_key: AAAAAAAAAAAAAA
-    version: v2
 read_only: 0
 chat: https://discord.gg/0qeJvuKHi75iK7Iy

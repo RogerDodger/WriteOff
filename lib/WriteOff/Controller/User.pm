@@ -76,9 +76,7 @@ sub logout :Local :Args(0) {
 sub register :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->redirect( $c->uri_for('/') ) if $c->user;
-
-	$c->forward('/captcha_get');
+	return $c->res->redirect('/') if $c->user;
 
 	push @{ $c->stash->{title} }, 'Register';
 	$c->stash->{template} = 'user/register.tt';
@@ -89,7 +87,7 @@ sub register :Local :Args(0) {
 sub do_register :Private {
 	my ( $self, $c ) = @_;
 
-	$c->req->params->{captcha} = $c->forward('/captcha_check');
+	$c->captcha_check;
 
 	$c->form(
 		username => [
@@ -107,7 +105,7 @@ sub do_register :Private {
 			'EMAIL_MX',
 			[ 'DBIC_UNIQUE', $c->model('DB::User'), 'email' ]
 		],
-		# captcha  => [ [ 'EQUAL_TO', 1 ] ],
+		captcha_ok => [ [ 'EQUAL_TO', 1 ] ],
 	);
 
 	if (!$c->form->has_error) {

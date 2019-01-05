@@ -47,7 +47,7 @@
 
 		<div class="Form-item">
 			<label>Prove You Are Human<span class="required">*</span></label>
-			{{ recaptcha.remove(' frameborder="0"') | none }}
+			{{ c.captcha_html | none }}
 		</div>
 
 		<div class="Form-item">

@@ -7,7 +7,6 @@ require WriteOff::DateTime;
 no warnings "uninitialized";
 
 BEGIN { extends 'Catalyst::Controller' }
-with 'Catalyst::TraitFor::Controller::reCAPTCHA';
 
 __PACKAGE__->config(namespace => '');
 

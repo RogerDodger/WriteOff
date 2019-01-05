@@ -35,7 +35,6 @@ my @dependencies = (
 	'Catalyst::Plugin::FillInForm',
 	'Catalyst::Plugin::Upload::MIME',
 	'Catalyst::Plugin::RunAfterRequest',
-	'Catalyst::TraitFor::Controller::reCAPTCHA',
 	'Catalyst::Action::RenderView',
 	'Catalyst::Model::DBIC::Schema',
 	'DBIx::Class',
@@ -64,6 +63,7 @@ my @dependencies = (
 	'Imager::File::JPEG',
 	'Graphics::ColorNames::Netscape',
 	'Graphics::ColorObject',
+	'Captcha::noCAPTCHA',
 );
 
 if (eval { require App::cpanminus; 1; }) {
