@@ -10,10 +10,9 @@
 	@extend .Document-title;
 }
 
-.Story,
-.Story-example {
-	line-height: 1.618;
-	text-align: justify;
+.Story-example,
+.Story {
+	line-height: 1.6;
 }
 
 .Story-example {
@@ -29,30 +28,50 @@
 
 .Story {
 	@include bbcode;
-	font-size: 1.2em;
+	font-size: (18em / 16);
+	text-align: justify;
 	margin-bottom: 2em;
 
+	@media (max-width: #{$container-default}) {
+		font-size: (17em / 16);
+		text-align: start;
+	}
+
+	@media (max-width: #{$container-narrow}) {
+		font-size: (16em / 16);
+	}
+
+	@media #{$mobile} {
+		font-size: (15em / 16);
+	}
+
 	hr {
-		background: transparent;
-	    border: none;
-	    border-top: medium double #666;
-		border-bottom: medium solid transparent;
-	    color: #666;
-		margin: 1.5em 0 0 0;
+		background: none;
+		border: none;
+		border-top: medium double #666;
+		margin: (20em / 16) 0;
 		overflow: visible;
-		padding: 0;
-	    text-align: center;
+		position: relative;
+
+		@media #{$mobile} {
+			margin: (10em / 16) 0;
+		}
 
 		&:after {
-		    content: "§";
-			position: relative;
-			top: -0.7em;
-		    display: inline-block;
-		    font-size: 1.5em;
-			line-height: normal;
-		    padding: 0 0.25em;
-		    background: hsla(0, 0%, 98%, 1);
+			position: absolute;
+			left: 47%;
+			left: calc(50% - (10em / 16));
+			top: -(19em / 32);
+			background: $off-white;
+			content: "§";
+			color: #666;
+			display: block;
+			font-size: 1.5em;
+			line-height: 1;
+			text-align: center;
+			width: (20em / 16);
 		}
+
 	}
 
 	blockquote {

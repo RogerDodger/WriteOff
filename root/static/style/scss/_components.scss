@@ -105,7 +105,7 @@
 }
 
 @mixin sheet {
-	background-color: hsla(0, 0%, 98%, 1);
+	background-color: $off-white;
 }
 
 @mixin table-divider {

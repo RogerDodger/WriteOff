@@ -9,6 +9,10 @@
 
 	& > :last-child {
 		margin-bottom: 0;
+
+		@media #{$mobile} {
+			margin-bottom: (10em / 16);
+		}
 	}
 
 	pre {
@@ -36,6 +40,11 @@
 	margin-top: 0;
 	margin-bottom: 1em;
 	padding-bottom: 0.6em;
+
+	@media #{$mobile} {
+		padding-bottom: 0.4em;
+		margin-bottom: 0.7em;
+	}
 }
 
 .Document-subtitle {
@@ -49,7 +58,7 @@
 	text-align: center;
 
 	span {
-		background-color: hsla(0, 0%, 98%, 1);
+		background-color: $off-white;
 		padding: 0 0.5em;
 	}
 }
