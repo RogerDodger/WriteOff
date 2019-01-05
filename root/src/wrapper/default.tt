@@ -135,7 +135,7 @@
 			{{ END }}
 
 			{{ IF !c.session('introduced') }}
-			<div class="Flash big">{{ c.string('introSplash') | markdown }}</div>
+			<div class="Flash big ctn">{{ c.string('introSplash') | markdown }}</div>
 			{{ END }}
 
 			{{ IF event }}
