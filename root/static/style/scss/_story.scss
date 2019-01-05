@@ -34,7 +34,6 @@
 
 	@media (max-width: #{$container-default}) {
 		font-size: (17em / 16);
-		text-align: start;
 	}
 
 	@media (max-width: #{$container-narrow}) {
@@ -43,6 +42,10 @@
 
 	@media #{$mobile} {
 		font-size: (15em / 16);
+	}
+
+	@media (max-width: 32rem) {
+		text-align: start;
 	}
 
 	hr {
