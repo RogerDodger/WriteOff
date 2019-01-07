@@ -170,7 +170,7 @@ sub do_form :Private {
 
 	$c->stash->{event}->set_column(blurb => $blurb);
 
-	unless ($c->stash->{rulesFrozen}) {
+	if (!$c->stash->{rulesFrozen}) {
 		$c->stash->{event}->set_columns({
 			format_id => $format->id,
 			genre_id => $genre->id,
@@ -178,16 +178,16 @@ sub do_form :Private {
 			wc_min => $wc_min,
 			wc_max => $wc_max,
 		});
-	}
 
-	if ($c->stash->{event}->in_storage && $c->stash->{event}->started && !$c->stash->{rulesFrozen}) {
-		$c->stash->{event}->prompt($prompt)
-	}
-	elsif (!length $prompt) {
-		$c->stash->{event}->prompt_fixed(undef);
-	}
-	else {
-		$c->stash->{event}->prompt_fixed($prompt);
+		if ($c->stash->{event}->in_storage && $c->stash->{event}->started) {
+			$c->stash->{event}->prompt($prompt);
+		}
+		elsif (!length $prompt) {
+			$c->stash->{event}->prompt_fixed(undef);
+		}
+		else {
+			$c->stash->{event}->prompt_fixed($prompt);
+		}
 	}
 
 	$c->forward('/round/do_form');
