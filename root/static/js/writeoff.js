@@ -1596,7 +1596,11 @@ postModifiers.push(function (ctx) {
 	var q = $.when();
 
 	$('.Post-reply', ctx)
-		.on('mouseenter', function () {
+		.on('pointerenter', function (e) {
+			if (e.originalEvent.pointerType === 'touch') {
+				return;
+			}
+
 			var $reply = $(this);
 			var $caller = $reply.closest('.Post');
 			var tid = $reply.attr('data-target');
@@ -1638,6 +1642,7 @@ postModifiers.push(function (ctx) {
 		})
 		.removeAttr('href')
 		.on('click', function () {
+			document.location.hash = '';
 			document.location.hash = $(this).attr('data-target');
 		});
 });
