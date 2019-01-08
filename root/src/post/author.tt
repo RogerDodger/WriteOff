@@ -1,10 +1,4 @@
-<div class="Post-author">
-	<a class="Post-author--name"
-		href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
-		{{ artist.name }}
-	</a>
-
-	<div class="Post-author--avatar">
-		<img src="{{ artist.avatar }}">
-	</div>
-</div>
+<a class="Post-author"
+	href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
+	{{ artist.name }}
+</a>

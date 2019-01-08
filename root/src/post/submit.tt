@@ -1,5 +1,5 @@
 <div class="Post">
-	{{ INCLUDE 'post/author.tt'  artist = c.user.active_artist }}
+	{{ INCLUDE 'post/sidebar.tt'  artist = c.user.active_artist }}
 
 	<div class="Post-submit">
 		<form class="Form" method="post" action="/post/add">
@@ -9,7 +9,7 @@
 			<input type="hidden" name="entry" value="{{ entry.id }}">
 			{{ END }}
 
-			{{ INCLUDE 'post/form.tt' }}
+			{{ INCLUDE 'post/form.tt'  artist = c.user.active_artist }}
 
 			<div class="Post-form--footer">
 				<div class="Post-form--senders">

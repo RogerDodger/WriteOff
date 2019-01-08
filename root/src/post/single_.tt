@@ -20,9 +20,12 @@
 		{{ c.string('postDeleted', name, post.updated.delta_html) | none }}
 	</div>
 {{- ELSE }}
-	{{ INCLUDE 'post/author.tt' artist = post.artist }}
+	{{ INCLUDE 'post/sidebar.tt' artist = post.artist }}
 
 	<div class="Post-contents">
+		{{ INCLUDE post/avatar.tt  artist = post.artist }}
+		{{ INCLUDE post/author.tt  artist = post.artist }}
+
 		<div class="Post-contents--header">
 			<ul class="Post-controls">
 				<!-- IF editable -->

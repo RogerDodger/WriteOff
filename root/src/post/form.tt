@@ -1,3 +1,6 @@
+{{ INCLUDE post/avatar.tt }}
+{{ INCLUDE post/author.tt }}
+
 <div class="Post-form--controls">
 	<ul>
 		<li title="{{ c.string('bold') }}">

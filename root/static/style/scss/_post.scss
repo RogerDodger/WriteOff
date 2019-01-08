@@ -75,42 +75,11 @@
 	}
 }
 
-.Post.highlight {
-	$shadow: 0 0 1em hsla(180, 50%, 75%, 1);
-
-	@media #{$mobile} {
-		box-shadow: $shadow;
-	}
-
-	.Post-contents {
-		box-shadow: $shadow;
-
-		@media #{$mobile} {
-			box-shadow: none;
-		}
-	}
+.Post.highlight .Post-contents {
+	box-shadow: 0 0 1em hsla(180, 50%, 75%, 1);
 }
 
 .Post-author {
-	float: left;
-	width: 9em;
-
-	@media #{$mobile} {
-		float: none;
-		width: 100%;
-	}
-
-	& + div {
-		margin-left: 9.7rem;
-
-		@media #{$mobile} {
-			margin-left: 0;
-			box-shadow: none;
-		}
-	}
-}
-
-.Post-author--name {
 	@include button($hue: 240, $sat: 60%, $l: 55%, $invert: 1);
 
 	border-radius: 0.2em;
@@ -125,15 +94,15 @@
 	}
 }
 
-.admin .Post-author--name {
+.admin .Post-author {
 	@include button-color($hue: 0, $sat: 55%, $l: 50%, $invert: 1);
 }
 
-.organiser .Post-author--name {
+.organiser .Post-author {
 	@include button-color($hue: 130, $sat: 50%, $l: 40%, $invert: 1);
 }
 
-.Post-author--avatar {
+.Post-avatar {
 	@include box;
 	background-color: hsla(0, 0%, 98%, 1);
 	border-radius: 0.1em;
@@ -144,6 +113,17 @@
 	img {
 		width: 4em;
 		height: 4em;
+	}
+}
+
+.Post-sidebar {
+	@media #{$desktop} {
+		float: left;
+		width: 9em;
+
+		& + div {
+			margin-left: 9.7rem;
+		}
 	}
 
 	@media #{$mobile} {
@@ -161,13 +141,43 @@
 	padding: 0;
 }
 
+.Post-contents,
+.Post-edit,
+.Post-submit {
+	.Post-avatar,
+	.Post-author {
+		display: none;
+
+		@media #{$mobile} {
+			display: block;
+		}
+	}
+
+	.Post-avatar {
+		margin: 0.5em;
+		margin-bottom: (3em / 36);
+		float: left;
+	}
+
+	.Post-author {
+		text-align: start;
+	}
+}
+
 .Post-contents--header {
 	color: #989898;
-	font-size: 0.8em;
+	font-size: (13em / 16);
+	line-height: (25 / 16);
 	margin: 0 1em;
-	padding-bottom: 0.7em;
+	padding-bottom: (9em / 13);
 	padding-top: 1em;
 	border-bottom: 1px solid #ddd;
+
+	@media #{$mobile} {
+		font-size: (13em / 16);
+		padding-bottom: (9em / 13);
+		padding-top: (9em / 13);
+	}
 
 	a,
 	button:not(:disabled) {
@@ -229,8 +239,15 @@
 	@include bbcode;
 	margin: 0 1em;
 	padding-top: 1em;
-	padding-bottom: 1.2em;
+	padding-bottom: (18em / 16);
 	white-space: pre-wrap;
+
+	@media #{$mobile} {
+		clear: both;
+		font-size: (15em / 16);
+		padding-top: (8em / 15);
+		padding-bottom: (13em / 15);
+	}
 
 	hr {
 		background: transparent;
@@ -271,7 +288,12 @@
 .Post-edit {
 	background-color: #f7f7f7;
 	box-shadow: 0 0 3px #b6b6b6;
-	font-size: 1.1em;
+
+	font-size: (17em / 16);
+
+	@media #{$mobile} {
+		font-size: (15em / 16);
+	}
 }
 
 .Post-form--controls {
@@ -284,7 +306,7 @@
 	list-style-type: none;
 	margin: 0 0.2em;
 	padding: 0.01em;
-	font-size: 0.9em;
+	font-size: (15em / 17);
 	position: relative;
 
 	& > li {
@@ -326,6 +348,7 @@
 	border-width: 1px 0;
 
 	textarea {
+		background: $off-white;
 		border: 0;
 		box-shadow: none;
 		color: #444;
@@ -359,6 +382,10 @@
 	button[type="submit"],
 	.Post-edit--save {
 		@include button($hue: 120);
+	}
+
+	button[type="submit"] {
+		white-space: nowrap;
 	}
 
 	.Post-edit--cancel {
