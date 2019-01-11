@@ -1631,13 +1631,18 @@ postModifiers.push(function (ctx) {
 					left: $caller.offset().left - $('body').css('font-size').replace(/px/,''),
 				});
 
-				if ($reply.is(':hover')) {
-					$hover.append($target);
-					$('body').append($hover);
-				}
+				// In Firefox, a check on :hover immediately after a
+				// pointerenter will be false. Delaying this check by 1ms is
+				// enough to work around the issue.
+				setTimeout(function () {
+					if ($reply.is(':hover')) {
+						$hover.append($target);
+						$('body').append($hover);
+					}
+				}, 1);
 			});
 		})
-		.on('mouseleave', function () {
+		.on('pointerleave', function () {
 			$('.Post-hover').remove();
 		})
 		.removeAttr('href')
