@@ -15,8 +15,17 @@
 				{{ INCLUDE 'entry/link.tt' }}
 
 				{{- IF entry.artist_public }}
-					by {{ PROCESS artist/name.tt  artist = entry.artist }}
+				<div>by {{ PROCESS artist/name.tt  artist = entry.artist }}</div>
 				{{- END -}}
+
+				{{ IF event.commenting }}
+				<div>
+					(<i class="fa fa-users" title="Commenters"></i>{{
+					entry.posts_rs.group_by_rs('artist_id').count }},
+					<i class="fa fa-comment" title="Comments"></i>{{
+					entry.posts_rs.count }})
+				</div>
+				{{ END }}
 			</figcaption>
 
 		</figure>
