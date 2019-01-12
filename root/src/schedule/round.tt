@@ -1,10 +1,10 @@
-{{ IF round.id }}
-<input type="hidden" name="round_id" value="{{ round.id }}">
-{{ END }}
-
 {{ SET frozen = round.active || round.finished }}
 
 <div class="Form-subsection Round {{ 'frozen' IF frozen }}">
+	{{ IF round.id }}
+	<input type="hidden" name="round_id" value="{{ round.id }}">
+	{{ END }}
+
 	<div class="Form-group three">
 		<div class="Form-item">
 			<label>{{ c.string('mode') }}</label>
