@@ -48,6 +48,12 @@ sub process {
 	$plain = Text::Wrap::wrap("", "", $plain);
 
 	if ($c->debug) {
+		if ($c->stash->{email}{users}) {
+			$html =~ s{</html>}{
+				my $n = $c->stash->{email}{users}->count;
+				"<p>$n Recipients</p></html>"
+			}xe;
+		}
 		return $c->res->body($html);
 	}
 

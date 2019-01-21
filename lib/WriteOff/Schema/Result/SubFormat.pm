@@ -9,7 +9,7 @@ __PACKAGE__->table("sub_formats");
 
 __PACKAGE__->add_columns(
 	"user_id",
-	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 	"format_id",
 	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );

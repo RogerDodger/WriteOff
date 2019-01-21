@@ -141,9 +141,10 @@ sub prefs :Local :Args(0) {
 
 	$c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
 
-	$c->stash->{triggers} = $c->model('DB::EmailTrigger');
-	$c->stash->{formats} = $c->model('DB::Format');
-	$c->stash->{genres} = $c->model('DB::Genre');
+	$c->stash->{modes} = [ @WriteOff::Mode::ALL ];
+	$c->stash->{triggers} = [ @WriteOff::EmailTrigger::ALL ];
+	$c->stash->{formats} = [ $c->model('DB::Format')->all ];
+	$c->stash->{genres} = [ $c->model('DB::Genre')->all ];
 
 	$c->forward('do_prefs') if $c->req->method eq 'POST';
 
@@ -156,7 +157,7 @@ sub prefs :Local :Args(0) {
 			map {
 				$k . $_->$i, 'on'
 			} $c->user->$m->all;
-		} qw/trigger genre format/,
+		} qw/mode trigger genre format/,
 	};
 
 	push @{ $c->stash->{title} }, $c->string('preferences');
@@ -172,7 +173,7 @@ sub do_prefs :Private {
 		font => ($c->req->param('font') // '') =~ /^(serif|sans-serif)$/ ? $1 : 'serif',
 	});
 
-	for my $k (qw/trigger genre format/) {
+	for my $k (qw/mode trigger genre format/) {
 		my $m = "sub_${k}s";
 		$c->user->$m->delete;
 		$c->model('DB::Sub' . ucfirst $k)->populate([
@@ -183,7 +184,7 @@ sub do_prefs :Private {
 			grep {
 				$c->req->param($k . $_->id)
 			}
-			$c->stash->{$k . 's'}->all,
+			@{ $c->stash->{"${k}s"} },
 		]);
 	}
 

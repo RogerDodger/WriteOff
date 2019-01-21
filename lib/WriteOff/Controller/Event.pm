@@ -4,6 +4,8 @@ use Moose;
 use List::Util qw/shuffle/;
 use WriteOff::Award qw/:all/;
 use WriteOff::DateTime;
+use WriteOff::EmailTrigger qw/:all/;
+use WriteOff::Mode qw/:all/;
 use WriteOff::Util qw/LEEWAY uniq/;
 use namespace::autoclean;
 
@@ -11,12 +13,15 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-# # Uncomment for debugging
-# sub e :Chained('fetch') :PathPart('e') :Args(0) {
-# 	my ($self, $c) = @_;
-# 	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });
-# 	$c->forward('/event/notify_mailing_list');
-# }
+# Uncomment for debugging
+sub e :Chained('fetch') :PathPart('e') :Args(0) {
+	my ($self, $c) = @_;
+	$c->stash->{trigger} = WriteOff::EmailTrigger->find($c->req->param('t') || 'subsOpen')
+		or die "Bad trigger\n";
+	$c->stash->{mode} = WriteOff::Mode->find($c->req->param('m') || 'fic')
+		or die "Bad mode\n";
+	$c->forward('/event/notify_mailing_list');
+}
 
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
@@ -392,25 +397,29 @@ sub notify_mailing_list :Private {
 
 	return unless $c->stash->{trigger};
 
-	$c->log->info("Sending mail for Event %d %s",
-		$c->stash->{event}->id,
+	$c->log->info("[mail] sending %s for event #%d",
 		$c->stash->{trigger}->name,
+		$c->stash->{event}->id,
 	);
 
 	$c->stash->{email} = {
 		users => $c->model('DB::User')->subscribers(
+			mode => $c->stash->{mode},
 			trigger_id => $c->stash->{trigger}->id,
 			genre_id => $c->stash->{event}->genre_id,
 			format_id => $c->stash->{event}->format_id,
 		),
-		subject => $c->stash->{trigger}->prompt_in_subject
-			? (sprintf "%s %s",
-				$c->stash->{event}->prompt,
-				$c->string($c->stash->{trigger}->name))
-			: (sprintf "%s %s %s", map $c->string($_),
-				$c->stash->{event}->genre->name,
-				$c->stash->{event}->format->name,
-				$c->stash->{trigger}->name),
+		subject => $c->stash->{trigger}->is(EVENTCREATED)
+			? ( sprintf "[#%d] %s | %s %s",
+				$c->stash->{event}->id,
+				$c->string($c->stash->{trigger}->name),
+				$c->string($c->stash->{event}->genre->name),
+				$c->string($c->stash->{event}->format->name) )
+			: ( sprintf "[#%d] %s %s | %s",
+				$c->stash->{event}->id,
+				$c->string($c->stash->{mode}->name),
+				$c->string($c->stash->{trigger}->name),
+				$c->stash->{event}->prompt ),
 		template => $c->stash->{trigger}->template,
 	};
 

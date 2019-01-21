@@ -1,5 +1,11 @@
-A(n) [{{ event.genre.name }} {{ event.format.name }} event]({{
-c.uri_for_action('/event/permalink', [ event.id ]) }}) is happening this
-weekend.
+The next [{{ event.genre.name }} {{ event.format.name }} event]({{
+c.uri_for_action('/event/permalink', [ event.id ]) }}) is starting soon.
 
-Have your say in what the prompt is!
+{{ IF event.fic2pic }}
+It's a fic2pic event.
+{{ ELSIF event.pic2fic }}
+It's a pic2fic event.
+{{ END }}
+
+[Have your say in what the prompt is!]({{
+c.uri_for_action('/prompt/submit', [ event.id ]) }})

@@ -62,14 +62,6 @@ sub run {
 			unlink $dbfn;
 			my $sch = $write_db->();
 
-			$_ = $sch->resultset('EmailTrigger')->populate([
-				[qw/name template prompt_in_subject/],
-				['eventCreated', 'email/event-created.tt', 0],
-				['promptSelected', 'email/prompt-selected.tt', 0],
-				['votingStarted', 'email/voting-started.tt', 1],
-				['resultsUp', 'email/results-up.tt', 1],
-			]);
-
 			$_ = $sch->resultset('Format')->populate([
 				[qw/name wc_min wc_max/],
 				['Short Story', 2000, 8000],

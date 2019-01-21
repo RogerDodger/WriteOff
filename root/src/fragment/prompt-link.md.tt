@@ -1,0 +1,1 @@
+[{{ event.prompt }}]({{ c.uri_for_action('/event/permalink', [ event.id_uri ]) }}){{ -}}

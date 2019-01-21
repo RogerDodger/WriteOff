@@ -1,4 +1,7 @@
-Voting for [{{ event.prompt }}]({{ c.uri_for_action('/event/permalink', [
-event.id_uri ]) }}) has started.
+{{ c.string(mode.name) }} voting for {{ INCLUDE "fragment/prompt-link.md.tt" }} has started.
 
+{{ IF mode.name == "fic" }}
 Get reading!
+{{ ELSIF mode.name == "pic" }}
+Go have a look!
+{{ END }}

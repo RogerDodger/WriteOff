@@ -74,6 +74,10 @@ sub clean_unverified {
 sub subscribers {
 	my ($self, %cond) = @_;
 
+	if ( defined(my $mode = delete $cond{mode}) ) {
+		$cond{mode_id} = $mode->id;
+	}
+
 	Carp::croak "No $_" for grep !exists $cond{$_}, qw/trigger_id format_id genre_id/;
 
 	$self->search_rs(\%cond, {
@@ -81,6 +85,7 @@ sub subscribers {
 			sub_triggers
 			sub_genres
 			sub_formats
+			sub_modes
 		/],
 	});
 }
