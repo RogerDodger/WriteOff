@@ -150,6 +150,7 @@ sub prefs :Local :Args(0) {
 
 	$c->stash->{fillform} = {
 		font => $c->user->font,
+		autosub => $c->user->autosub ? 'on' : '',
 		map {
 			my $k = $_;
 			my $m = "sub_${_}s";
@@ -171,6 +172,7 @@ sub do_prefs :Private {
 
 	$c->user->update({
 		font => ($c->req->param('font') // '') =~ /^(serif|sans-serif)$/ ? $1 : 'serif',
+		autosub => $c->req->param('autosub') ? 1 : 0,
 	});
 
 	for my $k (qw/mode trigger genre format/) {

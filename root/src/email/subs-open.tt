@@ -1,6 +1,12 @@
+{{- IF mode }}
 {{ c.string(mode.name) }} submission for {{ INCLUDE "fragment/prompt-link.md.tt" }} is open.
+{{- ELSE }}
+Submissions for {{ INCLUDE "fragment/prompt-link.md.tt" }} are open.
+{{- END }}
 
-{{- IF mode.name == "fic" }}
+{{- IF !mode }}
+Get started!
+{{- ELSIF mode.name == "fic" }}
 Get writing!
 {{- ELSIF mode.name == "pic" }}
 Get drawing!

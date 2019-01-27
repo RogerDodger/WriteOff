@@ -115,6 +115,12 @@ sub has {
 	return $self->rounds->search({ mode => shift, maybe action => shift })->count;
 }
 
+sub modes {
+	my $self = shift;
+	$self->{__modes} //=
+		[ grep { $self->has($_->name) } @WriteOff::Mode::ALL ];
+}
+
 sub has_prompt {
 	return shift->prompt_type;
 }
@@ -326,18 +332,32 @@ sub reset_jobs {
 		],
 	})->delete;
 
-	my @jobs = (
-		{
-			action => '/event/set_prompt',
-			at => $self->start,
-			args => [ $self->id ],
-		},
-		{
-			action => '/event/check_rounds',
-			at => $self->rounds->fic->submit->first->end_leeway,
-			args => [ $self->id ],
-		}
-	);
+	# All jobs, filtered later to those that haven't been done already
+	my @jobs;
+
+	push @jobs,	{
+		action => '/event/set_prompt',
+		at => $self->start,
+		args => [ $self->id ],
+	};
+
+	if ($self->rorder =~ /(fic|pic)$/) {
+		my $mode = $1;
+
+		push @jobs, {
+			action => '/event/subs_open',
+			at => $self->rounds->mode($mode)->submit->first->start,
+			args => [ $self->id, $mode ],
+		};
+	}
+
+	for my $mode (grep $self->has($_->name), @WriteOff::Mode::ALL) {
+		push @jobs, {
+			action => '/event/voting_started',
+			at => $self->rounds->mode($mode->name)->vote->first->start,
+			args => [ $self->id, $mode->name ],
+		};
+	}
 
 	for my $round ($self->rounds->vote->all) {
 		push @jobs, {

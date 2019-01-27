@@ -60,6 +60,11 @@
 		</div>
 
 		<div class="Form-item">
+			<input type="checkbox" name="autosub">
+			<label>{{ c.string('autosubLabel') }}</label>
+		</div>
+
+		<div class="Form-item">
 			<input type="submit" value="{{ c.string('update') }}">
 		</div>
 	</form>

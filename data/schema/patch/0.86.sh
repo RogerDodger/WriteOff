@@ -15,5 +15,7 @@ SELECT me.id, 1
 FROM users me
 WHERE 0 != (SELECT COUNT(*) FROM sub_formats WHERE user_id=me.id)
 AND 0 != (SELECT COUNT(*) FROM sub_genres WHERE user_id=me.id)
-AND 0 != (SELECT COUNT(*) FROM sub_triggers WHERE user_id=me.id)
+AND 0 != (SELECT COUNT(*) FROM sub_triggers WHERE user_id=me.id);
+
+ALTER TABLE users ADD COLUMN autosub BIT NOT NULL DEFAULT 0;
 SQL

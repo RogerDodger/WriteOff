@@ -56,13 +56,6 @@ sub unverified {
 	return shift->search_rs({ verified => 0 });
 }
 
-sub mailing_list {
-	return shift->search_rs({
-		mailme   => 1,
-		verified => 1,
-	});
-}
-
 sub clean_unverified {
 	my $self = shift;
 
@@ -72,22 +65,38 @@ sub clean_unverified {
 }
 
 sub subscribers {
-	my ($self, %cond) = @_;
+	my ($self, %p) = @_;
 
-	if ( defined(my $mode = delete $cond{mode}) ) {
-		$cond{mode_id} = $mode->id;
+	Carp::croak "No $_" for grep !exists $p{$_}, qw/event trigger/;
+
+	my %q;
+	if ( defined(my $mode = delete $p{mode}) ) {
+		$q{mode_id} = $mode->id;
+	}
+	elsif (@{ $p{event}->modes } == 1) {
+		$q{mode_id} = $p{event}->modes->[0]->id;
+	}
+	else {
+		$q{mode_id} = { -in => [ map $_->id, @{ $p{event}->modes } ] };
 	}
 
-	Carp::croak "No $_" for grep !exists $cond{$_}, qw/trigger_id format_id genre_id/;
-
-	$self->search_rs(\%cond, {
-		join => [qw/
-			sub_triggers
-			sub_genres
-			sub_formats
-			sub_modes
-		/],
-	});
+	$self->search_rs(
+		{
+			%q,
+			trigger_id => $p{trigger}->id,
+			genre_id => $p{event}->genre_id,
+			format_id => $p{event}->format_id,
+		},
+		{
+			join => [qw/
+				sub_triggers
+				sub_genres
+				sub_formats
+				sub_modes
+			/],
+			group_by => [ 'me.id' ],
+		}
+	);
 }
 
 1;
