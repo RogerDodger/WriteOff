@@ -8,7 +8,7 @@
 
 {{ IF !c.user }}
 <div class="Flash">{{ c.string('loginRequiredArt') }}</div>
-{{ ELSIF event.pic_subs_allowed }}
+{{ ELSIF event.pic_subs_allowed || image && c.user.can_edit(image) }}
 <form class="Form" method="post" enctype="multipart/form-data">
 	{{ csrf_field | none }}
 	{{- IF c.form.has_error }}
