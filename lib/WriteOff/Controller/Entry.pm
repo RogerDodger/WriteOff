@@ -24,9 +24,16 @@ sub form :Private {
 	}
 
 	if ($c->user) {
+		my $uid = eval { $c->stash->{entry}->user_id } || $c->user->id;
+		my $organiser = $c->user->organises($c->stash->{event});
+
 		$c->stash->{artists} = $c->model('DB::Artist')->search({
 			-or => [
-				{ user_id => eval { $c->stash->{entry}->user_id } || $c->user->id },
+				{
+					$organiser && $c->user->id != $uid
+						? ( id => $c->stash->{entry}->artist_id )
+						: ( user_id => $uid )
+				},
 				{ id => 25 }, # Anonymous
 			],
 		}, {
@@ -35,11 +42,9 @@ sub form :Private {
 			],
 		});
 
-		if ($c->stash->{rels}) {
+		if ($c->stash->{rels} && !$organiser) {
 			$c->stash->{rels} = $c->stash->{rels}->search({
-				user_id => {
-					'!=' => eval { $c->stash->{entry}->user_id } || $c->user->id,
-				},
+				user_id => { '!=' => $uid },
 			});
 		}
 	}
