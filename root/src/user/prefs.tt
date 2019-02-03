@@ -35,22 +35,33 @@
 			{{ END }}
 
 			<ul class="Check-buttons">
-				{{ FOREACH opt IN triggers.all }}
+				{{ FOREACH opt IN modes }}
+					{{ PROCESS cb  name = 'mode' }}
+				{{ END }}
+			</ul>
+
+			<ul class="Check-buttons">
+				{{ FOREACH opt IN triggers }}
 					{{ PROCESS cb  name = 'trigger' }}
 				{{ END }}
 			</ul>
 
 			<ul class="Check-buttons">
-				{{ FOREACH opt IN genres.all }}
+				{{ FOREACH opt IN genres }}
 					{{ PROCESS cb  name = 'genre' }}
 				{{ END }}
 			</ul>
 
 			<ul class="Check-buttons">
-				{{ FOREACH opt IN formats.all }}
+				{{ FOREACH opt IN formats }}
 					{{ PROCESS cb  name = 'format' }}
 				{{ END }}
 			</ul>
+		</div>
+
+		<div class="Form-item">
+			<input type="checkbox" name="autosub">
+			<label>{{ c.string('autosubLabel') }}</label>
 		</div>
 
 		<div class="Form-item">

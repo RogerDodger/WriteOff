@@ -1,6 +1,7 @@
 package WriteOff::Controller::Cron;
 use Moose;
 use namespace::autoclean;
+use WriteOff::EmailTrigger qw/EVENTCREATED/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -78,7 +79,7 @@ sub schedule :Local {
 			$sch->delete;
 		}
 
-		$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
+		$c->stash->{trigger} = EVENTCREATED;
 		$c->forward('/event/notify_mailing_list');
 	}
 }
@@ -90,7 +91,7 @@ sub end :Private {
 		$c->res->body(join "\n", map "Error: $_", @{ $c->error });
 		$c->error(0);
 	}
-	else {
+	elsif (!$c->res->body) {
 		$c->res->body("Task complete\n");
 	}
 }

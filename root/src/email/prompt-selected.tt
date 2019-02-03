@@ -1,5 +1,0 @@
-The prompt for this weekend's {{ event.genre.name }} {{ event.format.name }}
-event is [{{ event.prompt }}]({{ c.uri_for_action('/event/permalink', [
-event.id_uri ]) }}).
-
-Get writing (and drawing)!

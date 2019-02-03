@@ -212,6 +212,7 @@ emailLimited: |
 introSplash: |
     Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
 confirmPrompt: Enter the %s of the selected item to continue
+autosubLabel: Automatically subscribe to new genres and formats
 jsRequired: |
     This page requires JavaScript to work properly
 csrfDetected: Bad session
@@ -260,7 +261,7 @@ original: Original
 minific: Minific
 shortStory: Short Story
 eventCreated: Event Created
-promptSelected: Prompt Selected
+subsOpen: Subs Open
 votingStarted: Voting Started
 resultsUp: Results Up
 

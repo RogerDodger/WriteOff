@@ -4,6 +4,8 @@ use Moose;
 use List::Util qw/shuffle/;
 use WriteOff::Award qw/:all/;
 use WriteOff::DateTime;
+use WriteOff::EmailTrigger qw/:all/;
+use WriteOff::Mode qw/:all/;
 use WriteOff::Util qw/LEEWAY uniq/;
 use namespace::autoclean;
 
@@ -11,12 +13,20 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 sub fetch :Chained('/') :PathPart('event') :CaptureArgs(1) :ActionClass('~Fetch') {}
 
-# # Uncomment for debugging
-# sub e :Chained('fetch') :PathPart('e') :Args(0) {
-# 	my ($self, $c) = @_;
-# 	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });
-# 	$c->forward('/event/notify_mailing_list');
-# }
+# Debugging method
+sub e :Chained('fetch') :PathPart('e') :Args(0) {
+	my ($self, $c) = @_;
+	$c->debug or $c->detach('/404');
+
+	$c->stash->{trigger} = WriteOff::EmailTrigger->find($c->req->param('t') || 'subsOpen')
+		or die "Bad trigger\n";
+
+	if ($c->req->param('m') ne 'none') {
+		$c->stash->{mode} = WriteOff::Mode->find($c->req->param('m') || 'fic')
+			or die "Bad mode\n";
+	}
+	$c->forward('/event/notify_mailing_list');
+}
 
 sub permalink :Chained('fetch') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
@@ -392,25 +402,30 @@ sub notify_mailing_list :Private {
 
 	return unless $c->stash->{trigger};
 
-	$c->log->info("Sending mail for Event %d %s",
-		$c->stash->{event}->id,
+	$c->log->info("[mail] sending %s for event #%d",
 		$c->stash->{trigger}->name,
+		$c->stash->{event}->id,
 	);
 
 	$c->stash->{email} = {
 		users => $c->model('DB::User')->subscribers(
-			trigger_id => $c->stash->{trigger}->id,
-			genre_id => $c->stash->{event}->genre_id,
-			format_id => $c->stash->{event}->format_id,
+			event => $c->stash->{event},
+			trigger => $c->stash->{trigger},
+			mode => $c->stash->{mode},
 		),
-		subject => $c->stash->{trigger}->prompt_in_subject
-			? (sprintf "%s %s",
-				$c->stash->{event}->prompt,
-				$c->string($c->stash->{trigger}->name))
-			: (sprintf "%s %s %s", map $c->string($_),
-				$c->stash->{event}->genre->name,
-				$c->stash->{event}->format->name,
-				$c->stash->{trigger}->name),
+		subject => $c->stash->{trigger}->is(EVENTCREATED)
+			? ( sprintf "[#%d] %s | %s %s",
+				$c->stash->{event}->id,
+				$c->string($c->stash->{trigger}->name),
+				$c->string($c->stash->{event}->genre->name),
+				$c->string($c->stash->{event}->format->name) )
+			: ( sprintf "[#%d] %s%s | %s",
+				$c->stash->{event}->id,
+				( $c->stash->{mode}
+					? $c->string($c->stash->{mode}->name) . ' '
+					: '' ),
+				$c->string($c->stash->{trigger}->name),
+				$c->stash->{event}->prompt ),
 		template => $c->stash->{trigger}->template,
 	};
 
@@ -419,7 +434,7 @@ sub notify_mailing_list :Private {
 }
 
 sub set_prompt :Private {
-	my ( $self, $c, $id ) = @_;
+	my ($self, $c, $id) = @_;
 
 	my $e = $c->stash->{event} = $c->model('DB::Event')->find($id) or return 0;
 
@@ -441,16 +456,31 @@ sub set_prompt :Private {
 		}
 	}
 
-	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'promptSelected' });
+	if ($e->rorder =~ /^(fic|pic)/) {
+		$c->stash->{mode} = WriteOff::Mode->find($1);
+	}
+
+	$c->stash->{trigger} = SUBSOPEN;
 	$c->forward('/event/notify_mailing_list');
 }
 
-sub check_rounds :Private {
-	my ($self, $c, $id ) = @_;
+sub subs_open :Private {
+	my ($self, $c, $eid, $mode) = @_;
 
-	$c->stash->{event} = $c->model('DB::Event')->find($id) or return 0;
+	$c->stash->{event} = $c->model('DB::Event')->find($eid) or return;
+	$c->stash->{mode} = WriteOff::Mode->find($mode) or return;
+	$c->stash->{trigger} = SUBSOPEN;
 
-	$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'votingStarted' });
+	$c->forward('/event/notify_mailing_list');
+}
+
+sub voting_started :Private {
+	my ($self, $c, $eid, $mode) = @_;
+
+	$c->stash->{event} = $c->model('DB::Event')->find($eid) or return;
+	$c->stash->{mode} = WriteOff::Mode->find($mode) or return;
+	$c->stash->{trigger} = VOTINGSTARTED;
+
 	$c->forward('/event/notify_mailing_list');
 }
 
@@ -469,11 +499,10 @@ sub tally_round :Private {
 		$e->theorys->search({ mode => $r->mode })->process if $e->guessing;
 		$e->score($r->mode);
 
-		if ($r->mode eq 'fic') {
-			$c->stash->{event} = $e;
-			$c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'resultsUp' });
-			$c->forward('/event/notify_mailing_list');
-		}
+		$c->stash->{mode} = WriteOff::Mode->find($r->mode);
+		$c->stash->{event} = $e;
+		$c->stash->{trigger} = RESULTSUP;
+		$c->forward('/event/notify_mailing_list');
 	}
 
 	$r->update({ tallied => 1 });
