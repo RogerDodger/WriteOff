@@ -28,8 +28,8 @@ sub twipie {
 	# Initialise
 	my (%scores, %p, %contr, %wins, %comps);
 
-	# Imaginary team, key guaranteed unique
-	my $x = join '', uniq flatten @$slates;
+	# Imaginary team, key guaranteed unique since other keys are numeric
+	my $x = 'x';
 
 	for my $n ($x, uniq flatten @$slates) {
 		$scores{$n} = 1;
