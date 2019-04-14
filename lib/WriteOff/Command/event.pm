@@ -43,7 +43,8 @@ sub score {
 	my $self = shift;
 	my $e = $self->_find(shift);
 	my $mode = WriteOff::Mode->find(shift // 'fic');
-	$e->score($mode->name, decay => 0);
+	$e->theorys->mode($mode->name)->process if $e->guessing;
+	$e->score($mode->name, decay => shift // 0);
 }
 
 1;

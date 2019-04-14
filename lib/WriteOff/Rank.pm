@@ -27,16 +27,20 @@ sub twipie {
 
 	# Initialise
 	my (%scores, %p, %contr, %wins, %comps);
+	my @teams = uniq flatten @$slates;
+
+	# If there are no teams, return early to avoid divide by zero errors
+	return ({}, {}) if !@teams;
 
 	# Imaginary team, key guaranteed unique since other keys are numeric
 	my $x = 'x';
 
-	for my $n ($x, uniq flatten @$slates) {
+	for my $n ($x, @teams) {
 		$scores{$n} = 1;
 		$wins{$n} = 0;
 		$comps{$n} = {};
 		$p{$n} = [];
-		for my $m ($x, uniq flatten @$slates) {
+		for my $m ($x, @teams) {
 			$comps{$n}{$m} = 0;
 		}
 	}

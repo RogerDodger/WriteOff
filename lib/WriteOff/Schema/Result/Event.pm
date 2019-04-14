@@ -388,9 +388,6 @@ sub score {
 		rank_low    => { '!=' => undef },
 	});
 
-	Carp::croak sprintf "No %s entries for %s\n", $mode->name, $self->id_uri
-		if !$entrys->count;
-
 	# Apply decay to older events' scores
 	if ($opt{decay}) {
 		my $scores = $schema->resultset('Entry')->search(
@@ -410,7 +407,7 @@ sub score {
 
 	# Assign awards to the entries
 	if ($opt{award}) {
-		# In case this sub is re-run, clear awards previous assigned
+		# In case this sub is re-run, clear awards previously assigned
 		$entrys->related_resultset('awards')->delete;
 
 		my $rounds = $self->rounds->search({

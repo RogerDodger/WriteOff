@@ -139,7 +139,11 @@ sub pct {
 	return $self->{__pct} if exists $self->{__pct};
 
 	$self->{__pct} = defined $self->rank
-		? (1 - $self->rank / $self->event->entrys->mode($self->mode)->get_column('rank_low')->max)
+		? do {
+			# If there is only 1 entry, then rank_low can be 0 and give a divide by zero error
+			my $m = $self->event->entrys->mode($self->mode)->get_column('rank_low')->max;
+			$m and 1 - $self->rank / $m;
+		}
 		: undef;
 }
 

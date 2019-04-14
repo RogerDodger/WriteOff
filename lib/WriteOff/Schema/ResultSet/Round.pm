@@ -26,6 +26,14 @@ sub after {
 		);
 }
 
+sub after_incl {
+	my ($self, $round) = @_;
+	$self->search(
+			{ start => { '>=' => $self->format_datetime($round->start) } },
+			{ order_by => { -asc => 'start' } }
+		);
+}
+
 sub pic {
 	shift->search({ mode => 'pic' });
 }

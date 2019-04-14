@@ -19,8 +19,9 @@ sub eligible {
 
 sub difficulty {
 	my $self = shift;
+	my $n = $self->count or return;
 
-	List::Util::sum(map { sqrt $_->difficulty } $self->all) / $self->count;
+	List::Util::sum(map { sqrt $_->difficulty } $self->all) / $n;
 }
 
 sub disqualified {

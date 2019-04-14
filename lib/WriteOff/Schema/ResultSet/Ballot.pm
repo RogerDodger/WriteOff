@@ -45,10 +45,12 @@ sub judge_records {
 
 sub slates {
 	my $self = shift;
+
 	my @slates;
-	while (my $record = $self->next) {
+	for my $record ($self->all) {
 		push @slates, [map { $_->entry_id } $record->votes->ordered->all];
 	}
+
 	return \@slates;
 }
 
