@@ -130,6 +130,12 @@ sub avatar_write_color {
 sub color_dark {
 	my $self = shift;
 	return if !$self->color;
+
+	# Same as above
+	local $SIG{__WARN__} = sub {
+		warn $_[0] unless $_[0] =~ /ColorObject.pm line 1905/;
+	};
+
 	my $lch = Graphics::ColorObject->new_RGBhex($self->color)->as_LCHuv;
 	$lch->[0] /= 2;
 	"#" . Graphics::ColorObject->new_LCHuv($lch)->as_RGBhex;
