@@ -3,103 +3,96 @@ package WriteOff::Command::user;
 use WriteOff::Command;
 use IO::Prompt;
 
-sub run {
-	my ($self, $command, @args) = @_;
+can add =>
+	sub {
+		my ($name, $email, $role) = @_;
 
-	if (defined $command && $command =~ /^(?:add|rename)$/) {
-		$self->$command(@args);
-	}
-	else {
-		$self->help;
-	}
-}
+		$role =~ /^(user|admin)$/ or abort qq{Invalid role "$role"};
 
-sub add {
-	my ($self, $name, $email, $role) = @_;
+		my $password = prompt('Password: ', -e => '*');
+		my $password2 = prompt('Confirm password: ', -e => '*');
+		$password eq $password2 or abort "Passwords do not match";
 
-	if (!defined $name || !defined $email) {
-		$self->usage;
-	}
+		say "Creating user $name...";
 
-	my $password = prompt('Password: ', -e => '*');
-	my $password2 = prompt('Confirm password: ', -e => '*');
-	if ($password ne $password2) {
-		say "Passwords do not match";
-		exit(1);
-	}
+		my $user = db('User')->create({
+			name            => $name,
+			name_canonical  => CORE::fc $name,
+			password        => $password,
+			email           => $email,
+			email_canonical => CORE::fc $email,
+			verified        => 1,
+		});
 
-	say "Creating user $name...";
+		my $artist = db('Artist')->create({
+			user_id => $user->id,
+			name => $user->name,
+			name_canonical => $user->name_canonical,
+			admin => 0+($role eq 'admin'),
+			# For some bizarre reason, this isn't being done automatically BUT ONLY
+			# HERE. Artist->create has auto timestamps everywhere else, and
+			# User->create just above this does too ... ???
+			created => DateTime->now,
+			updated => DateTime->now,
+		});
 
-	my $user = $self->db('User')->create({
-		name            => $name,
-		name_canonical  => CORE::fc $name,
-		password        => $password,
-		email           => $email,
-		email_canonical => CORE::fc $email,
-		verified        => 1,
-	});
+		$user->update({ active_artist_id => $artist->id });
+	},
+	which => q{
+		Creates a user with name NAME and email EMAIL. Password is input as a
+		prompt. If ROLE eq 'admin', the user will have admin privileges.
+	},
+	with => [
+		name => undef,
+		email => undef,
+		role => 'user',
+	],
+	fetch => 0;
 
-	my $artist = $self->db('Artist')->create({
-		user_id => $user->id,
-		name => $user->name,
-		name_canonical => $user->name_canonical,
-		admin => defined $role && $role eq 'admin' || 0,
-		# For some bizarre reason, this isn't being done automatically BUT ONLY
-		# HERE. Artist->create has auto timestamps everywhere else, and
-		# User->create just above this does too ... ???
-		created => DateTime->now,
-		updated => DateTime->now,
-	});
+# sub rename {
+# 	my $self = shift;
 
-	$user->update({ active_artist_id => $artist->id });
-}
+# 	if (@_ < 2) {
+# 		$self->help;
+# 	}
 
-sub rename {
-	my $self = shift;
+# 	my $oldname = shift;
+# 	my $sub = $self->db('User')->find({ username => $oldname });
+# 	if (!defined $sub) {
+# 		say "User `$oldname` does not exist";
+# 		exit(1);
+# 	}
 
-	die "Not implemented\n";
+# 	my $newname = shift;
+# 	my $main = $self->db('User')->find({ username => $newname });
 
-	if (@_ < 2) {
-		$self->help;
-	}
+# 	if (!defined $main) {
+# 		printf "Renaming `%s` to `%s`...\n", $sub->name, $newname;
+# 		$sub->update({ username => $newname });
+# 	}
+# 	else {
+# 		printf "Merging `%s` into `%s`...\n", $sub->name, $main->name;
 
-	my $oldname = shift;
-	my $sub = $self->db('User')->find({ username => $oldname });
-	if (!defined $sub) {
-		say "User `$oldname` does not exist";
-		exit(1);
-	}
+# 		for my $table (qw/Artist Image Story Prompt VoteRecord/) {
+# 			$self->db($table)
+# 			       ->search({ user_id => $sub->id })
+# 			         ->update({ user_id => $main->id });
+# 		}
 
-	my $newname = shift;
-	my $main = $self->db('User')->find({ username => $newname });
+# 		# These can fail if there's a PK conflict (e.g., both users have role
+# 		# `admin`, and it tries to update $main to being a `admin` twice).
+# 		# Rather than checking if a conflict exists, it's quicker to just try
+# 		# it and let the DBMS sort it out.
+# 		for my $table (qw/UserEvent UserRole/) {
+# 			for my $row ($self->db($table)->search({ user_id => $sub->id })) {
+# 				eval {
+# 					$row->update({ user_id => $main->id });
+# 				}
+# 			}
+# 		}
 
-	if (!defined $main) {
-		printf "Renaming `%s` to `%s`...\n", $sub->name, $newname;
-		$sub->update({ username => $newname });
-	}
-	else {
-		printf "Merging `%s` into `%s`...\n", $sub->name, $main->name;
-
-		for my $table (qw/Artist Image Story Prompt VoteRecord/) {
-			$self->db($table)
-			       ->search({ user_id => $sub->id })
-			         ->update({ user_id => $main->id });
-		}
-
-		# These can fail if there's a PK conflict (e.g., both users have role
-		# `admin`, and it tries to update $main to being a `admin` twice).
-		# Rather than checking if a conflict exists, it's quicker to just try
-		# it and let the DBMS sort it out.
-		for my $table (qw/UserEvent UserRole/) {
-			for my $row ($self->db($table)->search({ user_id => $sub->id })) {
-				eval {
-					$row->update({ user_id => $main->id });
-				}
-			}
-		}
-
-		$sub->delete;
-	}
-}
+# 		$sub->delete;
+# 	}
+# }
 
 'Merging is complete';

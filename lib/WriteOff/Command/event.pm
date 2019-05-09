@@ -5,46 +5,51 @@ use Try::Tiny;
 use IO::Prompt;
 use HTML::Entities qw/decode_entities/;
 
-sub _find {
-	my $self = shift;
-	if (@_ < 1) {
-		$self->help;
-	}
+can award =>
+	sub {
+		my ($e, $mode) = @_;
+		my $m = WriteOff::Mode->find($mode) or abort qq{Invalid mode "$mode"};
+		$e->score($m->name, decay => 0, score => 0);
+	},
+	which => q{
+		Assigns awards to MODE entries in the event with id EVENT.
+	},
+	with => [
+		mode => 'fic',
+	];
 
-	my $e = $self->db('Event')->find(shift);
-	if (!defined $e) {
-		say "Invalid event id";
-		exit(1);
-	}
+can calibrate =>
+	sub {
+		my ($e) = @_;
+		$e->calibrate(config()->{work});
+	},
+	which => q{
+		Deletes unnecessary voting rounds in event with id EVENT.
+	};
 
-	$e;
-}
+can reset =>
+	sub {
+		my ($e) = @_;
+		$e->reset_jobs;
+	},
+	which => q{
+		Resets the jobs for event with id EVENT.
+	};
 
-sub award {
-	my $self = shift;
-	my $e = $self->_find(shift);
-	my $mode = WriteOff::Mode->find(shift // 'fic');
-	$e->score($mode->name, decay => 0, score => 0);
-}
-
-sub calibrate {
-	my $self = shift;
-	my $e = $self->_find(@_);
-	$e->calibrate($self->config->{work});
-}
-
-sub reset {
-	my $self = shift;
-	my $e = $self->_find(@_);
-	$e->reset_jobs;
-}
-
-sub score {
-	my $self = shift;
-	my $e = $self->_find(shift);
-	my $mode = WriteOff::Mode->find(shift // 'fic');
-	$e->theorys->mode($mode->name)->process if $e->guessing;
-	$e->score($mode->name, decay => shift // 0);
-}
+can score =>
+	sub {
+		my ($e, $mode, $decay) = @_;
+		my $m = WriteOff::Mode->find($mode) or abort qq{Invalid mode "$mode"};
+		$e->theorys->mode($m->name)->process if $e->guessing;
+		$e->score($m->name, decay => $decay);
+	},
+	which => q{
+		Assigns scores and awards to MODE entries in the event with id EVENT.
+		Applies decay to previous events if DECAY is true.
+	},
+	with => [
+		mode => 'fic',
+		decay => 0,
+	];
 
 1;

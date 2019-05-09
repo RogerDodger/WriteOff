@@ -13,7 +13,7 @@ Installation
 ============
 
     perl Makefile.PL && make
-    ./script/command.pl deploy
+    ./script/deploy.pl deploy
     ./script/server.pl
 
 To create an admin account, run:
