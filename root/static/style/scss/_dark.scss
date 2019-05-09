@@ -1,0 +1,77 @@
+// =============================================================================
+// Dark theme
+// =============================================================================
+
+/*
+
+ * The general approach here is to use invert on the body to turn the default
+ * bright style into a dark theme. From here, the elements that look bad
+ * inverted are then re-inverted to their default style.
+ *
+ * A particularly annoying bug associated with this is explained in this blog:
+ * https://philipwalton.com/articles/what-no-one-told-you-about-z-index/
+ *
+ * Briefly, the filter attribute will create a new stacking context. This can
+ * cause the stacking order of elements to change. Fixing this bug requires
+ * a non-zero z-index on relevant elements to give them the right stack
+ * priority. And doing this also requires said elements not to have "position"
+ * value of "static".
+ */
+
+.dark {
+	body {
+		background: #101017;
+	}
+
+	.Site-header ul li ul,
+	.Site-content,
+	.Site-footer,
+	.Post-hover {
+		filter: invert(100%);
+	}
+
+	.Post-author,
+		img {
+		filter: invert(100%);
+	}
+
+	.Site-logo {
+		filter: none;
+	}
+
+	.Post-avatar {
+		position: relative;
+		z-index: 1;
+	}
+
+	.Post-hover {
+		z-index: 9999;
+	}
+
+	.Artist-card--name,
+	.Artist-card--joined,
+	.Artist-card--edit,
+	.Artist-card--stripe,
+	.Artist-card--band,
+	.Scoreboard-artist--expand,
+	.Scoreboard-artist--rank,
+	.Scoreboard-artist--score,
+	.Scoreboard-artist--stripe,
+	.Scoreboard-artist--band {
+		filter: invert(100%);
+	}
+
+	.Guess-graph path {
+		filter: hue-rotate(180deg);
+	}
+
+	.Results > tbody > tr {
+		&.gold {
+			background-color: hsla(231, 65%, 90%, 1) !important;
+		}
+
+		&.bronze {
+			background-color: hsla(219, 65%, 90%, 1) !important;
+		}
+	}
+}
