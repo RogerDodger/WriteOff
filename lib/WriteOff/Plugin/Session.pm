@@ -140,7 +140,7 @@ sub flash {
 }
 
 sub _assign_maybe {
-	my ($data, @args) = @_;
+	my $data = shift;
 
 	my $new_values = @_ > 1 ? { @_ } : $_[0];
 	if (ref $new_values eq 'HASH') {
