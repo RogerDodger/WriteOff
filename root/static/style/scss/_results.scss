@@ -6,16 +6,6 @@
 	@include striped-table;
 
 	& > tbody > tr {
-		&.gold,
-		&.silver,
-		&.bronze {
-			$stripe: 1.3em;
-			background-image: repeating-linear-gradient(30deg, transparent,
-				transparent $stripe,
-				rgba(255,255,255,.15) $stripe,
-				rgba(255,255,255,.15) $stripe * 2);
-		}
-
 		&.gold {
 			font-size: 1.25em;
 			background-color: hsla(51, 65%, 90%, 1) !important;
