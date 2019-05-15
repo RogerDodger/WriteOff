@@ -1,19 +1,19 @@
 {
-	"folders":
-	[
-		{
-			"path": "."
-		}
-	],
-	"settings":
-	{
-		"ensure_newline_at_eof_on_save": true,
-		"trim_trailing_white_space_on_save": true,
-		"tab_size": 4,
-		"translate_tabs_to_spaces": false
-	},
-	"build_systems":
-	[
+   "folders":
+   [
+      {
+         "path": "."
+      }
+   ],
+      "settings":
+   {
+      "ensure_newline_at_eof_on_save": true,
+      "trim_trailing_white_space_on_save": true,
+      "tab_size": 3,
+      "translate_tabs_to_spaces": false
+   },
+   "build_systems":
+   [
       {
          "name": "Writeoff-sass",
          "selector": "source.scss",

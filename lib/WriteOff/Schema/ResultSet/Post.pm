@@ -70,10 +70,10 @@ sub uid {
 	my ($self, $eid, $nid) = @_;
 	my $pager = $self->pager;
 
-    return join '.', 'thread', $eid // '', $nid // '',
-    	$pager->current_page, $pager->entries_per_page,
-    	# Using a ->max query doesn't work for some reason. I think it's the paging?
-    	maxstr($self->get_column('updated')->all),
+   return join '.', 'thread', $eid // '', $nid // '',
+		$pager->current_page, $pager->entries_per_page,
+		# Using a ->max query doesn't work for some reason. I think it's the paging?
+		maxstr($self->get_column('updated')->all),
 		maxstr($self->search({}, { join => 'artist' })->get_column('artist.updated')->all),
 }
 

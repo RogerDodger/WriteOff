@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 
 BEGIN {
-    $ENV{CATALYST_SCRIPT_GEN} = 40;
-    use FindBin '$Bin';
-    chdir("$Bin/..");
+   $ENV{CATALYST_SCRIPT_GEN} = 40;
+   use FindBin '$Bin';
+   chdir("$Bin/..");
 }
 
 use Catalyst::ScriptRunner;
