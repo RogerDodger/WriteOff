@@ -158,12 +158,29 @@
    }
 }
 
+.Event-blurb > :last-child {
+   margin-bottom: 0;
+}
+
 .Event-blurb > ul:first-child {
    @include button-group($hue: 230, $sat: 40%);
 }
 
 .Event-list--buttons {
    @include container;
+}
+
+.Event-rules {
+   @include button-base;
+   @include button-color($sat: 0%, $l: 98%);
+   border-width: 0.1em 0 0 0;
+   display: block;
+   padding: 0.7em;
+   text-align: center;
+
+   &:hover {
+      text-decoration: none;
+   }
 }
 
 .Archive-button {
@@ -179,7 +196,6 @@
 
 .Event-form--wordcount {
    display: flex;
-
 
    input[type="number"] {
       flex-grow: 1;

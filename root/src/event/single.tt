@@ -29,96 +29,98 @@
 </div>
 
 <div class="Event-details">
-   <!-- SET edits $c->user->admin -->
-   {{ FOREACH orgr IN event.organisers }}
-   <!-- SET edits $c->stash->{edits} || $c->user->active_artist_id == {{ orgr.id }} -->
-   {{ END }}
+   <div class="Page">
+      <!-- SET edits $c->user->admin -->
+      {{ FOREACH orgr IN event.organisers }}
+      <!-- SET edits $c->stash->{edits} || $c->user->active_artist_id == {{ orgr.id }} -->
+      {{ END }}
 
-   <!-- IF edits -->
-   <div class="Event-edit">
-      [<a href="{{ c.uri_for_action('/event/edit', [ event.id_uri ]) }}">{{
-         c.string('edit')
-      }}</a>]
-   </div>
-   <!-- END -->
+      <!-- IF edits -->
+      <div class="Event-edit">
+         [<a href="{{ c.uri_for_action('/event/edit', [ event.id_uri ]) }}">{{
+            c.string('edit')
+         }}</a>]
+      </div>
+      <!-- END -->
 
-   <div class="Event-staff--container">
-      Organised by
-      <span class="Event-staff">
-         {{ FOREACH artist IN event.organisers }}
-            {{ INCLUDE artist/name.tt }}
+      <div class="Event-staff--container">
+         Organised by
+         <span class="Event-staff">
+            {{ FOREACH artist IN event.organisers }}
+               {{ INCLUDE artist/name.tt }}
+            {{ END }}
+         </span>
+      </div>
+
+      {{ IF event.judges.size }}
+      <div class="Event-staff--container">
+         Judged by
+         <span class="Event-staff">
+            {{ FOREACH artist IN event.judges }}
+               {{ INCLUDE artist/name.tt }}
+            {{ END }}
+         </span>
+      </div>
+      {{ END }}
+
+      <div class="Event-wordcount--container">
+         Word limit
+         <span class="Event-wordcount">
+            {{ event.wc_min }}&ndash;{{ event.wc_max }}
+         </span>
+      </div>
+
+      {{ PROCESS 'event/timeline.tt'  timeline = event.timeline }}
+
+      {{ IF !event.prompt_fixed }}
+      <ul class="Event-links prompt">
+         <li><a href="{{ c.uri_for_action('/prompt/submit', id) }}">Prompt Submission</a>
+         <li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a>
+      </ul>
+      {{ END }}
+
+      {{ IF event.has('pic') }}
+      <ul class="Event-links pic">
+         <li><a href="{{ c.uri_for_action('/pic/submit', id) }}">Pic Submission</a>
+         <li><a href="{{ c.uri_for_action('/pic/gallery', id) }}">Gallery</a>
+         {{ IF event.guessing }}
+         <li><a href="{{ c.uri_for_action('/guess/pic', id) }}">Guessing</a>
          {{ END }}
-      </span>
-   </div>
 
-   {{ IF event.judges.size }}
-   <div class="Event-staff--container">
-      Judged by
-      <span class="Event-staff">
-         {{ FOREACH artist IN event.judges }}
-            {{ INCLUDE artist/name.tt }}
+         {{ IF event.has('pic', 'vote') }}
+         <li><a href="{{ c.uri_for_action('/vote/pic', id) }}">Voting</a>
+         <li><a href="{{ c.uri_for_action('/pic/results', id) }}">Results</a>
          {{ END }}
-      </span>
+      </ul>
+      {{ END }}
+
+      {{ IF event.has('fic') }}
+      <ul class="Event-links fic">
+         <li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
+         <li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
+         {{ IF event.guessing }}
+         <li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
+         {{ END }}
+
+         {{ IF event.has('fic', 'vote') }}
+         <li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
+         <li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
+         {{ END }}
+      </ul>
+      {{ END }}
+
+      {{ IF event.commenting }}
+      <ul class="Event-links commenting">
+         <li><a href="{{ c.uri_for_action('/event/permalink', id) }}">Discussion thread</a>
+      </ul>
+      {{ END }}
+
+      <div class="Event-blurb">
+      {{ event.blurb | html | markdown | externallinks }}
+      </div>
    </div>
-   {{ END }}
 
-   <div class="Event-wordcount--container">
-      Word limit
-      <span class="Event-wordcount">
-         {{ event.wc_min }}&ndash;{{ event.wc_max }}
-      </span>
-   </div>
-
-   {{ PROCESS 'event/timeline.tt'  timeline = event.timeline }}
-
-   <ul class="Event-links rules">
-      <li><a href="{{ c.uri_for_action('/event/rules', id) }}">Rules</a>
-   </ul>
-
-   {{ IF !event.prompt_fixed }}
-   <ul class="Event-links prompt">
-      <li><a href="{{ c.uri_for_action('/prompt/submit', id) }}">Prompt Submission</a>
-      <li><a href="{{ c.uri_for_action('/prompt/vote', id) }}">Voting</a>
-   </ul>
-   {{ END }}
-
-   {{ IF event.has('pic') }}
-   <ul class="Event-links pic">
-      <li><a href="{{ c.uri_for_action('/pic/submit', id) }}">Pic Submission</a>
-      <li><a href="{{ c.uri_for_action('/pic/gallery', id) }}">Gallery</a>
-      {{ IF event.guessing }}
-      <li><a href="{{ c.uri_for_action('/guess/pic', id) }}">Guessing</a>
-      {{ END }}
-
-      {{ IF event.has('pic', 'vote') }}
-      <li><a href="{{ c.uri_for_action('/vote/pic', id) }}">Voting</a>
-      <li><a href="{{ c.uri_for_action('/pic/results', id) }}">Results</a>
-      {{ END }}
-   </ul>
-   {{ END }}
-
-   {{ IF event.has('fic') }}
-   <ul class="Event-links fic">
-      <li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
-      <li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
-      {{ IF event.guessing }}
-      <li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
-      {{ END }}
-
-      {{ IF event.has('fic', 'vote') }}
-      <li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
-      <li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
-      {{ END }}
-   </ul>
-   {{ END }}
-
-   {{ IF event.commenting }}
-   <ul class="Event-links commenting">
-      <li><a href="{{ c.uri_for_action('/event/permalink', id) }}">Discussion thread</a>
-   </ul>
-   {{ END }}
-
-   <div class="Event-blurb">
-   {{ event.blurb | html | markdown | externallinks }}
-   </div>
+   <a class="Event-rules" href="{{ c.uri_for_action('/event/rules', id) }}">
+      Show rules
+   </a>
 </div>

@@ -553,15 +553,20 @@
    @include container;
 }
 
+.Page {
+   padding: 2em;
+
+   @media #{$mobile} {
+      padding: 0.8em 0.5em;
+   }
+}
+
 .Canvas {
    @include container;
    @include box;
    @include sheet;
 
-   padding: 2em;
-
    @media #{$mobile} {
-      padding: 0.8em 0.5em;
       width: auto;
    }
 }

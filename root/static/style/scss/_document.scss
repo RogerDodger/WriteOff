@@ -1,5 +1,6 @@
 .Document {
    @extend .Canvas;
+   @extend .Page;
 
    margin-top: 1em;
 
