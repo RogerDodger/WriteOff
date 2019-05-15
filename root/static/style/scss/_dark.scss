@@ -31,8 +31,13 @@
    }
 
    .Post-author,
-      img {
+   img {
       filter: invert(100%);
+   }
+
+   img.lightbulb,
+   img.sleuth {
+      filter: invert(0%);
    }
 
    .Site-logo {
