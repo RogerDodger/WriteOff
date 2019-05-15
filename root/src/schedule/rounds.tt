@@ -1,27 +1,27 @@
 <div class="Form-item">
-	{{ FOREACH val IN [ 'simul', 'fic2pic', 'pic2fic' ] }}
-	<label>
-		<input type="radio" name="rorder" value="{{ val }}"
-			{{ 'checked' IF val == rorder }}>
-		{{ val }}
-	</label>
-	{{ END }}
+   {{ FOREACH val IN [ 'simul', 'fic2pic', 'pic2fic' ] }}
+   <label>
+      <input type="radio" name="rorder" value="{{ val }}"
+         {{ 'checked' IF val == rorder }}>
+      {{ val }}
+   </label>
+   {{ END }}
 </div>
 
 <div class="Round-template hidden">
-	{{ INCLUDE schedule/round.tt  disabled = 'disabled' }}
+   {{ INCLUDE schedule/round.tt  disabled = 'disabled' }}
 </div>
 
 <div class="Form-subtitle">{{ c.string('rounds') }}</div>
 
 <div class="Rounds">
 {{ FOREACH round IN rounds }}
-	{{ INCLUDE schedule/round.tt }}
+   {{ INCLUDE schedule/round.tt }}
 {{ END }}
 </div>
 
 <div class="Form-subsection">
-	<button name="addRound" type="submit" class="Round-add">
-		{{ c.string('addRound') }}
-	</button>
+   <button name="addRound" type="submit" class="Round-add">
+      {{ c.string('addRound') }}
+   </button>
 </div>

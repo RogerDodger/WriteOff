@@ -1,6 +1,6 @@
 <noscript>
-	<div class="Flash error">
-		<i class="fa fa-warning"></i>
-		{{ c.string('jsRequired') }}
-	</div>
+   <div class="Flash error">
+      <i class="fa fa-warning"></i>
+      {{ c.string('jsRequired') }}
+   </div>
 </noscript>

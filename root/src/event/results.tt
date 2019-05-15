@@ -1,24 +1,24 @@
 {{ IF final.tallied }}
-	{{
-		USE cache = Cache(cache => c.config.renderCache);
-		cache.inc(
-			'template' => 'event/results_.tt',
-			'ttl' => c.debug || 360,
-			'keys' => {
-				'type' => 'event/results',
-				'id' => event.id,
-				'mode' => mode,
-			},
-		);
-	}}
+   {{
+      USE cache = Cache(cache => c.config.renderCache);
+      cache.inc(
+         'template' => 'event/results_.tt',
+         'ttl' => c.debug || 360,
+         'keys' => {
+            'type' => 'event/results',
+            'id' => event.id,
+            'mode' => mode,
+         },
+      );
+   }}
 {{ ELSE }}
 <div class="Document">
-	<div class="Document-title">
-		{{ type.ucfirst }} Results
-	</div>
+   <div class="Document-title">
+      {{ type.ucfirst }} Results
+   </div>
 
-	<div class="Countdown">
-		{{ final.end.delta_html | none }}
-	</div>
+   <div class="Countdown">
+      {{ final.end.delta_html | none }}
+   </div>
 </div>
 {{ END }}

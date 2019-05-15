@@ -1,25 +1,25 @@
 <div class="Document">
-	<div class="Document-title">{{ entry.title }}</div>
+   <div class="Document-title">{{ entry.title }}</div>
 
-	<div class="Image-container">
-		<img class="Image" src="{{ image.path }}" title="{{ image.hovertext }}">
-	</div>
+   <div class="Image-container">
+      <img class="Image" src="{{ image.path }}" title="{{ image.hovertext }}">
+   </div>
 
-	{{ IF storys.count }}
-	<div class="Document-subtitle">
-		<span>Fics</span>
-	</div>
+   {{ IF storys.count }}
+   <div class="Document-subtitle">
+      <span>Fics</span>
+   </div>
 
-	<ul class="Entrys-rels">
-		{{ WHILE (e = storys.next) }}
-		<li>{{ INCLUDE 'entry/link.tt' entry = e }}</li>
-		{{ END }}
-	</ul>
-	{{ END }}
+   <ul class="Entrys-rels">
+      {{ WHILE (e = storys.next) }}
+      <li>{{ INCLUDE 'entry/link.tt' entry = e }}</li>
+      {{ END }}
+   </ul>
+   {{ END }}
 
-	{{ INCLUDE entry/nav.tt }}
+   {{ INCLUDE entry/nav.tt }}
 </div>
 
 {{ IF posts }}
-	{{ INCLUDE post/list.tt }}
+   {{ INCLUDE post/list.tt }}
 {{ END }}

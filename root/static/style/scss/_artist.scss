@@ -3,277 +3,277 @@
 // =============================================================================
 
 .Artist-card {
-	@include container;
-	max-width: 69rem;
-	border: 1px solid #ccc;
-	border-radius: 0.2em;
-	background-color: #fafafa;
+   @include container;
+   max-width: 69rem;
+   border: 1px solid #ccc;
+   border-radius: 0.2em;
+   background-color: #fafafa;
 
-	display: grid;
-	grid-template-columns: 12em calc(100% - 12em);
-	grid-template-rows: minmax(5em, 1fr) auto minmax(1em, auto) auto auto;
-	grid-template-areas:
-		"avatar joined"
-		"avatar name"
-		"avatar bio"
-		"nav nav"
-		"content content";
+   display: grid;
+   grid-template-columns: 12em calc(100% - 12em);
+   grid-template-rows: minmax(5em, 1fr) auto minmax(1em, auto) auto auto;
+   grid-template-areas:
+      "avatar joined"
+      "avatar name"
+      "avatar bio"
+      "nav nav"
+      "content content";
 
-	& > * {
-		z-index: 5;
-	}
+   & > * {
+      z-index: 5;
+   }
 }
 
 .Artist-card--band {
-	z-index: 1;
-	grid-row: 1;
-	grid-column: 1 / -1;
-	background-color: #5e5e5e;
+   z-index: 1;
+   grid-row: 1;
+   grid-column: 1 / -1;
+   background-color: #5e5e5e;
 }
 
 .Artist-card--stripe {
-	z-index: 2;
-	grid-row: 2;
-	grid-column: 1 / -1;
-	background-color: #303030;
+   z-index: 2;
+   grid-row: 2;
+   grid-column: 1 / -1;
+   background-color: #303030;
 }
 
 .Artist-card--avatar {
-	grid-area: avatar;
-	margin: 1em;
-	margin-bottom: 0.5em;
+   grid-area: avatar;
+   margin: 1em;
+   margin-bottom: 0.5em;
 
-	img {
-		width: 10em;
-		height: 10em;
-	}
+   img {
+      width: 10em;
+      height: 10em;
+   }
 }
 
 .Artist-card--name {
-	grid-area: name;
-	color: #fff;
-	margin: 0.4em 0.2em 0.4em 0;
-	font-size: 1.25em;
-	overflow-wrap: break-word;
+   grid-area: name;
+   color: #fff;
+   margin: 0.4em 0.2em 0.4em 0;
+   font-size: 1.25em;
+   overflow-wrap: break-word;
 
-	a, a:visited {
-		color: inherit;
-	}
+   a, a:visited {
+      color: inherit;
+   }
 
-	a:hover {
-		text-decoration: underline;
-	}
+   a:hover {
+      text-decoration: underline;
+   }
 }
 
 .Artist-card--bio {
-	grid-area: bio;
-	margin: 0.4em 0.5em 0 0;
+   grid-area: bio;
+   margin: 0.4em 0.5em 0 0;
 }
 
 .Artist-card--joined {
-	grid-area: joined;
-	color: #f8f8f8;
-	font-size: (14em / 16);
-	justify-self: end;
-	margin: 0.5em 0.5em 0 0;
+   grid-area: joined;
+   color: #f8f8f8;
+   font-size: (14em / 16);
+   justify-self: end;
+   margin: 0.5em 0.5em 0 0;
 }
 
 .Artist-card--edit {
-	grid-area: joined;
-	align-self: end;
-	margin: 0.5em 0;
+   grid-area: joined;
+   align-self: end;
+   margin: 0.5em 0;
 
-	a, a:visited {
-		color: #fff;
-	}
+   a, a:visited {
+      color: #fff;
+   }
 }
 
 .Artist-card--nav {
-	grid-area: nav;
-	justify-self: center;
+   grid-area: nav;
+   justify-self: center;
 
-	display: flex;
-	flex-direction: row;
-	text-align: center;
-	align-items: end;
-	margin-top: 0.3em;
+   display: flex;
+   flex-direction: row;
+   text-align: center;
+   align-items: end;
+   margin-top: 0.3em;
 
-	& > a {
-		transition: 0.2s all;
-		border-bottom: (2em / 16) solid transparent;
-		padding: 0.5em 1em;
+   & > a {
+      transition: 0.2s all;
+      border-bottom: (2em / 16) solid transparent;
+      padding: 0.5em 1em;
 
-		&, &:visited {
-			color: #777;
-		}
+      &, &:visited {
+         color: #777;
+      }
 
-		&:hover {
-			color: #333;
-			border-bottom-color: #ccc;
-			text-decoration: none;
-		}
+      &:hover {
+         color: #333;
+         border-bottom-color: #ccc;
+         text-decoration: none;
+      }
 
-		&.current {
-			border-bottom-color: hsla(200, 80%, 75%, 1);
-			color: #333;
-		}
-	}
+      &.current {
+         border-bottom-color: hsla(200, 80%, 75%, 1);
+         color: #333;
+      }
+   }
 }
 
 .Artist-card--nav-count {
-	display: inline-block;
-	font-weight: bold;
-	padding: 0.2em 0.35em;
-	background-color: hsla(0, 0%, 88%, 1);
-	border-radius: 0.4em;
-	font-size: 0.7em;
-	line-height: 1;
-	position: relative;
-	top: -0.15em;
+   display: inline-block;
+   font-weight: bold;
+   padding: 0.2em 0.35em;
+   background-color: hsla(0, 0%, 88%, 1);
+   border-radius: 0.4em;
+   font-size: 0.7em;
+   line-height: 1;
+   position: relative;
+   top: -0.15em;
 }
 
 .Artist-card--content {
-	grid-area: content;
+   grid-area: content;
 }
 
 @media (max-width: 30rem) {
-	.Artist-card--avatar {
-		margin: 0.5em;
+   .Artist-card--avatar {
+      margin: 0.5em;
 
-		img {
-			width: 6em;
-			height: 6em;
-		}
-	}
+      img {
+         width: 6em;
+         height: 6em;
+      }
+   }
 
-	.Artist-card {
-		grid-template-columns: 7em calc(100% - 7em);
-		grid-template-rows: 3.4em auto 1fr repeat(4, auto);
-		grid-template-areas:
-			"avatar joined"
-			"avatar name"
-			"avatar null"
-			"bio bio"
-			"nav nav"
-			"content content";
-	}
+   .Artist-card {
+      grid-template-columns: 7em calc(100% - 7em);
+      grid-template-rows: 3.4em auto 1fr repeat(4, auto);
+      grid-template-areas:
+         "avatar joined"
+         "avatar name"
+         "avatar null"
+         "bio bio"
+         "nav nav"
+         "content content";
+   }
 
-	.Artist-card--avatar {
-		margin-bottom: 0;
-	}
+   .Artist-card--avatar {
+      margin-bottom: 0;
+   }
 
-	.Artist-card--bio {
-		margin-left: 0.5em;
-	}
+   .Artist-card--bio {
+      margin-left: 0.5em;
+   }
 }
 
 // Artist entry listing on profile and scoreboard
 
 .Artist-entries {
-	display: grid;
-	align-items: start;
-	grid-template-columns: repeat(auto-fill, minmax(13em, 1fr));
-	grid-gap: 0.5em;
-	padding: 0 0.5em 0.5em 0.5em;
+   display: grid;
+   align-items: start;
+   grid-template-columns: repeat(auto-fill, minmax(13em, 1fr));
+   grid-gap: 0.5em;
+   padding: 0 0.5em 0.5em 0.5em;
 }
 
 .Artist-entry {
-	@include sheet;
+   @include sheet;
 }
 
 .Artist-entry--awards {
-	background-color: #ababab;
-	padding: 0.5em;
-	min-height: 4em;
+   background-color: #ababab;
+   padding: 0.5em;
+   min-height: 4em;
 
-	.Award {
-		height: 3em;
-		width: 3em;
-	}
+   .Award {
+      height: 3em;
+      width: 3em;
+   }
 
-	margin-bottom: 0.3em;
+   margin-bottom: 0.3em;
 }
 
 .Artist-entry--title {
-	font-size: 1.1em;
-	margin: 0 0.5em;
-	overflow-wrap: break-word;
+   font-size: 1.1em;
+   margin: 0 0.5em;
+   overflow-wrap: break-word;
 }
 
 .Artist-entry--competition {
-	font-size: (13em / 16);
-	color: #555;
-	text-align: center;
+   font-size: (13em / 16);
+   color: #555;
+   text-align: center;
 }
 
 .Artist-entry--score,
 .Artist-entry--placing {
-	align-self: center;
+   align-self: center;
 }
 
 .Artist-entry--score { margin-right: 1em }
 .Artist-entry--placing { margin-left: 1em }
 
 .Artist-entry--score {
-	justify-self: end;
+   justify-self: end;
 }
 
 .Artist-entry--rank {
-	padding-right: 0.4rem;
-	margin-right: 0.4rem;
-	border-right: 1px solid #ccc;
+   padding-right: 0.4rem;
+   margin-right: 0.4rem;
+   border-right: 1px solid #ccc;
 }
 
 * + .Artist-entry--realscore {
-	padding-left: 0.4rem;
-	margin-left: 0.4rem;
-	border-left: 1px solid #ccc;
+   padding-left: 0.4rem;
+   margin-left: 0.4rem;
+   border-left: 1px solid #ccc;
 }
 
 .Artist-entry--basescore,
 .Artist-entry--pct {
-	font-size: 0.7em;
-	color: #666;
-	align-self: center;
+   font-size: 0.7em;
+   color: #666;
+   align-self: center;
 }
 
 .Artist-entry--deadline {
-	text-align: end;
-	font-size: (14em / 16);
-	margin: 0.5em;
-	margin-top: 0;
+   text-align: end;
+   font-size: (14em / 16);
+   margin: 0.5em;
+   margin-top: 0;
 
-	a {
-		color: #555;
-	}
+   a {
+      color: #555;
+   }
 }
 
 // Used to search for organisers/judges
 
 .Artist-search--results {
-	border: 0.1em solid #ccc;
-	border-radius: 0.25em;
+   border: 0.1em solid #ccc;
+   border-radius: 0.25em;
 }
 
 .Artist-search--result {
-	background-color: hsla(0, 0%, 99%, 1);
-	padding: 0.2em;
+   background-color: hsla(0, 0%, 99%, 1);
+   padding: 0.2em;
 
-	img {
-		height: 1.5em;
-		width: 1.5em;
-	}
+   img {
+      height: 1.5em;
+      width: 1.5em;
+   }
 
-	&:hover {
-		cursor: pointer;
-		background-color: hsla(51, 80%, 92%, 1);
-	}
+   &:hover {
+      cursor: pointer;
+      background-color: hsla(51, 80%, 92%, 1);
+   }
 
-	&:not(:last-child) {
-		border-bottom: 0.1em solid #ccc;
-	}
+   &:not(:last-child) {
+      border-bottom: 0.1em solid #ccc;
+   }
 }
 
 .Artist-search--id {
-	color: #888;
+   color: #888;
 }

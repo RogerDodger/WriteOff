@@ -1,36 +1,36 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ c.string('manageArtists') }}
-	</div>
+   <div class="Document-title">
+      {{ c.string('manageArtists') }}
+   </div>
 
-	<form class="Form" method="post">
-		{{ csrf_field | none }}
+   <form class="Form" method="post">
+      {{ csrf_field | none }}
 
-		<table class="Artists">
-			<thead>
-				<tr>
-					<th>{{ c.string('name') }}</th>
-					<th>
-						{{ c.string('artistActive') }}
-					</th>
-				</tr>
-			<tbody>
-			{{ FOREACH artist IN artists.all }}
-				<tr>
-					<td class="Artists-name">
-						{{ PROCESS artist/name.tt }}
-					</td>
-					<td class="Artists-active">
-						<input type="checkbox" name="active-{{ artist.id }}"
-							{{ 'checked' IF artist.active }}>
-					</td>
-				</tr>
-			{{ END }}
-			</tbody>
-		</table>
+      <table class="Artists">
+         <thead>
+            <tr>
+               <th>{{ c.string('name') }}</th>
+               <th>
+                  {{ c.string('artistActive') }}
+               </th>
+            </tr>
+         <tbody>
+         {{ FOREACH artist IN artists.all }}
+            <tr>
+               <td class="Artists-name">
+                  {{ PROCESS artist/name.tt }}
+               </td>
+               <td class="Artists-active">
+                  <input type="checkbox" name="active-{{ artist.id }}"
+                     {{ 'checked' IF artist.active }}>
+               </td>
+            </tr>
+         {{ END }}
+         </tbody>
+      </table>
 
-		<div class="Form-item">
-			<input type="submit" value="{{ c.string('update') }}">
-		</div>
-	</form>
+      <div class="Form-item">
+         <input type="submit" value="{{ c.string('update') }}">
+      </div>
+   </form>
 </div>

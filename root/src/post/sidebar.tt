@@ -1,4 +1,4 @@
 <div class="Post-sidebar">
-	{{ INCLUDE post/author.tt }}
-	{{ INCLUDE post/avatar.tt }}
+   {{ INCLUDE post/author.tt }}
+   {{ INCLUDE post/avatar.tt }}
 </div>

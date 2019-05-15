@@ -1,76 +1,76 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ title.-1 }}
-	</div>
+   <div class="Document-title">
+      {{ title.-1 }}
+   </div>
 
-	<table class="Results">
-		<thead>
-			<tr>
-				<th data-sort-method="number">#</th>
-				<th class="no-sort"></th>
-				<th>{{ c.string(c.mode == "fic" ? 'author' : 'artist') }}</th>
-				<th>{{ c.string('title') }}</th>
+   <table class="Results">
+      <thead>
+         <tr>
+            <th data-sort-method="number">#</th>
+            <th class="no-sort"></th>
+            <th>{{ c.string(c.mode == "fic" ? 'author' : 'artist') }}</th>
+            <th>{{ c.string('title') }}</th>
 
-				{{ FOREACH round IN rounds }}
-				<th data-sort-method="number">{{ c.string(round.name) }}</th>
-				{{ IF round.has_error }}
-				<th data-sort-method="number">&epsilon;</th>
-				{{ END }}
-				<th class="no-sort"></th>
-				{{ END }}
-			</tr>
-		</thead>
-		<tbody>
-			{{ BLOCK Score }}
-			<td class="Results-score" title="{{ score | format('%.5f') }}" data-sort="{{ score }}">{{ score | format('%.2f') }}</td>
-			{{ END }}
+            {{ FOREACH round IN rounds }}
+            <th data-sort-method="number">{{ c.string(round.name) }}</th>
+            {{ IF round.has_error }}
+            <th data-sort-method="number">&epsilon;</th>
+            {{ END }}
+            <th class="no-sort"></th>
+            {{ END }}
+         </tr>
+      </thead>
+      <tbody>
+         {{ BLOCK Score }}
+         <td class="Results-score" title="{{ score | format('%.5f') }}" data-sort="{{ score }}">{{ score | format('%.2f') }}</td>
+         {{ END }}
 
-			{{ FOREACH entry IN entrys.all }}
-			<tr class="Results-row{{ FOREACH award IN entry.awards }} {{ award.name; END }}">
-				<td class="Results-rank">{{ entry.rank + 1 }}</td>
-				<td class="Results-awards">
-					{{ FOREACH award IN entry.awards_sorted; award.html | none; END }}
-				</td>
+         {{ FOREACH entry IN entrys.all }}
+         <tr class="Results-row{{ FOREACH award IN entry.awards }} {{ award.name; END }}">
+            <td class="Results-rank">{{ entry.rank + 1 }}</td>
+            <td class="Results-awards">
+               {{ FOREACH award IN entry.awards_sorted; award.html | none; END }}
+            </td>
 
-				<td class="Results-artist">
-					{{ PROCESS artist/name.tt  artist = entry.artist }}
-				</td>
-				<td class="Results-title">
-					<a href="{{ c.uri_for(view, [ entry.id_uri ]) }}">{{ entry.title }}</a>
-				</td>
+            <td class="Results-artist">
+               {{ PROCESS artist/name.tt  artist = entry.artist }}
+            </td>
+            <td class="Results-title">
+               <a href="{{ c.uri_for(view, [ entry.id_uri ]) }}">{{ entry.title }}</a>
+            </td>
 
-				{{ FOREACH round IN rounds }}
-					{{ rating = ratings.find({ round_id => round.id, entry_id => entry.id }) }}
+            {{ FOREACH round IN rounds }}
+               {{ rating = ratings.find({ round_id => round.id, entry_id => entry.id }) }}
 
-					{{ PROCESS Score  score = rating.value }}
+               {{ PROCESS Score  score = rating.value }}
 
-					{{ IF round.has_error }}
-						{{ PROCESS Score  score = rating.error }}
-					{{ END }}
+               {{ IF round.has_error }}
+                  {{ PROCESS Score  score = rating.error }}
+               {{ END }}
 
-					<td class="Results-breakdown">
-						{{ IF rating }}
-						<a class="Breakdown" href="{{ c.uri_for(breakdown, [ entry.id_uri, round.id ]) }}">
-							<i class="fa fa-plus" title="Show breakdown"></i>
-						</a>
-						{{ END }}
-					</td>
-				{{ END }}
-			</tr>
-			{{ END }}
-		</tbody>
-	</table>
+               <td class="Results-breakdown">
+                  {{ IF rating }}
+                  <a class="Breakdown" href="{{ c.uri_for(breakdown, [ entry.id_uri, round.id ]) }}">
+                     <i class="fa fa-plus" title="Show breakdown"></i>
+                  </a>
+                  {{ END }}
+               </td>
+            {{ END }}
+         </tr>
+         {{ END }}
+      </tbody>
+   </table>
 
-	{{ IF theorys.count }}
-	<div class="Guesses hidden">
-		<div class="Document-subtitle">
-			<span>Guesses</span>
-		</div>
+   {{ IF theorys.count }}
+   <div class="Guesses hidden">
+      <div class="Document-subtitle">
+         <span>Guesses</span>
+      </div>
 
-		<div class="Guess-graph"></div>
-		<script>
-			graphs.push({{ graph().json | none }});
-		</script>
-	</div>
-	{{ END }}
+      <div class="Guess-graph"></div>
+      <script>
+         graphs.push({{ graph().json | none }});
+      </script>
+   </div>
+   {{ END }}
 </div>

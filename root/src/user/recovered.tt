@@ -1,9 +1,9 @@
 <div class="Document">
-	<div class="Document-title">{{ c.string('passwordRecovery') }}</div>
+   <div class="Document-title">{{ c.string('passwordRecovery') }}</div>
 
-	{{ c.string('newPassword') | markdown }}
+   {{ c.string('newPassword') | markdown }}
 
-	<div class="Password-new">
-		{{ pass }}
-	</div>
+   <div class="Password-new">
+      {{ pass }}
+   </div>
 </div>

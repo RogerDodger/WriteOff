@@ -5,61 +5,61 @@
 SELECT load_extension('bin/libsqlitefunctions.so');
 
 CREATE TABLE ratings_tmp (
-	id INTEGER,
-	story_id INTEGER,
-	image_id INTEGER,
-	event_id INTEGER,
-	round TEXT,
-	mode TEXT,
-	value REAL,
-	error REAL);
+   id INTEGER,
+   story_id INTEGER,
+   image_id INTEGER,
+   event_id INTEGER,
+   round TEXT,
+   mode TEXT,
+   value REAL,
+   error REAL);
 
 CREATE TABLE awards_tmp (
-	id INTEGER,
-	story_id INTEGER,
-	image_id INTEGER,
-	event_id INTEGER,
-	artist_id INTEGER,
-	award_id INTEGER);
+   id INTEGER,
+   story_id INTEGER,
+   image_id INTEGER,
+   event_id INTEGER,
+   artist_id INTEGER,
+   award_id INTEGER);
 
 CREATE TABLE votes_tmp (
-	id INTEGER,
-	ballot_id INTEGER,
-	story_id INTEGER,
-	image_id INTEGER,
-	value INTEGER,
-	abstained INTEGER);
+   id INTEGER,
+   ballot_id INTEGER,
+   story_id INTEGER,
+   image_id INTEGER,
+   value INTEGER,
+   abstained INTEGER);
 
 CREATE TABLE guesses_tmp (
-	id INTEGER,
-	theory_id INTEGER,
-	story_id INTEGER,
-	image_id INTEGER,
-	artist_id INTEGER);
+   id INTEGER,
+   theory_id INTEGER,
+   story_id INTEGER,
+   image_id INTEGER,
+   artist_id INTEGER);
 
 CREATE TABLE ballots_tmp (
-	id INTEGER,
-	event_id INTEGER,
-	user_id INTEGER,
-	round TEXT,
-	mode TEXT,
-	created TIMESTAMP,
-	updated TIMESTAMP);
+   id INTEGER,
+   event_id INTEGER,
+   user_id INTEGER,
+   round TEXT,
+   mode TEXT,
+   created TIMESTAMP,
+   updated TIMESTAMP);
 
 .read 'data/writeoff.sql'
 
 UPDATE theorys SET accuracy = (
-	SELECT COUNT(*)
-	FROM guesses g
-	LEFT JOIN entrys e ON e.id=g.entry_id
-	WHERE g.theory_id=theorys.id
-	AND e.artist_id=g.artist_id);
+   SELECT COUNT(*)
+   FROM guesses g
+   LEFT JOIN entrys e ON e.id=g.entry_id
+   WHERE g.theory_id=theorys.id
+   AND e.artist_id=g.artist_id);
 
 INSERT INTO ratings (round_id, entry_id, value, error)
 SELECT
-	(SELECT id FROM rounds r WHERE r.event_id=tmp.event_id AND r.name=tmp.round AND r.mode=tmp.mode),
-	(SELECT id FROM entrys e WHERE e.story_id=tmp.story_id OR e.image_id=tmp.image_id),
-	value, error
+   (SELECT id FROM rounds r WHERE r.event_id=tmp.event_id AND r.name=tmp.round AND r.mode=tmp.mode),
+   (SELECT id FROM entrys e WHERE e.story_id=tmp.story_id OR e.image_id=tmp.image_id),
+   value, error
 FROM ratings_tmp tmp;
 
 INSERT INTO votes
@@ -76,35 +76,35 @@ FROM awards_tmp tmp
 WHERE award_id != 7;
 
 UPDATE entrys SET
-	round_id = (
-		SELECT ro.id FROM rounds ro
-		LEFT JOIN ratings ra ON ra.round_id=ro.id AND ra.entry_id=entrys.id
-		WHERE ro.event_id=entrys.event_id
-		AND (ro.mode = 'fic' AND entrys.story_id IS NOT NULL
-			OR ro.mode = 'art' AND entrys.image_id IS NOT NULL)
-		AND ro.action = 'vote'
-		ORDER BY
-			(CASE WHEN ra.id IS NOT NULL THEN ro.end ELSE NULL END) DESC,
-			(CASE WHEN ra.id IS NULL THEN ro.end ELSE NULL END) ASC
-		LIMIT 1),
-	score_genre = score * power(0.9, (
-		SELECT COUNT(*) FROM events
-		WHERE created > (SELECT created FROM events e WHERE e.id=entrys.event_id)
-		AND genre_id = (SELECT genre_id FROM events WHERE id=entrys.event_id))),
-	score_format = score * power(0.9, (
-		SELECT COUNT(*) FROM events
-		WHERE created > (SELECT created FROM events e WHERE e.id=entrys.event_id)
-		AND genre_id = (SELECT e.genre_id FROM events e WHERE e.id=entrys.event_id)
-		AND format_id = (SELECT e.format_id FROM events e WHERE e.id=entrys.event_id)));
+   round_id = (
+      SELECT ro.id FROM rounds ro
+      LEFT JOIN ratings ra ON ra.round_id=ro.id AND ra.entry_id=entrys.id
+      WHERE ro.event_id=entrys.event_id
+      AND (ro.mode = 'fic' AND entrys.story_id IS NOT NULL
+         OR ro.mode = 'art' AND entrys.image_id IS NOT NULL)
+      AND ro.action = 'vote'
+      ORDER BY
+         (CASE WHEN ra.id IS NOT NULL THEN ro.end ELSE NULL END) DESC,
+         (CASE WHEN ra.id IS NULL THEN ro.end ELSE NULL END) ASC
+      LIMIT 1),
+   score_genre = score * power(0.9, (
+      SELECT COUNT(*) FROM events
+      WHERE created > (SELECT created FROM events e WHERE e.id=entrys.event_id)
+      AND genre_id = (SELECT genre_id FROM events WHERE id=entrys.event_id))),
+   score_format = score * power(0.9, (
+      SELECT COUNT(*) FROM events
+      WHERE created > (SELECT created FROM events e WHERE e.id=entrys.event_id)
+      AND genre_id = (SELECT e.genre_id FROM events e WHERE e.id=entrys.event_id)
+      AND format_id = (SELECT e.format_id FROM events e WHERE e.id=entrys.event_id)));
 
 INSERT INTO ballots (event_id, round_id, user_id, deviance, created, updated)
 SELECT
-	event_id,
-	(SELECT id FROM rounds r
-		WHERE r.event_id=ballots_tmp.event_id
-		AND r.mode=ballots_tmp.mode
-		AND r.name=ballots_tmp.round),
-	user_id, NULL, created, updated
+   event_id,
+   (SELECT id FROM rounds r
+      WHERE r.event_id=ballots_tmp.event_id
+      AND r.mode=ballots_tmp.mode
+      AND r.name=ballots_tmp.round),
+   user_id, NULL, created, updated
 FROM ballots_tmp;
 
 UPDATE events SET content_level='E' WHERE content_level=0;

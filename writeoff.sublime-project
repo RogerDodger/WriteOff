@@ -5,12 +5,12 @@
          "path": "."
       }
    ],
-      "settings":
+   "settings":
    {
       "ensure_newline_at_eof_on_save": true,
       "trim_trailing_white_space_on_save": true,
       "tab_size": 3,
-      "translate_tabs_to_spaces": false
+      "translate_tabs_to_spaces": true
    },
    "build_systems":
    [
@@ -26,5 +26,5 @@
          "working_dir": "${project_path}",
          "cmd": ["make", "js"]
       }
-	]
+   ]
 }

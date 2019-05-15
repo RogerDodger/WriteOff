@@ -5,88 +5,88 @@ use base 'WriteOff::Schema::ResultSet';
 use Scalar::Util qw/looks_like_number/;
 
 sub metadata {
-	Carp::croak "Deprecated method 'metadata' called";
+   Carp::croak "Deprecated method 'metadata' called";
 }
 
 sub finalists {
-	return shift->search({ finalist => 1 });
+   return shift->search({ finalist => 1 });
 }
 
 sub order_by_score {
-	return shift->order_by({ -desc => [ qw/private_score public_score prelim_score/ ]});
+   return shift->order_by({ -desc => [ qw/private_score public_score prelim_score/ ]});
 }
 
 sub candidates {
-	return shift->search({ candidate => 1 });
+   return shift->search({ candidate => 1 });
 }
 
 sub noncandidates {
-	return shift->search({ candidate => 0 });
+   return shift->search({ candidate => 0 });
 }
 
 sub sample {
-	shift->search({}, {
-		'+select', => [ \'COUNT(votes.value)' ],
-		'+as' => [ 'priority' ],
-		join => 'votes',
-		group_by => 'me.id',
-		order_by => [
-			{ -asc => \'COUNT(votes.value)' },
-			{ -desc => \'RANDOM()' },
-		],
-	});
+   shift->search({}, {
+      '+select', => [ \'COUNT(votes.value)' ],
+      '+as' => [ 'priority' ],
+      join => 'votes',
+      group_by => 'me.id',
+      order_by => [
+         { -asc => \'COUNT(votes.value)' },
+         { -desc => \'RANDOM()' },
+      ],
+   });
 }
 
 sub gallery {
-	my ($self, $offset) = @_;
+   my ($self, $offset) = @_;
 
-	my $num_rs = $self->search(
-		{
-			event_id => { '=' => { -ident => 'me.event_id' }},
-			seed => { '>' => { -ident => "me.seed" } },
-		},
-		{
-			'select' => [ \'COUNT(*) + 1' ],
-			'alias' => 'subq',
-		}
-	);
+   my $num_rs = $self->search(
+      {
+         event_id => { '=' => { -ident => 'me.event_id' }},
+         seed => { '>' => { -ident => "me.seed" } },
+      },
+      {
+         'select' => [ \'COUNT(*) + 1' ],
+         'alias' => 'subq',
+      }
+   );
 
-	$self->search({}, {
-		'+select' => [ $num_rs->as_query ],
-		'+as' => [ 'num' ],
-		order_by => [
-			{ -asc => 'disqualified' },
-			{ -desc => 'candidate' },
-			{ -desc => 'seed' },
-		],
-	});
+   $self->search({}, {
+      '+select' => [ $num_rs->as_query ],
+      '+as' => [ 'num' ],
+      order_by => [
+         { -asc => 'disqualified' },
+         { -desc => 'candidate' },
+         { -desc => 'seed' },
+      ],
+   });
 }
 
 sub recalc_candidates {
-	my ($self, $work) = @_;
+   my ($self, $work) = @_;
 
-	my $w = $work->{threshold} * 7;
-	my @candidates;
-	for my $story ($self->order_by({ -desc => 'prelim_score' })->all) {
-		if ($w <= 0) {
-			last if $candidates[-1]->prelim_score != $story->prelim_score;
-		}
+   my $w = $work->{threshold} * 7;
+   my @candidates;
+   for my $story ($self->order_by({ -desc => 'prelim_score' })->all) {
+      if ($w <= 0) {
+         last if $candidates[-1]->prelim_score != $story->prelim_score;
+      }
 
-		$w -= $work->{offset} + $story->wordcount / $work->{rate};
-		push @candidates, $story;
-	}
+      $w -= $work->{offset} + $story->wordcount / $work->{rate};
+      push @candidates, $story;
+   }
 
-	# We want to mark as candidates simultaneously. Using a transaction does
-	# not guarantee a read does not occur intermittently, which could reveal
-	# authors unintentionally (via fic/gallery.tt).
-	$self->search({ id => { -in => [ map { $_->id } @candidates ] } })
-	     ->update({ candidate => 1 });
+   # We want to mark as candidates simultaneously. Using a transaction does
+   # not guarantee a read does not occur intermittently, which could reveal
+   # authors unintentionally (via fic/gallery.tt).
+   $self->search({ id => { -in => [ map { $_->id } @candidates ] } })
+        ->update({ candidate => 1 });
 }
 
 sub wordcount {
-	my $self = shift;
+   my $self = shift;
 
-	return $self->get_column('wordcount')->sum;
+   return $self->get_column('wordcount')->sum;
 }
 
 1;

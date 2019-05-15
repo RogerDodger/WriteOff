@@ -2,4 +2,4 @@
 has ended and the ballots have been tallied.
 
 Check out [the results]({{ c.uri_for_action(
-	'/' _ mode.name _ '/results', [ event.id_uri ]) }})!
+   '/' _ mode.name _ '/results', [ event.id_uri ]) }})!

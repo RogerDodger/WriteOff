@@ -1,30 +1,30 @@
 {{ PROCESS 'fragment/js-required.tt' }}
 
 <form class="Form" method="post">
-	{{ csrf_field | none }}
+   {{ csrf_field | none }}
 
-	{{ INCLUDE schedule/datetime.tt  label = 'nextEvent' datetime = sched.next }}
+   {{ INCLUDE schedule/datetime.tt  label = 'nextEvent' datetime = sched.next }}
 
-	<div class="Form-group three">
-		<div class="Form-item">
-			<label>{{ c.string('period') }}</label>
-			<div class="Form-caption--container">
-				<input type="number" name="period"
-					step=1 min=0 max={{ c.config.biz.prd.max }}
-					value="{{ sched.period }}" required>
-				<span class="Form-caption">{{ c.string('weeks') }}</span>
-			</div>
-		</div>
+   <div class="Form-group three">
+      <div class="Form-item">
+         <label>{{ c.string('period') }}</label>
+         <div class="Form-caption--container">
+            <input type="number" name="period"
+               step=1 min=0 max={{ c.config.biz.prd.max }}
+               value="{{ sched.period }}" required>
+            <span class="Form-caption">{{ c.string('weeks') }}</span>
+         </div>
+      </div>
 
-		{{ INCLUDE schedule/genres.tt  selected = sched.genre_id }}
-		{{ INCLUDE schedule/formats.tt  selected = sched.format_id }}
-	</div>
+      {{ INCLUDE schedule/genres.tt  selected = sched.genre_id }}
+      {{ INCLUDE schedule/formats.tt  selected = sched.format_id }}
+   </div>
 
-	{{ INCLUDE schedule/rounds.tt  rounds = sched.rounds }}
+   {{ INCLUDE schedule/rounds.tt  rounds = sched.rounds }}
 
-	{{ PROCESS event/timeline.tt  timeline = sched.timeline }}
+   {{ PROCESS event/timeline.tt  timeline = sched.timeline }}
 
-	<div class="Form-item">
-		<input type="submit" value="{{ c.string('submit') }}">
-	</div>
+   <div class="Form-item">
+      <input type="submit" value="{{ c.string('submit') }}">
+   </div>
 </form>

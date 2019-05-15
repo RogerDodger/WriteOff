@@ -1,5 +1,5 @@
 <div class="Artist-search--result">
-	<input type="hidden" name="{{ key }}" value="{{ artist.id }}">
-	<img src="{{ artist.avatar }}">
-	<span class="Artist-search--name">{{ PROCESS artist/name.tt }}</span>
+   <input type="hidden" name="{{ key }}" value="{{ artist.id }}">
+   <img src="{{ artist.avatar }}">
+   <span class="Artist-search--name">{{ PROCESS artist/name.tt }}</span>
 </div>

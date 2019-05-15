@@ -1,65 +1,65 @@
 <div class="Countdown">
-	{{ IF countdown }}
-		{{ countdown.delta_html | none }}
-	{{ ELSE }}
-		{{ c.string('subsClosed') }}
-	{{ END }}
+   {{ IF countdown }}
+      {{ countdown.delta_html | none }}
+   {{ ELSE }}
+      {{ c.string('subsClosed') }}
+   {{ END }}
 </div>
 
 {{ IF !c.user }}
 <div class="Flash">{{ c.string('loginRequiredFic') }}</div>
 {{ ELSIF event.fic_subs_allowed || story && c.user.can_edit(story) }}
 <form class="Form" method="post">
-	{{ csrf_field | none }}
-	{{- IF c.form.has_error }}
-		{{- FOREACH message IN c.form.messages('submit') }}
-			{{ INCLUDE fragment/error_msg.tt }}
-		{{- END }}
-	{{- END }}
+   {{ csrf_field | none }}
+   {{- IF c.form.has_error }}
+      {{- FOREACH message IN c.form.messages('submit') }}
+         {{ INCLUDE fragment/error_msg.tt }}
+      {{- END }}
+   {{- END }}
 
-	<div class="Form-group two">
-		<div class="Form-item">
-			<label>{{ c.string('title') }}<span class="required">*</span></label>
-			<input name="title" type="text" size="30" maxlength="{{ c.config.len.max.title }}" required>
-		</div>
-		<div class="Form-item">
-			<label>{{ c.string('author') }}<span class="required">*</span></label>
-			<select name="artist">
-				{{ FOREACH artist IN artists.all }}
-				<option value="{{ artist.id }}">{{ artist.name }}</option>
-				{{ END }}
-			</select>
-		</div>
-	</div>
+   <div class="Form-group two">
+      <div class="Form-item">
+         <label>{{ c.string('title') }}<span class="required">*</span></label>
+         <input name="title" type="text" size="30" maxlength="{{ c.config.len.max.title }}" required>
+      </div>
+      <div class="Form-item">
+         <label>{{ c.string('author') }}<span class="required">*</span></label>
+         <select name="artist">
+            {{ FOREACH artist IN artists.all }}
+            <option value="{{ artist.id }}">{{ artist.name }}</option>
+            {{ END }}
+         </select>
+      </div>
+   </div>
 
-	{{- IF rels }}
-	<div class="Form-item">
-		<label>{{ c.string('relatedArt') }}<span class="required">*</span></label>
-		<select name="image_id" size="{{ rels.count }}" multiple required>
-			{{- FOREACH entry IN rels.all }}
-				<option value="{{ entry.image_id }}">{{ entry.title }}</option>
-			{{- END }}
-		</select>
-	</div>
-	{{- END }}
+   {{- IF rels }}
+   <div class="Form-item">
+      <label>{{ c.string('relatedArt') }}<span class="required">*</span></label>
+      <select name="image_id" size="{{ rels.count }}" multiple required>
+         {{- FOREACH entry IN rels.all }}
+            <option value="{{ entry.image_id }}">{{ entry.title }}</option>
+         {{- END }}
+      </select>
+   </div>
+   {{- END }}
 
-	<div class="Form-item">
-		<label>{{ c.string('story') }}<span class="required">*</span></label>
-		<textarea name="story" id="story-field" rows="16" cols="32" required
-			title="{{ c.string('wordLimit', event.wc_min, event.wc_max) }}"
-			data-max="{{ event.wc_max }}" data-min="{{ event.wc_min }}"></textarea>
-		<span class="Form-note">
-			<a href="/style">{{ c.document('style').title }}</a>
-		</span>
-	</div>
+   <div class="Form-item">
+      <label>{{ c.string('story') }}<span class="required">*</span></label>
+      <textarea name="story" id="story-field" rows="16" cols="32" required
+         title="{{ c.string('wordLimit', event.wc_min, event.wc_max) }}"
+         data-max="{{ event.wc_max }}" data-min="{{ event.wc_min }}"></textarea>
+      <span class="Form-note">
+         <a href="/style">{{ c.document('style').title }}</a>
+      </span>
+   </div>
 
-	<div class="Form-item">
-		<label>{{ c.string('wordcount') }}</label>
-		<input type="text" id="wordcount" size="72" disabled value="{{ story.wordcount }}">
-	</div>
+   <div class="Form-item">
+      <label>{{ c.string('wordcount') }}</label>
+      <input type="text" id="wordcount" size="72" disabled value="{{ story.wordcount }}">
+   </div>
 
-	<div class="Form-item">
-		<input class="Form-submit" type="submit" value="Submit">
-	</div>
+   <div class="Form-item">
+      <input class="Form-submit" type="submit" value="Submit">
+   </div>
 </form>
 {{ END }}

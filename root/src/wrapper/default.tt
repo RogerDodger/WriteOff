@@ -1,171 +1,171 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js {{ 'dark' IF c.session('dark') }}">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
-		{{ IF refresh }}
-		<meta http-equiv="refresh" content="1; url={{ refresh }}">
-		{{ END }}
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
+      {{ IF refresh }}
+      <meta http-equiv="refresh" content="1; url={{ refresh }}">
+      {{ END }}
 
-		<title>{{ title_html | none }}</title>
+      <title>{{ title_html | none }}</title>
 
-		<link rel="icon" href="/favicon.ico?v=6">
-		<link rel="stylesheet" href="/static/style/vendor-{{ c.config.pid }}.css">
-		<link rel="stylesheet" href="/static/style/writeoff-{{ c.config.pid }}.css">
+      <link rel="icon" href="/favicon.ico?v=6">
+      <link rel="stylesheet" href="/static/style/vendor-{{ c.config.pid }}.css">
+      <link rel="stylesheet" href="/static/style/writeoff-{{ c.config.pid }}.css">
 
-		<script>
-			var timelines = [];
-			var graphs = [];
-			var now = new Date("{{ now.iso8601 }}Z");
-			var entry_id = {{ entry.id || 'undefined' }};
-			var event_id = {{ event.id || 'undefined' }};
-		</script>
-	</head>
+      <script>
+         var timelines = [];
+         var graphs = [];
+         var now = new Date("{{ now.iso8601 }}Z");
+         var entry_id = {{ entry.id || 'undefined' }};
+         var event_id = {{ event.id || 'undefined' }};
+      </script>
+   </head>
 
-	<body>
-		<nav class="Site-header">
-			<div class="Site-header--container">
-				<div class="Site-header--global">
-					<ul>
-						<li>
-							<a href="/">
-								<img class="Site-logo" src="/static/images/logo.png">
-							</a>
-						</li>
-						<li class="{{ 'current' IF c.req.uri.path.match('^/schedule') }}">
-							<a href="/schedule">{{ c.string('schedule') }}</a>
-						</li>
-						<li class="{{ 'current' IF c.req.uri.path.match('^/scoreboard') }}">
-							<a href="/scoreboard">{{ c.string('scoreboard') }}</a>
-						</li>
-						{{ IF c.config.chat }}
-						<li>
-							<a href="{{ c.config.chat }}">
-								<i class="fa fa-external-link"></i>
-								Chat
-							</a>
-						</li>
-						{{ END }}
-						{{ IF c.controller.isa("WriteOff::Controller::Poll") }}
-						<li class="current">
-							<a href="/polls" >{{ c.string('polls') }}</a>
-						</li>
-						{{ END }}
-					</ul>
-				</div>
+   <body>
+      <nav class="Site-header">
+         <div class="Site-header--container">
+            <div class="Site-header--global">
+               <ul>
+                  <li>
+                     <a href="/">
+                        <img class="Site-logo" src="/static/images/logo.png">
+                     </a>
+                  </li>
+                  <li class="{{ 'current' IF c.req.uri.path.match('^/schedule') }}">
+                     <a href="/schedule">{{ c.string('schedule') }}</a>
+                  </li>
+                  <li class="{{ 'current' IF c.req.uri.path.match('^/scoreboard') }}">
+                     <a href="/scoreboard">{{ c.string('scoreboard') }}</a>
+                  </li>
+                  {{ IF c.config.chat }}
+                  <li>
+                     <a href="{{ c.config.chat }}">
+                        <i class="fa fa-external-link"></i>
+                        Chat
+                     </a>
+                  </li>
+                  {{ END }}
+                  {{ IF c.controller.isa("WriteOff::Controller::Poll") }}
+                  <li class="current">
+                     <a href="/polls" >{{ c.string('polls') }}</a>
+                  </li>
+                  {{ END }}
+               </ul>
+            </div>
 
-				<div class="Site-header--user">
-					<ul>
-						{{ IF c.user }}
-						<li class="Notif-bell">
-							<a href="/user/notifs">
-								<i class="fa fa-bell"></i>
-								{{ IF (n = c.user.notifs_rs.unread_rs.count) }}
-								<span class="Notif-bell--count">{{ n }}</span>
-								{{ END }}
-							</a>
-						</li>
-						<li>
-							<a href="{{ c.uri_for_action('/artist/view', [ c.user.active_artist.id_uri ]) }}">
-								@<span class="Artist-swap--selected">{{ c.user.active_artist.name }}</span>
-								<i class="fa fa-caret-down"></i>
-							</a>
-							<ul>
-								{{ FOREACH artist IN c.user.artists_rs.active }}
-								<li>
-									<div class="icon">
-										<form method="post" action="/artist/swap">
-											{{ csrf_field | none }}
-											<input type="hidden" name="artist-swap" value="{{ artist.id }}">
-											<button class="Artist-swap {{ 'active' IF artist.id == c.user.active_artist_id }}">
-												<i class="fa fa-star"></i>
-											</button>
-										</form>
-									</div>
-									{{- }}<a class="Artist-swap--option"
-										href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
-								</li>
-								{{ END }}
-								<li>
-									<div class="icon">
-										<i class="fa fa-star transparent"></i>
-									</div>
-									{{- }}<a href="/artist/add">{{ c.string('newArtist') }}</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#">
-								~{{ c.user.username }}
-								<i class="fa fa-caret-down"></i>
-							</a>
-							<ul>
-								{{ IF c.user.admin }}
-								<li><a href="/event/add">New event</a></li>
-								{{ END }}
-								<li><a href="/user/prefs">Preferences</a></li>
-								<li><a href="/user/artists">{{ c.string('manageArtists') }}</a></li>
-								<li><a href="/user/credentials?key=password">Change password</a></li>
-								<li><a href="/user/credentials?key=email">Change email</a></li>
-								<li><a href="/user/logout">Logout</a></li>
-							</ul>
-						</li>
-						{{ ELSE }}
-						<li><a href="/user/login">Login</a></li>
-						<li>
-							<a href="/user/register">
-								Register
-								<i class="fa fa-caret-down"></i>
-							</a>
-							<ul>
-								<li><a href="/user/verify">Resend verification email</a>
-							</ul>
-						</li>
-						{{ END }}
-					</ul>
-				</div>
-			</div>
-		</nav>
+            <div class="Site-header--user">
+               <ul>
+                  {{ IF c.user }}
+                  <li class="Notif-bell">
+                     <a href="/user/notifs">
+                        <i class="fa fa-bell"></i>
+                        {{ IF (n = c.user.notifs_rs.unread_rs.count) }}
+                        <span class="Notif-bell--count">{{ n }}</span>
+                        {{ END }}
+                     </a>
+                  </li>
+                  <li>
+                     <a href="{{ c.uri_for_action('/artist/view', [ c.user.active_artist.id_uri ]) }}">
+                        @<span class="Artist-swap--selected">{{ c.user.active_artist.name }}</span>
+                        <i class="fa fa-caret-down"></i>
+                     </a>
+                     <ul>
+                        {{ FOREACH artist IN c.user.artists_rs.active }}
+                        <li>
+                           <div class="icon">
+                              <form method="post" action="/artist/swap">
+                                 {{ csrf_field | none }}
+                                 <input type="hidden" name="artist-swap" value="{{ artist.id }}">
+                                 <button class="Artist-swap {{ 'active' IF artist.id == c.user.active_artist_id }}">
+                                    <i class="fa fa-star"></i>
+                                 </button>
+                              </form>
+                           </div>
+                           {{- }}<a class="Artist-swap--option"
+                              href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
+                        </li>
+                        {{ END }}
+                        <li>
+                           <div class="icon">
+                              <i class="fa fa-star transparent"></i>
+                           </div>
+                           {{- }}<a href="/artist/add">{{ c.string('newArtist') }}</a>
+                        </li>
+                     </ul>
+                  </li>
+                  <li>
+                     <a href="#">
+                        ~{{ c.user.username }}
+                        <i class="fa fa-caret-down"></i>
+                     </a>
+                     <ul>
+                        {{ IF c.user.admin }}
+                        <li><a href="/event/add">New event</a></li>
+                        {{ END }}
+                        <li><a href="/user/prefs">Preferences</a></li>
+                        <li><a href="/user/artists">{{ c.string('manageArtists') }}</a></li>
+                        <li><a href="/user/credentials?key=password">Change password</a></li>
+                        <li><a href="/user/credentials?key=email">Change email</a></li>
+                        <li><a href="/user/logout">Logout</a></li>
+                     </ul>
+                  </li>
+                  {{ ELSE }}
+                  <li><a href="/user/login">Login</a></li>
+                  <li>
+                     <a href="/user/register">
+                        Register
+                        <i class="fa fa-caret-down"></i>
+                     </a>
+                     <ul>
+                        <li><a href="/user/verify">Resend verification email</a>
+                     </ul>
+                  </li>
+                  {{ END }}
+               </ul>
+            </div>
+         </div>
+      </nav>
 
-		<main class="Site-content">
-			{{ messages.push(error_msg) IF error_msg }}
-			{{ messages.push(status_msg) IF status_msg }}
-			{{ FOREACH msg IN messages }}
-				<div class="Global-message">{{ msg }}</div>
-			{{ END }}
+      <main class="Site-content">
+         {{ messages.push(error_msg) IF error_msg }}
+         {{ messages.push(status_msg) IF status_msg }}
+         {{ FOREACH msg IN messages }}
+            <div class="Global-message">{{ msg }}</div>
+         {{ END }}
 
-			{{ IF !c.session('introduced') }}
-			<div class="Flash big ctn">{{ c.string('introSplash') | markdown }}</div>
-			{{ END }}
+         {{ IF !c.session('introduced') }}
+         <div class="Flash big ctn">{{ c.string('introSplash') | markdown }}</div>
+         {{ END }}
 
-			{{ IF event }}
-				{{ INCLUDE event/single.tt }}
-			{{ END }}
+         {{ IF event }}
+            {{ INCLUDE event/single.tt }}
+         {{ END }}
 
-			{{ content | none }}
-		</main>
+         {{ content | none }}
+      </main>
 
-		<footer class="Site-footer">
-			<div class="Site-footer--container">
-				<div class="Site-footer--links">
-					<a href="/tos">{{ c.document('tos').title }}</a>
-					<a href="/rights">{{ c.document('rights').title }}</a>
-					<a href="/intro">{{ c.document('intro').title }}</a>
-					<a href="/faq">FAQ</a>
-					<a href="//github.com/RogerDodger/WriteOff">Source code</a>
-					<a href="mailto:cthor@cpan.org">Email me</a>
-				</div>
-				<div>
-					{{ now.datetime_html | none }}
-				</div>
-			</div>
-		</footer>
-	</body>
+      <footer class="Site-footer">
+         <div class="Site-footer--container">
+            <div class="Site-footer--links">
+               <a href="/tos">{{ c.document('tos').title }}</a>
+               <a href="/rights">{{ c.document('rights').title }}</a>
+               <a href="/intro">{{ c.document('intro').title }}</a>
+               <a href="/faq">FAQ</a>
+               <a href="//github.com/RogerDodger/WriteOff">Source code</a>
+               <a href="mailto:cthor@cpan.org">Email me</a>
+            </div>
+            <div>
+               {{ now.datetime_html | none }}
+            </div>
+         </div>
+      </footer>
+   </body>
 
-	<script src="/static/js/vendor-{{ c.config.pid }}.js"></script>
-	{{ IF c.debug }}
-	<script src="/static/js/writeoff-{{ c.config.pid }}.js"></script>
-	{{ ELSE }}
-	<script src="/static/js/writeoff-{{ c.config.pid }}.min.js"></script>
-	{{ END }}
+   <script src="/static/js/vendor-{{ c.config.pid }}.js"></script>
+   {{ IF c.debug }}
+   <script src="/static/js/writeoff-{{ c.config.pid }}.js"></script>
+   {{ ELSE }}
+   <script src="/static/js/writeoff-{{ c.config.pid }}.min.js"></script>
+   {{ END }}
 </html>

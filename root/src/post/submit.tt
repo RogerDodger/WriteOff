@@ -1,36 +1,36 @@
 <div class="Post">
-	{{ INCLUDE 'post/sidebar.tt'  artist = c.user.active_artist }}
+   {{ INCLUDE 'post/sidebar.tt'  artist = c.user.active_artist }}
 
-	<div class="Post-submit">
-		<form class="Form" method="post" action="/post/add">
-			{{ csrf_field | none }}
-			<input type="hidden" name="event" value="{{ event.id }}">
-			{{ IF entry }}
-			<input type="hidden" name="entry" value="{{ entry.id }}">
-			{{ END }}
+   <div class="Post-submit">
+      <form class="Form" method="post" action="/post/add">
+         {{ csrf_field | none }}
+         <input type="hidden" name="event" value="{{ event.id }}">
+         {{ IF entry }}
+         <input type="hidden" name="entry" value="{{ entry.id }}">
+         {{ END }}
 
-			{{ INCLUDE 'post/form.tt'  artist = c.user.active_artist }}
+         {{ INCLUDE 'post/form.tt'  artist = c.user.active_artist }}
 
-			<div class="Post-form--footer">
-				<div class="Post-form--senders">
-					<button type="submit">
-						<i class="fa fa-comment"></i>
-						Post comment
-					</button>
-				</div>
+         <div class="Post-form--footer">
+            <div class="Post-form--senders">
+               <button type="submit">
+                  <i class="fa fa-comment"></i>
+                  Post comment
+               </button>
+            </div>
 
-				<div class="Post-form--role--container">
-					{{ IF c.post_roles.size == 1 }}
-					<input type="hidden" name="role" value="{{ c.post_roles.first }}">
-					{{ ELSE }}
-					<select class="Post-form--role" name="role">
-						{{ FOREACH role IN c.post_roles }}
-						<option value="{{ role }}">{{ c.string(role) }}</option>
-						{{ END }}
-					</select>
-					{{ END }}
-				</div>
-			</div>
-		</form>
-	</div>
+            <div class="Post-form--role--container">
+               {{ IF c.post_roles.size == 1 }}
+               <input type="hidden" name="role" value="{{ c.post_roles.first }}">
+               {{ ELSE }}
+               <select class="Post-form--role" name="role">
+                  {{ FOREACH role IN c.post_roles }}
+                  <option value="{{ role }}">{{ c.string(role) }}</option>
+                  {{ END }}
+               </select>
+               {{ END }}
+            </div>
+         </div>
+      </form>
+   </div>
 </div>

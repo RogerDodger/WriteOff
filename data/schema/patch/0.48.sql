@@ -8,12 +8,12 @@ WHERE event_id = 36
 
 DELETE FROM votes
 WHERE story_id IN (
-	SELECT id FROM storys WHERE disqualified = 1
+   SELECT id FROM storys WHERE disqualified = 1
 );
 
 DELETE FROM guesses
 WHERE story_id IN (
-	SELECT id FROM storys WHERE disqualified = 1
+   SELECT id FROM storys WHERE disqualified = 1
 );
 
 -- Unrelated thing

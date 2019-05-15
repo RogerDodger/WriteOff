@@ -1,7 +1,7 @@
 {{ PROCESS scoreboard/nav.tt }}
 
 {{ IF scoreboard.defined }}
-	{{ scoreboard | none }}
+   {{ scoreboard | none }}
 {{ ELSE }}
-	{{ PROCESS scoreboard/artists.tt }}
+   {{ PROCESS scoreboard/artists.tt }}
 {{ END }}

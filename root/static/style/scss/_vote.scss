@@ -3,138 +3,138 @@
 // =============================================================================
 
 .Ballot {
-	@include striped-table;
+   @include striped-table;
 
-	&.cast > tbody,
-	&.cast > thead {
-		border: none;
-	}
+   &.cast > tbody,
+   &.cast > thead {
+      border: none;
+   }
 
-	& > tbody > tr > td {
-		&.Ballot-arrows,
-		&.Ballot-score,
-		&.Ballot-abstain--cell {
-			text-align: center;
-		}
+   & > tbody > tr > td {
+      &.Ballot-arrows,
+      &.Ballot-score,
+      &.Ballot-abstain--cell {
+         text-align: center;
+      }
 
-		&.Ballot-score {
-			min-width: 2.5em;
-		}
+      &.Ballot-score {
+         min-width: 2.5em;
+      }
 
-		&.Ballot-title {
-			width: 100%;
-		}
+      &.Ballot-title {
+         width: 100%;
+      }
 
-		&.Ballot-abstain--cell {
-			padding-top: 0;
-			padding-bottom: 0;
-		}
-	}
+      &.Ballot-abstain--cell {
+         padding-top: 0;
+         padding-bottom: 0;
+      }
+   }
 
-	& > tbody > tr.Ballot-item {
-		&.final > td {
-			background-color: hsla(200, 30%, 92%, 1);
-		}
+   & > tbody > tr.Ballot-item {
+      &.final > td {
+         background-color: hsla(200, 30%, 92%, 1);
+      }
 
-		&.prelim > td {
-			background-color: hsla(40, 30%, 92%, 1);
-		}
-	}
+      &.prelim > td {
+         background-color: hsla(40, 30%, 92%, 1);
+      }
+   }
 
-	.ordered,
-	.unordered {
-		.Ballot-unabstain {
-			@extend .hidden;
-		}
-	}
+   .ordered,
+   .unordered {
+      .Ballot-unabstain {
+         @extend .hidden;
+      }
+   }
 
-	.abstained {
-		.Ballot-abstain,
-		.Ballot-up {
-			@extend .hidden;
-		}
-	}
+   .abstained {
+      .Ballot-abstain,
+      .Ballot-up {
+         @extend .hidden;
+      }
+   }
 
-	.abstained:empty {
-		@extend .hidden;
-	}
+   .abstained:empty {
+      @extend .hidden;
+   }
 }
 
 .Ballot-up:hover {
-	cursor: pointer;
+   cursor: pointer;
 }
 
 .Ballot-abstain,
 .Ballot-unabstain {
-	@include table-button;
+   @include table-button;
 }
 
 .Ballot-directions,
 .Ballot-append {
-	opacity: 0.6;
+   opacity: 0.6;
 
-	&:not(:only-child) {
-		display: none;
-	}
+   &:not(:only-child) {
+      display: none;
+   }
 }
 
 .Ballot-append {
-	&.waiting .Ballot-append--control,
-	&:not(.active) .Ballot-append--control {
-		@extend .hidden;
-	}
+   &.waiting .Ballot-append--control,
+   &:not(.active) .Ballot-append--control {
+      @extend .hidden;
+   }
 
-	&.active .Ballot-append--done {
-		@extend .hidden;
-	}
+   &.active .Ballot-append--done {
+      @extend .hidden;
+   }
 
-	&:not(.waiting) .Ballot-append--wait {
-		@extend .hidden;
-	}
+   &:not(.waiting) .Ballot-append--wait {
+      @extend .hidden;
+   }
 
-	&.active:hover,
-	&.waiting {
-		cursor: pointer;
-		opacity: 1;
-	}
+   &.active:hover,
+   &.waiting {
+      cursor: pointer;
+      opacity: 1;
+   }
 }
 
 .Ballot-item.gu-mirror {
-	display: none;
+   display: none;
 }
 
 .Ballot-item {
-	cursor: grab;
+   cursor: grab;
 }
 
 .Prompts-vote,
 .Post-vote {
-	button {
-		@extend .button-reset;
-		color: #aaa;
+   button {
+      @extend .button-reset;
+      color: #aaa;
 
-		&:not(:disabled):hover {
-			color: #666;
-		}
-	}
+      &:not(:disabled):hover {
+         color: #666;
+      }
+   }
 
-	form[data-vote="1"] button[value="1"] {
-		color: hsla(120, 60%, 60%, 1);
+   form[data-vote="1"] button[value="1"] {
+      color: hsla(120, 60%, 60%, 1);
 
-		&:not(:disabled):hover {
-			color: hsla(120, 60%, 40%, 1);
-		}
-	}
+      &:not(:disabled):hover {
+         color: hsla(120, 60%, 40%, 1);
+      }
+   }
 
-	form[data-vote="-1"] button[value="-1"] {
-		color: hsla(0, 60%, 60%, 1);
+   form[data-vote="-1"] button[value="-1"] {
+      color: hsla(0, 60%, 60%, 1);
 
-		&:not(:disabled):hover {
-			color: hsla(0, 60%, 40%, 1);
-		}
-	}
+      &:not(:disabled):hover {
+         color: hsla(0, 60%, 40%, 1);
+      }
+   }
 }
 
 .Prompts-vote button:disabled {
-	color: transparent;
+   color: transparent;
 }

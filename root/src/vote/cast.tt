@@ -1,105 +1,105 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ c.string(mode _ 'Voting') }}
-		{{ IF label }}
-			&#8250; {{ label }}
-		{{ END }}
-	</div>
+   <div class="Document-title">
+      {{ c.string(mode _ 'Voting') }}
+      {{ IF label }}
+         &#8250; {{ label }}
+      {{ END }}
+   </div>
 
-	<div class="Countdown">
-		{{ IF countdown }}
-			{{ countdown.delta_html | none }}
-		{{ ELSE }}
-			{{ c.string('votesClosed') }}
-		{{ END }}
-	</div>
+   <div class="Countdown">
+      {{ IF countdown }}
+         {{ countdown.delta_html | none }}
+      {{ ELSE }}
+         {{ c.string('votesClosed') }}
+      {{ END }}
+   </div>
 
-	{{ IF ballot }}
-	<table class="Ballot cast">
-		<tbody class="ordered">
-			{{ FOREACH vote IN ordered.all }}
-				{{ PROCESS 'vote/ballot-item.tt'  score = [loop.index, loop.max] }}
-			{{ END }}
+   {{ IF ballot }}
+   <table class="Ballot cast">
+      <tbody class="ordered">
+         {{ FOREACH vote IN ordered.all }}
+            {{ PROCESS 'vote/ballot-item.tt'  score = [loop.index, loop.max] }}
+         {{ END }}
 
-			<tr class="Ballot-directions">
-				<td></td>
-				<td></td>
-				<td>{{ c.string('ballotDirections') }}</td>
-				<td></td>
-			</tr>
-		</tbody>
+         <tr class="Ballot-directions">
+            <td></td>
+            <td></td>
+            <td>{{ c.string('ballotDirections') }}</td>
+            <td></td>
+         </tr>
+      </tbody>
 
-		<tbody class="Table-divider">
-			<tr>
-				<td colspan="4"></td>
-			</tr>
-		</tbody>
+      <tbody class="Table-divider">
+         <tr>
+            <td colspan="4"></td>
+         </tr>
+      </tbody>
 
-		<tbody class="unordered">
-			{{ FOREACH vote IN unordered.all }}
-				{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
-			{{ END }}
+      <tbody class="unordered">
+         {{ FOREACH vote IN unordered.all }}
+            {{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
+         {{ END }}
 
-			<tr class="Ballot-append {{ pool.count ? 'active' : 'done' }}">
-				<td></td>
-				<td></td>
-				<td>
-					<span class="Ballot-append--control">
-						{{ c.string('ballotAppend') }}
-					</span>
-					<span class="Ballot-append--wait">
-						<i class="fa fa-spinner fa-spin"></i>
-						{{ c.string('pleaseWait') }}...
-					</span>
-					<span class="Ballot-append--done">
-						{{ c.string('ballotDone') }}
-					</span>
-				</td>
-				<td></td>
-			</tr>
-		</tbody>
+         <tr class="Ballot-append {{ pool.count ? 'active' : 'done' }}">
+            <td></td>
+            <td></td>
+            <td>
+               <span class="Ballot-append--control">
+                  {{ c.string('ballotAppend') }}
+               </span>
+               <span class="Ballot-append--wait">
+                  <i class="fa fa-spinner fa-spin"></i>
+                  {{ c.string('pleaseWait') }}...
+               </span>
+               <span class="Ballot-append--done">
+                  {{ c.string('ballotDone') }}
+               </span>
+            </td>
+            <td></td>
+         </tr>
+      </tbody>
 
-		<tbody class="Table-divider {{ 'hidden' IF !abstained.count }}">
-			<tr>
-				<td colspan="4"></td>
-			</tr>
-		</tbody>
+      <tbody class="Table-divider {{ 'hidden' IF !abstained.count }}">
+         <tr>
+            <td colspan="4"></td>
+         </tr>
+      </tbody>
 
-		<tbody class="abstained">
-			{{ FOREACH vote IN abstained.all }}
-				{{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
-			{{ END }}
-		</tbody>
-	</table>
-	{{ END }}
+      <tbody class="abstained">
+         {{ FOREACH vote IN abstained.all }}
+            {{ PROCESS 'vote/ballot-item.tt'  score = 'N/A' }}
+         {{ END }}
+      </tbody>
+   </table>
+   {{ END }}
 
-	{{ IF round }}
-		{{ IF !c.user }}
-		<div class="Flash">{{ c.string('loginRequiredVote') }}</div>
-		{{ ELSIF notJudge }}
-		<div class="Flash">{{ c.string('judgeRequiredVote') }}</div>
-		{{ ELSIF !ballot }}
-		<div class="Flash">{{ c.string('calculatingCandidates') }}</div>
-		{{ END }}
-	{{ END }}
+   {{ IF round }}
+      {{ IF !c.user }}
+      <div class="Flash">{{ c.string('loginRequiredVote') }}</div>
+      {{ ELSIF notJudge }}
+      <div class="Flash">{{ c.string('judgeRequiredVote') }}</div>
+      {{ ELSIF !ballot }}
+      <div class="Flash">{{ c.string('calculatingCandidates') }}</div>
+      {{ END }}
+   {{ END }}
 
-	{{ IF ballots && ballots.count }}
-	<div class="Document-subtitle">
-		<span>My Votes</span>
-	</div>
+   {{ IF ballots && ballots.count }}
+   <div class="Document-subtitle">
+      <span>My Votes</span>
+   </div>
 
-	<table class="Table">
-		<tbody>
-			{{ FOREACH b IN ballots.all }}
-			<tr>
-				<td>
-					<a href="{{ c.uri_for_action('/ballot/view', [ b.id ]) }}">
-						{{ c.string(b.round.name) }}
-					</a>
-				</td>
-			</tr>
-			{{ END }}
-		</tbody>
-	</table>
-	{{ END }}
+   <table class="Table">
+      <tbody>
+         {{ FOREACH b IN ballots.all }}
+         <tr>
+            <td>
+               <a href="{{ c.uri_for_action('/ballot/view', [ b.id ]) }}">
+                  {{ c.string(b.round.name) }}
+               </a>
+            </td>
+         </tr>
+         {{ END }}
+      </tbody>
+   </table>
+   {{ END }}
 </div>

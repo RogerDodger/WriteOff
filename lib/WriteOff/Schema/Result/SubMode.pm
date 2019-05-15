@@ -9,10 +9,10 @@ use WriteOff::Mode;
 __PACKAGE__->table("sub_modes");
 
 __PACKAGE__->add_columns(
-	"user_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"mode_id",
-	{ data_type => "integer", is_nullable => 0 },
+   "user_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "mode_id",
+   { data_type => "integer", is_nullable => 0 },
 );
 
 __PACKAGE__->set_primary_key("user_id", "mode_id");

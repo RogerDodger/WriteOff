@@ -8,10 +8,10 @@ use base "WriteOff::Schema::Result";
 __PACKAGE__->table("image_story");
 
 __PACKAGE__->add_columns(
-	"image_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"story_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "image_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "story_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 __PACKAGE__->set_primary_key("image_id", "story_id");

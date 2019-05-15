@@ -1,83 +1,83 @@
 <div class="Document">
-	{{ IF c.req.method != 'POST' || c.form.has_error }}
-	<div class="Document-title">
-		Register
-	</div>
+   {{ IF c.req.method != 'POST' || c.form.has_error }}
+   <div class="Document-title">
+      Register
+   </div>
 
-	<form class="Form" method="post">
-		{{ IF c.form.has_error }}
-		<div>
-			{{- FOREACH message IN c.form.messages('register') }}
-				{{ INCLUDE fragment/error_msg.tt }}
-			{{- END }}
-		</div>
-		{{ END }}
-		<div class="Form-item">
-			<label>Username<span class="required">*</span></label>
-			<input type="text" name="username" size="30"
-				maxlength="{{ c.config.len.max.user }}"
-				pattern="^[a-zA-Z0-9_]{2,}$" required>
-			<div class="Form-note">2 or more letters, numbers, and underscores</div>
-		</div>
+   <form class="Form" method="post">
+      {{ IF c.form.has_error }}
+      <div>
+         {{- FOREACH message IN c.form.messages('register') }}
+            {{ INCLUDE fragment/error_msg.tt }}
+         {{- END }}
+      </div>
+      {{ END }}
+      <div class="Form-item">
+         <label>Username<span class="required">*</span></label>
+         <input type="text" name="username" size="30"
+            maxlength="{{ c.config.len.max.user }}"
+            pattern="^[a-zA-Z0-9_]{2,}$" required>
+         <div class="Form-note">2 or more letters, numbers, and underscores</div>
+      </div>
 
-		<div class="Form-group two">
-			<div class="Form-item">
-				<label>Password<span class="required">*</span></label>
-				<input type="password" name="password" size="30"
-					maxlength="{{ c.config.len.max.pass }}"
-					onchange="$('input[name=password2]')
-						.attr('pattern', '^' + this.value.regex() + '$')"
-					pattern=".{{'{'}}{{ c.config.len.min.pass }},}" required>
-				<div class="Form-note">{{ c.config.len.min.pass }} or more characters.</div>
-			</div>
+      <div class="Form-group two">
+         <div class="Form-item">
+            <label>Password<span class="required">*</span></label>
+            <input type="password" name="password" size="30"
+               maxlength="{{ c.config.len.max.pass }}"
+               onchange="$('input[name=password2]')
+                  .attr('pattern', '^' + this.value.regex() + '$')"
+               pattern=".{{'{'}}{{ c.config.len.min.pass }},}" required>
+            <div class="Form-note">{{ c.config.len.min.pass }} or more characters.</div>
+         </div>
 
-			<div class="Form-item">
-				<label>Confirm Password<span class="required">*</span></label>
-				<input type="password" name="password2" size="30" class="maxwidth"
-					title="Passwords must match"
-					maxlength="{{ c.config.len.max.pass }}" required>
-			</div>
-		</div>
+         <div class="Form-item">
+            <label>Confirm Password<span class="required">*</span></label>
+            <input type="password" name="password2" size="30" class="maxwidth"
+               title="Passwords must match"
+               maxlength="{{ c.config.len.max.pass }}" required>
+         </div>
+      </div>
 
-		<div class="Form-item">
-			<label>Email<span class="required">*</span></label>
-			<input type="email" name="email" size="72" class="maxwidth"
-				maxlength="{{ c.config.len.max.email }}" required>
-		</div>
+      <div class="Form-item">
+         <label>Email<span class="required">*</span></label>
+         <input type="email" name="email" size="72" class="maxwidth"
+            maxlength="{{ c.config.len.max.email }}" required>
+      </div>
 
-		<div class="Form-item">
-			<label>Prove You Are Human<span class="required">*</span></label>
-			{{ c.captcha_html | none }}
-		</div>
+      <div class="Form-item">
+         <label>Prove You Are Human<span class="required">*</span></label>
+         {{ c.captcha_html | none }}
+      </div>
 
-		<div class="Form-item">
-			<input type="checkbox" name="agree" required>
-			<label>
-				I agree to the <a href="/tos">{{ c.document('tos').title | html }}</a>.<span class="required">*</span>
-			</label>
-		</div>
+      <div class="Form-item">
+         <input type="checkbox" name="agree" required>
+         <label>
+            I agree to the <a href="/tos">{{ c.document('tos').title | html }}</a>.<span class="required">*</span>
+         </label>
+      </div>
 
-		<div class="Form-item">
-			<input type="submit" value="Register">
-		</div>
-	</form>
+      <div class="Form-item">
+         <input type="submit" value="Register">
+      </div>
+   </form>
 
-	{{- ELSIF user -}}
+   {{- ELSIF user -}}
 
-	<p>
-		You must validate your email address before your account may be used on the
-		site.
-	</p>
-	<p>
-		A validation email has been sent to {{ user.email }}. Please check
-		your inbox and follow the enclosed instructions to validate your account.
-	</p>
-	<p>
-		If you can't find said email, check your spam box and stuff. It should be in
-		there somewhere. If you still can't find it, send an email to <a class="link"
-		href="mailto:{{ c.config.AdminEmail }}">the admin</a> with appropriate
-		information to receive assistance.
-	</p>
+   <p>
+      You must validate your email address before your account may be used on the
+      site.
+   </p>
+   <p>
+      A validation email has been sent to {{ user.email }}. Please check
+      your inbox and follow the enclosed instructions to validate your account.
+   </p>
+   <p>
+      If you can't find said email, check your spam box and stuff. It should be in
+      there somewhere. If you still can't find it, send an email to <a class="link"
+      href="mailto:{{ c.config.AdminEmail }}">the admin</a> with appropriate
+      information to receive assistance.
+   </p>
 
-	{{- END }}
+   {{- END }}
 </diV>

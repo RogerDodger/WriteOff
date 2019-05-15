@@ -1,32 +1,32 @@
 <div class="Story-container">
-	<div class="Story-title">{{ story.title }}</div>
+   <div class="Story-title">{{ story.title }}</div>
 
-	{{ IF story.published }}
-	<div class="Story" style="font-family: {{ c.user.font || 'serif' }}">
-		{{ story.contents | bbcode }}
-		<!-- {{ story.wordcount }} words -->
-	</div>
-	{{ ELSE }}
-	<div class="Story-redacted">
-		{{ c.string('storyRedacted') }}
-	</div>
-	{{ END }}
+   {{ IF story.published }}
+   <div class="Story" style="font-family: {{ c.user.font || 'serif' }}">
+      {{ story.contents | bbcode }}
+      <!-- {{ story.wordcount }} words -->
+   </div>
+   {{ ELSE }}
+   <div class="Story-redacted">
+      {{ c.string('storyRedacted') }}
+   </div>
+   {{ END }}
 
-	{{ IF images.count }}
-	<div class="Document-subtitle">
-		<span>Pics</span>
-	</div>
+   {{ IF images.count }}
+   <div class="Document-subtitle">
+      <span>Pics</span>
+   </div>
 
-	<ul class="Entrys-rels">
-		{{ WHILE (e = images.next) }}
-		<li>{{ INCLUDE 'entry/link.tt' entry = e }}</li>
-		{{ END }}
-	</ul>
-	{{ END }}
+   <ul class="Entrys-rels">
+      {{ WHILE (e = images.next) }}
+      <li>{{ INCLUDE 'entry/link.tt' entry = e }}</li>
+      {{ END }}
+   </ul>
+   {{ END }}
 
-	{{ INCLUDE entry/nav.tt }}
+   {{ INCLUDE entry/nav.tt }}
 </div>
 
 {{ IF posts }}
-	{{ INCLUDE post/list.tt }}
+   {{ INCLUDE post/list.tt }}
 {{ END }}

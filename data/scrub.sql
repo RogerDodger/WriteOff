@@ -2,10 +2,10 @@
 -- such that it is suitable to give out publicly
 
 UPDATE users SET
-	active_artist_id = NULL,
-	-- "hunter2"
-	password = '$2$10$6F2eyWuzX1DmtnRsrDkU0uOa7PeedmRNO9TlVCCADtF9RIZD0ecwu',
-	email = NULL;
+   active_artist_id = NULL,
+   -- "hunter2"
+   password = '$2$10$6F2eyWuzX1DmtnRsrDkU0uOa7PeedmRNO9TlVCCADtF9RIZD0ecwu',
+   email = NULL;
 
 DELETE FROM tokens;
 

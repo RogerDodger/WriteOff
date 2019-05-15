@@ -1,77 +1,77 @@
 {{ PROCESS 'fragment/js-required.tt' }}
 
 <form class="Form" method="post">
-	{{ csrf_field | none }}
+   {{ csrf_field | none }}
 
-	{{ IF c.user.admin }}
-	<div class="Form-item">
-		<label>{{ c.string('organisers') }}</label>
-		<input class="Staff-search" name="organiser" type="text">
-		{{ FOREACH artist IN event.organisers }}
-			{{ INCLUDE "artist/search-result.tt"  key = "organiser_id" }}
-		{{ END }}
-	</div>
-	{{ END }}
+   {{ IF c.user.admin }}
+   <div class="Form-item">
+      <label>{{ c.string('organisers') }}</label>
+      <input class="Staff-search" name="organiser" type="text">
+      {{ FOREACH artist IN event.organisers }}
+         {{ INCLUDE "artist/search-result.tt"  key = "organiser_id" }}
+      {{ END }}
+   </div>
+   {{ END }}
 
-	<div class="Form-item">
-		<label>{{ c.string('judges') }}</label>
-		<input class="Staff-search" name="judge" type="text">
-		{{ FOREACH artist IN event.judges }}
-			{{ INCLUDE "artist/search-result.tt"  key = "judge_id" }}
-		{{ END }}
-	</div>
+   <div class="Form-item">
+      <label>{{ c.string('judges') }}</label>
+      <input class="Staff-search" name="judge" type="text">
+      {{ FOREACH artist IN event.judges }}
+         {{ INCLUDE "artist/search-result.tt"  key = "judge_id" }}
+      {{ END }}
+   </div>
 
-	{{ INCLUDE schedule/datetime.tt  label = 'start' datetime = event.start }}
+   {{ INCLUDE schedule/datetime.tt  label = 'start' datetime = event.start }}
 
-	<div class="Form-group three">
-		<div class="Form-item">
-			<label>{{ c.string('prompt') }}</label>
-			<input type="text" name="prompt" value="{{ event.started ? event.prompt : event.prompt_fixed }}"
-				maxlength={{ c.config.len.max.prompt }} {{ 'readonly' IF rulesFrozen }}>
-			{{ IF !event.started }}
-			<div class="Form-note">{{ c.string('promptNote') }}</div>
-			{{ END }}
-		</div>
+   <div class="Form-group three">
+      <div class="Form-item">
+         <label>{{ c.string('prompt') }}</label>
+         <input type="text" name="prompt" value="{{ event.started ? event.prompt : event.prompt_fixed }}"
+            maxlength={{ c.config.len.max.prompt }} {{ 'readonly' IF rulesFrozen }}>
+         {{ IF !event.started }}
+         <div class="Form-note">{{ c.string('promptNote') }}</div>
+         {{ END }}
+      </div>
 
-		{{ INCLUDE schedule/genres.tt  selected = event.genre_id }}
-		{{ INCLUDE schedule/formats.tt  selected = event.format_id }}
-	</div>
+      {{ INCLUDE schedule/genres.tt  selected = event.genre_id }}
+      {{ INCLUDE schedule/formats.tt  selected = event.format_id }}
+   </div>
 
-	<div class="Form-group three">
-		<div class="Form-item">
-			<label>{{ c.string('contentLevel') }}</label>
-			<select name="content_level" {{ 'disabled' IF rulesFrozen }}>
-			{{ FOREACH cl IN contentLevels }}
-				<option value="{{ cl }}" {{ 'selected' IF cl == event.content_level }}>{{ cl }}</option>
-			{{ END }}
-			</select>
+   <div class="Form-group three">
+      <div class="Form-item">
+         <label>{{ c.string('contentLevel') }}</label>
+         <select name="content_level" {{ 'disabled' IF rulesFrozen }}>
+         {{ FOREACH cl IN contentLevels }}
+            <option value="{{ cl }}" {{ 'selected' IF cl == event.content_level }}>{{ cl }}</option>
+         {{ END }}
+         </select>
 
-			{{ IF rulesFrozen }}
-			<input type="hidden" name="content_level" value="{{ event.content_level }}">
-			{{ END }}
-		</div>
+         {{ IF rulesFrozen }}
+         <input type="hidden" name="content_level" value="{{ event.content_level }}">
+         {{ END }}
+      </div>
 
-		<div class="Form-item">
-			<label>{{ c.string('wordcount') }}</label>
-			<div class="Event-form--wordcount">
-				<input type="number" name="wc_min" value="{{ event.wc_min }}" required {{ 'readonly' IF rulesFrozen }}>
-				<input type="number" name="wc_max" value="{{ event.wc_max }}" required {{ 'readonly' IF rulesFrozen }}>
-			</div>
-		</div>
-	</div>
+      <div class="Form-item">
+         <label>{{ c.string('wordcount') }}</label>
+         <div class="Event-form--wordcount">
+            <input type="number" name="wc_min" value="{{ event.wc_min }}" required {{ 'readonly' IF rulesFrozen }}>
+            <input type="number" name="wc_max" value="{{ event.wc_max }}" required {{ 'readonly' IF rulesFrozen }}>
+         </div>
+      </div>
+   </div>
 
-	{{ INCLUDE schedule/rounds.tt
-		rounds => event.rounds
-		modeFreeze => c.action.name == "edit" }}
+   {{ INCLUDE schedule/rounds.tt
+      rounds => event.rounds
+      modeFreeze => c.action.name == "edit" }}
 
-	{{ PROCESS event/timeline.tt  timeline = event.timeline }}
+   {{ PROCESS event/timeline.tt  timeline = event.timeline }}
 
-	<div class="Form-item">
-		<label>{{ c.string('blurb') }}</labe>
-		<textarea class="Event-form--blurb" name="blurb" rows="6" cols="32">{{ event.blurb }}</textarea>
-	</div>
+   <div class="Form-item">
+      <label>{{ c.string('blurb') }}</labe>
+      <textarea class="Event-form--blurb" name="blurb" rows="6" cols="32">{{ event.blurb }}</textarea>
+   </div>
 
-	<div class="Form-item">
-		<input type="submit" value="{{ c.string('submit') }}">
-	</div>
+   <div class="Form-item">
+      <input type="submit" value="{{ c.string('submit') }}">
+   </div>
 </form>

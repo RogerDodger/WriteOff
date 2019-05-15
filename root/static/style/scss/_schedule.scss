@@ -3,35 +3,35 @@
 // =============================================================================
 
 .Schedule:not(:first-child) {
-	margin-top: 1.5em;
+   margin-top: 1.5em;
 }
 
 .Schedule-header {
-	font-size: 1.07em;
-	display: flex;
-	align-items: center;
+   font-size: 1.07em;
+   display: flex;
+   align-items: center;
 }
 
 .Schedule-edit {
-	margin-left: 0.5em;
-	font-size: 0.8em;
+   margin-left: 0.5em;
+   font-size: 0.8em;
 }
 
 .Schedule-add {
-	@include button($sat: 0%, $l: 90%);
-	display: block;
-	margin-top: 0.5em;
-	text-align: center;
+   @include button($sat: 0%, $l: 90%);
+   display: block;
+   margin-top: 0.5em;
+   text-align: center;
 }
 
 .Round-add {
-	@include button($hue: 200);
+   @include button($hue: 200);
 }
 
 .Round-remove--pad {
-	visibility: hidden;
+   visibility: hidden;
 
-	@media #{$mobile} {
-		display: none !important;
-	}
+   @media #{$mobile} {
+      display: none !important;
+   }
 }

@@ -1,5 +1,5 @@
 {{ IF entrys.count }}
 <div class="mt1">
-	{{ INCLUDE scoreboard/entrys.tt  scores = entrys.all }}
+   {{ INCLUDE scoreboard/entrys.tt  scores = entrys.all }}
 </div>
 {{ END }}

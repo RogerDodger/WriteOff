@@ -1,29 +1,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<title>{{ entry.title | xml }}</title>
-		<meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
-		<link href="story.css" type="text/css" rel="stylesheet"/>
-	</head>
-	<body>
-		<h1>{{ entry.title | xml }}</h1>
+   <head>
+      <title>{{ entry.title | xml }}</title>
+      <meta content="http://www.w3.org/1999/xhtml; charset=utf-8" http-equiv="Content-Type"/>
+      <link href="story.css" type="text/css" rel="stylesheet"/>
+   </head>
+   <body>
+      <h1>{{ entry.title | xml }}</h1>
 
-		{{ IF story.images_rs.count }}
-		<div class="pic">
-		{{ FOREACH image IN story.images }}
-			<img src="images/{{ image.filename | xml }}"/>
-			<h5>{{ image.entry.title | xml }}</h5>
-		{{ END }}
-		</div>
-		{{ END }}
+      {{ IF story.images_rs.count }}
+      <div class="pic">
+      {{ FOREACH image IN story.images }}
+         <img src="images/{{ image.filename | xml }}"/>
+         <h5>{{ image.entry.title | xml }}</h5>
+      {{ END }}
+      </div>
+      {{ END }}
 
-		{{ IF story.published }}
-		<div class="story">
-			{{ story.contents | bbcode('xhtml' => 1) }}
-		</div>
-		{{ ELSE }}
-		<div class="redacted">
-			{{ c.string('storyRedacted') | xml }}
-		</div>
-		{{ END }}
-	</body>
+      {{ IF story.published }}
+      <div class="story">
+         {{ story.contents | bbcode('xhtml' => 1) }}
+      </div>
+      {{ ELSE }}
+      <div class="redacted">
+         {{ c.string('storyRedacted') | xml }}
+      </div>
+      {{ END }}
+   </body>
 </html>

@@ -1,26 +1,26 @@
 {{ IF c.user }}
 
 <div class="Container">
-	<div class="Poll-create">
-		<form method="post">
-			{{ csrf_field | none }}
-			<input type="text" name="title" class="Poll-create--title" placeholder="Poll subject" autocomplete="off" required maxlength="{{ c.config.len.max.title }}">
-			{{ FOREACH i IN [1..3] }}
-			<input type="text" name="bid" class="Poll-create--bid" placeholder="Entry name" autocomplete="off" maxlength="{{ c.config.len.max.title }}">
-			{{ END }}
-			<input type="submit" name="submit" class="Poll-create--submit" value="Create poll">
-		</form>
-	</div>
+   <div class="Poll-create">
+      <form method="post">
+         {{ csrf_field | none }}
+         <input type="text" name="title" class="Poll-create--title" placeholder="Poll subject" autocomplete="off" required maxlength="{{ c.config.len.max.title }}">
+         {{ FOREACH i IN [1..3] }}
+         <input type="text" name="bid" class="Poll-create--bid" placeholder="Entry name" autocomplete="off" maxlength="{{ c.config.len.max.title }}">
+         {{ END }}
+         <input type="submit" name="submit" class="Poll-create--submit" value="Create poll">
+      </form>
+   </div>
 
-	{{ IF c.user.polls_rs.count }}
-		<div class="Divider"></div>
+   {{ IF c.user.polls_rs.count }}
+      <div class="Divider"></div>
 
-		{{ FOREACH poll IN c.user.polls }}
-			<div class="Poll-header">
-				<div class="Poll-title">{{ poll.title }}</div>
-			</div>
-		{{ END }}
-	{{ END }}
+      {{ FOREACH poll IN c.user.polls }}
+         <div class="Poll-header">
+            <div class="Poll-title">{{ poll.title }}</div>
+         </div>
+      {{ END }}
+   {{ END }}
 </div>
 
 {{ ELSE }}

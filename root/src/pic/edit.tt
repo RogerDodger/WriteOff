@@ -1,7 +1,7 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ image.title }}
-	</div>
+   <div class="Document-title">
+      {{ image.title }}
+   </div>
 
-	{{ INCLUDE pic/form.tt }}
+   {{ INCLUDE pic/form.tt }}
 </div>

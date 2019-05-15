@@ -3,28 +3,28 @@
 // =============================================================================
 
 .Prompts {
-	@include striped-table;
+   @include striped-table;
 }
 
 .Prompts-edit,
 .Prompts-vote,
 .Prompts-score {
-	text-align: center;
+   text-align: center;
 }
 
 .Prompts-contents {
-	width: 100%;
-	text-align: start;
+   width: 100%;
+   text-align: start;
 }
 
 .Prompts-name {
-	width: 100%;
+   width: 100%;
 }
 
 .Prompts-vote {
-	white-space: nowrap;
+   white-space: nowrap;
 }
 
 .Prompts-name {
-	width: 100%;
+   width: 100%;
 }

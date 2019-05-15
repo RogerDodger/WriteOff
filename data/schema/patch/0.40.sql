@@ -15,10 +15,10 @@ BEGIN TRANSACTION;
 ALTER TABLE events ADD COLUMN tallied BIT NOT NULL DEFAULT 0;
 
 UPDATE
-	events
+   events
 SET
-	tallied = 1
+   tallied = 1
 WHERE
-	(SELECT COUNT(*) FROM scores WHERE event_id = events.id) != 0;
+   (SELECT COUNT(*) FROM scores WHERE event_id = events.id) != 0;
 
 COMMIT;

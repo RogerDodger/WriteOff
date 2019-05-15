@@ -1,13 +1,13 @@
 <div class="Form-item">
-	<label>{{ c.string('genre') }}</label>
-	<select name="genre" {{ 'disabled' IF rulesFrozen }}>
-		{{ FOREACH g IN genres.all }}
-		<option value="{{ g.id }}" {{ 'selected' IF g.id == selected }}>
-			{{ c.string(g.name) }}
-		</option>
-		{{ END }}
-	</select>
-	{{ IF rulesFrozen }}
-	<input type="hidden" name="genre" value="{{ selected }}">
-	{{ END }}
+   <label>{{ c.string('genre') }}</label>
+   <select name="genre" {{ 'disabled' IF rulesFrozen }}>
+      {{ FOREACH g IN genres.all }}
+      <option value="{{ g.id }}" {{ 'selected' IF g.id == selected }}>
+         {{ c.string(g.name) }}
+      </option>
+      {{ END }}
+   </select>
+   {{ IF rulesFrozen }}
+   <input type="hidden" name="genre" value="{{ selected }}">
+   {{ END }}
 </div>

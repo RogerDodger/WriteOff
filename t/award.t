@@ -7,8 +7,8 @@ use Test::More;
 use Test::Deep;
 
 BEGIN {
-	use_ok 'WriteOff::Award';
-	WriteOff::Award->import(':all');
+   use_ok 'WriteOff::Award';
+   WriteOff::Award->import(':all');
 }
 
 my $award = GOLD;
@@ -24,15 +24,15 @@ is $award->html, q{<img src="/static/images/awards/gold.png" alt="Gold medal" }
                . q{title="Gold medal">}, 'Award attributes';
 
 cmp_deeply(
-	[
-		sort_awards GOLD, BRONZE, GOLD, RIBBON, SILVER,
-		CONFETTI, RIBBON, CONFETTI, SPOON, SPOON, GOLD, CONFETTI,
-	],
-	[
-		GOLD, GOLD, GOLD, SILVER, BRONZE, CONFETTI,
-		CONFETTI, CONFETTI, SPOON, SPOON, RIBBON, RIBBON,
-	],
-	'Awards sort correctly',
+   [
+      sort_awards GOLD, BRONZE, GOLD, RIBBON, SILVER,
+      CONFETTI, RIBBON, CONFETTI, SPOON, SPOON, GOLD, CONFETTI,
+   ],
+   [
+      GOLD, GOLD, GOLD, SILVER, BRONZE, CONFETTI,
+      CONFETTI, CONFETTI, SPOON, SPOON, RIBBON, RIBBON,
+   ],
+   'Awards sort correctly',
 );
 
 done_testing;

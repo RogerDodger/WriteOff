@@ -1,21 +1,21 @@
 <div class="Document narrow">
-	<div class="Document-title">
-		<i class="fa fa-bell"></i>
-		{{ c.string('notifs') }}
-	</div>
+   <div class="Document-title">
+      <i class="fa fa-bell"></i>
+      {{ c.string('notifs') }}
+   </div>
 
-	<form class="Notifs-clear" method="post" action="/user/notifs/clear">
-		{{ csrf_field | none }}
-		<button >{{ c.string('notifsClear') }}</button>
-	</form>
+   <form class="Notifs-clear" method="post" action="/user/notifs/clear">
+      {{ csrf_field | none }}
+      <button >{{ c.string('notifsClear') }}</button>
+   </form>
 
-	{{ IF notifs.count }}
-	<div class="Notifs">
-		{{ FOREACH notif IN notifs.all }}
-			{{ INCLUDE notif/single.tt }}
-		{{ END }}
-	</div>
-	{{ ELSE }}
-	<div class="Flash">{{ c.string('noNotifs') }}</div>
-	{{ END }}
+   {{ IF notifs.count }}
+   <div class="Notifs">
+      {{ FOREACH notif IN notifs.all }}
+         {{ INCLUDE notif/single.tt }}
+      {{ END }}
+   </div>
+   {{ ELSE }}
+   <div class="Flash">{{ c.string('noNotifs') }}</div>
+   {{ END }}
 </div>

@@ -3,11 +3,11 @@
 {{ PROCESS 'post/pager.tt'  pos = 'top', pager = posts.pager }}
 
 {{ cache.inc(
-	template => 'post/list_.tt',
-	key => posts.uid(event.id, entry.id)) }}
+   template => 'post/list_.tt',
+   key => posts.uid(event.id, entry.id)) }}
 
 {{ PROCESS 'post/pager.tt'  pos = 'bottom', pager = posts.pager }}
 
 {{ IF c.user.active_artist }}
-	{{ INCLUDE post/submit.tt }}
+   {{ INCLUDE post/submit.tt }}
 {{ END }}

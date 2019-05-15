@@ -4,159 +4,159 @@
 
 
 .Scoreboard-nav {
-	width: 100%;
-	background-color: hsla(200, 17%, 92%, 1);
-	border: 1px solid hsla(200, 17%, 80%, 1);
-	margin-top: -1em;
+   width: 100%;
+   background-color: hsla(200, 17%, 92%, 1);
+   border: 1px solid hsla(200, 17%, 80%, 1);
+   margin-top: -1em;
 }
 
 .Scoreboard-filter {
-	display: flex;
-	flex-flow: row wrap;
-	align-items: flex-end;
+   display: flex;
+   flex-flow: row wrap;
+   align-items: flex-end;
 }
 
 .Scoreboard-filter--cat {
-	display: flex;
-	flex-direction: column;
-	margin-right: 0.8em;
+   display: flex;
+   flex-direction: column;
+   margin-right: 0.8em;
 
-	label {
-		font-variant: small-caps;
-	}
+   label {
+      font-variant: small-caps;
+   }
 }
 
 .Scoreboard {
-	max-width: 88rem;
-	margin-top: 1em;
+   max-width: 88rem;
+   margin-top: 1em;
 
-	display: grid;
-	grid-gap: 1em;
-	grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
-	align-items: start;
+   display: grid;
+   grid-gap: 1em;
+   grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+   align-items: start;
 }
 
 .Scoreboard-artist {
-	@include sheet;
-	border: 1px solid #ccc;
-	border-radius: 0.2em;
-	position: relative;
+   @include sheet;
+   border: 1px solid #ccc;
+   border-radius: 0.2em;
+   position: relative;
 
-	&.expanded.span-max {
-		grid-column: 1 / -1;
-	}
+   &.expanded.span-max {
+      grid-column: 1 / -1;
+   }
 
-	&.expanded,
-	&.loading {
-		.Scoreboard-artist--awards,
-		.fa-expand { display: none }
-	}
+   &.expanded,
+   &.loading {
+      .Scoreboard-artist--awards,
+      .fa-expand { display: none }
+   }
 
-	&:not(.expanded) {
-		.Scoreboard-breakdown,
-		.fa-compress { display: none }
-	}
+   &:not(.expanded) {
+      .Scoreboard-breakdown,
+      .fa-compress { display: none }
+   }
 }
 
 .Scoreboard-breakdown--toggle {
-	cursor: pointer;
+   cursor: pointer;
 }
 
 .Scoreboard-artist--header {
-	display: grid;
-	grid-template-columns: 8.6em calc(100% - 8.6em);
-	grid-template-rows: minmax(3.5em, 1fr) auto auto;
+   display: grid;
+   grid-template-columns: 8.6em calc(100% - 8.6em);
+   grid-template-rows: minmax(3.5em, 1fr) auto auto;
 
-	& > * {
-		z-index: 5;
-	}
+   & > * {
+      z-index: 5;
+   }
 }
 
 .Scoreboard-artist--band {
-	z-index: 1;
-	grid-row: 1;
-	grid-column: 1 / -1;
-	background-color: #5e5e5e;
+   z-index: 1;
+   grid-row: 1;
+   grid-column: 1 / -1;
+   background-color: #5e5e5e;
 }
 
 .Scoreboard-artist--stripe {
-	z-index: 2;
-	grid-row: 2;
-	grid-column: 1 / -1;
-	background-color: #303030;
+   z-index: 2;
+   grid-row: 2;
+   grid-column: 1 / -1;
+   background-color: #303030;
 }
 
 .Scoreboard-artist--expand {
-	grid-row: 1;
-	grid-column: 2;
-	align-self: start;
-	justify-self: end;
-	margin: 0.5em;
+   grid-row: 1;
+   grid-column: 2;
+   align-self: start;
+   justify-self: end;
+   margin: 0.5em;
 
-	a {
-		color: white;
-	}
+   a {
+      color: white;
+   }
 }
 
 .Scoreboard-artist--name {
-	grid-row: 3;
-	grid-column: 2;
-	font-size: 1.15em;
-	margin: 0.3em 0;
-	overflow-wrap: break-word;
+   grid-row: 3;
+   grid-column: 2;
+   font-size: 1.15em;
+   margin: 0.3em 0;
+   overflow-wrap: break-word;
 }
 
 
 .Scoreboard-artist--score,
 .Scoreboard-artist--rank {
-	margin: 0.3em 0;
-	grid-row: 2;
-	grid-column: 2;
-	color: #ddd;
+   margin: 0.3em 0;
+   grid-row: 2;
+   grid-column: 2;
+   color: #ddd;
 }
 
 .Scoreboard-artist--score {
-	font-size: 1.1em;
-	justify-self: end;
-	align-self: center;
+   font-size: 1.1em;
+   justify-self: end;
+   align-self: center;
 }
 
 .Scoreboard-artist--rank {
-	font-size: 1.4em;
-	justify-self: start;
+   font-size: 1.4em;
+   justify-self: start;
 }
 
 .Scoreboard-artist--name,
 .Scoreboard-artist--score {
-	margin-right: 0.5em;
+   margin-right: 0.5em;
 }
 
 .Scoreboard-artist--avatar {
-	grid-row: 1 / -1;
-	grid-column: 1;
-	margin: 0.8em;
-	align-self: start;
-	justify-self: start;
+   grid-row: 1 / -1;
+   grid-column: 1;
+   margin: 0.8em;
+   align-self: start;
+   justify-self: start;
 
-	img {
-		width: 7em;
-		height: 7em;
-	}
+   img {
+      width: 7em;
+      height: 7em;
+   }
 }
 
 .Scoreboard-artist--awards {
-	$size: 2.5em;
+   $size: 2.5em;
 
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax($size, 1fr));
-	grid-row-gap: 0.5em;
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax($size, 1fr));
+   grid-row-gap: 0.5em;
 
-	.Award {
-		height: $size;
-		width: $size;
-	}
+   .Award {
+      height: $size;
+      width: $size;
+   }
 }
 
 .Scoreboard-artist--awards {
-	padding: 0 0.5em 0.5em 0.5em;
+   padding: 0 0.5em 0.5em 0.5em;
 }

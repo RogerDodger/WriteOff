@@ -3,49 +3,49 @@
 // =============================================================================
 
 .Password-new {
-	text-align: center;
-	font-size: 1.3em;
-	font-family: monospace;
+   text-align: center;
+   font-size: 1.3em;
+   font-family: monospace;
 }
 
 .Check-buttons {
-	list-style-type: none;
-	padding: 0;
-	margin: 0.2em 0 0.5em 0;
-	font-size: 0.95em;
+   list-style-type: none;
+   padding: 0;
+   margin: 0.2em 0 0.5em 0;
+   font-size: 0.95em;
 
-	li {
-		display: inline-block;
-	}
+   li {
+      display: inline-block;
+   }
 
-	label {
-		display: inline;
-		font-weight: normal;
-		font-variant: normal;
-	}
+   label {
+      display: inline;
+      font-weight: normal;
+      font-variant: normal;
+   }
 }
 
 .Check-button {
-	input[type="checkbox"] {
-		@extend .hidden;
+   input[type="checkbox"] {
+      @extend .hidden;
 
-		& + span {
-			@include button;
-			margin-right: -1px;
-			margin-bottom: -1px;
-		}
+      & + span {
+         @include button;
+         margin-right: -1px;
+         margin-bottom: -1px;
+      }
 
-		&:checked + span {
-			@include button-active($l: 70%);
-		}
-	}
+      &:checked + span {
+         @include button-active($l: 70%);
+      }
+   }
 }
 
 .Artists {
-	@include striped-table;
+   @include striped-table;
 }
 
 .Artists-name,
 .Artists-active {
-	text-align: center;
+   text-align: center;
 }

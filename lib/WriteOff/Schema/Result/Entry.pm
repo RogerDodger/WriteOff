@@ -12,44 +12,44 @@ __PACKAGE__->table("entrys");
 # artist.name = "Anonymous". Otherwise, it isn't possible to determine the owner.
 
 __PACKAGE__->add_columns(
-	"id",
-	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-	"event_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"user_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"artist_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"story_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"image_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"round_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"title",
-	{ data_type => "text", is_nullable => 0 },
-	"seed",
-	{ data_type => "real", is_nullable => 0, dynamic_default_on_create => sub { rand() } },
-	"artist_public",
-	{ data_type => "bit", default_value => 0, is_nullable => 0 },
-	"disqualified",
-	{ data_type => 'bit', default_value => 0, is_nullable => 0 },
-	"score",
-	{ data_type => "real", is_nullable => 1 },
-	"score_genre",
-	{ data_type => "real", is_nullable => 1 },
-	"score_format",
-	{ data_type => "real", is_nullable => 1 },
-	"rank",
-	{ data_type => "integer", is_nullable => 1 },
-	"rank_low",
-	{ data_type => "integer", is_nullable => 1 },
-	"views",
-	{ data_type => "integer", default_value => 0, is_nullable => 1 },
-	"created",
-	{ data_type => "timestamp", is_nullable => 1 },
-	"updated",
-	{ data_type => "timestamp", is_nullable => 1 },
+   "id",
+   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+   "event_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "user_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+   "artist_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+   "story_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+   "image_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+   "round_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+   "title",
+   { data_type => "text", is_nullable => 0 },
+   "seed",
+   { data_type => "real", is_nullable => 0, dynamic_default_on_create => sub { rand() } },
+   "artist_public",
+   { data_type => "bit", default_value => 0, is_nullable => 0 },
+   "disqualified",
+   { data_type => 'bit', default_value => 0, is_nullable => 0 },
+   "score",
+   { data_type => "real", is_nullable => 1 },
+   "score_genre",
+   { data_type => "real", is_nullable => 1 },
+   "score_format",
+   { data_type => "real", is_nullable => 1 },
+   "rank",
+   { data_type => "integer", is_nullable => 1 },
+   "rank_low",
+   { data_type => "integer", is_nullable => 1 },
+   "views",
+   { data_type => "integer", default_value => 0, is_nullable => 1 },
+   "created",
+   { data_type => "timestamp", is_nullable => 1 },
+   "updated",
+   { data_type => "timestamp", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("id");
@@ -72,87 +72,87 @@ __PACKAGE__->has_many('story_images', "WriteOff::Schema::Result::ImageStory", { 
 __PACKAGE__->mk_group_accessors(column => 'num');
 
 sub awards_sorted {
-	sort { $a->order <=> $b->order } shift->awards;
+   sort { $a->order <=> $b->order } shift->awards;
 }
 
 sub difficulty {
-	my $self = shift;
+   my $self = shift;
 
-	$self->story
-		? $self->story->wordcount
-		: 2500;
+   $self->story
+      ? $self->story->wordcount
+      : 2500;
 }
 
 sub mode {
-	my $self = shift;
+   my $self = shift;
 
-	$self->image_id && 'pic' || 'fic';
+   $self->image_id && 'pic' || 'fic';
 }
 
 sub view {
-	"/" . shift->mode . "/view";
+   "/" . shift->mode . "/view";
 }
 
 sub work {
-	my ($self, $work) = @_;
+   my ($self, $work) = @_;
 
-	$self->story
-		? $work->{offset} + $self->story->wordcount / $work->{rate}
-		: $work->{offset};
+   $self->story
+      ? $work->{offset} + $self->story->wordcount / $work->{rate}
+      : $work->{offset};
 }
 
 BEGIN { *type = \&mode }
 
 sub item {
-	my $self = shift;
-	$self->story || $self->image;
+   my $self = shift;
+   $self->story || $self->image;
 }
 
 sub item_id {
-	my $self = shift;
-	$self->story_id || $self->image_id;
+   my $self = shift;
+   $self->story_id || $self->image_id;
 }
 
 sub pos {
-	return shift->rank;
+   return shift->rank;
 }
 
 sub pos_low {
-	return shift->rank_low;
+   return shift->rank_low;
 }
 
 sub id_uri {
-	my $self = shift;
+   my $self = shift;
 
-	return WriteOff::Util::simple_uri($self->story_id || $self->image_id, $self->title);
+   return WriteOff::Util::simple_uri($self->story_id || $self->image_id, $self->title);
 }
 
 sub detected {
-	my $self = shift;
+   my $self = shift;
 
-	return $self->guesses->search({ artist_id => $self->artist_id })->count;
+   return $self->guesses->search({ artist_id => $self->artist_id })->count;
 }
 
 sub pct {
-	my $self = shift;
+   my $self = shift;
 
-	return $self->{__pct} if exists $self->{__pct};
+   return $self->{__pct} if exists $self->{__pct};
 
-	$self->{__pct} = defined $self->rank
-		? do {
-			# If there is only 1 entry, then rank_low can be 0 and give a divide by zero error
-			my $m = $self->event->entrys->mode($self->mode)->get_column('rank_low')->max;
-			$m and 1 - $self->rank / $m;
-		}
-		: undef;
+   $self->{__pct} = defined $self->rank
+      ? do {
+         # If there is only 1 entry, then rank_low can be 0 and give a divide by zero error
+         my $m = $self->event->entrys->mode($self->mode)->get_column('rank_low')->max;
+         $m and 1 - $self->rank / $m;
+      }
+      : undef;
 }
 
 sub deadline {
-	my $self = shift;
+   my $self = shift;
 
-	# We're populating ->rounds with a prefetch. The grep here dodges hitting the DB again.
-	$self->{__deadline} //=
-		(grep { $_->mode eq $self->mode && $_->action eq 'submit' } $self->event->rounds)[-1]->end_leeway;
+   # We're populating ->rounds with a prefetch. The grep here dodges hitting the DB again.
+   $self->{__deadline} //=
+      (grep { $_->mode eq $self->mode && $_->action eq 'submit' } $self->event->rounds)[-1]->end_leeway;
 }
 
 sub class { 'entry' }

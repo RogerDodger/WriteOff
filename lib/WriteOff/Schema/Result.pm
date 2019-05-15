@@ -6,23 +6,23 @@ require DateTime;
 __PACKAGE__->load_components(qw/InflateColumn::DateTime DynamicDefault/);
 
 sub add_columns {
-	my $self = shift;
-	my %cols = @_;
+   my $self = shift;
+   my %cols = @_;
 
-	for my $col (keys %cols) {
-		my $info = $cols{$col};
+   for my $col (keys %cols) {
+      my $info = $cols{$col};
 
-		if ($info->{data_type} eq 'timestamp') {
-			$info->{dynamic_default_on_create} = 'get_timestamp';
-			if ($col eq 'updated') {
-				$info->{dynamic_default_on_update} = 'get_timestamp';
-			}
-		}
-	}
+      if ($info->{data_type} eq 'timestamp') {
+         $info->{dynamic_default_on_create} = 'get_timestamp';
+         if ($col eq 'updated') {
+            $info->{dynamic_default_on_update} = 'get_timestamp';
+         }
+      }
+   }
 
-	$self->next::method(@_);
+   $self->next::method(@_);
 }
 
 sub get_timestamp {
-	return DateTime->now;
+   return DateTime->now;
 }

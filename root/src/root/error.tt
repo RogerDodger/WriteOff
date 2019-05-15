@@ -1,8 +1,8 @@
 <div class="Document">
-	<div class="Document-title">{{ c.string('error') }}</div>
+   <div class="Document-title">{{ c.string('error') }}</div>
 
-	<div class="Flash error">
-		<span class="fa fa-warning"></span>
-		{{ error }}
-	</div>
+   <div class="Flash error">
+      <span class="fa fa-warning"></span>
+      {{ error }}
+   </div>
 </div>

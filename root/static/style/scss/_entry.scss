@@ -3,7 +3,7 @@
 // =============================================================================
 
 .Entrys {
-	@include striped-table;
+   @include striped-table;
 }
 
 .Entrys-edit,
@@ -11,106 +11,106 @@
 .Entrys-artist,
 .Entrys-filesize,
 .Entrys-filetype {
-	text-align: center;
+   text-align: center;
 }
 
 .Entry-nav {
-	text-align: center;
+   text-align: center;
 }
 
 .Entrys-rels {
-	@include striped-list;
-	margin-bottom: 2em;
+   @include striped-list;
+   margin-bottom: 2em;
 }
 
 .Entrys-rels--label {
-	font-size: 1.1em;
+   font-size: 1.1em;
 }
 
 .Entrys-rels--title {
-	text-align: start;
+   text-align: start;
 }
 
 .Entry-votes {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(3.5em, 1fr));
-	grid-auto-rows: minmax(4em, auto);
-	grid-gap: 0.5em 0;
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(3.5em, 1fr));
+   grid-auto-rows: minmax(4em, auto);
+   grid-gap: 0.5em 0;
 }
 
 .Entry-votes--ballot {
-	display: grid;
-	position: relative;
-	margin-right: -1px;
+   display: grid;
+   position: relative;
+   margin-right: -1px;
 
-	&::before,
-	&::after {
-		$offset: (29em / 32);
-		content: ' ';
-		display: block;
-		position: absolute;
-		background: #aaa;
-		width: 1px;
-		height: calc(100% - #{$offset * 2});
-		top: $offset;
-	}
+   &::before,
+   &::after {
+      $offset: (29em / 32);
+      content: ' ';
+      display: block;
+      position: absolute;
+      background: #aaa;
+      width: 1px;
+      height: calc(100% - #{$offset * 2});
+      top: $offset;
+   }
 
-	&::before { left: 0 }
-	&::after { right: 0 }
+   &::before { left: 0 }
+   &::after { right: 0 }
 }
 
 .Entry-votes--pct {
-	text-align: center;
-	align-self: center;
-	$size: 12;
-	font-size: (1em * $size / 16);
+   text-align: center;
+   align-self: center;
+   $size: 12;
+   font-size: (1em * $size / 16);
 
-	$l: red;
-	$d: transparent;
-	$fade-start: (20em / $size);
-	$fade-end: (14em / $size);
+   $l: red;
+   $d: transparent;
+   $fade-start: (20em / $size);
+   $fade-end: (14em / $size);
 
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: auto (3em / $size);
-	background-image: linear-gradient(to left,
-		$l,
-		$l calc(50% - #{$fade-start}),
-		$d calc(50% - #{$fade-end}),
-		$d calc(50% + #{$fade-end}),
-		$l calc(50% + #{$fade-start}),
-		$l);
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: auto (3em / $size);
+   background-image: linear-gradient(to left,
+      $l,
+      $l calc(50% - #{$fade-start}),
+      $d calc(50% - #{$fade-end}),
+      $d calc(50% + #{$fade-end}),
+      $l calc(50% + #{$fade-start}),
+      $l);
 
-	z-index: 1;
+   z-index: 1;
 }
 
 .Entry-votes--pips {
-	display: grid;
-	grid-template-columns: repeat(5, minmax(0.5em, auto));
-	grid-auto-flow: row;
-	grid-auto-rows: minmax(0.5em, auto);
-	justify-content: center;
-	align-content: end;
-	align-items: end;
-	justify-items: end;
-	width: 100%;
-	overflow: hidden;
-	grid-row: span 2;
+   display: grid;
+   grid-template-columns: repeat(5, minmax(0.5em, auto));
+   grid-auto-flow: row;
+   grid-auto-rows: minmax(0.5em, auto);
+   justify-content: center;
+   align-content: end;
+   align-items: end;
+   justify-items: end;
+   width: 100%;
+   overflow: hidden;
+   grid-row: span 2;
 }
 
 .Entry-votes--pips:last-child {
-	transform: scaleY(-1);
+   transform: scaleY(-1);
 }
 
 .Entry-votes--pip {
-	height: (8em / 16);
-	width: auto;
+   height: (8em / 16);
+   width: auto;
 }
 
 .Entry-votes--pip:nth-child(10n+11) {
-	margin-top: (4em / 16);
+   margin-top: (4em / 16);
 }
 
 .Entry-votes--pip:nth-child(50n+51) {
-	margin-top: (8em / 16);
+   margin-top: (8em / 16);
 }

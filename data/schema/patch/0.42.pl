@@ -4,8 +4,8 @@ use warnings;
 
 use FindBin '$Bin';
 BEGIN {
-	chdir "$Bin/../..";
-	push @INC, './lib';
+   chdir "$Bin/../..";
+   push @INC, './lib';
 }
 use WriteOff::Schema;
 use WriteOff::Award qw/:all/;
@@ -20,11 +20,11 @@ my $scores = $s->resultset('Score');
 $scores->delete;
 
 for my $e ($s->resultset('Event')->finished->all) {
-	printf "%02d %10s\n", $e->id, $e->prompt;
-	$scores->decay;
+   printf "%02d %10s\n", $e->id, $e->prompt;
+   $scores->decay;
 
-	$artists->_score($e->storys_rs);
-	$artists->_score($e->images_rs) if $e->art;
+   $artists->_score($e->storys_rs);
+   $artists->_score($e->images_rs) if $e->art;
 }
 
 $artists->recalculate_scores;

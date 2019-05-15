@@ -1,7 +1,7 @@
 {{ title.push(c.string('new')) }}
 
 <div class="Document">
-	<div class="Document-title">{{ c.string('newSchedule') }}</div>
+   <div class="Document-title">{{ c.string('newSchedule') }}</div>
 
-	{{ INCLUDE 'schedule/form.tt' }}
+   {{ INCLUDE 'schedule/form.tt' }}
 </div>

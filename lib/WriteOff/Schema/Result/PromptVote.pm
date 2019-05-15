@@ -8,12 +8,12 @@ use base "WriteOff::Schema::Result";
 __PACKAGE__->table("prompt_votes");
 
 __PACKAGE__->add_columns(
-	"user_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"prompt_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"value",
-	{ data_type => "integer", is_nullable => 1 },
+   "user_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "prompt_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "value",
+   { data_type => "integer", is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key("user_id", "prompt_id");

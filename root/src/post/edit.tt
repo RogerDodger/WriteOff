@@ -1,20 +1,20 @@
 <div class="Post view {{ post.role }}" id="{{ post.id }}">
-	{{ INCLUDE 'post/sidebar.tt'  artist = post.artist}}
+   {{ INCLUDE 'post/sidebar.tt'  artist = post.artist}}
 
-	<div class="Post-edit">
-		<form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
-			{{ csrf_field | none }}
+   <div class="Post-edit">
+      <form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
+         {{ csrf_field | none }}
 
-			{{ INCLUDE 'post/form.tt'  artist = post.artist }}
+         {{ INCLUDE 'post/form.tt'  artist = post.artist }}
 
-			<div class="Post-form--footer">
-				<div class="Post-form--senders">
-					<button type="submit">
-						<i class="fa fa-check"></i>
-						Save
-					</button>
-				</div>
-			</div>
-		</form>
-	</div>
+         <div class="Post-form--footer">
+            <div class="Post-form--senders">
+               <button type="submit">
+                  <i class="fa fa-check"></i>
+                  Save
+               </button>
+            </div>
+         </div>
+      </form>
+   </div>
 </div>

@@ -14,16 +14,16 @@ my %commands;
 sub abort;
 
 sub import {
-	my $class = shift;
+   my $class = shift;
 
-	my $caller = caller;
+   my $caller = caller;
    return unless $caller =~ /^WriteOff::Command/;
 
-	strict->import;
-	warnings->import;
-	feature->import(':5.10');
+   strict->import;
+   warnings->import;
+   feature->import(':5.10');
 
-	no strict 'refs';
+   no strict 'refs';
    *{"${caller}::abort"} = *abort;
    *{"${caller}::config"} = *config;
    *{"${caller}::db"} = *db;
@@ -106,12 +106,12 @@ sub import {
 }
 
 sub run {
-	my $self = shift;
+   my $self = shift;
    my $noun = shift // '';
    my $verb = shift // '';
 
    usesub __PACKAGE__;
-	if (my $c = $commands{$noun}{$verb} || $commands{$verb}{$noun}) {
+   if (my $c = $commands{$noun}{$verb} || $commands{$verb}{$noun}) {
       $c->{run}->(@_);
    }
    else {
@@ -124,22 +124,22 @@ sub abort {
 }
 
 sub config {
-	require WriteOff;
-	return WriteOff->config;
+   require WriteOff;
+   return WriteOff->config;
 }
 
 sub db {
-	if (my $rs = shift) {
-		return schema()->resultset($rs);
-	}
-	else {
-		return schema();
-	}
+   if (my $rs = shift) {
+      return schema()->resultset($rs);
+   }
+   else {
+      return schema();
+   }
 }
 
 sub dbh {
-	require DBI;
-	return DBI->connect('dbi:SQLite:data/WriteOff.db','','');
+   require DBI;
+   return DBI->connect('dbi:SQLite:data/WriteOff.db','','');
 }
 
 sub help {
@@ -170,18 +170,18 @@ EOF
 }
 
 sub schema {
-	state $schema;
-	return $schema if defined $schema;
+   state $schema;
+   return $schema if defined $schema;
 
-	require WriteOff::Schema;
-	$schema = WriteOff::Schema->connect('dbi:SQLite:data/WriteOff.db','','', {
-		sqlite_unicode => 1,
-		on_connect_do => q{PRAGMA foreign_keys = ON},
-	});
+   require WriteOff::Schema;
+   $schema = WriteOff::Schema->connect('dbi:SQLite:data/WriteOff.db','','', {
+      sqlite_unicode => 1,
+      on_connect_do => q{PRAGMA foreign_keys = ON},
+   });
 
-	$schema->storage->dbh->sqlite_enable_load_extension(1);
-	$schema->storage->dbh->sqlite_load_extension('./bin/libsqlitefunctions.so');
-	$schema;
+   $schema->storage->dbh->sqlite_enable_load_extension(1);
+   $schema->storage->dbh->sqlite_load_extension('./bin/libsqlitefunctions.so');
+   $schema;
 }
 
 1;

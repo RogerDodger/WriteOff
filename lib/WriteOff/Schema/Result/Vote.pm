@@ -8,16 +8,16 @@ use base "WriteOff::Schema::Result";
 __PACKAGE__->table("votes");
 
 __PACKAGE__->add_columns(
-	"id",
-	{ data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-	"ballot_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"entry_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-	"value",
-	{ data_type => "integer", is_nullable => 1 },
-	"abstained",
-	{ data_type => "bit", is_nullable => 0, default_value => 0 },
+   "id",
+   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+   "ballot_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "entry_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+   "value",
+   { data_type => "integer", is_nullable => 1 },
+   "abstained",
+   { data_type => "bit", is_nullable => 0, default_value => 0 },
 );
 
 __PACKAGE__->set_primary_key("id");

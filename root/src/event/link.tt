@@ -1,2 +1,2 @@
 <a class="Event-link" href="{{ c.uri_for_action(
-	'/event/permalink', [ event.id_uri ]) }}">{{ event.prompt }}</a>
+   '/event/permalink', [ event.id_uri ]) }}">{{ event.prompt }}</a>

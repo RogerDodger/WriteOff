@@ -6,62 +6,62 @@ require WriteOff::DateTime;
 require WriteOff::Util;
 
 sub datetime_parser {
-	shift->result_source->schema->storage->datetime_parser;
+   shift->result_source->schema->storage->datetime_parser;
 }
 
 sub format_datetime {
-	shift->datetime_parser->format_datetime(shift);
+   shift->datetime_parser->format_datetime(shift);
 }
 
 sub parse_datetime {
-	shift->datetime_parser->parse_datetime(shift);
+   shift->datetime_parser->parse_datetime(shift);
 }
 
 sub now {
-	my $self = shift;
-	$self->format_datetime($self->now_dt);
+   my $self = shift;
+   $self->format_datetime($self->now_dt);
 }
 
 sub now_dt {
-	WriteOff::DateTime->now;
+   WriteOff::DateTime->now;
 }
 
 sub now_leeway {
-	my $self = shift;
-	$self->format_datetime($self->now_dt->clone->subtract(minutes => WriteOff::Util::LEEWAY));
+   my $self = shift;
+   $self->format_datetime($self->now_dt->clone->subtract(minutes => WriteOff::Util::LEEWAY));
 }
 
 sub created_before {
-	my ($self, $datetime) = @_;
-	$self->search_rs({ created => { '<' => $self->format_datetime($datetime) } });
+   my ($self, $datetime) = @_;
+   $self->search_rs({ created => { '<' => $self->format_datetime($datetime) } });
 }
 
 sub created_after {
-	my ($self, $datetime) = @_;
-	$self->search_rs({ created => { '>' => $self->format_datetime($datetime) } });
+   my ($self, $datetime) = @_;
+   $self->search_rs({ created => { '>' => $self->format_datetime($datetime) } });
 }
 
 sub order_by {
-	my $self = shift;
-	$self->search_rs(undef, { order_by => shift });
+   my $self = shift;
+   $self->search_rs(undef, { order_by => shift });
 }
 
 sub join {
-	my $self = shift;
-	$self->search_rs(undef, { join => shift });
+   my $self = shift;
+   $self->search_rs(undef, { join => shift });
 }
 
 sub find_maybe {
-	my ($self, $id) = @_;
-	defined $id && $id =~ /(\d+)/ && $self->find($1) || undef;
+   my ($self, $id) = @_;
+   defined $id && $id =~ /(\d+)/ && $self->find($1) || undef;
 }
 
 sub group_by {
-	shift->search({}, { group_by => shift });
+   shift->search({}, { group_by => shift });
 }
 
 sub group_by_rs {
-	scalar shift->group_by(@_);
+   scalar shift->group_by(@_);
 }
 
 1;

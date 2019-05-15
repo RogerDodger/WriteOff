@@ -1,59 +1,59 @@
 <div class="Document">
-	<div class="Document-title">{{ c.string(mode _ 'Guessing') }}</div>
+   <div class="Document-title">{{ c.string(mode _ 'Guessing') }}</div>
 
-	<div class="Countdown">
-		{{ IF open > now }}
-			{{ open.delta_html | none }}
-		{{ ELSIF close > now }}
-			{{ close.delta_html | none }}
-		{{ ELSE }}
-			{{ c.string('guessesClosed') }}
-		{{ END }}
-	</div>
+   <div class="Countdown">
+      {{ IF open > now }}
+         {{ open.delta_html | none }}
+      {{ ELSIF close > now }}
+         {{ close.delta_html | none }}
+      {{ ELSE }}
+         {{ c.string('guessesClosed') }}
+      {{ END }}
+   </div>
 
-	{{- IF opened }}
-		{{- IF !c.user }}
-		<div class="Flash">
-			{{ c.string('loginRequiredVote') }}
-		</div>
-		{{ ELSE }}
-		<form class="Form auto" method="post" action="{{ c.req.uri }}">
-			<table class="Storys">
-				<thead>
-					<tr>
-						<th></th>
-						<th>{{ c.string('entry') }}</th>
-						<th>{{ c.string(mode == "fic" ? "author" : 'artist') }}</th>
-					</tr>
-				</thead>
+   {{- IF opened }}
+      {{- IF !c.user }}
+      <div class="Flash">
+         {{ c.string('loginRequiredVote') }}
+      </div>
+      {{ ELSE }}
+      <form class="Form auto" method="post" action="{{ c.req.uri }}">
+         <table class="Storys">
+            <thead>
+               <tr>
+                  <th></th>
+                  <th>{{ c.string('entry') }}</th>
+                  <th>{{ c.string(mode == "fic" ? "author" : 'artist') }}</th>
+               </tr>
+            </thead>
 
-				{{ options = BLOCK }}
-					<option value="" selected></option>
-					{{ FOREACH artist IN artists }}
-					<option value="{{ artist.id }}">{{ artist.name }}</option>
-					{{- END }}
-				{{ END }}
+            {{ options = BLOCK }}
+               <option value="" selected></option>
+               {{ FOREACH artist IN artists }}
+               <option value="{{ artist.id }}">{{ artist.name }}</option>
+               {{- END }}
+            {{ END }}
 
-				<tbody>
-					{{- FOREACH item IN candidates.all }}
-					<tr class="{{ loop.parity }}">
-						<td class="Storys-num">{{ item.num || loop.count }}</td>
-						<td>{{ item.title }}</td>
-						{{- SET disabled = item.user_id == c.user_id ? " disabled" : "" }}
-						<td>
-							<select name="{{ item.id }}" {{ disabled }}>
-								{{ options | none }}
-							</select>
-						</td>
-					</tr>
-					{{- END }}
-				</tbody>
-			</table>
+            <tbody>
+               {{- FOREACH item IN candidates.all }}
+               <tr class="{{ loop.parity }}">
+                  <td class="Storys-num">{{ item.num || loop.count }}</td>
+                  <td>{{ item.title }}</td>
+                  {{- SET disabled = item.user_id == c.user_id ? " disabled" : "" }}
+                  <td>
+                     <select name="{{ item.id }}" {{ disabled }}>
+                        {{ options | none }}
+                     </select>
+                  </td>
+               </tr>
+               {{- END }}
+            </tbody>
+         </table>
 
-			<div class="Form-item">
-				<input type="submit" name="submit" value="Update vote">
-			</div>
-		</form>
-		{{- END }}
-	{{- END }}
+         <div class="Form-item">
+            <input type="submit" name="submit" value="Update vote">
+         </div>
+      </form>
+      {{- END }}
+   {{- END }}
 </div>

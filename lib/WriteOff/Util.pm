@@ -18,80 +18,80 @@ my $_rng = Math::Random::ISAAC::XS->new( map { unpack( "N", urandom(4) ) } 1 .. 
 sub LEEWAY () { 5 } # minutes
 
 sub avg {
-	my $sum = 0;
-	$sum += $_ for @_;
-	$sum / @_;
+   my $sum = 0;
+   $sum += $_ for @_;
+   $sum / @_;
 }
 
 sub bbcode {
-	WriteOff::Markup::story(@_);
+   WriteOff::Markup::story(@_);
 }
 
 sub maybe ($$) {
-	$_[1] ? @_ : ();
+   $_[1] ? @_ : ();
 }
 
 # TODO: put this somewhere else
 sub rorder {
-	my $rounds = shift;
+   my $rounds = shift;
 
-	my $submit = $rounds->search({ action => 'submit' })->ordered;
-	my $fic = $submit->search({ mode => 'fic' })->first;
-	my $pic = $submit->search({ mode => 'pic' })->first;
+   my $submit = $rounds->search({ action => 'submit' })->ordered;
+   my $fic = $submit->search({ mode => 'fic' })->first;
+   my $pic = $submit->search({ mode => 'pic' })->first;
 
-	if (defined $fic && defined $pic) {
-		if ($pic->end <= $fic->start) {
-			return "pic2fic";
-		}
-		elsif ($fic->end <= $pic->start) {
-			return "fic2pic";
-		}
-		else {
-			return "simul";
-		}
-	}
+   if (defined $fic && defined $pic) {
+      if ($pic->end <= $fic->start) {
+         return "pic2fic";
+      }
+      elsif ($fic->end <= $pic->start) {
+         return "fic2pic";
+      }
+      else {
+         return "simul";
+      }
+   }
 
-	'';
+   '';
 }
 
 sub simple_uri {
-	local $_ = join "-", @_;
+   local $_ = join "-", @_;
 
-	s/[\\\/—–]/ /g; # Turn punctuation that commonly divide words into spaces
-	s/[^a-zA-Z0-9\-\x20]//g; # Remove all except English letters,
-	                         # Arabic numerals, hyphens, and spaces.
-	s/^\s+|\s+$//g; # Trim
-	s/[\s\-]+/-/g; # Collate spaces and hyphens into a single hyphen
+   s/[\\\/—–]/ /g; # Turn punctuation that commonly divide words into spaces
+   s/[^a-zA-Z0-9\-\x20]//g; # Remove all except English letters,
+                            # Arabic numerals, hyphens, and spaces.
+   s/^\s+|\s+$//g; # Trim
+   s/[\s\-]+/-/g; # Collate spaces and hyphens into a single hyphen
 
-	return $_;
+   return $_;
 }
 
 sub sorted {
-	my $cmp = ref $_[0] eq 'CODE' ? shift : sub { $_[0] cmp $_[1] };
+   my $cmp = ref $_[0] eq 'CODE' ? shift : sub { $_[0] cmp $_[1] };
 
-	my $prev = shift;
-	for my $curr (@_) {
-		return 0 if $cmp->($prev, $curr) > 0;
-		$prev = $curr;
-	}
-	1;
+   my $prev = shift;
+   for my $curr (@_) {
+      return 0 if $cmp->($prev, $curr) > 0;
+      $prev = $curr;
+   }
+   1;
 }
 
 sub token {
-	my $salt = shift // '';
-	Digest->new(shift // 'MD5')->add($salt)->add($_rng->irand)->hexdigest;
+   my $salt = shift // '';
+   Digest->new(shift // 'MD5')->add($salt)->add($_rng->irand)->hexdigest;
 }
 
 sub wordcount ($) {
-	my $str = shift or return 0;
+   my $str = shift or return 0;
 
-	return scalar split /\s+/, $str;
+   return scalar split /\s+/, $str;
 }
 
 sub uniq {
-	my %uniq;
-	$uniq{$_} = 1 for @_;
-	return keys %uniq;
+   my %uniq;
+   $uniq{$_} = 1 for @_;
+   return keys %uniq;
 }
 
 1;

@@ -19,59 +19,59 @@
  */
 
 .dark {
-	body {
-		background: #101017;
-	}
+   body {
+      background: #101017;
+   }
 
-	.Site-header ul li ul,
-	.Site-content,
-	.Site-footer,
-	.Post-hover {
-		filter: invert(100%);
-	}
+   .Site-header ul li ul,
+   .Site-content,
+   .Site-footer,
+   .Post-hover {
+      filter: invert(100%);
+   }
 
-	.Post-author,
-		img {
-		filter: invert(100%);
-	}
+   .Post-author,
+      img {
+      filter: invert(100%);
+   }
 
-	.Site-logo {
-		filter: none;
-	}
+   .Site-logo {
+      filter: none;
+   }
 
-	.Post-avatar {
-		position: relative;
-		z-index: 1;
-	}
+   .Post-avatar {
+      position: relative;
+      z-index: 1;
+   }
 
-	.Post-hover {
-		z-index: 9999;
-	}
+   .Post-hover {
+      z-index: 9999;
+   }
 
-	.Artist-card--name,
-	.Artist-card--joined,
-	.Artist-card--edit,
-	.Artist-card--stripe,
-	.Artist-card--band,
-	.Scoreboard-artist--expand,
-	.Scoreboard-artist--rank,
-	.Scoreboard-artist--score,
-	.Scoreboard-artist--stripe,
-	.Scoreboard-artist--band {
-		filter: invert(100%);
-	}
+   .Artist-card--name,
+   .Artist-card--joined,
+   .Artist-card--edit,
+   .Artist-card--stripe,
+   .Artist-card--band,
+   .Scoreboard-artist--expand,
+   .Scoreboard-artist--rank,
+   .Scoreboard-artist--score,
+   .Scoreboard-artist--stripe,
+   .Scoreboard-artist--band {
+      filter: invert(100%);
+   }
 
-	.Guess-graph path {
-		filter: hue-rotate(180deg);
-	}
+   .Guess-graph path {
+      filter: hue-rotate(180deg);
+   }
 
-	.Results > tbody > tr {
-		&.gold {
-			background-color: hsla(231, 65%, 90%, 1) !important;
-		}
+   .Results > tbody > tr {
+      &.gold {
+         background-color: hsla(231, 65%, 90%, 1) !important;
+      }
 
-		&.bronze {
-			background-color: hsla(219, 65%, 90%, 1) !important;
-		}
-	}
+      &.bronze {
+         background-color: hsla(219, 65%, 90%, 1) !important;
+      }
+   }
 }

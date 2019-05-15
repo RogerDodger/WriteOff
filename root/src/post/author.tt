@@ -1,4 +1,4 @@
 <a class="Post-author"
-	href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
-	{{ artist.name }}
+   href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">
+   {{ artist.name }}
 </a>

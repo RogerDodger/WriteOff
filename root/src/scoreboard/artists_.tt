@@ -1,57 +1,57 @@
 <div class="Scoreboard ctn">
-	{{- SET j = 1 }}
-	{{- FOREACH artist IN artists.all }}
-	<div class="Scoreboard-artist">
-		<div class="Scoreboard-artist--header">
-			<div class="Scoreboard-artist--band"
-				style="background-color: {{ artist.color }}"></div>
-			<div class="Scoreboard-artist--stripe"
-				style="background-color: {{ artist.color_dark }}"></div>
+   {{- SET j = 1 }}
+   {{- FOREACH artist IN artists.all }}
+   <div class="Scoreboard-artist">
+      <div class="Scoreboard-artist--header">
+         <div class="Scoreboard-artist--band"
+            style="background-color: {{ artist.color }}"></div>
+         <div class="Scoreboard-artist--stripe"
+            style="background-color: {{ artist.color_dark }}"></div>
 
-			<div class="Scoreboard-artist--avatar">
-				<img src="{{ artist.avatar }}">
-			</div>
+         <div class="Scoreboard-artist--avatar">
+            <img src="{{ artist.avatar }}">
+         </div>
 
-			<div class="Scoreboard-artist--score"
-				title="{{ artist.${skey} | format('%.5f') }}">
-				{{ artist.${skey} | format('%d') }}
-			</div>
+         <div class="Scoreboard-artist--score"
+            title="{{ artist.${skey} | format('%.5f') }}">
+            {{ artist.${skey} | format('%d') }}
+         </div>
 
-			{{- IF !loop.prev || artist.${skey} != loop.prev.${skey} }}
-				{{- SET j = loop.count }}
-			{{- END }}
-			<div class="Scoreboard-artist--rank" data-sort="{{ loop.count }}">
-				#{{ j }}
-			</div>
+         {{- IF !loop.prev || artist.${skey} != loop.prev.${skey} }}
+            {{- SET j = loop.count }}
+         {{- END }}
+         <div class="Scoreboard-artist--rank" data-sort="{{ loop.count }}">
+            #{{ j }}
+         </div>
 
-			<div class="Scoreboard-artist--expand">
-				<a class="Scoreboard-breakdown--toggle"
-					href="{{ artist.id | format(aUrl) }}">
-					<i class="fa fa-expand" title="{{ c.string('showBreakdown') }}"></i>
-					<i class="fa fa-compress" title="{{ c.string('hideBreakdown') }}"></i>
-				</a>
-			</div>
+         <div class="Scoreboard-artist--expand">
+            <a class="Scoreboard-breakdown--toggle"
+               href="{{ artist.id | format(aUrl) }}">
+               <i class="fa fa-expand" title="{{ c.string('showBreakdown') }}"></i>
+               <i class="fa fa-compress" title="{{ c.string('hideBreakdown') }}"></i>
+            </a>
+         </div>
 
-			<div class="Scoreboard-artist--name">
-				{{ PROCESS artist/name.tt }}
-			</div>
-		</div>
+         <div class="Scoreboard-artist--name">
+            {{ PROCESS artist/name.tt }}
+         </div>
+      </div>
 
-		{{ INCLUDE fragment/spinner.tt }}
+      {{ INCLUDE fragment/spinner.tt }}
 
-		<div class="Scoreboard-artist--awards">
-			{{ FOREACH award IN awards.for(artist) }}
-				{{ award.html | none }}
-			{{ END }}
-		</div>
+      <div class="Scoreboard-artist--awards">
+         {{ FOREACH award IN awards.for(artist) }}
+            {{ award.html | none }}
+         {{ END }}
+      </div>
 
-		<div class="Scoreboard-breakdown"></div>
-	</div>
-	{{- END }}
+      <div class="Scoreboard-breakdown"></div>
+   </div>
+   {{- END }}
 </div>
 
 {{ IF !artists.count }}
 <div class="Global-message">
-	Scoreboard is empty
+   Scoreboard is empty
 </div>
 {{ END }}

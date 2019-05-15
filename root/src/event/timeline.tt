@@ -2,6 +2,6 @@
 <div class="Event-timeline hidden"></div>
 {{ IF timeline }}
 <script type="text/javascript">
-	timelines.push({{ timeline.json | none }});
+   timelines.push({{ timeline.json | none }});
 </script>
 {{ END }}

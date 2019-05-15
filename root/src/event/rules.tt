@@ -21,17 +21,17 @@ In this event, for drawn works, "the prompt" refers to the written work(s) indic
 {{ END }}
 
 1. Submitted works&mdash;
-	1. may not be submitted elsewhere until the event's conclusion;
-	2. must be based on the prompt to a reasonable and discernible degree;
+   1. may not be submitted elsewhere until the event's conclusion;
+   2. must be based on the prompt to a reasonable and discernible degree;
 2. Submitted written works&mdash;
-	1. must be written primarily in English;
-	2. must be {{ event.wc_min }}–{{ event.wc_max }} words long;
+   1. must be written primarily in English;
+   2. must be {{ event.wc_min }}–{{ event.wc_max }} words long;
 3. Participants&mdash;
-	1. may not start creating their work(s) until the prompt has been selected;
-	2. may not disclose their authorship explicitly or implicitly until this website has done so;
-	3. may not submit works explicitly connected to another work of theirs; and
-	4. may not attempt to doctor the votes in any way that may give them or
-	another person an unfair advantage.
+   1. may not start creating their work(s) until the prompt has been selected;
+   2. may not disclose their authorship explicitly or implicitly until this website has done so;
+   3. may not submit works explicitly connected to another work of theirs; and
+   4. may not attempt to doctor the votes in any way that may give them or
+   another person an unfair advantage.
 
 {{- IF event.custom_rules }}
 
@@ -60,13 +60,13 @@ This event's content level is **E** for Everybody. This is loosely defined
 as material suitable for all ages.
 
 * Submitted works may not contain&mdash;
-	* coarse language;
-	* drug references;
-	* sexual references;
-	* adult themes;
-	* excessive violence;
-	* depictions of sexual acts; or
-	* grotesque content.
+   * coarse language;
+   * drug references;
+   * sexual references;
+   * adult themes;
+   * excessive violence;
+   * depictions of sexual acts; or
+   * grotesque content.
 
 {{- CASE 'T' }}
 
@@ -74,15 +74,15 @@ This event's content level is **T** for Teen. This is loosely defined as
 material suitable for teenagers.
 
 * Submitted works may not contain&mdash;
-	* depictions of sexual acts; or
-	* grotesque content.
+   * depictions of sexual acts; or
+   * grotesque content.
 
 {{- CASE 'A' }}
 
 This event's content level is **A** for Adult.
 
 * Submitted works may not contain&mdash;
-	* obscenity that serves no narrative purpose
+   * obscenity that serves no narrative purpose
 
 {{- CASE 'M' }}
 

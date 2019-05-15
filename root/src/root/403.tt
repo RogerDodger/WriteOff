@@ -1,12 +1,12 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ c.string('403') }}
-	</div>
+   <div class="Document-title">
+      {{ c.string('403') }}
+   </div>
 
-	{{ IF forbidden_msg }}
-	<div class="Flash">
-		<span class="fa fa-warning"></span>
-		{{ forbidden_msg | none }}
-	</div>
-	{{ END }}
+   {{ IF forbidden_msg }}
+   <div class="Flash">
+      <span class="fa fa-warning"></span>
+      {{ forbidden_msg | none }}
+   </div>
+   {{ END }}
 </div>

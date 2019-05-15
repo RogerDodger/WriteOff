@@ -1,16 +1,16 @@
 <td class="Ballot-score">
-	{{ IF score.0.defined }}
-		{{ IF score.1 == 0 }}
-			&ndash;
-		{{ ELSE }}
-			{{ pct = 1 - score.0 / score.1 }}
-			{{ n = score.0 + 1 }}
-			<span title="{{ pct * 100 | format('%.0f') }}%"
-			      style="color: hsla({{ pct * 120 }}, 100%, 25%, 1)">
-				{{ n.ordinal }}
-			</span>
-		{{ END }}
-	{{ ELSE }}
-		{{ score }}
-	{{ END }}
+   {{ IF score.0.defined }}
+      {{ IF score.1 == 0 }}
+         &ndash;
+      {{ ELSE }}
+         {{ pct = 1 - score.0 / score.1 }}
+         {{ n = score.0 + 1 }}
+         <span title="{{ pct * 100 | format('%.0f') }}%"
+               style="color: hsla({{ pct * 120 }}, 100%, 25%, 1)">
+            {{ n.ordinal }}
+         </span>
+      {{ END }}
+   {{ ELSE }}
+      {{ score }}
+   {{ END }}
 </td>

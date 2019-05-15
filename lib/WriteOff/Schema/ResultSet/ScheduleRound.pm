@@ -5,7 +5,7 @@ use warnings;
 use base 'WriteOff::Schema::ResultSet';
 
 sub ordered {
-	shift->order_by({ -asc => 'offset' });
+   shift->order_by({ -asc => 'offset' });
 }
 
 1;

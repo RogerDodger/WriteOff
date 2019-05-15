@@ -3,420 +3,420 @@
 // =============================================================================
 
 .Posts {
-	width: 100%;
-	max-width: none;
-	margin: 0;
+   width: 100%;
+   max-width: none;
+   margin: 0;
 }
 
 .Post {
-	@extend .clearfix;
-	@include container;
+   @extend .clearfix;
+   @include container;
 
-	margin-top: 1.5em;
-	word-wrap: break-word;
+   margin-top: 1.5em;
+   word-wrap: break-word;
 
-	@media #{$mobile} {
-		@include box;
-	}
+   @media #{$mobile} {
+      @include box;
+   }
 }
 
 .Post-hover {
-	@include box;
-	background-color: hsla(60, 20%, 94%, 1);
-	padding: 1em;
-	position: absolute;
-	max-width: $container-wide + 2rem;
+   @include box;
+   background-color: hsla(60, 20%, 94%, 1);
+   padding: 1em;
+   position: absolute;
+   max-width: $container-wide + 2rem;
 
-	.Post {
-		margin: 0;
-		width: 100%;
-	}
+   .Post {
+      margin: 0;
+      width: 100%;
+   }
 }
 
 .Post-deleted {
-	background-color: hsla(27, 40%, 90%, 1);
-	border: 0.05em solid hsla(27, 40%, 75%, 1);
-	color: hsla(27, 40%, 30%, 1);
-	font-size: 0.85em;
-	padding: 0.5em 1em;
+   background-color: hsla(27, 40%, 90%, 1);
+   border: 0.05em solid hsla(27, 40%, 75%, 1);
+   color: hsla(27, 40%, 30%, 1);
+   font-size: 0.85em;
+   padding: 0.5em 1em;
 
-	.Artist-link {
-		color: hsla(240, 40%, 30%, 1);
-	}
+   .Artist-link {
+      color: hsla(240, 40%, 30%, 1);
+   }
 }
 
 .Post-deleted--restore {
-	float: right;
+   float: right;
 
-	form {
-		@extend .noselect;
-		display: inline;
-	}
+   form {
+      @extend .noselect;
+      display: inline;
+   }
 
-	button {
-		@extend .button-reset;
-		color: hsla(27, 40%, 40%, 1);
+   button {
+      @extend .button-reset;
+      color: hsla(27, 40%, 40%, 1);
 
-		&:hover {
-			text-decoration: underline;
-		}
-	}
+      &:hover {
+         text-decoration: underline;
+      }
+   }
 }
 
 .Post.edit {
-	.Post-contents--body {
-		@extend .hidden;
-	}
+   .Post-contents--body {
+      @extend .hidden;
+   }
 }
 
 .Post:not(.edit) {
-	.Post-contents--edit {
-		@extend .hidden;
-	}
+   .Post-contents--edit {
+      @extend .hidden;
+   }
 }
 
 .Post.highlight .Post-contents {
-	box-shadow: 0 0 1em hsla(180, 50%, 75%, 1);
+   box-shadow: 0 0 1em hsla(180, 50%, 75%, 1);
 }
 
 .Post-author {
-	@include button($hue: 240, $sat: 60%, $l: 55%, $invert: 1);
+   @include button($hue: 240, $sat: 60%, $l: 55%, $invert: 1);
 
-	border-radius: 0.2em;
-	display: block;
-	font-size: 0.9em;
-	padding: 0.5em 0.17em;
-	text-align: center;
-	word-wrap: break-word;
+   border-radius: 0.2em;
+   display: block;
+   font-size: 0.9em;
+   padding: 0.5em 0.17em;
+   text-align: center;
+   word-wrap: break-word;
 
-	@media #{$mobile} {
-		border-radius: 0;
-	}
+   @media #{$mobile} {
+      border-radius: 0;
+   }
 }
 
 .admin .Post-author {
-	@include button-color($hue: 0, $sat: 55%, $l: 50%, $invert: 1);
+   @include button-color($hue: 0, $sat: 55%, $l: 50%, $invert: 1);
 }
 
 .organiser .Post-author {
-	@include button-color($hue: 130, $sat: 50%, $l: 40%, $invert: 1);
+   @include button-color($hue: 130, $sat: 50%, $l: 40%, $invert: 1);
 }
 
 .Post-avatar {
-	@include box;
-	background-color: hsla(0, 0%, 98%, 1);
-	border-radius: 0.1em;
-	float: right;
-	padding: 0.15em;
-	margin-top: 0.5em;
+   @include box;
+   background-color: hsla(0, 0%, 98%, 1);
+   border-radius: 0.1em;
+   float: right;
+   padding: 0.15em;
+   margin-top: 0.5em;
 
-	img {
-		width: 4em;
-		height: 4em;
-	}
+   img {
+      width: 4em;
+      height: 4em;
+   }
 }
 
 .Post-sidebar {
-	@media #{$desktop} {
-		float: left;
-		width: 9em;
+   @media #{$desktop} {
+      float: left;
+      width: 9em;
 
-		& + div {
-			margin-left: 9.7rem;
-		}
-	}
+      & + div {
+         margin-left: 9.7rem;
+      }
+   }
 
-	@media #{$mobile} {
-		display: none;
-	}
+   @media #{$mobile} {
+      display: none;
+   }
 }
 
 .Post-contents {
-	@include box;
-	background-color: hsla(0, 0%, 98%, 1);
-	border-radius: 0.2em;
-	color: #444;
-	font-size: (15em / 16);
-	line-height: 1.4;
-	padding: 0;
+   @include box;
+   background-color: hsla(0, 0%, 98%, 1);
+   border-radius: 0.2em;
+   color: #444;
+   font-size: (15em / 16);
+   line-height: 1.4;
+   padding: 0;
 }
 
 .Post-contents,
 .Post-edit,
 .Post-submit {
-	.Post-avatar,
-	.Post-author {
-		display: none;
+   .Post-avatar,
+   .Post-author {
+      display: none;
 
-		@media #{$mobile} {
-			display: block;
-		}
-	}
+      @media #{$mobile} {
+         display: block;
+      }
+   }
 
-	.Post-avatar {
-		margin: 0.5em;
-		margin-bottom: (3em / 36);
-		float: left;
-	}
+   .Post-avatar {
+      margin: 0.5em;
+      margin-bottom: (3em / 36);
+      float: left;
+   }
 
-	.Post-author {
-		text-align: start;
-	}
+   .Post-author {
+      text-align: start;
+   }
 }
 
 .Post-contents--header {
-	color: #989898;
-	font-size: (13em / 16);
-	line-height: (25 / 16);
-	margin: 0 1em;
-	padding-bottom: (9em / 13);
-	padding-top: 1em;
-	border-bottom: 1px solid #ddd;
+   color: #989898;
+   font-size: (13em / 16);
+   line-height: (25 / 16);
+   margin: 0 1em;
+   padding-bottom: (9em / 13);
+   padding-top: 1em;
+   border-bottom: 1px solid #ddd;
 
-	@media #{$mobile} {
-		font-size: (13em / 16);
-		padding-bottom: (9em / 13);
-		padding-top: (9em / 13);
-	}
+   @media #{$mobile} {
+      font-size: (13em / 16);
+      padding-bottom: (9em / 13);
+      padding-top: (9em / 13);
+   }
 
-	a,
-	button:not(:disabled) {
-		cursor: pointer;
-		color: #989898;
-	}
+   a,
+   button:not(:disabled) {
+      cursor: pointer;
+      color: #989898;
+   }
 }
 
 .Post-contents:hover {
-	.Post-contents--header {
-		a {
-			color: #666;
+   .Post-contents--header {
+      a {
+         color: #666;
 
-			&:hover {
-				text-decoration: underline;
-			}
-		}
+         &:hover {
+            text-decoration: underline;
+         }
+      }
 
-		.Post-controls .fa,
-		.Post-controls button,
-		.Post-vote--button:not(:disabled):not([value="1"]) {
-			color: #888;
+      .Post-controls .fa,
+      .Post-controls button,
+      .Post-vote--button:not(:disabled):not([value="1"]) {
+         color: #888;
 
-			&:hover,
-			&:hover .fa {
-				color: #555;
-			}
-		}
-	}
+         &:hover,
+         &:hover .fa {
+            color: #555;
+         }
+      }
+   }
 }
 
 .Post-controls button {
-	@extend .button-reset;
+   @extend .button-reset;
 }
 
 .Post-controls form,
 .Post-vote form {
-	display: inline;
+   display: inline;
 }
 
 .Post-vote--score {
-	color: green;
-	font-weight: bold;
+   color: green;
+   font-weight: bold;
 }
 
 .Post-controls {
-	float: right;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
+   float: right;
+   list-style-type: none;
+   margin: 0;
+   padding: 0;
 
-	li {
-		float: left;
-		margin-left: 0.6em;
-	}
+   li {
+      float: left;
+      margin-left: 0.6em;
+   }
 }
 
 .Post-contents--body {
-	@include bbcode;
-	margin: 0 1em;
-	padding-top: 1em;
-	padding-bottom: (18em / 16);
-	white-space: pre-wrap;
+   @include bbcode;
+   margin: 0 1em;
+   padding-top: 1em;
+   padding-bottom: (18em / 16);
+   white-space: pre-wrap;
 
-	@media #{$mobile} {
-		clear: both;
-		font-size: (15em / 16);
-		padding-top: (8em / 15);
-		padding-bottom: (13em / 15);
-	}
+   @media #{$mobile} {
+      clear: both;
+      font-size: (15em / 16);
+      padding-top: (8em / 15);
+      padding-bottom: (13em / 15);
+   }
 
-	hr {
-		background: transparent;
-		border: none;
-		border-bottom: 1px solid #bbb;
-	}
+   hr {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #bbb;
+   }
 
-	blockquote {
-		padding: 0.1em 0.5em;
-		border-left: 0.3em solid hsla(240, 40%, 70%, 1);
-		opacity: 0.75;
-		margin: 0;
-	}
+   blockquote {
+      padding: 0.1em 0.5em;
+      border-left: 0.3em solid hsla(240, 40%, 70%, 1);
+      opacity: 0.75;
+      margin: 0;
+   }
 
-	a {
-		color: blue;
-		text-decoration: none;
+   a {
+      color: blue;
+      text-decoration: none;
 
-		&:hover {
-			text-decoration: underline;
-		}
+      &:hover {
+         text-decoration: underline;
+      }
 
-		&:not(.Post-reply):visited {
-			color: purple;
-		}
-	}
+      &:not(.Post-reply):visited {
+         color: purple;
+      }
+   }
 }
 
 .Post-reply {
-	cursor: pointer;
+   cursor: pointer;
 
-	&.loading {
-		cursor: wait;
-	}
+   &.loading {
+      cursor: wait;
+   }
 }
 
 .Post-submit,
 .Post-edit {
-	background-color: #f7f7f7;
-	box-shadow: 0 0 3px #b6b6b6;
+   background-color: #f7f7f7;
+   box-shadow: 0 0 3px #b6b6b6;
 
-	font-size: (17em / 16);
+   font-size: (17em / 16);
 
-	@media #{$mobile} {
-		font-size: (15em / 16);
-	}
+   @media #{$mobile} {
+      font-size: (15em / 16);
+   }
 }
 
 .Post-form--controls {
-	padding: 0.2em;
+   padding: 0.2em;
 }
 
 .Post-form--controls > ul {
-	display: inline-block;
-	line-height: 0;
-	list-style-type: none;
-	margin: 0 0.2em;
-	padding: 0.01em;
-	font-size: (15em / 17);
-	position: relative;
+   display: inline-block;
+   line-height: 0;
+   list-style-type: none;
+   margin: 0 0.2em;
+   padding: 0.01em;
+   font-size: (15em / 17);
+   position: relative;
 
-	& > li {
-		display: inline-block;
-		margin: 0 0.2em;
-		padding: 0.5em;
+   & > li {
+      display: inline-block;
+      margin: 0 0.2em;
+      padding: 0.5em;
 
-		&:hover {
-			background-color: white;
-			border-radius: 0.25em;
-			box-shadow: 0 0 0.15em #b6b6b6 inset;
-			cursor: pointer;
-		}
+      &:hover {
+         background-color: white;
+         border-radius: 0.25em;
+         box-shadow: 0 0 0.15em #b6b6b6 inset;
+         cursor: pointer;
+      }
 
-		&:active {
-			box-shadow: 0 0 0.23em #b6b6b6 inset;
-		}
-	}
+      &:active {
+         box-shadow: 0 0 0.23em #b6b6b6 inset;
+      }
+   }
 
-	& + ul:before {
-		@extend .noselect;
-		background-color: #e5e5e5;
-		box-shadow: 0 0 2px white;
-		content: " ";
-		height: 80%;
-		position: absolute;
-		left: -0.21em;
-		top: 10%;
-		width: 1px;
-	}
+   & + ul:before {
+      @extend .noselect;
+      background-color: #e5e5e5;
+      box-shadow: 0 0 2px white;
+      content: " ";
+      height: 80%;
+      position: absolute;
+      left: -0.21em;
+      top: 10%;
+      width: 1px;
+   }
 
-	.fa-font {
-		color: hsla(240, 50%, 50%, 1);
-	}
+   .fa-font {
+      color: hsla(240, 50%, 50%, 1);
+   }
 }
 
 .Post-form--body {
-	border: solid #e5e5e5;
-	border-width: 1px 0;
+   border: solid #e5e5e5;
+   border-width: 1px 0;
 
-	textarea {
-		background: $off-white;
-		border: 0;
-		box-shadow: none;
-		color: #444;
-		min-height: 12em;
-		font-size: 0.9rem;
-		padding: 0.75em;
-		width: 100%;
-	}
+   textarea {
+      background: $off-white;
+      border: 0;
+      box-shadow: none;
+      color: #444;
+      min-height: 12em;
+      font-size: 0.9rem;
+      padding: 0.75em;
+      width: 100%;
+   }
 }
 
 .Post-contents--edit {
-	.Post-form--body {
-		margin-top: -1px;
-	}
+   .Post-form--body {
+      margin-top: -1px;
+   }
 
-	.Post-form--footer {
-		font-size: 0.9em;
-	}
+   .Post-form--footer {
+      font-size: 0.9em;
+   }
 }
 
 .Post-form--footer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 1em;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 1em;
 
-	button {
-		font-size: 0.9em;
-	}
+   button {
+      font-size: 0.9em;
+   }
 
-	button[type="submit"],
-	.Post-edit--save {
-		@include button($hue: 120);
-	}
+   button[type="submit"],
+   .Post-edit--save {
+      @include button($hue: 120);
+   }
 
-	button[type="submit"] {
-		white-space: nowrap;
-	}
+   button[type="submit"] {
+      white-space: nowrap;
+   }
 
-	.Post-edit--cancel {
-		@include button($hue: 0, $sat: 20%);
-	}
+   .Post-edit--cancel {
+      @include button($hue: 0, $sat: 20%);
+   }
 
-	.Post-form--role {
-		width: auto;
-	}
+   .Post-form--role {
+      width: auto;
+   }
 }
 
 .Pager {
-	margin: 2.5rem auto;
+   margin: 2.5rem auto;
 
-	ul {
-		@include button-group($hue: 40, $sat: 60%);
-		margin: 0;
+   ul {
+      @include button-group($hue: 40, $sat: 60%);
+      margin: 0;
 
-		li a {
-			width: 2.5em;
-			height: 2.5em;
-		}
-	}
+      li a {
+         width: 2.5em;
+         height: 2.5em;
+      }
+   }
 }
 
 .Pager.loading,
 .Pager.loading + .Posts {
-	opacity: 0.5;
+   opacity: 0.5;
 
-	&:hover,
-	a:hover {
-		cursor: wait !important;
-	}
+   &:hover,
+   a:hover {
+      cursor: wait !important;
+   }
 }

@@ -7,27 +7,27 @@
  */
 
 figure {
-	max-width: 230px;
+   max-width: 230px;
 }
 
 div.pics figure {
-	display: inline-block;
-	vertical-align: top;
-	text-align: center;
-	margin: 0 1.5em 1.5em 0;
+   display: inline-block;
+   vertical-align: top;
+   text-align: center;
+   margin: 0 1.5em 1.5em 0;
 }
 
 figure img {
-	margin-bottom: 4px;
-	max-width: 225px;
-	max-height: 225px;
-	border: 1px solid black;
-	background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
-	box-shadow: 2px 2px 2px black;
+   margin-bottom: 4px;
+   max-width: 225px;
+   max-height: 225px;
+   border: 1px solid black;
+   background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
+   box-shadow: 2px 2px 2px black;
 }
 
 .required {
-	color: red;
+   color: red;
 }
 
 /*
@@ -35,10 +35,10 @@ figure img {
  */
 
 a.dialog-fetcher:hover {
-	cursor: pointer;
+   cursor: pointer;
 }
 .dialog {
-	min-width: 300px;
+   min-width: 300px;
 }
 // ==========================================================================
 // STYLES FOR OLD LAYOUT - DEPRECATED, REMOVE WHERE POSSIBLE

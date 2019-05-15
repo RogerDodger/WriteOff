@@ -1,2 +1,2 @@
 <a class="Entry-link" href="{{ c.uri_for_action(
-	entry.view, [ entry.id_uri ]) }}">{{ entry.title }}</a>
+   entry.view, [ entry.id_uri ]) }}">{{ entry.title }}</a>

@@ -27,73 +27,73 @@ Cleans old data from the database.
 =cut
 
 sub auto :Private {
-	my ($self, $c) = @_;
+   my ($self, $c) = @_;
 
-	substr($c->req->address, -9) eq '127.0.0.1'
-		or $c->error("Forbidden");
+   substr($c->req->address, -9) eq '127.0.0.1'
+      or $c->error("Forbidden");
 }
 
 sub cleanup :Local {
-	my ( $self, $c ) = @_;
+   my ( $self, $c ) = @_;
 
-	$c->model('DB::User')->clean_unverified;
-	$c->model('DB::Token')->clean_expired;
+   $c->model('DB::User')->clean_unverified;
+   $c->model('DB::Token')->clean_expired;
 }
 
 sub clear :Local {
-	my ($self, $c, $target) = @_;
+   my ($self, $c, $target) = @_;
 
-	my $cache = $c->config->{$target};
+   my $cache = $c->config->{$target};
 
-	if ($cache && $cache->can('clear')) {
-		$cache->clear;
-	}
-	else {
-		$c->error("Cache $target not found");
-	}
+   if ($cache && $cache->can('clear')) {
+      $cache->clear;
+   }
+   else {
+      $c->error("Cache $target not found");
+   }
 }
 
 sub jobs :Local {
-	my ( $self, $c ) = @_;
+   my ( $self, $c ) = @_;
 
-	my $rs = $c->model('DB::Job')->active;
+   my $rs = $c->model('DB::Job')->active;
 
-	# Extract and delete jobs *before* executing them, lest long-running
-	# jobs execute twice.
-	my @jobs = $rs->all;
-	$rs->delete;
+   # Extract and delete jobs *before* executing them, lest long-running
+   # jobs execute twice.
+   my @jobs = $rs->all;
+   $rs->delete;
 
-	$c->forward($_->action, $_->args) for @jobs;
+   $c->forward($_->action, $_->args) for @jobs;
 }
 
 sub schedule :Local {
-	my ($self, $c) = @_;
+   my ($self, $c) = @_;
 
-	for my $sch ($c->model('DB::Schedule')->active->all) {
-		$c->stash->{event} = $c->model('DB::Event')->create_from_sched($sch);
+   for my $sch ($c->model('DB::Schedule')->active->all) {
+      $c->stash->{event} = $c->model('DB::Event')->create_from_sched($sch);
 
-		if ($sch->period > 0) {
-			$sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
-		}
-		else {
-			$sch->delete;
-		}
+      if ($sch->period > 0) {
+         $sch->update({ next => $sch->next->clone->add(weeks => $sch->period) });
+      }
+      else {
+         $sch->delete;
+      }
 
-		$c->stash->{trigger} = EVENTCREATED;
-		$c->forward('/event/notify_mailing_list');
-	}
+      $c->stash->{trigger} = EVENTCREATED;
+      $c->forward('/event/notify_mailing_list');
+   }
 }
 
 sub end :Private {
-	my ($self, $c) = @_;
+   my ($self, $c) = @_;
 
-	if ($c->has_errors) {
-		$c->res->body(join "\n", map "Error: $_", @{ $c->error });
-		$c->error(0);
-	}
-	elsif (!$c->res->body) {
-		$c->res->body("Task complete\n");
-	}
+   if ($c->has_errors) {
+      $c->res->body(join "\n", map "Error: $_", @{ $c->error });
+      $c->error(0);
+   }
+   elsif (!$c->res->body) {
+      $c->res->body("Task complete\n");
+   }
 }
 
 =head1 AUTHOR

@@ -1,84 +1,84 @@
 {{ BLOCK divider }}
 <tbody class="Table-divider">
-	<tr>
-		<td colspan="99"></td>
-	</tr>
+   <tr>
+      <td colspan="99"></td>
+   </tr>
 </tbody>
 {{ END }}
 
 <div class="Document">
-	<div class="Document-title">
-		Fic Gallery
-	</div>
+   <div class="Document-title">
+      Fic Gallery
+   </div>
 
-	{{ IF event.fic_gallery_opened }}
-		<table class="Storys gallery">
-			<thead>
-				<tr>
-					<th class="Storys-num">#</th>
-					<th>Story</th>
-					<th class="no-sort"></th>
-					{{ IF event.commenting }}
-					<th><i class="fa fa-users" title="Commenters"></i></th>
-					<th><i class="fa fa-comment" title="Comments"></i></th>
-					{{ END }}
-					<th class="Storys-wordcount">Words</th>
-				</tr>
-			</thead>
+   {{ IF event.fic_gallery_opened }}
+      <table class="Storys gallery">
+         <thead>
+            <tr>
+               <th class="Storys-num">#</th>
+               <th>Story</th>
+               <th class="no-sort"></th>
+               {{ IF event.commenting }}
+               <th><i class="fa fa-users" title="Commenters"></i></th>
+               <th><i class="fa fa-comment" title="Comments"></i></th>
+               {{ END }}
+               <th class="Storys-wordcount">Words</th>
+            </tr>
+         </thead>
 
-			<tbody>
-			{{ FOREACH entry IN gallery.all }}
-				{{ IF loop.count != 1
-					&& (loop.prev.disqualified != entry.disqualified
-						|| loop.prev.round_id != entry.round_id) }}
-					</tbody>
-					{{ PROCESS divider }}
-					<tbody>
-				{{ END }}
+         <tbody>
+         {{ FOREACH entry IN gallery.all }}
+            {{ IF loop.count != 1
+               && (loop.prev.disqualified != entry.disqualified
+                  || loop.prev.round_id != entry.round_id) }}
+               </tbody>
+               {{ PROCESS divider }}
+               <tbody>
+            {{ END }}
 
-				<tr class="{{ loop.parity }}">
-					<td class="Storys-num">{{ entry.num }}</td>
-					<td class="Storys-listing">
-						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">{{ entry.title }}</a>
-						{{ IF entry.artist_public }}
-						by {{ PROCESS artist/name.tt  artist = entry.artist }}
-						{{ END }}
-					</td>
-					<td class="Storys-export">
-						(<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.txt">txt</a>,
-						<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.epub">epub</a>)
-					</td>
-					{{ IF event.commenting }}
-					<td class="Storys-posts">{{ entry.posts_rs.group_by_rs('artist_id').count }}</td>
-					<td class="Storys-posts">{{ entry.posts_rs.count }}</td>
-					{{ END }}
-					<td class="Storys-wordcount">{{ entry.story.wordcount.chunk(-3).join(',') }}</td>
-				</tr>
-			{{ END }}
-			</tbody>
+            <tr class="{{ loop.parity }}">
+               <td class="Storys-num">{{ entry.num }}</td>
+               <td class="Storys-listing">
+                  <a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">{{ entry.title }}</a>
+                  {{ IF entry.artist_public }}
+                  by {{ PROCESS artist/name.tt  artist = entry.artist }}
+                  {{ END }}
+               </td>
+               <td class="Storys-export">
+                  (<a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.txt">txt</a>,
+                  <a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}.epub">epub</a>)
+               </td>
+               {{ IF event.commenting }}
+               <td class="Storys-posts">{{ entry.posts_rs.group_by_rs('artist_id').count }}</td>
+               <td class="Storys-posts">{{ entry.posts_rs.count }}</td>
+               {{ END }}
+               <td class="Storys-wordcount">{{ entry.story.wordcount.chunk(-3).join(',') }}</td>
+            </tr>
+         {{ END }}
+         </tbody>
 
-			{{ PROCESS divider }}
+         {{ PROCESS divider }}
 
-			<tbody>
-				<tr>
-					<td class="Storys-num"></td>
-					<td class="Storys-listing">Anthology</td>
-					<td class="Storys-export">
-						(<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
-					</td>
-					{{ IF event.commenting }}
-					<td class="Storys-posts"></td>
-					<td class="Storys-posts"></td>
-					{{ END }}
-					<td class="Storys-wordcount">
-						{{ event.wordcount.chunk(-3).join(',') }}
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	{{ ELSE }}
-		<div class="Countdown">
-			{{ event.fic_gallery_opens.delta_html | none }}
-		</div>
-	{{ END }}
+         <tbody>
+            <tr>
+               <td class="Storys-num"></td>
+               <td class="Storys-listing">Anthology</td>
+               <td class="Storys-export">
+                  (<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
+               </td>
+               {{ IF event.commenting }}
+               <td class="Storys-posts"></td>
+               <td class="Storys-posts"></td>
+               {{ END }}
+               <td class="Storys-wordcount">
+                  {{ event.wordcount.chunk(-3).join(',') }}
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   {{ ELSE }}
+      <div class="Countdown">
+         {{ event.fic_gallery_opens.delta_html | none }}
+      </div>
+   {{ END }}
 </div>

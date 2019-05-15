@@ -4,11 +4,11 @@ use strict;
 use base 'WriteOff::Schema::ResultSet';
 
 sub unread {
-	shift->search({ read => 0 });
+   shift->search({ read => 0 });
 }
 
 sub unread_rs {
-	scalar shift->unread;
+   scalar shift->unread;
 }
 
 1;

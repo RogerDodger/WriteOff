@@ -3,150 +3,150 @@
 // =============================================================================
 
 .Results {
-	@include striped-table;
+   @include striped-table;
 
-	& > tbody > tr {
-		&.gold {
-			font-size: 1.25em;
-			background-color: hsla(51, 65%, 90%, 1) !important;
-		}
+   & > tbody > tr {
+      &.gold {
+         font-size: 1.25em;
+         background-color: hsla(51, 65%, 90%, 1) !important;
+      }
 
-		&.silver {
-			font-size: 1.17em;
-			background-color: hsla(0, 0%, 90%, 1) !important;
-		}
+      &.silver {
+         font-size: 1.17em;
+         background-color: hsla(0, 0%, 90%, 1) !important;
+      }
 
-		&.bronze {
-			font-size: 1.10em;
-			background-color: hsla(39, 65%, 90%, 1) !important;
-		}
+      &.bronze {
+         font-size: 1.10em;
+         background-color: hsla(39, 65%, 90%, 1) !important;
+      }
 
-		& > td {
-			&.Results-rank,
-			&.Results-awards,
-			&.Results-score {
-				text-align: center;
-			}
+      & > td {
+         &.Results-rank,
+         &.Results-awards,
+         &.Results-score {
+            text-align: center;
+         }
 
-			&.Results-artist {
-				text-align: right;
-			}
+         &.Results-artist {
+            text-align: right;
+         }
 
-			&.Results-title {
-				text-align: left;
-				width: 100%;
-			}
+         &.Results-title {
+            text-align: left;
+            width: 100%;
+         }
 
-			&.Results-awards {
-				padding-top: 0;
-				padding-bottom: 0;
-			}
+         &.Results-awards {
+            padding-top: 0;
+            padding-bottom: 0;
+         }
 
-			&.Results-awards,
-			&.Results-artist {
-				white-space: nowrap;
-			}
-		}
-	}
+         &.Results-awards,
+         &.Results-artist {
+            white-space: nowrap;
+         }
+      }
+   }
 
-	.Award {
-		height: 1.8em;
-		width: 1.8em;
-	}
+   .Award {
+      height: 1.8em;
+      width: 1.8em;
+   }
 }
 
 .Results-breakdown {
-	font-size: 0.7rem;
+   font-size: 0.7rem;
 }
 
 .Guesses {
-	width: 100%;
-	table-layout: fixed;
+   width: 100%;
+   table-layout: fixed;
 }
 
 .Guesses-wrapper {
-	position: relative;
+   position: relative;
 }
 
 .Guesses-sticky {
-	position: absolute;
-	top: 1.3em;
-	width: 10em;
-	@media #{$mobile} {
-		width: 6.5em;
-	}
+   position: absolute;
+   top: 1.3em;
+   width: 10em;
+   @media #{$mobile} {
+      width: 6.5em;
+   }
 }
 
 .Guesses-grid {
-	margin-left: 10.5em;
-	overflow: auto;
-	@media #{$mobile} {
-		margin-left: 7em;
-	}
+   margin-left: 10.5em;
+   overflow: auto;
+   @media #{$mobile} {
+      margin-left: 7em;
+   }
 
-	.fa {
-		vertical-align: middle;
-	}
+   .fa {
+      vertical-align: middle;
+   }
 
-	.Guesses {
-		margin-bottom: 0.7em;
-	}
+   .Guesses {
+      margin-bottom: 0.7em;
+   }
 }
 
 .Guesses-entry {
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: start;
-	text-overflow: ellipsis;
+   overflow: hidden;
+   white-space: nowrap;
+   text-align: start;
+   text-overflow: ellipsis;
 }
 
 .Guesses-entry,
 .Guesses-guess, {
-	padding: 0.2em;
+   padding: 0.2em;
 }
 
 .Guesses-guess {
-	cursor: default;
-	text-align: center;
-	position: relative;
+   cursor: default;
+   text-align: center;
+   position: relative;
 
-	.fa-circle {
-		font-size: 0.5em;
-	}
+   .fa-circle {
+      font-size: 0.5em;
+   }
 
-	&:not(:hover) .Guess-details {
-		@extend .invisible;
-	}
+   &:not(:hover) .Guess-details {
+      @extend .invisible;
+   }
 }
 
 .Guess-details {
-	position: absolute;
-	left: 3.8em;
-	top: -0.7em;
-	background: white;
-	border: 1px solid hsla(200, 30%, 70%, 1);
-	z-index: 1;
-	white-space: nowrap;
+   position: absolute;
+   left: 3.8em;
+   top: -0.7em;
+   background: white;
+   border: 1px solid hsla(200, 30%, 70%, 1);
+   z-index: 1;
+   white-space: nowrap;
 
-	display: table;
-	& > div {
-		display: table-row;
-		& > div {
-			display: table-cell;
-			padding: 0.1em 0.2em;
-		}
-	}
+   display: table;
+   & > div {
+      display: table-row;
+      & > div {
+         display: table-cell;
+         padding: 0.1em 0.2em;
+      }
+   }
 }
 
 .Guesses-guesser {
-	font-weight: normal;
-	white-space: nowrap;
-	overflow: hidden;
-	width: 6em;
-	padding: 0 0.2em;
-	text-overflow: ellipsis;
+   font-weight: normal;
+   white-space: nowrap;
+   overflow: hidden;
+   width: 6em;
+   padding: 0 0.2em;
+   text-overflow: ellipsis;
 }
 
 tr.Breakdown-row > td {
-	font-size: 1rem;
+   font-size: 1rem;
 }

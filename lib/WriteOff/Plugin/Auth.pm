@@ -4,65 +4,65 @@ use Class::Null;
 use WriteOff::Util;
 
 sub authenticate {
-	my ($c, $username, $password) = @_;
+   my ($c, $username, $password) = @_;
 
-	my $user = $c->model('DB::User')->find({ name_canonical => lc $username });
+   my $user = $c->model('DB::User')->find({ name_canonical => lc $username });
 
-	if ($user && $user->check_password($password)) {
-		$c->session->{__user_id} = $user->id;
-		return 1;
-	}
+   if ($user && $user->check_password($password)) {
+      $c->session->{__user_id} = $user->id;
+      return 1;
+   }
 
-	0;
+   0;
 }
 
 sub csrf_token {
-	my $c = shift;
-	my $key = '__csrf_token';
+   my $c = shift;
+   my $key = '__csrf_token';
 
-	return $c->session($key) // ($c->session->{$key} = WriteOff::Util::token());
+   return $c->session($key) // ($c->session->{$key} = WriteOff::Util::token());
 }
 
 sub logout {
-	my $c = shift;
+   my $c = shift;
 
-	delete $c->stash->{__user};
-	delete $c->session->{__user_id};
+   delete $c->stash->{__user};
+   delete $c->session->{__user_id};
 }
 
 sub user {
-	my ($c, $user) = @_;
+   my ($c, $user) = @_;
 
-	if ($user) {
-		$c->session->{__user_id} = $user->id;
-		return $c->stash->{__user} = $user;
-	}
+   if ($user) {
+      $c->session->{__user_id} = $user->id;
+      return $c->stash->{__user} = $user;
+   }
 
-	return $c->stash->{__user} if $c->stash->{__user};
+   return $c->stash->{__user} if $c->stash->{__user};
 
-	if (my $uid = $c->session('__user_id')) {
-		if (my $user = $c->model('DB::User')->find($uid)) {
-			return $c->stash->{__user} = $user;
-		}
-	}
+   if (my $uid = $c->session('__user_id')) {
+      if (my $user = $c->model('DB::User')->find($uid)) {
+         return $c->stash->{__user} = $user;
+      }
+   }
 
-	return Class::Null->new;
+   return Class::Null->new;
 }
 
 sub user_id {
-	my $self = shift;
+   my $self = shift;
 
-	return $self->user->id || -1;
+   return $self->user->id || -1;
 }
 
 sub post_roles {
-	my $c = shift;
+   my $c = shift;
 
-	return $c->stash->{__post_roles} //= [
-		'user',
-		('organiser') x!! $c->user->organises($c->stash->{event}),
-		('admin') x!! $c->user->admin,
-	];
+   return $c->stash->{__post_roles} //= [
+      'user',
+      ('organiser') x!! $c->user->organises($c->stash->{event}),
+      ('admin') x!! $c->user->admin,
+   ];
 }
 
 1;

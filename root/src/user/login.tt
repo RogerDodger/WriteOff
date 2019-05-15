@@ -1,24 +1,24 @@
 <div class="Document">
-	<div class="Document-title">{{ c.string('login') }}</div>
+   <div class="Document-title">{{ c.string('login') }}</div>
 
-	<form class="Form" method="post" action="/user/login">
-		<input type="hidden" name="referer" value="{{ c.req.param('referer') || c.req.referer }}">
+   <form class="Form" method="post" action="/user/login">
+      <input type="hidden" name="referer" value="{{ c.req.param('referer') || c.req.referer }}">
 
-		<div class="Form-item">
-			<label>{{ c.string('username') }}</label>
-			<input type="text" name="Username" size="32" placeholder="JoeBlow" required autofocus>
-		</div>
+      <div class="Form-item">
+         <label>{{ c.string('username') }}</label>
+         <input type="text" name="Username" size="32" placeholder="JoeBlow" required autofocus>
+      </div>
 
-		<div class="Form-item">
-			<label>{{ c.string('password') }}</label>
-			<input type="password" name="Password" size="32" placeholder="hunter2" required>
-			<span class="Form-note">
-				<a href="/user/recover">{{ c.string('forgotPassword') }}</a>
-			</span>
-		</div>
+      <div class="Form-item">
+         <label>{{ c.string('password') }}</label>
+         <input type="password" name="Password" size="32" placeholder="hunter2" required>
+         <span class="Form-note">
+            <a href="/user/recover">{{ c.string('forgotPassword') }}</a>
+         </span>
+      </div>
 
-		<div class="Form-item">
-			<input type="submit" value="{{ c.string('login') }}">
-		</div>
-	</form>
+      <div class="Form-item">
+         <input type="submit" value="{{ c.string('login') }}">
+      </div>
+   </form>
 </div>

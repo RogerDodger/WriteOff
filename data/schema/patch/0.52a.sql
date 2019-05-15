@@ -26,13 +26,13 @@ SELECT * FROM genres;
 
 .mode insert users
 SELECT id, (
-	SELECT artist_id FROM scores LEFT JOIN artists ON scores.artist_id=artists.id
-	WHERE artists.user_id=users.id
-	GROUP BY scores.artist_id
-	ORDER BY COUNT(artist_id)
-	LIMIT 1),
-	username, lower(username), password, email, lower(email),
-	username='RogerDodger', verified, mailme, created, updated
+   SELECT artist_id FROM scores LEFT JOIN artists ON scores.artist_id=artists.id
+   WHERE artists.user_id=users.id
+   GROUP BY scores.artist_id
+   ORDER BY COUNT(artist_id)
+   LIMIT 1),
+   username, lower(username), password, email, lower(email),
+   username='RogerDodger', verified, mailme, created, updated
 FROM users;
 
 .mode insert tokens
@@ -43,7 +43,7 @@ SELECT id, user_id, name, IFNULL((SELECT MIN(created) FROM storys WHERE artist_i
 
 .mode insert events
 SELECT id, format_id, genre_id, prompt, blurb, wc_min, wc_max, rule_set,
-	custom_rules, guessing, tallied, created, created
+   custom_rules, guessing, tallied, created, created
 FROM events;
 
 .mode insert prompts
@@ -64,20 +64,20 @@ SELECT * FROM user_event;
 -- round_id must be determined later
 .mode insert entrys
 SELECT NULL, s.event_id, user_id, artist_id, s.id, NULL, NULL, title, seed,
-	e.tallied OR s.disqualified OR e.public < datetime('now') AND NOT s.candidate,
-	s.disqualified,
-	(SELECT orig FROM scores WHERE s.id=scores.story_id),
-	(SELECT orig FROM scores WHERE s.id=scores.story_id),
-	(SELECT orig FROM scores WHERE s.id=scores.story_id),
-	rank, rank_low, 0, s.created, s.updated
+   e.tallied OR s.disqualified OR e.public < datetime('now') AND NOT s.candidate,
+   s.disqualified,
+   (SELECT orig FROM scores WHERE s.id=scores.story_id),
+   (SELECT orig FROM scores WHERE s.id=scores.story_id),
+   (SELECT orig FROM scores WHERE s.id=scores.story_id),
+   rank, rank_low, 0, s.created, s.updated
 FROM storys s
 LEFT JOIN events e ON s.event_id=e.id;
 
 SELECT NULL, event_id, user_id, artist_id, NULL, id, NULL, title, seed, 1, 0,
-	(SELECT orig FROM scores WHERE images.id=scores.image_id),
-	(SELECT orig FROM scores WHERE images.id=scores.image_id),
-	(SELECT orig FROM scores WHERE images.id=scores.image_id),
-	rank, rank_low, 0, created, updated
+   (SELECT orig FROM scores WHERE images.id=scores.image_id),
+   (SELECT orig FROM scores WHERE images.id=scores.image_id),
+   (SELECT orig FROM scores WHERE images.id=scores.image_id),
+   rank, rank_low, 0, created, updated
 FROM images;
 
 .mode insert storys
@@ -96,11 +96,11 @@ SELECT * from image_story;
 -- event_id IN [3,7,8,9] has judges
 
 UPDATE storys
-	SET prelim_stdev=(
-		SELECT STDEV(v.percentile)
-		FROM votes v LEFT JOIN vote_records r ON r.id=v.record_id
-		WHERE r.round='prelim' AND v.story_id=storys.id AND v.value IS NOT NULL)
-	WHERE event_id IN (35, 36, 37);
+   SET prelim_stdev=(
+      SELECT STDEV(v.percentile)
+      FROM votes v LEFT JOIN vote_records r ON r.id=v.record_id
+      WHERE r.round='prelim' AND v.story_id=storys.id AND v.value IS NOT NULL)
+   WHERE event_id IN (35, 36, 37);
 
 .mode insert ratings_tmp
 SELECT NULL, NULL, id, event_id, 'final', 'art', public_score, public_stdev
@@ -139,15 +139,15 @@ SELECT id, record_id, story_id, image_id, value, abstained FROM votes;
 
 .mode insert theorys
 SELECT id, event_id, user_id, artist_id, (
-	SELECT award_id
-	FROM artist_award a
-	LEFT JOIN vote_records ir
-		ON ir.event_id=a.event_id
-		AND ir.artist_id=a.artist_id
-	WHERE ir.event_id=r.event_id
-	AND ir.artist_id=r.artist_id
-	AND award_id=7),
-	NULL, created, updated FROM vote_records r WHERE round = 'guess';
+   SELECT award_id
+   FROM artist_award a
+   LEFT JOIN vote_records ir
+      ON ir.event_id=a.event_id
+      AND ir.artist_id=a.artist_id
+   WHERE ir.event_id=r.event_id
+   AND ir.artist_id=r.artist_id
+   AND award_id=7),
+   NULL, created, updated FROM vote_records r WHERE round = 'guess';
 
 .mode insert guesses_tmp
 SELECT id, record_id, story_id, image_id, artist_id FROM guesses;

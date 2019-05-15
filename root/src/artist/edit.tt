@@ -1,19 +1,19 @@
 {{ WRAPPER 'artist/card.tt' }}
 <div class="p1">
-	<form class="Form" method="post" enctype="multipart/form-data">
-		<div class="Form-item">
-			<label>Avatar</label>
-			<input type="file" name="avatar" accept="{{ c.config.biz.img.types.join(',') }}">
-		</div>
+   <form class="Form" method="post" enctype="multipart/form-data">
+      <div class="Form-item">
+         <label>Avatar</label>
+         <input type="file" name="avatar" accept="{{ c.config.biz.img.types.join(',') }}">
+      </div>
 
-		<div class="Form-item">
-			<label>Bio</label>
-			<input type="text" name="bio" maxlength="256" value="{{ artist.bio }}">
-		</div>
+      <div class="Form-item">
+         <label>Bio</label>
+         <input type="text" name="bio" maxlength="256" value="{{ artist.bio }}">
+      </div>
 
-		<div class="Form-item">
-			<input type="submit" value="{{ c.string('saveChanges') }}">
-		</div>
-	</form>
+      <div class="Form-item">
+         <input type="submit" value="{{ c.string('saveChanges') }}">
+      </div>
+   </form>
 </div>
 {{ END }}

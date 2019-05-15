@@ -1,76 +1,76 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ c.string('preferences') }}
-	</div>
+   <div class="Document-title">
+      {{ c.string('preferences') }}
+   </div>
 
-	<form class="Form" method="post">
-		{{ csrf_field | none }}
+   <form class="Form" method="post">
+      {{ csrf_field | none }}
 
-		<div class="Form-item">
-			<label>{{ c.string('storyFont') }}</label>
-			<select name="font" class="Font-select">
-				<option value="serif">{{ c.string('serif') }}</option>
-				<option value="sans-serif">{{ c.string('sans') }}</option>
-			</select>
-		</div>
+      <div class="Form-item">
+         <label>{{ c.string('storyFont') }}</label>
+         <select name="font" class="Font-select">
+            <option value="serif">{{ c.string('serif') }}</option>
+            <option value="sans-serif">{{ c.string('sans') }}</option>
+         </select>
+      </div>
 
-		<div class="Story-example hidden">
-			{{ FOREACH line IN c.string('lipsum').split("\n\n") }}
-			<div>{{ line }}</div>
-			{{ END }}
-		</div>
+      <div class="Story-example hidden">
+         {{ FOREACH line IN c.string('lipsum').split("\n\n") }}
+         <div>{{ line }}</div>
+         {{ END }}
+      </div>
 
-		<div class="Form-item">
-			<label>
-				{{ c.string('emailNotifs') }}
-				<span class="Hint" data-hint="{{ c.string('emailNotifsHint') }}">?</span>
-			</label>
+      <div class="Form-item">
+         <label>
+            {{ c.string('emailNotifs') }}
+            <span class="Hint" data-hint="{{ c.string('emailNotifsHint') }}">?</span>
+         </label>
 
-			{{ BLOCK cb }}
-				<li>
-				<label class="Check-button">
-					<input name="{{ name _ opt.id }}" type="checkbox">
-					<span>{{ c.string(opt.name) }}</span>
-				</label>
-			{{ END }}
+         {{ BLOCK cb }}
+            <li>
+            <label class="Check-button">
+               <input name="{{ name _ opt.id }}" type="checkbox">
+               <span>{{ c.string(opt.name) }}</span>
+            </label>
+         {{ END }}
 
-			<ul class="Check-buttons">
-				{{ FOREACH opt IN modes }}
-					{{ PROCESS cb  name = 'mode' }}
-				{{ END }}
-			</ul>
+         <ul class="Check-buttons">
+            {{ FOREACH opt IN modes }}
+               {{ PROCESS cb  name = 'mode' }}
+            {{ END }}
+         </ul>
 
-			<ul class="Check-buttons">
-				{{ FOREACH opt IN triggers }}
-					{{ PROCESS cb  name = 'trigger' }}
-				{{ END }}
-			</ul>
+         <ul class="Check-buttons">
+            {{ FOREACH opt IN triggers }}
+               {{ PROCESS cb  name = 'trigger' }}
+            {{ END }}
+         </ul>
 
-			<ul class="Check-buttons">
-				{{ FOREACH opt IN genres }}
-					{{ PROCESS cb  name = 'genre' }}
-				{{ END }}
-			</ul>
+         <ul class="Check-buttons">
+            {{ FOREACH opt IN genres }}
+               {{ PROCESS cb  name = 'genre' }}
+            {{ END }}
+         </ul>
 
-			<ul class="Check-buttons">
-				{{ FOREACH opt IN formats }}
-					{{ PROCESS cb  name = 'format' }}
-				{{ END }}
-			</ul>
-		</div>
+         <ul class="Check-buttons">
+            {{ FOREACH opt IN formats }}
+               {{ PROCESS cb  name = 'format' }}
+            {{ END }}
+         </ul>
+      </div>
 
-		<div class="Form-item">
-			<input type="checkbox" name="dark">
-			<label>{{ c.string('darkMode') }}</label>
-		</div>
+      <div class="Form-item">
+         <input type="checkbox" name="dark">
+         <label>{{ c.string('darkMode') }}</label>
+      </div>
 
-		<div class="Form-item">
-			<input type="checkbox" name="autosub">
-			<label>{{ c.string('autosubLabel') }}</label>
-		</div>
+      <div class="Form-item">
+         <input type="checkbox" name="autosub">
+         <label>{{ c.string('autosubLabel') }}</label>
+      </div>
 
-		<div class="Form-item">
-			<input type="submit" value="{{ c.string('update') }}">
-		</div>
-	</form>
+      <div class="Form-item">
+         <input type="submit" value="{{ c.string('update') }}">
+      </div>
+   </form>
 </div>

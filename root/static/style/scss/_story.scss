@@ -3,115 +3,115 @@
 // =============================================================================
 
 .Story-container {
-	@extend .Document;
+   @extend .Document;
 }
 
 .Story-title {
-	@extend .Document-title;
+   @extend .Document-title;
 }
 
 .Story-example,
 .Story {
-	line-height: 1.6;
+   line-height: 1.6;
 }
 
 .Story-example {
-	border-left: 0.3em solid hsla(240, 30%, 80%, 1);
-	margin: 1em 0;
-	padding: 0.1em 0.5em;
-	font-size: 0.9em;
+   border-left: 0.3em solid hsla(240, 30%, 80%, 1);
+   margin: 1em 0;
+   padding: 0.1em 0.5em;
+   font-size: 0.9em;
 
-	div + div {
-		margin-top: 1em
-	}
+   div + div {
+      margin-top: 1em
+   }
 }
 
 .Story {
-	@include bbcode;
-	font-size: (18em / 16);
-	text-align: justify;
-	margin-bottom: 2em;
+   @include bbcode;
+   font-size: (18em / 16);
+   text-align: justify;
+   margin-bottom: 2em;
 
-	@media (max-width: #{$container-default}) {
-		font-size: (17em / 16);
-	}
+   @media (max-width: #{$container-default}) {
+      font-size: (17em / 16);
+   }
 
-	@media (max-width: #{$container-narrow}) {
-		font-size: (16em / 16);
-	}
+   @media (max-width: #{$container-narrow}) {
+      font-size: (16em / 16);
+   }
 
-	@media #{$mobile} {
-		font-size: (15em / 16);
-	}
+   @media #{$mobile} {
+      font-size: (15em / 16);
+   }
 
-	@media (max-width: 32rem) {
-		text-align: start;
-	}
+   @media (max-width: 32rem) {
+      text-align: start;
+   }
 
-	hr {
-		background: none;
-		border: none;
-		border-top: medium double #666;
-		margin: (20em / 16) 0;
-		overflow: visible;
-		position: relative;
+   hr {
+      background: none;
+      border: none;
+      border-top: medium double #666;
+      margin: (20em / 16) 0;
+      overflow: visible;
+      position: relative;
 
-		@media #{$mobile} {
-			margin: (10em / 16) 0;
-		}
+      @media #{$mobile} {
+         margin: (10em / 16) 0;
+      }
 
-		&:after {
-			position: absolute;
-			left: 47%;
-			left: calc(50% - (10em / 16));
-			top: -(19em / 32);
-			background: $off-white;
-			content: "§";
-			color: #666;
-			display: block;
-			font-size: 1.5em;
-			line-height: 1;
-			text-align: center;
-			width: (20em / 16);
-		}
+      &:after {
+         position: absolute;
+         left: 47%;
+         left: calc(50% - (10em / 16));
+         top: -(19em / 32);
+         background: $off-white;
+         content: "§";
+         color: #666;
+         display: block;
+         font-size: 1.5em;
+         line-height: 1;
+         text-align: center;
+         width: (20em / 16);
+      }
 
-	}
+   }
 
-	blockquote {
-		padding: 1.8em;
-		margin: 0;
-		border: 1px solid hsla(0, 0%, 80%, 1);
-		border-radius: 4px 0 0 0;
-		box-shadow: 1px 1px 1px hsla(0, 0%, 85%, 1);
-		background: hsla(0, 0%, 99%, 1);
-	}
+   blockquote {
+      padding: 1.8em;
+      margin: 0;
+      border: 1px solid hsla(0, 0%, 80%, 1);
+      border-radius: 4px 0 0 0;
+      box-shadow: 1px 1px 1px hsla(0, 0%, 85%, 1);
+      background: hsla(0, 0%, 99%, 1);
+   }
 }
 
 .Story-redacted {
-	text-align: center;
-	margin: 1em 0;
+   text-align: center;
+   margin: 1em 0;
 }
 
 .Storys {
-	@include striped-table;
+   @include striped-table;
 
-	@media #{$mobile} {
-		& > thead {
-			display: none;
-		}
-	}
+   @media #{$mobile} {
+      & > thead {
+         display: none;
+      }
+   }
 }
 
 .Storys-edit {
-	font-size: 0.9em;
+   font-size: 0.9em;
 }
 
 .Storys-num,
 .Storys-wordcount,
 .Storys-related {
-	@media #{$mobile} {
-		display: none;
-	}
+   @media #{$mobile} {
+      display: none;
+   }
 }
 
 .Storys-num,
@@ -124,25 +124,25 @@
 .Storys-publish,
 .Storys-created,
 .Storys-updated {
-	text-align: center;
+   text-align: center;
 }
 
 .Storys-listing {
-	width: 100%;
+   width: 100%;
 }
 
 .Storys-export {
-	white-space: nowrap;
-	@media #{$mobile} {
-		white-space: normal;
-	}
+   white-space: nowrap;
+   @media #{$mobile} {
+      white-space: normal;
+   }
 }
 
 .Storys-access--update {
-	text-align: center;
-	margin-top: 1em;
+   text-align: center;
+   margin-top: 1em;
 
-	input {
-		@include button($hue: 200);
-	}
+   input {
+      @include button($hue: 200);
+   }
 }

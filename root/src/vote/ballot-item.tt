@@ -1,18 +1,18 @@
 <tr class="Ballot-item">
-	<td class="Ballot-arrows">
-		<i class="Ballot-up fa fa-caret-up"></i>
-	</td>
-	{{ PROCESS 'vote/ballot-score.tt' }}
-	<td class="Ballot-title">
-		<input name="order" value="{{ vote.id }}" type="hidden">
-		<a href="{{ c.uri_for(view, [ vote.entry.id_uri ]) }}">{{ vote.entry.title | html }}</a>
-	</td>
-	<td class="Ballot-abstain--cell">
-		<span class="Ballot-abstain {{ 'hidden' IF ballot.abstains <= 0 }}">
-			{{ c.string('abstain') }}
-		</span>
-		<span class="Ballot-unabstain">
-			{{ c.string('unabstain') }}
-		</span>
-	</td>
+   <td class="Ballot-arrows">
+      <i class="Ballot-up fa fa-caret-up"></i>
+   </td>
+   {{ PROCESS 'vote/ballot-score.tt' }}
+   <td class="Ballot-title">
+      <input name="order" value="{{ vote.id }}" type="hidden">
+      <a href="{{ c.uri_for(view, [ vote.entry.id_uri ]) }}">{{ vote.entry.title | html }}</a>
+   </td>
+   <td class="Ballot-abstain--cell">
+      <span class="Ballot-abstain {{ 'hidden' IF ballot.abstains <= 0 }}">
+         {{ c.string('abstain') }}
+      </span>
+      <span class="Ballot-unabstain">
+         {{ c.string('unabstain') }}
+      </span>
+   </td>
 </tr>

@@ -1,9 +1,9 @@
 {{ WRAPPER 'artist/card.tt' }}
-	{{ INCLUDE artist/entrys_.tt  entrys = artist.entrys_rs.popular_rs }}
+   {{ INCLUDE artist/entrys_.tt  entrys = artist.entrys_rs.popular_rs }}
 {{ END }}
 
 <div class="Artist-posts">
-	{{ FOREACH post IN artist.posts_rs.popular }}
-		{{ INCLUDE post/single_.tt }}
-	{{ END }}
+   {{ FOREACH post IN artist.posts_rs.popular }}
+      {{ INCLUDE post/single_.tt }}
+   {{ END }}
 </div>

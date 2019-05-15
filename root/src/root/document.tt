@@ -1,20 +1,20 @@
 {{ SET sidebar = document.sections.size }}
 <div class="Document {{ 'narrow' IF !sidebar }} clearfix">
-	<div class="Document-title">
-		{{ document.title }}
-	</div>
+   <div class="Document-title">
+      {{ document.title }}
+   </div>
 
-	{{ IF sidebar }}
-	<div class="Document-index">
-		{{ FOREACH section IN document.sections }}
-		<div class="Document-index--{{ section.class }}">
-			<a href="#{{ section.id }}">{{ section.title }}</a>
-		</div>
-		{{ END }}
-	</div>
-	{{ END }}
+   {{ IF sidebar }}
+   <div class="Document-index">
+      {{ FOREACH section IN document.sections }}
+      <div class="Document-index--{{ section.class }}">
+         <a href="#{{ section.id }}">{{ section.title }}</a>
+      </div>
+      {{ END }}
+   </div>
+   {{ END }}
 
-	<div class="Document-body">
-		{{ document.contents | none }}
-	</div>
+   <div class="Document-body">
+      {{ document.contents | none }}
+   </div>
 </div>

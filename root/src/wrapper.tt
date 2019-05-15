@@ -1,9 +1,9 @@
 {{
-	IF !wrapper && template.name.match('^email/');
-		wrapper = 'wrapper/email.tt';
-	END;
-	DEFAULT wrapper = 'wrapper/default.tt';
+   IF !wrapper && template.name.match('^email/');
+      wrapper = 'wrapper/email.tt';
+   END;
+   DEFAULT wrapper = 'wrapper/default.tt';
 -}}
 {{ WRAPPER $wrapper }}
-	{{ content | none }}
+   {{ content | none }}
 {{ END }}

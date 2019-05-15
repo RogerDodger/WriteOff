@@ -1,76 +1,76 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
 
-		<title>{{ subject }}</title>
-		<style type="text/css">
-			body {
-				max-width: 600px;
-				font-size: 1.05em;
-			}
+      <title>{{ subject }}</title>
+      <style type="text/css">
+         body {
+            max-width: 600px;
+            font-size: 1.05em;
+         }
 
-			p {
-				margin: 0;
-			}
+         p {
+            margin: 0;
+         }
 
-			p + p {
-				margin-top: 1em;
-			}
+         p + p {
+            margin-top: 1em;
+         }
 
-			.Email-header {
-				color: #bdc3cf;
-				padding: 0.3em;
-				background: hsla(0, 0%, 21%, 1) linear-gradient(hsla(0, 0%, 23%, 1), hsla(0, 0%, 18%, 1));
-			}
+         .Email-header {
+            color: #bdc3cf;
+            padding: 0.3em;
+            background: hsla(0, 0%, 21%, 1) linear-gradient(hsla(0, 0%, 23%, 1), hsla(0, 0%, 18%, 1));
+         }
 
-			.Site-logo {
-				margin-left: 2em;
-			}
+         .Site-logo {
+            margin-left: 2em;
+         }
 
-			.Email-contents {
-				padding: 1.5em 1em;
-			}
+         .Email-contents {
+            padding: 1.5em 1em;
+         }
 
-			.Email-footer {
-				background-color: hsla(0, 0%, 92%, 1);
-				font-size: 0.75em;
-				padding: 1em 1rem;
-			}
+         .Email-footer {
+            background-color: hsla(0, 0%, 92%, 1);
+            font-size: 0.75em;
+            padding: 1em 1rem;
+         }
 
-			.Email-footer p + p {
-				margin-top: 0.5em;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="Email-header">
-			<div class="Site-logo">
-				<a href="{{ c.uri_for('/') }}">
-					<img alt="Writeoff" width="134" height="49"
-						src="{{ c.uri_for('/static/images/logo.png') }}"
-					/>
-				</a>
-			</div>
-		</div>
+         .Email-footer p + p {
+            margin-top: 0.5em;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="Email-header">
+         <div class="Site-logo">
+            <a href="{{ c.uri_for('/') }}">
+               <img alt="Writeoff" width="134" height="49"
+                  src="{{ c.uri_for('/static/images/logo.png') }}"
+               />
+            </a>
+         </div>
+      </div>
 
-		<div class="Email-contents">{{ content | markdown }}</div>
+      <div class="Email-contents">{{ content | markdown }}</div>
 
-		<div class="Email-footer">
-		{{ FILTER markdown }}
-			{{ IF bulk }}
+      <div class="Email-footer">
+      {{ FILTER markdown }}
+         {{ IF bulk }}
 You're receiving this email because of your notification preferences.
 
 If you no longer want to receive notifications, log in to your account and
 change your preferences.
-			{{ ELSE }}
+         {{ ELSE }}
 This email was sent because a user requested it.
 
 If that user wasn't you, please ignore it. If you continue to receive similar
 emails, please [let me know](mailto:cthor@cpan.org).
-			{{ END }}
-		{{ END }}
-		</div>
-	</body>
+         {{ END }}
+      {{ END }}
+      </div>
+   </body>
 </html>

@@ -1,7 +1,7 @@
 <div class="Document">
-	<div class="Document-title">
-		{{ story.title }}
-	</div>
+   <div class="Document-title">
+      {{ story.title }}
+   </div>
 
-	{{ INCLUDE fic/form.tt }}
+   {{ INCLUDE fic/form.tt }}
 </div>

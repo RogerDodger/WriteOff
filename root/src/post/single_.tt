@@ -4,120 +4,120 @@
 <!-- SET replyable $c->user->active_artist_id -->
 
 {{- IF post.deleted }}
-	<div class="Post-deleted">
-		<!-- IF editable -->
-		<div class="Post-deleted--restore">
-			<form method="post" action="{{ c.uri_for_action('/post/delete', [ post.id ]) }}">
-				{{ csrf_field | none }}
-				[<button>{{ c.string('restore') }}</button>]
-			</form>
-		</div>
-		<!-- END -->
+   <div class="Post-deleted">
+      <!-- IF editable -->
+      <div class="Post-deleted--restore">
+         <form method="post" action="{{ c.uri_for_action('/post/delete', [ post.id ]) }}">
+            {{ csrf_field | none }}
+            [<button>{{ c.string('restore') }}</button>]
+         </form>
+      </div>
+      <!-- END -->
 
-		{{ name = BLOCK }}
-			{{ PROCESS artist/name.tt  artist = post.artist }}
-		{{ END }}
-		{{ c.string('postDeleted', name, post.updated.delta_html) | none }}
-	</div>
+      {{ name = BLOCK }}
+         {{ PROCESS artist/name.tt  artist = post.artist }}
+      {{ END }}
+      {{ c.string('postDeleted', name, post.updated.delta_html) | none }}
+   </div>
 {{- ELSE }}
-	{{ INCLUDE 'post/sidebar.tt' artist = post.artist }}
+   {{ INCLUDE 'post/sidebar.tt' artist = post.artist }}
 
-	<div class="Post-contents">
-		{{ INCLUDE post/avatar.tt  artist = post.artist }}
-		{{ INCLUDE post/author.tt  artist = post.artist }}
+   <div class="Post-contents">
+      {{ INCLUDE post/avatar.tt  artist = post.artist }}
+      {{ INCLUDE post/author.tt  artist = post.artist }}
 
-		<div class="Post-contents--header">
-			<ul class="Post-controls">
-				<!-- IF editable -->
-				<li class="Post-control--delete">
-					<form method="post" action="{{ c.uri_for_action('/post/delete', [ post.id ]) }}">
-						{{ csrf_field | none }}
-						<button title="{{ c.string('delete') }}">
-							<i class="fa fa-remove fa-fw"></i>
-						</button>
-					</form>
+      <div class="Post-contents--header">
+         <ul class="Post-controls">
+            <!-- IF editable -->
+            <li class="Post-control--delete">
+               <form method="post" action="{{ c.uri_for_action('/post/delete', [ post.id ]) }}">
+                  {{ csrf_field | none }}
+                  <button title="{{ c.string('delete') }}">
+                     <i class="fa fa-remove fa-fw"></i>
+                  </button>
+               </form>
 
-				<li>
-				<a class="Post-control--edit" href="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
-					<i class="fa fa-pencil fa-fw" title="{{ c.string('edit') }}"></i>
-				</a>
-				<!-- END -->
+            <li>
+            <a class="Post-control--edit" href="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
+               <i class="fa fa-pencil fa-fw" title="{{ c.string('edit') }}"></i>
+            </a>
+            <!-- END -->
 
-				<!-- IF replyable -->
-				<li>
-				<a class="Post-control--reply" data-target="{{ post.id }}"{{ IF post.entry }}<!-- IF !entry -->
-					href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"<!-- END -->{{ END }}>
-					<i class="fa fa-reply fa-fw" title="{{ c.string('reply') }}"></i>
-				</a>
-				<!-- END -->
-			</ul>
+            <!-- IF replyable -->
+            <li>
+            <a class="Post-control--reply" data-target="{{ post.id }}"{{ IF post.entry }}<!-- IF !entry -->
+               href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}"<!-- END -->{{ END }}>
+               <i class="fa fa-reply fa-fw" title="{{ c.string('reply') }}"></i>
+            </a>
+            <!-- END -->
+         </ul>
 
-			<span class="Post-id">
-				<a href="/post/{{ post.id }}">#{{ num || post.id }}</a>
-			</span>
+         <span class="Post-id">
+            <a href="/post/{{ post.id }}">#{{ num || post.id }}</a>
+         </span>
 
-			&middot;
+         &middot;
 
-			<span class="Post-vote">
-				<span class="Post-vote--score">{{ post.score IF post.score }}</span>
-				<!-- SET vote $stash->{votes}->{ {{ post.id}} } -->
-				<form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="<!-- GET vote -->">
-					{{ csrf_field | none }}
-					<button class="Post-vote--button" name="value" value="1" <!-- IF !votable -->disabled<!-- END -->>
-						<i class="fa fa-thumbs-up"></i>
-					</button>
-				</form>
-			</span>
+         <span class="Post-vote">
+            <span class="Post-vote--score">{{ post.score IF post.score }}</span>
+            <!-- SET vote $stash->{votes}->{ {{ post.id}} } -->
+            <form action="{{ c.uri_for_action('/post/vote', [ post.id ]) }}" method="post" data-vote="<!-- GET vote -->">
+               {{ csrf_field | none }}
+               <button class="Post-vote--button" name="value" value="1" <!-- IF !votable -->disabled<!-- END -->>
+                  <i class="fa fa-thumbs-up"></i>
+               </button>
+            </form>
+         </span>
 
-			&middot;
+         &middot;
 
-			<span class="Post-created">
-				{{ post.created.delta_html | none }}
-			</span>
+         <span class="Post-created">
+            {{ post.created.delta_html | none }}
+         </span>
 
-			{{ IF post.entry }}
-				<!-- IF !entry -->
-				<span class="Post-entry">
-					on
-					<a href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}">{{ post.entry.title }}</a>
-				</span>
-				<!-- END -->
-			{{ END }}
+         {{ IF post.entry }}
+            <!-- IF !entry -->
+            <span class="Post-entry">
+               on
+               <a href="{{ c.uri_for_action(post.entry.view, [ post.entry.id_uri ]) }}">{{ post.entry.title }}</a>
+            </span>
+            <!-- END -->
+         {{ END }}
 
-			{{ IF post.children_render }}
-			&middot;
+         {{ IF post.children_render }}
+         &middot;
 
-			<span class="Post-children">{{ post.children_render | none }}</span>
-			{{ END }}
-		</div>
+         <span class="Post-children">{{ post.children_render | none }}</span>
+         {{ END }}
+      </div>
 
-		<div class="Post-contents--body">{{ post.body_render | none }}</div>
+      <div class="Post-contents--body">{{ post.body_render | none }}</div>
 
-		<!-- IF editable -->
-		<div class="Post-contents--edit">
-			<form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
-				{{ csrf_field | none }}
+      <!-- IF editable -->
+      <div class="Post-contents--edit">
+         <form class="Form" method="post" action="{{ c.uri_for_action('/post/edit', [ post.id ]) }}">
+            {{ csrf_field | none }}
 
-				<div class="Post-form--body">
-					<textarea name="body" rows="1" cols="1" maxlength="65535">{{ post.body }}</textarea>
-				</div>
+            <div class="Post-form--body">
+               <textarea name="body" rows="1" cols="1" maxlength="65535">{{ post.body }}</textarea>
+            </div>
 
-				<div class="Post-form--footer">
-					<div class="Post-form--senders">
-						<div class="Post-edit--save">
-							<i class="fa fa-check"></i>
-							{{ c.string('save') }}
-						</div>
+            <div class="Post-form--footer">
+               <div class="Post-form--senders">
+                  <div class="Post-edit--save">
+                     <i class="fa fa-check"></i>
+                     {{ c.string('save') }}
+                  </div>
 
-						<div class="Post-edit--cancel">
-							<i class="fa fa-close"></i>
-							{{ c.string('cancel') }}
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-		<!-- END -->
-	</div>
+                  <div class="Post-edit--cancel">
+                     <i class="fa fa-close"></i>
+                     {{ c.string('cancel') }}
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
+      <!-- END -->
+   </div>
 {{- END }}
 </div>

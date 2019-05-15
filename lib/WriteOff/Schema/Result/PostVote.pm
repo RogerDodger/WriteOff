@@ -9,12 +9,12 @@ use WriteOff::Markup;
 __PACKAGE__->table("post_votes");
 
 __PACKAGE__->add_columns(
-	"user_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"post_id",
-	{ data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-	"value",
-	{ data_type => "integer", is_nullable => 0 },
+   "user_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "post_id",
+   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "value",
+   { data_type => "integer", is_nullable => 0 },
 );
 
 __PACKAGE__->set_primary_key("user_id", "post_id");

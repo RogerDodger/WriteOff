@@ -3,570 +3,570 @@
 // =============================================================================
 
 @mixin button-base {
-	border-style: solid;
-	border-width: 1px;
-	display: inline-block;
-	line-height: 1;
-	padding: 0.8em;
-	text-decoration: none;
-	vertical-align: middle;
+   border-style: solid;
+   border-width: 1px;
+   display: inline-block;
+   line-height: 1;
+   padding: 0.8em;
+   text-decoration: none;
+   vertical-align: middle;
 
-	&:not(:disabled):not(.selected):hover {
-		cursor: pointer;
-		text-decoration: none;
-	}
+   &:not(:disabled):not(.selected):hover {
+      cursor: pointer;
+      text-decoration: none;
+   }
 }
 
 @mixin button-active($hue: 200, $sat: 30%, $l: 80%) {
-	box-shadow: 0 0.5em 0.7em hsla($hue, $sat, $l * .9, 1) inset;
+   box-shadow: 0 0.5em 0.7em hsla($hue, $sat, $l * .9, 1) inset;
 }
 
 @mixin button-color($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
-	background: hsla($hue, $sat, $l, 1);
-	border-color: hsla($hue, $sat, $l * .75, 1);
+   background: hsla($hue, $sat, $l, 1);
+   border-color: hsla($hue, $sat, $l * .75, 1);
 
-	@if $invert == 1 {
-		color: hsla($hue, $sat, 100% - ($l * .1), 1);
-		text-shadow: -0.05em -0.05em hsla($hue, $sat, $l * .5, 1);
-	} @else {
-		color: hsla($hue, $sat, $l * .2, 1);
-	}
+   @if $invert == 1 {
+      color: hsla($hue, $sat, 100% - ($l * .1), 1);
+      text-shadow: -0.05em -0.05em hsla($hue, $sat, $l * .5, 1);
+   } @else {
+      color: hsla($hue, $sat, $l * .2, 1);
+   }
 
-	&:not(:disabled):not(.selected) {
-		&:hover {
-			background: hsla($hue, $sat, $l * .95, 1);
-		}
+   &:not(:disabled):not(.selected) {
+      &:hover {
+         background: hsla($hue, $sat, $l * .95, 1);
+      }
 
-		&:active {
-			@include button-active($hue, $sat, $l);
-		}
-	}
+      &:active {
+         @include button-active($hue, $sat, $l);
+      }
+   }
 
-	&:disabled,
-	&.selected {
-		@extend .noselect;
-		background: hsla($hue, $sat * .35, $l, 1);
-		border-color: hsla($hue, $sat * .35, $l * .75, 1);
-		color: hsla($hue, $sat * .35, $l * .2, 1);
+   &:disabled,
+   &.selected {
+      @extend .noselect;
+      background: hsla($hue, $sat * .35, $l, 1);
+      border-color: hsla($hue, $sat * .35, $l * .75, 1);
+      color: hsla($hue, $sat * .35, $l * .2, 1);
 
-		&:hover {
-			cursor: default;
-		}
-	}
+      &:hover {
+         cursor: default;
+      }
+   }
 }
 
 @mixin button($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
-	@include button-base;
+   @include button-base;
 
-	&.current {
-		@include button-color($hue, $sat * 0.65, $l, $invert);
-	}
+   &.current {
+      @include button-color($hue, $sat * 0.65, $l, $invert);
+   }
 
-	&:not(.current) {
-		@include button-color($hue, $sat, $l, $invert);
-	}
+   &:not(.current) {
+      @include button-color($hue, $sat, $l, $invert);
+   }
 }
 
 @mixin button-group($hue: 200, $sat: 30%, $l: 80%, $invert: 0) {
-	list-style-type: none;
-	padding: 1px 0 0 0;
-	display: flex;
-	flex-flow: row wrap;
-	align-items: center;
+   list-style-type: none;
+   padding: 1px 0 0 0;
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
 
-	li {
-		margin-top: -1px;
-		margin-right: -1px;
+   li {
+      margin-top: -1px;
+      margin-right: -1px;
 
-		a {
-			@include button($hue, $sat, $l, $invert);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-	}
+      a {
+         @include button($hue, $sat, $l, $invert);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+   }
 }
 
 @mixin divider($hue: 0, $sat: 0%, $l: 60%) {
-	$bg: hsla($hue, $sat, $l, 1);
-	display: block;
-	background: linear-gradient(to right, transparent 0%, $bg 10%, $bg 90%, transparent 100%);
-	width: 80%;
-	height: 1px;
-	margin: 1.2em auto;
+   $bg: hsla($hue, $sat, $l, 1);
+   display: block;
+   background: linear-gradient(to right, transparent 0%, $bg 10%, $bg 90%, transparent 100%);
+   width: 80%;
+   height: 1px;
+   margin: 1.2em auto;
 }
 
 .Divider {
-	@include divider;
+   @include divider;
 }
 
 @mixin box {
-	box-shadow: 0 0 3px #b6b6b6;
+   box-shadow: 0 0 3px #b6b6b6;
 }
 
 @mixin sheet {
-	background-color: $off-white;
+   background-color: $off-white;
 }
 
 @mixin table-divider {
-	background-color: transparent;
-	border: none;
+   background-color: transparent;
+   border: none;
 
-	& > tr {
-		background-color: transparent !important;
+   & > tr {
+      background-color: transparent !important;
 
-		& > td {
-			padding: 0;
-			width: 100%;
+      & > td {
+         padding: 0;
+         width: 100%;
 
-			&:before {
-				@include divider;
-				content: " ";
-			}
-		}
-	}
+         &:before {
+            @include divider;
+            content: " ";
+         }
+      }
+   }
 }
 
 @mixin cell-padding($padding: 0.8em) {
-	padding: $padding ($padding / 2);
+   padding: $padding ($padding / 2);
 
-	&:first-child {
-		padding-left: $padding;
-	}
+   &:first-child {
+      padding-left: $padding;
+   }
 
-	&:last-child {
-		padding-right: $padding;
-	}
+   &:last-child {
+      padding-right: $padding;
+   }
 }
 
 @mixin striped($hue, $sat, $reverse: 0) {
-	&:nth-child(odd) {
-		background-color: hsla($hue, $sat + (100% - $sat) * .14, 94% - (2% * $reverse), 1);
-	}
+   &:nth-child(odd) {
+      background-color: hsla($hue, $sat + (100% - $sat) * .14, 94% - (2% * $reverse), 1);
+   }
 
-	&:nth-child(even) {
-		background-color: hsla($hue, $sat + (100% - $sat) * .14, 92% + (2% * $reverse), 1);
-	}
+   &:nth-child(even) {
+      background-color: hsla($hue, $sat + (100% - $sat) * .14, 92% + (2% * $reverse), 1);
+   }
 }
 
 @mixin striped-list($hue: 200, $sat: 30%) {
-	border: 1px solid hsla($hue, $sat * .8, 85%, 1);
-	list-style-type: none;
-	padding-left: 0;
+   border: 1px solid hsla($hue, $sat * .8, 85%, 1);
+   list-style-type: none;
+   padding-left: 0;
 
-	li {
-		padding: 0.8em;
-		@include striped($hue, $sat);
-	}
+   li {
+      padding: 0.8em;
+      @include striped($hue, $sat);
+   }
 }
 
 @mixin striped-table($hue: 200, $sat: 30%) {
-	width: 100%;
-	$border-color: hsla($hue, $sat * .8, 85%, 1);
-	$td-pad: 0.8em;
-	$th-pad: 0.6em;
+   width: 100%;
+   $border-color: hsla($hue, $sat * .8, 85%, 1);
+   $td-pad: 0.8em;
+   $th-pad: 0.6em;
 
-	& > tbody > tr > td {
-		@include cell-padding($td-pad);
-	}
+   & > tbody > tr > td {
+      @include cell-padding($td-pad);
+   }
 
 
-	& > thead,
-	& > tbody {
-		border: 1px solid $border-color;
-	}
+   & > thead,
+   & > tbody {
+      border: 1px solid $border-color;
+   }
 
-	&.sortable > thead > tr > th {
-		@extend .noselect;
+   &.sortable > thead > tr > th {
+      @extend .noselect;
 
-		&:not(:empty):hover {
-			cursor: pointer;
-		}
-	}
+      &:not(:empty):hover {
+         cursor: pointer;
+      }
+   }
 
-	& > thead {
-		background-color: hsla($hue, $sat, 90%, 1);
-		border-bottom: 1px solid hsla($hue, $sat, 70%, 1);
-		font-size: 1.07em;
+   & > thead {
+      background-color: hsla($hue, $sat, 90%, 1);
+      border-bottom: 1px solid hsla($hue, $sat, 70%, 1);
+      font-size: 1.07em;
 
-		& > tr > th {
-			@include cell-padding($th-pad);
-			font-weight: normal;
-			letter-spacing: 0.04em;
-			text-align: center;
-			text-shadow: 1px 0 1px hsla(0, 0%, 80%, 1);
-		}
-	}
+      & > tr > th {
+         @include cell-padding($th-pad);
+         font-weight: normal;
+         letter-spacing: 0.04em;
+         text-align: center;
+         text-shadow: 1px 0 1px hsla(0, 0%, 80%, 1);
+      }
+   }
 
-	&.grid {
-		& > thead > tr > th,
-		& > tbody > tr > td {
-			border-right: 1px solid $border-color;
-			border-left: 1px solid $border-color;
-		}
+   &.grid {
+      & > thead > tr > th,
+      & > tbody > tr > td {
+         border-right: 1px solid $border-color;
+         border-left: 1px solid $border-color;
+      }
 
-		& > thead > tr > th {
-			padding: $th-pad;
-		}
+      & > thead > tr > th {
+         padding: $th-pad;
+      }
 
-		& > tbody > tr > td {
-			padding: $td-pad;
-		}
-	}
+      & > tbody > tr > td {
+         padding: $td-pad;
+      }
+   }
 
-	& > thead + tbody > tr {
-		@include striped($hue, $sat);
-	}
+   & > thead + tbody > tr {
+      @include striped($hue, $sat);
+   }
 
-	& > tbody > tr {
-		@include striped($hue, $sat, 1);
-	}
+   & > tbody > tr {
+      @include striped($hue, $sat, 1);
+   }
 
-	& > .Table-divider {
-		@include table-divider;
-	}
+   & > .Table-divider {
+      @include table-divider;
+   }
 }
 
 .Table {
-	@include striped-table;
+   @include striped-table;
 }
 
 @mixin table-button($hue: 200, $sat: 30%, $l: 97%) {
-	@include button($hue, $sat, $l);
-	padding: 0.4em;
-	font-size: 0.8em;
+   @include button($hue, $sat, $l);
+   padding: 0.4em;
+   font-size: 0.8em;
 }
 
 .Table-button {
-	@include table-button;
+   @include table-button;
 }
 
 .Clarify {
-	position: relative;
-	bottom: 0.5em;
-	font-size: 0.8em;
+   position: relative;
+   bottom: 0.5em;
+   font-size: 0.8em;
 }
 
 .Countdown {
-	font-size: 1.2em;
-	margin: 1em 0;
-	text-align: center;
+   font-size: 1.2em;
+   margin: 1em 0;
+   text-align: center;
 }
 
 @mixin tint($hue: 200, $sat: 50%, $l: 88%) {
-	background: hsla($hue, $sat, $l, 1);
-	border: 0.1em solid hsla($hue, $sat, $l * 0.8, 1);
-	color: hsla($hue, $sat, $l * 0.25, 1);
+   background: hsla($hue, $sat, $l, 1);
+   border: 0.1em solid hsla($hue, $sat, $l * 0.8, 1);
+   color: hsla($hue, $sat, $l * 0.25, 1);
 }
 
 .Flash {
-	font-size: 0.8em;
+   font-size: 0.8em;
 
-	&.big {
-		font-size: 0.9em;
-	}
+   &.big {
+      font-size: 0.9em;
+   }
 
-	padding: 1em;
-	margin-bottom: 1em;
+   padding: 1em;
+   margin-bottom: 1em;
 
-	@include tint;
-	&.error {
-		@include tint($hue: 0);
-	}
+   @include tint;
+   &.error {
+      @include tint($hue: 0);
+   }
 
-	p {
-		margin: 0;
-	}
+   p {
+      margin: 0;
+   }
 
-	p:not(:first-child) {
-		margin-top: 1em;
-	}
+   p:not(:first-child) {
+      margin-top: 1em;
+   }
 }
 
 .noselect {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+   -webkit-touch-callout: none;
+   -webkit-user-select: none;
+   khtml-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
 }
 
 .Form,
 .Form-item {
-	label {
-		color: #666;
-		display: block;
-		font-weight: bold;
-		font-size: 0.85em;
-		font-variant: small-caps;
-		position: relative;
-		text-shadow: 0 1px 1px #fff;
+   label {
+      color: #666;
+      display: block;
+      font-weight: bold;
+      font-size: 0.85em;
+      font-variant: small-caps;
+      position: relative;
+      text-shadow: 0 1px 1px #fff;
 
-		.Hint {
-			@extend .noselect;
-			cursor: help;
-			color: #222;
-			display: inline-block;
-			font-size: 0.7rem;
-			font-variant: normal;
-			font-weight: normal;
-			margin-left: 0.15em;
-			position: relative;
-			top: -0.1em;
-			text-align: center;
-			width: 1.5em;
+      .Hint {
+         @extend .noselect;
+         cursor: help;
+         color: #222;
+         display: inline-block;
+         font-size: 0.7rem;
+         font-variant: normal;
+         font-weight: normal;
+         margin-left: 0.15em;
+         position: relative;
+         top: -0.1em;
+         text-align: center;
+         width: 1.5em;
 
-			@media #{$mobile} {
-				position: absolute;
-				right: 0;
-			}
+         @media #{$mobile} {
+            position: absolute;
+            right: 0;
+         }
 
-			&::before {
-				border-radius: 1.5em;
-				border: 1px solid silver;
-				display: block;
-				content: " ";
-				height: 1.5em;
-				left: -0.05em;
-				position: absolute;
-				top: -0.2em;
-				width: 1.5em;
-			}
+         &::before {
+            border-radius: 1.5em;
+            border: 1px solid silver;
+            display: block;
+            content: " ";
+            height: 1.5em;
+            left: -0.05em;
+            position: absolute;
+            top: -0.2em;
+            width: 1.5em;
+         }
 
-			&:hover::after {
-				background: white;
-				border: 1px solid silver;
-				content: attr(data-hint);
-				display: block;
-				font-size: 1.1em;
-				left: 1.6em;
-				padding: 0.5em;
-				position: absolute;
-				text-align: start;
-				top: -0.5em;
-				width: 24rem;
-				z-index: 2;
+         &:hover::after {
+            background: white;
+            border: 1px solid silver;
+            content: attr(data-hint);
+            display: block;
+            font-size: 1.1em;
+            left: 1.6em;
+            padding: 0.5em;
+            position: absolute;
+            text-align: start;
+            top: -0.5em;
+            width: 24rem;
+            z-index: 2;
 
-				@media #{$mobile} {
-					left: inherit;
-					right: 0;
-					top: 1.5em;
-					width: 85vw;
-				}
-			}
-		}
-	}
+            @media #{$mobile} {
+               left: inherit;
+               right: 0;
+               top: 1.5em;
+               width: 85vw;
+            }
+         }
+      }
+   }
 
-	input[type="text"],
-	input[type="password"],
-	input[type="email"],
-	input[type="url"],
-	input[type="number"],
-	input[type="search"],
-	textarea,
-	select {
-		background: hsla(0, 0%, 99%, 1);
-		border: 1px solid #aaa;
-		padding: 0.25em;
-		border-radius: 0.25em;
-		width: 100%;
+   input[type="text"],
+   input[type="password"],
+   input[type="email"],
+   input[type="url"],
+   input[type="number"],
+   input[type="search"],
+   textarea,
+   select {
+      background: hsla(0, 0%, 99%, 1);
+      border: 1px solid #aaa;
+      padding: 0.25em;
+      border-radius: 0.25em;
+      width: 100%;
 
-		&[readonly] {
-			background: hsla(0, 0%, 92%, 1);
-			color: #888;
-		}
-	}
+      &[readonly] {
+         background: hsla(0, 0%, 92%, 1);
+         color: #888;
+      }
+   }
 
-	input[type="checkbox"] {
-		vertical-align: middle;
+   input[type="checkbox"] {
+      vertical-align: middle;
 
-		& + label {
-			display: inline;
-		}
-	}
+      & + label {
+         display: inline;
+      }
+   }
 
-	textarea {
-		font-size: 0.8em;
-		margin-bottom: 0;
-	}
+   textarea {
+      font-size: 0.8em;
+      margin-bottom: 0;
+   }
 
-	input[type="submit"] {
-		@include button($hue: 120, $sat: 50%);
-		font-size: 1.03em;
-	}
+   input[type="submit"] {
+      @include button($hue: 120, $sat: 50%);
+      font-size: 1.03em;
+   }
 
-	*[disabled] {
-		background-color: hsla(0, 0%, 90%, 1);
-	}
+   *[disabled] {
+      background-color: hsla(0, 0%, 90%, 1);
+   }
 }
 
 .Form-item {
-	margin-top: 1em;
+   margin-top: 1em;
 }
 
 .Form-subtitle {
-	color: #444;
-	margin-top: 1em;
-	font-weight: bold;
-	font-variant: small-caps;
+   color: #444;
+   margin-top: 1em;
+   font-weight: bold;
+   font-variant: small-caps;
 }
 
 .Form-subsection {
-	margin-top: 1.3em;
-	padding: 0.1em 0.5em;
-	border-left: 0.3em solid hsla(240, 40%, 70%, 0.75);
+   margin-top: 1.3em;
+   padding: 0.1em 0.5em;
+   border-left: 0.3em solid hsla(240, 40%, 70%, 0.75);
 }
 
 .Form-subtitle + .Form-subsection,
 .Form-subtitle + * > .Form-subsection:first-of-type {
-	margin-top: 0.5em;
+   margin-top: 0.5em;
 }
 
 .Form-subsection + .Event-timeline {
-	margin-top: 1em;
+   margin-top: 1em;
 }
 
 .Form-group {
-	@extend .clearfix;
+   @extend .clearfix;
 
-	&:first-of-type > .Form-item {
-		margin-top: 0;
-	}
+   &:first-of-type > .Form-item {
+      margin-top: 0;
+   }
 
-	& > div {
-		float: left;
-		width: 100%;
+   & > div {
+      float: left;
+      width: 100%;
 
-		&:not(:first-child) {
-			padding-left: 0.5em;
-		}
+      &:not(:first-child) {
+         padding-left: 0.5em;
+      }
 
-		&:not(:last-child) {
-			padding-right: 0.5em;
-		}
+      &:not(:last-child) {
+         padding-right: 0.5em;
+      }
 
-		@media #{$mobile} {
-			padding: 0 !important;
-		}
-	}
+      @media #{$mobile} {
+         padding: 0 !important;
+      }
+   }
 
-	&.two > * {
-		width: 50%;
+   &.two > * {
+      width: 50%;
 
-		&:nth-child(1) { padding-right: 0.5em; }
-		&:nth-child(2) { padding-left: 0.5em; }
-	}
+      &:nth-child(1) { padding-right: 0.5em; }
+      &:nth-child(2) { padding-left: 0.5em; }
+   }
 
-	&.three > * {
-		width: 33.33%;
+   &.three > * {
+      width: 33.33%;
 
-		&:nth-child(1), &:nth-child(2) { padding-right: 0.5em; }
-		&:nth-child(2), &:nth-child(3) { padding-left: 0.5em; }
-	}
+      &:nth-child(1), &:nth-child(2) { padding-right: 0.5em; }
+      &:nth-child(2), &:nth-child(3) { padding-left: 0.5em; }
+   }
 
-	@media #{$mobile} {
-		& > div {
-			width: 100% !important;
-			padding: 0 !important;
-		}
+   @media #{$mobile} {
+      & > div {
+         width: 100% !important;
+         padding: 0 !important;
+      }
 
-		&:first-of-type > .Form-item:not(:first-of-type) {
-			margin-top: 1em;
-		}
-	}
+      &:first-of-type > .Form-item:not(:first-of-type) {
+         margin-top: 1em;
+      }
+   }
 }
 
 .Form-note {
-	color: #666;
-	font-size: 0.85em;
-	margin-top: 0.1em;
+   color: #666;
+   font-size: 0.85em;
+   margin-top: 0.1em;
 }
 
 .Form-caption--container {
-	position: relative;
+   position: relative;
 }
 
 .Form-caption {
-	font-size: 0.9em;
-	color: hsla(0, 0%, 50%, 1);
-	position: absolute;
-	right: 1.5em;
-	top: 0.23em;
+   font-size: 0.9em;
+   color: hsla(0, 0%, 50%, 1);
+   position: absolute;
+   right: 1.5em;
+   top: 0.23em;
 }
 
 .Form-error {
-	box-shadow: 0 0 0.25em red;
+   box-shadow: 0 0 0.25em red;
 }
 
 @mixin bbcode {
-	hr,
-	blockquote,
-	div {
-		display: inline-block;
-		width: 100%;
-	}
+   hr,
+   blockquote,
+   div {
+      display: inline-block;
+      width: 100%;
+   }
 
-	.Spoiler:not(:hover) {
-		background-color: #444;
+   .Spoiler:not(:hover) {
+      background-color: #444;
 
-		&,
-		& > a,
-		& > span {
-			color: #444 !important;
-		}
-	}
+      &,
+      & > a,
+      & > span {
+         color: #444 !important;
+      }
+   }
 }
 
 .Breakdown {
-	cursor: pointer;
+   cursor: pointer;
 }
 
 .Breakdown-row {
-	td {
-		padding-top: 0 !important;
-	}
+   td {
+      padding-top: 0 !important;
+   }
 
-	table {
-		font-size: 0.9em;
-	}
+   table {
+      font-size: 0.9em;
+   }
 }
 
 .Auto-complete {
-	position: absolute;
-	width: 16em;
-	max-height: 16em;
-	overflow-x: hidden;
-	overflow-y: auto;
-	white-space: nowrap;
+   position: absolute;
+   width: 16em;
+   max-height: 16em;
+   overflow-x: hidden;
+   overflow-y: auto;
+   white-space: nowrap;
 
-	background-color: hsla(0, 0%, 99%, 1);
-	border: 1px solid #ccc;
+   background-color: hsla(0, 0%, 99%, 1);
+   border: 1px solid #ccc;
 }
 
 .Auto-complete .fa-spinner,
 .Auto-complete--text {
-	margin: 0.5em;
+   margin: 0.5em;
 }
 
 .Container {
-	@include container;
+   @include container;
 }
 
 .Canvas {
-	@include container;
-	@include box;
-	@include sheet;
+   @include container;
+   @include box;
+   @include sheet;
 
-	padding: 2em;
+   padding: 2em;
 
-	@media #{$mobile} {
-		padding: 0.8em 0.5em;
-		width: auto;
-	}
+   @media #{$mobile} {
+      padding: 0.8em 0.5em;
+      width: auto;
+   }
 }
 
 .Global-message {
-	@include container;
-	@extend .Flash;
+   @include container;
+   @extend .Flash;
 }
