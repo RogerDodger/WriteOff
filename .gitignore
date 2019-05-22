@@ -1,10 +1,6 @@
-WriteOff.db*
-writeoff.yml
-writeoff.conf
-writeoff.log*
 config.yml
-scheduler.state
-nohup.out
+avatars.zip
+pics.zip
 *.sublime-workspace
 root/static/js/writeoff.min.js
 root/static/js/writeoff.min.js.map
