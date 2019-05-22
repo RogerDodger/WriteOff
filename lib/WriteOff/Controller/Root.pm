@@ -50,7 +50,7 @@ sub auto :Private {
       $c->req->address,
       ( $c->user ? $c->user->username : 'guest' ),
       $c->req->uri->path,
-      $c->req->referer || 'no referer',
+      ( $so ? () : $c->req->referer || 'no referer'),
    );
 
    if ($c->req->method eq 'POST') {
