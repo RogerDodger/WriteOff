@@ -12,9 +12,3 @@
       'template' => 'event/single.tt',
       'key' => event.uid(show_last_post)) }}
 {{ END }}
-
-{{ IF c.action.name == 'index' }}
-<div class="Event-list--buttons">
-   <a class="Archive-button" href="/archive">View all</a>
-</div>
-{{ END }}

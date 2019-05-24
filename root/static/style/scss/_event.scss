@@ -166,10 +166,6 @@
    @include button-group($hue: 230, $sat: 40%);
 }
 
-.Event-list--buttons {
-   @include container;
-}
-
 .Event-rules {
    @include button-base;
    @include button-color($sat: 0%, $l: 98%);
@@ -184,6 +180,7 @@
 }
 
 .Archive-button {
+   @include container;
    @include button($sat: 0%, $l: 90%);
    display: block;
    margin-top: 0.5em;

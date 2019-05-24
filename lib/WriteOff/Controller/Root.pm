@@ -92,11 +92,14 @@ sub awardmock :Local {
 sub index :Path :Args(0) {
    my ( $self, $c ) = @_;
 
-   $c->stash->{events} = $c->model('DB::Event')->active;
+   $c->stash->{events} = $c->model('DB::Event');
+   $c->stash->{active} = $c->stash->{events}->active;
+   $c->stash->{last} = $c->stash->{events}->last_ended;
+   $c->stash->{forum} = $c->stash->{events}->forum;
+
    $c->stash->{show_last_post} = 1;
 
-   push @{ $c->stash->{title} }, 'Events';
-   $c->stash->{template} = 'event/list.tt';
+   $c->stash->{template} = 'root/index.tt';
 }
 
 sub archive :Local :Args(0) {

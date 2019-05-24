@@ -7,22 +7,11 @@ use WriteOff::Util qw/LEEWAY/;
 
 sub active {
    my $self = shift;
-   my $t = $self->format_datetime($self->now_dt->subtract(months => 2));
-   return $self->search(
-      {
-         -or => [
-            'me.created' => { '>' => $t },
-            -and => [
-               'last_post_id' => { '!=' => undef },
-               'last_post.created' => { '>' => $t },
-            ]
-         ],
-      },
-      {
-         join => 'last_post',
-         order_by => { -desc => 'me.created' },
-      }
-   );
+   $self->search({ tallied => 0 });
+}
+
+sub active_rs {
+   scalar shift->active;
 }
 
 sub archive {
@@ -97,12 +86,45 @@ sub create_from_sched {
    $event;
 }
 
-sub finished {
+sub last_ended {
    my $self = shift;
-   return $self->search(
-      { end => { '<' => $self->now } },
-      { order_by => { -asc => 'created' } }
+
+   $self->search({
+      'me.tallied' => 1,
+   }, {
+      join => 'rounds',
+      group_by => 'me.id',
+      '+select' => { max => 'rounds.end', -as => 'fin' },
+      order_by => { -desc => 'fin' },
+      rows => 1,
+   });
+}
+
+sub last_rs {
+   scalar shift->last;
+}
+
+# Exclude active events and the last event, then sort by last post date
+sub forum {
+   my $self = shift;
+   my $t = $self->format_datetime($self->now_dt->subtract(months => 2));
+
+   $self->search(
+      {
+         'me.tallied' => 1,
+         'me.id' => { '!=' =>
+            $self->last_ended->get_column('id')->max_rs->as_query },
+         'last_post.created' => { '>' => $t },
+      },
+      {
+         join => 'last_post',
+         order_by => { -desc => 'last_post.created' },
+      }
    );
+}
+
+sub forum_rs {
+   scalar shift->recent;
 }
 
 1;

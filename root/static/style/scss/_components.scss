@@ -575,3 +575,9 @@
    @include container;
    @extend .Flash;
 }
+
+.Container-title {
+   @include container;
+   font-size: (18em / 16);
+   margin-bottom: 0.1em;
+}

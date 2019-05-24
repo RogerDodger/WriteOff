@@ -51,7 +51,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-
 __PACKAGE__->has_many("artist_events", "WriteOff::Schema::Result::ArtistEvent", "event_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "event_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "event_id");
@@ -91,7 +90,7 @@ sub start {
 sub end {
    my $self = shift;
 
-   $self->rounds->search({}, { order_by => { -desc => 'end' } })->first->end;
+   $self->rounds->get_column('end')->max;
 }
 
 sub fic {

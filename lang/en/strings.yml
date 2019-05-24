@@ -136,6 +136,12 @@ editPost: Edit Post
 postN: Post #%d
 notifs: Notifications
 
+viewAll: View all
+showRules: Show rules
+activeEvents: Active events
+lastEvent: Last event
+recentDiscussion: Recent discussion
+
 storyFont: Story font
 serif: Serif
 sans: Sans
