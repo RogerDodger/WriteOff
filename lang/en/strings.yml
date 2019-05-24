@@ -137,7 +137,7 @@ postN: Post #%d
 notifs: Notifications
 
 viewAll: View all
-showRules: Show rules
+showRules: Show rules for this event
 activeEvents: Active events
 lastEvent: Last event
 recentDiscussion: Recent discussion
