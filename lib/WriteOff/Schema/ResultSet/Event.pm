@@ -7,7 +7,7 @@ use WriteOff::Util qw/LEEWAY/;
 
 sub active {
    my $self = shift;
-   $self->search({ tallied => 0 });
+   $self->search({ tallied => 0 }, { order_by => 'created' });
 }
 
 sub active_rs {
