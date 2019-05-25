@@ -179,6 +179,10 @@
    }
 }
 
+.Event-details .Event-timeline {
+   margin: 0.5em 0;
+}
+
 .Archive-button {
    @include container;
    @include button($sat: 0%, $l: 90%);
@@ -187,8 +191,16 @@
    text-align: center;
 }
 
-.Event-details .Event-timeline {
-   margin: 0.5em 0;
+.Event-archive--nav {
+   @include container;
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: flex-start;
+   align-items: flex-end;
+
+   & > a {
+      @include tab-nav-button;
+   }
 }
 
 .Event-form--wordcount {

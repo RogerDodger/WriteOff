@@ -120,6 +120,7 @@ authorGuessing: Pic Guessing
 artistGuessing: Fic Guessing
 picResults: Pic Results
 ficResults: Fic Results
+archive: Archive
 prelim: Prelim
 semifinal: Semi-final
 final: Final
@@ -141,6 +142,7 @@ showRules: Show rules for this event
 activeEvents: Active events
 lastEvent: Last event
 recentDiscussion: Recent discussion
+eventArchive: Event archive
 
 storyFont: Story font
 serif: Serif

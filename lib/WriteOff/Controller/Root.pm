@@ -2,6 +2,7 @@ package WriteOff::Controller::Root;
 use Moose;
 use namespace::autoclean;
 use feature 'state';
+use Scalar::Util qw/looks_like_number/;
 require WriteOff::DateTime;
 
 no warnings "uninitialized";
@@ -96,19 +97,28 @@ sub index :Path :Args(0) {
    $c->stash->{active} = $c->stash->{events}->active;
    $c->stash->{last} = $c->stash->{events}->last_ended;
    $c->stash->{forum} = $c->stash->{events}->forum;
-
    $c->stash->{show_last_post} = 1;
 
    $c->stash->{template} = 'root/index.tt';
 }
 
-sub archive :Local :Args(0) {
-   my ( $self, $c ) = @_;
+sub archive :Local {
+   my ( $self, $c, $year ) = @_;
 
-   $c->stash->{events} = $c->model('DB::Event')->archive;
+   my $rs = $c->model('DB::Event');
+   $c->stash->{minYear} = $rs->parse_datetime($rs->get_column('created')->min)->year;
+   $c->stash->{maxYear} = $c->stash->{now}->year;
 
-   push @{ $c->stash->{title} }, 'Event Archive';
-   $c->stash->{template} = 'event/list.tt';
+   $year = $c->stash->{maxYear} if
+      !defined $year || !looks_like_number($year) ||
+      $year < $c->stash->{minYear} || $year > $c->stash->{maxYear};
+
+   $c->stash->{year} = $year;
+   $c->stash->{events} = $rs->archive(DateTime->new(year => $year));
+   $c->stash->{show_last_post} = 1;
+
+   push @{ $c->stash->{title} }, $year, $c->string('archive');
+   $c->stash->{template} = 'root/archive.tt';
 }
 
 sub faq :Local :Args(0) {

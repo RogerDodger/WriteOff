@@ -99,24 +99,7 @@
    margin-top: 0.3em;
 
    & > a {
-      transition: 0.2s all;
-      border-bottom: (2em / 16) solid transparent;
-      padding: 0.5em 1em;
-
-      &, &:visited {
-         color: #777;
-      }
-
-      &:hover {
-         color: #333;
-         border-bottom-color: #ccc;
-         text-decoration: none;
-      }
-
-      &.current {
-         border-bottom-color: hsla(200, 80%, 75%, 1);
-         color: #333;
-      }
+      @include tab-nav-button;
    }
 }
 

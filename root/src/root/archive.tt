@@ -1,0 +1,13 @@
+<div class="Container-title">{{ c.string('eventArchive') }}</div>
+
+<div class="Event-archive--nav mb_5">
+   {{ SET years = [minYear .. maxYear] }}
+   {{ FOREACH y IN years.reverse }}
+   <a href="{{ c.uri_for_action('/archive') }}/{{ y }}"
+      class="{{ 'current' IF y == year }}">
+      {{ y }}
+   </a>
+   {{ END }}
+</div>
+
+{{ INCLUDE event/list.tt }}

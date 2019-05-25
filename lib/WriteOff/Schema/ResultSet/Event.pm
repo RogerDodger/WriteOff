@@ -16,9 +16,23 @@ sub active_rs {
 
 sub archive {
    my $self = shift;
-   return $self->search({},
-      { order_by => { -desc => 'created' } },
-   );
+   my $dt = shift // $self->now_dt;
+
+   my $mindt = $self->format_datetime(DateTime->new(year => $dt->year));
+   my $maxdt = $self->format_datetime(DateTime->new(year => $dt->year + 1));
+
+   $self->search({}, {
+      join => 'rounds',
+      group_by => 'me.id',
+      '+select' => [
+         { min => 'rounds.start', -as => 'start' },
+      ],
+      order_by => { -desc => 'start' },
+      having => \[
+         q{ start >= ? AND start <= ? },
+         $mindt, $maxdt
+      ],
+   });
 }
 
 sub create_from_sched {

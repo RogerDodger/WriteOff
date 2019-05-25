@@ -227,6 +227,27 @@
    }
 }
 
+@mixin tab-nav-button() {
+   transition: 0.2s all;
+   border-bottom: (2em / 16) solid transparent;
+   padding: 0.5em 1em;
+
+   &, &:visited {
+      color: #555;
+   }
+
+   &:hover {
+      color: #222;
+      border-bottom-color: #ccc;
+      text-decoration: none;
+   }
+
+   &.current {
+      border-bottom-color: hsla(200, 80%, 75%, 1);
+      color: #222;
+   }
+}
+
 .Table {
    @include striped-table;
 }
