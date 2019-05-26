@@ -2,7 +2,7 @@
 {{ IF active.count }}
    {{ INCLUDE event/list.tt  events => active }}
 {{ ELSE }}
-   <div class="Flash">{{ c.string('noActiveEvents') }}</div>
+   <div class="Flash ctn">{{ c.string('noActiveEvents') }}</div>
 {{ END }}
 
 {{ IF last.count }}

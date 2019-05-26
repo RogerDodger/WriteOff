@@ -239,6 +239,7 @@ noNotifs: You have no notifications
 badInput: Bad input
 tooManyRounds: Too many rounds
 noRounds: No rounds
+noActiveEvents: There are no active events
 nextEventTooSoon: Next event is too soon
 nextEventTooSoon: Event is too soon
 cantChangeFinishedRound: Can't change finished round
