@@ -90,7 +90,7 @@ sub start {
 sub end {
    my $self = shift;
 
-   $self->rounds->get_column('end')->max;
+   $self->parse_datetime($self->rounds->get_column('end')->max);
 }
 
 sub fic {
@@ -523,8 +523,6 @@ sub score {
          });
       }
    }
-
-   $self->update({ tallied => 1 });
 }
 
 sub students {

@@ -26,3 +26,7 @@ sub add_columns {
 sub get_timestamp {
    return DateTime->now;
 }
+
+sub parse_datetime {
+   shift->result_source->schema->storage->datetime_parser->parse_datetime(shift);
+}

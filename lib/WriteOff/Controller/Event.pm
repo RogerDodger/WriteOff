@@ -505,6 +505,10 @@ sub tally_round :Private {
       $c->forward('/event/notify_mailing_list');
    }
 
+   if ($r->end == $e->end) {
+      $e->update({ tallied => 1 });
+   }
+
    $r->update({ tallied => 1 });
 }
 
