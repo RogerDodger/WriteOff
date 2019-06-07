@@ -12,7 +12,7 @@ can compress =>
       for my $in (glob "log/*.log") {
          my $out = $in =~ s{^ (.+?) \. (.+) $}{$1-$ts.$2.gzip}rx;
 
-         -e $out or abort qq{! $out already exists};
+         -e $out and abort qq{! $out already exists};
          gzip $in => $out or abort qq{gzip failed: $GzipError};
 
          say STDERR "+ $in => $out";
