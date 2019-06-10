@@ -26,6 +26,7 @@ In this event, for drawn works, "the prompt" refers to the written work(s) indic
 2. Submitted written works&mdash;
    1. must be written primarily in English;
    2. must be {{ event.wc_min }}–{{ event.wc_max }} words long;
+   3. must not be mostly nonsense;
 3. Participants&mdash;
    1. may not start creating their work(s) until the prompt has been selected;
    2. may not disclose their authorship explicitly or implicitly until this website has done so;
