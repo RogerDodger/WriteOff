@@ -4,6 +4,7 @@ Dependencies
 - perl v5.14+
 - gcc
 - make
+- freetype2
 - [sqlite3](https://www.sqlite.org/index.html)
 - [terser](https://github.com/terser-js/terser)
 - [autoprefixer](https://github.com/postcss/autoprefixer)
