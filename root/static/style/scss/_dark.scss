@@ -70,6 +70,15 @@
       filter: hue-rotate(180deg);
    }
 
+   .Event-timeline circle[fill="red"] {
+      fill: #0ff;
+   }
+
+   .Post-vote,
+   .Prompts-vote {
+      filter: invert(100%);
+   }
+
    .Results > tbody > tr {
       &.gold {
          background-color: hsla(231, 65%, 90%, 1) !important;
