@@ -12,7 +12,7 @@ sub fetch :Chained('/') :PathPart('ballot') :CaptureArgs(1) {
    $c->stash->{event} = $c->stash->{ballot}->event;
 }
 
-sub view :Chained('fetch') :PathPart('') Args(0) {
+sub view :Chained('fetch') :PathPart('') :Args(0) {
    my ($self, $c) = @_;
 
    $c->detach('/forbidden') unless $c->user->id == $c->stash->{ballot}->user_id;

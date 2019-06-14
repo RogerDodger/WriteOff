@@ -1,0 +1,5 @@
+<div class="Groups">
+{{ WHILE (group = groups.next) }}
+   {{ INCLUDE group/single.tt }}
+{{ END }}
+</div>

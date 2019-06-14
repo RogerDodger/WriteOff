@@ -144,6 +144,15 @@ lastEvent: Last event
 recentDiscussion: Recent discussion
 eventArchive: Event archive
 
+groups: Groups
+events: Events
+members: Members
+promotedGroups: Promoted groups
+establishedGroups: Established groups
+newGroups: New groups
+createNewGroup: Create a new group
+join: Join
+
 storyFont: Story font
 serif: Serif
 sans: Sans

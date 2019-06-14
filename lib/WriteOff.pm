@@ -325,6 +325,16 @@ sub parami {
    return $self->paramo($key) =~ /(\d+)/ ? int $1 : undef;
 }
 
+sub title_push {
+   my $self = shift;
+   push @{ $self->stash->{title} }, @_;
+}
+
+sub title_unshift {
+   my $self = shift;
+   unshift @{ $self->stash->{title} }, @_;
+}
+
 sub uri_for_action_abs {
    my $self = shift;
 

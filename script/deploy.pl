@@ -59,11 +59,6 @@ my $write_db = sub {
       ['Minific', 400, 750],
    ]);
 
-   $sch->resultset('Genre')->populate([
-      [qw/name descr created/],
-      ['Original', 'Fiction not dependent on work under U.S. copyright', DateTime->now],
-   ]);
-
    $sch->resultset('Artist')->populate([
       [qw/id name name_canonical created updated/],
       [25, 'Anonymous', 'anonymous', (DateTime->now) x 2],

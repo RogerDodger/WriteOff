@@ -1,0 +1,20 @@
+<div class="Container-title">{{ c.string('promotedGroups') }}</div>
+{{ IF promoted.count }}
+   {{ INCLUDE group/list.tt  groups => promoted }}
+{{ ELSE }}
+   <div class="Flash ctn">{{ c.string('noPromotedGroups') }}</div>
+{{ END }}
+
+{{ IF established.count }}
+   <div class="Container-title mt1">{{ c.string('establishedGroups') }}</div>
+   {{ INCLUDE group/list.tt  groups => established }}
+{{ END }}
+
+<div class="Container-title mt1">{{ c.string('newGroups') }}</div>
+{{ IF new.count }}
+   {{ INCLUDE group/list.tt  groups => new }}
+{{ END }}
+
+<a class="New-group--button" href="{{ c.uri_for_action('/group/add') }}">
+   {{ c.string('createNewGroup') }}
+</a>

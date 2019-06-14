@@ -1,0 +1,31 @@
+<div class="Group">
+   <div class="Group-banner" style="background-image: url('{{ group.banner_url }}')"></div>
+   <div class="Group-stripe"></div>
+
+   <div class="Group-name">{{ group.name }}</div>
+   <div class="Group-descr">{{ group.descr }}</div>
+
+   <div class="Group-owner">
+      Owned by {{ INCLUDE artist/name.tt  artist = group.owner }}
+   </div>
+
+   <div class="Group-events">
+      <div>{{ c.string('events') }}</div>
+      <div>{{ group.get_column('event_count') }}</div>
+   </div>
+   <div class="Group-entrys">
+      <div>{{ c.string('entrys') }}</div>
+      <div>{{ group.get_column('entry_count') }}</div>
+   </div>
+   <div class="Group-members">
+      <div>{{ c.string('members') }}</div>
+      <div>{{ group.get_column('member_count') }}</div>
+   </div>
+
+   <div class="Group-join">
+      <form action="{{ c.uri_for_action('/group/join', [ group.id_uri ]) }}" method="POST">
+         {{ csrf_field | none }}
+         <input class="Group-join--button" type="submit" value="{{ c.string('join') }}">
+      </form>
+   </div>
+</div>

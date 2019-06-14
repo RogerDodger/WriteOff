@@ -32,6 +32,9 @@
                         <img class="Site-logo" src="/static/images/logo.png">
                      </a>
                   </li>
+                  <li class="{{ 'current' IF c.req.uri.path.match('^/group') }}">
+                     <a href="/groups">{{ c.string('groups') }}</a>
+                  </li>
                   <li class="{{ 'current' IF c.req.uri.path.match('^/schedule') }}">
                      <a href="/schedule">{{ c.string('schedule') }}</a>
                   </li>
