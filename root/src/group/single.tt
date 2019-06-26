@@ -1,8 +1,11 @@
 <div class="Group">
-   <div class="Group-banner" style="background-image: url('{{ group.banner_url }}')"></div>
+   <a class="Group-banner"
+      href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}"
+      style="background-image: url('{{ group.banner_url }}')"></a>
    <div class="Group-stripe"></div>
 
-   <div class="Group-name">{{ group.name }}</div>
+   <a class="Group-name" href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">{{
+      group.name }}</a>
    <div class="Group-descr">{{ group.descr }}</div>
 
    <div class="Group-owner">
@@ -22,10 +25,20 @@
       <div>{{ group.get_column('member_count') }}</div>
    </div>
 
+   <div class="Group-links">
+      <a class="Group-schedule" href="{{ c.uri_for_action('/group/schedule', [ group.id_uri ]) }}">
+         {{ c.string('schedule') }}
+      </a>
+
+      <a class="Group-scoreboard" href="{{ c.uri_for_action('/group/scoreboard', [ group.id_uri ]) }}">
+         {{ c.string('scoreboard') }}
+      </a>
+   </div>
+
    <div class="Group-join">
       <form action="{{ c.uri_for_action('/group/join', [ group.id_uri ]) }}" method="POST">
          {{ csrf_field | none }}
-         <input class="Group-join--button" type="submit" value="{{ c.string('join') }}">
+         <input type="submit" value="{{ c.string('join') }}">
       </form>
    </div>
 </div>

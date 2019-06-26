@@ -5,7 +5,9 @@
       <div class="Event-overview--left">
          <a class="Event-prompt" href="{{ c.uri_for_action('/event/permalink', id) }}">{{ event.prompt }}</a>
          &middot;
-         <span class="Genre" title="{{ event.genre.descr }}">{{ event.genre.name }}</span>
+         <a class="Event-group"
+            href="{{ c.uri_for_action('/group/view', [ event.genre.id_uri ]) }}">{{
+               event.genre.name }}</a>
          <span class="Format">{{ event.format.name }}</span>
          &middot;
          <span class="Event-start">{{ event.start.date_html | none }}</span>
