@@ -152,6 +152,7 @@ establishedGroups: Established groups
 newGroups: New groups
 createNewGroup: Create a new group
 join: Join
+leave: Leave
 
 storyFont: Story font
 serif: Serif

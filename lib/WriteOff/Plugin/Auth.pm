@@ -23,6 +23,15 @@ sub csrf_token {
    return $c->session($key) // ($c->session->{$key} = WriteOff::Util::token());
 }
 
+sub csrf_assert {
+   my $c = shift;
+
+   $c->detach('/default') unless $c->req->method eq 'POST';
+
+   $c->req->param('csrf_token') eq $c->csrf_token
+      or $c->detach('/error', [ $c->string('csrfDetected') ]);
+}
+
 sub logout {
    my $c = shift;
 
@@ -50,9 +59,13 @@ sub user {
 }
 
 sub user_id {
-   my $self = shift;
+   my $c = shift;
+   return $c->user->id || -1;
+}
 
-   return $self->user->id || -1;
+sub user_assert {
+   my $c = shift;
+   $c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
 }
 
 sub post_roles {

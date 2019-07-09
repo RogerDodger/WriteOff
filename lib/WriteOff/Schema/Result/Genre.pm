@@ -68,4 +68,10 @@ sub id_uri {
    return WriteOff::Util::simple_uri $self->id, $self->name;
 }
 
+sub member {
+   my ($self, $aid) = @_;
+
+   return $self->members->search({ artist_id => $aid })->count;
+}
+
 1;

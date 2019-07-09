@@ -42,6 +42,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+__PACKAGE__->has_many("artist_genre", "WriteOff::Schema::Result::ArtistGenre", "artist_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "artist_id");
 __PACKAGE__->has_many("posts", "WriteOff::Schema::Result::Post", "artist_id");
 __PACKAGE__->has_many("theorys", "WriteOff::Schema::Result::Theory", "artist_id");

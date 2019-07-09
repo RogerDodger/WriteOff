@@ -22,9 +22,10 @@
    </div>
 
    <div class="Group-stub--join">
-      <form action="{{ c.uri_for_action('/group/join', [ group.id_uri ]) }}" method="POST">
+      {{ SET verb = member(group.id) ? 'leave' : 'join' }}
+      <form action="{{ c.uri_for_action('/group/' _ verb, [ group.id_uri ]) }}" method="POST">
          {{ csrf_field | none }}
-         <input type="submit" value="{{ c.string('join') }}">
+         <input type="submit" value="{{ c.string(verb) }}">
       </form>
    </div>
 </div>
