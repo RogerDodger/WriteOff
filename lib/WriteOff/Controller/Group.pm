@@ -21,6 +21,10 @@ sub add :Path('new') :Args(0) {
    $c->title_push($c->string('new'), $c->string('groups'));
 }
 
+sub archive :Chained('fetch') :PathPart('archive') :Args(0) {
+
+}
+
 sub index :Path('/groups') :Args(0) {
    my ($self, $c) = @_;
 
@@ -67,6 +71,10 @@ sub leave :Chained('fetch') :PathPart('leave') :Args(0) {
 
    $c->res->redirect($c->req->referer
       || $c->uri_for_action('view', [ $c->stash->{genre}->id_uri ]));
+}
+
+sub members :Chained('fetch') :PathPart('members') :Args(0) {
+
 }
 
 sub schedule :Chained('fetch') :PathPart('schedule') :Args(0) {

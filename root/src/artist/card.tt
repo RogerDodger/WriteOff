@@ -44,7 +44,7 @@
          >
             {{ c.string(tab.1) }}
             {{ IF tab.2 }}
-            <span class="Artist-card--nav-count">{{ tab.2 }}</span>
+            <span class="count">{{ tab.2 }}</span>
             {{ END }}
          </a>
       {{ END }}

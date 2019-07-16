@@ -246,6 +246,18 @@
       border-bottom-color: hsla(200, 80%, 75%, 1);
       color: #222;
    }
+
+   & > .count {
+      display: inline-block;
+      font-weight: bold;
+      padding: 0.2em 0.35em;
+      background-color: hsla(0, 0%, 88%, 1);
+      border-radius: 0.4em;
+      font-size: 0.7em;
+      line-height: 1;
+      position: relative;
+      top: -0.15em;
+   }
 }
 
 .Table {

@@ -1,45 +1,33 @@
 <div class="Group">
+   <div class="Group-sheet"></div>
+
    <a class="Group-banner"
       href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}"
       style="background-image: url('{{ group.banner_url }}')"></a>
-   <div class="Group-stripe"></div>
 
    <a class="Group-name" href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">{{
       group.name }}</a>
    <div class="Group-descr">{{ group.descr }}</div>
 
-   <div class="Group-owner">
-      Owned by {{ INCLUDE artist/name.tt  artist = group.owner }}
-   </div>
-
-   <div class="Group-events">
-      <div>{{ c.string('events') }}</div>
-      <div>{{ group.get_column('event_count') }}</div>
-   </div>
-   <div class="Group-entrys">
-      <div>{{ c.string('entrys') }}</div>
-      <div>{{ group.get_column('entry_count') }}</div>
-   </div>
-   <div class="Group-members">
-      <div>{{ c.string('members') }}</div>
-      <div>{{ group.get_column('member_count') }}</div>
-   </div>
-
    <div class="Group-links">
-      <a class="Group-schedule" href="{{ c.uri_for_action('/group/schedule', [ group.id_uri ]) }}">
+      <a href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">
+         {{ c.string('overview') }}
+      </a>
+
+      <a href="{{ c.uri_for_action('/group/schedule', [ group.id_uri ]) }}">
          {{ c.string('schedule') }}
       </a>
 
-      <a class="Group-scoreboard" href="{{ c.uri_for_action('/group/scoreboard', [ group.id_uri ]) }}">
+      <a href="{{ c.uri_for_action('/group/scoreboard', [ group.id_uri ]) }}">
          {{ c.string('scoreboard') }}
       </a>
-   </div>
 
-   <div class="Group-join">
-      {{ SET verb = group.member(c.user.active_artist_id) ? 'leave' : 'join' }}
-      <form action="{{ c.uri_for_action('/group/' _ verb, [ group.id_uri ]) }}" method="POST">
-         {{ csrf_field | none }}
-         <input type="submit" value="{{ c.string(verb) }}">
-      </form>
+      <a href="{{ c.uri_for_action('/group/members', [ group.id_uri ]) }}">
+         {{ c.string('members') }}
+      </a>
+
+      <a href="{{ c.uri_for_action('/group/archive', [ group.id_uri ]) }}">
+         {{ c.string('archive') }}
+      </a>
    </div>
 </div>

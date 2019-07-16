@@ -17,12 +17,24 @@
 
 .Group,
 .Group-stub {
-   @include box;
-   @include sheet;
-
    & > * {
       grid-column: 1 / -1;
    }
+}
+
+.Group-stub,
+.Group-sheet {
+   @include box;
+   @include sheet;
+}
+
+.Group {
+   @include container;
+   // display: grid must be here after @include container to override its
+   // display: block -- so it can't go in the .Group, .Group-stub selection
+   display: grid;
+   grid-template-columns: auto;
+   grid-template-rows: 1fr repeat(3, auto);
 }
 
 .Group-stub {
@@ -31,11 +43,10 @@
    grid-template-rows: 1fr repeat(4, auto);
 }
 
-.Group {
-   @include container;
-   display: grid;
-   grid-template-columns: 1fr repeat(4, auto);
-   grid-template-rows: 1fr repeat(5, auto);
+.Group-sheet {
+   grid-row: 1 / -2;
+   grid-column: 1 / -1;
+   z-index: -1;
 }
 
 .Group-banner,
@@ -54,19 +65,13 @@
    min-height: 8em;
 }
 
-.Group-stripe,
-.Group-stub--stripe {
-   grid-row: 2;
-   opacity: 0.7;
-   background-color: #000;
-}
-
 .Group-name,
 .Group-stub--name {
    z-index: 2;
    grid-row: 2;
    padding: 0.3em 0.5rem;
    font-size: (19em / 16);
+   background-color: hsla(0, 0%, 0%, 0.7);
 
    color: #eee;
 
@@ -76,20 +81,20 @@
    }
 }
 
-.Group-descr { grid-row: 4; }
-.Group-owner { grid-row: 5; }
-
-.Group-descr,
-.Group-owner {
-   grid-column: 1;
+.Group-descr {
+   grid-row: 3;
+   padding: 0.5rem;
 }
 
-.Group-descr,
-.Group-owner,
-.Group-events,
-.Group-entrys,
-.Group-members, {
-   padding: 0.5rem;
+.Group-links {
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: center;
+   grid-row: 4;
+
+   & > a {
+      @include tab-nav-button;
+   }
 }
 
 .Group-stub--descr,
@@ -106,31 +111,12 @@
    border-bottom: 1px solid #ccc;
 }
 
-.Group-events,
-.Group-entrys,
-.Group-members,
 .Group-stub--events,
 .Group-stub--entrys,
 .Group-stub--members {
    font-variant: small-caps;
    color: #444;
    text-align: center;
-}
-
-.Group-events,
-.Group-entrys,
-.Group-members {
-   grid-row: 4 / span 2;
-   align-self: center;
-}
-
-.Group-events { grid-column: 2 }
-.Group-entrys { grid-column: 3 }
-.Group-members { grid-column: 4 }
-
-.Group-stub--events,
-.Group-stub--entrys,
-.Group-stub--members {
    grid-row: 4;
 }
 
@@ -138,21 +124,7 @@
 .Group-stub--entrys { grid-column: 2 }
 .Group-stub--members { grid-column: 3 }
 
-.Group-links {
-   display: flex;
-   flex-flow: row wrap;
-   justify-content: center;
-   grid-row: 3;
-
-   & > a {
-      @include tab-nav-button;
-   }
-}
-
-.Group-join,
 .Group-stub--join {
-   grid-row: -1;
-
    input[type="submit"] {
       @include button-base;
       @include button-color($sat: 0%, $l: 98%);
@@ -165,25 +137,4 @@
    }
 }
 
-@media #{$mobile} {
-   .Group {
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: 1fr repeat(6, auto);
-   }
-
-   .Group-descr,
-   .Group-owner {
-      grid-column: 1 / -1;
-   }
-
-   .Group-events,
-   .Group-entrys,
-   .Group-members {
-      border-top: 1px solid #ccc;
-      grid-row: 6;
-   }
-
-   .Group-events { grid-column: 1 }
-   .Group-entrys { grid-column: 2 }
-   .Group-members { grid-column: 3 }
-}
+.Group-stub--join { grid-row: -1 }
