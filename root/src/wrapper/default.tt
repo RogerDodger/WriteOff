@@ -41,6 +41,9 @@
                   <li class="{{ 'current' IF c.action.private_path == '/scoreboard/index' }}">
                      <a href="/scoreboard">{{ c.string('scoreboard') }}</a>
                   </li>
+                  <li class="{{ 'current' IF c.action.private_path == '/archive' }}">
+                     <a href="/archive">{{ c.string('archive') }}</a>
+                  </li>
                   {{ IF c.config.chat }}
                   <li>
                      <a href="{{ c.config.chat }}">
@@ -139,6 +142,10 @@
 
          {{ IF !c.session('introduced') }}
          <div class="Flash big ctn">{{ c.string('introSplash') | markdown }}</div>
+         {{ END }}
+
+         {{ IF group }}
+            {{ INCLUDE group/single.tt }}
          {{ END }}
 
          {{ IF event }}

@@ -1,6 +1,7 @@
 package WriteOff::Controller::Group;
 use Moose;
 use namespace::autoclean;
+use Scalar::Util qw/looks_like_number/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -21,8 +22,25 @@ sub add :Path('new') :Args(0) {
    $c->title_push($c->string('new'), $c->string('groups'));
 }
 
-sub archive :Chained('fetch') :PathPart('archive') :Args(0) {
+sub archive :Chained('fetch') :PathPart('archive') {
+   my ($self, $c, $year) = @_;
 
+   my $rs = $c->stash->{events} // $c->stash->{group}->events;
+   $c->stash->{maxYear} = $c->stash->{now}->year;
+   $c->stash->{minYear} =
+      eval { $rs->parse_datetime($rs->get_column('created')->min)->year } //
+      $c->stash->{maxYear};
+
+   $year = $c->stash->{maxYear} if
+      !defined $year || !looks_like_number($year) ||
+      $year < $c->stash->{minYear} || $year > $c->stash->{maxYear};
+
+   $c->stash->{year} = $year;
+   $c->stash->{events} = $rs->archive(DateTime->new(year => $year));
+   $c->stash->{show_last_post} = 1;
+
+   push @{ $c->stash->{title} }, $c->string('archive'), $year;
+   $c->stash->{template} = 'group/archive.tt';
 }
 
 sub index :Path('/groups') :Args(0) {
@@ -86,7 +104,15 @@ sub scoreboard :Chained('fetch') :PathPart('scoreboard') :Args(0) {
 }
 
 sub view :Chained('fetch') :PathPart('') :Args(0) {
+   my ($self, $c) = @_;
 
+   $c->stash->{events} //= $c->stash->{group}->events;
+   $c->stash->{active} = $c->stash->{events}->active;
+   $c->stash->{last} = $c->stash->{events}->last_ended;
+   $c->stash->{forum} = $c->stash->{events}->forum;
+   $c->stash->{show_last_post} = 1;
+
+   $c->stash->{template} = 'group/view.tt';
 }
 
 __PACKAGE__->meta->make_immutable;

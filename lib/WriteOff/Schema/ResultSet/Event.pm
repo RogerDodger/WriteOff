@@ -141,4 +141,8 @@ sub forum_rs {
    scalar shift->recent;
 }
 
+sub promoted {
+   shift->search({ promoted => 1 }, { join => 'genre' });
+}
+
 1;

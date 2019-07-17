@@ -10,24 +10,20 @@
    <div class="Group-descr">{{ group.descr }}</div>
 
    <div class="Group-links">
-      <a href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">
-         {{ c.string('overview') }}
-      </a>
-
-      <a href="{{ c.uri_for_action('/group/schedule', [ group.id_uri ]) }}">
-         {{ c.string('schedule') }}
-      </a>
-
-      <a href="{{ c.uri_for_action('/group/scoreboard', [ group.id_uri ]) }}">
-         {{ c.string('scoreboard') }}
-      </a>
-
-      <a href="{{ c.uri_for_action('/group/members', [ group.id_uri ]) }}">
-         {{ c.string('members') }}
-      </a>
-
-      <a href="{{ c.uri_for_action('/group/archive', [ group.id_uri ]) }}">
-         {{ c.string('archive') }}
-      </a>
+      {{ FOREACH tab IN [
+           ['view', 'overview'],
+           ['schedule', 'schedule'],
+           ['scoreboard', 'scoreboard'],
+           ['members', 'members'],
+           ['archive', 'archive'],
+         ] }}
+         {{ SET action = c.controller.action_for(tab.0) }}
+         <a
+            href="{{ c.uri_for_action(action, [ group.id_uri ]) }}"
+            class="{{ 'current' IF action.name == c.action.name }}"
+         >
+            {{ c.string(tab.1) }}
+         </a>
+      {{ END }}
    </div>
 </div>

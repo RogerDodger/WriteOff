@@ -35,6 +35,7 @@
    display: grid;
    grid-template-columns: auto;
    grid-template-rows: 1fr repeat(3, auto);
+   margin-bottom: 1.5em;
 }
 
 .Group-stub {

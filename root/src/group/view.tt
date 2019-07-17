@@ -1,1 +1,16 @@
-{{ INCLUDE group/single.tt }}
+<div class="Container-title">{{ c.string('activeEvents') }}</div>
+{{ IF active.count }}
+   {{ INCLUDE event/list.tt  events => active }}
+{{ ELSE }}
+   <div class="Flash ctn">{{ c.string('noActiveEvents') }}</div>
+{{ END }}
+
+{{ IF last.count }}
+<div class="Container-title mt1">{{ c.string('lastEvent') }}</div>
+{{ INCLUDE event/list.tt  events => last }}
+{{ END }}
+
+{{ IF forum.count }}
+<div class="Container-title mt1">{{ c.string('recentDiscussion') }}</div>
+{{ INCLUDE event/list.tt  events => forum }}
+{{ END}}
