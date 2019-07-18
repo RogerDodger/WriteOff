@@ -39,8 +39,11 @@ body {
  */
 
 .Site-header--container {
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: space-between;
    max-width: $container-overflow;
-   width: 95%;
+   width: 100%;
    margin: 0 auto;
 }
 
@@ -165,15 +168,14 @@ body {
 }
 
 .Site-header--global {
-   float: left;
-
    .fa-external-link {
       font-size: 0.9em;
    }
 }
 
 .Site-header--user {
-   float: right;
+   flex-grow: 1;
+   text-align: end;
 }
 
 .Site-logo {
