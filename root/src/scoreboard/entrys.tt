@@ -2,7 +2,7 @@
 {{- FOREACH score IN scores }}
    {{ SET ctrl = c.controller(score.mode.ucfirst) }}
    {{ SET awards = score.awards_sorted }}
-   <div class="Artist-entry flex-col">
+   <div class="Artist-entry">
       <div
          class="Artist-entry--awards flex-row center"
          style="background-color: {{ awards.first.color }}"
@@ -10,7 +10,15 @@
          {{ FOREACH award IN score.awards_sorted; award.html | none; END }}
       </div>
 
+      <div class="Artist-entry--competition">
+         <a class="Artist-entry--prompt"
+            href="{{ c.uri_for_action('/event/permalink', [ score.event.id_uri ]) }}">
+            {{ score.event.prompt }}
+         </a>
+      </div>
+
       {{ IF score.class == 'entry'; entry = score }}
+
          {{ IF !scoreKey }}
          <div class="Artist-entry--competition">
             <span class="Artist-entry--genre">
@@ -64,27 +72,12 @@
                {{ entry.title }}
             </a>
          </div>
-
-         <div class="Artist-entry--deadline">
-            <i class="fa fa-calendar"></i>
-            <a href="{{ c.uri_for_action('/event/permalink', [ entry.event.id_uri ]) }}">
-               {{ entry.deadline.date_html | none }}
-            </a>
-         </div>
-      {{- ELSIF score.class == 'theory'; theory = score }}
-         <div class="Artist-entry--title theory">
-            <a href="{{ c.uri_for(ctrl.action_for('results'), [ theory.event.id_uri ]) }}">
-               {{ theory.event.prompt }}
-            </a>
-         </div>
-
-         <div class="Artist-entry--deadline">
-            <i class="fa fa-calendar"></i>
-            <a href="{{ c.uri_for_action('/event/permalink', [ theory.event.id_uri ]) }}">
-               {{ theory.deadline.date_html | none }}
-            </a>
-         </div>
       {{- END }}
+
+      <div class="Artist-entry--deadline">
+         <i class="fa fa-calendar"></i>
+         {{ score.deadline.date_html | none }}
+      </div>
    </div>
 {{- END }}
 </div>
