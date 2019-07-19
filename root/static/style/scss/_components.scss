@@ -594,6 +594,10 @@
    }
 }
 
+.Page.thick {
+   padding: 0.8em 0.5em;
+}
+
 .Canvas {
    @include container;
    @include box;

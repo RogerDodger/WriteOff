@@ -55,6 +55,8 @@ vote: Vote
 save: Save
 cancel: Cancel
 scheduleAt: Schedule @ %s
+once: Once
+everyXWeeks: Every %d weeks
 go: Go
 artistActive: Swappable
 saveChanges: Save changes

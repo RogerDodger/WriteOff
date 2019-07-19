@@ -21,7 +21,10 @@ sub fetch :Chained('/') :PathPart('schedule') :CaptureArgs(1) {
 sub index :Path :Args(0) {
    my ($self, $c) = @_;
 
-   $c->stash->{schedules} = $c->model('DB::Schedule')->search({}, { order_by => 'next' });
+   $c->stash->{schedules} = $c->model('DB::Schedule')->search({}, {
+      order_by => 'next',
+      prefetch => [qw/format genre/],
+   });
 }
 
 sub add :Local {
@@ -38,7 +41,7 @@ sub do_add :Private {
 
    $c->forward('do_form');
    $c->stash->{sched}->insert;
-   $c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds } };
+   $c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
 
    $c->flash->{status_msg} = $c->string('scheduleUpdated');
    $c->res->redirect($c->uri_for_action('/schedule/index'));

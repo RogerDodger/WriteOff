@@ -1,13 +1,11 @@
 {{ title.push(c.string('schedule')) }}
 
-<div class="Document">
-   {{ FOREACH schedule IN schedules.all }}
-      {{ PROCESS 'schedule/single.tt' }}
-   {{ END }}
+{{ FOREACH schedule IN schedules.all }}
+   {{ PROCESS 'schedule/single.tt' }}
+{{ END }}
 
-   {{ IF c.user.admin }}
-   <a class="Schedule-add" href="{{ c.uri_for_action('/schedule/add') }}">
-      {{ c.string('new') }}
-   </a>
-   {{ END }}
-</div>
+{{ IF c.user.admin }}
+<a class="Schedule-add" href="{{ c.uri_for_action('/schedule/add') }}">
+   {{ c.string('new') }}
+</a>
+{{ END }}

@@ -1,17 +1,34 @@
-<div class="Schedule">
-   <div class="Schedule-header">
-      <div class="Schedule-name">
-         <span class="Genre" title="{{ schedule.genre.descr }}">{{ schedule.genre.name }}</span>
+<div class="Event-header" data-nocollapse="1">
+   <div class="Event-overview">
+      <div class="Event-overview--left">
+         <a class="Event-group"
+            href="{{ c.uri_for_action('/group/view', [ schedule.genre.id_uri ]) }}">{{
+               schedule.genre.name }}</a>
          <span class="Format">{{ schedule.format.name }}</span>
+         &middot;
+         <span class="Event-start">{{ schedule.next.date_html | none }}</span>
+         &middot;
+         <span class="Schedule-period">
+            {{ IF schedule.period > 0 }}
+               {{ c.string('everyXWeeks', schedule.period )}}
+            {{ ELSE }}
+               {{ c.string('once') }}
+            {{ END }}
+         </span>
       </div>
+   </div>
+</div>
+
+<div class="Event-details">
+   <div class="Page thick">
       {{ IF c.user.admin }}
-      <div class="Schedule-edit">
+      <div class="Event-edit">
          [<a href="{{ c.uri_for_action('/schedule/edit', [ schedule.id ]) }}">{{ c.string('edit')}}</a>]
       </div>
       {{ END }}
-   </div>
 
-   <div class="Schedule-timeline">
-      {{ PROCESS 'event/timeline.tt' timeline = schedule.timeline  }}
+      <div class="Schedule-timeline">
+         {{ PROCESS 'event/timeline.tt' timeline = schedule.timeline  }}
+      </div>
    </div>
 </div>
