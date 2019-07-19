@@ -36,6 +36,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->belongs_to("owner", "WriteOff::Schema::Result::Artist", "owner_id");
 __PACKAGE__->has_many("events", "WriteOff::Schema::Result::Event", "genre_id");
+__PACKAGE__->has_many("schedules", "WriteOff::Schema::Result::Schedule", "genre_id");
 __PACKAGE__->has_many("subs", "WriteOff::Schema::Result::SubGenre", "genre_id");
 __PACKAGE__->has_many("members", "WriteOff::Schema::Result::ArtistGenre", "genre_id");
 

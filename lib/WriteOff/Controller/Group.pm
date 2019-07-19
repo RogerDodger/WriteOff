@@ -96,7 +96,9 @@ sub members :Chained('fetch') :PathPart('members') :Args(0) {
 }
 
 sub schedule :Chained('fetch') :PathPart('schedule') :Args(0) {
+   my ($self, $c) = @_;
 
+   $c->stash->{schedules} = $c->stash->{group}->schedules->index;
 }
 
 sub scoreboard :Chained('fetch') :PathPart('scoreboard') :Args(0) {

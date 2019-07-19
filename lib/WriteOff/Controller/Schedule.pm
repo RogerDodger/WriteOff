@@ -21,10 +21,7 @@ sub fetch :Chained('/') :PathPart('schedule') :CaptureArgs(1) {
 sub index :Path :Args(0) {
    my ($self, $c) = @_;
 
-   $c->stash->{schedules} = $c->model('DB::Schedule')->search({}, {
-      order_by => 'next',
-      prefetch => [qw/format genre/],
-   });
+   $c->stash->{schedules} = $c->model('DB::Schedule')->promoted->index;
 }
 
 sub add :Local {

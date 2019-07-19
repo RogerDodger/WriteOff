@@ -13,4 +13,15 @@ sub active {
    });
 }
 
+sub index {
+   shift->search({}, {
+      order_by => 'next',
+      prefetch => [qw/format genre/],
+   })
+}
+
+sub promoted {
+   shift->search({ promoted => 1 }, { join => 'genre' });
+}
+
 1;

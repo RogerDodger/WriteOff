@@ -1,4 +1,4 @@
-<div class="Event-header" data-nocollapse="1">
+<div class="Event-header">
    <div class="Event-overview">
       <div class="Event-overview--left">
          <a class="Event-group"
@@ -15,6 +15,11 @@
                {{ c.string('once') }}
             {{ END }}
          </span>
+      </div>
+
+      <div class="Event-toggle">
+         <i class="Event-toggle--down fa fa-angle-double-down"></i>
+         <i class="Event-toggle--up fa fa-angle-double-up"></i>
       </div>
    </div>
 </div>
