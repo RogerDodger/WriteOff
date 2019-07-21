@@ -83,7 +83,24 @@ __PACKAGE__->filter_column('password', {
 });
 
 sub admin {
-   shift->active_artist->admin;
+   my $aa = shift->active_artist;
+   defined $aa && $aa->admin;
+}
+
+sub admins {
+   my ($self, $group) = @_;
+   return 0 unless UNIVERSAL::isa($group, 'WriteOff::Schema::Result::Genre');
+   $group->{__admins} //= do {
+      return 1 if $self->admin || $group->owner_id == $self->active_artist_id;
+      my $memship = $group->members->find($self->active_artist_id, $group->id);
+      return defined $memship && $memship->role eq 'admin';
+   }
+}
+
+sub owns {
+   my ($self, $group) = @_;
+   return 0 unless UNIVERSAL::isa($group, 'WriteOff::Schema::Result::Genre');
+   $group->owner_id == $self->active_artist_id;
 }
 
 sub check_password {

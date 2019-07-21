@@ -1,0 +1,19 @@
+<div class="Member">
+   <div class="Member-band"
+      style="background-color: {{ artist.color }}"></div>
+   <div class="Member-stripe"
+      style="background-color: {{ artist.color_dark }}"></div>
+
+   <div class="Member-avatar">
+      <img src="{{ artist.avatar }}">
+   </div>
+
+   <div class="Member-name">{{ INCLUDE artist/name.tt }}</div>
+
+   {{ IF joined }}
+   <div class="Member-joined">
+      <i class="fa fa-calendar"></i>
+      {{ joined.date_html | none }}
+   </div>
+   {{ END }}
+</div>

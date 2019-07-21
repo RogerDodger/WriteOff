@@ -26,7 +26,7 @@
 
 <div class="Event-details">
    <div class="Page thick">
-      {{ IF c.user.admin }}
+      {{ IF c.user.admins(schedule.genre) }}
       <div class="Event-edit">
          [<a href="{{ c.uri_for_action('/schedule/edit', [ schedule.id ]) }}">{{ c.string('edit')}}</a>]
       </div>

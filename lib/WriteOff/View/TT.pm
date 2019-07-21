@@ -23,7 +23,7 @@ __PACKAGE__->config(
    TEMPLATE_EXTENSION => '.tt',
    START_TAG          => quotemeta('{{'),
    END_TAG            => quotemeta('}}'),
-   expose_methods     => [ qw/data_uri format_dt title_html spectrum/ ],
+   expose_methods     => [ qw/data_uri format_dt title_html title_push title_push_s spectrum/ ],
    render_die         => 1,
    TIMER              => 1,
 );
@@ -315,6 +315,20 @@ sub title_html {
               map { Template::Filters::html_filter($_) }
                 ref $title eq 'ARRAY' ? reverse @$title : $title || ();
    return join " &#x2022; ", $title || (), $c->config->{name};
+}
+
+sub title_push {
+   my $self = shift;
+   my $c = shift;
+   $c->title_push(@_);
+   '';
+}
+
+sub title_push_s {
+   my $self = shift;
+   my $c = shift;
+   $c->title_push($c->string(@_));
+   '';
 }
 
 1;

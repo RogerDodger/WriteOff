@@ -5,6 +5,12 @@
       href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}"
       style="background-image: url('{{ group.banner_url }}')"></a>
 
+  {{ IF c.user.admins(group) }}
+  <a class="Group-edit" href="{{ c.uri_for_action('/group/edit', [ group.id_uri ]) }}">
+     [{{ c.string('edit') }}]
+  </a>
+  {{ END }}
+
    <a class="Group-name" href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">{{
       group.name }}</a>
    <div class="Group-descr">{{ group.descr }}</div>

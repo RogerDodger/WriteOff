@@ -1,0 +1,28 @@
+{{ title_push_s('members') }}
+
+<div class="Container-title">{{ c.string('owner') }}</div>
+
+<div class="ctn">
+   <div class="Members">
+      {{ INCLUDE group/member.tt
+         artist = group.owner
+         joined = group.created }}
+   </div>
+</div>
+
+{{ FOREACH r IN ['admin', 'mod', 'user'] }}
+   {{ SET rs = members.search_rs({ role => r }) }}
+   {{ IF rs.count }}
+   <div class="Container-title mt1">{{ c.string(r == 'user' ? 'members' : r _ 's') }}</div>
+
+   <div class="ctn">
+      <div class="Members">
+         {{ FOREACH member IN rs.all }}
+            {{ INCLUDE group/member.tt
+               artist = member.artist
+               joined = member.created }}
+         {{ END }}
+      </div>
+   </div>
+   {{ END }}
+{{ END }}

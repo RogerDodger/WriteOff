@@ -330,6 +330,11 @@ sub title_push {
    push @{ $self->stash->{title} }, @_;
 }
 
+sub title_push_s {
+   my $self = shift;
+   $self->title_push($self->string(@_));
+}
+
 sub title_unshift {
    my $self = shift;
    unshift @{ $self->stash->{title} }, @_;

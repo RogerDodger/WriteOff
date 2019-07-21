@@ -43,6 +43,10 @@ sub archive :Chained('fetch') :PathPart('archive') {
    $c->stash->{template} = 'group/archive.tt';
 }
 
+sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
+
+}
+
 sub index :Path('/groups') :Args(0) {
    my ($self, $c) = @_;
 
@@ -92,12 +96,12 @@ sub leave :Chained('fetch') :PathPart('leave') :Args(0) {
 }
 
 sub members :Chained('fetch') :PathPart('members') :Args(0) {
-
+   my ($self, $c) = @_;
+   $c->stash->{members} = $c->stash->{group}->members->index;
 }
 
 sub schedule :Chained('fetch') :PathPart('schedule') :Args(0) {
    my ($self, $c) = @_;
-
    $c->stash->{schedules} = $c->stash->{group}->schedules->index;
 }
 
