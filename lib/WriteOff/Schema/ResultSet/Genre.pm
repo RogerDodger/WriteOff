@@ -3,6 +3,10 @@ package WriteOff::Schema::ResultSet::Genre;
 use strict;
 use base 'WriteOff::Schema::ResultSet';
 
+sub promoted {
+   shift->search({ promoted => 1 });
+}
+
 sub with_counts {
    my $self = shift;
 

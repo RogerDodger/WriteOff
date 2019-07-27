@@ -2,6 +2,7 @@ package WriteOff::Controller::Group;
 use Moose;
 use namespace::autoclean;
 use Scalar::Util qw/looks_like_number/;
+use WriteOff::Mode qw/FIC/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -105,8 +106,12 @@ sub schedule :Chained('fetch') :PathPart('schedule') :Args(0) {
    $c->stash->{schedules} = $c->stash->{group}->schedules->index;
 }
 
-sub scoreboard :Chained('fetch') :PathPart('scoreboard') :Args(0) {
-
+sub scoreboard :Chained('fetch') :PathPart('scoreboard') {
+   my ($self, $c, $mname) = @_;
+   $c->stash->{genre} = $c->stash->{group};
+   $c->stash->{mode} = WriteOff::Mode->find($mname) // FIC;
+   $c->stash->{mUrl} = $c->uri_for_action($c->action, [ $c->stash->{group}->id_uri ], '%s');
+   $c->forward('/scoreboard/view');
 }
 
 sub view :Chained('fetch') :PathPart('') :Args(0) {

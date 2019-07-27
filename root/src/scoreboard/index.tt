@@ -1,7 +1,32 @@
-{{ PROCESS scoreboard/nav.tt }}
+{{ title_push_s(mode.name _ 'Scoreboard') }}
 
-{{ IF scoreboard.defined }}
-   {{ scoreboard | none }}
-{{ ELSE }}
-   {{ PROCESS scoreboard/artists.tt }}
+{{ IF gUrl }}
+<div class="Tabs ctn">
+   {{ FOREACH el IN genres.all }}
+   <a href="{{ el.id_uri | format(gUrl) }}"
+      class="{{ 'current' IF el.id == genre.id }}">
+      {{ c.string(el.name) }}
+   </a>
+   {{ END }}
+</div>
 {{ END }}
+
+{{ IF mUrl }}
+<div class="Tabs ctn">
+   {{ FOREACH el IN modes }}
+   <a href="{{ el.name | format(mUrl) }}"
+      class="{{ 'current' IF el.id == mode.id }}">
+      {{ c.string(el.name) }}
+   </a>
+   {{ END }}
+</div>
+{{ END }}
+
+{{
+   USE cache = Cache(cache => c.config.renderCache);
+   cache.inc(
+      'template' => 'scoreboard/artists.tt',
+      'ttl' => c.debug || 360,
+      'key' => key
+   );
+}}

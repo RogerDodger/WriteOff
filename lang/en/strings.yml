@@ -110,6 +110,8 @@ newEventTitle: New Event
 error: Error
 redirect: Redirect
 scoreboard: Scoreboard
+ficScoreboard: Fic Scoreboard
+picScoreboard: Pic Scoreboard
 schedule: Schedule
 editSchedule: Edit Schedule
 newSchedule: New Schedule

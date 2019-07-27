@@ -9,23 +9,35 @@ use WriteOff::Util qw/maybe/;
 BEGIN { extends 'Catalyst::Controller'; }
 
 sub index :Path('/scoreboard') {
-   my ($self, $c, $gid, $fid) = @_;
+   my ($self, $c, $gid, $mname) = @_;
 
+   $c->stash->{genres} = $c->model('DB::Genre')->promoted;
+   $c->stash->{genre} =
+      $c->stash->{genres}->find_maybe($gid) //
+      $c->stash->{genres}->find(1);
+
+   $c->stash->{mode} = WriteOff::Mode->find($mname) // FIC;
+
+   $c->stash->{gUrl} = '/scoreboard/%s/' . $c->stash->{mode}->name;
+   $c->stash->{mUrl} = '/scoreboard/' . $c->stash->{genre}->id_uri . '/%s';
+
+   $c->title_push_s($c->stash->{genre}->name);
+
+   $c->forward('view');
+}
+
+sub view :Private {
+   my ($self, $c) = @_;
    my $s = $c->stash;
 
    $s->{modes} = \@WriteOff::Mode::ALL;
-   $s->{genres} = $c->model('DB::Genre');
+
+   # Keep this behaviour to allow this view still, but it's not linked anymore
    $s->{formats} = $c->model('DB::Format');
-
-   $s->{mode} = WriteOff::Mode->find($c->paramo('mode')) // FIC;
-   $s->{genre} = $s->{genres}->find_maybe($c->paramo('genre')) // $s->{genres}->find(1);
-
-   if ($s->{mode}->is(FIC)) {
-      $s->{format} = $s->{formats}->find_maybe($c->paramo('format'));
-   }
-   else {
-      $s->{format} = undef;
-   }
+   $s->{format} =
+      $s->{mode}->is(FIC)
+         ? $s->{formats}->find_maybe($c->paramo('format'))
+         : undef;
 
    my %cond;
    $cond{"genre_id"} = $s->{genre}->id;
@@ -79,11 +91,10 @@ sub index :Path('/scoreboard') {
       maybe(format => $s->{format} && $s->{format}->id),
    });
 
-   push @{ $c->stash->{title} },
-      $c->string('scoreboard'),
-      ($s->{format} ? () : $c->string($s->{mode}->name)),
-      $c->string($s->{genre}->name),
-      ($s->{format} ? $c->string($s->{format}->name) : ());
+   if ($s->{format}) {
+      $c->title_push_s($s->{format}->name);
+   }
+
    $c->stash->{template} = 'scoreboard/index.tt';
 }
 

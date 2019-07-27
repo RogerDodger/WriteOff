@@ -32,7 +32,7 @@ my %attr = (
    _PIC() => [ 'pic', 'image_id', 'image' ],
 );
 
-our @ALL = map { __PACKAGE__->new($_) } keys %attr;
+our @ALL = map { eval "$_" } @modes;
 
 sub new {
    my ($class, $id) = @_;
@@ -46,7 +46,7 @@ sub new {
 
 sub find {
    my ($class, $name) = @_;
-
+   return if !defined $name;
    return $name if UNIVERSAL::isa($name, __PACKAGE__);
 
    for my $mode (@ALL) {
