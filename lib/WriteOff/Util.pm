@@ -10,7 +10,7 @@ use Crypt::URandom qw/urandom/;
 use Time::HiRes qw/gettimeofday/;
 use WriteOff::Markup;
 
-our @EXPORT_OK = qw/LEEWAY avg maybe rorder simple_uri sorted token wordcount uniq/;
+our @EXPORT_OK = qw/LEEWAY avg maybe rorder simple_uri sorted token trim wordcount uniq/;
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 my $_rng = Math::Random::ISAAC::XS->new( map { unpack( "N", urandom(4) ) } 1 .. 256);
@@ -80,6 +80,10 @@ sub sorted {
 sub token {
    my $salt = shift // '';
    Digest->new(shift // 'MD5')->add($salt)->add($_rng->irand)->hexdigest;
+}
+
+sub trim {
+   $_[0] =~ s/^\s+|\s+$//gr;
 }
 
 sub wordcount ($) {

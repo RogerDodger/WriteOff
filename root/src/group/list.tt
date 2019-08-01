@@ -1,5 +1,0 @@
-<div class="Groups">
-{{ WHILE (group = groups.next) }}
-   {{ INCLUDE group/stub.tt }}
-{{ END }}
-</div>

@@ -435,6 +435,10 @@
       margin-bottom: 0;
    }
 
+   textarea.short {
+      font-size: 0.9em;
+   }
+
    input[type="submit"] {
       @include button($hue: 120, $sat: 50%);
       font-size: 1.03em;

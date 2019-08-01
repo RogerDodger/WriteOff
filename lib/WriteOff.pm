@@ -152,7 +152,7 @@ __PACKAGE__->config(
       },
       img => {
          size  => 2 * 1024 * 1024,
-         types => [ qw:image/jpeg image/png: ],
+         types => [ qw:image/jpeg image/png image/webp: ],
          xmin => 225,
          ymin => 225,
          xmax => 1800,

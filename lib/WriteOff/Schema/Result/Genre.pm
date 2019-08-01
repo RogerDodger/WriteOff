@@ -4,6 +4,7 @@ package WriteOff::Schema::Result::Genre;
 use strict;
 use warnings;
 use base "WriteOff::Schema::Result";
+use Imager;
 use File::Spec;
 use WriteOff::Util;
 
@@ -19,8 +20,6 @@ __PACKAGE__->add_columns(
    "descr",
    { data_type => "text", is_nullable => 1 },
    "banner_id",
-   { data_type => "text", is_nullable => 1 },
-   "color",
    { data_type => "text", is_nullable => 1 },
    "promoted",
    { data_type => "bit", is_nullable => 0, default_value => 0 },
@@ -54,8 +53,32 @@ sub banner_path {
 sub banner_url {
    my ($self, $id) = @_;
    defined $id
-      ? "/static/banner/$id.jpg"
+      ? "/static/banner/" . substr($id, 0, 2) . "/$id.jpg"
       : '/static/banner/default.jpg';
+}
+
+sub banner_write {
+   my ($self, $upload) = @_;
+
+   my $token = WriteOff::Util::token;
+   my $newId = sprintf "%s-%d-%s", substr($token, 0, 2), $self->id, substr($token, 2, 8);
+
+   my @pathparts = File::Spec->splitpath($self->banner_path($newId));
+   if (!-d $pathparts[1]) {
+      File::Path::mkpath($pathparts[1]);
+   }
+
+   my $img = Imager->new(file => $upload->tempname, png_ignore_benign_errors => 1)
+      or die Imager->errstr . "\n";
+   my $scale = $img->scale(xpixels => 1024, ypixels => 192) or die $img->errstr . "\n";
+   my $crop = $scale->crop(width => 1024, height => 192) or die $scale->errstr . "\n";
+   $crop->write(file => $self->banner_path($newId), jpegquality => 90, jpeg_optimize => 1)
+      or die $crop->errstr . "\n";
+
+   if (defined $self->banner_id) {
+      unlink $self->banner_path($self->banner_id);
+   }
+   $self->banner_id($newId);
 }
 
 sub entry_count {

@@ -77,15 +77,17 @@ sub avatar_write {
       File::Path::mkpath($pathparts[1]);
    }
 
-   my $img = Imager->new(file => $upload->tempname) or die Imager->errstr . "\n";
-   my $thumb = $img->scale(xpixels => 160, ypixels => 160, type => 'nonprop') or die $img->errstr . "\n";
-   $thumb->write(file => $self->avatar_path($newId), type => 'png') or die $thumb->errstr . "\n";
+   my $img = Imager->new(file => $upload->tempname, png_ignore_benign_errors => 1)
+      or die Imager->errstr . "\n";
+   my $scale = $img->scale(xpixels => 160, ypixels => 160) or die $img->errstr . "\n";
+   my $crop = $scale->crop(width => 160, height => 160) or die $scale->errstr . "\n";
+   $crop->write(file => $self->avatar_path($newId), type => 'png') or die $crop->errstr . "\n";
 
    if (defined $self->avatar_id) {
       unlink $self->avatar_path($self->avatar_id);
    }
    $self->avatar_id($newId);
-   $self->avatar_write_color($thumb);
+   $self->avatar_write_color($crop);
 }
 
 sub avatar_write_color {

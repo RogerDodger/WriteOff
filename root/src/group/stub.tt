@@ -1,7 +1,7 @@
 <div class="Group-stub">
    <a class="Group-stub--banner"
       href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}"
-      style="background-image: url('{{ group.banner_url }}')"></a>
+      style="background-image: url('{{ group.banner }}')"></a>
 
    <a class="Group-stub--name" href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">{{
       group.name }}</a>

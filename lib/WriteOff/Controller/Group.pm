@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Scalar::Util qw/looks_like_number/;
 use WriteOff::Mode qw/FIC/;
+use WriteOff::Util qw/trim/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -19,6 +20,36 @@ sub fetch :Chained('/') :PathPart('group') :CaptureArgs(1) {
 
 sub add :Path('new') :Args(0) {
    my ($self, $c) = @_;
+
+   if ($c->req->method eq 'POST') {
+      $c->csrf_assert;
+
+      my $name = $c->paramo('groupname');
+      $c->yuck('Name is required') if !length $name;
+
+      my $descr = $c->paramo('descr');
+      $c->yuck('Descr is required') if !length $descr;
+
+      my $group = $c->model('DB::Genre')->new_result({
+         name => substr($name, 0, $c->config->{len}{max}{title}),
+         descr => substr($descr, 0, $c->config->{len}{max}{blurb}),
+         owner_id => $c->user->active_artist_id,
+      });
+
+      $group->banner_write($c->req->upload('banner'))
+         if defined $c->req->upload('banner');
+
+      $group->insert;
+      $c->log->info("Group %d created by %s: %s - %s",
+         $group->id,
+         $c->user->name,
+         $group->name,
+         $group->descr,
+      );
+
+      $c->flash->{status_msg} = $c->string('groupCreated');
+      $c->res->redirect($c->uri_for_action('/group/view', [ $group->id_uri ]));
+   }
 
    $c->title_push($c->string('new'), $c->string('groups'));
 }
@@ -45,7 +76,38 @@ sub archive :Chained('fetch') :PathPart('archive') {
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
+   my ($self, $c) = @_;
 
+   $c->detach('/forbidden', [ $c->string('notGroupAdmin') ])
+      if !$c->user->admins($c->stash->{group});
+
+   if ($c->req->method eq 'POST') {
+      $c->csrf_assert;
+
+      my $name = $c->paramo('groupname');
+      $c->stash->{group}->name(substr $name, 0, $c->config->{len}{max}{title})
+         if length $name;
+
+      my $descr = $c->paramo('descr');
+      $c->stash->{group}->descr(substr $descr, 0, $c->config->{len}{max}{blurb})
+         if length $descr;
+
+      $c->stash->{group}->banner_write($c->req->upload('banner'))
+         if defined $c->req->upload('banner');
+
+      $c->stash->{group}->update;
+      $c->log->info("Group %d updated by %s: %s - %s",
+         $c->stash->{group}->id,
+         $c->user->name,
+         $c->stash->{group}->name,
+         $c->stash->{group}->descr,
+      );
+
+      $c->flash->{status_msg} = $c->string('groupUpdated');
+      $c->res->redirect($c->uri_for_action('/group/view', [ $c->stash->{group}->id_uri ]));
+   }
+
+   $c->title_push_s('edit');
 }
 
 sub index :Path('/groups') :Args(0) {

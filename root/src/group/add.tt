@@ -1,0 +1,4 @@
+<div class="Document">
+   <div class="Document-title">{{ c.string('newGroupTitle') }}</div>
+   {{ INCLUDE group/form.tt }}
+</div>

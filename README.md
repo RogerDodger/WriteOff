@@ -5,6 +5,9 @@ Dependencies
 - gcc
 - make
 - freetype2
+- libjpg
+- libpng
+- libwebp
 - [sqlite3](https://www.sqlite.org/index.html)
 - [terser](https://github.com/terser-js/terser)
 - [autoprefixer](https://github.com/postcss/autoprefixer)

@@ -1,0 +1,38 @@
+<form class="Form" method="post" action="{{ c.req.uri }}" enctype="multipart/form-data">
+   {{ csrf_field | none }}
+
+   <div class="Form-item">
+      <label>{{ c.string('name') }}<span class="required">*</span></label>
+      <input type="text" name="groupname" size="30"
+         maxlength="{{ c.config.len.max.title }}"
+         required value="{{ group.name }}"
+         placeholder="{{ c.string('groupNamePlaceholder') }}">
+      <div class="Form-note">{{ c.string('groupNameNote') }}</div>
+   </div>
+
+   <div class="Form-item">
+      <label>{{ c.string('description') }}<span class="required">*</span></label>
+      <textarea
+         class="short"
+         name="descr"
+         rows="2"
+         cols="32"
+         maxlength="{{ c.config.len.max.blurb }}"
+         placeholder="{{ c.string('groupDescrPlaceholder') }}"
+         required
+         >{{ group.descr }}</textarea>
+      <div class="Form-note">{{ c.string('groupDescrNote') }}</div>
+   </div>
+
+   <div class="Form-item">
+      <label>{{ c.string('banner') }}</label>
+      <input type="file" name="banner"
+         title="{{ c.string('allowedTypes', c.config.biz.img.types.join_serial) }}"
+         accept="{{ c.config.biz.img.types.join(',') }}">
+      <div class="Form-note">{{ c.string('groupBannerNote') }}</div>
+   </div>
+
+   <div class="Form-item">
+      <input type="submit" value="{{ c.string('submit') }}">
+   </div>
+</form>

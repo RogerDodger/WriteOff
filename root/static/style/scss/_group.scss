@@ -11,8 +11,14 @@
    @include container;
    display: grid;
    grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
-   grid-gap: 1em;
+   grid-gap: 0 1em;
    align-items: start;
+}
+
+.Groups-label {
+   font-size: (18em / 16);
+   margin-bottom: 0.1em;
+   grid-column: 1 / -1;
 }
 
 .Group,
@@ -42,6 +48,7 @@
    display: grid;
    grid-template-columns: repeat(3, 1fr);
    grid-template-rows: 1fr repeat(4, auto);
+   margin-bottom: 1em;
 }
 
 .Group-sheet {

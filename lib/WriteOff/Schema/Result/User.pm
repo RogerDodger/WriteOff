@@ -98,9 +98,17 @@ sub admins {
 }
 
 sub owns {
-   my ($self, $group) = @_;
-   return 0 unless UNIVERSAL::isa($group, 'WriteOff::Schema::Result::Genre');
-   $group->owner_id == $self->active_artist_id;
+   my ($self, $obj) = @_;
+
+   if (UNIVERSAL::isa($obj, 'WriteOff::Schema::Result::Genre')) {
+      return $self->active_artist_id == $obj->owner_id;
+   }
+   elsif (UNIVERSAL::can($obj, 'user_id')) {
+      return $self->id == $obj->user_id;
+   }
+   else {
+      return 0;
+   }
 }
 
 sub check_password {
@@ -253,10 +261,6 @@ sub can_edit {
    my ($self, $row) = @_;
 
    $row->is_manipulable_by($self);
-}
-
-sub owns {
-   $_[0]->id == $_[1]->user_id;
 }
 
 sub storys {

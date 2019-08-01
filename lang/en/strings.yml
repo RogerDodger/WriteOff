@@ -30,6 +30,9 @@ username: Username
 password: Password
 timezone: Timezone
 emailNotifs: Email Notifications
+descr: &descr Description
+description: *descr
+banner: Banner
 score: Score
 allowedTypes: Allowed types: %s
 maxSize: Max filesize: %dKB
@@ -64,6 +67,7 @@ castVote: Cast vote
 newArtist: New alias
 editArtist: Edit profile
 deleteArtist: Delete alias
+editGroup: Edit group
 user: User
 users: Users
 admin: Admin
@@ -105,6 +109,7 @@ darkMode: Dark mode
 
 newArtistTitle: New Alias
 newEventTitle: New Event
+newGroupTitle: New Group
 404: File Not Found
 403: Forbidden
 error: Error
@@ -241,10 +246,18 @@ introSplash: |
    Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
 confirmPrompt: Enter the %s of the selected item to continue
 autosubLabel: Automatically subscribe to new genres and formats
+groupNameNote: Keep as short as possible.
+groupNamePlaceholder: OGAAS
+groupDescrNote: What type of works are suitable for this group.
+groupDescrPlaceholder: Works based on Joe Blow's Obscure Genre And Also a Spinoff
+groupBannerNote: |
+   Will be cropped to 1024x196 pixels.
+   On mobile, will be cropped to be narrower.
 jsRequired: |
    This page requires JavaScript to work properly
 csrfDetected: Bad session
 notAdmin: You are not an admin
+notGroupAdmin: You are not an admin for this group
 notOrganiser: You are not an event organiser for this event
 notUser: You are not logged in
 areUser: You are already logged in
@@ -269,6 +282,8 @@ cantMakeRoundAlreadyStarted: Can't make a round that's already started
 scheduleUpdated: Schedule updated
 eventCreated: Event created
 eventUpdated: Event updated
+groupCreated: Group created
+groupUpdated: Group updated
 
 notifComment: %s commented
 notifMention: %s mentioned you
