@@ -23,7 +23,8 @@ sub with_counts {
       'inn.id' => { -ident => 'me.id' },
    }, {
       join => { 'members' },
-      select => { count => 'members.artist_id' },
+      # Include the owner in the member count
+      select => \'count(members.artist_id) + 1',
       group_by => 'inn.id',
       alias => 'inn',
    });

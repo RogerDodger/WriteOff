@@ -137,7 +137,9 @@ sub join :Chained('fetch') :PathPart('join') :Args(0) {
    );
 
    my $rs = $c->model('DB::ArtistGenre');
-   $rs->create(\%o) if !$rs->find($o{artist_id}, $o{genre_id});
+   $rs->create(\%o) unless
+      $c->user->owns($c->stash->{genre}) ||
+      $rs->find($o{artist_id}, $o{genre_id});
 
    $c->res->redirect($c->req->referer
       || $c->uri_for_action('view', [ $c->stash->{genre}->id_uri ]));

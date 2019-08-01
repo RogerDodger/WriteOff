@@ -20,6 +20,7 @@
       <div>{{ group.get_column('member_count') }}</div>
    </div>
 
+   {{ IF !c.user.owns(group) }}
    <div class="Group-stub--join">
       {{ SET verb = member(group.id) ? 'leave' : 'join' }}
       <form action="{{ c.uri_for_action('/group/' _ verb, [ group.id_uri ]) }}" method="POST">
@@ -27,4 +28,5 @@
          <input type="submit" value="{{ c.string(verb) }}">
       </form>
    </div>
+   {{ END }}
 </div>
