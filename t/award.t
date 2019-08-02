@@ -19,9 +19,9 @@ is $award->id, 1, 'Award attributes';
 is $award->name, 'gold', 'Award attributes';
 is $award->type, 'gold', 'Award attributes';
 is $award->alt, 'Gold medal', 'Award attributes';
-is $award->src, '/static/images/awards/gold.png', 'Award attributes';
-is $award->html, q{<img src="/static/images/awards/gold.png" alt="Gold medal" }
-               . q{title="Gold medal">}, 'Award attributes';
+is $award->src, '/static/images/awards/gold.svg', 'Award attributes';
+is $award->html, q{<img class="Award gold" src="/static/images/awards/gold.svg" }
+               . q{alt="Gold medal" title="First place">}, 'Award attributes';
 
 cmp_deeply(
    [
