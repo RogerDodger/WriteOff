@@ -139,6 +139,47 @@
 .Group-stub--entrys { grid-column: 2 }
 .Group-stub--members { grid-column: 3 }
 
+.Group-stub--progress {
+   display: grid;
+   grid-row: 4;
+   padding: 0.5em;
+}
+
+.Group-stub--progressbar,
+.Group-stub--progresstext {
+   grid-row: 1;
+   grid-column: 1;
+}
+
+.Group-stub--progressbar {
+   width: 100%;
+   height: 2em;
+   border-radius: 1em;
+   background-color: #ddd;
+   padding: 0.2em;
+
+   & > div {
+      border-radius: 1em;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+
+      & > div {
+         border-radius: 1em 0 0 1em;
+         display: block;
+         content: '';
+         background-color: hsla(200, 90%, 75%, 1);
+         height: 100%;
+      }
+   }
+}
+
+.Group-stub--progresstext {
+   justify-self: center;
+   align-self: center;
+   font-size: (14em / 16);
+}
+
 .Group-stub--join {
    input[type="submit"] {
       @include button-base;

@@ -60,6 +60,7 @@ cancel: Cancel
 scheduleAt: Schedule @ %s
 once: Once
 everyXWeeks: Every %d weeks
+needsXMoreMembers: Needs %d more members
 go: Go
 artistActive: Swappable
 saveChanges: Save changes
@@ -163,6 +164,7 @@ events: Events
 members: Members
 promotedGroups: Promoted groups
 establishedGroups: Established groups
+nascentGroups: Nascent groups
 newGroups: New groups
 createNewGroup: Create a new group
 join: Join

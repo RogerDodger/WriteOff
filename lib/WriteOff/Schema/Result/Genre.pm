@@ -98,4 +98,21 @@ sub member {
    return $self->members->search({ artist_id => $aid })->count;
 }
 
+sub recalc_completion {
+   my $self = shift;
+   my $cap = shift // 20;
+   return if $self->established;
+
+   my $c = $self->subs->count;
+   if ($c >= $cap) {
+      $self->update({
+         established => 1,
+         completion => undef,
+      });
+   }
+   else {
+      $self->update({ completion => $c });
+   }
+}
+
 1;

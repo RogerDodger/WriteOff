@@ -7,6 +7,7 @@
       group.name }}</a>
    <div class="Group-stub--descr">{{ group.descr }}</div>
 
+   {{ IF group.established }}
    <div class="Group-stub--events">
       <div>{{ c.string('events') }}</div>
       <div>{{ group.get_column('event_count') }}</div>
@@ -19,6 +20,18 @@
       <div>{{ c.string('members') }}</div>
       <div>{{ group.get_column('member_count') }}</div>
    </div>
+   {{ ELSE }}
+   <div class="Group-stub--progress">
+      <div class="Group-stub--progressbar">
+         <div>
+            <div style="width: {{ 100 * group.completion / c.config.group_min_size }}%;"></div>
+         </div>
+      </div>
+      <div class="Group-stub--progresstext">
+         {{ c.string('needsXMoreMembers', c.config.group_min_size - group.completion) }}
+      </div>
+   </div>
+   {{ END }}
 
    {{ IF !c.user.owns(group) }}
    <div class="Group-stub--join">

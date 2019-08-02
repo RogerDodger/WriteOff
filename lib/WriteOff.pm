@@ -171,6 +171,7 @@ __PACKAGE__->config(
    },
    elo_base => 1500,
    prompts_per_user => 5,
+   group_min_size => 15,
    judge_distr_size => 5,
    interim => 60, #minutes
    use_google_analytics => 1,

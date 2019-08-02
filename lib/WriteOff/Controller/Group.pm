@@ -34,6 +34,7 @@ sub add :Path('new') :Args(0) {
          name => substr($name, 0, $c->config->{len}{max}{title}),
          descr => substr($descr, 0, $c->config->{len}{max}{blurb}),
          owner_id => $c->user->active_artist_id,
+         completion => 1,
       });
 
       $group->banner_write($c->req->upload('banner'))
@@ -148,6 +149,7 @@ sub join :Chained('fetch') :PathPart('join') :Args(0) {
          user_id => $c->user->id,
          genre_id => $o{genre_id},
       });
+      $c->stash->{genre}->recalc_completion($c->config->{group_min_size});
    }
 
    $c->res->redirect($c->req->referer
@@ -160,19 +162,24 @@ sub leave :Chained('fetch') :PathPart('leave') :Args(0) {
    $c->user_assert;
    $c->csrf_assert;
 
-   my $row = $c->model('DB::ArtistGenre')->find(
-      $c->user->active_artist_id, $c->stash->{genre}->id);
-   $row->delete if $row;
+   if ( my $row = $c->model('DB::ArtistGenre')->find(
+         $c->user->active_artist_id, $c->stash->{genre}->id) ) {
+      $row->delete;
 
-   # Unsub if the user has no other artists in the group
-   $c->model('DB::SubGenre')->search({
-      user_id => $c->user->id,
-      genre_id => $c->stash->{genre}->id
-      })->delete
-         if !$c->user->artists
-            ->related_resultset('artist_genre')
-            ->search({ genre_id => $c->stash->{genre}->id })
-            ->count;
+      # Unsub only if the user has no other artists in the group
+      $c->model('DB::SubGenre')->search({
+         user_id => $c->user->id,
+         genre_id => $c->stash->{genre}->id
+         })->delete
+            if !$c->user->artists
+               ->related_resultset('artist_genre')
+               ->search({ genre_id => $c->stash->{genre}->id })
+               ->count
+            # Need to check for the owner also
+            && !$c->user->artists->find($c->stash->{genre}->owner_id);
+
+      $c->stash->{genre}->recalc_completion($c->config->{group_min_size});
+   }
 
    $c->res->redirect($c->req->referer
       || $c->uri_for_action('view', [ $c->stash->{genre}->id_uri ]));
