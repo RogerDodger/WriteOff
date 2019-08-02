@@ -47,6 +47,11 @@ sub add :Path('new') :Args(0) {
          $group->descr,
       );
 
+      $c->model('DB::SubGenre')->create({
+         user_id => $c->user->id,
+         genre_id => $group->id,
+      });
+
       $c->flash->{status_msg} = $c->string('groupCreated');
       $c->res->redirect($c->uri_for_action('/group/view', [ $group->id_uri ]));
    }
@@ -121,7 +126,7 @@ sub index :Path('/groups') :Args(0) {
    my %membership = map { $_->genre_id => 1 } $c->user->active_artist->artist_genre;
    $c->stash->{member} = sub { defined $_[0] && $membership{$_[0]} };
 
-   $c->title_push($c->string('groups'));
+   $c->title_push_s('groups');
 }
 
 sub join :Chained('fetch') :PathPart('join') :Args(0) {
@@ -137,9 +142,13 @@ sub join :Chained('fetch') :PathPart('join') :Args(0) {
    );
 
    my $rs = $c->model('DB::ArtistGenre');
-   $rs->create(\%o) unless
-      $c->user->owns($c->stash->{genre}) ||
-      $rs->find($o{artist_id}, $o{genre_id});
+   if (!$c->user->owns($c->stash->{genre}) && !$rs->find($o{artist_id}, $o{genre_id})) {
+      $rs->create(\%o);
+      $c->model('DB::SubGenre')->find_or_create({
+         user_id => $c->user->id,
+         genre_id => $o{genre_id},
+      });
+   }
 
    $c->res->redirect($c->req->referer
       || $c->uri_for_action('view', [ $c->stash->{genre}->id_uri ]));
@@ -153,8 +162,17 @@ sub leave :Chained('fetch') :PathPart('leave') :Args(0) {
 
    my $row = $c->model('DB::ArtistGenre')->find(
       $c->user->active_artist_id, $c->stash->{genre}->id);
-
    $row->delete if $row;
+
+   # Unsub if the user has no other artists in the group
+   $c->model('DB::SubGenre')->search({
+      user_id => $c->user->id,
+      genre_id => $c->stash->{genre}->id
+      })->delete
+         if !$c->user->artists
+            ->related_resultset('artist_genre')
+            ->search({ genre_id => $c->stash->{genre}->id })
+            ->count;
 
    $c->res->redirect($c->req->referer
       || $c->uri_for_action('view', [ $c->stash->{genre}->id_uri ]));

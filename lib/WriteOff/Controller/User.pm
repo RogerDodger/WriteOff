@@ -144,7 +144,6 @@ sub prefs :Local :Args(0) {
    $c->stash->{modes} = [ @WriteOff::Mode::ALL ];
    $c->stash->{triggers} = [ @WriteOff::EmailTrigger::ALL ];
    $c->stash->{formats} = [ $c->model('DB::Format')->all ];
-   $c->stash->{genres} = [ $c->model('DB::Genre')->all ];
 
    $c->forward('do_prefs') if $c->req->method eq 'POST';
 
@@ -159,7 +158,7 @@ sub prefs :Local :Args(0) {
          map {
             $k . $_->$i, 'on'
          } $c->user->$m->all;
-      } qw/mode trigger genre format/,
+      } qw/mode trigger format/,
    };
 
    push @{ $c->stash->{title} }, $c->string('preferences');
@@ -178,7 +177,7 @@ sub do_prefs :Private {
 
    $c->session('dark', $c->req->param('dark') ? 1 : 0);
 
-   for my $k (qw/mode trigger genre format/) {
+   for my $k (qw/mode trigger format/) {
       my $m = "sub_${k}s";
       $c->user->$m->delete;
       $c->model('DB::Sub' . ucfirst $k)->populate([

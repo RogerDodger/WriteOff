@@ -47,12 +47,6 @@
          </ul>
 
          <ul class="Check-buttons">
-            {{ FOREACH opt IN genres }}
-               {{ PROCESS cb  name = 'genre' }}
-            {{ END }}
-         </ul>
-
-         <ul class="Check-buttons">
             {{ FOREACH opt IN formats }}
                {{ PROCESS cb  name = 'format' }}
             {{ END }}
