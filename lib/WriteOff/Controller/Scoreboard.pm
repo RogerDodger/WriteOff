@@ -21,7 +21,7 @@ sub index :Path('/scoreboard') {
    $c->stash->{gUrl} = '/scoreboard/%s/' . $c->stash->{mode}->name;
    $c->stash->{mUrl} = '/scoreboard/' . $c->stash->{genre}->id_uri . '/%s';
 
-   $c->title_push_s($c->stash->{genre}->name);
+   $c->title_push($c->stash->{genre}->name);
 
    $c->forward('view');
 }

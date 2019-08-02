@@ -5,7 +5,7 @@
    {{ FOREACH el IN genres.all }}
    <a href="{{ el.id_uri | format(gUrl) }}"
       class="{{ 'current' IF el.id == genre.id }}">
-      {{ c.string(el.name) }}
+      {{ el.name }}
    </a>
    {{ END }}
 </div>

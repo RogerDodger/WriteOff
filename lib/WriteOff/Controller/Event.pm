@@ -417,7 +417,7 @@ sub notify_mailing_list :Private {
          ? ( sprintf "[#%d] %s | %s %s",
             $c->stash->{event}->id,
             $c->string($c->stash->{trigger}->name),
-            $c->string($c->stash->{event}->genre->name),
+            $c->stash->{event}->genre->name,
             $c->string($c->stash->{event}->format->name) )
          : ( sprintf "[#%d] %s%s | %s",
             $c->stash->{event}->id,
