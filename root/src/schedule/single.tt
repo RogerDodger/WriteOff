@@ -4,7 +4,7 @@
          <a class="Event-group"
             href="{{ c.uri_for_action('/group/view', [ schedule.genre.id_uri ]) }}">{{
                schedule.genre.name }}</a>
-         <span class="Format">{{ schedule.format.name }}</span>
+         <span class="Format">{{ c.string(schedule.format.name) }}</span>
          &middot;
          <span class="Event-start">{{ schedule.next.date_html | none }}</span>
          &middot;

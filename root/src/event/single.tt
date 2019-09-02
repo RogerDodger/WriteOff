@@ -8,7 +8,7 @@
          <a class="Event-group"
             href="{{ c.uri_for_action('/group/view', [ event.genre.id_uri ]) }}">{{
                event.genre.name }}</a>
-         <span class="Format">{{ event.format.name }}</span>
+         <span class="Format">{{ c.string(event.format.name) }}</span>
          &middot;
          <span class="Event-start">{{ event.start.date_html | none }}</span>
       </div>

@@ -21,7 +21,7 @@ sub fetch :Chained('/') :PathPart('fic') :CaptureArgs(1) {
 sub view :Chained('fetch') :PathPart('') :Args(0) {
    my ( $self, $c ) = @_;
 
-   if ($c->stash->{format} eq 'txt') {
+   if ($c->stash->{ext} eq 'txt') {
       $c->res->content_type('text/plain; charset=utf-8');
       $c->res->body(
          $c->stash->{story}->published
@@ -29,7 +29,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
             : $c->string('storyRedacted')
       );
    }
-   elsif ($c->stash->{format} eq 'epub') {
+   elsif ($c->stash->{ext} eq 'epub') {
       $c->forward('View::Epub');
    }
    else {
@@ -58,7 +58,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
    my ( $self, $c ) = @_;
 
-   if ($c->stash->{format} eq 'epub') {
+   if ($c->stash->{ext} eq 'epub') {
       $c->forward('View::Epub');
    }
    else {

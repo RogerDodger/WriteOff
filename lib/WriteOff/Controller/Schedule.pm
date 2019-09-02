@@ -2,6 +2,7 @@ package WriteOff::Controller::Schedule;
 use Moose;
 use namespace::autoclean;
 use Try::Tiny;
+use WriteOff::Format;
 use WriteOff::Mode;
 use WriteOff::Util qw/uniq/;
 
@@ -69,7 +70,7 @@ sub form :Private {
 
    $c->stash->{rorder} = $c->stash->{sched}->rorder;
    $c->stash->{minDate} = WriteOff::DateTime->now->add(days => 2);
-   $c->stash->{formats} = $c->model('DB::Format');
+   $c->stash->{formats} = \@Writeoff::Format::ALL;
    $c->stash->{genres} = $c->model('DB::Genre');
    $c->stash->{modes} = \@WriteOff::Mode::ALL;
 }
@@ -80,7 +81,7 @@ sub do_form :Private {
    $c->forward('/check_csrf_token');
 
    my $next = WriteOff::DateTime->parse($c->paramo('date'), $c->paramo('time'));
-   my $format = $c->stash->{formats}->find_maybe($c->paramo('format'));
+   my $format = WriteOff::Format->get($c->paramo('format'));
    my $genre = $c->stash->{genres}->find_maybe($c->paramo('genre'));
    my $period = $c->parami('period');
 

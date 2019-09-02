@@ -5,6 +5,7 @@ use List::Util qw/shuffle/;
 use WriteOff::Award qw/:all/;
 use WriteOff::DateTime;
 use WriteOff::EmailTrigger qw/:all/;
+use WriteOff::Format qw/:all/;
 use WriteOff::Mode qw/:all/;
 use WriteOff::Util qw/LEEWAY uniq/;
 use namespace::autoclean;
@@ -38,7 +39,7 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
       $c->forward('/prepare_thread', [ $c->stash->{event}->posts_rs ]);
    }
 
-   if ($c->stash->{format} eq 'json') {
+   if ($c->stash->{ext} eq 'json') {
       $c->stash->{json} = $c->stash->{event}->json;
       $c->forward('View::JSON');
    }
@@ -143,7 +144,7 @@ sub form :Private {
    $c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
    $c->stash->{contentLevels} = [ qw/E T A M/ ];
    $c->stash->{modes} = \@WriteOff::Mode::ALL;
-   $c->stash->{formats} = $c->model('DB::Format');
+   $c->stash->{formats} = \@WriteOff::Format::ALL;
    $c->stash->{genres} = $c->model('DB::Genre');
 }
 
@@ -156,20 +157,17 @@ sub do_form :Private {
    my $prompt = $c->paramo('prompt');
    my $blurb = $c->paramo('blurb');
    my $genre = $c->stash->{genres}->find_maybe($c->paramo('genre'));
-   my $format = $c->stash->{formats}->find_maybe($c->paramo('format'));
    my $clevel = $c->paramo('content_level');
    my $wc_min = $c->parami('wc_min');
    my $wc_max = $c->parami('wc_max');
+   ($wc_min, $wc_max) = ($wc_max, $wc_min) if $wc_min > $wc_max;
+   my $format = WriteOff::Format->for($wc_max);
 
    $c->yuck($c->string('badInput'))
       if (grep !defined, $start, $format, $genre)
       or (!grep $_ eq $clevel, @{ $c->stash->{contentLevels} })
       or $c->config->{len}{max}{prompt} < length $prompt
       or $c->config->{len}{max}{blurb} < length $blurb;
-
-   if ($wc_min > $wc_max) {
-      ($wc_min, $wc_max) = ($wc_max, $wc_min);
-   }
 
    if ($c->stash->{dateFrozen}) {
       $start = $c->stash->{event}->start;

@@ -1,4 +1,4 @@
-The next [{{ event.genre.name }} {{ event.format.name }} event]({{
+The next [{{ event.genre.name }} {{ c.string(event.format.name) }} event]({{
 c.uri_for_action('/event/permalink', [ event.id ]) }}) is starting soon.
 
 {{ IF event.fic2pic }}

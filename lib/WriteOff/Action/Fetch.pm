@@ -36,7 +36,7 @@ sub execute {
    }
 
    if (defined $ext) {
-      $c->stash->{format} = substr($ext, 1);
+      $c->stash->{ext} = substr($ext, 1);
    }
 }
 

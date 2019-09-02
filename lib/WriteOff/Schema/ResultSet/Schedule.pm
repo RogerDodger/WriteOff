@@ -16,7 +16,7 @@ sub active {
 sub index {
    shift->search({}, {
       order_by => 'next',
-      prefetch => [qw/format genre/],
+      prefetch => [qw/genre/],
    })
 }
 

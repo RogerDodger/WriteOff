@@ -33,10 +33,9 @@ sub view :Private {
    $s->{modes} = \@WriteOff::Mode::ALL;
 
    # Keep this behaviour to allow this view still, but it's not linked anymore
-   $s->{formats} = $c->model('DB::Format');
    $s->{format} =
       $s->{mode}->is(FIC)
-         ? $s->{formats}->find_maybe($c->paramo('format'))
+         ? WriteOff::Format->get($c->paramo('format'))
          : undef;
 
    my %cond;

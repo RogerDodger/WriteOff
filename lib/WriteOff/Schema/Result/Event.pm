@@ -18,7 +18,7 @@ __PACKAGE__->add_columns(
    "id",
    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
    "format_id",
-   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   { data_type => "integer", is_nullable => 0 },
    "genre_id",
    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
    "last_post_id",
@@ -54,7 +54,6 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many("artist_events", "WriteOff::Schema::Result::ArtistEvent", "event_id");
 __PACKAGE__->has_many("ballots", "WriteOff::Schema::Result::Ballot", "event_id");
 __PACKAGE__->has_many("entrys", "WriteOff::Schema::Result::Entry", "event_id");
-__PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
 __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
 __PACKAGE__->belongs_to("last_post", "WriteOff::Schema::Result::Post", "last_post_id", { join_type => 'left' });
 __PACKAGE__->has_many("posts", "WriteOff::Schema::Result::Post", "event_id");
@@ -65,6 +64,10 @@ __PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "eve
 
 __PACKAGE__->many_to_many(users => 'user_events', 'user');
 __PACKAGE__->many_to_many(artists => 'artist_events', 'artist');
+
+sub format {
+   WriteOff::Format->get(shift->format_id);
+}
 
 sub storys {
    return shift->entrys->search({ story_id => { '!=' => undef }});

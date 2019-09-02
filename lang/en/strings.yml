@@ -247,7 +247,7 @@ emailLimited: |
 introSplash: |
    Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
 confirmPrompt: Enter the %s of the selected item to continue
-autosubLabel: Automatically subscribe to new genres and formats
+autosubLabel: Automatically subscribe to new groups
 groupNameNote: Keep as short as possible.
 groupNamePlaceholder: OGAAS
 groupDescrNote: What type of works are suitable for this group.
@@ -296,12 +296,14 @@ notifFollow: View post
 notifClear: Mark as read
 notifsClear: Mark all as read
 
-Short Story: Short Story
-Polished Story: Polished Story
-Minific: Minific
-
+flashfic: Flashfic
 minific: Minific
+vignette: Vignette
 shortStory: Short Story
+novelette: Novelette
+novella: Novella
+novel: Novel
+
 eventCreated: Event Created
 subsOpen: Subs Open
 votingStarted: Voting Started

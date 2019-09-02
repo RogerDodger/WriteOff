@@ -3,7 +3,7 @@
    <select name="genre" {{ 'disabled' IF rulesFrozen }}>
       {{ FOREACH g IN genres.all }}
       <option value="{{ g.id }}" {{ 'selected' IF g.id == selected }}>
-         {{ c.string(g.name) }}
+         {{ g.name }}
       </option>
       {{ END }}
    </select>

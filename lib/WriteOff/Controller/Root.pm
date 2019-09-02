@@ -39,7 +39,7 @@ sub auto :Private {
    $c->stash(
       now        => WriteOff::DateTime->now,
       title      => [],
-      format     => scalar($c->req->param('format')) || 'html',
+      ext        => scalar($c->req->param('format')) || 'html',
       csrf_token => $c->csrf_token,
       messages   => [],
    );

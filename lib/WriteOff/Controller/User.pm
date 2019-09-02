@@ -143,7 +143,7 @@ sub prefs :Local :Args(0) {
 
    $c->stash->{modes} = [ @WriteOff::Mode::ALL ];
    $c->stash->{triggers} = [ @WriteOff::EmailTrigger::ALL ];
-   $c->stash->{formats} = [ $c->model('DB::Format')->all ];
+   $c->stash->{formats} = [ @WriteOff::Format::ALL ];
 
    $c->forward('do_prefs') if $c->req->method eq 'POST';
 

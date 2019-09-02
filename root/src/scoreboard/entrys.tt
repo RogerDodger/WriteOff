@@ -26,7 +26,7 @@
             </span>
             {{ IF entry.mode == 'fic' }}
                <span class="Artist-entry--format">
-                  {{ entry.event.format.name }}
+                  {{ c.string(entry.event.format.name) }}
                </span>
             {{ ELSE }}
                <span class="Artist-entry--mode">

@@ -12,7 +12,7 @@ __PACKAGE__->add_columns(
    "id",
    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
    "format_id",
-   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   { data_type => "integer", is_nullable => 0 },
    "genre_id",
    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
    "next",
@@ -23,9 +23,12 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to("format", "WriteOff::Schema::Result::Format", "format_id");
 __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
 __PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::ScheduleRound", "schedule_id");
+
+sub format {
+   WriteOff::Format->get(shift->format_id);
+}
 
 sub duration {
    shift->rounds
