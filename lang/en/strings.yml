@@ -275,6 +275,9 @@ badInput: Bad input
 tooManyRounds: Too many rounds
 noRounds: No rounds
 noActiveEvents: There are no active events
+noScheduledEvents: There are no scheduled events
+noEventsThisYear: There have been no events this year
+noEventsThatYear: There were no events this year
 nextEventTooSoon: Next event is too soon
 nextEventTooSoon: Event is too soon
 cantChangeFinishedRound: Can't change finished round

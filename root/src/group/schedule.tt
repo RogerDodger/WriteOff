@@ -1,7 +1,11 @@
 {{ title_push_s('schedule') }}
 
-{{ FOREACH schedule IN schedules.all }}
-   {{ PROCESS 'schedule/single.tt' }}
+{{ IF schedule.count }}
+   {{ FOREACH schedule IN schedules.all }}
+      {{ PROCESS 'schedule/single.tt' }}
+   {{ END }}
+{{ ELSE }}
+<div class="Flash ctn">{{ c.string('noScheduledEvents') }}</div>
 {{ END }}
 
 {{ IF c.user.admin }}

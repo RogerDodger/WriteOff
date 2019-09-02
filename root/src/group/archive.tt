@@ -8,4 +8,9 @@
    {{ END }}
 </div>
 
-{{ INCLUDE event/list.tt }}
+{{# events.count doesn't work for some reason (the HAVING clause in the RS?) }}
+{{ IF events.all.size }}
+   {{ INCLUDE event/list.tt }}
+{{ ELSE }}
+<div class="Flash ctn">{{ c.string(year == maxYear ? 'noEventsThisYear' : 'noEventsThatYear') }}
+{{ END }}
