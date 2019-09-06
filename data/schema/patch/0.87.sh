@@ -51,9 +51,6 @@ FROM schedules_old;
 
 DROP TABLE schedules_old;
 
---- Testing
+--- Make Quill the owner of the She-Ra group
 UPDATE genres SET owner_id=256 WHERE id=3;
-UPDATE genres SET banner_id='8d-1-4299f545' WHERE id=1;
-UPDATE genres SET banner_id='a3-2-d2d7c302' WHERE id=2;
-UPDATE genres SET banner_id='1e-3-9f17989a' WHERE id=3;
 SQL
