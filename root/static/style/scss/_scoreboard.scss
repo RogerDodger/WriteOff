@@ -32,8 +32,13 @@
 
    display: grid;
    grid-gap: 1em;
-   grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+   grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
    align-items: start;
+   font-size: 0.8em;
+}
+
+.Scoreboard-breakdown {
+   font-size: (15rem / 16);
 }
 
 .Scoreboard-artist {
