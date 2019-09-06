@@ -9,6 +9,10 @@
    text-align: center;
 }
 
+.Schedule-timeline {
+   padding: 0.01em 0.5em;
+}
+
 .Round-add {
    @include button($hue: 200);
 }

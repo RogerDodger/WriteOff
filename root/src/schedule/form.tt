@@ -9,8 +9,10 @@
       <div class="Form-item">
          <label>{{ c.string('wordLimit') }}</label>
          <div class="Event-form--wordcount">
-            <input type="number" name="wc_min" placeholder="2000" required>
-            <input type="number" name="wc_max" placeholder="8000" required>
+            <input type="number" name="wc_min"
+               placeholder="2000" value="{{ sched.wc_min }}" required>
+            <input type="number" name="wc_max"
+               placeholder="8000" value="{{ sched.wc_max }}" required>
          </div>
       </div>
 

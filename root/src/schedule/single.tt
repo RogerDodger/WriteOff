@@ -1,4 +1,4 @@
-<div class="Event-header">
+<div class="Event-header" data-nocollapse="1">
    <div class="Event-overview">
       <div class="Event-overview--left">
          <a class="Event-group"
@@ -27,15 +27,13 @@
 </div>
 
 <div class="Event-details">
-   <div class="Page thick">
-      {{ IF c.user.admins(schedule.genre) }}
-      <div class="Event-edit">
-         [<a href="{{ c.uri_for_action('/schedule/edit', [ schedule.id ]) }}">{{ c.string('edit')}}</a>]
-      </div>
-      {{ END }}
+   {{ IF c.user.admins(schedule.genre) }}
+   <div class="Event-edit">
+      [<a href="{{ c.uri_for_action('/schedule/edit', [ schedule.genre.id_uri, schedule.id ]) }}">{{ c.string('edit')}}</a>]
+   </div>
+   {{ END }}
 
-      <div class="Schedule-timeline">
-         {{ PROCESS 'event/timeline.tt' timeline = schedule.timeline  }}
-      </div>
+   <div class="Schedule-timeline">
+      {{ PROCESS 'event/timeline.tt' timeline = schedule.timeline  }}
    </div>
 </div>

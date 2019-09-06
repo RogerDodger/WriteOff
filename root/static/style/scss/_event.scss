@@ -172,7 +172,7 @@
 .Event-rules {
    @include button-base;
    @include button-color($sat: 0%, $l: 98%);
-   border-width: 0.1em 0 0 0;
+   border-width: 1px 0 0 0;
    display: block;
    padding: 0.7em;
    text-align: center;

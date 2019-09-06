@@ -12,7 +12,7 @@ __PACKAGE__->config(model => 'Schedule');
 
 sub _fetch :ActionClass('~Fetch') {}
 
-sub fetch :Chained('/') :PathPart('schedule') :CaptureArgs(1) {
+sub fetch :Chained('/group/fetch') :PathPart('schedule') :CaptureArgs(1) {
    my ($self, $c) = @_;
    $c->forward('_fetch');
    my $sched = $c->stash->{sched} = $c->stash->{schedule};
@@ -45,13 +45,15 @@ sub do_add :Private {
    $c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
 
    $c->flash->{status_msg} = $c->string('scheduleUpdated');
-   $c->res->redirect($c->uri_for_action('/group/schedule', [ $c->stash->{group}->id_uri ]));
+   $c->res->redirect(
+      $c->uri_for_action('/group/schedule', [ $c->stash->{group}->id_uri ]) );
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
    my ($self, $c) = @_;
 
-   $c->forward('/assert_admin');
+   $c->no('notGroupAdmin') if !$c->user->admins($c->stash->{group});
+
    $c->forward('form');
    $c->forward('do_edit') if $c->req->method eq 'POST';
 }
@@ -62,10 +64,11 @@ sub do_edit :Private {
    $c->forward('do_form');
    $c->stash->{sched}->update;
    $c->stash->{sched}->rounds->delete;
-   $c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds } };
+   $c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
 
    $c->flash->{status_msg} = $c->string('scheduleUpdated');
-   $c->res->redirect($c->uri_for_action('/schedule/index'));
+   $c->res->redirect(
+      $c->uri_for_action('/group/schedule', [ $c->stash->{group}->id_uri ]) );
 }
 
 sub form :Private {
@@ -74,7 +77,6 @@ sub form :Private {
    $c->stash->{rorder} = $c->stash->{sched}->rorder;
    $c->stash->{minDate} = WriteOff::DateTime->now->add(days => 2);
    $c->stash->{formats} = \@Writeoff::Format::ALL;
-   $c->stash->{genres} = $c->model('DB::Genre');
    $c->stash->{modes} = \@WriteOff::Mode::ALL;
 }
 

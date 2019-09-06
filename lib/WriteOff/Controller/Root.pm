@@ -129,7 +129,7 @@ sub default :Path {
       }
    }
 
-   push @{ $c->stash->{title} }, $c->string('404');
+   $c->stash->{title} = [ $c->string('404') ];
    $c->stash->{template} = 'root/404.tt';
    $c->res->status(404);
 }
@@ -139,7 +139,7 @@ sub forbidden :Private {
 
    $c->stash->{forbidden_msg} = $msg if $msg;
 
-   push @{ $c->stash->{title} }, $c->string('403');
+   $c->stash->{title} = [ $c->string('403') ];
    $c->stash->{template} = 'root/403.tt';
    $c->res->status(403);
 }
