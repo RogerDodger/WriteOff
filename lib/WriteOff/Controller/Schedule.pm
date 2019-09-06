@@ -25,10 +25,12 @@ sub index :Path :Args(0) {
    $c->stash->{schedules} = $c->model('DB::Schedule')->promoted->index;
 }
 
-sub add :Local {
+sub add :Chained('/group/fetch') :PathPart('schedule/add') :Args(0) {
    my ($self, $c) = @_;
 
-   $c->forward('/assert_admin');
+   $c->detach('/default') if !$c->stash->{group}->established;
+   $c->no('notGroupAdmin') if !$c->user->admins($c->stash->{group});
+
    $c->stash->{sched} = $c->model('DB::Schedule')->new_result({});
    $c->forward('form');
    $c->forward('do_add') if $c->req->method eq 'POST';
@@ -38,11 +40,12 @@ sub do_add :Private {
    my ($self, $c) = @_;
 
    $c->forward('do_form');
+   $c->stash->{sched}->genre_id($c->stash->{group}->id);
    $c->stash->{sched}->insert;
    $c->stash->{sched}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
 
    $c->flash->{status_msg} = $c->string('scheduleUpdated');
-   $c->res->redirect($c->uri_for_action('/schedule/index'));
+   $c->res->redirect($c->uri_for_action('/group/schedule', [ $c->stash->{group}->id_uri ]));
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
@@ -77,29 +80,24 @@ sub form :Private {
 
 sub do_form :Private {
    my ($self, $c) = @_;
-
-   $c->forward('/check_csrf_token');
+   $c->csrf_assert;
 
    my $next = WriteOff::DateTime->parse($c->paramo('date'), $c->paramo('time'));
-   my $format = WriteOff::Format->get($c->paramo('format'));
-   my $genre = $c->stash->{genres}->find_maybe($c->paramo('genre'));
    my $period = $c->parami('period');
+   my $wc_min = $c->parami('wc_min');
+   my $wc_max = $c->parami('wc_max');
+   ($wc_min, $wc_max) = ($wc_max, $wc_min) if $wc_min > $wc_max;
 
-   if (grep !defined, $next, $format, $genre, $period) {
-      $c->yuck($c->string('badInput'));
-   }
+   $c->yuk('badInput')
+      if (grep !defined, $next, $period)
+      || $wc_max <= 0 || $period > $c->config->{biz}{prd}{max};
 
-   if ($next <= $c->stash->{minDate}) {
-      $c->yuck($c->string('nextEventTooSoon'));
-   }
-
-   if ($period > $c->config->{biz}{prd}{max}) {
-      $c->yuck($c->string('badInput'))
-   }
+   $c->yuk('nextEventTooSoon')
+      if $next <= $c->stash->{minDate};
 
    $c->stash->{sched}->set_columns({
-      format_id => $format->id,
-      genre_id => $genre->id,
+      wc_min => $wc_min,
+      wc_max => $wc_max,
       period => $period,
    });
 

@@ -36,7 +36,8 @@ banner: Banner
 score: Score
 allowedTypes: Allowed types: %s
 maxSize: Max filesize: %dKB
-wordLimit: Word limit: %d-%d
+wordLimit: Word limit
+wordLimitN: Word limit: %d-%d
 created: Created
 submitted: Submitted
 index: Index
@@ -85,6 +86,7 @@ nextEvent: Next Event
 promptNote: Prompt will show as "TBD" until event starts
 dateTimeNote: Date/Time is in UTC
 period: Period
+interval: Interval
 action: Action
 mode: Mode
 offset: Offset
@@ -120,7 +122,7 @@ ficScoreboard: Fic Scoreboard
 picScoreboard: Pic Scoreboard
 schedule: Schedule
 editSchedule: Edit Schedule
-newSchedule: New Schedule
+newSchedule: New Schedule Entry
 picGuessing: Pic Guessing
 ficGuessing: Fic Guessing
 picGallery: Pic Gallery

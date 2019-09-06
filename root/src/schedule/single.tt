@@ -8,6 +8,8 @@
          &middot;
          <span class="Event-start">{{ schedule.next.date_html | none }}</span>
          &middot;
+         {{ schedule.wc_min }}&ndash;{{ schedule.wc_max }} words
+         &middot;
          <span class="Schedule-period">
             {{ IF schedule.period > 0 }}
                {{ c.string('everyXWeeks', schedule.period )}}

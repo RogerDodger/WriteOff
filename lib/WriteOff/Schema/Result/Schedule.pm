@@ -11,10 +11,12 @@ __PACKAGE__->table("schedules");
 __PACKAGE__->add_columns(
    "id",
    { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-   "format_id",
-   { data_type => "integer", is_nullable => 0 },
    "genre_id",
    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+   "wc_min",
+   { data_type => "integer", is_nullable => 0 },
+   "wc_max",
+   { data_type => "integer", is_nullable => 0 },
    "next",
    { data_type => "timestamp", is_nullable => 0 },
    "period",
@@ -27,7 +29,7 @@ __PACKAGE__->belongs_to("genre", "WriteOff::Schema::Result::Genre", "genre_id");
 __PACKAGE__->has_many("rounds", "WriteOff::Schema::Result::ScheduleRound", "schedule_id");
 
 sub format {
-   WriteOff::Format->get(shift->format_id);
+   WriteOff::Format->for(shift->wc_max);
 }
 
 sub duration {

@@ -1,4 +1,4 @@
-{{ title.push(c.string('new')) }}
+{{ title_push_s('newSchedule') }}
 
 <div class="Document">
    <div class="Document-title">{{ c.string('newSchedule') }}</div>

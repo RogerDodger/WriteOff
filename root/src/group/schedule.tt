@@ -1,6 +1,6 @@
 {{ title_push_s('schedule') }}
 
-{{ IF schedule.count }}
+{{ IF schedules.count }}
    {{ FOREACH schedule IN schedules.all }}
       {{ PROCESS 'schedule/single.tt' }}
    {{ END }}
@@ -8,8 +8,8 @@
 <div class="Flash ctn">{{ c.string('noScheduledEvents') }}</div>
 {{ END }}
 
-{{ IF c.user.admin }}
-<a class="Schedule-add" href="{{ c.uri_for_action('/schedule/add') }}">
+{{ IF group.established && c.user.owns(group) }}
+<a class="Schedule-add" href="{{ c.uri_for_action('/schedule/add', [ group.id_uri ]) }}">
    {{ c.string('new') }}
 </a>
 {{ END }}

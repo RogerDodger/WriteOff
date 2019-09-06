@@ -323,7 +323,7 @@ sub paramo {
 sub parami {
    my ($self, $key) = @_;
 
-   return $self->paramo($key) =~ /(\d+)/ ? int $1 : undef;
+   return $self->paramo($key) =~ /(\d+)/ ? int $1 : 0;
 }
 
 sub title_push {
@@ -353,14 +353,17 @@ sub uri_for_action_abs {
 
 sub yuck {
    my ($self, $msg) = @_;
-
    $self->detach('/error', [ $msg ]);
 }
 
 sub yuk {
    my ($self, $msg) = @_;
-
    $self->detach('/error', [ $self->string($msg) ]);
+}
+
+sub no {
+   my ($self, $msg) = @_;
+   $self->detach('/forbidden', $msg ? [ $self->string($msg) ] : ());
 }
 
 =head1 NAME

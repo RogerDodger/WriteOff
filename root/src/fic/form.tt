@@ -46,7 +46,7 @@
    <div class="Form-item">
       <label>{{ c.string('story') }}<span class="required">*</span></label>
       <textarea name="story" id="story-field" rows="16" cols="32" required
-         title="{{ c.string('wordLimit', event.wc_min, event.wc_max) }}"
+         title="{{ c.string('wordLimitN', event.wc_min, event.wc_max) }}"
          data-max="{{ event.wc_max }}" data-min="{{ event.wc_min }}"></textarea>
       <span class="Form-note">
          <a href="/style">{{ c.document('style').title }}</a>

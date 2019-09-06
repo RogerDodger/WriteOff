@@ -3,21 +3,26 @@
 <form class="Form" method="post">
    {{ csrf_field | none }}
 
-   {{ INCLUDE schedule/datetime.tt  label = 'nextEvent' datetime = sched.next }}
-
    <div class="Form-group three">
+      {{ INCLUDE schedule/datetime.tt  label = 'nextEvent' datetime = sched.next }}
+
       <div class="Form-item">
-         <label>{{ c.string('period') }}</label>
-         <div class="Form-caption--container">
-            <input type="number" name="period"
-               step=1 min=0 max={{ c.config.biz.prd.max }}
-               value="{{ sched.period }}" required>
-            <span class="Form-caption">{{ c.string('weeks') }}</span>
+         <label>{{ c.string('wordLimit') }}</label>
+         <div class="Event-form--wordcount">
+            <input type="number" name="wc_min" placeholder="2000" required>
+            <input type="number" name="wc_max" placeholder="8000" required>
          </div>
       </div>
 
-      {{ INCLUDE schedule/genres.tt  selected = sched.genre_id }}
-      {{ INCLUDE schedule/formats.tt  selected = sched.format_id }}
+      <div class="Form-item">
+         <label>{{ c.string('interval') }}</label>
+         <div class="Form-caption--container">
+            <input type="number" name="period"
+               step=1 min=0 max={{ c.config.biz.prd.max }}
+               value="{{ sched.period }}">
+            <span class="Form-caption">{{ c.string('weeks') }}</span>
+         </div>
+      </div>
    </div>
 
    {{ INCLUDE schedule/rounds.tt  rounds = sched.rounds }}
