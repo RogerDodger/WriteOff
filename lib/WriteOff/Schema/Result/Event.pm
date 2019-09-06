@@ -354,11 +354,13 @@ sub reset_jobs {
    }
 
    for my $mode (grep $self->has($_->name), @WriteOff::Mode::ALL) {
+      my $first = $self->rounds->mode($mode->name)->vote->first;
+
       push @jobs, {
          action => '/event/voting_started',
-         at => $self->rounds->mode($mode->name)->vote->first->start,
+         at => $first->start,
          args => [ $self->id, $mode->name ],
-      };
+      } if defined $first;
    }
 
    for my $round ($self->rounds->vote->all) {
