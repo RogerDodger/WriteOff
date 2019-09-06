@@ -12,7 +12,7 @@
    {{ INCLUDE schedule/round.tt  disabled = 'disabled' }}
 </div>
 
-<div class="Form-subtitle">{{ c.string('rounds') }}</div>
+<div class="Form-subtitle">{{ c.string('rounds') }}<span class="required">*</span></div>
 
 <div class="Rounds">
 {{ FOREACH round IN rounds }}

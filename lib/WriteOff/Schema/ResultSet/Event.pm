@@ -7,7 +7,7 @@ use WriteOff::Util qw/LEEWAY/;
 
 sub active {
    my $self = shift;
-   $self->search({ tallied => 0 }, { order_by => 'created' });
+   $self->search({ tallied => 0 }, { order_by => 'me.created' });
 }
 
 sub active_rs {
@@ -48,21 +48,18 @@ sub create_from_sched {
       );
 
    $t0 //= $sched->next;
-
-   my $schema = $self->result_source->schema;
-   my $format = $sched->format;
    my $genre = $sched->genre;
 
    my $event = $self->create({
-      format_id => $format->id,
+      format_id => $sched->format->id,
       genre_id => $genre->id,
-      wc_min => $format->wc_min,
-      wc_max => $format->wc_max,
+      wc_min => $sched->wc_min,
+      wc_max => $sched->wc_max,
       content_level => 'T',
    });
 
-   $orgs //= $schema->resultset('Artist')->search({ admin => 1 });
-   for my $artist ($orgs->all) {
+   $event->add_to_artists($genre->owner, { role => 'organiser' });
+   for my $artist (defined $orgs ? $orgs->all : ()) {
       $event->add_to_artists($artist, { role => 'organiser' });
    }
 

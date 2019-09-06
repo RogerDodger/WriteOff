@@ -33,13 +33,16 @@
          {{ END }}
       </div>
 
-      {{ INCLUDE schedule/genres.tt  selected = event.genre_id }}
-      {{ INCLUDE schedule/formats.tt  selected = event.format_id }}
-   </div>
-
-   <div class="Form-group three">
       <div class="Form-item">
-         <label>{{ c.string('contentLevel') }}</label>
+         <label>{{ c.string('wordLimit') }}<span class="required">*</span></label>
+         <div class="Event-form--wordcount">
+            <input type="number" name="wc_min" value="{{ event.wc_min }}" required {{ 'readonly' IF rulesFrozen }}>
+            <input type="number" name="wc_max" value="{{ event.wc_max }}" required {{ 'readonly' IF rulesFrozen }}>
+         </div>
+      </div>
+
+      <div class="Form-item">
+         <label>{{ c.string('contentLevel') }}<span class="required">*</span></label>
          <select name="content_level" {{ 'disabled' IF rulesFrozen }}>
          {{ FOREACH cl IN contentLevels }}
             <option value="{{ cl }}" {{ 'selected' IF cl == event.content_level }}>{{ cl }}</option>
@@ -49,14 +52,6 @@
          {{ IF rulesFrozen }}
          <input type="hidden" name="content_level" value="{{ event.content_level }}">
          {{ END }}
-      </div>
-
-      <div class="Form-item">
-         <label>{{ c.string('wordcount') }}</label>
-         <div class="Event-form--wordcount">
-            <input type="number" name="wc_min" value="{{ event.wc_min }}" required {{ 'readonly' IF rulesFrozen }}>
-            <input type="number" name="wc_max" value="{{ event.wc_max }}" required {{ 'readonly' IF rulesFrozen }}>
-         </div>
       </div>
    </div>
 

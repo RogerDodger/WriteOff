@@ -144,8 +144,6 @@ sub form :Private {
    $c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
    $c->stash->{contentLevels} = [ qw/E T A M/ ];
    $c->stash->{modes} = \@WriteOff::Mode::ALL;
-   $c->stash->{formats} = \@WriteOff::Format::ALL;
-   $c->stash->{genres} = $c->model('DB::Genre');
 }
 
 sub do_form :Private {
@@ -156,32 +154,30 @@ sub do_form :Private {
    my $start = WriteOff::DateTime->parse($c->paramo('date'), $c->paramo('time'));
    my $prompt = $c->paramo('prompt');
    my $blurb = $c->paramo('blurb');
-   my $genre = $c->stash->{genres}->find_maybe($c->paramo('genre'));
    my $clevel = $c->paramo('content_level');
    my $wc_min = $c->parami('wc_min');
    my $wc_max = $c->parami('wc_max');
    ($wc_min, $wc_max) = ($wc_max, $wc_min) if $wc_min > $wc_max;
    my $format = WriteOff::Format->for($wc_max);
 
-   $c->yuck($c->string('badInput'))
-      if (grep !defined, $start, $format, $genre)
+   $c->yuk('badInput')
+      if (grep !defined, $start)
       or (!grep $_ eq $clevel, @{ $c->stash->{contentLevels} })
       or $c->config->{len}{max}{prompt} < length $prompt
-      or $c->config->{len}{max}{blurb} < length $blurb;
+      or $c->config->{len}{max}{blurb} < length $blurb
+      or $wc_max <= 0;
 
    if ($c->stash->{dateFrozen}) {
       $start = $c->stash->{event}->start;
    }
    elsif ($start <= $c->stash->{minDate}) {
-      $c->yuck($c->string('eventTooSoon'));
+      $c->yuk('eventTooSoon');
    }
 
    $c->stash->{event}->set_column(blurb => $blurb);
 
    if (!$c->stash->{rulesFrozen}) {
       $c->stash->{event}->set_columns({
-         format_id => $format->id,
-         genre_id => $genre->id,
          content_level => $clevel,
          wc_min => $wc_min,
          wc_max => $wc_max,
