@@ -49,7 +49,7 @@ body {
 
 .Site-header {
    color: #bdc3cf;
-   background: hsla(0, 0%, 21%, 1) linear-gradient(hsla(0, 0%, 23%, 1), hsla(0, 0%, 18%, 1));
+   background: hsla(0, 0%, 9%, 1) linear-gradient(hsla(0, 0%, 0%, 1), hsla(0, 0%, 18%, 1));
    line-height: 42px;
    margin-bottom: 1em;
 
@@ -136,7 +136,7 @@ body {
    }
 
    div > ul > li:hover {
-      background-color: hsla(0, 0%, 8%, 1);
+      background-color: hsla(0, 0%, 15%, 1);
    }
 
    div > ul > li.current a {
