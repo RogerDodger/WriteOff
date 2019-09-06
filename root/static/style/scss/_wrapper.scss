@@ -6,6 +6,10 @@
  * Sticky footer
  */
 
+html {
+   overflow-y: scroll;
+}
+
 body {
    display: flex;
    flex-direction: column;
@@ -136,7 +140,7 @@ body {
    }
 
    div > ul > li:hover {
-      background-color: hsla(0, 0%, 15%, 1);
+      background-color: hsla(0, 0%, 0%, 1);
    }
 
    div > ul > li.current a {

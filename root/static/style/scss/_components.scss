@@ -297,25 +297,23 @@
    text-align: center;
 }
 
-@mixin tint($hue: 200, $sat: 50%, $l: 88%) {
+@mixin flash-color($hue: 200, $sat: 50%, $l: 88%) {
    background: hsla($hue, $sat, $l, 1);
-   border: 0.1em solid hsla($hue, $sat, $l * 0.8, 1);
+   border-left: 0.8em solid hsla($hue, $sat, $l * 0.8, 1);
    color: hsla($hue, $sat, $l * 0.25, 1);
 }
 
 .Flash {
-   font-size: 0.8em;
+   font-size: 0.9em;
+   padding: 0.7em;
+   margin-bottom: 1rem;
 
-   &.big {
-      font-size: 0.9em;
-   }
-
-   padding: 1em;
-   margin-bottom: 1em;
-
-   @include tint;
+   @include flash-color;
    &.error {
-      @include tint($hue: 0);
+      @include flash-color($hue: 0);
+   }
+   &.pop {
+      @include flash-color($hue: 280);
    }
 
    p {
