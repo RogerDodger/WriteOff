@@ -88,4 +88,13 @@
          background-color: hsla(219, 65%, 90%, 1) !important;
       }
    }
+
+   .Group-name,
+   .Group-banner,
+   .Group-stub--name,
+   .Group-stub--banner,
+   .Member,
+   .Member-avatar {
+      filter: invert(100%);
+   }
 }
