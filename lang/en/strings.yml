@@ -58,7 +58,7 @@ guess: Guess
 vote: Vote
 save: Save
 cancel: Cancel
-scheduleAt: Schedule @ %s
+scheduleAt: %s. Schedule Entry
 once: Once
 everyXWeeks: Every %d weeks
 needsXMoreMembers: Needs %d more members

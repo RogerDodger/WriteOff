@@ -7,7 +7,7 @@
       {{ INCLUDE schedule/datetime.tt  label = 'nextEvent' datetime = sched.next }}
 
       <div class="Form-item">
-         <label>{{ c.string('wordLimit') }}</label>
+         <label>{{ c.string('wordLimit') }}<span class="required">*</span></label>
          <div class="Event-form--wordcount">
             <input type="number" name="wc_min"
                placeholder="2000" value="{{ sched.wc_min }}" required>
