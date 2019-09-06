@@ -3,7 +3,7 @@
       {{ c.string('preferences') }}
    </div>
 
-   <form class="Form" method="post">
+   <form class="Form auto" method="post">
       {{ csrf_field | none }}
 
       <div class="Form-item">

@@ -230,11 +230,16 @@ $(document).ready(function() {
       var q = $.when();
       $form.find('input, select, textarea').on('change', function () {
          var $field = $(this);
+
+         if ($field.attr('name') == 'dark') {
+            $('html')[$field.is(':checked') ? 'addClass' : 'removeClass']('dark');
+         }
+
          q.then(
             $.ajax({
                type: $form.attr('method'),
                url: $form.attr('action'),
-               data: $field.serialize(),
+               data: $form.serialize(),
                success: function () {
                   $field.removeClass('Form-error');
                },
