@@ -10,7 +10,7 @@ my @formats;
 
 BEGIN {
    # Order of this array is immutable -- IDs must be persistent
-   @formats = qw/FLASHFIC MINIFIC VIGNETTE SHORTSTORY NOVELETTE NOVELLA NOVEL/;
+   @formats = qw/FLASHFIC MINIFIC SHORTSHORT SHORTSTORY NOVELETTE NOVELLA NOVEL/;
 
    my $i = 0;
    for my $format (@formats) {
@@ -31,7 +31,7 @@ our %EXPORT_TAGS = ( formats => \@formats, all => \@EXPORT_OK );
 my %attr = (
    _FLASHFIC()   => [ 'flashfic', 300 ],
    _MINIFIC()    => [ 'minific', 1000 ],
-   _VIGNETTE()   => [ 'vignette', 2250 ],
+   _SHORTSHORT() => [ 'shortShort', 2250 ],
    _SHORTSTORY() => [ 'shortStory', 9000 ],
    _NOVELETTE()  => [ 'novelette', 20000 ],
    _NOVELLA()    => [ 'novella', 45000 ],
