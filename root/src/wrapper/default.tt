@@ -35,7 +35,9 @@
                   <li class="{{ 'current' IF c.action.private_path == '/group/index' }}">
                      <a href="/groups">{{ c.string('groups') }}</a>
                   </li>
-                  <li class="{{ 'current' IF c.action.private_path == '/schedule/index' }}">
+                  <li class="{{ 'current'
+                     IF c.action.private_path == '/schedule/index'
+                     || c.action.private_path == '/schedule/all' }}">
                      <a href="/schedule">{{ c.string('schedule') }}</a>
                   </li>
                   <li class="{{ 'current' IF c.action.private_path == '/scoreboard/index' }}">

@@ -109,6 +109,7 @@ popularPosts: Popular posts
 showBreakdown: Show breakdown
 hideBreakdown: Hide breakdown
 darkMode: Dark mode
+all: All
 
 newArtistTitle: New Alias
 newEventTitle: New Event
@@ -156,6 +157,7 @@ notifs: Notifications
 
 viewAll: View all
 showRules: Show rules for this event
+showScheduleAll: Show schedule for all groups
 activeEvents: Active events
 lastEvent: Last event
 recentDiscussion: Recent discussion

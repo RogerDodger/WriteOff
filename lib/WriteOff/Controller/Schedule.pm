@@ -25,6 +25,12 @@ sub index :Path :Args(0) {
    $c->stash->{schedules} = $c->model('DB::Schedule')->promoted->index;
 }
 
+sub all :Local :Args(0) {
+   my ($self, $c) = @_;
+
+   $c->stash->{schedules} = $c->model('DB::Schedule')->index;
+}
+
 sub add :Chained('/group/fetch') :PathPart('schedule/add') :Args(0) {
    my ($self, $c) = @_;
 

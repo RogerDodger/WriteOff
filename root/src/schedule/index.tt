@@ -3,3 +3,5 @@
 {{ FOREACH schedule IN schedules.all }}
    {{ PROCESS 'schedule/single.tt' }}
 {{ END }}
+
+<a class="Archive-button" href="/schedule/all">{{ c.string('showScheduleAll') }}</a>

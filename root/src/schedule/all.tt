@@ -1,0 +1,5 @@
+{{ title.push(c.string('all'), c.string('schedule')) }}
+
+{{ FOREACH schedule IN schedules.all }}
+   {{ PROCESS 'schedule/single.tt' }}
+{{ END }}
