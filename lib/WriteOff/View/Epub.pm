@@ -177,7 +177,7 @@ sub process {
       );
 
       my $event = $story->entry->event;
-      if ($event->fic2pic || $event->pic2fic) {
+      if (($event->fic2pic || $event->pic2fic) && $event->pic_gallery_opened) {
          my $images = $story->images;
          while (my $image = $images->next) {
             $self->add_image(
@@ -193,7 +193,7 @@ sub process {
       $self->add_title($event->prompt);
       $self->add_author('Writeoff Participants');
 
-      if ($event->fic2pic || $event->pic2fic) {
+      if (($event->fic2pic || $event->pic2fic) && $event->pic_gallery_opened) {
          my $images = $event->images->related_resultset('image');
          while (my $image = $images->next) {
             $self->add_image(
