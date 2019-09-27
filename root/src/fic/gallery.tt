@@ -64,7 +64,7 @@
                <td class="Storys-num"></td>
                <td class="Storys-listing">Anthology</td>
                <td class="Storys-export">
-                  (<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}.epub">epub</a>)
+                  (<a href="{{ c.uri_for(c.action, [ event.id_uri ]) }}?format=epub">epub</a>)
                </td>
                {{ IF event.commenting }}
                <td class="Storys-posts"></td>
