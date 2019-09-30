@@ -25,113 +25,124 @@
    <body>
       <nav class="Site-header">
          <div class="Site-header--container">
-            <div class="Site-header--global">
-               <ul>
-                  <li>
-                     <a href="/">
-                        <img class="Site-logo" src="/static/images/logo.png">
-                     </a>
-                  </li>
-                  <li class="{{ 'current' IF c.action.private_path == '/group/index' }}">
-                     <a href="/groups">{{ c.string('groups') }}</a>
-                  </li>
-                  <li class="{{ 'current'
-                     IF c.action.private_path == '/schedule/index'
-                     || c.action.private_path == '/schedule/all' }}">
-                     <a href="/schedule">{{ c.string('schedule') }}</a>
-                  </li>
-                  <li class="{{ 'current' IF c.action.private_path == '/scoreboard/index' }}">
-                     <a href="/scoreboard">{{ c.string('scoreboard') }}</a>
-                  </li>
-                  <li class="{{ 'current' IF c.action.private_path == '/archive' }}">
-                     <a href="/archive">{{ c.string('archive') }}</a>
-                  </li>
-                  {{ IF c.config.chat }}
-                  <li>
-                     <a href="{{ c.config.chat }}">
-                        <i class="fa fa-external-link"></i>
-                        Chat
-                     </a>
-                  </li>
-                  {{ END }}
-                  {{ IF c.controller.isa("WriteOff::Controller::Poll") }}
-                  <li class="current">
-                     <a href="/polls" >{{ c.string('polls') }}</a>
-                  </li>
-                  {{ END }}
-               </ul>
-            </div>
+            <ul class="Site-header--global">
+               <li>
+                  <a href="/">
+                     <img class="Site-logo" src="/static/images/logo.png">
+                  </a>
+               </li>
+               <li class="{{ 'current' IF c.action.private_path == '/group/index' }}">
+                  <a href="/groups">{{ c.string('groups') }}</a>
+               </li>
+               <li class="{{ 'current'
+                  IF c.action.private_path == '/schedule/index'
+                  || c.action.private_path == '/schedule/all' }}">
+                  <a href="/schedule">{{ c.string('schedule') }}</a>
+               </li>
+               <li class="{{ 'current' IF c.action.private_path == '/scoreboard/index' }}">
+                  <a href="/scoreboard">{{ c.string('scoreboard') }}</a>
+               </li>
+               <li class="{{ 'current' IF c.action.private_path == '/archive' }}">
+                  <a href="/archive">{{ c.string('archive') }}</a>
+               </li>
+               {{ IF c.config.chat }}
+               <li>
+                  <a href="{{ c.config.chat }}">
+                     <i class="fa fa-external-link"></i>
+                     Chat
+                  </a>
+               </li>
+               {{ END }}
+               {{ IF c.controller.isa("WriteOff::Controller::Poll") }}
+               <li class="current">
+                  <a href="/polls" >{{ c.string('polls') }}</a>
+               </li>
+               {{ END }}
+            </ul>
 
-            <div class="Site-header--user">
-               <ul>
-                  {{ IF c.user }}
-                  <li class="Notif-bell">
-                     <a href="/user/notifs">
-                        <i class="fa fa-bell"></i>
-                        {{ IF (n = c.user.notifs_rs.unread_rs.count) }}
-                        <span class="Notif-bell--count">{{ n }}</span>
-                        {{ END }}
-                     </a>
-                  </li>
-                  <li>
-                     <a href="{{ c.uri_for_action('/artist/view', [ c.user.active_artist.id_uri ]) }}">
-                        @<span class="Artist-swap--selected">{{ c.user.active_artist.name }}</span>
-                        <i class="fa fa-caret-down"></i>
-                     </a>
-                     <ul>
-                        {{ FOREACH artist IN c.user.artists_rs.active }}
-                        <li>
-                           <div class="icon">
-                              <form method="post" action="/artist/swap">
-                                 {{ csrf_field | none }}
-                                 <input type="hidden" name="artist-swap" value="{{ artist.id }}">
-                                 <button class="Artist-swap {{ 'active' IF artist.id == c.user.active_artist_id }}">
-                                    <i class="fa fa-star"></i>
-                                 </button>
-                              </form>
-                           </div>
-                           {{- }}<a class="Artist-swap--option"
-                              href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
-                        </li>
-                        {{ END }}
-                        <li>
-                           <div class="icon">
-                              <i class="fa fa-star transparent"></i>
-                           </div>
-                           {{- }}<a href="/artist/add">{{ c.string('newArtist') }}</a>
-                        </li>
-                     </ul>
-                  </li>
-                  <li>
-                     <a href="#">
-                        ~{{ c.user.username }}
-                        <i class="fa fa-caret-down"></i>
-                     </a>
-                     <ul>
-                        {{ IF c.user.admin }}
-                        <li><a href="/event/add">New event</a></li>
-                        {{ END }}
-                        <li><a href="/user/prefs">Preferences</a></li>
-                        <li><a href="/user/artists">{{ c.string('manageArtists') }}</a></li>
-                        <li><a href="/user/credentials?key=password">Change password</a></li>
-                        <li><a href="/user/credentials?key=email">Change email</a></li>
-                        <li><a href="/user/logout">Logout</a></li>
-                     </ul>
-                  </li>
-                  {{ ELSE }}
-                  <li><a href="/user/login">Login</a></li>
-                  <li>
-                     <a href="/user/register">
-                        Register
-                        <i class="fa fa-caret-down"></i>
-                     </a>
-                     <ul>
-                        <li><a href="/user/verify">Resend verification email</a>
-                     </ul>
-                  </li>
-                  {{ END }}
-               </ul>
-            </div>
+            <ul class="Site-header--user">
+               {{ IF c.user }}
+               <li class="Notif-bell">
+                  <a href="/user/notifs">
+                     <i class="fa fa-bell"></i>
+                     {{ IF (n = c.user.notifs_rs.unread_rs.count) }}
+                     <span class="Notif-bell--count">{{ n }}</span>
+                     {{ END }}
+                  </a>
+               </li>
+               <li>
+                  <a href="/user/groups">
+                     My groups
+                     <i class="fa fa-caret-down"></i>
+                  </a>
+                  <ul>
+                     {{ FOREACH g IN c.user.groups }}
+                     <li>
+                        <a href="{{ c.uri_for_action('/group/view', [ g.id_uri ]) }}">
+                           {{ g.name }}
+                        </a>
+                     </li>
+                     {{ END }}
+                  </ul>
+               </li>
+               <li>
+                  <a href="{{ c.uri_for_action('/artist/view', [ c.user.active_artist.id_uri ]) }}">
+                     @{{ c.user.active_artist.name }}
+                     <i class="fa fa-caret-down"></i>
+                  </a>
+                  <ul>
+                     {{ FOREACH artist IN c.user.artists_rs.active }}
+                     <li>
+                        <div class="icon">
+                           <form method="post" action="/artist/swap">
+                              {{ csrf_field | none }}
+                              <input type="hidden" name="artist-swap" value="{{ artist.id }}">
+                              <button class="Artist-swap {{ 'active' IF artist.id == c.user.active_artist_id }}">
+                                 <i class="fa fa-star"></i>
+                              </button>
+                           </form>
+                        </div>
+                        {{- }}<a class="Artist-swap--option"
+                           href="{{ c.uri_for_action('/artist/view', [ artist.id_uri ]) }}">{{ artist.name }}</a>
+                     </li>
+                     {{ END }}
+                     <li>
+                        <div class="icon">
+                           <i class="fa fa-star transparent"></i>
+                        </div>
+                        {{- }}<a href="/artist/add">{{ c.string('newArtist') }}</a>
+                     </li>
+                  </ul>
+               </li>
+               <li>
+                  <a href="#">
+                     ~{{ c.user.username }}
+                     <i class="fa fa-caret-down"></i>
+                  </a>
+                  <ul>
+                     {{ IF c.user.admin }}
+                     <li><a href="/event/add">New event</a></li>
+                     {{ END }}
+                     <li><a href="/user/prefs">Preferences</a></li>
+                     <li><a href="/user/artists">{{ c.string('manageArtists') }}</a></li>
+                     <li><a href="/user/credentials?key=password">Change password</a></li>
+                     <li><a href="/user/credentials?key=email">Change email</a></li>
+                     <li><a href="/user/logout">Logout</a></li>
+                  </ul>
+               </li>
+               {{ ELSE }}
+               <li><a href="/user/login">Login</a></li>
+               <li>
+                  <a href="/user/register">
+                     Register
+                     <i class="fa fa-caret-down"></i>
+                  </a>
+                  <ul>
+                     <li><a href="/user/verify">Resend verification email</a>
+                  </ul>
+               </li>
+               {{ END }}
+            </ul>
          </div>
       </nav>
 

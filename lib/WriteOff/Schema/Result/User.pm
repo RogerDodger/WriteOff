@@ -64,6 +64,8 @@ __PACKAGE__->has_many("sub_modes", "WriteOff::Schema::Result::SubMode", "user_id
 __PACKAGE__->has_many("sub_triggers", "WriteOff::Schema::Result::SubTrigger", "user_id");
 __PACKAGE__->has_many("user_events", "WriteOff::Schema::Result::UserEvent", "user_id");
 
+__PACKAGE__->many_to_many("groups", "sub_genres", "genre");
+
 __PACKAGE__->mk_group_accessors(
    column => 'role',
    column => 'prompt_skill',

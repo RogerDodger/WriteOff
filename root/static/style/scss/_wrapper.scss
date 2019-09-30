@@ -44,8 +44,9 @@ body {
 
 .Site-header--container {
    display: flex;
-   flex-flow: row wrap;
+   flex-flow: row nowrap;
    justify-content: space-between;
+   align-items: flex-start;
    max-width: $container-overflow;
    width: 100%;
    margin: 0 auto;
@@ -54,7 +55,6 @@ body {
 .Site-header {
    color: #bdc3cf;
    background: hsla(0, 0%, 9%, 1) linear-gradient(hsla(0, 0%, 0%, 1), hsla(0, 0%, 18%, 1));
-   line-height: 42px;
    margin-bottom: 1em;
 
    a {
@@ -67,71 +67,69 @@ body {
    }
 
    ul {
-      display: inline;
       list-style: none;
+   }
+
+   ul, li {
       margin: 0;
-      padding: 0.01em;
+      padding: 0;
+   }
 
-      li {
-         display: inline-block;
-         margin: 0;
-         padding: 0;
-         position: relative;
+   .fa {
+      vertical-align: middle;
+   }
+}
 
-         & > * {
-            padding: 0 0.75em;
-         }
-      }
+.Site-header--user {
+   justify-content: flex-end;
+}
 
-      li ul {
-         padding: 0;
-         position: absolute;
-         top: 42px;
-         right: 0;
-         text-align: left;
-         min-width: 10em;
-         display: none;
-         opacity: 0;
-         visibility: hidden;
-         border: 0.1em solid hsla(0, 0%, 30%, 1);
-         border-top: none;
-      }
+.Site-header--user,
+.Site-header--global {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: flex-start;
 
-      li ul li {
-         display: block;
-         padding: 0;
-         white-space: nowrap;
+   & > li > a {
+      display: grid;
+      grid-gap: 0 0.33em;
+      grid-auto-flow: column;
+      align-items: center;
+      height: 100%;
+      padding: 0.6em 0.8em;
+      min-height: 3em;
+   }
 
-         & > * {
-            font-size: 0.9em;
-            display: inline-block;
-            padding: 0.25em 1em;
-         }
+   & > li > a[href="/"] {
+      padding-top: 0.2em;
+      padding-bottom: 0;
+   }
 
-         .icon {
-            background: hsla(0, 0%, 95%, 1);
-            line-height: inherit;
-            text-shadow: none;
+   & > li {
+      position: relative;
+      word-break: break-word;
+      text-align: end;
+   }
 
-            button {
-               cursor: pointer;
+   & > li > ul {
+      padding: 0;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      text-align: left;
+      min-width: 10em;
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      border-width: 0 1px 1px 1px;
+      border-style: solid;
+      border-color: hsla(0, 0%, 30%, 1);
+   }
 
-               &:not(.active) {
-                  color: hsla(0, 0%, 70%, 1);
+   & > li:hover {
+      background-color: hsla(0, 0%, 0%, 1);
 
-                  &:hover {
-                     color: hsla(0, 0%, 50%, 1);
-                  }
-               }
-            }
-
-            & > .fa {
-               cursor: default;
-            }
-         }
-      }
-
-      li:hover ul {
+      & > ul {
          display: block;
          opacity: 1;
          visibility: visible;
@@ -139,16 +137,15 @@ body {
       }
    }
 
-   div > ul > li:hover {
-      background-color: hsla(0, 0%, 0%, 1);
-   }
-
-   div > ul > li.current a {
+   & > li.current a {
       color: hsla(0, 92%, 60%, 1);
       text-shadow: 1px 1px 2px #000;
    }
 
-   ul > li > ul > li {
+   & > li > ul > li {
+      display: flex;
+      flex-flow: row nowrap;
+      white-space: nowrap;
       background-color: hsla(0, 0%, 98%, 1);
       color: invert(#bdc3cf);
 
@@ -156,14 +153,40 @@ body {
          text-shadow: hsla(0, 0%, 80%, 1);
       }
 
-      // FIXME this should be a:hover but a should fill remaining space
-      &:hover {
+      a:hover {
          background-color: hsla(60, 70%, 90%, 1);
       }
-   }
 
-   .fa {
-      vertical-align: middle;
+      & > * {
+         font-size: 0.9em;
+         padding: 1em;
+
+         &:last-child {
+            flex-grow: 1;
+         }
+      }
+
+      .icon {
+         background: hsla(0, 0%, 95%, 1);
+         line-height: inherit;
+         text-shadow: none;
+
+         button {
+            cursor: pointer;
+
+            &:not(.active) {
+               color: hsla(0, 0%, 70%, 1);
+
+               &:hover {
+                  color: hsla(0, 0%, 50%, 1);
+               }
+            }
+         }
+
+         & > .fa {
+            cursor: default;
+         }
+      }
    }
 }
 
@@ -177,16 +200,8 @@ body {
    }
 }
 
-.Site-header--user {
-   flex-grow: 1;
-   text-align: end;
-}
-
 .Site-logo {
-   margin: 5px 0 4px 0;
-   vertical-align: middle;
-   line-height: 0;
-   height: 32px;
+   height: 2.2em;
 }
 
 /*
