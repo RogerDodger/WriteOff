@@ -217,7 +217,8 @@ sub scoreboard :Chained('fetch') :PathPart('scoreboard') {
 sub view :Chained('fetch') :PathPart('') :Args(0) {
    my ($self, $c) = @_;
 
-   $c->stash->{events} //= $c->stash->{group}->events;
+   $c->stash->{events} //=
+      $c->model('DB::Event')->search({ genre_id => $c->stash->{group}->id });
    $c->stash->{active} = $c->stash->{events}->active;
    $c->stash->{last} = $c->stash->{events}->last_ended;
    $c->stash->{forum} = $c->stash->{events}->forum;

@@ -8,7 +8,7 @@
 
          {{ IF g.owner.user_id == c.user_id }}
             {{ name = BLOCK; PROCESS artist/name.tt  artist = g.owner; END }}
-            ({{ c.string('ownedBy', name) | none }})
+            ({{ c.string('ownedByYouAs', name) | none }})
          {{ ELSE }}
          <form class="il" method="post" action="{{ c.uri_for_action('/group/unsub', [ g.id_uri ]) }}">
             {{ csrf_field | none }}

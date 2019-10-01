@@ -7,7 +7,13 @@ use WriteOff::Util qw/LEEWAY/;
 
 sub active {
    my $self = shift;
-   $self->search({ tallied => 0 }, { order_by => 'me.created' });
+   $self->search(
+      { tallied => 0 },
+      {
+         alias => 'events',
+         order_by => 'events.created',
+      }
+   );
 }
 
 sub active_rs {
@@ -22,8 +28,9 @@ sub archive {
    my $maxdt = $self->format_datetime(DateTime->new(year => $dt->year + 1));
 
    $self->search({}, {
+      alias => 'events',
       join => 'rounds',
-      group_by => 'me.id',
+      group_by => 'events.id',
       '+select' => [
          { min => 'rounds.start', -as => 'start' },
       ],
@@ -101,18 +108,15 @@ sub last_ended {
    my $self = shift;
 
    $self->search({
-      'me.tallied' => 1,
+      'events.tallied' => 1,
    }, {
+      alias => 'events',
       join => 'rounds',
-      group_by => 'me.id',
+      group_by => 'events.id',
       '+select' => { max => 'rounds.end', -as => 'fin' },
       order_by => { -desc => 'fin' },
       rows => 1,
    });
-}
-
-sub last_rs {
-   scalar shift->last;
 }
 
 # Exclude active events and the last event, then sort by last post date
@@ -122,12 +126,13 @@ sub forum {
 
    $self->search(
       {
-         'me.tallied' => 1,
-         'me.id' => { '!=' =>
+         'events.tallied' => 1,
+         'events.id' => { '!=' =>
             $self->last_ended->get_column('id')->max_rs->as_query },
          'last_post.created' => { '>' => $t },
       },
       {
+         alias => 'events',
          join => 'last_post',
          order_by => { -desc => 'last_post.created' },
       }

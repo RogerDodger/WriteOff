@@ -11,17 +11,22 @@ BEGIN { extends 'Catalyst::Controller'; }
 sub index :Path('/scoreboard') {
    my ($self, $c, $gid, $mname) = @_;
 
-   $c->stash->{genres} = $c->model('DB::Genre')->promoted;
+   $c->stash->{genres} = $c->user
+      ? $c->user->sub_genres->related_resultset('genre')
+      : $c->model('DB::Genre')->promoted;
+
    $c->stash->{genre} =
       $c->stash->{genres}->find_maybe($gid) //
-      $c->stash->{genres}->find(1);
+      $c->stash->{genres}->first //
+      $c->model('DB::Genre')->new_result({});
 
    $c->stash->{mode} = WriteOff::Mode->find($mname) // FIC;
 
    $c->stash->{gUrl} = '/scoreboard/%s/' . $c->stash->{mode}->name;
    $c->stash->{mUrl} = '/scoreboard/' . $c->stash->{genre}->id_uri . '/%s';
 
-   $c->title_push($c->stash->{genre}->name);
+   $c->title_push($c->stash->{genre}->name)
+      if $c->stash->{genre}->in_storage;
 
    $c->forward('view');
 }

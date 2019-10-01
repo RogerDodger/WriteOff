@@ -298,7 +298,7 @@ groupUpdated: Group updated
 artistLeftGroup: %s left %s
 cantUnsubOwnGroup: Can't unsub from own group
 unsubbedGroup: Unsubscribed from %s
-ownedBy: Owned by %s
+ownedByYouAs: Owned by you as %s
 
 notifComment: %s commented
 notifMention: %s mentioned you

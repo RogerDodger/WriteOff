@@ -93,14 +93,20 @@ sub awardmock :Local {
 sub index :Path :Args(0) {
    my ( $self, $c ) = @_;
 
-   $c->stash->{events} = $c->model('DB::Event')->promoted;
+   $c->stash->{events} = $c->user
+      ? $c->user->sub_events
+      : $c->model('DB::Event')->promoted;
+
    $c->forward('/group/view');
 }
 
 sub archive :Local {
    my ( $self, $c, $year ) = @_;
 
-   $c->stash->{events} = $c->model('DB::Event')->promoted;
+   $c->stash->{events} = $c->user
+      ? $c->user->sub_events
+      : $c->model('DB::Event')->promoted;
+
    $c->forward('/group/archive');
 }
 

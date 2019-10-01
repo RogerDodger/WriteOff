@@ -275,4 +275,12 @@ sub images {
 
 sub page_size { 100 }
 
+sub sub_events {
+   shift->sub_genres->related_resultset('genre')->related_resultset('events');
+}
+
+sub sub_schedules {
+   shift->sub_genres->related_resultset('genre')->related_resultset('schedules');
+}
+
 1;
