@@ -162,23 +162,10 @@ sub leave :Chained('fetch') :PathPart('leave') :Args(0) {
    $c->user_assert;
    $c->csrf_assert;
 
-   if ( my $row = $c->model('DB::ArtistGenre')->find(
+   if ( my $member = $c->model('DB::ArtistGenre')->find(
          $c->user->active_artist_id, $c->stash->{genre}->id) ) {
-      $row->delete;
 
-      # Unsub only if the user has no other artists in the group
-      $c->model('DB::SubGenre')->search({
-         user_id => $c->user->id,
-         genre_id => $c->stash->{genre}->id
-         })->delete
-            if !$c->user->artists
-               ->related_resultset('artist_genre')
-               ->search({ genre_id => $c->stash->{genre}->id })
-               ->count
-            # Need to check for the owner also
-            && !$c->user->artists->find($c->stash->{genre}->owner_id);
-
-      $c->stash->{genre}->recalc_completion($c->config->{group_min_size});
+      $member->leave($c->config->{group_min_size});
    }
 
    $c->res->redirect($c->req->referer
@@ -188,6 +175,30 @@ sub leave :Chained('fetch') :PathPart('leave') :Args(0) {
 sub members :Chained('fetch') :PathPart('members') :Args(0) {
    my ($self, $c) = @_;
    $c->stash->{members} = $c->stash->{group}->members->index;
+}
+
+sub member :Chained('fetch') :PathPart('member') :CaptureArgs(1) {
+   my ($self, $c, $aid) = @_;
+
+   $aid =~ /^(\d+)/ and
+   $c->stash->{member} = $c->model('DB::ArtistGenre')->find($1, $c->stash->{group}->id)
+      or $c->detach('/default');
+}
+
+sub member_leave :Chained('member') :PathPart('leave') :Args(0) {
+   my ($self, $c) = @_;
+   $c->detach('/default') if $c->req->method ne 'POST';
+   $c->user_assert;
+   $c->csrf_assert;
+
+   my $artist = $c->stash->{member}->artist;
+   $c->detach('/forbidden') if $artist->user_id != $c->user->id;
+
+   $c->stash->{member}->leave($c->config->{group_min_size});
+   $c->flash->{status_msg} =
+      $c->string('artistLeftGroup', $artist->name, $c->stash->{group}->name);
+
+   $c->res->redirect($c->req->referer || $c->uri_for_action('/user/groups'));
 }
 
 sub schedule :Chained('fetch') :PathPart('schedule') :Args(0) {
@@ -213,6 +224,32 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
    $c->stash->{show_last_post} = 1;
 
    $c->stash->{template} = 'group/view.tt';
+}
+
+sub unsub :Chained('fetch') :PathPart('unsub') :Args(0) {
+   my ($self, $c) = @_;
+   $c->detach('/default') if $c->req->method ne 'POST';
+   $c->user_assert;
+   $c->csrf_assert;
+
+   if ($c->stash->{group}->owner->user_id == $c->user->id) {
+      $c->flash->{error_msg} = $c->string('cantUnsubOwnGroup');
+   }
+   else {
+      $c->user->artists
+         ->related_resultset('artist_genre')
+         ->search({ genre_id => $c->stash->{group}->id })
+         ->delete;
+
+      $c->model('DB::SubGenre')->find($c->user->id, $c->stash->{group}->id)->delete;
+
+      $c->stash->{group}->recalc_completion($c->config->{group_min_size});
+
+      $c->flash->{status_msg} =
+         $c->string('unsubbedGroup', $c->stash->{group}->name);
+   }
+
+   $c->res->redirect($c->req->referer || $c->uri_for_action('/user/groups'));
 }
 
 __PACKAGE__->meta->make_immutable;

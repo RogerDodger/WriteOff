@@ -383,6 +383,15 @@ sub send_email :Private {
    $cache->set($mailto, 1);
 }
 
+sub groups :Local {
+   my ($self, $c) = @_;
+
+   $c->user_assert;
+
+   $c->stash->{subs} = $c->user->groups;
+   $c->stash->{members} = $c->user->artists->related_resultset('artist_genre');
+}
+
 =head1 AUTHOR
 
 Cameron Thornton E<lt>cthor@cpan.orgE<gt>

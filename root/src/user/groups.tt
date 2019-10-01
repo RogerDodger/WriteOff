@@ -1,0 +1,32 @@
+<div class="Document">
+   <div class="Document-title">{{ c.string('myGroups') }}</div>
+
+   {{ FOREACH g IN subs.all }}
+   <div class="mt1">
+      <div>
+         <a href="{{ c.uri_for_action('/group/view', [ g.id_uri ]) }}">{{ g.name }}</a>
+
+         {{ IF g.owner.user_id == c.user_id }}
+            {{ name = BLOCK; PROCESS artist/name.tt  artist = g.owner; END }}
+            ({{ c.string('ownedBy', name) | none }})
+         {{ ELSE }}
+         <form class="il" method="post" action="{{ c.uri_for_action('/group/unsub', [ g.id_uri ]) }}">
+            {{ csrf_field | none }}
+            <input type="submit" value="{{ c.string('unsub') }}">
+         </form>
+         {{ END }}
+      </div>
+      {{ FOREACH m IN members.search({ genre_id => g.id }) }}
+         <div>
+            &ndash;
+            {{ PROCESS artist/name.tt  artist = m.artist }}
+
+            <form class="il" method="post" action="{{ c.uri_for_action('/group/member_leave', [ g.id_uri, m.artist_id ]) }}">
+               {{ csrf_field | none }}
+               <input type="submit" value="{{ c.string('leave') }}">
+            </form>
+         </div>
+      {{ END }}
+   </div>
+   {{ END }}
+</div>

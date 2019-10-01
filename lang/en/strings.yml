@@ -3,6 +3,7 @@ pleaseWait: Please wait
 abstain: Abstain
 unabstain: Unabstain
 mySubs: My submissions
+myGroups: My groups
 title: Title
 artist: Artist
 author: Author
@@ -173,6 +174,7 @@ newGroups: New groups
 createNewGroup: Create a new group
 join: Join
 leave: Leave
+unsub: Unsub
 
 storyFont: Story font
 serif: Serif
@@ -293,6 +295,10 @@ eventCreated: Event created
 eventUpdated: Event updated
 groupCreated: Group created
 groupUpdated: Group updated
+artistLeftGroup: %s left %s
+cantUnsubOwnGroup: Can't unsub from own group
+unsubbedGroup: Unsubscribed from %s
+ownedBy: Owned by %s
 
 notifComment: %s commented
 notifMention: %s mentioned you
