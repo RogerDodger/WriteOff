@@ -72,6 +72,12 @@ sub auto :Private {
       $c->session->{introduced} = 1 if $c->user;
    }
 
+   # Autosub user with no subs to the promoted groups
+   if ($c->user && !$c->user->sub_genres->count) {
+      $c->user->create_related('sub_genres', { genre_id => $_->id })
+         for $c->model('DB::Genre')->promoted->all;
+   }
+
    1;
 }
 
