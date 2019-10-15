@@ -5,10 +5,24 @@
       href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}"
       style="background-image: url('{{ group.banner }}')"></a>
 
+   {{ IF c.user && !c.user.owns(group) }}
+      <div class="Group-action">
+      {{ IF group.member(c.user.active_artist_id) }}
+         {{ INCLUDE fragment/action.tt
+            uri = c.uri_for_action('/group/leave', [ group.id_uri ])
+            string = c.string('leave') }}
+      {{ ELSE }}
+         {{ INCLUDE fragment/action.tt
+            uri = c.uri_for_action('/group/join', [ group.id_uri ])
+            string = c.string('join') }}
+      {{ END }}
+      </div>
+   {{ END }}
+
    {{ IF c.user.admins(group) }}
-   <a class="Group-edit" href="{{ c.uri_for_action('/group/edit', [ group.id_uri ]) }}">
-      [{{ c.string('edit') }}]
-   </a>
+   <span class="Group-edit">
+      [<a href="{{ c.uri_for_action('/group/edit', [ group.id_uri ]) }}">{{ c.string('edit') }}</a>]
+   </span>
    {{ END }}
 
    <a class="Group-name" href="{{ c.uri_for_action('/group/view', [ group.id_uri ]) }}">{{

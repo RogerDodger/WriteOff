@@ -93,12 +93,21 @@
    grid-row: 3;
    grid-column: 1;
    padding: 0.5rem;
+   align-self: start;
+}
+
+.Group-action {
+   grid-row: 1;
+   grid-column: 1 / -1;
+   align-self: end;
+   justify-self: end;
+   padding: 0.5em;
 }
 
 .Group-edit {
    grid-row: 3;
    grid-column: 2;
-   padding: 0.5rem;
+   padding: 0.5em;
 }
 
 .Group-links {

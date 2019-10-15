@@ -1,0 +1,4 @@
+<form class="Action" method="post" action="{{ uri }}">
+   {{ csrf_field | none }}
+   <input type="submit" value="{{ string }}">
+</form>

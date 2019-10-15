@@ -631,3 +631,25 @@
    font-size: (18em / 16);
    margin-bottom: 0.1em;
 }
+
+.Action {
+   display: inline-block;
+   vertical-align: text-bottom;
+
+   input[type="submit"] {
+      display: inline-block;
+      border: 1px solid #ccc;
+      background: #eee;
+      padding: 0.15em 0.8em;
+      font-size: 0.8em;
+
+      &:hover {
+         border-color: hsla(200, 50%, 70%, 1);
+      }
+
+      &:active {
+         position: relative;
+         top: 1px;
+      }
+   }
+}
