@@ -5,9 +5,9 @@
    <div class="Flash ctn">{{ c.string('noActiveEvents') }}</div>
 {{ END }}
 
-{{ IF last.count }}
-<div class="Container-title mt1">{{ c.string('lastEvent') }}</div>
-{{ INCLUDE event/list.tt  events => last }}
+{{ IF recent.count }}
+<div class="Container-title mt1">{{ c.string('recentlyFinished') }}</div>
+{{ INCLUDE event/list.tt  events => recent }}
 {{ END }}
 
 {{ IF forum.count }}

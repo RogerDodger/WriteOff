@@ -104,43 +104,38 @@ sub create_from_sched {
    $event;
 }
 
-sub last_ended {
+sub _forum {
    my $self = shift;
+   my %p = @_;
 
    $self->search({
       'events.tallied' => 1,
    }, {
       alias => 'events',
-      join => 'rounds',
+      join => [qw/rounds last_post/],
       group_by => 'events.id',
       '+select' => { max => 'rounds.end', -as => 'fin' },
-      order_by => { -desc => 'fin' },
-      rows => 1,
+      order_by => { -desc => 'last_post.created' },
+      having => {
+         fin => { (%p{recent} ? '>' : '<=') => $self->now_dt->subtract(weeks => 1) }
+      }
    });
 }
 
-# Exclude active events and the last event, then sort by last post date
 sub forum {
    my $self = shift;
-   my $t = $self->format_datetime($self->now_dt->subtract(months => 2));
 
-   $self->search(
-      {
-         'events.tallied' => 1,
-         'events.id' => { '!=' =>
-            $self->last_ended->get_column('id')->max_rs->as_query },
-         'last_post.created' => { '>' => $t },
-      },
-      {
-         alias => 'events',
-         join => 'last_post',
-         order_by => { -desc => 'last_post.created' },
+   $self->_forum->search(
+      { 'last_post.created' =>
+         { '>' => $self->now_dt->subtract(months => 2) }
       }
    );
 }
 
-sub forum_rs {
-   scalar shift->recent;
+sub recent {
+   my $self = shift;
+
+   $self->_forum(recent => 1);
 }
 
 sub promoted {

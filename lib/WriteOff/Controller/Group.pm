@@ -220,7 +220,7 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
    $c->stash->{events} //=
       $c->model('DB::Event')->search({ genre_id => $c->stash->{group}->id });
    $c->stash->{active} = $c->stash->{events}->active;
-   $c->stash->{last} = $c->stash->{events}->last_ended;
+   $c->stash->{recent} = $c->stash->{events}->recent;
    $c->stash->{forum} = $c->stash->{events}->forum;
    $c->stash->{show_last_post} = 1;
 

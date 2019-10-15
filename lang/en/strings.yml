@@ -160,7 +160,7 @@ viewAll: View all
 showRules: Show rules for this event
 showScheduleAll: Show schedule for all groups
 activeEvents: Active events
-lastEvent: Last event
+recentlyFinished: Recently finished
 recentDiscussion: Recent discussion
 eventArchive: Event archive
 
