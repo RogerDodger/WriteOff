@@ -23,7 +23,7 @@ sub index :Path :Args(0) {
    my ($self, $c) = @_;
 
    $c->stash->{schedules} = $c->user
-      ? $c->user->sub_schedules
+      ? $c->user->sub_schedules->index
       : $c->model('DB::Schedule')->promoted->index;
 }
 
