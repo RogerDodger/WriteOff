@@ -1,4 +1,4 @@
-<div class="Container-title">{{ c.string('activeEvents') }}</div>
+<div class="Container-title Active-events">{{ c.string('activeEvents') }}</div>
 {{ IF active.count }}
    {{ INCLUDE event/list.tt  events => active }}
 {{ ELSE }}
