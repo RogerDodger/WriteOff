@@ -273,7 +273,7 @@ joinedOn: Joined on %s
 postCount: %d posts
 entryCount: %d entries
 doublePost: Double post detected—attempting to redirect
-postDeleted: Post by %s deleted %s
+postDeleted: Post by %s %s, deleted %s
 noNotifs: You have no notifications
 noMembers: There are no members
 

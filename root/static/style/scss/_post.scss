@@ -34,11 +34,11 @@
 }
 
 .Post-deleted {
-   background-color: hsla(27, 40%, 90%, 1);
-   border: 0.05em solid hsla(27, 40%, 75%, 1);
-   color: hsla(27, 40%, 30%, 1);
+   background-color: #ddd;
+   border-left: 0.75em solid #aaa;
+   color: #555;
    font-size: 0.85em;
-   padding: 0.5em 1em;
+   padding: 0.5em 0.7em;
 
    .Artist-link {
       color: hsla(240, 40%, 30%, 1);
@@ -55,7 +55,7 @@
 
    button {
       @extend .button-reset;
-      color: hsla(27, 40%, 40%, 1);
+      color: hsla(240, 40%, 30%, 1);
 
       &:hover {
          text-decoration: underline;

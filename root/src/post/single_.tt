@@ -17,7 +17,7 @@
       {{ name = BLOCK }}
          {{ PROCESS artist/name.tt  artist = post.artist }}
       {{ END }}
-      {{ c.string('postDeleted', name, post.updated.delta_html) | none }}
+      {{ c.string('postDeleted', name, post.created.delta_html, post.updated.delta_html) | none }}
    </div>
 {{- ELSE }}
    {{ INCLUDE 'post/sidebar.tt' artist = post.artist }}
