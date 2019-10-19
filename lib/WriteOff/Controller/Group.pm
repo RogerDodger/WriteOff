@@ -63,7 +63,9 @@ sub add :Path('new') :Args(0) {
 sub archive :Chained('fetch') :PathPart('archive') {
    my ($self, $c, $year) = @_;
 
-   my $rs = $c->stash->{events} // $c->stash->{group}->events;
+   my $rs = $c->stash->{events}
+         // $c->model('DB::Event')->search({ genre_id => $c->stash->{genre}->id });
+
    $c->stash->{maxYear} = $c->stash->{now}->year;
    $c->stash->{minYear} =
       eval { $rs->parse_datetime($rs->get_column('created')->min)->year } //
