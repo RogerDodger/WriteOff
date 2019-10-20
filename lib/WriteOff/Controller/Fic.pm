@@ -73,7 +73,7 @@ sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
 sub form :Private {
    my ($self, $c) = @_;
 
-   if ($c->stash->{event}->pic2fic) {
+   if ($c->stash->{event}->pic2fic && $c->stash->{event}->images->count) {
       $c->stash->{rels} = $c->stash->{event}->images->seed_order;
    }
 

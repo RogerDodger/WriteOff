@@ -441,7 +441,7 @@ sub score {
          my $aid = $entry->artist_id;
          my @awards;
 
-         if (defined $mxrel and $rels{$entry->id} == $mxrel) {
+         if ($mxrel and $rels{$entry->id} == $mxrel) {
             push @awards, LIGHTBULB();
          }
 
