@@ -567,12 +567,21 @@ sub wordcount {
 }
 
 sub calibrate {
-   my ($self, $work) = @_;
+   my ($self, $mode, $work) = @_;
+   my $m = WriteOff::Mode->find($mode) // FIC;
 
-   my $rounds = $self->rounds->fic->vote;
-   my $entrys = $self->storys;
+   my $rounds = $self->rounds->mode($m->name)->vote;
+   my $entrys = $self->entrys->mode($m->name);
+
+   if (!$entrys->count) {
+      $rounds->delete;
+      $self->ballots->mode($m->name)->delete;
+      $self->theorys->mode($m->name)->delete;
+      $self->reset_jobs;
+      return;
+   }
+
    my $n = $rounds->count - 1;
-
    my $wFinals = $work->{threshold} * $rounds->search({ name => 'final' })->first->days;
    my $wTotal = List::Util::sum(map $_->work($work), $entrys->all);
 

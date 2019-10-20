@@ -20,7 +20,7 @@ Catalyst Controller.
 sub cast :Private {
    my ($self, $c) = @_;
 
-   my $rounds = $c->stash->{event}->rounds->search({
+   my $rounds = $c->stash->{rounds} = $c->stash->{event}->rounds->search({
       mode => $c->stash->{mode},
       action => 'vote',
    });

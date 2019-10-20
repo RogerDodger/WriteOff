@@ -1,6 +1,7 @@
 <div class="Document">
-   <div class="Document-title">{{ c.string(mode _ 'Guessing') }}</div>
+   <div class="Document-title">{{ title.-1 }}</div>
 
+   {{ IF close.defined }}
    <div class="Countdown">
       {{ IF open > now }}
          {{ open.delta_html | none }}
@@ -11,8 +12,8 @@
       {{ END }}
    </div>
 
-   {{- IF opened }}
-      {{- IF !c.user }}
+      {{- IF opened }}
+         {{- IF !c.user }}
       <div class="Flash">
          {{ c.string('loginRequiredVote') }}
       </div>
@@ -35,7 +36,7 @@
             {{ END }}
 
             <tbody>
-               {{- FOREACH item IN candidates.all }}
+               {{- FOREACH item IN candts.all }}
                <tr class="{{ loop.parity }}">
                   <td class="Storys-num">{{ item.num || loop.count }}</td>
                   <td>{{ item.title }}</td>
@@ -54,6 +55,11 @@
             <input type="submit" name="submit" value="Update vote">
          </div>
       </form>
+         {{- END }}
       {{- END }}
-   {{- END }}
+   {{ ELSIF event.guessing }}
+   <div class="Flash">{{ c.string('no' _ mode.name.ucfirst _ 's') }}</div>
+   {{ ELSE }}
+   <div class="Flash">{{ c.string('noGuessing') }}</div>
+   {{ END }}
 </div>

@@ -85,11 +85,11 @@
       <ul class="Event-links pic">
          <li><a href="{{ c.uri_for_action('/pic/submit', id) }}">Pic Submission</a>
          <li><a href="{{ c.uri_for_action('/pic/gallery', id) }}">Gallery</a>
-         {{ IF event.guessing }}
-         <li><a href="{{ c.uri_for_action('/guess/pic', id) }}">Guessing</a>
-         {{ END }}
 
          {{ IF event.has('pic', 'vote') }}
+            {{ IF event.guessing }}
+         <li><a href="{{ c.uri_for_action('/guess/pic', id) }}">Guessing</a>
+            {{ END }}
          <li><a href="{{ c.uri_for_action('/vote/pic', id) }}">Voting</a>
          <li><a href="{{ c.uri_for_action('/pic/results', id) }}">Results</a>
          {{ END }}
@@ -100,11 +100,11 @@
       <ul class="Event-links fic">
          <li><a href="{{ c.uri_for_action('/fic/submit', id) }}">Fic Submission</a>
          <li><a href="{{ c.uri_for_action('/fic/gallery', id) }}">Gallery</a>
-         {{ IF event.guessing }}
-         <li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
-         {{ END }}
 
          {{ IF event.has('fic', 'vote') }}
+            {{ IF event.guessing }}
+         <li><a href="{{ c.uri_for_action('/guess/fic', id) }}">Guessing</a>
+            {{ END }}
          <li><a href="{{ c.uri_for_action('/vote/fic', id) }}">Voting</a>
          <li><a href="{{ c.uri_for_action('/fic/results', id) }}">Results</a>
          {{ END }}

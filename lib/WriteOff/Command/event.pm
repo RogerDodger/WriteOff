@@ -20,12 +20,16 @@ can award =>
 
 can calibrate =>
    sub {
-      my ($e) = @_;
-      $e->calibrate(config()->{work});
+      my ($e, $mode) = @_;
+      my $m = WriteOff::Mode->find($mode) or abort qq{Invalid mode "$mode"};
+      $e->calibrate($m, config()->{work});
    },
    which => q{
-      Deletes unnecessary voting rounds in event with id EVENT.
-   };
+      Deletes unnecessary MODE voting rounds in event with id EVENT.
+   },
+   with => [
+      mode => 'fic',
+   ];
 
 can reset =>
    sub {

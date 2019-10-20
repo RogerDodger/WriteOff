@@ -12,6 +12,7 @@
    </div>
 
    {{ IF event.fic_gallery_opened }}
+      {{ IF gallery.count }}
       <table class="Storys gallery">
          <thead>
             <tr>
@@ -76,6 +77,11 @@
             </tr>
          </tbody>
       </table>
+      {{ ELSE }}
+      <div class="Flash">
+         {{ c.string('noFics') }}
+      </div>
+      {{ END }}
    {{ ELSE }}
       <div class="Countdown">
          {{ event.fic_gallery_opens.delta_html | none }}

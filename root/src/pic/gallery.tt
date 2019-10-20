@@ -3,7 +3,8 @@
       {{ c.string('picGallery') }}
    </div>
 
-   {{- IF event.pic_gallery_opened }}
+{{- IF event.pic_gallery_opened }}
+   {{ IF gallery.count }}
    <div class="pics">
       {{- FOREACH entry IN gallery.all }}
       <figure>
@@ -31,9 +32,14 @@
       </figure>
       {{- END }}
    </div>
-   {{- ELSE }}
+   {{ ELSE }}
+   <div class="Flash">
+      {{ c.string('noPics') }}
+   </div>
+   {{ END }}
+{{- ELSE }}
    <div class="Countdown">
       {{ event.pic_gallery_opens.delta_html | none }}
    </div>
-   {{- END }}
+{{- END }}
 </div>

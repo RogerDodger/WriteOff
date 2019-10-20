@@ -3,45 +3,40 @@ use Moose;
 use namespace::autoclean;
 use Scalar::Util qw/looks_like_number/;
 use WriteOff::Util qw/sorted/;
+use WriteOff::Mode qw/:all/;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
 sub pic :PathPart('guess') :Chained('/event/pic') :Args(0) {
    my ($self, $c) = @_;
-
-   $c->stash(
-      mode => 'pic',
-      candidates => scalar $c->stash->{event}->images,
-      open => $c->stash->{event}->rounds->pic->submit->ordered->first->end_leeway,
-      close => $c->stash->{event}->rounds->pic->vote->reversed->first->end,
-   );
-
-   $c->forward('guess');
+   $c->forward('guess', [ PIC ]);
 }
 
 sub fic :PathPart('guess') :Chained('/event/fic') :Args(0) {
    my ($self, $c) = @_;
-
-   $c->stash(
-      mode => 'fic',
-      candidates => scalar $c->stash->{event}->storys,
-      open => $c->stash->{event}->rounds->fic->submit->ordered->first->end_leeway,
-      close => $c->stash->{event}->rounds->fic->vote->reversed->first->end,
-   );
-
-   $c->forward('guess');
+   $c->forward('guess', [ FIC ]);
 }
 
 sub guess :Private {
-   my ($self, $c) = @_;
+   my ($self, $c, $mode) = @_;
 
+   push @{ $c->stash->{title} }, $c->string($mode->name . 'Guessing');
+   $c->stash->{template} = 'vote/guess.tt';
+
+   $c->stash->{mode} = $mode;
+   $c->stash->{candts} = $c->stash->{event}->entrys->mode($mode);
+   return unless $c->stash->{event}->guessing && $c->stash->{event}->has($mode->name, 'vote');
+
+   my $rounds = $c->stash->{event}->rounds->mode($mode->name);
+   $c->stash->{open} = eval { $rounds->submit->ordered->first->end_leeway };
+   $c->stash->{close} = eval { $rounds->vote->reversed->first->end };
    $c->stash->{opened} = sorted $c->stash->{open}, $c->stash->{now}, $c->stash->{close};
 
    if ($c->stash->{opened}) {
-      $c->stash->{candidates} = $c->stash->{candidates}->search({ artist_public => 0 })->gallery;
+      $c->stash->{candts} = $c->stash->{candts}->search({ artist_public => 0 })->gallery;
       $c->stash->{artists} = [
          map { $_->artist }
-            $c->stash->{candidates}->search({}, {
+            $c->stash->{candts}->search({}, {
                group_by => 'artist_id',
                prefetch => 'artist',
                order_by => 'artist.name',
@@ -62,16 +57,13 @@ sub guess :Private {
          $c->forward('do_guess') if $c->req->method eq 'POST';
       }
    }
-
-   push @{ $c->stash->{title} }, $c->string('guess');
-   $c->stash->{template} = 'vote/guess.tt';
 }
 
 sub do_guess :Private {
    my ($self, $c) = @_;
 
    my @artists = @{ $c->stash->{artists} };
-   for my $entry ($c->stash->{candidates}->all) {
+   for my $entry ($c->stash->{candts}->all) {
       # Users cannot vote on their own entries
       next if $entry->user_id == $c->user_id;
 

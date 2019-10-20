@@ -276,6 +276,9 @@ doublePost: Double post detected—attempting to redirect
 postDeleted: Post by %s %s, deleted %s
 noNotifs: You have no notifications
 noMembers: There are no members
+noFics: No fics were submitted
+noPics: No pics were submitted
+noGuessing: There is no guessing for this event
 
 badInput: Bad input
 tooManyRounds: Too many rounds

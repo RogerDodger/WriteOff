@@ -17,8 +17,12 @@
       {{ type.ucfirst }} Results
    </div>
 
+   {{ IF !final }}
+   <div class="Flash">{{ c.string('no' _ mode.ucfirst _ 's') }}</div>
+   {{ ELSE }}
    <div class="Countdown">
       {{ final.end.delta_html | none }}
    </div>
+   {{ END }}
 </div>
 {{ END }}

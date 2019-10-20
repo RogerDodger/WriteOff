@@ -58,11 +58,12 @@ sub view :Chained('fetch') :PathPart('') :Args(0) {
 sub gallery :Chained('/event/fic') :PathPart('gallery') :Args(0) {
    my ( $self, $c ) = @_;
 
-   if ($c->stash->{ext} eq 'epub' && $c->stash->{event}->fic_gallery_opened) {
+   my $rs = $c->stash->{event}->storys;
+   if ($c->stash->{ext} eq 'epub' && $c->stash->{event}->fic_gallery_opened && $rs->count) {
       $c->forward('View::Epub');
    }
    else {
-      $c->stash->{gallery} = $c->stash->{event}->storys->gallery->search({}, { prefetch => 'story' });
+      $c->stash->{gallery} = $rs->gallery->search({}, { prefetch => 'story' });
 
       push @{ $c->stash->{title} }, 'Gallery';
       $c->stash->{template} = 'fic/gallery.tt';

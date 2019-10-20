@@ -473,9 +473,12 @@ sub voting_started :Private {
 
    $c->stash->{event} = $c->model('DB::Event')->find($eid) or return;
    $c->stash->{mode} = WriteOff::Mode->find($mode) or return;
-   $c->stash->{trigger} = VOTINGSTARTED;
+   $c->stash->{event}->calibrate($mode, $c->config->{work});
 
-   $c->forward('/event/notify_mailing_list');
+   if ($c->stash->{event}->has('vote', $mode)) {
+      $c->stash->{trigger} = VOTINGSTARTED;
+      $c->forward('/event/notify_mailing_list');
+   }
 }
 
 sub tally_round :Private {

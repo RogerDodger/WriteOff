@@ -6,6 +6,7 @@
       {{ END }}
    </div>
 
+{{ IF rounds.count }}
    <div class="Countdown">
       {{ IF countdown }}
          {{ countdown.delta_html | none }}
@@ -102,4 +103,9 @@
       </tbody>
    </table>
    {{ END }}
+{{ ELSE }}
+   <div class="Flash">
+      {{ c.string('no' _ mode.ucfirst _ 's') }}
+   </div>
+{{ END }}
 </div>
