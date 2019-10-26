@@ -117,7 +117,9 @@ sub _forum {
       '+select' => { max => 'rounds.end', -as => 'fin' },
       order_by => { -desc => 'last_post.created' },
       having => {
-         fin => { (%p{recent} ? '>' : '<=') => $self->now_dt->subtract(weeks => 1) }
+         fin => { (%p{recent} ? '>' : '<=') =>
+            $self->format_datetime(
+               $self->now_dt->subtract(weeks => 1) ) }
       }
    });
 }
@@ -127,7 +129,7 @@ sub forum {
 
    $self->_forum->search(
       { 'last_post.created' =>
-         { '>' => $self->now_dt->subtract(months => 2) }
+         { '>' => $self->format_datetime( $self->now_dt->subtract(months => 2) ) }
       }
    );
 }
