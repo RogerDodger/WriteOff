@@ -4,6 +4,9 @@ use v5.14;
 use warnings;
 use Carp;
 use Exporter;
+use overload
+   '""' => \&name,
+   fallback => 1;
 
 my @modes;
 

@@ -47,7 +47,7 @@ sub guess :Private {
          $c->stash->{theory} = $c->model("DB::Theory")->find_or_create({
             event_id => $c->stash->{event}->id,
             user_id => $c->user->id,
-            mode => $c->stash->{mode},
+            mode => $c->stash->{mode}->name,
          });
 
          $c->stash->{fillform} = {
