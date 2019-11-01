@@ -38,6 +38,7 @@ sub cleanup :Local {
 
    $c->model('DB::User')->clean_unverified;
    $c->model('DB::Token')->clean_expired;
+   $c->clean_flash;
 }
 
 sub clear :Local {

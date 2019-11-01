@@ -12,7 +12,11 @@ package WriteOff::Plugin::Session;
 
 use Moose::Role;
 
+use Carp qw/croak/;
 use Crypt::URandom qw/urandom/;
+use DBI;
+use File::Spec;
+use JSON;
 use Math::Random::ISAAC::XS;
 use Session::Storage::Secure;
 
@@ -29,6 +33,7 @@ has $_ => (is => 'rw') for @session_data_accessors;
 my $_conf;
 my $_secure_store;
 my $_rng;
+my $_flash_dbh;
 my $DAY = 60 * 60 * 24;
 
 after setup => sub {
@@ -55,6 +60,22 @@ after setup => sub {
          sereal_encoder_options => $_conf->{sereal_encoder_options},
          sereal_decoder_options => $_conf->{sereal_decoder_options},
       );
+
+   $_flash_dbh = DBI->connect('dbi:SQLite:' .
+      File::Spec->catfile(File::Spec->tmpdir, $_conf->{cookie_name} . '-flash.db'),
+      "", "", {
+         sqlite_unicode => 1,
+         AutoCommit => 1,
+      },
+   );
+
+   $_flash_dbh->do(q{
+      CREATE TABLE IF NOT EXISTS flash (
+         key TEXT PRIMARY KEY,
+         value TEXT,
+         expires INTEGER
+      );
+   }) or croak $_flash_dbh->errstr;
 };
 
 after prepare_action => sub {
@@ -73,9 +94,11 @@ after prepare_action => sub {
          $c->_session_dirty(1);
       }
 
-      # Move flash to the stash and delete it from the session
-      if (my $flash = delete $session->{__flash}) {
-         $c->stash($flash);
+      # Try and find flash data if __flash is in the session
+      if (delete $session->{__flash}) {
+         if (defined( my $data = _flash_get($session->{__sessionid}) )) {
+            $c->stash($data);
+         }
          $c->_session_dirty(1);
       }
 
@@ -87,11 +110,17 @@ before finalize_headers => sub {
    my $c = shift;
    return if $c->_static_file;
 
+   if (defined $c->_flash) {
+      $c->session->{__flash} = 1;
+      _flash_set($c->sessionid, $c->_flash);
+   }
+
    if ($c->_session_dirty) {
       my $expires = time + $_conf->{expires};
       my $value = $_secure_store->encode($c->_session, $expires);
 
-      $c->log->debug("Plugin::Session - Writing new session cookie: \n  $value");
+      $c->log->debug(
+         "Plugin::Session - Writing new session cookie:\n  $value\n  " . encode_json($c->_session));
 
       $c->res->cookies->{$_conf->{cookie_name}} = CGI::Simple::Cookie->new(
          -name => $_conf->{cookie_name},
@@ -108,6 +137,12 @@ before finalize_body => sub {
    my $c = shift;
    $c->$_(undef) for @session_data_accessors;
 };
+
+sub clean_flash {
+   my $c = shift;
+   my $sth = $_flash_dbh->prepare_cached(q{ DELETE FROM flash WHERE expires < ? });
+   $sth->execute(time) or croak $sth->errstr;
+}
 
 sub session {
    my $c = shift;
@@ -134,7 +169,8 @@ sub sessionid {
 
 sub flash {
    my $c = shift;
-   my $data = ($c->session->{__flash} //= {});
+   my $data = ($c->_flash // {});
+   $c->_flash($data);
    _assign_maybe($data, @_);
    $data;
 }
@@ -149,6 +185,31 @@ sub _assign_maybe {
       }
    }
 }
+
+sub _flash_set {
+   my ($k, $v) = @_;
+
+   my $sth = $_flash_dbh->prepare_cached(q{ INSERT OR REPLACE INTO flash VALUES (?, ?, ?) });
+   $sth->execute($k, encode_json($v), time + $DAY) or croak $sth->errstr;
+}
+
+sub _flash_get {
+   my ($k) = @_;
+
+   my $sel = $_flash_dbh->prepare_cached(q{ SELECT value FROM flash WHERE key = ? });
+   $sel->execute($k) or croak $sel->errstr;
+   my $result = $sel->fetchall_arrayref;
+   my $v = $result->[0]->[0];
+
+   if (defined $v) {
+      my $del = $_flash_dbh->prepare_cached(q{ DELETE FROM flash WHERE key = ? });
+      $del->execute($k) or croak $del->errstr;
+      return decode_json($v);
+   }
+
+   undef;
+}
+
 
 sub _rng_digest {
    Digest->new('MD5')->add($_rng->irand)->hexdigest;
