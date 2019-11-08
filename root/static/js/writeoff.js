@@ -223,7 +223,7 @@ $(document).ready(function ($) {
 //==========================================================================
 
 $(document).ready(function() {
-   $('.Form.auto').each(function () {
+   $('form.auto').each(function () {
       var $form = $(this);
       $form.find('input[type="submit"]').remove();
 
@@ -241,10 +241,10 @@ $(document).ready(function() {
                url: $form.attr('action'),
                data: $form.serialize(),
                success: function () {
-                  $field.removeClass('Form-error');
+                  $form.removeClass('Form-error');
                },
-               error: function () {
-                  $field.addClass('Form-error');
+               error: function (xhr, status, err) {
+                  $form.addClass('Form-error');
                }
             })
          );

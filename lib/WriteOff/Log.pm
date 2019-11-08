@@ -3,6 +3,7 @@ package WriteOff::Log;
 use Moose;
 extends 'Catalyst::Log';
 
+use Data::Dump qw/pp/;
 use File::Spec;
 use POSIX ();
 
@@ -13,6 +14,7 @@ sub _log {
    my ($self, $level, $fmt, @list) = @_;
    return if $self->abort || !defined $fmt;
 
+   $fmt = pp($fmt) if ref $fmt;
    my $message = scalar @list ? (sprintf $fmt, @list) : $fmt;
    $message .= "\n" unless $message =~ /\n$/;
    my $timestamp = POSIX::strftime($self->timeformat, localtime);

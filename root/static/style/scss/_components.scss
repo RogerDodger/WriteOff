@@ -313,10 +313,10 @@
       @include flash-color($hue: 0);
    }
    &.pop {
-      @include flash-color($hue: 280);
+      @include flash-color($hue: 260);
    }
 
-   p {
+   p, ul {
       margin: 0;
    }
 

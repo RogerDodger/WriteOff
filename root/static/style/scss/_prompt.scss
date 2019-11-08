@@ -17,14 +17,114 @@
    text-align: start;
 }
 
-.Prompts-name {
-   width: 100%;
+.PB-prompt {
+   display: flex;
+   flex-direction: row;
+   align-items: stretch;
 }
 
-.Prompts-vote {
-   white-space: nowrap;
+.PB-name {
+   font-size: 1.2em;
+   flex-grow: 1;
+   margin-left: 0.5em;
+   padding: 0.2em 0;
+   order: 9;
 }
 
-.Prompts-name {
+.PB-radio {
+   font-size: 0.8em;
+   input[type="radio"] {
+      display: none;
+   }
+
+   span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 5em;
+      height: 100%;
+      border: 1px solid transparent;
+      cursor: pointer;
+   }
+
+   span:hover {
+      border: 1px solid hsla(200, 30%, 50%, 1);
+   }
+
+   @each $type, $hue, $sat in ("bad"  , 0,   60%),
+                              ("meh"  , 0,   0%),
+                              ("good" , 200, 20%),
+                              ("great", 200, 60%) {
+      &.#{$type} input[type="radio"]:checked + span {
+         background-color: hsla($hue, $sat, 70%, 1);
+         border: 1px solid hsla($hue, $sat, 70%, 1);
+      }
+   }
+}
+
+@media #{$mobile} {
+   .PB-prompt {
+      flex-wrap: wrap;
+      justify-content: center;
+
+      & + .PB-prompt {
+         margin-top: 0.6em;
+      }
+   }
+
+   .PB-name {
+      order: 0;
+      width: 100%;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+   }
+
+   .PB-radio span {
+      height: 2em;
+   }
+}
+
+.Prompt-Results {
+   display: table;
+}
+
+.PR-Prompt {
+   display: table-row;
+   font-size: 0.8em;
+
+   &.top {
+      font-size: 1.3em;
+   }
+
+   &.chosen {
+      background-color: hsla(200, 80%, 86%, 1);
+   }
+}
+
+.PR-Rank,
+.PR-Contents,
+.PR-Score {
+   display: table-cell;
+   vertical-align: middle;
+   padding: 0.2rem 0.5rem;
+   @media #{$mobile} {
+      padding-right: 0;
+   }
+}
+
+.PR-Rank,
+.PR-Score {
+   font-size: 0.8em;
+}
+
+.PR-Rank,
+.PR-Score {
+   text-align: center;
+}
+
+.PR-Contents {
    width: 100%;
+   font-size: 1.3em;
+   word-break: break-word;
 }

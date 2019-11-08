@@ -27,31 +27,83 @@ sub vote :Chained('/event/prompt') :PathPart('vote') :Args(0) {
    $c->stash->{prompts} = $c->stash->{event}->prompts->ballot($c->user->offset);
 
    if ($c->user) {
+      if ($c->stash->{event}->prompt_votes_opened) {
+         $c->forward('do_vote') if $c->req->method eq 'POST';
+      }
+
       $c->stash->{votes} = {
          map { $_->prompt_id => $_->value }
-            $c->user->prompt_votes->search(
-               { event_id => $c->stash->{event}->id },
-               { join => 'prompt' }
-            )
+            $c->stash->{event}->prompts->related_resultset('votes')->search({
+               "votes.user_id" => $c->user->id,
+            })
       };
    }
 
-   $c->stash->{show_results} = $c->stash->{event}->has_started;
-
-   if ($c->stash->{event}->prompt_votes_allowed) {
-      $c->forward('do_vote') if $c->req->method eq 'POST';
-   }
-
+   $c->title_psh('vote');
    $c->stash->{template} = 'prompt/vote.tt';
 }
 
-sub _do_vote :ActionClass("~Vote");
-
 sub do_vote :Private {
    my ( $self, $c ) = @_;
-   $c->stash->{prompt} = $c->stash->{prompts}->find_maybe($c->req->param('prompt'));
-   $c->forward('_do_vote');
-   $c->res->redirect($c->req->uri) if !defined $c->res->body;
+
+   $c->csrf_assert;
+
+   $c->stash->{event}->prompts->related_resultset('votes')
+                              ->search({ "votes.user_id" => $c->user->id })
+                              ->delete;
+
+   # my $oldVotes = $c->stash->{event}->prompts->related_resultset('votes')
+   #                                           ->search({ "votes.user_id" => $c->user->id });
+   # my %oldVals = map { $_->prompt_id => $_->value } $oldVotes->all;
+   # $oldVotes->delete;
+
+   my $max = $#{ $c->stash->{labels} };
+   my $uid = $c->user->id;
+   my $default = $c->stash->{default};
+
+   $c->model('DB::PromptVote')->populate([
+      map {
+         my $v = $c->parami('prompt' . $_->id);
+         my $val = $c->parami('prompt' . $_->id);
+            $val = $val >= 0 && $val <= $max ? $val : $default;
+
+         # my $old = $oldVals{$_->id} // 0;
+         # $_->update({ score => $_->score + $val - $old }) if $val != $old;
+
+         {
+            prompt_id => $_->id,
+            user_id => $uid,
+            value => $val >= 0 && $val <= $max ? $v : $default,
+         }
+      } $c->stash->{event}->prompts
+   ]);
+
+   # Commented out code above does this update in a smart way, but the
+   # performance difference isn't significant enough to worry about it, and
+   # this is more guaranteed to be correct.
+   $c->model('DB')->schema->storage->dbh_do(
+      sub {
+         my ($s, $dbh, $eid) = @_;
+         $dbh->do(
+            q{
+               UPDATE prompts
+               SET score=(SELECT SUM(value) FROM prompt_votes WHERE prompt_id=prompts.id)
+               WHERE event_id=?
+            },
+            undef,
+            $eid
+         );
+      },
+      $c->stash->{event}->id,
+   );
+
+   if ($c->stash->{ajax}) {
+      $c->res->body($c->string('voteUpdated'));
+   }
+   else {
+      $c->flash->{status_msg} = $c->string('voteUpdated');
+      $c->res->redirect($c->req->uri);
+   }
 }
 
 sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {
@@ -69,7 +121,7 @@ sub submit :Chained('/event/prompt') :PathPart('submit') :Args(0) {
    $c->forward('do_submit')
       if $c->req->method eq 'POST'
       && $c->user
-      && $c->stash->{event}->prompt_subs_allowed;
+      && $c->stash->{event}->prompt_subs_opened;
 
    $c->stash->{subs_left} = $subs_left->();
 
@@ -96,13 +148,13 @@ sub do_submit :Private {
       my $prompt = $c->stash->{event}->create_related('prompts', {
          user_id  => $c->user->id,
          contents => $c->form->valid('prompt'),
-         score    => 1,
+         score    => $#{ $c->stash->{labels} },
       });
 
       $c->model("DB::PromptVote")->create({
          user_id => $c->user->id,
          prompt_id => $prompt->id,
-         value => 1,
+         value => $#{ $c->stash->{labels} },
       });
 
       $c->stash->{status_msg} = 'Submission successful';
@@ -142,6 +194,18 @@ sub do_delete :Private {
 
    $c->flash->{status_msg} = 'Deletion successful';
    $c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
+}
+
+sub results :Chained('/event/prompt') :PathPart('results') :Args(0) {
+   my ($self, $c) = @_;
+
+   $c->stash->{prompts} = $c->stash->{event}->prompts->order_by([
+      { -desc => 'score' },
+      { -asc => 'contents' },
+   ]);
+
+   pop @{ $c->stash->{title} };
+   $c->title_psh('promptResults');
 }
 
 =head1 AUTHOR

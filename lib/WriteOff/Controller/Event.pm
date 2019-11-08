@@ -277,6 +277,9 @@ sub prompt :Chained('fetch') :PathPart('prompt') :CaptureArgs(0) {
    $c->detach('/error', ['There is no prompt round for this event.'])
       if $c->stash->{event}->prompt_fixed;
 
+   $c->stash->{labels} = [qw/bad meh good great/];
+   $c->stash->{default} = 1; #meh
+
    push @{ $c->stash->{title} }, 'Prompt';
 }
 

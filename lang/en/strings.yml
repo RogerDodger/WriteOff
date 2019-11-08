@@ -139,6 +139,7 @@ authorGuessing: Pic Guessing
 artistGuessing: Fic Guessing
 picResults: Pic Results
 ficResults: Fic Results
+promptResults: Prompt Results
 archive: Archive
 prelim: Prelim
 semifinal: Semi-final
@@ -175,6 +176,10 @@ createNewGroup: Create a new group
 join: Join
 leave: Leave
 unsub: Unsub
+bad: Bad
+meh: Meh
+good: Good
+great: Great
 
 storyFont: Story font
 serif: Serif
@@ -221,14 +226,15 @@ calculatingScoreboard: Scoreboard is being calculated
 storyRedacted: The contents of this story are no longer available
 promptLimitReached: You have reached the prompt limit
 promptGuide: |
-   - Prompts should&mdash;
-      - be a short phrase or figure of speech;
-      - not lock participants into certain characters, settings, or plots; and
-      - be suitable for use as a title for the event; and therefore
-      - be in title case, using the following rules:
-         1. the first and last words are capitalised;
-         2. articles, coordinating conjunctions, and prepositions shorter than 5 characters are not capitalised;
-         3. everything else is capitalised.
+   Prompts should&mdash;
+
+   - be a short phrase or figure of speech;
+   - not lock participants into certain characters, settings, or plots; and
+   - be suitable for use as a title for the event; and therefore
+   - be in title case, using the following rules:
+      1. the first and last words are capitalised;
+      2. articles, coordinating conjunctions, and prepositions 4 letters or shorter are not capitalised;
+      3. everything else is capitalised.
 emailNotifsHint: |
    You will only receive notifications that match your selections,
    e.g., when a FiM Minific event is created, you will only be notified if
@@ -302,6 +308,7 @@ artistLeftGroup: %s left %s
 cantUnsubOwnGroup: Can't unsub from own group
 unsubbedGroup: Unsubscribed from %s
 ownedByYouAs: Owned by you as %s
+voteUpdated: Vote updated
 
 notifComment: %s commented
 notifMention: %s mentioned you

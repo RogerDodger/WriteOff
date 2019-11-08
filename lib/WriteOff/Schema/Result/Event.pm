@@ -192,12 +192,12 @@ sub is_judged_by {
    return $self->judges->search({ id => $user->active_artist_id })->count;
 }
 
-sub prompt_subs_allowed {
+sub prompt_subs_opened {
    my $row = shift;
    return sorted $row->now_dt, $row->prompt_voting;
 }
 
-sub prompt_votes_allowed {
+sub prompt_votes_opened {
    my $row = shift;
    return sorted $row->prompt_voting, $row->now_dt, $row->start;
 }

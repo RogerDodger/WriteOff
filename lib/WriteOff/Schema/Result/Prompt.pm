@@ -39,7 +39,7 @@ sub is_manipulable_by {
 
    return 1 if $user->is_admin
             || $self->event->is_organised_by($user)
-            || $self->user_id == $user->id && $self->event->prompt_subs_allowed;
+            || $self->user_id == $user->id && $self->event->prompt_subs_opened;
    0;
 }
 

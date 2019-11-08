@@ -1,24 +1,29 @@
+
+
 <div class="Document">
    <div class="Document-title">
       {{ c.string('promptSubmission') }}
    </div>
 
    <div class="Countdown">
-      {{ IF event.prompt_subs_allowed }}
+      {{ IF event.prompt_subs_opened }}
          {{ event.prompt_voting.delta_html | none }}
       {{ ELSE }}
          {{ c.string('subsClosed') }}
       {{ END }}
    </div>
 
-   {{ IF event.prompt_subs_allowed }}
+   <div class="Flash pop">
+      {{ c.string('promptGuide') | markdown }}
+   </div>
+
+   {{ IF event.prompt_subs_opened }}
       {{ IF !c.user }}
       <div class="Flash">
          {{ c.string('loginRequiredPrompt') }}
       </div>
       {{ ELSIF subs_left > 0 }}
 
-      {{ c.string('promptGuide') | markdown }}
 
       <form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
          {{ csrf_field | none }}
@@ -52,7 +57,7 @@
    <table class="Prompts">
       <thead>
          <tr>
-            {{ IF event.prompt_subs_allowed }}
+            {{ IF event.prompt_subs_opened }}
             <th></th>
             {{ END }}
             <th>{{ c.string('prompt') }}</th>
@@ -61,7 +66,7 @@
       <tbody>
       {{ FOREACH prompt IN prompts.all }}
          <tr>
-            {{ IF event.prompt_subs_allowed }}
+            {{ IF event.prompt_subs_opened }}
             <td class="Prompts-edit">
                [<a href="{{ c.uri_for_action('/prompt/delete', [ prompt.id_uri ]) }}">{{ c.string('delete') }}</a>]
             </td>

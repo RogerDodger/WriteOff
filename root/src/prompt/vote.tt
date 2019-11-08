@@ -4,52 +4,37 @@
    </div>
 
    <div class="Countdown">
-      {{ IF event.prompt_subs_allowed }}
+      {{ IF event.prompt_subs_opened }}
          {{ event.prompt_voting.delta_html | none }}
-      {{ ELSIF event.prompt_votes_allowed }}
+      {{ ELSIF event.prompt_votes_opened }}
          {{ event.start.delta_html | none }}
       {{ ELSE }}
          {{ c.string('votesClosed') }}
       {{ END }}
    </div>
 
-   {{ IF !c.user && event.prompt_votes_allowed }}
+{{ IF event.prompt_votes_opened }}
+   {{ IF c.user }}
+   <form class="Prompt-Ballot auto" method="post" action="{{ c.req.uri }}">
+      {{ csrf_field | none }}
+      {{ FOREACH prompt IN prompts.all }}
+         {{ SET val = votes.exists(prompt.id) ? votes.${prompt.id} : default }}
+         <div class="PB-prompt">
+            <div class="PB-name">{{ prompt.contents }}</div>
+            {{ FOREACH label IN labels }}
+            <label class="PB-radio {{ label }}">
+               <input type="radio" name="prompt{{ prompt.id }}" value="{{ loop.index }}" {{ 'checked' IF loop.index == val }}>
+               <span>{{ c.string(label) }}</span>
+            </label>
+            {{ END }}
+         </div>
+      {{ END }}
+      <input class="mt1" type="submit" value="{{ c.string('update') }}">
+   </form>
+   {{ ELSE }}
    <div class="Flash">
       {{ c.string('loginRequiredVote') }}
    </div>
    {{ END }}
-
-   <table class="Prompts">
-      {{ votes_allowed = c.user && event.prompt_votes_allowed }}
-
-      {{ IF show_results }}
-      <thead>
-         <tr>
-            <th></th>
-            <th>Prompt</th>
-            <th>Score</th>
-         </tr>
-      </thead>
-      {{ END }}
-
-      <tbody>
-         {{ FOREACH prompt IN prompts.all }}
-         <tr>
-            <td class="Prompts-vote">
-               <form method="post" action="{{ c.req.uri }}" data-vote="{{ votes.${prompt.id} IF votes }}">
-                  {{ csrf_field | none }}
-                  <input type="hidden" name="prompt" value="{{ prompt.id }}">
-                  <button class="Prompts-vote--button" name="value" value="1" {{ 'disabled' IF !votes_allowed }}>
-                     <i class="fa fa-thumbs-up"></i>
-                  </button>
-               </form>
-            </td>
-            <td class="Prompts-name">{{ prompt.contents }}</td>
-            {{ IF show_results }}
-            <td class="Prompts-score">{{ prompt.score }}</td>
-            {{ END }}
-         </tr>
-         {{ END }}
-      </tbody>
-   </table>
+{{ END }}
 </div>

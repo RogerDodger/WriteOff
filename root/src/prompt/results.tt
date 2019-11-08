@@ -1,0 +1,25 @@
+<div class="Document">
+   <div class="Document-title">
+      {{ title.-1 }}
+   </div>
+
+   {{ IF !event.has_started }}
+   <div class="Countdown">
+      {{ event.start.delta_html | none }}
+   </div>
+   {{ ELSE }}
+   <div class="Prompt-Results">
+      {{ SET i = 1 }}
+      {{ FOREACH prompt IN prompts.all }}
+         {{ SET i = loop.count IF loop.prev.score != prompt.score }}
+      <div class="PR-Prompt
+         {{ 'top' IF i == 1 }}
+         {{ 'chosen' IF prompt.contents.fc == event.prompt.fc }}">
+         <div class="PR-Rank">#{{ i }}</div>
+         <div class="PR-Score">{{ prompt.score }}</div>
+         <div class="PR-Contents">{{ prompt.contents }}</div>
+      </div>
+      {{ END }}
+   </div>
+   {{ END }}
+</div>
