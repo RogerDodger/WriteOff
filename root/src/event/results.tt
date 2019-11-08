@@ -14,7 +14,7 @@
 {{ ELSE }}
 <div class="Document">
    <div class="Document-title">
-      {{ type.ucfirst }} Results
+      {{ title.-1 }}
    </div>
 
    {{ IF !final }}

@@ -375,7 +375,8 @@ sub results :Private {
 
    $c->stash->{ratings} = $c->model('DB::Rating');
 
-   push @{ $c->stash->{title} }, $c->string($c->stash->{mode} . 'Results');
+   pop @{ $c->stash->{title} };
+   $c->title_psh($c->stash->{mode} . 'Results');
    $c->stash->{template} = 'event/results.tt';
 }
 
