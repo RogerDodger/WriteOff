@@ -157,4 +157,9 @@ sub deadline {
 
 sub class { 'entry' }
 
+sub published {
+   my $self = shift;
+   return $self->story ? $self->story->published : 1;
+}
+
 1;

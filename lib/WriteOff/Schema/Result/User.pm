@@ -254,9 +254,11 @@ sub judges {
 sub publishes {
    my ($self, $entry) = @_;
 
-   return $self->admin
-      || $self->organises($entry->event)
-      || $entry->user_id == $self->id && $entry->artist_public && !$entry->disqualified;
+   return
+      $entry->artist_public &&
+      (( $self->admin || $self->organises($entry->event) and $entry->disqualified ) ||
+       ( $entry->user_id == $self->id and !$entry->disqualified || $entry->published )
+      );
 }
 
 sub can_edit {

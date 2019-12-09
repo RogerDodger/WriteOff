@@ -3,19 +3,48 @@
 // =============================================================================
 
 .Entrys {
-   @include striped-table;
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+   grid-gap: 1em;
 }
 
-.Entrys-edit,
-.Entrys-title,
-.Entrys-artist,
-.Entrys-filesize,
-.Entrys-filetype {
-   text-align: center;
+.Entry {
+   & > * {
+      padding: 0.2em 0.5em;
+   }
 }
 
-.Entry-nav {
+.Entry-title {
+   font-size: 1em;
+}
+
+.Entrys.organiser .Entry-artist:not(:hover) {
+   background-color: $artist-color-dark !important;
+   a { color: transparent }
+}
+
+.Entry-artist {
+   color: #fff;
+   font-size: 0.9em;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   overflow-x: hidden;
+   background-color: $artist-color-dark;
+
+   a, a:visited {
+      color: currentColor;
+   }
+}
+
+.Entry-size {
+   text-align: end;
+   font-size: 0.8em;
+}
+
+.Entry-actions,
+.Entry-controls {
    text-align: center;
+   font-size: 0.8em;
 }
 
 .Entrys-rels {

@@ -103,9 +103,7 @@ sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
    $c->forward('form');
 
    if ($c->user) {
-      $c->stash->{entrys} = $c->user->organises($c->stash->{event})
-         ? $c->stash->{event}->storys
-         : $c->stash->{event}->storys->search({ user_id => $c->user->id });
+      $c->stash->{entrys} = $c->stash->{event}->storys->search({ user_id => $c->user->id });
 
       if ($c->req->method eq 'POST') {
          if ($c->req->param('flip')) {
@@ -152,33 +150,6 @@ sub do_submit :Private {
          $c->form->valid('wordcount'),
       );
    }
-}
-
-sub flip :Private {
-   my ($self, $c) = @_;
-
-   $c->forward('/check_csrf_token');
-
-   while (my $entry = $c->stash->{entrys}->next) {
-      my $story = $entry->story;
-      my $id = $story->id;
-
-      if ($c->user->publishes($entry)) {
-         my $val = !!$c->req->param("publish-$id");
-         if ($story->published != $val) {
-            $c->log->info("Fic %d %s SET published=%d", $story->id, $entry->title, $val);
-            $story->update({ published => int $val });
-         }
-      }
-
-      my $val = !!$c->req->param("index-$id");
-      if ($story->indexed != $val) {
-         $c->log->info("Fic %d %s SET indexed=%d", $story->id, $entry->title, $val);
-         $story->update({ indexed => int $val });
-      }
-   }
-
-   $c->res->redirect($c->req->uri) unless $c->stash->{ajax};
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
@@ -231,10 +202,44 @@ sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
    $c->forward('/entry/delete');
 }
 
-sub dq :Chained('fetch') :PathPart('dq') {
+sub dq :Chained('fetch') :PathPart('dq') :Args(0) {
    my ($self, $c) = @_;
 
    $c->forward('/entry/dq');
+}
+
+sub index :Chained('fetch') :PathPart('index') :Args(0) {
+   my ($self, $c) = @_;
+   $c->forward('flip', [ 'indexed', $c->paramo('index') eq $c->string('reindex') ]);
+}
+
+sub publish :Chained('fetch') :PathPart('publish') :Args(0) {
+   my ($self, $c) = @_;
+   $c->forward('flip', [ 'published', $c->paramo('publish') eq $c->string('republish') ]);
+}
+
+sub flip :Private {
+   my ($self, $c, $key, $val) = @_;
+
+   $c->req->method eq 'POST' or $c->detach('/default');
+   $c->user_assert;
+   $c->csrf_assert;
+
+   $val = 0+!!$val;
+   $c->stash->{story}->update({ $key => $val });
+   $c->res->redirect($c->req->referer ||
+      $c->uri_for_action('/fic/submit', [ $c->stash->{event}->id_uri ])
+   );
+
+   my %str = (
+      indexed => [qw/deindexed reindexed/],
+      published => [qw/unpublished republished/],
+   );
+
+   $c->flash->{status_msg} = $c->string(
+      %str{$key}->[$val] . 'Entry',
+      $c->stash->{entry}->title
+   );
 }
 
 sub rels :Chained('fetch') :PathPart('rels') :Args(0) {

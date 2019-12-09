@@ -177,9 +177,7 @@ sub submit :Chained('/event/pic') :PathPart('submit') :Args(0) {
    $c->forward('form');
 
    if ($c->user) {
-      $c->stash->{entrys} = $c->user->organises($c->stash->{event})
-         ? $c->stash->{event}->images
-         : $c->stash->{event}->images->search({ user_id => $c->user->id });
+      $c->stash->{entrys} = $c->stash->{event}->images->search({ user_id => $c->user->id });
 
       if ($c->req->method eq 'POST' && $c->stash->{event}->pic_subs_allowed) {
          $c->forward('do_submit');

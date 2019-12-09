@@ -2,6 +2,7 @@ lang: English
 pleaseWait: Please wait
 abstain: Abstain
 unabstain: Unabstain
+allSubs: All submissions
 mySubs: My submissions
 myGroups: My groups
 title: Title
@@ -14,6 +15,7 @@ relatedFic: Related Fic(s)
 entry: Entry
 story: Story
 words: Words
+nWords: %d words
 contentLevel: Content level
 wordcount: Wordcount
 blurb: Blurb
@@ -42,7 +44,11 @@ wordLimitN: Word limit: %d-%d
 created: Created
 submitted: Submitted
 index: Index
+deindex: Deindex
+reindex: Reindex
 publish: Publish
+unpublish: Unpublish
+republish: Republish
 guessed: Guessed
 actual: Actual
 update: Update
@@ -54,6 +60,7 @@ delete: Delete
 new: New
 restore: Restore
 dq: Disqualify
+dqd: Disqualified
 submit: Submit
 guess: Guess
 vote: Vote
@@ -309,6 +316,10 @@ cantUnsubOwnGroup: Can't unsub from own group
 unsubbedGroup: Unsubscribed from %s
 ownedByYouAs: Owned by you as %s
 voteUpdated: Vote updated
+unpublishedEntry: Unpublished %s
+republishedEntry: Republished %s
+deindexedEntry: Deindexed %s
+reindexedEntry: Reindexed %s
 
 notifComment: %s commented
 notifMention: %s mentioned you

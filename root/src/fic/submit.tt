@@ -5,72 +5,23 @@
 
    {{ INCLUDE fic/form.tt }}
 
-   {{ IF c.user && entrys.count }}
-   <div class="Document-subtitle">
-      <span>{{ c.string('mySubs') }}</span>
-   </div>
-
-   <form class="Storys-access" method="post">
-      {{ csrf_field | none }}
-      <input type="hidden" name="flip" value="1">
-
-      <table class="Storys">
-         <thead>
-            <tr>
-               <th></th>
-               <th>{{ c.string('title') }}</th>
-               <th>{{ c.string('author') }}</th>
-               <th>{{ c.string('words') }}</th>
-               <th>
-                  {{ c.string('index') }}
-                  <span class="Clarify">
-                     [<a href="/rights">?</a>]
-                  </span>
-               </th>
-               <th>
-                  {{ c.string('publish') }}
-                  <span class="Clarify">
-                     [<a href="/rights">?</a>]
-                  </span>
-               </th>
-            </tr>
-         </thead>
-         <tbody>
-         {{ FOREACH entry IN entrys.all }}
-            <tr>
-               <td class="Storys-edit">
-                  {{ IF c.user.can_edit(entry.story) }}
-                  [<a href="{{ c.uri_for_action('/fic/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
-                  [<a href="{{ c.uri_for_action('/fic/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
-                  {{ END }}
-                  {{ IF c.user.organises(event) && !entry.disqualified }}
-                  [<a href="{{ c.uri_for_action('/fic/dq', [ entry.id_uri ]) }}">{{ c.string('dq') }}</a>]
-                  {{ END }}
-               </td>
-               <td class="Storys-title">
-                  <a href="{{ c.uri_for_action('/fic/view', [ entry.id_uri ]) }}">
-                     {{ entry.title }}
-                  </a>
-               </td>
-               <td class="Storys-author">{{ PROCESS artist/name.tt  artist = entry.artist }}</td>
-               <td class="Storys-wordcount">{{ entry.story.wordcount }}</td>
-               <td class="Storys-index">
-                  <input type="checkbox" name="index-{{ entry.story_id }}"
-                     {{ 'checked' IF entry.story.indexed }}>
-               </td>
-               <td class="Storys-publish">
-                  <input type="checkbox" name="publish-{{ entry.story_id }}"
-                     {{ 'disabled' IF !c.user.publishes(entry) }}
-                     {{ 'checked' IF entry.story.published }}>
-               </td>
-            </tr>
-         {{ END }}
-         </tbody>
-      </table>
-
-      <div class="Storys-access--update">
-         <input type="submit" value="{{ c.string('update') }}">
+   {{ IF entrys.count }}
+      <div class="Document-subtitle">
+         <span>{{ c.string('mySubs') }}</span>
       </div>
-   </form>
+
+      {{ INCLUDE entry/list.tt }}
    {{ END }}
 </div>
+
+{{ IF c.user.organises(event) }}
+<div class="Document">
+   <div class="Document-title">
+      {{ c.string('allSubs') }}
+   </div>
+
+   {{ INCLUDE entry/list.tt
+      entrys => event.storys_rs
+      class => 'organiser' }}
+</div>
+{{ END }}

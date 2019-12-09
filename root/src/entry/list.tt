@@ -1,0 +1,71 @@
+<div class="Entrys {{ class }}">
+   {{ FOREACH entry IN entrys.all }}
+      {{ ctl = c.controller(entry.mode.ucfirst) }}
+   <div class="Entry">
+      <div class="Entry-title">
+         <a href="{{ c.uri_for(ctl.action_for('view'), [ entry.id_uri ]) }}">
+            {{ entry.title }}
+         </a>
+      </div>
+
+      <div class="Entry-artist"
+         style="background-color: {{ entry.artist.color_dark }}">
+         by
+         {{ PROCESS artist/name.tt  artist = entry.artist }}
+      </div>
+
+      <div class="Entry-size">
+         {{ IF entry.mode == 'fic' }}
+            {{ c.string('nWords', entry.story.wordcount) }}
+         {{ ELSIF entry.mode == 'pic' }}
+            {{ entry.image.filesize / 1024 | format('%d KB') }}
+         {{ END }}
+      </div>
+
+      <div class="Entry-controls">
+         {{ IF c.user.can_edit(entry.item) }}
+         [<a href="{{ c.uri_for(ctl.action_for('edit'), [
+            entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
+         [<a href="{{ c.uri_for(ctl.action_for('delete'), [
+            entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
+         {{ END }}
+
+         {{ IF entry.disqualified }}
+            [{{ c.string('dqd') }}]
+         {{ ELSIF c.user.organises(event) }}
+            [<a href="{{ c.uri_for(ctl.action_for('dq'), [
+               entry.id_uri ]) }}">{{ c.string('dq') }}</a>]
+         {{ END }}
+      </div>
+
+      {{ IF entry.mode == 'fic' }}
+      <div class="Entry-actions">
+         {{ IF c.user.publishes(entry) }}
+         <form class="Action" method="post"
+            action="{{ c.uri_for(ctl.action_for('publish'), [ entry.id_uri ]) }}">
+            {{ csrf_field | none }}
+
+            <input type="submit" name="publish"
+               value="{{ c.string(entry.story.published ? 'unpublish' : 'republish') }}">
+         </form>
+         {{ END }}
+
+         {{ IF c.user_id == entry.user_id }}
+         <form class="Action" method="post"
+            action="{{ c.uri_for(ctl.action_for('index'), [ entry.id_uri ]) }}">
+            {{ csrf_field | none }}
+
+            <input type="submit" name="index"
+               value="{{ c.string(entry.story.indexed ? 'deindex' : 'reindex') }}">
+         </form>
+
+         <span class="Clarify">
+            [<a href="/rights">?</a>]
+         </span>
+         {{ END }}
+      </div>
+      {{ END }}
+   </div>
+   {{ END }}
+</div>
+

@@ -5,42 +5,24 @@
 
    {{ INCLUDE pic/form.tt }}
 
-   {{ IF c.user && entrys.count }}
-   <div class="Document-subtitle">
-      <span>{{ c.string('mySubs') }}</span>
-   </div>
 
-   <table class="Entrys">
-      <thead>
-         <tr>
-            <th></th>
-            <th>{{ c.string('title') }}</th>
-            <th>{{ c.string('artist') }}</th>
-            <th>{{ c.string('filesize') }}</th>
-         </tr>
-      </thead>
-      <tbody>
-      {{ FOREACH entry IN entrys.all }}
-         <tr>
-            <td class="Entrys-edit">
-               {{ IF c.user.can_edit(entry.image) }}
-               [<a href="{{ c.uri_for_action('/pic/edit', [ entry.id_uri ]) }}">{{ c.string('edit') }}</a>]
-               [<a href="{{ c.uri_for_action('/pic/delete', [ entry.id_uri ]) }}">{{ c.string('delete') }}</a>]
-               {{ END }}
-               {{ IF c.user.organises(event) && !entry.disqualified }}
-               [<a href="{{ c.uri_for_action('/pic/dq', [ entry.id_uri ]) }}">{{ c.string('dq') }}</a>]
-               {{ END }}
-            </td>
-            <td class="Entrys-title">
-               <a href="{{ c.uri_for_action('/pic/view', [ entry.id_uri ]) }}">
-                  {{ entry.title }}
-               </a>
-            </td>
-            <td class="Entrys-artist">{{ PROCESS artist/name.tt  artist = entry.artist }}</td>
-            <td class="Entrys-filesize">{{ entry.image.filesize / 1024 | format('%d KB') }}</td>
-         </tr>
-      {{ END }}
-      </tbody>
-   </table>
+   {{ IF entrys.count }}
+      <div class="Document-subtitle">
+         <span>{{ c.string('mySubs') }}</span>
+      </div>
+
+      {{ INCLUDE entry/list.tt }}
    {{ END }}
 </div>
+
+{{ IF c.user.organises(event) }}
+<div class="Document">
+   <div class="Document-title">
+      {{ c.string('allSubs') }}
+   </div>
+
+   {{ INCLUDE entry/list.tt
+      entrys => event.images_rs
+      class => 'organiser' }}
+</div>
+{{ END }}

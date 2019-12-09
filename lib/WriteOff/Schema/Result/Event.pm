@@ -73,8 +73,16 @@ sub storys {
    return shift->entrys->search({ story_id => { '!=' => undef }});
 }
 
+sub storys_rs {
+   scalar shift->storys;
+}
+
 sub images {
    return shift->entrys->search({ image_id => { '!=' => undef }});
+}
+
+sub images_rs {
+   scalar shift->images;
 }
 
 sub title {
