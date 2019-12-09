@@ -1,0 +1,7 @@
+<div class="Story-container">
+   <div class="Story-title">{{ c.req.params.title }}</div>
+
+   <div class="Story" style="font-family: {{ c.user.font || 'serif' }}">
+      {{ c.req.params.story | bbcode }}
+   </div>
+</div>

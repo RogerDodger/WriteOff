@@ -105,17 +105,12 @@ sub submit :Chained('/event/fic') :PathPart('submit') :Args(0) {
    if ($c->user) {
       $c->stash->{entrys} = $c->stash->{event}->storys->search({ user_id => $c->user->id });
 
-      if ($c->req->method eq 'POST') {
-         if ($c->req->param('flip')) {
-            $c->forward('flip');
-         }
-         elsif ($c->stash->{event}->fic_subs_allowed) {
-            $c->forward('do_submit');
-         }
+      if ($c->req->method eq 'POST' && $c->stash->{event}->fic_subs_allowed) {
+         $c->forward('do_submit');
       }
    }
 
-   push @{ $c->stash->{title} }, 'Submit';
+   $c->title_push_s('submit');
    $c->stash->{template} = 'fic/submit.tt';
 }
 
@@ -150,6 +145,19 @@ sub do_submit :Private {
          $c->form->valid('wordcount'),
       );
    }
+}
+
+sub preview :Chained('/event/fic') :PathPart('preview') :Args(0) {
+   my ($self, $c) = @_;
+
+   $c->user_assert;
+
+   if ($c->req->method ne 'POST' || !exists $c->req->params->{story}) {
+      return $c->res->redirect(
+         $c->uri_for_action('/fic/submit', [ $c->stash->{event}->id_uri ]) );
+   }
+
+   $c->title_push_s('preview');
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {

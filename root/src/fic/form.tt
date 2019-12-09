@@ -9,7 +9,7 @@
 {{ IF !c.user }}
 <div class="Flash">{{ c.string('loginRequiredFic') }}</div>
 {{ ELSIF event.fic_subs_allowed || story && c.user.can_edit(story) }}
-<form class="Form" method="post">
+<form class="Form" method="post" action="{{ c.uri_for_action(c.action) }}">
    {{ csrf_field | none }}
    {{- IF c.form.has_error }}
       {{- FOREACH message IN c.form.messages('submit') }}
@@ -59,7 +59,13 @@
    </div>
 
    <div class="Form-item">
-      <input class="Form-submit" type="submit" value="Submit">
+      <input name="submit" type="submit" value="{{ c.string('submit') }}">
+
+      {{ IF c.action.name == 'submit' }}
+      <input name="preview" type="submit" value="{{ c.string('preview') }}"
+         class="Form-preview" formnovalidate
+         formaction="{{ c.uri_for_action('/fic/preview', [ event.id_uri ]) }}">
+      {{ END }}
    </div>
 </form>
 {{ END }}

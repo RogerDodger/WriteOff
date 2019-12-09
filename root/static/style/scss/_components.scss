@@ -440,6 +440,10 @@
    input[type="submit"] {
       @include button($hue: 120, $sat: 50%);
       font-size: 1.03em;
+
+      &.Form-preview {
+         @include button-color($hue: 200, $sat: 50%);
+      }
    }
 
    *[disabled] {
