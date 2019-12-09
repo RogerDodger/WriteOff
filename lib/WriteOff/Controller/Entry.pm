@@ -129,7 +129,8 @@ sub do_edit :Private {
       });
 
       $c->flash->{status_msg} = 'Edit successful';
-      $c->res->redirect($c->req->uri);
+      $c->res->redirect( $c->uri_for_action(
+         $c->controller->action_for('view'), [ $c->stash->{entry}->id_uri ]) );
    }
 }
 
