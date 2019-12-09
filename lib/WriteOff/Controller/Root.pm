@@ -208,23 +208,6 @@ sub style :Local :Args(0) {
    $c->stash->{template} = 'root/document.tt';
 }
 
-sub robots :Path('/robots.txt') :Args(0) {
-   my ($self, $c) = @_;
-
-   my $storys = $c->model('DB::Story')->search(
-      { indexed => { "!=" => 1 } },
-      { columns => [ qw/me.id entry.title/ ], prefetch => 'entry' },
-   );
-
-   my $body = "User-agent: *\n";
-   while (my $story = $storys->next) {
-      $body .= "Disallow: /fic/" . $story->id_uri . "\n";
-   }
-
-   $c->res->body($body);
-   $c->res->content_type('text/plain; charset=utf-8');
-}
-
 sub assert_admin :Private {
    my ( $self, $c, $msg ) = @_;
 

@@ -20,6 +20,10 @@
          var entry_id = {{ entry.id || 'undefined' }};
          var event_id = {{ event.id || 'undefined' }};
       </script>
+
+      {{- IF entry.noindex }}
+      <meta name="robots" content="noindex">
+      {{- END }}
    </head>
 
    <body>

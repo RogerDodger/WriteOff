@@ -157,6 +157,11 @@ sub deadline {
 
 sub class { 'entry' }
 
+sub noindex {
+   my $self = shift;
+   return $self->story ? !$self->story->indexed : 0;
+}
+
 sub published {
    my $self = shift;
    return $self->story ? $self->story->published : 1;
