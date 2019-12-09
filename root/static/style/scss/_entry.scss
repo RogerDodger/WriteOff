@@ -47,6 +47,10 @@
    font-size: 0.8em;
 }
 
+.Entry-nav {
+   text-align: center;
+}
+
 .Entrys-rels {
    @include striped-list;
    margin-bottom: 2em;
