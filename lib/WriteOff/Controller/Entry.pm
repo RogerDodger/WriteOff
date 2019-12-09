@@ -160,7 +160,7 @@ sub delete :Private {
    $c->stash(
       key => $c->stash->{entry}->title,
       header => $c->string('confirmDeletion'),
-      prompt => $c->string('confirmPrompt', $c->string('title')),
+      confirmPrompt => $c->string('confirmPrompt', $c->string('title')),
    );
 
    $c->forward('do_delete') if $c->req->method eq 'POST';
