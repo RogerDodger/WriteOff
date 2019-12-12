@@ -114,6 +114,10 @@ sub do_form :Private {
    $c->stash->{sched}->next($next);
 
    $c->forward('/round/do_form');
+
+   my %m;
+   $m{ $_->{mode} }++ for @{ $c->stash->{rounds} };
+   $c->yuk('everyModeMustHaveVoting') if grep { $m{$_} == 1 } keys %m;
 }
 
 __PACKAGE__->meta->make_immutable;

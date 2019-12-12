@@ -45,36 +45,15 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
    }
 }
 
-sub add :Local :Args(0) {
-   my ( $self, $c ) = @_;
-
-   $c->forward('/assert_admin');
-   $c->forward('form');
-   $c->forward('do_add') if $c->req->method eq 'POST';
-}
-
-sub do_add :Private {
-   my ( $self, $c ) = @_;
-
-   $c->stash->{event} = $c->model('DB::Event')->new_result({});
-   $c->forward('do_form');
-   $c->stash->{event}->insert;
-   $c->stash->{event}->create_related('rounds', $_) for @{ $c->stash->{rounds} };
-   $c->forward('_upsert_staff');
-   $c->stash->{event}->reset_jobs;
-
-   # $c->stash->{trigger} = $c->model('DB::EmailTrigger')->find({ name => 'eventCreated' });
-   # $c->forward('/event/notify_mailing_list');
-
-   $c->flash->{status_msg} = $c->string('eventCreated');
-   $c->res->redirect($c->uri_for_action('/event/permalink', [ $c->stash->{event}->id_uri ]));
-}
-
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
    my ($self, $c) = @_;
 
    $c->forward('assert_organiser');
-   $c->forward('form');
+
+   $c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
+   $c->stash->{contentLevels} = [ qw/E T A M/ ];
+   $c->stash->{modes} = \@WriteOff::Mode::ALL;
+
    $c->stash->{rorder} = $c->stash->{event}->rorder;
    $c->stash->{dateFrozen} = $c->stash->{event}->started;
    $c->stash->{rulesFrozen} = $c->stash->{event}->fic_gallery_opened;
@@ -136,14 +115,6 @@ sub do_edit :Private {
 
    $c->flash->{status_msg} = $c->string('eventUpdated');
    $c->res->redirect($c->uri_for_action('/event/permalink', [ $c->stash->{event}->id_uri ]));
-}
-
-sub form :Private {
-   my ($self, $c) = @_;
-
-   $c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
-   $c->stash->{contentLevels} = [ qw/E T A M/ ];
-   $c->stash->{modes} = \@WriteOff::Mode::ALL;
 }
 
 sub do_form :Private {
@@ -217,6 +188,15 @@ sub do_form :Private {
 
       delete $round->{offset};
       delete $round->{duration};
+   }
+
+   my %m;
+   $m{ $_->{mode} }++ for @{ $c->stash->{rounds} };
+   for my $mode (grep $m{$_} == 1, keys %m) {
+      # It's possible to already have no voting round: it gets removed if
+      # there were no entries. Check that didn't happen before going yuk.
+      $c->yuk('everyModeMustHaveVoting')
+         if $c->stash->{event}->rounds->search({ mode => $mode })->count != 1;
    }
 
    my %staff = (

@@ -301,10 +301,10 @@ noScheduledEvents: There are no scheduled events
 noEventsThisYear: There have been no events this year
 noEventsThatYear: There were no events this year
 nextEventTooSoon: Next event is too soon
-nextEventTooSoon: Event is too soon
 cantChangeFinishedRound: Can't change finished round
 cantChangeActiveRoundStart: Can't change active round's start
 cantMakeRoundAlreadyStarted: Can't make a round that's already started
+everyModeMustHaveVoting: Every mode must have a voting round
 
 scheduleUpdated: Schedule updated
 eventCreated: Event created
