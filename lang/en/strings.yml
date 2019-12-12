@@ -303,6 +303,7 @@ noEventsThatYear: There were no events this year
 nextEventTooSoon: Next event is too soon
 cantChangeFinishedRound: Can't change finished round
 cantChangeActiveRoundStart: Can't change active round's start
+cantMakeEventStartEarlier: Can't make event start earlier
 cantMakeRoundAlreadyStarted: Can't make a round that's already started
 everyModeMustHaveVoting: Every mode must have a voting round
 

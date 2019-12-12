@@ -50,7 +50,12 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
 
    $c->forward('assert_organiser');
 
-   $c->stash->{minDate} = $c->stash->{now}->clone->add(hours => 2);
+   # In case somebody accidentally sets their event way too far ahead, we
+   # allow resetting the date back to as early as 2 days into the future.
+   $c->stash->{minDate} = List::Util::min(
+      $c->stash->{event}->start->clone,
+      $c->stash->{now}->clone->add(days => 2),
+   );
    $c->stash->{contentLevels} = [ qw/E T A M/ ];
    $c->stash->{modes} = \@WriteOff::Mode::ALL;
 
@@ -141,8 +146,8 @@ sub do_form :Private {
    if ($c->stash->{dateFrozen}) {
       $start = $c->stash->{event}->start;
    }
-   elsif ($start <= $c->stash->{minDate}) {
-      $c->yuk('eventTooSoon');
+   elsif ($start < $c->stash->{minDate}) {
+      $c->yuk('cantMakeEventStartEarlier');
    }
 
    $c->stash->{event}->set_column(blurb => $blurb);
