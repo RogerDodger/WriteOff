@@ -108,7 +108,7 @@ sub add :Local {
       $post{role} = $role if grep { $_ eq $role } @{ $c->post_roles };
    }
 
-   my $post = $c->model('DB::Post')->create(\%post)->render;
+   my $post = $c->stash->{post} = $c->model('DB::Post')->create(\%post)->render;
    $c->stash->{event}->update({ last_post => $post });
 
    # We don't want to notify someone of the same post multiple times, so we
@@ -150,7 +150,7 @@ sub add :Local {
 
    $c->model('DB::Notif')->populate([ map { { %$_, %base } } @notifs ]);
 
-   $c->res->redirect($c->uri_for_action('/post/permalink', [ $post->id ]));
+   $c->forward('redirect');
 }
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
@@ -177,7 +177,7 @@ sub do_edit :Private {
       $c->res->body($post->body_render);
    }
    else {
-      $c->forward('permalink');
+      $c->forward('redirect');
    }
 }
 
@@ -190,7 +190,7 @@ sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
 
    $c->stash->{post}->update({ deleted => int !$c->stash->{post}->deleted });
 
-   $c->forward('permalink');
+   $c->forward('redirect');
 }
 
 sub latest :Local :Args(0) {
@@ -211,9 +211,18 @@ sub vote :Chained('fetch') :PathPart('vote') :Args(0) {
       if $c->stash->{post}->artist->user_id == $c->user_id || $c->stash->{post}->deleted;
 
    $c->forward('_vote');
+   $c->forward('redirect') if !defined $c->res->body;
+}
 
-   $c->res->redirect($c->uri_for_action('/post/permalink', [ $c->stash->{post}->id ]))
-      if !defined $c->res->body;
+sub redirect :Private {
+   my ($self, $c) = @_;
+
+   if ($c->req->referer) {
+      $c->res->redirect($c->req->referer . '#' . $c->stash->{post}->id);
+   }
+   else {
+      $c->forward('/post/permalink');
+   }
 }
 
 __PACKAGE__->meta->make_immutable;

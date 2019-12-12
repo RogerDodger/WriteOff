@@ -45,6 +45,20 @@ sub permalink :Chained('fetch') :PathPart('') :Args(0) {
    }
 }
 
+sub thread :Chained('fetch') :PathPart('thread') :Args(0) {
+   my ($self, $c) = @_;
+
+   $c->stash->{event}{nocollapse} = 1;
+   $c->stash->{template} = 'event/view.tt';
+
+   if ($c->stash->{event}->commenting) {
+      $c->forward('/prepare_thread', [
+         $c->stash->{event}->posts->search_rs({ entry_id => undef }) ]);
+   }
+
+   $c->title_push_s('eventThread');
+}
+
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
    my ($self, $c) = @_;
 

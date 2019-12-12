@@ -286,7 +286,7 @@ sub page {
       $key .= '.entry.' . $self->stash->{entry}->id;
    }
    elsif ($self->stash->{event}) {
-      $key .= '.event.' . $self->stash->{event}->id;
+      $key .= '.event.' . $self->stash->{event}->id . '.' . $self->action->name;
    }
    else {
       die "No page context";

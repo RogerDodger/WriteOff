@@ -114,7 +114,10 @@
 
       {{ IF event.commenting }}
       <ul class="Event-links commenting">
-         <li><a href="{{ c.uri_for_action('/event/permalink', id) }}">Discussion thread</a>
+         <li><a href="{{ c.uri_for_action('/event/permalink', id) }}">{{
+            c.string('combinedThread') }}</a>
+         <li><a href="{{ c.uri_for_action('/event/thread', id) }}">{{
+            c.string('eventThread') }}</a>
       </ul>
       {{ END }}
 
