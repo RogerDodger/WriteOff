@@ -1542,7 +1542,6 @@ $(document).ready(function () {
 
    var hashchanged = function () {
       $('.Post.highlight').removeClass('highlight');
-
       if (document.location.hash.search(/^#[0-9]+$/) != -1) {
          var $post = $('.Posts .Post' + document.location.hash);
          var pid = document.location.hash.substr(1);
@@ -1572,7 +1571,7 @@ $(document).ready(function () {
                      });
                   }
                   else {
-                     window.location = '/post/' + $orphan.attr('id');
+                     window.location.replace('/post/' + $orphan.attr('id'));
                   }
                }
             });
@@ -1642,7 +1641,6 @@ postModifiers.push(function (ctx) {
       })
       .removeAttr('href')
       .on('click', function () {
-         document.location.hash = '';
          document.location.hash = $(this).attr('data-target');
       });
 });
