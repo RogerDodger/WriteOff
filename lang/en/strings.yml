@@ -57,6 +57,8 @@ edit: Edit
 reply: Reply
 create: Create
 delete: Delete
+cancel: Cancel
+cancelled: Cancelled
 new: New
 restore: Restore
 dq: Disqualify
@@ -66,6 +68,7 @@ guess: Guess
 vote: Vote
 save: Save
 cancel: Cancel
+cancelEvent: Cancel Event
 scheduleAt: %s. Schedule Entry
 once: Once
 everyXWeeks: Every %d weeks
@@ -157,6 +160,7 @@ prelimBallot: My Prelim Ballot
 finalBallot: My Final Ballot
 writing: Writing
 drawing: Drawing
+confirmCancel: Confirm Cancellation
 confirmDeletion: Confirm Deletion
 confirmDQ: Confirm DQ
 passwordRecovery: Password Recovery
@@ -267,7 +271,9 @@ emailLimited: |
    Please wait 10 minutes and try again.
 introSplash: |
    Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
+confirmFlash: Careful! This process can't be reversed.
 confirmPrompt: Enter the %s of the selected item to continue
+cancelFlash: Cancelling an event deletes everything but comments and freezes the rules
 autosubLabel: Automatically subscribe to new groups
 groupNameNote: Keep as short as possible.
 groupNamePlaceholder: OGAAS
@@ -289,6 +295,7 @@ postCount: %d posts
 entryCount: %d entries
 doublePost: Double post detected—attempting to redirect
 postDeleted: Post by %s %s, deleted %s
+eventCancelled: %s has been cancelled
 noNotifs: You have no notifications
 noMembers: There are no members
 noFics: No fics were submitted
@@ -307,6 +314,8 @@ cantChangeFinishedRound: Can't change finished round
 cantChangeActiveRoundStart: Can't change active round's start
 cantMakeEventStartEarlier: Can't make event start earlier
 cantMakeRoundAlreadyStarted: Can't make a round that's already started
+cantCancel: This event can't be cancelled
+alreadyCancelled: This event is already cancelled
 everyModeMustHaveVoting: Every mode must have a voting round
 
 scheduleUpdated: Schedule updated

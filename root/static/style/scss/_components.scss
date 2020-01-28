@@ -87,6 +87,18 @@
    }
 }
 
+@mixin container {
+   display: block;
+   max-width: $container-wide;
+   margin-left: auto;
+   margin-right: auto;
+   width: 98%;
+}
+
+.ctn {
+   @include container;
+}
+
 @mixin divider($hue: 0, $sat: 0%, $l: 60%) {
    $bg: hsla($hue, $sat, $l, 1);
    display: block;

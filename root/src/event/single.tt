@@ -72,7 +72,11 @@
          </span>
       </div>
 
-      {{ PROCESS 'event/timeline.tt'  timeline = event.timeline }}
+      {{ IF event.cancelled }}
+         <div class="Event-cancelled">{{ c.string('cancelled') }}</div>
+      {{ ELSE }}
+         {{ PROCESS 'event/timeline.tt'  timeline = event.timeline }}
+      {{ END }}
 
       {{ IF !event.prompt_fixed }}
       <ul class="Event-links prompt">

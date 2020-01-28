@@ -3,7 +3,7 @@
 <form class="Form" method="post">
    {{ csrf_field | none }}
 
-   {{ IF c.user.admin }}
+   {{ IF staff.exists('organiser') }}
    <div class="Form-item">
       <label>{{ c.string('organisers') }}</label>
       <input class="Staff-search" name="organiser" type="text">
@@ -13,6 +13,7 @@
    </div>
    {{ END }}
 
+   {{ IF staff.exists('judge') }}
    <div class="Form-item">
       <label>{{ c.string('judges') }}</label>
       <input class="Staff-search" name="judge" type="text">
@@ -20,6 +21,7 @@
          {{ INCLUDE "artist/search-result.tt"  key = "judge_id" }}
       {{ END }}
    </div>
+   {{ END }}
 
    {{ INCLUDE schedule/datetime.tt  label = 'start' datetime = event.start }}
 
@@ -55,11 +57,13 @@
       </div>
    </div>
 
-   {{ INCLUDE schedule/rounds.tt
-      rounds => event.rounds
-      modeFreeze => c.action.name == "edit" }}
+   {{ IF !event.cancelled }}
+      {{ INCLUDE schedule/rounds.tt
+         rounds => event.rounds
+         modeFreeze => c.action.name == "edit" }}
 
-   {{ PROCESS event/timeline.tt  timeline = event.timeline }}
+      {{ PROCESS event/timeline.tt  timeline = event.timeline }}
+   {{ END }}
 
    <div class="Form-item">
       <label>{{ c.string('blurb') }}</labe>

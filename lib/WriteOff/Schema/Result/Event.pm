@@ -43,6 +43,10 @@ __PACKAGE__->add_columns(
    { data_type => "bit", default_value => 1, is_nullable => 0 },
    "tallied",
    { data_type => "bit", default_value => 0, is_nullable => 0 },
+   "cancelled",
+   { data_type => "bit", default_value => 0, is_nullable => 0 },
+   "start",
+   { data_type => "timestamp", is_nullable => 0 },
    "created",
    { data_type => "timestamp", is_nullable => 1 },
    "updated",
@@ -87,15 +91,6 @@ sub images_rs {
 
 sub title {
    return shift->prompt;
-}
-
-sub start {
-   my $round = shift->rounds->search(
-      { action => 'submit' },
-      { order_by => { -asc => 'start' } },
-   )->first;
-
-   $round && $round->start;
 }
 
 sub end {
@@ -163,6 +158,12 @@ sub id_uri {
    my $self = shift;
 
    return $self->{__id_uri} //= simple_uri($self->id, $self->prompt);
+}
+
+sub cancellable {
+   my $self = shift;
+   return !$self->cancelled
+       && !$self->rounds->search({ action => 'submit' })->finished->count;
 }
 
 sub organisers {

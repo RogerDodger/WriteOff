@@ -8,7 +8,7 @@ use WriteOff::Util qw/LEEWAY/;
 sub active {
    my $self = shift;
    $self->search(
-      { tallied => 0 },
+      { tallied => 0, cancelled => 0 },
       {
          alias => 'events',
          order_by => 'events.created',
@@ -27,19 +27,8 @@ sub archive {
    my $mindt = $self->format_datetime(DateTime->new(year => $dt->year));
    my $maxdt = $self->format_datetime(DateTime->new(year => $dt->year + 1));
 
-   $self->search({}, {
-      alias => 'events',
-      join => 'rounds',
-      group_by => 'events.id',
-      '+select' => [
-         { min => 'rounds.start', -as => 'start' },
-      ],
-      order_by => { -desc => 'start' },
-      having => \[
-         q{ start >= ? AND start <= ? },
-         $mindt, $maxdt
-      ],
-   });
+   $self->search({ start => { '>=' => $mindt, '<=' => $maxdt } },
+                 { order_by => { -desc => 'start' } });
 }
 
 sub create_from_sched {
@@ -63,6 +52,7 @@ sub create_from_sched {
       wc_min => $sched->wc_min,
       wc_max => $sched->wc_max,
       content_level => 'T',
+      start => $t0,
    });
 
    $event->add_to_artists($genre->owner, { role => 'organiser' });
@@ -109,18 +99,21 @@ sub _forum {
    my %p = @_;
 
    $self->search({
-      'events.tallied' => 1,
+      -or => {
+         'events.tallied' => 1,
+         'events.cancelled' => 1,
+      },
    }, {
       alias => 'events',
       join => [qw/rounds last_post/],
       group_by => 'events.id',
       '+select' => { max => 'rounds.end', -as => 'fin' },
       order_by => { -desc => 'last_post.created' },
-      having => {
-         fin => { (%p{recent} ? '>' : '<=') =>
-            $self->format_datetime(
-               $self->now_dt->subtract(weeks => 1) ) }
-      }
+      having => \[
+         ( sprintf "IFNULL(fin, events.start) %s ?", %p{recent} ? '>' : '<=' ),
+         $self->format_datetime( $self->now_dt->subtract(weeks => 1) ),
+      ],
+      cache => 1, # See comment in group/view.tt
    });
 }
 

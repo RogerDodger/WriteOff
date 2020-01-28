@@ -1,7 +1,20 @@
-{{ title.push(c.string('edit')) }}
+{{ title_push_s('edit') }}
 
 <div class="Document">
    <div class="Document-title">{{ c.string('edit') }}</div>
 
    {{ INCLUDE event/form.tt }}
+
+   {{ IF event.cancellable }}
+   <div class="Form-item mt2">
+      <label>{{ c.string('cancelEvent') }}</label>
+
+      <a class="Event-form--cancel"
+         href="{{ c.uri_for_action('/event/cancel', [ event.id_uri ]) }}">
+         {{ c.string('cancel') }}
+      </a>
+      <div class="Form-note">{{ c.string('cancelFlash') }}</div>
+
+   </div>
+   {{ END }}
 </div>

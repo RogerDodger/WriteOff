@@ -76,6 +76,18 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
    $c->stash->{rorder} = $c->stash->{event}->rorder;
    $c->stash->{dateFrozen} = $c->stash->{event}->started;
    $c->stash->{rulesFrozen} = $c->stash->{event}->fic_gallery_opened;
+
+   # The form will only process staff that have a key in this hash
+   $c->stash->{staff} = {
+      (judge => []) x!! !$c->stash->{event}->ended,
+      (organiser => []) x!! $c->user->admin,
+   };
+
+   if ($c->stash->{event}->cancelled) {
+      $c->stash->{rulesFrozen} = 1;
+      $c->stash->{dateFrozen} = 1;
+   }
+
    $c->forward('do_edit') if $c->req->method eq 'POST';
 }
 
@@ -164,7 +176,10 @@ sub do_form :Private {
       $c->yuk('cantMakeEventStartEarlier');
    }
 
-   $c->stash->{event}->set_column(blurb => $blurb);
+   $c->stash->{event}->set_columns({
+      blurb => $blurb,
+      start => $start,
+   });
 
    if (!$c->stash->{rulesFrozen}) {
       $c->stash->{event}->set_columns({
@@ -184,7 +199,12 @@ sub do_form :Private {
       }
    }
 
-   $c->forward('/round/do_form');
+   if ($c->stash->{event}->cancelled) {
+      $c->stash->{rounds} = [];
+   }
+   else {
+      $c->forward('/round/do_form')
+   }
 
    my %leeway;
    for my $round (@{ $c->stash->{rounds} }) {
@@ -218,23 +238,18 @@ sub do_form :Private {
          if $c->stash->{event}->rounds->search({ mode => $mode })->count != 1;
    }
 
-   my %staff = (
-      judge => [],
-      (organiser => []) x!! $c->user->admin,
-   );
-   $c->stash->{staff} = \%staff;
-
    my $artists = $c->model('DB::Artist');
-   for my $role (keys %staff) {
+   my $staff = $c->stash->{staff};
+   for my $role (keys %$staff) {
       my @ids = $c->req->param("${role}_id");
       for my $id (uniq @ids) {
          my $artist = $artists->find_maybe($id) or $c->yuk('badInput');
-         push @{ $staff{$role} }, $artist;
+         push @{ $staff->{$role} }, $artist;
       }
    }
 
-   if (exists $staff{organiser} && !@{ $staff{organiser} }) {
-      push @{ $staff{organiser} }, $c->user->active_artist;
+   if (exists $staff->{organiser} && !@{ $staff->{organiser} }) {
+      push @{ $staff->{organiser} }, $c->user->active_artist;
    }
 }
 
@@ -250,6 +265,47 @@ sub _upsert_staff :Private {
          });
       }
    }
+}
+
+sub cancel :Chained('fetch') :PathPart('cancel') :Args(0) {
+   my ($self, $c) = @_;
+
+   $c->forward('assert_organiser');
+   $c->detach('/error', [
+      $c->string( $c->stash->{event}->cancelled ? 'alreadyCancelled' : 'cantCancel' )
+         ]) if !$c->stash->{event}->cancellable;
+
+   $c->stash(
+      key => $c->stash->{event}->prompt,
+      header => $c->string('confirmCancel'),
+      confirmPrompt => $c->string('confirmPrompt', $c->string('prompt')),
+   );
+
+   $c->forward('do_cancel') if $c->req->method eq 'POST';
+
+   push @{ $c->stash->{title} }, $c->string('cancel');
+   $c->stash->{template} = 'root/confirm.tt';
+}
+
+sub do_cancel :Private {
+   my ($self, $c) = @_;
+
+   $c->csrf_assert;
+
+   $c->log->info("%s cancelled by %d:%s",
+      $c->stash->{event}->prompt,
+      $c->user->id,
+      $c->user->name);
+
+   $c->stash->{event}->entrys->delete;
+   $c->stash->{event}->rounds->delete;
+   $c->stash->{event}->ballots->delete;
+   $c->stash->{event}->theorys->delete;
+   $c->stash->{event}->reset_jobs;
+   $c->stash->{event}->update({ cancelled => 1 });
+
+   $c->flash->{status_msg} = $c->string('eventCancelled', $c->stash->{event}->prompt);
+   $c->res->redirect($c->uri_for_action('/event/permalink', [ $c->stash->{event}->id_uri ]));
 }
 
 sub fic :Chained('fetch') :PathPart('fic') :CaptureArgs(0) {

@@ -5,12 +5,18 @@
    <div class="Flash ctn">{{ c.string('noActiveEvents') }}</div>
 {{ END }}
 
-{{ IF recent.count }}
+{{#
+   We can't say IF recent.count because that query fails for some reason.
+   Instead, we pull the rows in with the check, and have caching turned on so
+   that the include doesn't pull the rows in a second time.
+}}
+
+{{ IF recent.all.size }}
 <div class="Container-title mt1">{{ c.string('recentlyFinished') }}</div>
 {{ INCLUDE event/list.tt  events => recent }}
 {{ END }}
 
-{{ IF forum.count }}
+{{ IF forum.all.size }}
 <div class="Container-title mt1">{{ c.string('recentDiscussion') }}</div>
 {{ INCLUDE event/list.tt  events => forum }}
 {{ END}}

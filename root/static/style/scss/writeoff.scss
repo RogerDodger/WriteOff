@@ -24,9 +24,7 @@ $artist-color-dark: #303030;
 
 @import "global";
 
-@import "helpers";
 @import "components";
-
 @import "wrapper";
 @import "document";
 
@@ -48,4 +46,5 @@ $artist-color-dark: #303030;
 @import "user";
 @import "vote";
 
+@import "helpers";
 @import "dark";

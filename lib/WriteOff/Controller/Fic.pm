@@ -245,7 +245,7 @@ sub flip :Private {
    );
 
    $c->flash->{status_msg} = $c->string(
-      %str{$key}->[$val] . 'Entry',
+      $str{$key}->[$val] . 'Entry',
       $c->stash->{entry}->title
    );
 }

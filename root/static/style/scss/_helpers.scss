@@ -124,19 +124,11 @@
 }
 
 /*
- * Random stuff
+ * Inline CSS rules
  */
 
-@mixin container {
-   display: block;
-   max-width: $container-wide;
-   margin-left: auto;
-   margin-right: auto;
-   width: 98%;
-}
-
-.ctn {
-   @include container;
+.required {
+   color: red;
 }
 
 .t1 { font-size: 1.5em; }

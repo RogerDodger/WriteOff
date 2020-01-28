@@ -1,6 +1,8 @@
 <div class="Document">
    <div class="Document-title">{{ header }}</div>
 
+   <div class="Flash pop">{{ c.string('confirmFlash') }}</div>
+
    <p>{{ confirmPrompt }}</p>
 
    <form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
