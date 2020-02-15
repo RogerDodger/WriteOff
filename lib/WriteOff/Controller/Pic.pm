@@ -73,7 +73,10 @@ sub do_form :Private {
    my $upload = $c->req->upload('image');
    if ($upload) {
       $c->stash->{imager} = Imager->new(file => $upload->tempname, png_ignore_benign_errors => 1)
-         or die "Failed to read image: " . Imager->errstr . "\n";
+         or $c->detach('/error', [
+            Imager->errstr =~ m{^file size limit}
+               ? $c->string('imagerSizeLimit')
+               : "Failed to read image: " . Imager->errstr ]);
 
       $c->req->params->{xpixels} = $c->stash->{imager}->getwidth;
       $c->req->params->{ypixels} = $c->stash->{imager}->getheight;

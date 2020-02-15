@@ -317,6 +317,9 @@ cantMakeRoundAlreadyStarted: Can't make a round that's already started
 cantCancel: This event can't be cancelled
 alreadyCancelled: This event is already cancelled
 everyModeMustHaveVoting: Every mode must have a voting round
+imagerSizeLimit: |
+   Image is too big, probably because of its dimensions.
+   Try resizing to max 1800x1800.
 
 scheduleUpdated: Schedule updated
 eventCreated: Event created
