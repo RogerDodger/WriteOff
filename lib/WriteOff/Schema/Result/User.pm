@@ -23,14 +23,18 @@ __PACKAGE__->add_columns(
    "active_artist_id",
    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
    "name",
-   { data_type => "text", is_nullable => 0 },
+   { data_type => "text", is_nullable => 1 },
    "name_canonical",
-   { data_type => "text", is_nullable => 0 },
+   { data_type => "text", is_nullable => 1 },
    "password",
-   { data_type => "text", is_nullable => 0 },
+   { data_type => "text", is_nullable => 1 },
    "email",
    { data_type => "text", is_nullable => 1 },
    "email_canonical",
+   { data_type => "text", is_nullable => 1 },
+   "fimfic_id",
+   { data_type => "integer", is_nullable => 1 },
+   "fimfic_name",
    { data_type => "text", is_nullable => 1 },
    "verified",
    { data_type => "integer", default_value => 0, is_nullable => 0 },
@@ -142,13 +146,18 @@ sub lang {
    'en';
 }
 
+sub id_uri {
+   my $self = shift;
+   return WriteOff::Util::simple_uri($self->id, $self->username);
+}
+
 sub username {
-   return shift->name;
+   my $self = shift;
+   return $self->name // $self->fimfic_name;
 }
 
 sub username_and_email {
    my $self = shift;
-
    return sprintf "%s <%s>", $self->username, $self->email;
 }
 

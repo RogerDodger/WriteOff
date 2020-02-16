@@ -34,15 +34,6 @@ sub recalc_stats {
    }
 }
 
-sub judge_records {
-   return shift->search_rs({
-      round => 'private',
-   }, {
-      prefetch => 'user',
-      order_by => { -asc => 'user.username ' },
-   });
-}
-
 sub slates {
    my $self = shift;
 

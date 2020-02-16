@@ -185,9 +185,9 @@ sub do_delete :Private {
    $c->forward('/check_csrf_token');
 
    $c->log->info( sprintf "Prompt deleted by %s: %s by %s",
-      $c->user->name,
+      $c->user->id_uri,
       $c->stash->{prompt}->contents,
-      $c->stash->{prompt}->user->name,
+      $c->stash->{prompt}->user->id_uri,
    );
 
    $c->stash->{prompt}->delete;

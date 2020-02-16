@@ -220,6 +220,12 @@ __PACKAGE__->config(
       namespace => 'render',
    ),
 
+   tokenCache => CHI->new(
+      expires_in => '10m',
+      driver => 'FastMmap',
+      namespace => 'token',
+   ),
+
    disable_component_resolution_regex_fallback => 1,
    enable_catalyst_header => 1,
 );

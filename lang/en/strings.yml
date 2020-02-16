@@ -28,6 +28,7 @@ filesize: Filesize
 image: Image
 prompt: Prompt
 login: Login
+loginFimfiction: Login with Fimfiction
 name: Name
 username: Username
 password: Password
@@ -121,6 +122,7 @@ showBreakdown: Show breakdown
 hideBreakdown: Hide breakdown
 darkMode: Dark mode
 all: All
+or: Or
 
 newArtistTitle: New Alias
 newEventTitle: New Event
@@ -284,6 +286,7 @@ groupBannerNote: |
    On mobile, will be cropped to be narrower.
 jsRequired: |
    This page requires JavaScript to work properly
+badSession: Bad session
 csrfDetected: Bad session
 notAdmin: You are not an admin
 notGroupAdmin: You are not an admin for this group

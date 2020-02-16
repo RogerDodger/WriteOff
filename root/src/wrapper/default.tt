@@ -120,7 +120,13 @@
                </li>
                <li>
                   <a href="#">
-                     ~{{ c.user.username }}
+                     {{ IF c.user.name }}
+                        ~{{ c.user.name }}
+                     {{ ELSE }}
+                        <img src="/static/images/fimfiction.png"
+                           height="16" width="16" style="height: 1em; width: auto;">
+                        {{ c.user.fimfic_name }}
+                     {{ END }}
                      <i class="fa fa-caret-down"></i>
                   </a>
                   <ul>

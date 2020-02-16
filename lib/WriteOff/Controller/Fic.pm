@@ -139,7 +139,7 @@ sub do_submit :Private {
 
       $c->log->info("Fic %d submitted by %s: %s by %s (%d words)",
          $story->id,
-         $c->user->name,
+         $c->user->id_uri,
          $c->form->valid('title'),
          $c->stash->{entry}->artist->name,
          $c->form->valid('wordcount'),
@@ -189,7 +189,7 @@ sub do_edit :Private {
    if (!$c->form->has_error) {
       $c->log->info("Fic %d edited by %s to %s by %s (%d words)",
          $c->stash->{story}->id,
-         $c->user->name,
+         $c->user->id_uri,
          $c->form->valid('title'),
          $c->stash->{entry}->artist->name,
          $c->form->valid('wordcount'),

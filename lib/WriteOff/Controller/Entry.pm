@@ -176,7 +176,7 @@ sub do_delete :Private {
 
    $c->log->info("%s deleted by %s: %s by %s",
       ucfirst $c->stash->{entry}->mode,
-      $c->user->name,
+      $c->user->id_uri,
       $c->stash->{entry}->title,
       $c->stash->{entry}->artist->name,
    );
@@ -213,7 +213,7 @@ sub do_dq :Private {
 
    $c->log->info("%s disqualified by %s: %s by %s",
       ucfirst $c->stash->{entry}->mode,
-      $c->user->name,
+      $c->user->id_uri,
       $c->stash->{entry}->title,
       $c->stash->{entry}->artist->name,
    );

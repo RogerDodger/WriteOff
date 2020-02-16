@@ -92,7 +92,7 @@ sub process {
 
    if ($c->stash->{email}{users}) {
       for my $user ($c->stash->{email}{users}->all) {
-         $email->header_set(To => sprintf "%s <%s>", $user->name, $user->email);
+         $email->header_set(To => sprintf "%s <%s>", $user->username, $user->email);
          Email::Sender::Simple->send($email);
       }
    }

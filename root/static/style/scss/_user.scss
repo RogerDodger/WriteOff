@@ -49,3 +49,12 @@
 .Artists-active {
    text-align: center;
 }
+
+.Login-fimfiction {
+   @include button($hue: 30);
+   padding: 0.5em;
+
+   img {
+      height: 2em;
+   }
+}

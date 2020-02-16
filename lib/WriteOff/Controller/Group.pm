@@ -43,7 +43,7 @@ sub add :Path('new') :Args(0) {
       $group->insert;
       $c->log->info("Group %d created by %s: %s - %s",
          $group->id,
-         $c->user->name,
+         $c->user->id_uri,
          $group->name,
          $group->descr,
       );
@@ -106,7 +106,7 @@ sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
       $c->stash->{group}->update;
       $c->log->info("Group %d updated by %s: %s - %s",
          $c->stash->{group}->id,
-         $c->user->name,
+         $c->user->id_uri,
          $c->stash->{group}->name,
          $c->stash->{group}->descr,
       );

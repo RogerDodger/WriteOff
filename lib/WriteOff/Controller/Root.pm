@@ -29,10 +29,8 @@ sub auto :Private {
    }
 
    if ($c->debug) {
-      if ($c->req->param('login')) {
-         $c->user(
-            $c->model('DB::User')->find({ name_canonical => lc $c->req->params->{login} })
-         );
+      if (my $login = $c->req->param('login')) {
+         $c->user( $c->model('DB::User')->find($login) );
       }
    }
 
@@ -49,7 +47,7 @@ sub auto :Private {
    $c->log->_log("access", "[%s] %s (%s) - %s" . ( $so ? "" : " - %s" ),
       $c->req->method,
       $c->req->address,
-      ( $c->user ? $c->user->username : 'guest' ),
+      ( $c->user ? $c->user->id_uri : 'guest' ),
       $c->req->uri->path,
       ( $so ? () : $c->req->referer || 'no referer'),
    );

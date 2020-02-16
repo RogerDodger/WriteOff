@@ -68,6 +68,7 @@ my @dependencies = (
    'Graphics::ColorObject',
    'JSON',
    'Captcha::noCAPTCHA',
+   'LWP::Protocol::https',
 );
 
 if (eval { require App::cpanminus; 1; }) {

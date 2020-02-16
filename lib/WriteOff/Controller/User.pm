@@ -2,6 +2,8 @@ package WriteOff::Controller::User;
 use Moose;
 use namespace::autoclean;
 use feature ':5.10';
+use LWP::UserAgent;
+use JSON ();
 no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
@@ -32,10 +34,9 @@ sub artists :Local :Args(0) {
 
 sub login :Local :Args(0) {
    my ( $self, $c ) = @_;
+   $c->yuk('areUser') if $c->user;
 
-   $c->detach('/error', [ $c->string('areUser') ]) if $c->user;
-
-   push @{ $c->stash->{title} }, 'Login';
+   $c->title_push_s('login');
    $c->stash->{template} = 'user/login.tt';
 
    $c->forward('do_login') if $c->req->method eq 'POST';
@@ -65,6 +66,113 @@ sub do_login :Private {
       $cache->set($key, $attempts);
       $c->stash->{error_msg} = 'Bad username or password';
    }
+}
+
+sub login_fimfiction :Path('login/fimfiction') :Args(0) {
+   my ( $self, $c ) = @_;
+   $c->detach('/default') unless $c->config->{fimfiction_client_id};
+   $c->yuk('areUser') if $c->user;
+
+   my $token = WriteOff::Util::token();
+   $c->config->{tokenCache}->set($c->sessionid, $token);
+
+   my $endpoint = $c->uri_for('/fimfiction');
+   $endpoint->scheme('https');
+
+   my $uri = URI->new("https://www.fimfiction.net/authorize-app");
+   $uri->query_form(
+      client_id => $c->config->{fimfiction_client_id},
+      response_type => "code",
+      scope => "read_user",
+      state => $token,
+      redirect_uri => $endpoint,
+   );
+
+   $c->res->redirect($uri, 303);
+}
+
+sub auth_fimfiction :Path('/fimfiction') :Args(0) {
+   my ( $self, $c ) = @_;
+   $c->detach('/default') unless $c->config->{fimfiction_client_id};
+
+   my $state = $c->config->{tokenCache}->get($c->sessionid);
+   $c->yuk('badSession') if !$state || $state ne $c->req->param('state');
+
+   my $code = $c->req->param('code');
+
+   my $ua = LWP::UserAgent->new(
+      timeout => 5,
+      # Cloudflare doesn't like the default User-Agent header
+      agent => "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+             . "AppleWebKit/537.36 (KHTML, like Gecko)"
+             . "Chrome/71.1.2222.33 Safari/537.36"
+   );
+
+   # $ua->add_handler(
+   #    "request_send",
+   #    sub { shift->dump( maxlength => 0 ); return }
+   # );
+
+   # $ua->add_handler(
+   #    "response_done",
+   #    sub { shift->dump( maxlength => 0 ); return }
+   # );
+
+   my $endpoint = $c->uri_for('/fimfiction');
+   $endpoint->scheme('https');
+
+   my $res = $ua->post('https://www.fimfiction.net/api/v2/token', {
+      client_id => $c->config->{fimfiction_client_id},
+      client_secret => $c->config->{fimfiction_client_secret},
+      grant_type => 'authorization_code',
+      redirect_uri => $endpoint,
+      code => $code,
+      });
+
+   if (!$res->is_success) {
+      $c->log->debug('Failed to get token from Fimfiction: ' . $res->status_line);
+      $c->log->debug($res->decoded_content);
+      $c->yuk('badSession');
+   }
+   else {
+      $c->log->debug('Got token From Fimfiction: ');
+      $c->log->debug($res->decoded_content);
+   }
+
+   my $token = JSON::decode_json( $res->decoded_content );
+   my $rs = $c->model('DB::User');
+
+   $c->yuk('badSession') unless exists $token->{user}{id} && exists $token->{user}{name};
+
+   if ( my $user = $rs->find({ fimfic_id => $token->{user}{id} }) ) {
+      $c->user($user);
+   }
+   else {
+      my $user = $rs->create({
+         fimfic_id => $token->{user}{id},
+         fimfic_name => $token->{user}{name},
+         verified => 1,
+         email => $token->{user}{email},
+         email_canonical => CORE::fc $token->{user}{email},
+         });
+
+      $user->update({
+         active_artist =>
+            $user->create_related('artists', {
+               name => $user->fimfic_name,
+               name_canonical => CORE::fc $user->fimfic_name,
+            })
+      });
+
+      $c->user($user);
+
+      $c->log->info( sprintf 'User created from Fimfic: %s (%s)',
+         $user->fimfic_name,
+         $user->email,
+      );
+   }
+
+   $c->res->redirect('/');
 }
 
 sub logout :Local :Args(0) {

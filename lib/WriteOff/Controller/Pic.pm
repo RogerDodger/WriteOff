@@ -228,7 +228,7 @@ sub do_submit :Private {
 
       $c->log->info("Pic %d submitted by %s: %s by %s (%.2fKB)",
          $image->id,
-         $c->user->name,
+         $c->user->id_uri,
          $c->form->valid('title'),
          $c->stash->{entry}->artist->name,
          $c->stash->{image}->filesize / 1024,
@@ -274,7 +274,7 @@ sub do_edit :Private {
 
       $c->log->info("Pic %d edited by %s: %s by %s (%.2fKB)",
          $c->stash->{image}->id,
-         $c->user->name,
+         $c->user->id_uri,
          $c->form->valid('title'),
          $c->stash->{entry}->artist->name,
          $c->stash->{image}->filesize / 1024,

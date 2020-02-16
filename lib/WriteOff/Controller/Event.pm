@@ -292,10 +292,10 @@ sub do_cancel :Private {
 
    $c->csrf_assert;
 
-   $c->log->info("%s cancelled by %d:%s",
+   $c->log->info("%s cancelled by %s",
       $c->stash->{event}->prompt,
-      $c->user->id,
-      $c->user->name);
+      $c->user->id_uri
+      );
 
    $c->stash->{event}->entrys->delete;
    $c->stash->{event}->rounds->delete;
