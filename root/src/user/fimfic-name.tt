@@ -1,0 +1,7 @@
+<div class="User-name fimfic">
+   <img src="/static/images/fimfiction.png"
+      height="16" width="16">
+   <a href="//fimfiction.net/user/{{ c.user.fimfic_id | uri }}/{{ c.user.fimfic_name || uri }}">
+      {{ c.user.fimfic_name }}
+   </a>
+</div>

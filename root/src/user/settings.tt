@@ -1,6 +1,8 @@
+{{ title_push_s('settings') }}
+{{ WRAPPER user/card.tt }}
 <div class="Document">
    <div class="Document-title">
-      {{ c.string('preferences') }}
+      {{ c.string('settings') }}
    </div>
 
    <form class="Form auto" method="post">
@@ -20,11 +22,15 @@
          {{ END }}
       </div>
 
+
+
       <div class="Form-item">
          <label>
             {{ c.string('emailNotifs') }}
             <span class="Hint" data-hint="{{ c.string('emailNotifsHint') }}">?</span>
          </label>
+
+         <div class="Flash pop muted">Notifications are sent to {{ c.user.email }}</div>
 
          {{ BLOCK cb }}
             <li>
@@ -54,13 +60,13 @@
       </div>
 
       <div class="Form-item">
-         <input type="checkbox" name="dark">
-         <label>{{ c.string('darkMode') }}</label>
+         <input type="checkbox" name="autosub">
+         <label>{{ c.string('autosubLabel') }}</label>
       </div>
 
       <div class="Form-item">
-         <input type="checkbox" name="autosub">
-         <label>{{ c.string('autosubLabel') }}</label>
+         <input type="checkbox" name="dark">
+         <label>{{ c.string('darkMode') }}</label>
       </div>
 
       <div class="Form-item">
@@ -68,3 +74,4 @@
       </div>
    </form>
 </div>
+{{ END }}

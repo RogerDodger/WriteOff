@@ -1,0 +1,22 @@
+{{ title_push_s('linkedAccounts') }}
+{{ WRAPPER user/card.tt }}
+<div class="Document">
+   <div class="Document-title">{{ c.string('linkedAccounts') }}</div>
+
+   {{ IF c.config.fimfiction_client_id }}
+      {{ IF c.user.fimfic_id }}
+         {{ INCLUDE 'user/fimfic-name.tt' }}
+
+         <form class="Action" method="post" action="{{ c.uri_for_action('/user/unlink_fimfiction') }}">
+            {{ csrf_field | none }}
+            <input type="submit" value="{{ c.string('unlink') }}">
+         </form>
+      {{ ELSE }}
+      <a href="{{ c.uri_for_action('/user/link_fimfiction') }}" class="Login-fimfiction">
+         <img src="/static/images/fimfiction.png">
+         {{ c.string('linkFimfiction') }}
+      </a>
+      {{ END }}
+   {{ END }}
+</div>
+{{ END }}

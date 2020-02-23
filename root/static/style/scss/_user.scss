@@ -58,3 +58,139 @@
       height: 2em;
    }
 }
+
+.User-card {
+   @include container;
+   display: grid;
+   grid-template-columns: 12em 1fr;
+   grid-template-rows: auto 1fr;
+   grid-gap: 1em;
+   grid-template-areas: "nav conts";
+   align-items: start;
+}
+
+@media #{$mobile} {
+   .User-card {
+      grid-template-columns: auto;
+      grid-template-rows: repeat(2, auto);
+      grid-template-areas: "nav" "conts";
+   }
+
+   .User-nav {
+      width: 98%;
+      justify-self: center;
+   }
+}
+
+.User-card--content {
+   grid-area: conts;
+
+   .Document {
+      margin-top: 0;
+      width: auto;
+   }
+}
+
+.User-nav {
+   @include sheet;
+   @include box;
+   grid-area: nav;
+}
+
+.User-nav--heading {
+   padding: 0.5em 0.8em;
+   border-bottom: 1px solid #ccc;
+   margin-bottom: 1px;
+}
+
+.User-id--ctn {
+   font-size: 0.7em;
+   color: #666;
+   font-variant: small-caps;
+}
+
+.User-id {
+   color: #222;
+}
+
+.User-name {
+   font-size: 1.1em;
+   line-height: 1.4;
+   overflow: hidden;
+   overflow-wrap: break-word;
+   position: relative;
+
+   &.fimfic {
+      text-indent: 1.2em;
+
+      a,
+      a:visited {
+         color: inherit;
+         text-decoration: none;
+      }
+
+      a:hover {
+         text-decoration: underline;
+      }
+   }
+
+   img {
+      position: absolute;
+      top: 0.4ex;
+      left: 0;
+      height: 1em;
+      width: auto;
+   }
+}
+
+.User-nav--tab,
+.User-nav--faketab {
+   $pip-width: 0.75em;
+   display: block;
+   padding: 0.4em 0.8em 0.4em ($pip-width + 0.8em);
+   font-size: 0.9em;
+   font-weight: bold;
+   border-top: 1px solid #ccc;
+   position: relative;
+
+   &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+      display: block;
+      width: $pip-width;
+      height: 100%;
+      background-color: transparent;
+      transition: 0.2s background-color;
+   }
+}
+
+.User-nav--tab {
+   &,
+   &:visited {
+      color: #333;
+   }
+
+   &.current::before {
+      background-color: $selection-color;
+   }
+
+   &.current,
+   &.current + * {
+      border-top-color: darken($selection-color, 5%);
+   }
+
+   &:not(.current):hover::before {
+      background-color: #ccc;
+   }
+
+   &:hover {
+      text-decoration: none;
+   }
+}
+
+.User-nav--faketab {
+   cursor: not-allowed;
+   color: #aaa;
+}

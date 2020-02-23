@@ -39,6 +39,12 @@ sub logout {
    delete $c->session->{__user_id};
 }
 
+sub password_assert {
+   my $c = shift;
+   $c->user_assert;
+   $c->detach('/forbidden', [ $c->string('noLogin') ]) unless defined $c->user->password;
+}
+
 sub user {
    my ($c, $user) = @_;
 

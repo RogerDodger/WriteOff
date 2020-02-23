@@ -23,7 +23,7 @@ __PACKAGE__->config(
    TEMPLATE_EXTENSION => '.tt',
    START_TAG          => quotemeta('{{'),
    END_TAG            => quotemeta('}}'),
-   expose_methods     => [ qw/data_uri format_dt title_html title_push title_push_s spectrum/ ],
+   expose_methods     => [ qw/data_uri format_dt title_html title_push title_push_s title_unshift_s spectrum/ ],
    render_die         => 1,
    TIMER              => 1,
 );
@@ -332,6 +332,13 @@ sub title_push_s {
    my $self = shift;
    my $c = shift;
    $c->title_push($c->string(@_));
+   '';
+}
+
+sub title_unshift_s {
+   my $self = shift;
+   my $c = shift;
+   $c->title_unshift($c->string(@_));
    '';
 }
 

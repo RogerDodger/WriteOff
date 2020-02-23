@@ -29,6 +29,8 @@ sub artists :Local :Args(0) {
          $artist->active(!!$c->req->param('active-' . $artist->id));
          $artist->update;
       }
+      $c->flash->{status_msg} = 'Artists updated';
+      $c->res->redirect($c->uri_for_action($c->action));
    }
 }
 
@@ -70,8 +72,19 @@ sub do_login :Private {
 
 sub login_fimfiction :Path('login/fimfiction') :Args(0) {
    my ( $self, $c ) = @_;
-   $c->detach('/default') unless $c->config->{fimfiction_client_id};
    $c->yuk('areUser') if $c->user;
+   $c->forward('goto_fimfiction');
+}
+
+sub link_fimfiction :Path('link/fimfiction') :Args(0) {
+   my ($self, $c) = @_;
+   $c->user_assert;
+   $c->forward('goto_fimfiction');
+}
+
+sub goto_fimfiction :Private {
+   my ($self, $c) = @_;
+   $c->detach('/default') unless $c->config->{fimfiction_client_id};
 
    my $token = WriteOff::Util::token();
    $c->config->{tokenCache}->set($c->sessionid, $token);
@@ -106,7 +119,7 @@ sub auth_fimfiction :Path('/fimfiction') :Args(0) {
       agent => "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
              . "AppleWebKit/537.36 (KHTML, like Gecko)"
              . "Chrome/71.1.2222.33 Safari/537.36"
-   );
+      );
 
    # $ua->add_handler(
    #    "request_send",
@@ -144,10 +157,39 @@ sub auth_fimfiction :Path('/fimfiction') :Args(0) {
 
    $c->yuk('badSession') unless exists $token->{user}{id} && exists $token->{user}{name};
 
-   if ( my $user = $rs->find({ fimfic_id => $token->{user}{id} }) ) {
-      $c->user($user);
+   my $existing_user = $rs->find({ fimfic_id => $token->{user}{id} });
+
+   if ($c->user) {
+      # Link to logged in user
+      if (defined $c->user->fimfic_id) {
+         $c->flsh_err('youAlreadyHaveLinkedFimficAccount');
+      }
+      elsif ($existing_user) {
+         $c->flsh_err('fimficAccountIsAlreadyLinked');
+      }
+      else {
+         $c->user->update({
+            fimfic_id => $token->{user}{id},
+            fimfic_name => $token->{user}{name},
+            });
+
+         $c->log->info('Fimfic account linked: %d:%s to %d',
+            $c->user->fimfic_id, $c->user->fimfic_name, $c->user->id);
+
+         $c->flsh_msg('fimficAccountLinked');
+      }
+
+      return $c->res->redirect($c->uri_for_action('/user/accounts'));
+   }
+   elsif ($existing_user) {
+      # Login to existing user
+      $c->user($existing_user);
+   }
+   elsif ( $rs->find({ email_canonical => CORE::fc $token->{user}{email} }) ) {
+      $c->flsh_err('fimficEmailExists');
    }
    else {
+      # Create new user
       my $user = $rs->create({
          fimfic_id => $token->{user}{id},
          fimfic_name => $token->{user}{name},
@@ -194,14 +236,15 @@ sub register :Local :Args(0) {
 
 sub do_register :Private {
    my ( $self, $c ) = @_;
-
+   $c->csrf_assert;
    $c->captcha_check;
 
    $c->form(
       username => [
          'NOT_BLANK',
          [ 'LENGTH', 2, $c->config->{len}{max}{user} ],
-         [ 'REGEX', $c->config->{biz}{user}{regex} ]
+         [ 'REGEX', $c->config->{biz}{user}{regex} ],
+         [ 'DBIC_UNIQUE', $c->model('DB::User'), 'name' ],
       ],
       password => [
          'NOT_BLANK',
@@ -233,10 +276,7 @@ sub do_register :Private {
             })
       });
 
-      $c->log->info( sprintf 'User created: %s (%s)',
-         $c->stash->{user}->name,
-         $c->stash->{user}->email,
-      );
+      $c->log->info('User created: %s (%s)', $c->stash->{user}->name, $c->stash->{user}->email);
 
       $c->stash->{mailtype} = { noun => 'verification', verb => 'verify' };
       $c->forward('send_email');
@@ -244,7 +284,44 @@ sub do_register :Private {
    }
 }
 
-sub prefs :Local :Args(0) {
+sub upgrade :Local :Args(0) {
+   my ($self, $c) = @_;
+   $c->user_assert;
+   $c->detach('/forbidden') if $c->user->password;
+
+   if ($c->req->method eq 'POST') {
+      $c->csrf_assert;
+
+      $c->form(
+         username => [
+            'NOT_BLANK',
+            [ 'LENGTH', 2, $c->config->{len}{max}{user} ],
+            [ 'REGEX', $c->config->{biz}{user}{regex} ],
+            [ 'DBIC_UNIQUE', $c->model('DB::User'), 'name' ],
+         ],
+         password => [
+            'NOT_BLANK',
+            [ 'LENGTH', $c->config->{len}{min}{pass}, $c->config->{len}{max}{pass} ]
+         ],
+         { pass_confirm => [qw/password password2/] } => [ 'DUPLICATION' ],
+      );
+
+      if (!$c->form->has_error) {
+         $c->user->update({
+            password => $c->form->valid('password'),
+            name => $c->form->valid('username'),
+            name_canonical => CORE::fc $c->form->valid('username'),
+         });
+
+         $c->log->info("User upgraded: %d %s", $c->user->id, $c->user->name);
+
+         $c->flash->{status_msg} = $c->string('loginCreated');
+         $c->res->redirect($c->uri_for_action( $self->action_for('settings') ));
+      }
+   }
+}
+
+sub settings :Local :Args(0) {
    my ( $self, $c ) = @_;
 
    $c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
@@ -253,7 +330,7 @@ sub prefs :Local :Args(0) {
    $c->stash->{triggers} = [ @WriteOff::EmailTrigger::ALL ];
    $c->stash->{formats} = [ @WriteOff::Format::ALL ];
 
-   $c->forward('do_prefs') if $c->req->method eq 'POST';
+   $c->forward('do_settings') if $c->req->method eq 'POST';
 
    $c->stash->{fillform} = {
       font => $c->user->font,
@@ -268,12 +345,9 @@ sub prefs :Local :Args(0) {
          } $c->user->$m->all;
       } qw/mode trigger format/,
    };
-
-   push @{ $c->stash->{title} }, $c->string('preferences');
-   $c->stash->{template} = 'user/prefs.tt';
 }
 
-sub do_prefs :Private {
+sub do_settings :Private {
    my ( $self, $c ) = @_;
 
    $c->forward('/check_csrf_token');
@@ -305,61 +379,86 @@ sub do_prefs :Private {
    $c->res->redirect($c->req->referer || $c->uri_for($c->action));
 }
 
-sub credentials :Path('credentials') :Args(0) {
+sub password :Local :Args(0) {
    my ($self, $c) = @_;
-
-   $c->detach('/forbidden', [ $c->string('notUser') ]) unless $c->user;
-
-   my $key = $c->stash->{key} = $c->req->param('key') || '';
-   if ($key ne 'password' && $key ne 'email') {
-      $c->detach('/default');
-   }
+   $c->password_assert;
 
    if ($c->req->method eq 'POST') {
-      $c->forward('do_credentials');
-   }
+      $c->csrf_assert;
 
-   push @{ $c->stash->{title} }, qw/User Credentials/;
-   $c->stash->{template} = 'user/credentials.tt';
+      if ( !$c->user->check_password(scalar $c->req->param('password')) ) {
+         $c->flash->{error_msg} = $c->string('currentPasswordIsInvalid');
+      }
+      else {
+         my $new1 = $c->req->param('newpassword')  // '';
+         my $new2 = $c->req->param('confirmpassword') // '';
+
+         if ($new1 eq $new2) {
+            $c->user->update({ password => $new1 });
+            $c->flash->{status_msg} = $c->string('passwordChanged');
+         }
+         else {
+            $c->flash->{error_msg} = $c->string('passwordsDoNotMatch');
+         }
+      }
+
+      $c->res->redirect($c->req->referer || $c->uri_for($c->action));
+   }
 }
 
-sub do_credentials :Private {
+sub email :Local :Args(0) {
    my ($self, $c) = @_;
+   $c->password_assert;
 
-   $c->forward('/check_csrf_token');
+   if ($c->req->method eq 'POST') {
+      $c->csrf_assert;
 
-   my $user = $c->stash->{user} = $c->user;
-
-   if (!$user->check_password(scalar $c->req->param('password'))) {
-      $c->flash->{error_msg} = 'Current password is invalid';
-   }
-   elsif ($c->stash->{key} eq 'password') {
-      my $new1 = $c->req->param('newpassword')  // '';
-      my $new2 = $c->req->param('confirmpassword') // '';
-
-      if ($new1 eq $new2) {
-         $c->user->update({ password => $new1 });
-         $c->flash->{status_msg} = 'Password changed successfully';
+      if ( !$c->user->check_password(scalar $c->req->param('password')) ) {
+         $c->flash->{error_msg} = $c->string('currentPasswordIsInvalid');
       }
       else {
-         $c->flash->{error_msg} = 'Passwords do not match';
+         my $mailto = $c->stash->{mailto} = CORE::fc $c->req->param('email');
+
+         if (!defined $c->model('DB::User')->find({ email_canonical => $mailto })) {
+            $c->stash->{mailtype}{noun} = 'relocation';
+            $c->forward('send_email');
+            $c->flash->{status_msg} = $c->string('verificationEmailSentTo', $mailto);
+         }
+         else {
+            $c->flash->{error_msg} = $c->string('userWithThatEmailExists');
+         }
+      }
+
+      $c->res->redirect($c->req->referer || $c->uri_for($c->action));
+   }
+}
+
+sub accounts :Local :Args(0) {
+   my ($self, $c) = @_;
+   $c->password_assert;
+}
+
+sub unlink_fimfiction :Path('unlink/fimfiction') :Args(0) {
+   my ($self, $c) = @_;
+   $c->password_assert;
+
+   if ($c->req->method eq 'POST') {
+      $c->csrf_assert;
+
+      if ($c->user->fimfic_id) {
+         $c->log->info('User %d unlinked fimfic account: %d:%s',
+            $c->user->id, $c->user->fimfic_id, $c->user->fimfic_name);
+
+         $c->user->update({
+            fimfic_name => undef,
+            fimfic_id => undef,
+            });
+
+         $c->flsh_msg('fimficAccountUnlinked');
       }
    }
-   elsif ($c->stash->{key} eq 'email') {
-      my $mailto = $c->stash->{mailto} = $c->req->param('email');
 
-      if (!defined $c->model('DB::User')->find({ email => $mailto })) {
-         $c->stash->{mailtype}{noun} = 'relocation';
-         $c->forward('send_email');
-         $c->flash->{status_msg} =
-            "Verification email sent to <strong>$mailto</strong>";
-      }
-      else {
-         $c->flash->{error_msg} = 'A user with that email address already exists';
-      }
-   }
-
-   $c->res->redirect($c->req->referer || $c->uri_for($c->action));
+   $c->res->redirect($c->uri_for_action('/user/accounts'));
 }
 
 sub verify :Local :Args(0) {

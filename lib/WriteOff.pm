@@ -374,6 +374,16 @@ sub no {
    $self->detach('/forbidden', $msg ? [ $self->string($msg) ] : ());
 }
 
+sub flsh_err {
+   my $self = shift;
+   $self->flash->{error_msg} = $self->string(@_);
+}
+
+sub flsh_msg {
+   my $self = shift;
+   $self->flash->{status_msg} = $self->string(@_);
+}
+
 =head1 NAME
 
 WriteOff - Writing contests with anonymous voting

@@ -1,5 +1,7 @@
+{{ title_push_s('groups') }}
+{{ WRAPPER user/card.tt }}
 <div class="Document">
-   <div class="Document-title">{{ c.string('myGroups') }}</div>
+   <div class="Document-title">{{ c.string('groups') }}</div>
 
    {{ FOREACH g IN subs.all }}
    <div class="mt1">
@@ -29,3 +31,4 @@
    </div>
    {{ END }}
 </div>
+{{ END }}

@@ -1,0 +1,12 @@
+{{ WRAPPER user/credentials.tt }}
+   <div class="Form-item">
+      <label>{{ c.string('currentEmail') }}</label>
+      <input type="text" size="64"
+         value="{{- c.user.email | html }}" disabled>
+   </div>
+   <div class="Form-item">
+      <label>{{ c.string('newEmail') }}<span class="required">*</span></label>
+      <input type="text" name="email" size="64"
+         maxlength="{{ c.config.len.max.email }}" required>
+   </div>
+{{ END }}

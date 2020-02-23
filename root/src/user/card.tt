@@ -1,0 +1,46 @@
+{{ title_push_s('user') }}
+<div class="User-card">
+   <div class="User-nav">
+      <div class="User-nav--heading">
+         <div class="User-id--ctn">
+            {{ c.string('user') }}
+            <span class="User-id">#{{ c.user.id }}</span>
+         </div>
+
+         {{ IF c.user.name }}
+         <div class="User-name">~{{ c.user.name }}</div>
+         {{ ELSIF c.user.fimfic_name  }}
+            {{ INCLUDE 'user/fimfic-name.tt' }}
+         {{ END }}
+      </div>
+
+      {{
+         SET ctrl = c.controller('User');
+         SET tabs = [
+            ['settings',       'settings', 1],
+            ['aliases',        'artists', 1],
+            ['groups',         'groups', 1],
+            ['createLogin',    'upgrade', 1]
+            ['changePassword', 'password', c.user.password.defined],
+            ['changeEmail',    'email', c.user.password.defined],
+            ['linkedAccounts', 'accounts', c.user.password.defined]
+         ];
+         _foo = tabs.splice(3, 1, []) IF c.user.password.defined
+      }}
+      {{ FOREACH tab IN tabs }}
+         {{ SET action = ctrl.action_for(tab.1) }}
+         {{ IF !tab.2 }}
+         <div class="User-nav--faketab">{{ c.string(tab.0) }}</div>
+         {{ ELSE }}
+         <a class="User-nav--tab {{ 'current' IF action.name == c.action.name }}"
+            href="{{ c.uri_for_action(action) }}">
+            {{ c.string(tab.0) }}
+         </a>
+         {{ END }}
+      {{ END }}
+   </div>
+
+   <div class="User-card--content">
+{{ content | none }}
+   </div>
+</div>

@@ -130,10 +130,7 @@
                      <i class="fa fa-caret-down"></i>
                   </a>
                   <ul>
-                     <li><a href="/user/prefs">Preferences</a></li>
-                     <li><a href="/user/artists">{{ c.string('manageArtists') }}</a></li>
-                     <li><a href="/user/credentials?key=password">Change password</a></li>
-                     <li><a href="/user/credentials?key=email">Change email</a></li>
+                     <li><a href="/user/settings">Settings</a></li>
                      <li><a href="/user/logout">Logout</a></li>
                   </ul>
                </li>
@@ -154,10 +151,14 @@
       </nav>
 
       <main class="Site-content">
-         {{ messages.push(error_msg) IF error_msg }}
          {{ messages.push(status_msg) IF status_msg }}
          {{ FOREACH msg IN messages }}
             <div class="Global-message">{{ msg }}</div>
+         {{ END }}
+
+
+         {{ IF error_msg }}
+            <div class="Global-message error">{{ error_msg }}</div>
          {{ END }}
 
          {{ IF !c.session('introduced') }}

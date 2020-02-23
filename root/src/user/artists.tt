@@ -1,6 +1,8 @@
+{{ title_push_s('aliases') }}
+{{ WRAPPER user/card.tt }}
 <div class="Document">
    <div class="Document-title">
-      {{ c.string('manageArtists') }}
+      {{ c.string('aliases') }}
    </div>
 
    <form class="Form" method="post">
@@ -34,3 +36,4 @@
       </div>
    </form>
 </div>
+{{ END }}

@@ -27,7 +27,7 @@
       <span>{{ c.string('or') }}</span>
    </div>
 
-   <a href="/user/login/fimfiction" class="Login-fimfiction">
+   <a href="{{ c.uri_for_action('/user/login_fimfiction') }}" class="Login-fimfiction">
       <img src="/static/images/fimfiction.png">
       {{ c.string('loginFimfiction') }}
    </a>

@@ -1,8 +1,7 @@
+{{ title_push_s('createLogin') }}
+{{ WRAPPER user/card.tt }}
 <div class="Document">
-   {{ IF c.req.method != 'POST' || c.form.has_error }}
-   <div class="Document-title">
-      Register
-   </div>
+   <div class="Document-title">{{ c.string('createLogin') }}</div>
 
    <form class="Form" method="post">
       {{ csrf_field | none }}
@@ -41,44 +40,8 @@
       </div>
 
       <div class="Form-item">
-         <label>Email<span class="required">*</span></label>
-         <input type="email" name="email" size="72" class="maxwidth"
-            maxlength="{{ c.config.len.max.email }}" required>
-      </div>
-
-      <div class="Form-item">
-         <label>Prove You Are Human<span class="required">*</span></label>
-         {{ c.captcha_html | none }}
-      </div>
-
-      <div class="Form-item">
-         <input type="checkbox" name="agree" required>
-         <label>
-            I agree to the <a href="/tos">{{ c.document('tos').title | html }}</a>.<span class="required">*</span>
-         </label>
-      </div>
-
-      <div class="Form-item">
-         <input type="submit" value="Register">
+         <input type="submit" value="{{ c.string('createLogin') }}">
       </div>
    </form>
-
-   {{- ELSIF user -}}
-
-   <p>
-      You must validate your email address before your account may be used on the
-      site.
-   </p>
-   <p>
-      A validation email has been sent to {{ user.email }}. Please check
-      your inbox and follow the enclosed instructions to validate your account.
-   </p>
-   <p>
-      If you can't find said email, check your spam box and stuff. It should be in
-      there somewhere. If you still can't find it, send an email to <a class="link"
-      href="mailto:{{ c.config.AdminEmail }}">the admin</a> with appropriate
-      information to receive assistance.
-   </p>
-
-   {{- END }}
-</diV>
+</div>
+{{ END }}

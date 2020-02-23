@@ -29,6 +29,7 @@ image: Image
 prompt: Prompt
 login: Login
 loginFimfiction: Login with Fimfiction
+linkFimfiction: Link Fimfiction account
 name: Name
 username: Username
 password: Password
@@ -69,6 +70,7 @@ guess: Guess
 vote: Vote
 save: Save
 cancel: Cancel
+unlink: Unlink
 cancelEvent: Cancel Event
 scheduleAt: %s. Schedule Entry
 once: Once
@@ -82,6 +84,12 @@ newArtist: New alias
 editArtist: Edit profile
 deleteArtist: Delete alias
 editGroup: Edit group
+currentPassword: Current password
+changePassword: Change password
+newPassword: New password
+currentEmail: Current email
+newEmail: New email
+changeEmail: Change email
 user: User
 users: Users
 admin: Admin
@@ -168,7 +176,13 @@ confirmDQ: Confirm DQ
 passwordRecovery: Password Recovery
 manageArtists: Manage aliases
 preferences: Preferences
+settings: Settings
+aliases: Aliases
+linkedAccounts: Linked accounts
+createLogin: Create login
 editPost: Edit Post
+email: Email
+joined: Joined
 postN: Post #%d
 notifs: Notifications
 
@@ -251,9 +265,10 @@ promptGuide: |
       2. articles, coordinating conjunctions, and prepositions 4 letters or shorter are not capitalised;
       3. everything else is capitalised.
 emailNotifsHint: |
-   You will only receive notifications that match your selections,
-   e.g., when a FiM Minific event is created, you will only be notified if
-   you have "Event created", "FiM", and "Minific" selected.
+   You will only receive notifications that match your selections, e.g., when
+   Fic voting starts for a Minific event, you will only be notified if you
+   have "Fic", "Voting Started", and "Minific" selected.
+   You will only receive notifications for groups you are subscribed to.
 watermarkHint: |
    Watermark the submission in the chosen position. "None" is recommended.
    This option is to provide a standardised watermark for those who feel it's
@@ -292,6 +307,7 @@ notAdmin: You are not an admin
 notGroupAdmin: You are not an admin for this group
 notOrganiser: You are not an event organiser for this event
 notUser: You are not logged in
+noLogin: You need to make a Writeoff login first
 areUser: You are already logged in
 joinedOn: Joined on %s
 postCount: %d posts
@@ -320,6 +336,12 @@ cantMakeRoundAlreadyStarted: Can't make a round that's already started
 cantCancel: This event can't be cancelled
 alreadyCancelled: This event is already cancelled
 everyModeMustHaveVoting: Every mode must have a voting round
+currentPasswordIsInvalid: Current password is invalid
+passwordsDoNotMatch: Passwords do not match
+userWithThatEmailExists: A user with that email already exists
+youAlreadyHaveLinkedFimficAccount: You already have a linked Fimfiction account
+fimficAccountIsAlreadyLinked: Your Fimfiction account is already linked to a Writeoff account
+fimficEmailExists: A Writeoff account with the same email as your Fimfiction account already exists
 imagerSizeLimit: |
    Image is too big, probably because of its dimensions.
    Try resizing to max 1800x1800.
@@ -338,6 +360,11 @@ unpublishedEntry: Unpublished %s
 republishedEntry: Republished %s
 deindexedEntry: Deindexed %s
 reindexedEntry: Reindexed %s
+passwordChanged: Password changed
+verificationEmailSentTo: Verification email sent to %s
+loginCreated: Login created
+fimficAccountLinked: Fimfiction account linked
+fimficAccountUnlinked: Fimfiction account unlinked
 
 notifComment: %s commented
 notifMention: %s mentioned you
