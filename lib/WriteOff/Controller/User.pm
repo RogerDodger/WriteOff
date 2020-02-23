@@ -121,15 +121,11 @@ sub auth_fimfiction :Path('/fimfiction') :Args(0) {
              . "Chrome/71.1.2222.33 Safari/537.36"
       );
 
-   # $ua->add_handler(
-   #    "request_send",
-   #    sub { shift->dump( maxlength => 0 ); return }
-   # );
-
-   # $ua->add_handler(
-   #    "response_done",
-   #    sub { shift->dump( maxlength => 0 ); return }
-   # );
+   my $reqdump;
+   $ua->add_handler(
+      "request_send",
+      sub { $reqdump = shift->dump; return }
+   );
 
    my $endpoint = $c->uri_for('/fimfiction');
    $endpoint->scheme('https');
@@ -143,8 +139,9 @@ sub auth_fimfiction :Path('/fimfiction') :Args(0) {
       });
 
    if (!$res->is_success) {
-      $c->log->debug('Failed to get token from Fimfiction: ' . $res->status_line);
-      $c->log->debug($res->decoded_content);
+      $c->log->error('Failed to get token from Fimfiction: ' . $res->status_line);
+      $c->log->error("Request:\n$reqdump") if defined $reqdump;
+      $c->log->error("Response:\n" . $res->dump);
       $c->yuk('badSession');
    }
    else {
