@@ -122,7 +122,7 @@ before finalize_headers => sub {
       $c->log->debug(
          "Plugin::Session - Writing new session cookie:\n  $value\n  " . encode_json($c->_session));
 
-      $c->res->cookies->{$_conf->{cookie_name}} = CGI::Simple::Cookie->new(
+      my $cookie = CGI::Simple::Cookie->new(
          -name => $_conf->{cookie_name},
          -value => $value,
          -expires => $expires,
@@ -130,6 +130,11 @@ before finalize_headers => sub {
          -httponly => $_conf->{httponly},
          -samesite => $_conf->{samesite},
       );
+
+      $c->log->debug(
+         "Plugin::Session - Cookie size: %d bytes", 8 * length "$cookie" );
+
+      $c->res->cookies->{$_conf->{cookie_name}} = $cookie;
    }
 };
 
