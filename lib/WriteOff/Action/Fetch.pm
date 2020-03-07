@@ -24,10 +24,14 @@ sub execute {
 
    my $desired_arg = $item->can('id_uri') ? $item->id_uri : $item->id;
    if ($id . $desc ne $desired_arg) {
-      $c->req->args->[0] = $desired_arg . ($ext // '');
-      $c->res->redirect(
-         $c->uri_for($c->action, $c->req->args, $c->req->params)
-      );
+      $c->log->debug($c->action);
+      # $c->req->args doesn't have access to arguments/captures for any
+      # chained actions, so we can't use that and uri_for to construct the
+      # redirect nicely. Instead, we need to mangle the raw URI directly.
+      my $new_arg = $desired_arg . ($ext // '');
+      my $uri = $c->req->uri->clone;
+      $uri->path( $uri->path =~ s{/\Q$arg\E}{/$new_arg}xr );
+      $c->res->redirect($uri);
       $c->detach;
    }
 

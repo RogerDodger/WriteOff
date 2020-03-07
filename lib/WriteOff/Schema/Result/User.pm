@@ -212,7 +212,7 @@ sub find_token {
    return $tokens->search({
       type => $type,
       value => $value,
-      expires => { '>' => $tokens->format_datetime(DateTime->now) },
+      expires => { '>' => $tokens->format_datetime(WriteOff::DateTime->now) },
    })->first;
 }
 

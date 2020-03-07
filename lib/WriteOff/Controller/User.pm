@@ -8,12 +8,7 @@ no warnings 'uninitialized';
 
 BEGIN { extends 'Catalyst::Controller'; }
 
-sub fetch :Chained('/') :PathPart('user') :CaptureArgs(1) :ActionClass('~Fetch') {
-   my ( $self, $c, $id ) = @_;
-
-   $c->stash->{user} = $c->model('DB::User')->find($id)
-      or $c->detach('/default');
-}
+sub fetch :Chained('/') :PathPart('user') :CaptureArgs(1) :ActionClass("~Fetch") {}
 
 sub artists :Local :Args(0) {
    my ($self, $c) = @_;
@@ -493,7 +488,7 @@ sub do_verify :Chained('fetch') :PathPart('verify') :Args(1) {
       $c->flash->{status_msg} = 'Email changed successfully';
    }
    else {
-      return $c->detach('/default');
+      return $c->detach('/error', [ 'Token not found' ]);
    }
 
    $token->delete;
