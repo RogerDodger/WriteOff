@@ -3,7 +3,7 @@
 
    <div class="Flash pop">{{ c.string('confirmFlash') }}</div>
 
-   <p>{{ confirmPrompt }}</p>
+   <p>{{ confirmPrompt | markdown }}</p>
 
    <form class="Form" method="post" action="{{ c.uri_for( c.req.uri.path ) }}">
       {{ csrf_field | none }}

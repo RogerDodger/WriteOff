@@ -43,6 +43,7 @@ allowedTypes: Allowed types: %s
 maxSize: Max filesize: %dKB
 wordLimit: Word limit
 wordLimitN: Word limit: %d-%d
+maxWordcount: Max wordcount
 created: Created
 submitted: Submitted
 index: Index
@@ -289,7 +290,8 @@ emailLimited: |
 introSplash: |
    Hey! It looks like you're new here. You might want to check out [the introduction](/intro).
 confirmFlash: Careful! This process can't be reversed.
-confirmPrompt: Enter the %s of the selected item to continue
+confirmPrompt: |
+   Just to check you didn't misclick, please enter the selected item's **%s**
 cancelFlash: Cancelling an event deletes everything but comments and freezes the rules
 autosubLabel: Automatically subscribe to new groups
 groupNameNote: Keep as short as possible.
@@ -347,6 +349,7 @@ imagerSizeLimit: |
    Try resizing to max 1800x1800.
 
 scheduleUpdated: Schedule updated
+scheduleDeleted: Schedule deleted
 eventCreated: Event created
 eventUpdated: Event updated
 groupCreated: Group created

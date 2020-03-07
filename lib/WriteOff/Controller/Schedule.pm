@@ -65,7 +65,6 @@ sub do_add :Private {
 
 sub edit :Chained('fetch') :PathPart('edit') :Args(0) {
    my ($self, $c) = @_;
-
    $c->no('notGroupAdmin') if !$c->user->admins($c->stash->{group});
 
    $c->forward('form');
@@ -124,6 +123,36 @@ sub do_form :Private {
    my %m;
    $m{ $_->{mode} }++ for @{ $c->stash->{rounds} };
    $c->yuk('everyModeMustHaveVoting') if grep { $m{$_} == 1 } keys %m;
+}
+
+sub delete :Chained('fetch') :PathPart('delete') :Args(0) {
+   my ($self, $c) = @_;
+   $c->no('notGroupAdmin') if !$c->user->admins($c->stash->{group});
+
+   $c->stash(
+      key => $c->stash->{schedule}->wc_max,
+      header => $c->string('confirmDeletion'),
+      confirmPrompt => $c->string('confirmPrompt', $c->string('maxWordcount')),
+   );
+
+   if ($c->req->method eq 'POST') {
+      $c->csrf_assert;
+
+      $c->log->info( sprintf "Schedule in group %s deleted by %s: %d:%s",
+         $c->stash->{group}->id_uri,
+         $c->user->id_uri,
+         $c->stash->{schedule}->id,
+         $c->stash->{schedule}->next->iso8601,
+      );
+
+      $c->stash->{schedule}->delete;
+
+      $c->flsh_msg('scheduleDeleted');
+      $c->res->redirect($c->req->param('referer') || $c->uri_for('/'));
+   }
+
+   push @{ $c->stash->{title} }, $c->string('delete');
+   $c->stash->{template} = 'root/confirm.tt';
 }
 
 __PACKAGE__->meta->make_immutable;

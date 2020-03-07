@@ -30,6 +30,7 @@
    {{ IF c.user.admins(schedule.genre) }}
    <div class="Event-edit">
       [<a href="{{ c.uri_for_action('/schedule/edit', [ schedule.genre.id_uri, schedule.id ]) }}">{{ c.string('edit')}}</a>]
+      [<a href="{{ c.uri_for_action('/schedule/delete', [ schedule.genre.id_uri, schedule.id ]) }}">{{ c.string('delete')}}</a>]
    </div>
    {{ END }}
 
