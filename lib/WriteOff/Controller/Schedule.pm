@@ -15,6 +15,12 @@ sub _fetch :ActionClass('~Fetch') {}
 sub fetch :Chained('/group/fetch') :PathPart('schedule') :CaptureArgs(1) {
    my ($self, $c) = @_;
    $c->forward('_fetch');
+
+   if ($c->stash->{schedule}->genre_id != $c->stash->{group}->id) {
+      undef $c->stash->{group};
+      $c->detach('/default');
+   }
+
    my $sched = $c->stash->{sched} = $c->stash->{schedule};
    push @{ $c->stash->{title} }, $c->string('scheduleAt', $sched->next->strftime('%d %b'));
 }
