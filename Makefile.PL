@@ -61,7 +61,7 @@ my @dependencies = (
    'Imager',
    'Imager::File::PNG',
    'Imager::File::JPEG',
-   'ImageR::File::WEBP',
+   'Imager::File::WEBP',
    'Graphics::ColorNames::Netscape', # Dependencies of Graphics::ColorObject,
    'Graphics::ColorNames::Windows',  # but it doesn't include them in its own
    'Graphics::ColorNames::HTML',     # Makefile.PL
