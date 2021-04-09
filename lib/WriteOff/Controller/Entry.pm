@@ -43,9 +43,13 @@ sub form :Private {
       });
 
       if ($c->stash->{rels} && !$organiser) {
-         $c->stash->{rels} = $c->stash->{rels}->search({
+         # Don't allow rels to be user's own entries...
+         my $others = $c->stash->{rels}->search({
             user_id => { '!=' => $uid },
          });
+         
+         # ...except when no others are available
+         $c->stash->{rels} = $others if $others->count;
       }
    }
 }
