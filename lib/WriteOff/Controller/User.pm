@@ -413,6 +413,7 @@ sub email :Local :Args(0) {
 
          if (!defined $c->model('DB::User')->find({ email_canonical => $mailto })) {
             $c->stash->{mailtype}{noun} = 'relocation';
+            $c->stash->{user} = $c->user;
             $c->forward('send_email');
             $c->flash->{status_msg} = $c->string('verificationEmailSentTo', $mailto);
          }
@@ -555,8 +556,11 @@ sub send_email :Private {
       $c->log->warn("Unknown email type '$type' given to User::send_email");
       return;
    }
-
-   return unless defined $c->stash->{user};
+   
+   if (!defined $c->stash->{user}) {
+      $c->log->warn('Undefined $c->stash->{user} when calling User::send_email');
+      return;
+   }
 
    my $mailto = $c->stash->{mailto} || $c->stash->{user}->email;
    my $cache  = $c->cache(backend => 'recent-emails');
