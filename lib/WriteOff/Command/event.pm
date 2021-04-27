@@ -31,6 +31,21 @@ can calibrate =>
       mode => 'fic',
    ];
 
+can cancel =>
+   sub {
+      my ($e) = @_;
+      printf STDERR q{### WARNING ###
+This will irreversibly delete all rounds, entrys, ballots, and theorys for event %d "%s". Continue? [y/N] },
+      $e->id, $e->prompt;
+      chomp(my $in = <STDIN>);
+      return unless $in =~ /^(?:y|yes)$/i;
+      say STDERR "Deleting everything...";
+      $e->cancel;
+   },
+   which => q{
+      Cancels the event with id EVENT.
+   };
+
 can reset =>
    sub {
       my ($e) = @_;

@@ -166,6 +166,17 @@ sub cancellable {
        && !$self->rounds->search({ action => 'submit' })->finished->count;
 }
 
+sub cancel {
+   my $self = shift;
+
+   $self->entrys->delete;
+   $self->rounds->delete;
+   $self->ballots->delete;
+   $self->theorys->delete;
+   $self->reset_jobs;
+   $self->update({ cancelled => 1 });
+}
+
 sub organisers {
    my $self = shift;
 

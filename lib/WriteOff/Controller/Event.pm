@@ -297,12 +297,7 @@ sub do_cancel :Private {
       $c->user->id_uri
       );
 
-   $c->stash->{event}->entrys->delete;
-   $c->stash->{event}->rounds->delete;
-   $c->stash->{event}->ballots->delete;
-   $c->stash->{event}->theorys->delete;
-   $c->stash->{event}->reset_jobs;
-   $c->stash->{event}->update({ cancelled => 1 });
+   $c->stash->{event}->cancel;
 
    $c->flash->{status_msg} = $c->string('eventCancelled', $c->stash->{event}->prompt);
    $c->res->redirect($c->uri_for_action('/event/permalink', [ $c->stash->{event}->id_uri ]));
